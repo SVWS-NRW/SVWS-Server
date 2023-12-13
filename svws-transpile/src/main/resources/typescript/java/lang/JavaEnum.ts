@@ -96,9 +96,13 @@ export abstract class JavaEnum<K extends JavaEnum<K>> extends JavaObject impleme
 		return this.__ordinal - other.__ordinal;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Enum';
+	}
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
+			'java.lang.Enum',
 			'java.lang.Constable',
 			'java.lang.Comparable',
 			'java.lang.Serializable',

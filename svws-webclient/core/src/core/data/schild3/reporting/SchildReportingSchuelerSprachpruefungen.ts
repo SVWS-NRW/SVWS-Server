@@ -77,6 +77,10 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen'].includes(name);
 	}

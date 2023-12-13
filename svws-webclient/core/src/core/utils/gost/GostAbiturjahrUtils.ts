@@ -81,6 +81,10 @@ export class GostAbiturjahrUtils extends JavaObject {
 		return strJG;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostAbiturjahrUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostAbiturjahrUtils'].includes(name);
 	}

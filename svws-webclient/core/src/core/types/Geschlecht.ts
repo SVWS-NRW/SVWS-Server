@@ -189,8 +189,12 @@ export class Geschlecht extends JavaEnum<Geschlecht> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.Geschlecht';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.Geschlecht', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.Geschlecht', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

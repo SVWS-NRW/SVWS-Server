@@ -71,6 +71,10 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		this._dynDaten.entferneLetztenTermin();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusGreedy3';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusGreedy3', 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}

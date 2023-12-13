@@ -18,6 +18,10 @@ export class StringBuilder extends AbstractStringBuilder implements Comparable<S
 	}
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.lang.StringBuilder';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.StringBuilder',

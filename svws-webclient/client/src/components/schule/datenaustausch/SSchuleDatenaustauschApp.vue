@@ -1,8 +1,6 @@
 <template>
 	<svws-ui-header>
-		<span class="inline-block mr-3">Importieren</span>
-		<br>
-		<span class="opacity-50"><i-ri-download2-line /></span>
+		<div class="svws-schule-datenauschtausch-header-target" />
 	</svws-ui-header>
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">

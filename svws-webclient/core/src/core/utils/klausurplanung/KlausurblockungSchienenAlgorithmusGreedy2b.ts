@@ -34,6 +34,10 @@ export class KlausurblockungSchienenAlgorithmusGreedy2b extends KlausurblockungS
 			this._dynDaten.aktionZustand2Speichern();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy2b';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy2b', 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}

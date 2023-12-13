@@ -89,6 +89,10 @@ export class AbiturFachbelegung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.AbiturFachbelegung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.AbiturFachbelegung'].includes(name);
 	}

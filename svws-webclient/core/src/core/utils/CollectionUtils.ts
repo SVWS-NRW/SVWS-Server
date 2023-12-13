@@ -67,6 +67,10 @@ export class CollectionUtils extends JavaObject {
 		return set;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.CollectionUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.CollectionUtils'].includes(name);
 	}

@@ -2,6 +2,10 @@ import { Exception } from '../../java/lang/Exception';
 
 export class IOException extends Exception {
 
+	transpilerCanonicalName(): string {
+		return 'java.io.IOException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.io.IOException',

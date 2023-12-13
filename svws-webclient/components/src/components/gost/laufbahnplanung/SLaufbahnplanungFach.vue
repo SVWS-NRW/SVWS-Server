@@ -96,6 +96,16 @@
 			'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
 		}" @click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
+			<span v-if="abi_wahl && !istMoeglichAbi" class="absolute -right-0">
+				<svws-ui-tooltip :color="'danger'">
+					<svws-ui-button type="icon" size="small">
+						<i-ri-close-line @click="deleteFachwahlAbitur()" />
+					</svws-ui-button>
+					<template #content>
+						Löschen (Nicht als Abiturfach wählbar)
+					</template>
+				</svws-ui-tooltip>
+			</span>
 		</div>
 	</div>
 </template>
@@ -370,6 +380,12 @@
 		onUpdateWahl(wahl, props.fach.id);
 	}
 
+	function deleteFachwahlAbitur() {
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
+		wahl.abiturFach = null;
+		onUpdateWahl(wahl);
+	}
+
 	function stepper_manuellAbi() : void {
 		if (istBewertet(GostHalbjahr.Q22))
 			return;
@@ -416,10 +432,20 @@
 				wahl.halbjahre[hj] = "M";
 				break;
 			case "M":
-				wahl.halbjahre[hj] = "S";
+				if (ist_VTF.value || ist_PJK.value || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach)))
+					wahl.halbjahre[hj] = null;
+				else
+					wahl.halbjahre[hj] = "S";
 				break;
 			case "S":
-				wahl.halbjahre[hj] = "LK";
+				if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[hj] = "AT";
+					else
+						wahl.halbjahre[hj] = null;
+				} else { // in der Q-Phase als LK möglich, allerdings nicht im Fachbereich des literarisch-künstlerischen Bereichs
+					wahl.halbjahre[hj] = "LK";
+				}
 				break;
 			case "LK": {
 				wahl.halbjahre[hj] = null
@@ -439,28 +465,48 @@
 
 	function setEF1Wahl(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
-			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S"; break;
-			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
-			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
+			case null:
+				if ((ist_VTF.value || ist_PJK.value) || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = "S";
+				break;
+			case "S":
+				wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+				break;
+			case "M":
+				if (GostFachbereich.SPORT.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				break;
+			case "AT":
+				wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				break;
 		}
-		// TODO AT für Sport !!!
 	}
 
 
 	function setEF2Wahl(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null:
-				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				if ((ist_VTF.value || ist_PJK.value) || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
+				else
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
-				if (GostFachbereich.SPORT.hat(props.fach)) wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				if (GostFachbereich.SPORT.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				else
+					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
 				break;
 			case "AT":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				break;
 		}
 	}
 
@@ -483,13 +529,22 @@
 	function setEF1WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
 			case null: {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre auch leer sind, dann setze auch diese
-				else if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = (ist_VTF.value || ist_PJK.value) ? ['M', 'M', 'M', 'M', 'M', 'M'] : ['S', 'S', 'S', 'S', 'S', 'M'];
-				else
-					wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				} else if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
+					if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
+					else if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = ['S', 'S', 'LK', 'LK', 'LK', 'LK'];
+					else
+						wahl.halbjahre = ['S', 'S', 'S', 'S', 'S', 'M'];
+				} else {
+					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+						wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+					else
+						wahl.halbjahre[GostHalbjahr.EF1.id] = "S";
+				}
 				break;
 			}
 			case "S":  {
@@ -501,21 +556,39 @@
 						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
 					else
 						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
+				else if (identicalArray(wahl.halbjahre, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
 				break;
 			}
 			case "M":  {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
-				else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [null, null, null, null, null, null];
-				else
-					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				} else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre = ["AT", "AT", "AT", "AT", "AT", "AT"];
+					else
+						wahl.halbjahre = [null, null, null, null, null, null];
+				} else {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
+					else
+						wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				}
 				break;
 			}
-			// TODO AT für Sport !!!
+			case "AT": {
+				if (wahl.abiturFach !== null) {
+					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
+				} else if (identicalArray(wahl.halbjahre, ["AT", "AT", "AT", "AT", "AT", "AT"])) {
+					wahl.halbjahre = [null, null, null, null, null, null];
+				} else {
+					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				}
+				break;
+			}
 		}
 	}
 
@@ -523,12 +596,21 @@
 	function setEF2WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null: {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [wahl.halbjahre[0], 'S', 'S', 'S', 'S', 'M'];
-				else
-					wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				} else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
+					if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
+					else if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = [wahl.halbjahre[0], 'S', 'LK', 'LK', 'LK', 'LK'];
+					else
+						wahl.halbjahre = [wahl.halbjahre[0], 'S', 'S', 'S', 'S', 'M'];
+				} else {
+					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
+						wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
+					else
+						wahl.halbjahre[GostHalbjahr.EF2.id] = "S";
+				}
 				break;
 			}
 			case "S": {
@@ -540,24 +622,38 @@
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', null, null];
 					else
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
+				else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+					wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
 			}
 			case "M": {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+				} else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
 					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', 'M', 'M'])
-					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
-				if (GostFachbereich.SPORT.hat(props.fach))
-					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre = [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"];
+					else
+						wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
+				} else {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+					else
+						wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				}
 				break;
 			}
 			case "AT": {
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				if (wahl.abiturFach !== null) {
+					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
+				} else if (identicalArray(wahl.halbjahre, [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"])) {
+					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
+				} else {
+					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				}
 			}
 		}
 	}
@@ -569,7 +665,14 @@
 				wahl.halbjahre[GostHalbjahr.Q11.id] = (GostFachbereich.DEUTSCH.hat(props.fach) || GostFachbereich.MATHEMATIK.hat(props.fach)) ? "S" : "M";
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q11.id] = ist_VTF.value || ist_PJK.value ? null : "S";
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q11.id] = "LK";
+				else
+					wahl.halbjahre[GostHalbjahr.Q11.id] = "S";
 				break;
 			case "S":
 				//S->S ist richtig, weil DE und MA muss belegt sein, entweder S oder LK, anders geht es nicht.
@@ -720,7 +823,14 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q12.id] = ist_VTF.value || ist_PJK.value ? null : "S";
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q12.id] = "LK";
+				else
+					wahl.halbjahre[GostHalbjahr.Q12.id] = "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id] === "LK" ? "LK" : null;
@@ -801,7 +911,14 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q21.id] = ist_VTF.value || ist_PJK.value ? null : "S";
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q21.id] = "LK";
+				else
+					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q12.id] === "LK" ? "LK" : null;
@@ -865,7 +982,14 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q22.id] = ist_VTF.value || ist_PJK.value ? null : "S";
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK)
+					wahl.halbjahre[GostHalbjahr.Q22.id] = "LK";
+				else
+					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q22.id] = wahl.halbjahre[GostHalbjahr.Q21.id] === "LK" ? "LK" : null;
@@ -962,23 +1086,25 @@
 </script>
 
 <style lang="postcss" scoped>
-.data-table__tr {
-  --background-color: #ffffff;
 
-  .data-table__td {
-    background-color: var(--background-color);
-  }
+	.data-table__tr {
+		--background-color: #ffffff;
 
-  &.svws-background-on-hover {
-    .data-table__td {
-      @apply bg-transparent;
-    }
+		.data-table__td {
+			background-color: var(--background-color);
+		}
 
-    &:hover {
-      .data-table__td {
-        background-color: var(--background-color);
-      }
-    }
-  }
-}
+		&.svws-background-on-hover {
+			.data-table__td {
+				@apply bg-transparent;
+			}
+
+			&:hover {
+				.data-table__td {
+					background-color: var(--background-color);
+				}
+			}
+		}
+	}
+
 </style>

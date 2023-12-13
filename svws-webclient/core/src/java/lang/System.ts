@@ -22,6 +22,10 @@ export class System extends JavaObject {
 		return "\n";
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.lang.System';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.System',

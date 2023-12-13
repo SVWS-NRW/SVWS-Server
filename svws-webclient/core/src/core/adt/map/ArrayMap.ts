@@ -254,6 +254,10 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 		this.numEntries = 0;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMap';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Map', 'de.svws_nrw.core.adt.map.ArrayMap'].includes(name);
 	}

@@ -50,6 +50,10 @@ export class KlassenDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.klassen.KlassenDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.klassen.KlassenDaten'].includes(name);
 	}

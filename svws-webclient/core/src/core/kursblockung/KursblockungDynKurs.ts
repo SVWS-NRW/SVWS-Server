@@ -480,6 +480,10 @@ export class KursblockungDynKurs extends JavaObject {
 		this.logger.modifyIndent(-4);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungDynKurs';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynKurs'].includes(name);
 	}

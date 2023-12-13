@@ -100,4 +100,8 @@ export class HashMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		return result;
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashMapKeySet';
+	}
+
 }

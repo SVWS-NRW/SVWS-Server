@@ -17,6 +17,10 @@ export class BKFachklassenSchluessel extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.bk.BKFachklassenSchluessel';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKFachklassenSchluessel'].includes(name);
 	}

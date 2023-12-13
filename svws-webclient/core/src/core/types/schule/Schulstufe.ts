@@ -123,8 +123,12 @@ export class Schulstufe extends JavaEnum<Schulstufe> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Schulstufe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Schulstufe', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Schulstufe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

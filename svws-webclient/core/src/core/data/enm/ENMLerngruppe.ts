@@ -54,6 +54,10 @@ export class ENMLerngruppe extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMLerngruppe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLerngruppe'].includes(name);
 	}

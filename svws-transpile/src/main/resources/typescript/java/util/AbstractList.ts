@@ -170,6 +170,10 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
     	}
     }
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.AbstractList';
+	}
+
     public isTranspiledInstanceOf(name : string): boolean {
     	return [
     		'java.util.AbstractList',

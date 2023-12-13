@@ -434,7 +434,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
+	bcContainsAllKeys(c : Collection<any>, iv : AVLMapIntervall<K>) : boolean {
 		for (const key of c)
 			if (!this.bcContainsKey(key, iv))
 				return false;
@@ -477,7 +477,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllValues(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
+	bcContainsAllValues(c : Collection<any>, iv : AVLMapIntervall<K>) : boolean {
 		for (const val of c)
 			if (!this.bcContainsValue(val, iv))
 				return false;
@@ -511,7 +511,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
+	bcContainsAllEntries(c : Collection<any>, iv : AVLMapIntervall<K>) : boolean {
 		for (const entry of c)
 			if (!this.bcContainsEntry(entry, iv))
 				return false;
@@ -564,7 +564,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	bcRemoveAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
+	bcRemoveAllKeys(c : Collection<any>, iv : AVLMapIntervall<K>) : boolean {
 		let changed : boolean = false;
 		for (const obj of c)
 			changed = changed || this.bcRemoveKeyReturnBool(obj, iv);
@@ -599,7 +599,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	bcRemoveAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
+	bcRemoveAllEntries(c : Collection<any>, iv : AVLMapIntervall<K>) : boolean {
 		let removedAny : boolean = false;
 		for (const entry of c)
 			removedAny = removedAny || this.bcRemoveEntry(entry, iv);
@@ -1216,6 +1216,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		const heightL : number = (node._childL === null) ? 0 : node._childL._height;
 		const heightR : number = (node._childR === null) ? 0 : node._childR._height;
 		return heightR - heightL;
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMap';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -81,7 +81,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		throw new UnsupportedOperationException()
 	}
 
-	public containsAll(c : Collection<unknown>) : boolean {
+	public containsAll(c : Collection<any>) : boolean {
 		return this._sub.bcContainsAllValues(c);
 	}
 
@@ -89,16 +89,20 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		throw new UnsupportedOperationException()
 	}
 
-	public removeAll(c : Collection<unknown>) : boolean {
+	public removeAll(c : Collection<any>) : boolean {
 		throw new UnsupportedOperationException()
 	}
 
-	public retainAll(c : Collection<unknown>) : boolean {
+	public retainAll(c : Collection<any>) : boolean {
 		throw new UnsupportedOperationException()
 	}
 
 	public clear() : void {
 		this._sub.clear();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubCollection';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -54,6 +54,10 @@ export class AbiturKursMarkierung extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.AbiturKursMarkierung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.AbiturKursMarkierung'].includes(name);
 	}

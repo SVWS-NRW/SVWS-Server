@@ -26,7 +26,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "/stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));

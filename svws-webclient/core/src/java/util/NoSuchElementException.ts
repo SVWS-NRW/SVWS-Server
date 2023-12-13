@@ -2,6 +2,10 @@ import { RuntimeException } from '../../java/lang/RuntimeException';
 
 export class NoSuchElementException extends RuntimeException {
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.NoSuchElementException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.NoSuchElementException',

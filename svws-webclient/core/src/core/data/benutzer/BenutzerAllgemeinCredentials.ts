@@ -22,6 +22,10 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials'].includes(name);
 	}

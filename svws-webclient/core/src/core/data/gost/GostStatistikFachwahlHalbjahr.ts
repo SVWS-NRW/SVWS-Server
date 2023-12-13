@@ -32,6 +32,10 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr'].includes(name);
 	}

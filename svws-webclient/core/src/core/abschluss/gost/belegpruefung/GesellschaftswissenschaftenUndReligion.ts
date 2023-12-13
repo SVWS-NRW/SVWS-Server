@@ -288,6 +288,10 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion'].includes(name);
 	}

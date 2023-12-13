@@ -2,6 +2,10 @@ import { RuntimeException } from './RuntimeException';
 
 export class IllegalArgumentException extends RuntimeException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.IllegalArgumentException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.IllegalArgumentException',

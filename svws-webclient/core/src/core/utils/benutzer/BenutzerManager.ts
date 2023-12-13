@@ -397,6 +397,10 @@ export class BenutzerManager extends JavaObject {
 		this.removeGruppe(bgd);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.benutzer.BenutzerManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzerManager'].includes(name);
 	}

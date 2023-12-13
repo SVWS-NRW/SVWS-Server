@@ -1,40 +1,45 @@
 <template>
-	<div class="svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled}" v-bind="$attrs" ref="inputElTags">
-		<svws-ui-text-input ref="inputEl"
-			:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
-			:readonly="!autocomplete"
-			:placeholder="label || title"
-			:statistics="statistics"
-			:headless="headless"
-			:disabled="disabled"
-			:debounce-ms="0"
-			role="combobox"
-			:aria-label="label || title"
-			:aria-expanded="showList"
-			aria-haspopup="listbox"
-			aria-autocomplete="list"
-			:aria-controls="showList ? listIdPrefix : null"
-			:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-			@update:model-value="value => searchText = value"
-			@click="toggleListBox"
-			@focus="onInputFocus"
-			@blur="onInputBlur"
-			@keyup.down.prevent
-			@keyup.up.prevent
-			@keydown.down.prevent="onArrowDown"
-			@keydown.up.prevent="onArrowUp"
-			@keydown.enter.prevent="selectCurrentActiveItem"
-			@keydown.backspace="onBackspace"
-			@keydown.esc.prevent="toggleListBox"
-			@keydown.space.prevent="onSpace"
-			@keydown.tab.prevent="onTab" />
-		<div v-if="!headless" class="svws-tags">
-			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
-				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
-				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
-					<i-ri-close-line />
-				</button>
-			</span>
+	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled}" v-bind="$attrs" ref="inputElTags">
+		<div class="flex-grow">
+			<svws-ui-text-input ref="inputEl"
+				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
+				:readonly="!autocomplete"
+				:placeholder="label || title"
+				:statistics="statistics"
+				:headless="headless"
+				:disabled="disabled"
+				:debounce-ms="0"
+				role="combobox"
+				:aria-label="label || title"
+				:aria-expanded="showList"
+				aria-haspopup="listbox"
+				aria-autocomplete="list"
+				:aria-controls="showList ? listIdPrefix : null"
+				:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
+				@update:model-value="value => searchText = value"
+				@click="toggleListBox"
+				@focus="onInputFocus"
+				@blur="onInputBlur"
+				@keyup.down.prevent
+				@keyup.up.prevent
+				@keydown.down.prevent="onArrowDown"
+				@keydown.up.prevent="onArrowUp"
+				@keydown.enter.prevent="selectCurrentActiveItem"
+				@keydown.backspace="onBackspace"
+				@keydown.esc.prevent="toggleListBox"
+				@keydown.space.prevent="onSpace"
+				@keydown.tab.prevent="onTab">
+				<template #tags v-if="!headless">
+					<div class="svws-tags">
+						<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
+							<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
+							<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
+								<i-ri-close-line />
+							</button>
+						</span>
+					</div>
+				</template>
+			</svws-ui-text-input>
 		</div>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
 			<i-ri-expand-up-down-line v-if="headless" />

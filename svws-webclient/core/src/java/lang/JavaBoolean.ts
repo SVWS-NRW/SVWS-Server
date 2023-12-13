@@ -6,6 +6,10 @@ export class JavaBoolean extends JavaObject {
 		return (s === null) ? false : s.localeCompare("true", undefined, { sensitivity: 'accent' }) === 0;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Boolean';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Boolean',

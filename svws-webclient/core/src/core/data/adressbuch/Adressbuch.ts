@@ -40,6 +40,10 @@ export class Adressbuch extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.adressbuch.Adressbuch';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.adressbuch.Adressbuch'].includes(name);
 	}

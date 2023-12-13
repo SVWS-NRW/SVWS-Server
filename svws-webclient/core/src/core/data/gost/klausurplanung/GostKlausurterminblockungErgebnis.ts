@@ -15,6 +15,10 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis'].includes(name);
 	}

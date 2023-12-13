@@ -890,6 +890,10 @@ export class GostKlausurraumManager extends JavaObject {
 		return start === null ? this._termin.startzeit : start;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.GostKlausurraumManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.GostKlausurraumManager'].includes(name);
 	}

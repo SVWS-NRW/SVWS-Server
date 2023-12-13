@@ -39,6 +39,10 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs'].includes(name);
 	}

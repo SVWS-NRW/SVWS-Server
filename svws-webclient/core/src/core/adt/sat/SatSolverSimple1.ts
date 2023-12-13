@@ -75,6 +75,10 @@ export class SatSolverSimple1 extends SatSolver {
 		return true;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.sat.SatSolverSimple1';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatSolverSimple1', 'java.util.function.Function', 'de.svws_nrw.core.adt.sat.SatSolver'].includes(name);
 	}

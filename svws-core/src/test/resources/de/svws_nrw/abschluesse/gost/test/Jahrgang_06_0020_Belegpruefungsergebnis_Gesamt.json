@@ -116,6 +116,10 @@
     "code" : "STD_10",
     "art" : "BELEGUNG",
     "beschreibung" : "Der Pflichtunterricht darf 102 Stunden nicht unterschreiten."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

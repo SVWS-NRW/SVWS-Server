@@ -128,6 +128,10 @@ export class MapUtils extends JavaObject {
 		return value;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.MapUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.MapUtils'].includes(name);
 	}

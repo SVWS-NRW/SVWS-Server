@@ -1,9 +1,6 @@
-import type { ShallowRef} from "vue";
-import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { FachDaten, FaecherListeEintrag, List} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,119 +14,7 @@ import { routeKatalogFachDaten } from "~/router/apps/kataloge/faecher/RouteKatal
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppProps";
 import type { FaecherAuswahlProps } from "~/components/kataloge/faecher/SFaecherAuswahlProps";
-
-interface RouteStateKatalogFaecher {
-	auswahl: FaecherListeEintrag | undefined;
-	daten: FachDaten | undefined;
-	mapKatalogeintraege: Map<number, FaecherListeEintrag>;
-	view: RouteNode<any, any>;
-}
-
-export class RouteDataKatalogFaecher {
-
-	private static _defaultState: RouteStateKatalogFaecher = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogFachDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogFaecher._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogFaecher>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogFaecher._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogFaecher>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogFaecher.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Fächer gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-
-	get auswahl(): FaecherListeEintrag | undefined {
-		return this._state.value.auswahl;
-	}
-
-	get mapKatalogeintraege(): Map<number, FaecherListeEintrag> {
-		return this._state.value.mapKatalogeintraege;
-	}
-
-	get daten(): FachDaten {
-		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
-		return this._state.value.daten;
-	}
-
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getFaecher(api.schema);
-		const mapKatalogeintraege = new Map<number, FaecherListeEintrag>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
-	}
-
-	setEintrag = async (auswahl: FaecherListeEintrag) => {
-		const daten = await api.server.getFach(api.schema, auswahl.id)
-		this.setPatchedState({ auswahl, daten })
-	}
-
-	gotoEintrag = async (eintrag: FaecherListeEintrag) => {
-		await RouteManager.doRoute(routeKatalogFaecher.getRoute(eintrag.id));
-	}
-
-	patch = async (data : Partial<FachDaten>) => {
-		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchFach(data, api.schema, this.daten.id);
-		Object.assign(this.daten, data);
-	}
-
-}
-export class RouteDataKatalogFaecherx {
-	auswahl: ShallowRef<FaecherListeEintrag | undefined> = shallowRef(undefined);
-	listFaecher: List<FaecherListeEintrag> = new ArrayList();
-	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
-
-	public async ladeListe() {
-		this.listFaecher = await api.server.getFaecher(api.schema);
-		const mapKurse = new Map<number, FaecherListeEintrag>();
-		for (const l of this.listFaecher)
-			mapKurse.set(l.id, l);
-		this.mapFaecher = mapKurse;
-	}
-
-	public async onSelect(item?: FaecherListeEintrag) {
-		if (item === this.auswahl.value)
-			return;
-		if (item === undefined) {
-			this.auswahl.value = undefined;
-		} else {
-			this.auswahl.value = item;
-		}
-	}
-
-	setFach = async (value: FaecherListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeKatalogFaecher.name, params: { } });
-			return;
-		}
-		const redirect_name: string = (routeKatalogFaecher.selectedChild === undefined) ? routeKatalogFachDaten.name : routeKatalogFaecher.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
-	}
-}
+import { RouteDataKatalogFaecher } from "./RouteDataKatalogFaecher";
 
 const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
@@ -155,24 +40,20 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
-			return;
-		let eintrag: FaecherListeEintrag | undefined;
-		if (!to_params.id && this.data.auswahl)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
-			return this.getRoute(eintrag?.id);
-		}
-		else {
+		if (to_params.id === undefined) {
+			await this.data.ladeListe();
+		} else {
 			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined) {
-				return;
+			const eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined && this.data.auswahl !== undefined) {
+				await this.data.ladeListe();
+				return this.getRoute(this.data.auswahl.id);
 			}
+			else if (eintrag)
+				await this.data.setEintrag(eintrag);
 		}
-		if (eintrag !== undefined)
-			await this.data.setEintrag(eintrag);
+		if (to.name === this.name && this.data.auswahl !== undefined)
+			return this.getRoute(this.data.auswahl.id);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

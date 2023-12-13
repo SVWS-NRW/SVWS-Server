@@ -17,6 +17,10 @@ export class BKAnlageAFach extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach'].includes(name);
 	}

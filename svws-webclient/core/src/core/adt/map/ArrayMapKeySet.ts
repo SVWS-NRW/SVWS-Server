@@ -78,7 +78,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		return this._map.remove(obj) !== null;
 	}
 
-	public containsAll(collection : Collection<unknown> | null) : boolean {
+	public containsAll(collection : Collection<any> | null) : boolean {
 		if ((collection === null) || (this as unknown === collection as unknown))
 			return true;
 		for (const obj of collection)
@@ -91,7 +91,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		throw new UnsupportedOperationException("addAll: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).")
 	}
 
-	public retainAll(collection : Collection<unknown> | null) : boolean {
+	public retainAll(collection : Collection<any> | null) : boolean {
 		if (collection === null)
 			throw new NullPointerException()
 		let changed : boolean = false;
@@ -107,7 +107,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		return changed;
 	}
 
-	public removeAll(collection : Collection<unknown> | null) : boolean {
+	public removeAll(collection : Collection<any> | null) : boolean {
 		if (collection === null)
 			throw new NullPointerException()
 		let removed : boolean = false;
@@ -122,6 +122,10 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 
 	public clear() : void {
 		this._map.clear();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapKeySet';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

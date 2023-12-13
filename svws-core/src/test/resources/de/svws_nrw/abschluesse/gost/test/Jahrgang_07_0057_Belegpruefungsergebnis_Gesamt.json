@@ -16,6 +16,10 @@
     "code" : "ANZ_11_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

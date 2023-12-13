@@ -42,6 +42,10 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung'].includes(name);
 	}

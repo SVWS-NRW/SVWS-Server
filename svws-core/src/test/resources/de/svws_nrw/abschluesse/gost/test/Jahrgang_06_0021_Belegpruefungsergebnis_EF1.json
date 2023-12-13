@@ -4,6 +4,10 @@
     "code" : "KU_MU_10",
     "art" : "BELEGUNG",
     "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden"
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

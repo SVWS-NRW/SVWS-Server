@@ -27,6 +27,10 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung'].includes(name);
 	}

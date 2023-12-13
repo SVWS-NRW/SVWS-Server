@@ -138,6 +138,10 @@ export class GostFachUtils extends JavaObject {
 		return ((fach !== null) && (fach.istMoeglichAbiLK) && (fach.istMoeglichQ11) && (fach.istMoeglichQ12) && (fach.istMoeglichQ21) && (fach.istMoeglichQ22)) && ((GostFachbereich.FREMDSPRACHE.hat(fach) && !fach.istFremdSpracheNeuEinsetzend) || (GostFachbereich.MATHEMATIK.hat(fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH.hat(fach)) || (GostFachbereich.DEUTSCH.hat(fach)));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostFachUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFachUtils'].includes(name);
 	}

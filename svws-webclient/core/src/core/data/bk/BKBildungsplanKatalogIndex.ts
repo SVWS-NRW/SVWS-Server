@@ -25,6 +25,10 @@ export class BKBildungsplanKatalogIndex extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.bk.BKBildungsplanKatalogIndex';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplanKatalogIndex'].includes(name);
 	}

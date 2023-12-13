@@ -201,6 +201,10 @@ export class AbgangsartenManager extends JavaObject {
 		return SchulabschlussBerufsbildend.getByKuerzelStatistik(abschlussart.kuerzel.substring(0, 1));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schule.AbgangsartenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.AbgangsartenManager'].includes(name);
 	}

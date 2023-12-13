@@ -193,8 +193,12 @@ export class SchulabschlussBerufsbildend extends JavaEnum<SchulabschlussBerufsbi
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

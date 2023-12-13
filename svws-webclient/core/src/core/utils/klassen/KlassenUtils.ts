@@ -26,6 +26,10 @@ export class KlassenUtils extends JavaObject {
 		throw new IllegalStateException("Instantiation not allowed")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klassen.KlassenUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klassen.KlassenUtils'].includes(name);
 	}

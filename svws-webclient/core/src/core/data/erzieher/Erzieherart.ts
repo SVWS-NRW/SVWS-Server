@@ -17,6 +17,10 @@ export class Erzieherart extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.erzieher.Erzieherart';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.erzieher.Erzieherart'].includes(name);
 	}

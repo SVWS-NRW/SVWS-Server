@@ -1,5 +1,5 @@
 <template>
-	<div v-if="auswahl !== undefined && schuleInfo !== undefined" class="page--flex">
+	<div v-if="auswahl !== undefined" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -10,7 +10,7 @@
 							<template v-else> Revision: {{ auswahl.revision }} </template>
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ schuleInfo.schulNr }} {{ schuleInfo.schulform }} {{ schuleInfo.bezeichnung }} | {{ schuleInfo.strassenname }} {{ schuleInfo.hausnummer }} {{ schuleInfo.hausnummerZusatz ?? '' }} {{ schuleInfo.ort }}</span>
+					<span v-if="info !== undefined" class="svws-subline">{{ info.schulNr }} {{ info.schulform }} {{ info.bezeichnung }} | {{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -26,8 +26,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { SchemaAppProps } from "./SSchemaAppProps";
 
 	const props = defineProps<SchemaAppProps>();
+
+	const info = computed(() => props.schuleInfo())
 
 </script>

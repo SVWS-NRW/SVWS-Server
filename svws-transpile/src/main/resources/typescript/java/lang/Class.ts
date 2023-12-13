@@ -4,6 +4,7 @@ import type { TranspiledObject } from './TranspiledObject';
 export class Class<T extends TranspiledObject> implements TranspiledObject {
 
 	protected simplename : string;
+	protected canonicalname : string;
 
 	public constructor(obj : T) {
 		if (obj instanceof Class)
@@ -12,6 +13,12 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
 			this.simplename = Object.getPrototypeOf(obj);
 		else
 			this.simplename = typeof obj;
+		this.canonicalname = this.transpilerCanonicalName();
+	}
+
+
+	public getCanonicalName() : string {
+		return this.canonicalname;
 	}
 
 
@@ -25,10 +32,14 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
 	}
 
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Class';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Object',
-			'java.lang.class',
+			'java.lang.Class',
 			'java.io.Serializable',
 			'java.lang.reflect.AnnotatedElement',
 			'java.lang.reflect.GenericDeclaration',

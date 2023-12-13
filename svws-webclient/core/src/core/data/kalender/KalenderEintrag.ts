@@ -62,6 +62,10 @@ export class KalenderEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kalender.KalenderEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kalender.KalenderEintrag'].includes(name);
 	}

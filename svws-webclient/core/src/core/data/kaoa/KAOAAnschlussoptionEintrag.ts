@@ -89,6 +89,10 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag'].includes(name);
 	}

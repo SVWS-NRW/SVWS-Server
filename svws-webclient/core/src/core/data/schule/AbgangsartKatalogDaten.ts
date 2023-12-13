@@ -35,6 +35,10 @@ export class AbgangsartKatalogDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.AbgangsartKatalogDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.AbgangsartKatalogDaten'].includes(name);
 	}

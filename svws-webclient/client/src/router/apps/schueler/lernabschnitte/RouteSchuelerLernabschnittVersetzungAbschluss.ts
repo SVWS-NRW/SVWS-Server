@@ -14,7 +14,7 @@ export class RouteSchuelerLernabschnittVersetzungAbschluss extends RouteNode<unk
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.versetzung", "versetzung", SSchuelerLernabschnittAllgmein);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Versetzung/Abschluss";
 		super.children = [

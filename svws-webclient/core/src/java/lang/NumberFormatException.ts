@@ -2,6 +2,10 @@ import { IllegalArgumentException } from './IllegalArgumentException';
 
 export class NumberFormatException extends IllegalArgumentException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.NumberFormatException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.NumberFormatException',

@@ -27,6 +27,10 @@ export class LehrerUtils extends JavaObject {
 		throw new IllegalStateException("Instantiation not allowed")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.lehrer.LehrerUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.lehrer.LehrerUtils'].includes(name);
 	}

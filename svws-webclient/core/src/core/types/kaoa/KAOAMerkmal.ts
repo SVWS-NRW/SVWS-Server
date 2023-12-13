@@ -296,8 +296,12 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOAMerkmal';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmal', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmal', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

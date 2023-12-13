@@ -123,8 +123,12 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.Einschulungsart';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Einschulungsart', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Einschulungsart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

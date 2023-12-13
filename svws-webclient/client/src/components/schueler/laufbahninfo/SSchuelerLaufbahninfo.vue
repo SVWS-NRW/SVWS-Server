@@ -4,51 +4,75 @@
 			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
 		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
-			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge">
+			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
+				<template #cell(sprache)="{ value }">
+					<svws-ui-select title="Sprache" headless :model-value="value" @update:model-value="sprache=>sprache && patchSprachbelegung({sprache})" :items="sprachen(value).value" :item-text="i=>i" />
+				</template>
+				<template #cell(reihenfolge)="{ rowData }">
+					<svws-ui-input-number title="Reihenfolge" headless :model-value="rowData.reihenfolge" @update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge, sprache: rowData.sprache})" :min="1" :max="9" />
+				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
-					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungVonAbschnitt" @change="belegungVonAbschnitt => patchSprachbelegung({belegungVonAbschnitt: Number(belegungVonAbschnitt), sprache: rowData.sprache})" headless />
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
+						<span class="opacity-50">|</span>
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 1}">2</span>
+					</div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
-					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungVonJahrgang" @change="belegungVonJahrgang => patchSprachbelegung({belegungVonJahrgang, sprache: rowData.sprache})" headless />
+					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
-					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungBisAbschnitt" @change="belegungBisAbschnitt => patchSprachbelegung({belegungBisAbschnitt: Number(belegungBisAbschnitt), sprache: rowData.sprache})" headless />
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 2}">1</span>
+						<span class="opacity-50">|</span>
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 1}">2</span>
+					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungBisJahrgang" @change="belegungBisJahrgang => patchSprachbelegung({belegungBisJahrgang, sprache: rowData.sprache})" headless />
+					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungBisJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
 					<svws-ui-checkbox v-else-if="rowData.sprache === 'H'" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
 					<template v-else-if="rowData.sprache === 'L'">
-						<svws-ui-checkbox v-model="hatKleinesLatinum" headless title="Kleines Latinum">Kleines Latinum</svws-ui-checkbox>
-						<svws-ui-checkbox v-model="hatLatinum" headless title="Latinum">Latinum</svws-ui-checkbox>
+						<svws-ui-select headless :items="latein" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
 					</template>
 					<template v-else>
-						<svws-ui-select title="Referenzniveau" headless :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @change="(referenzniveau: Sprachreferenzniveau) => patchSprachbelegung({referenzniveau: referenzniveau.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="(i: Sprachreferenzniveau)=>i.name()" />
+						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten.kuerzel ?? null, sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
 					</template>
 				</template>
-				<!--  -->
+				<template #actions>
+					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
+					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
+					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><i-ri-calculator-line /></svws-ui-button>
+					<svws-ui-button @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
-			<svws-ui-input-wrapper>
-				<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen">
-					<!-- -->
-				</svws-ui-table>
-			</svws-ui-input-wrapper>
+			<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
+				<template #actions>
+					<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
+					<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+				</template>
+				<!-- -->
+			</svws-ui-table>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed, ref } from 'vue';
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
-	import type { DataTableColumn, InputDataType } from "@ui";
-	import { computed } from 'vue';
-	import { Sprachreferenzniveau } from '@core';
+	import type { DataTableColumn } from "@ui";
+	import type { Sprachbelegung} from '@core';
+	import { Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
+
+	const auswahl = ref([]);
+	const auswahlPr = ref([]);
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
 		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache" },
@@ -62,50 +86,63 @@
 
 	const colsSprachpruefungen: Array<DataTableColumn> = [
 		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
+		{ key: "istHSUPruefung", label: "Prüfungsart", tooltip: "Art der Prüfung", minWidth: 4 },
+		{ key: "kannErstePflichtfremdspracheErsetzen", label: "Ersetzt", tooltip: "Was wird ersetzt", minWidth: 4 },
+		{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgeführt", tooltip: "Kann die Belegung als fortgeführte Fremdsprache erlauben", align: 'center', minWidth: 4, span: 0.5 },
 		{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 },
 		{ key: "anspruchsniveauId", label: "Anspruch", tooltip: "Anspruchsniveau", minWidth: 4 },
-		{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
-		{ key: "sprache", label: "Ersetzt", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
-		{ key: "istHSUPruefung", label: "HSU", tooltip: "Ist eine HSU-Prüfung", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "istFeststellungspruefung", label: "Feststellungsprüfung", tooltip: "Ist eine Feststellungsprüfung", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "kannErstePflichtfremdspracheErsetzen", label: "1. FS", tooltip: "Kann die erster Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "kannZweitePflichtfremdspracheErsetzen", label: "2. FS", tooltip: "Kann die zweite Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "kannWahlpflichtfremdspracheErsetzen", label: "WP FS", tooltip: "Kann die Wahlpflicht-Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgeführt", tooltip: "Kann die Belegung als fortgeführte Fremdsprache erlauben", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "referenzniveau", label: "Niveau", tooltip: "Referenzniveau", minWidth: 6 },
 		{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
+		{ key: "referenzniveau", label: "Niveau", tooltip: "Referenzniveau", minWidth: 6 },
+		{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
+		{ key: "sprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
 	];
 
-	function abschnitt(item: InputDataType) {
-		if (typeof item !== 'number')
-			return false;
-		return (item < 1 || item > 2)
+	const verfuegbareSprachen = computed(() => {
+		const belegungen = new Set();
+		const sprachen = [];
+		for (const b of props.sprachbelegungen())
+			belegungen.add(b.sprache);
+		for (const k of ZulaessigesFach.getListFremdsprachenKuerzelAtomar()) {
+			const sprache = ZulaessigesFach.getFremdspracheByKuerzelAtomar(k);
+			if (!sprache.daten.istErsatzPflichtFS && !sprache.daten.istHKFS && !sprache.daten.istAusRegUFach && !belegungen.has(k))
+				sprachen.push(k);
+		}
+		return sprachen;
+	})
+
+	const sprachen = (s: string) => computed(() => [s, ...verfuegbareSprachen.value])
+
+	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
+	const latinum = computed(()=> {
+		if (hatKleinesLatinum.value)
+			return latein[0];
+		if (hatLatinum.value)
+			return latein[1];
+		return
+	})
+
+	async function patchLatinum(item:any) {
+		console.log(item)
+		if (item === undefined)
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: false, sprache: 'L'});
+		if (item === latein[0])
+			await props.patchSprachbelegung({hatKleinesLatinum: true, hatLatinum: false, sprache: 'L'});
+		if (item === latein[1])
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: true, sprache: 'L'});
 	}
 
-	function jahrgang(item: InputDataType) {
-		if (typeof item !== 'string')
-			return false;
-		return (Number(item) < 0 || Number(item) > 13)
-	}
+	const hatKleinesLatinum = computed<boolean>(() => {
+		for (const sprache of props.sprachbelegungen())
+			if (sprache.sprache === 'L')
+				return sprache.hatKleinesLatinum;
+		return false;
+	})
 
-	const hatKleinesLatinum = computed<boolean>({
-		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'L')
-					return sprache.hatKleinesLatinum;
-			return false;
-		},
-		set: (hatKleinesLatinum) => void props.patchSprachbelegung({hatKleinesLatinum, sprache: 'L'})
-	});
-
-	const hatLatinum = computed<boolean>({
-		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'L')
-					return sprache.hatLatinum;
-			return false;
-		},
-		set: (hatLatinum) => void props.patchSprachbelegung({hatLatinum, sprache: 'L'})
+	const hatLatinum = computed<boolean>(() => {
+		for (const sprache of props.sprachbelegungen())
+			if (sprache.sprache === 'L')
+				return sprache.hatLatinum;
+		return false;
 	});
 
 	const hatGraecum = computed<boolean>({
@@ -128,4 +165,37 @@
 		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum, sprache: 'H'})
 	});
 
+	async function remove() {
+		for (const sprache of auswahl.value)
+			await props.removeSprachbelegung(sprache);
+		auswahl.value = [];
+	}
+	async function suchen() {
+		//suche Sprache
+	}
+	async function ermitteln() {
+		//ermittel Sprache
+	}
+
+	async function hinzufuegen() {
+		if (verfuegbareSprachen.value.length === 0)
+			return;
+		const data: Partial<Sprachbelegung> = {};
+		data.sprache = verfuegbareSprachen.value[0];
+		data.reihenfolge = props.sprachbelegungen().size() + 1;
+		data.belegungVonAbschnitt = 1;
+		data.belegungBisAbschnitt = 2;
+		data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
+		await props.addSprachbelegung(data);
+	}
+
+	async function hinzufuegenPruefungen() {
+		const data = new Sprachpruefung();
+		await props.addSprachpruefung(data);
+	}
+
+	async function removePruefungen() {
+		for (const pruefung of auswahlPr.value)
+			await props.removeSprachpruefung(pruefung);
+	}
 </script>

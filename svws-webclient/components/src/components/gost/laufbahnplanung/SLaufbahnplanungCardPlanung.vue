@@ -263,29 +263,30 @@
 </script>
 
 <style lang="postcss" scoped>
-.svws-ergebnis-badge {
-  @apply inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-lg w-full h-full border-2 border-white dark:border-black;
-}
+	.svws-ergebnis-badge {
+		@apply inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-lg w-full h-full border-2 border-white dark:border-black;
+	}
 
-.svws-ui-tfoot--data {
-  .tooltip-trigger {
-    @apply -m-2;
-  }
-}
+	.svws-ui-tfoot--data {
+		.tooltip-trigger {
+			@apply -m-2;
+		}
+	}
 
-.svws-ergebnis--not-enough {
-  @apply bg-error text-white;
-}
+	.svws-ergebnis--not-enough {
+		@apply bg-error text-white;
+	}
 
-.svws-ergebnis--low {
-  @apply bg-amber-400;
-}
+	.svws-ergebnis--low {
+		@apply bg-amber-400;
+	}
 
-.svws-ergebnis--good {
-  @apply bg-success;
-}
+	.svws-ergebnis--good {
+		@apply bg-success;
+	}
 
-.svws-ergebnis--more {
-  @apply bg-lime-700 text-white;
-}
+	.svws-ergebnis--more {
+		@apply bg-lime-700 text-white;
+	}
+
 </style>

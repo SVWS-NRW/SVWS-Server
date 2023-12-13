@@ -35,7 +35,7 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 	public equals(o : unknown) : boolean {
 		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
-		const e : JavaMapEntry<unknown, unknown> | null = cast_java_util_Map_Entry(o);
+		const e : JavaMapEntry<any, any> | null = cast_java_util_Map_Entry(o);
 		return JavaObject.equalsTranspiler(this._key, (e.getKey())) && (JavaObject.equalsTranspiler(this._val, (e.getValue())));
 	}
 
@@ -53,6 +53,10 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 
 	public setValue(value : V) : V {
 		throw new UnsupportedOperationException()
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapEntry';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

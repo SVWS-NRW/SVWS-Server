@@ -104,6 +104,10 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 		return this._menge.size();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraftMenge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraftMenge'].includes(name);
 	}

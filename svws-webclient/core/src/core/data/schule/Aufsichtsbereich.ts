@@ -22,6 +22,10 @@ export class Aufsichtsbereich extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.Aufsichtsbereich';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.Aufsichtsbereich'].includes(name);
 	}

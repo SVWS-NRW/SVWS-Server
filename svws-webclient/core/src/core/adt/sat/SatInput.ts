@@ -490,6 +490,10 @@ export class SatInput extends JavaObject {
 		return true;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.sat.SatInput';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatInput'].includes(name);
 	}

@@ -132,7 +132,7 @@ export class Note extends JavaEnum<Note> {
 	/**
 	 * Der Noteneintrag "kein Unterricht wegen Lehrermangel" mit dem Wert LM.
 	 */
-	public static readonly LEHRERMANGEL : Note = new Note("LEHRERMANGEL", 24, 23, 9000, null, "LM", "(kein Unterricht wegen Lehrermangel)", "--------------------", null, null);
+	public static readonly LEHRERMANGEL : Note = new Note("LEHRERMANGEL", 24, 23, 9000, null, "LM", "(kein Unterricht wegen Lehrermangels)", "--------------------", null, null);
 
 	/**
 	 * Der Noteneintrag "abgemeldet" mit dem Wert AM.
@@ -613,8 +613,12 @@ export class Note extends JavaEnum<Note> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.Note';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.Note', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.Note', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

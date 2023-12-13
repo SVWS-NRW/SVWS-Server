@@ -80,7 +80,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 			return true;
 		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map')))))
 			return false;
-		const mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
+		const mapO : JavaMap<any, any> | null = cast_java_util_Map(o);
 		if (mapO.size() !== this.size())
 			return false;
 		for (const e of this.entrySet())
@@ -331,7 +331,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllKeys(c : Collection<unknown>) : boolean {
+	bcContainsAllKeys(c : Collection<any>) : boolean {
 		return this._par.bcContainsAllKeys(c, this._iv);
 	}
 
@@ -355,7 +355,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllEntries(c : Collection<unknown>) : boolean {
+	bcContainsAllEntries(c : Collection<any>) : boolean {
 		return this._par.bcContainsAllEntries(c, this._iv);
 	}
 
@@ -368,7 +368,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
-	bcContainsAllValues(c : Collection<unknown>) : boolean {
+	bcContainsAllValues(c : Collection<any>) : boolean {
 		return this._par.bcContainsAllValues(c, this._iv);
 	}
 
@@ -392,7 +392,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	bcRemoveAllKeys(c : Collection<unknown>) : boolean {
+	bcRemoveAllKeys(c : Collection<any>) : boolean {
 		return this._par.bcRemoveAllKeys(c, this._iv);
 	}
 
@@ -415,7 +415,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	bcRemoveAllEntries(c : Collection<unknown>) : boolean {
+	bcRemoveAllEntries(c : Collection<any>) : boolean {
 		return this._par.bcRemoveAllEntries(c, this._iv);
 	}
 
@@ -447,7 +447,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	bcRetainAllKeys(c : Collection<unknown>) : boolean {
+	bcRetainAllKeys(c : Collection<any>) : boolean {
 		const mapRetain : AVLMap<K, K> = new AVLMap();
 		for (const obj of c) {
 			const key : K = obj as unknown as K;
@@ -473,7 +473,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	bcRetainAllEntries(c : Collection<unknown>) : boolean {
+	bcRetainAllEntries(c : Collection<any>) : boolean {
 		const mapSave : AVLMap<K, V> = new AVLMap();
 		const setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
 		for (const o of c)
@@ -790,6 +790,10 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	private _createSet(from : K, fromInc : boolean, to : K, toInc : boolean, asc : boolean) : AVLMapSubKeySet<K, V> {
 		return new AVLMapSubKeySet(this._createMap(from, fromInc, to, toInc, asc));
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubMap';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -22,6 +22,10 @@ export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten | null, 
 		return abidaten;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierAlgorithmus'].includes(name);
 	}

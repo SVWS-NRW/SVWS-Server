@@ -34,6 +34,10 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 			this._dynDaten.aktionZustand2Speichern();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusGreedy1b';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusGreedy1b', 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}

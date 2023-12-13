@@ -32,6 +32,10 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus'].includes(name);
 	}

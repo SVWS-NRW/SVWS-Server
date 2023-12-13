@@ -80,8 +80,12 @@ export class SchildReportingAttributTyp extends JavaEnum<SchildReportingAttribut
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schild3.SchildReportingAttributTyp';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

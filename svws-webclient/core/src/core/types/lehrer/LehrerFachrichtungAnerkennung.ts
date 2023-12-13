@@ -137,8 +137,12 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

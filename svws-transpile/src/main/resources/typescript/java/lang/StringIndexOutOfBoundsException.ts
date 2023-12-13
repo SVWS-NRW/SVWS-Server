@@ -11,6 +11,10 @@ export class StringIndexOutOfBoundsException extends IndexOutOfBoundsException {
 			super("String index invalid: " + param);
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.lang.StringIndexOutOfBoundsException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.StringIndexOutOfBoundsException',

@@ -20,6 +20,10 @@ export class BerufskollegFachklassenKatalog extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog'].includes(name);
 	}

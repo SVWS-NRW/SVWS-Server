@@ -24,6 +24,10 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 		return dynDaten.gibBestesMatching();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus'].includes(name);
 	}

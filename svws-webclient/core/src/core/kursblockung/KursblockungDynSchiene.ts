@@ -137,6 +137,10 @@ export class KursblockungDynSchiene extends JavaObject {
 		return summe;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungDynSchiene';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchiene'].includes(name);
 	}

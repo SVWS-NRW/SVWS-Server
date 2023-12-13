@@ -33,6 +33,10 @@ export class StundenplanListUtils extends JavaObject {
 		return last;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplan.StundenplanListUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanListUtils'].includes(name);
 	}

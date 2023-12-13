@@ -80,6 +80,10 @@ export class Throwable extends Error implements TranspiledObject {
 		return JSON.stringify(this, prepareAttributeOrderForStringify());
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.lang.Throwable';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Throwable',

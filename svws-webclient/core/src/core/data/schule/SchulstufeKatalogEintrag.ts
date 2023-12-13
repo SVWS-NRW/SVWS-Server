@@ -64,6 +64,10 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag', 'de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}

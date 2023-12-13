@@ -22,6 +22,10 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal'].includes(name);
 	}

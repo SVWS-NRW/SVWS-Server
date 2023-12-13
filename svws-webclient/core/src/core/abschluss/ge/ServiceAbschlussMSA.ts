@@ -349,6 +349,10 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA'].includes(name);
 	}

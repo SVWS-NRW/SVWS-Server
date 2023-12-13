@@ -1,12 +1,12 @@
 import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
-	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile } from "@core";
+	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile, SimpleOperationResponse } from "@core";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
 	getPdfWahlbogen: (title: string) => Promise<ApiFile>;
 	exportLaufbahnplanung: () => Promise<ApiFile>;
-	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
+	importLaufbahnplanung: (data: FormData) => Promise<boolean|SimpleOperationResponse>;
 	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;

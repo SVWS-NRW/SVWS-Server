@@ -140,8 +140,12 @@ export class HerkunftSonstige extends JavaEnum<HerkunftSonstige> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.HerkunftSonstige';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.HerkunftSonstige', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftSonstige', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

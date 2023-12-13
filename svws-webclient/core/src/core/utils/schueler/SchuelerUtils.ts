@@ -27,6 +27,10 @@ export class SchuelerUtils extends JavaObject {
 		throw new IllegalStateException("Instantiation not allowed")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schueler.SchuelerUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerUtils'].includes(name);
 	}

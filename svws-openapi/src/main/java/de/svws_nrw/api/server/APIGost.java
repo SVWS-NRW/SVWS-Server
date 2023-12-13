@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.MultipleBinaryMultipartBody;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -66,6 +67,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import java.io.InputStream;
 import java.util.List;
@@ -1519,5 +1521,65 @@ public class APIGost {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importJSON(id, daten),
         		request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
     }
+
+
+    /**
+     * Die OpenAPI-Methode für den Import von Laufbahnplanungsdaten mehrerer Schüler der gymnasialen Oberstufe.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param multipart     Die Laufbahnplanungsdateien als GZIP-komprimierte JSON
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/laufbahnplanung/import")
+    @Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein.",
+               description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+    public Response importGostSchuelerLaufbahnplanungen(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Laufbahnplanungsdatein", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA, schema = @Schema(implementation = MultipleBinaryMultipartBody.class))) @MultipartForm final MultipartFormDataInput multipart,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).importGZip(multipart),
+        		request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der gymnasialen Oberstufe
+     * in Bezug auf die angegebenen Schüler als GZIP-Json.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param ids       die Liste der IDs der Schüler
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die Laufbahnplanungsdaten
+     */
+    @POST
+    @Produces("application/zip")
+    @Path("/laufbahnplanung/export")
+    @Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler (GZip-komprimiert).",
+    	description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler aus der Datenbank "
+    			+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
+    			+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe",
+                 content = @Content(mediaType = "application/zip",
+                 schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
+    public Response exportGostSchuelerLaufbahnplanungen(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Liste der IDs der Schüler", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+    		final List<Long> ids, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn).exportGZip(ids),
+        		request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+    }
+
 
 }

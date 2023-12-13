@@ -191,7 +191,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					kl.kuerzel = lehrer.Kuerzel;
 					kl.vorname = lehrer.Vorname;
 					kl.nachname = lehrer.Nachname;
-					kl.istExtern = (abschnitt != null) && ((abschnitt.StammschulNr != null) || (!abschnitt.StammschulNr.equals("" + schule.SchulNr)));
+					kl.istExtern = (abschnitt != null) && (abschnitt.StammschulNr != null) && (!abschnitt.StammschulNr.equals("" + schule.SchulNr));
 					kl.reihenfolge = kurslehrer.Reihenfolge;
 					kl.wochenstunden = kurslehrer.Wochenstunden;
 					manager.kursAddLehrkraft(kurslehrer.Blockung_Kurs_ID, kl);

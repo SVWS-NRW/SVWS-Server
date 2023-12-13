@@ -171,6 +171,10 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, true);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9', 'de.svws_nrw.core.Service'].includes(name);
 	}

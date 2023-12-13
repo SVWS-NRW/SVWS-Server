@@ -2,6 +2,10 @@ import { RuntimeException } from "../../java/lang/RuntimeException";
 
 export class ConcurrentModificationException extends RuntimeException {
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.ConcurrentModificationException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.ConcurrentModificationException',

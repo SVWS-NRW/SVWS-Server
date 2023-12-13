@@ -432,6 +432,10 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		return this._katalog;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager'].includes(name);
 	}

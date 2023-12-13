@@ -24,6 +24,10 @@ export class KursUtils extends JavaObject {
 		throw new IllegalStateException("Instantiation not allowed")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.kurse.KursUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.kurse.KursUtils'].includes(name);
 	}

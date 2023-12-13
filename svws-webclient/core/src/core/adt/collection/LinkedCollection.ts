@@ -197,7 +197,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		} else throw new Error('invalid method overload');
 	}
 
-	public containsAll(c : Collection<unknown> | null) : boolean {
+	public containsAll(c : Collection<any> | null) : boolean {
 		if ((c === null) || (this as unknown === c as unknown))
 			return true;
 		for (const o of c)
@@ -232,7 +232,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return result;
 	}
 
-	public removeAll(c : Collection<unknown> | null) : boolean {
+	public removeAll(c : Collection<any> | null) : boolean {
 		if (c === null)
 			return false;
 		if (this as unknown === c as unknown) {
@@ -249,7 +249,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return result;
 	}
 
-	public retainAll(c : Collection<unknown> | null) : boolean {
+	public retainAll(c : Collection<any> | null) : boolean {
 		if ((this as unknown === c as unknown) || (this._head === null))
 			return false;
 		if (c === null) {
@@ -287,11 +287,11 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			return false;
 		if (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('java.util.Collection')))))
 			return false;
-		const other : Collection<unknown> = cast_java_util_Collection(obj);
+		const other : Collection<any> = cast_java_util_Collection(obj);
 		if (this._size !== other.size())
 			return false;
 		const iter : JavaIterator<E> = this.iterator();
-		const otherIter : JavaIterator<unknown> = other.iterator();
+		const otherIter : JavaIterator<any> = other.iterator();
 		while (iter.hasNext()) {
 			if (!JavaObject.equalsTranspiler(iter.next(), (otherIter.next())))
 				return false;
@@ -621,6 +621,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	 */
 	public set(index : number, element : E) : E {
 		return this.find(index).setValue(element);
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.collection.LinkedCollection';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

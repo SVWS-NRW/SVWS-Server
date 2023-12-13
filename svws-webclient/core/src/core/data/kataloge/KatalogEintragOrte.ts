@@ -42,6 +42,10 @@ export class KatalogEintragOrte extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kataloge.KatalogEintragOrte';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEintragOrte'].includes(name);
 	}

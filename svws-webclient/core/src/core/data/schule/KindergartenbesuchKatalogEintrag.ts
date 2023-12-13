@@ -65,6 +65,10 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.KindergartenbesuchKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.KindergartenbesuchKatalogEintrag'].includes(name);
 	}

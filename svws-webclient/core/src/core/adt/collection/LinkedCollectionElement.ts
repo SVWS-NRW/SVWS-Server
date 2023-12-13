@@ -91,6 +91,10 @@ export class LinkedCollectionElement<E> extends JavaObject {
 		this._next = next;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.collection.LinkedCollectionElement';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.collection.LinkedCollectionElement'].includes(name);
 	}

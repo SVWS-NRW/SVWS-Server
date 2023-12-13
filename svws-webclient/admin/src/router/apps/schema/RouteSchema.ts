@@ -45,7 +45,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 				return this.getChildRoute(this.data.auswahl.name);
 			return;
 		}
-		await this.data.setSchema(this.data.mapSchema.get(to_params.schema));
+		await this.data.setSchema(this.data.mapSchema.get(to_params.schema.toLocaleLowerCase()));
 		if (to.name === this.name)
 			return this.getChildRoute(to_params.schema);
 		if (!to.name.startsWith(this.data.view.name))
@@ -61,7 +61,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 	public getChildRoute(schema: string) : RouteLocationRaw {
 		const redirect_name: string = (routeSchema.selectedChild === undefined) ? routeSchemaUebersicht.name : routeSchema.selectedChild.name;
-		return { name: redirect_name, params: { schema: schema } };
+		return { name: redirect_name, params: { schema } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchemaAuswahlProps {
@@ -84,7 +84,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchemaAppProps {
 		return {
 			auswahl: this.data.auswahl,
-			schuleInfo: this.data.schuleInfo,
+			schuleInfo: () => this.data.schuleInfo,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),

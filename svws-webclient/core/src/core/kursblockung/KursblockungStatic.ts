@@ -44,6 +44,10 @@ export class KursblockungStatic extends JavaObject {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungStatic';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungStatic'].includes(name);
 	}

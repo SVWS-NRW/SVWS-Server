@@ -25,6 +25,10 @@ export class Random extends JavaObject {
 		return Math.random() < 0.5 ? true : false;
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.Random';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.Random',

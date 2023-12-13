@@ -112,6 +112,10 @@ export class LehrerStammdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerStammdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerStammdaten'].includes(name);
 	}

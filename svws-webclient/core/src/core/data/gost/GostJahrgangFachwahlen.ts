@@ -19,6 +19,10 @@ export class GostJahrgangFachwahlen extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostJahrgangFachwahlen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachwahlen'].includes(name);
 	}

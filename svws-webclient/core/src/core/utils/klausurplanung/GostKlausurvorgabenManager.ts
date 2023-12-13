@@ -221,9 +221,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	public vorgabeGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0) {
 			let vorgaben : List<GostKlausurvorgabe> | null = new ArrayList();
-			for (let vQuartal of this._vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
-				vorgaben.addAll(vQuartal);
-			}
+			if (this._vorgabenmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
+				for (let vQuartal of this._vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+					vorgaben.addAll(vQuartal);
+				}
 			return vorgaben;
 		}
 		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
@@ -297,6 +298,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		if (listIndex === 0)
 			return null;
 		return vorgabenSchuljahr.get(listIndex - 1);
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -305,8 +305,12 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

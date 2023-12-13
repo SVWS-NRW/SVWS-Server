@@ -553,6 +553,26 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	public static readonly KOMBI_2 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 107, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
 
 	/**
+	 * BelegungsfehlerArt WAEHLBARKEIT_0
+	 */
+	public static readonly WAEHLBARKEIT_0 : GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_0", 108, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.");
+
+	/**
+	 * BelegungsfehlerArt WAEHLBARKEIT_1
+	 */
+	public static readonly WAEHLBARKEIT_1 : GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_1", 109, "WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.");
+
+	/**
+	 * BelegungsfehlerArt WAEHLBARKEIT_2
+	 */
+	public static readonly WAEHLBARKEIT_2 : GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_2", 110, "WAEHLBARKEIT_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.", "Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.");
+
+	/**
+	 * BelegungsfehlerArt WAEHLBARKEIT_3
+	 */
+	public static readonly WAEHLBARKEIT_3 : GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_3", 111, "WAEHLBARKEIT_3", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.", "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.");
+
+	/**
 	 * Der eindeutige Code des Belegungsfehlers
 	 */
 	public readonly code : string;
@@ -661,8 +681,12 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.GostBelegungsfehler';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

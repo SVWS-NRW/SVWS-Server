@@ -75,7 +75,7 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		throw new UnsupportedOperationException("remove: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
 	}
 
-	public containsAll(collection : Collection<unknown> | null) : boolean {
+	public containsAll(collection : Collection<any> | null) : boolean {
 		if ((collection === null) || (this as unknown === collection as unknown))
 			return true;
 		for (const obj of collection)
@@ -88,16 +88,20 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		throw new UnsupportedOperationException("addAll: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.")
 	}
 
-	public removeAll(c : Collection<unknown> | null) : boolean {
+	public removeAll(c : Collection<any> | null) : boolean {
 		throw new UnsupportedOperationException("removeAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
 	}
 
-	public retainAll(c : Collection<unknown> | null) : boolean {
+	public retainAll(c : Collection<any> | null) : boolean {
 		throw new UnsupportedOperationException("retainAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
 	}
 
 	public clear() : void {
 		this._map.clear();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapCollection';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -52,6 +52,10 @@ export class SatWrapper1 extends JavaObject implements JavaFunction<SatInput, Sa
 		return SatOutput.createCopy(out2, solution1);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.sat.SatWrapper1';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatWrapper1', 'java.util.function.Function'].includes(name);
 	}

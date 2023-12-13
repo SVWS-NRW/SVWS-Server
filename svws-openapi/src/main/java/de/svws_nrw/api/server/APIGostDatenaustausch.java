@@ -136,10 +136,10 @@ public class APIGostDatenaustausch {
 
 
     /**
-     * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der i, Untis-Format GPU001.txt vorliegt.
+     * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der im Untis-Format GPU001.txt vorliegt.
      *
      * @param multipart     Die GPU001.txt
-     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden sollen
+     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
@@ -148,11 +148,15 @@ public class APIGostDatenaustausch {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/untis/import/gpu001")
     @Operation(summary = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.",
-               description = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.")
+        description = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Import des Untis-Stundenplans",
-    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
-    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um den Untis-Stundenplan zu importieren.")
     public Response importStundenplanUntisGPU001(@PathParam("schema") final String schemaname,
     		@RequestBody(description = "Die Textdatei GPU001.txt", required = true, content =

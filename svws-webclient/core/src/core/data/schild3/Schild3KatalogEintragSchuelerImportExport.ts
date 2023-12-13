@@ -57,6 +57,10 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragSchuelerImportExport';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragSchuelerImportExport'].includes(name);
 	}

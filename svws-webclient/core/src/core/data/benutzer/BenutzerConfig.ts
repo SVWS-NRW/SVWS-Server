@@ -20,6 +20,10 @@ export class BenutzerConfig extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.benutzer.BenutzerConfig';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerConfig'].includes(name);
 	}

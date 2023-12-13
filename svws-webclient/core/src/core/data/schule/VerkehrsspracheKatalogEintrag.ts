@@ -73,6 +73,10 @@ export class VerkehrsspracheKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag'].includes(name);
 	}

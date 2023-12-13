@@ -2,7 +2,6 @@ package de.svws_nrw.transpiler.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +48,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 */
 	public static <@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> @NotNull CoreTypeEnumDataManager<@NotNull T, @NotNull U> getManager(final @NotNull Class<@NotNull U> clazz) {
 		@SuppressWarnings("unchecked")
-		final CoreTypeEnumDataManager<T, U> manager = (CoreTypeEnumDataManager<T, U>) _data.get(clazz.getCanonicalName());
+		final CoreTypeEnumDataManager<@NotNull T, @NotNull U> manager = (CoreTypeEnumDataManager<@NotNull T, @NotNull U>) _data.get(clazz.getCanonicalName());
 		if (manager == null)
 			throw new RuntimeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.");
 		return manager;
@@ -138,7 +137,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 			final @NotNull List<@NotNull T> historie = entry.getValue();
 			for (final @NotNull T eintrag : historie) {
 				// Prüfe zunächst die Historie auf plausible Einträge ...
-				if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (eintrag.gueltigBis > 3000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0)))
+				if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000))))
 					throw new RuntimeException(_name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.");
 				schuljahr = (eintrag.gueltigBis == null) ? Integer.MAX_VALUE : eintrag.gueltigBis;
 				// ... dann prüfe, ob die ID doppelt vorkommt ...
@@ -182,7 +181,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 * @return die nicht veränderbare Liste aller Werte
 	 */
 	public @NotNull List<@NotNull U> getWerte() {
-		return Collections.unmodifiableList(_listWerte);
+		return new ArrayList<>(_listWerte);
 	}
 
 
@@ -239,7 +238,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 * @return das Set der Core-Type-Werte
 	 */
 	public @NotNull Set<@NotNull U> getWerteByBezeichnerAsSet(final @NotNull List<@NotNull String> bezeichner) {
-		final @NotNull Set<@NotNull U> result = new HashSet<>();
+		final @NotNull Set<@NotNull U> result = new HashSet<@NotNull U>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -256,7 +255,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	public @NotNull Set<@NotNull U> getWerteByBezeichnerAsNonEmptySet(final @NotNull List<@NotNull String> bezeichner) {
 		if (bezeichner.isEmpty())
 			throw new RuntimeException(_name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.");
-		final @NotNull Set<@NotNull U> result = new HashSet<>();
+		final @NotNull Set<@NotNull U> result = new HashSet<@NotNull U>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -388,7 +387,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 					result.add(wert);
 			_mapSchuljahrToWerte.put(schuljahr, result);
 		}
-		return Collections.unmodifiableList(result);
+		return new ArrayList<>(result);
 	}
 
 }

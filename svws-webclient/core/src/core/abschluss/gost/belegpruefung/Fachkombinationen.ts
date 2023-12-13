@@ -13,7 +13,7 @@ export class Fachkombinationen extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für das Fach Deutsch.
+	 * Erstellt eine neue Belegprüfung für die schulspezifischen Fachkombinationen.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
@@ -63,6 +63,10 @@ export class Fachkombinationen extends GostBelegpruefung {
 	protected pruefeGesamt() : void {
 		for (const kombi of this.manager.getFachkombinationenGesamt())
 			this.pruefeHatFachkombination(kombi, ...GostHalbjahr.values());
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

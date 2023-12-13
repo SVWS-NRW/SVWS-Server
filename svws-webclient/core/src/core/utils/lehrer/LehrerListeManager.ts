@@ -301,6 +301,10 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.lehrer.LehrerListeManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.lehrer.LehrerListeManager'].includes(name);
 	}

@@ -182,7 +182,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return false;
 	}
 
-	public containsAll(c : Collection<unknown> | null) : boolean {
+	public containsAll(c : Collection<any> | null) : boolean {
 		if (c === null)
 			return true;
 		if (this as unknown === c as unknown)
@@ -213,7 +213,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return result;
 	}
 
-	public removeAll(c : Collection<unknown> | null) : boolean {
+	public removeAll(c : Collection<any> | null) : boolean {
 		if (c === null)
 			return false;
 		if (this as unknown === c as unknown) {
@@ -230,7 +230,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return result;
 	}
 
-	public retainAll(c : Collection<unknown> | null) : boolean {
+	public retainAll(c : Collection<any> | null) : boolean {
 		if (this._size === 0)
 			return false;
 		if (c === null) {
@@ -359,7 +359,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		if (obj === null)
 			return false;
 		if (((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap')))) {
-			const other : MinHeap<unknown> | null = cast_de_svws_nrw_core_adt_tree_MinHeap(obj);
+			const other : MinHeap<any> | null = cast_de_svws_nrw_core_adt_tree_MinHeap(obj);
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
 		}
 		return false;
@@ -529,6 +529,10 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	getModCount() : number {
 		return this._modCount;
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.tree.MinHeap';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

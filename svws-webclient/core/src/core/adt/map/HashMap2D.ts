@@ -267,6 +267,10 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		return size;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.HashMap2D';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}

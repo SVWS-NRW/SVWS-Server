@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo } from "@core";
+import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo, SchulenKatalogEintrag } from "@core";
 import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
@@ -16,6 +16,7 @@ interface RouteStateSchema {
 	mapSchema: Map<string, SchemaListeEintrag>;
 	revision: number | null;
 	schuleInfo: SchuleInfo | undefined;
+	schulen: List<SchulenKatalogEintrag>;
 	admins: List<BenutzerListeEintrag>;
 	view: RouteNode<any, any>;
 }
@@ -28,6 +29,7 @@ export class RouteDataSchema {
 		mapSchema: new Map(),
 		revision: null,
 		schuleInfo: undefined,
+		schulen: new ArrayList<SchulenKatalogEintrag>(),
 		admins: new ArrayList<BenutzerListeEintrag>(),
 		view: routeSchemaUebersicht,
 	};
@@ -63,13 +65,13 @@ export class RouteDataSchema {
 		const listSchema : List<string> = await api.privileged.getSchemaListe();
 		listSchema.sort(<Comparator<string>>{ compare(s1 : string, s2 : string) { return JavaString.compareToIgnoreCase(s1, s2); } });
 		for (const s of listSchema)
-			mapSchema.set(s, this.getEmpty(s));
+			mapSchema.set(s.toLocaleLowerCase(), this.getEmpty(s));
 		const listSVWSSchema : List<SchemaListeEintrag> = await api.privileged.getSVWSSchemaListe();
 		for (const s of listSVWSSchema)
-			mapSchema.set(s.name, s);
+			mapSchema.set(s.name.toLocaleLowerCase(), s);
 		let auswahl : SchemaListeEintrag | undefined = undefined;
 		if (mapSchema.size > 0) {
-			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname);
+			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname.toLocaleLowerCase());
 			if (auswahl === undefined)
 				auswahl = mapSchema.values().next().value;
 		}
@@ -90,19 +92,23 @@ export class RouteDataSchema {
 	 * @param schema   das ausgewählte Schema
 	 */
 	public async setSchema(schema: SchemaListeEintrag | undefined) {
-		if (schema === this._state.value.auswahl)
-			return;
 		if ((schema === undefined) || (this.mapSchema.size === 0))
 			return;
-		const auswahl = this.mapSchema.has(schema.name) ? schema : undefined;
+		const auswahl = this.mapSchema.has(schema.name.toLocaleLowerCase()) ? schema : undefined;
 		let schuleInfo = undefined;
+		let schulen: List<SchulenKatalogEintrag> = new ArrayList();
 		let admins: List<BenutzerListeEintrag> = new ArrayList();
 		if (auswahl !== undefined && auswahl.revision > 0) {
-			schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			try {
+				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			} catch (e) {
+				console.log("Die Information zur Schule konnte nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
+				schulen = await api.privileged.getAllgemeinenKatalogSchulen();
+			}
 			if (auswahl.revision === this.revision)
 				admins = await api.privileged.getSchemaAdmins(auswahl.name);
 		}
-		this.setPatchedState({ auswahl, schuleInfo, admins });
+		this.setPatchedState({ auswahl, schuleInfo, admins, schulen });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -152,6 +158,10 @@ export class RouteDataSchema {
 		return this._state.value.schuleInfo;
 	}
 
+	get schulen(): List<SchulenKatalogEintrag> {
+		return this._state.value.schulen;
+	}
+
 	gotoSchema = async (value: SchemaListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchema.name, params: { } });
@@ -176,7 +186,7 @@ export class RouteDataSchema {
 		api.status.start();
 		for (const schema of this.auswahlGruppe) {
 			await api.privileged.destroySchema(schema.name);
-			this.mapSchema.delete(schema.name);
+			this.mapSchema.delete(schema.name.toLocaleLowerCase());
 		}
 		api.status.stop();
 		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
@@ -190,7 +200,7 @@ export class RouteDataSchema {
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
-				this.mapSchema.set(item.name, item);
+				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
 				this.setPatchedState({mapSchema: this.mapSchema});
 				await this.gotoSchema(item);
 				break;
@@ -205,7 +215,7 @@ export class RouteDataSchema {
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
-				this.mapSchema.set(item.name, item);
+				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
 				this.setPatchedState({mapSchema: this.mapSchema});
 				await this.gotoSchema(item);
 				break;
@@ -338,6 +348,17 @@ export class RouteDataSchema {
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 		}
+		api.status.stop();
+		return result;
+	}
+
+	initSchema = async (schulnummer: number) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		const result = await api.privileged.initSchemaMitSchule(this.auswahl.name, schulnummer);
+		const schuleInfo = await api.privileged.getSchuleInfo(this.auswahl.name);
+		this.setPatchedState({ schuleInfo });
 		api.status.stop();
 		return result;
 	}

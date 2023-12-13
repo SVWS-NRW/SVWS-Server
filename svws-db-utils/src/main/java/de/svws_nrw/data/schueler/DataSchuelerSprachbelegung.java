@@ -135,7 +135,7 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
 				throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Daten der Schule konnten nicht bestimmt werden.");
-			dto.AbschnittVon = JSONMapper.convertToIntegerInRange(value, true, 1, schule.AnzahlAbschnitte == null ? 2 : schule.AnzahlAbschnitte);
+			dto.AbschnittVon = JSONMapper.convertToIntegerInRange(value, true, 1, (schule.AnzahlAbschnitte == null ? 2 : schule.AnzahlAbschnitte) + 1);
 		}),
 		Map.entry("belegungBisJahrgang", (conn, dto, value, map) -> {
 			final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
@@ -152,7 +152,7 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
 				throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Daten der Schule konnten nicht bestimmt werden.");
-			dto.AbschnittBis = JSONMapper.convertToIntegerInRange(value, true, 1, schule.AnzahlAbschnitte == null ? 2 : schule.AnzahlAbschnitte);
+			dto.AbschnittBis = JSONMapper.convertToIntegerInRange(value, true, 1, (schule.AnzahlAbschnitte == null ? 2 : schule.AnzahlAbschnitte) + 1);
 		}),
 		Map.entry("referenzniveau", (conn, dto, value, map) -> {
 			final String kuerzel = JSONMapper.convertToString(value, true, false, 10);

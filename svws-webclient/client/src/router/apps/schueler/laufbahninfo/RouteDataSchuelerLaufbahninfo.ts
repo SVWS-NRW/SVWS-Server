@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung} from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
+import type { Comparator, List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung} from "@core";
+import { ArrayList, DeveloperNotificationException, JavaInteger } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -45,11 +45,11 @@ export class RouteDataSchuelerLaufbahninfo {
 	}
 
 	get sprachbelegungen(): List<Sprachbelegung> {
-		return this._state.value.sprachbelegungen;
+		return new ArrayList(this._state.value.sprachbelegungen);
 	}
 
 	get sprachpruefungen(): List<Sprachpruefung> {
-		return this._state.value.sprachpruefungen;
+		return new ArrayList(this._state.value.sprachpruefungen);
 	}
 
 	public async auswahlSchueler(auswahl: SchuelerListeEintrag | null) {
@@ -63,11 +63,12 @@ export class RouteDataSchuelerLaufbahninfo {
 			api.status.start();
 			const sprachbelegungen = await api.server.getSchuelerSprachbelegungen(api.schema, auswahl.id);
 			const sprachpruefungen = await api.server.getSchuelerSprachpruefungen(api.schema, auswahl.id);
+			sprachbelegungen.sort(<Comparator<Sprachbelegung>>{ compare(n1: Sprachbelegung, n2: Sprachbelegung) { return JavaInteger.compare(n1.reihenfolge ?? 0, n2.reihenfolge ?? 0); }})
 			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen })
-			api.status.stop();
 		} catch(error) {
 			throw new Error("Die Laufbahninformationen konnten nicht eingeholt werden.")
 		}
+		api.status.stop();
 	}
 
 	getSprachbelegung(data: Partial<Sprachbelegung>) : Sprachbelegung | null {

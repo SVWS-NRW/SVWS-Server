@@ -199,8 +199,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				schueler.Geschlecht = geschlecht;
 			}),
 			Map.entry("geburtsdatum", (conn, schueler, value, map) -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false, null)),
-			Map.entry("geburtsort", (conn, schueler, value, map) -> schueler.Geburtsort = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Geburtsort.datenlaenge())),
-			Map.entry("geburtsname", (conn, schueler, value, map) -> schueler.Geburtsname = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Geburtsname.datenlaenge())),
+			Map.entry("geburtsort", (conn, schueler, value, map) -> schueler.Geburtsort = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsort.datenlaenge())),
+			Map.entry("geburtsname", (conn, schueler, value, map) -> schueler.Geburtsname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Geburtsname.datenlaenge())),
 
 			// Wohnort und Kontaktdaten
 			Map.entry("strassenname", (conn, schueler, value, map) -> schueler.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Strassenname.datenlaenge())),

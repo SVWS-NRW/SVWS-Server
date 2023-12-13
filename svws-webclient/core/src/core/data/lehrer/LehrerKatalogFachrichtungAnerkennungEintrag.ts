@@ -65,6 +65,10 @@ export class LehrerKatalogFachrichtungAnerkennungEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungAnerkennungEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungAnerkennungEintrag'].includes(name);
 	}

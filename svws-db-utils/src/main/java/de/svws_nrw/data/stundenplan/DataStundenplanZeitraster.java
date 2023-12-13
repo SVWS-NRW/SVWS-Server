@@ -222,6 +222,8 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response deleteMultiple(final List<Long> ids) {
+		if (ids.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Es wurden keine IDs übergeben.");
 		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", ids, DTOStundenplanZeitraster.class);
 		for (final DTOStundenplanZeitraster dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)

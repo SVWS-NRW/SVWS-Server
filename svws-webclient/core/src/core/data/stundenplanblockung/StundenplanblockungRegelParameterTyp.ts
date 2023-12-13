@@ -75,8 +75,12 @@ export class StundenplanblockungRegelParameterTyp extends JavaEnum<Stundenplanbl
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

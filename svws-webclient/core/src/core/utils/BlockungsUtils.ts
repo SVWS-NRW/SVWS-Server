@@ -113,6 +113,10 @@ export class BlockungsUtils extends JavaObject {
 		return a >= b ? a : b;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.BlockungsUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.BlockungsUtils'].includes(name);
 	}

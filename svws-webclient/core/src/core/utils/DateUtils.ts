@@ -356,6 +356,10 @@ export class DateUtils extends JavaObject {
 		return result;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.DateUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}

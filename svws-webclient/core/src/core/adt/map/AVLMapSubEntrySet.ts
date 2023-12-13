@@ -68,7 +68,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		return this._sub.bcRemoveEntry(o);
 	}
 
-	public containsAll(c : Collection<unknown>) : boolean {
+	public containsAll(c : Collection<any>) : boolean {
 		return this._sub.bcContainsAllEntries(c);
 	}
 
@@ -76,16 +76,20 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		return this._sub.bcAddAllEntries(c);
 	}
 
-	public retainAll(c : Collection<unknown>) : boolean {
+	public retainAll(c : Collection<any>) : boolean {
 		return this._sub.bcRetainAllEntries(c);
 	}
 
-	public removeAll(c : Collection<unknown>) : boolean {
+	public removeAll(c : Collection<any>) : boolean {
 		return this._sub.bcRemoveAllEntries(c);
 	}
 
 	public clear() : void {
 		this._sub.clear();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubEntrySet';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

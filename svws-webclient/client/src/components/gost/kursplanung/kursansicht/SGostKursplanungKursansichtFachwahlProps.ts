@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 import type { Config } from "~/components/Config";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
@@ -31,6 +31,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
 	isSelectedKurse: GostBlockungKurs[];
+	selectedDo: (action: 'fixieren'|'sperren') => Promise<List<GostBlockungRegel>>;
 	dragDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	dropDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	onDragKursSchiene: (data: SGostKursplanungKursansichtDragData) => void;

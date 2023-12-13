@@ -7,7 +7,11 @@
 						<div class="modal--content-wrapper pb-3">
 							<div class="modal--content px-5">
 								<div class="mb-6 mt-2">
-									<h1 class="font-bold text-headline-sm leading-none w-full py-2">
+									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
+										SVWS NRW
+									</h1>
+									<h2 class="text-headline-sm leading-tight opacity-50">Schulverwaltung für<br>Nordrhein-Westfalen</h2>
+									<h1 class="font-bold text-headline-sm leading-none w-full py-2 mt-3">
 										Laufbahnplanung Oberstufe - Datei laden
 									</h1>
 								</div>
@@ -16,6 +20,34 @@
 									<svws-ui-spinner :spinning="loading" />
 									<br> {{ status === false ? "Fehler beim Import" : status === true ? "Import erfolgreich" : "" }}
 								</svws-ui-input-wrapper>
+								<div class="mt-3 -mb-3 opacity-50">
+									<p class="text-sm text-left">
+										Bitte beachten Sie, dass keinerlei personenbezogenen Daten
+										auf unsere Server geladen werden. Die Daten verbleiben auf Ihrem Endgerät.
+									</p>
+								</div>
+								<div class="mt-16 text-sm font-medium">
+									<div class="flex gap-3 items-center opacity-50">
+										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="" class="h-8">
+										<div class="text-left">
+											<p>
+												Powered by SVWS-NRW <span class="font-bold">Version {{ version }}</span>
+											</p>
+											<nav class="flex flex-row items-center gap-2 mt-0.5">
+												<a class="login-footer-link" href="#">Impressum</a>
+												<a class="login-footer-link" href="#">Datenschutz</a>
+											</nav>
+										</div>
+									</div>
+									<div class="mt-3 -mb-3 opacity-50">
+										<p class="text-sm text-left">
+											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
+											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
+											Geschlechter gleichermaßen zu berücksichtigen.
+										</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -29,6 +61,7 @@
 
 	import { ref } from "vue";
 	import type { LadeDatenProps } from "./LadeDatenProps";
+	import { version } from '../../version';
 
 	const props = defineProps<LadeDatenProps>();
 

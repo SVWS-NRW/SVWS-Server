@@ -31,6 +31,10 @@ export class GostStatistikFachwahlManager extends JavaObject {
 		statfw.fachwahlen[halbjahr.id].wahlenLK += JavaObject.equalsTranspiler("LK", (fachwahl)) ? 1 : 0;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager'].includes(name);
 	}

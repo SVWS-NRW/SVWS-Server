@@ -47,6 +47,10 @@ export class BKBildungsplan extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.bk.BKBildungsplan';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplan'].includes(name);
 	}

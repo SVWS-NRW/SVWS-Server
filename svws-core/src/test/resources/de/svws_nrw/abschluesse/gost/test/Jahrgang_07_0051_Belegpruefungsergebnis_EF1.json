@@ -8,6 +8,10 @@
     "code" : "PF_10",
     "art" : "BELEGUNG",
     "beschreibung" : "In EF.1 können keine Projektkurse belegt werden."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

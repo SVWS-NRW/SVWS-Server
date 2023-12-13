@@ -120,8 +120,12 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

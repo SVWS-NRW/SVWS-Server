@@ -57,6 +57,10 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 		this.dynDaten.aktionZustandLadenK();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKOptimiereBest';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKOptimiereBest', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}

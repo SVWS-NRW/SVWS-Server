@@ -215,6 +215,10 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 		return this.value;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.AbstractStringBuilder';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.AbstractStringBuilder',

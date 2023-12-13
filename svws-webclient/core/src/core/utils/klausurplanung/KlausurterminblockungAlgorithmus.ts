@@ -182,6 +182,10 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		this._logger.modifyIndent(-4);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus'].includes(name);
 	}

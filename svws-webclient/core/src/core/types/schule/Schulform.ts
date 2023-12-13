@@ -278,8 +278,12 @@ export class Schulform extends JavaEnum<Schulform> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Schulform';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Schulform', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Schulform', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

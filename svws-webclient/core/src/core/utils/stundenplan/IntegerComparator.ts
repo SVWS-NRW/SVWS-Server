@@ -12,6 +12,10 @@ export class IntegerComparator extends JavaObject implements Comparator<number |
 		return o1! - o2!;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplan.IntegerComparator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.IntegerComparator', 'java.util.Comparator'].includes(name);
 	}

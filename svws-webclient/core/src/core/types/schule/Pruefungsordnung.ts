@@ -126,8 +126,12 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Pruefungsordnung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Pruefungsordnung', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Pruefungsordnung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

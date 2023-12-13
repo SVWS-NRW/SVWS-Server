@@ -329,6 +329,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten'].includes(name);
 	}

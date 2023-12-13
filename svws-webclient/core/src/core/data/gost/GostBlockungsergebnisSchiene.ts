@@ -20,6 +20,10 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene'].includes(name);
 	}

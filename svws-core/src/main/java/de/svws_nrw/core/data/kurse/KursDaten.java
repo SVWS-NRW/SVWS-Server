@@ -42,6 +42,10 @@ public class KursDaten {
 	@Schema(description = "die ID des Kurslehrers", example = "42")
 	public Long lehrer;
 
+	/** Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird. */
+	@Schema(description = "die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird", example = "GK")
+	public @NotNull String kursartAllg = "";
+
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
 	public int sortierung;

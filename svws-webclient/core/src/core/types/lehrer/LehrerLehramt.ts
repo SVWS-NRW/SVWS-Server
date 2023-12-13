@@ -347,8 +347,12 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerLehramt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerLehramt', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLehramt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

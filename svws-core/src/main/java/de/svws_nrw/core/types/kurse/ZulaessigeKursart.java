@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.kurse.KursartKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
@@ -962,7 +963,11 @@ public enum ZulaessigeKursart {
 	private static final @NotNull HashMap<@NotNull String, ZulaessigeKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist */
-	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private @NotNull
+	final ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+
+	/** Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten */
+	private static final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> _mapByAllgemein = new HashMap<>();
 
 
 	/**
@@ -1017,6 +1022,32 @@ public enum ZulaessigeKursart {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 		return _mapKuerzel;
+	}
+
+
+	private static @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> getMapByAllgemeinemKuerzel() {
+		if (_mapByAllgemein.size() == 0) {
+			for (final ZulaessigeKursart k : ZulaessigeKursart.values()) {
+				if (k.daten != null) {
+					final @NotNull String allgKursart = (k.daten.kuerzelAllg != null) ? k.daten.kuerzelAllg : "";
+					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(allgKursart);
+					if (list == null) {
+						list = new ArrayList<>();
+						_mapByAllgemein.put(allgKursart, list);
+					}
+					list.add(k);
+				}
+				if (k.daten.kuerzelAllg == null) {
+					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(k.daten.kuerzel);
+					if (list == null) {
+						list = new ArrayList<>();
+						_mapByAllgemein.put(k.daten.kuerzel, list);
+					}
+					list.add(k);
+				}
+			}
+		}
+		return _mapByAllgemein;
 	}
 
 
@@ -1079,5 +1110,21 @@ public enum ZulaessigeKursart {
 	public static ZulaessigeKursart getByASDKursart(final String kursart) {
 		return getMapByKuerzel().get(kursart);
 	}
+
+
+	/**
+	 * Bestimmt die Liste der möglichen speziellen Kursarten für die angegebene allgemeine Kursart
+	 *
+	 * @param allgKursart   die allgemeine Kursart
+	 *
+	 * @return die Liste der möglichen speziellen Kursarten
+	 */
+	public static @NotNull List<@NotNull ZulaessigeKursart> getByAllgemeinerKursart(@NotNull final String allgKursart) {
+		final List<@NotNull ZulaessigeKursart> result = getMapByAllgemeinemKuerzel().get(allgKursart);
+		if (result == null)
+			throw new DeveloperNotificationException("Die allgemeine Kursart " + allgKursart + " existiert nicht.");
+		return result;
+	}
+
 
 }

@@ -512,6 +512,10 @@ export class Fremdsprachen extends GostBelegpruefung {
 		return this._anzahlDurchgehendSchriftlich;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen'].includes(name);
 	}

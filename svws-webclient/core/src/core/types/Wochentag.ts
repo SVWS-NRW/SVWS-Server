@@ -114,8 +114,12 @@ export class Wochentag extends JavaEnum<Wochentag> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.Wochentag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.Wochentag', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.Wochentag', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -66,6 +66,10 @@ export class SprachpruefungsniveauKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag'].includes(name);
 	}

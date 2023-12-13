@@ -139,6 +139,10 @@ export class GostFachwahlManager extends JavaObject {
 		return schueler.contains(idSchueler);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostFachwahlManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFachwahlManager'].includes(name);
 	}

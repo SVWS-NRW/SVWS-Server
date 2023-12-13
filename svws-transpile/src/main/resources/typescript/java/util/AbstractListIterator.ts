@@ -76,6 +76,10 @@ export class AbstractListIterator<E> extends JavaObject implements JavaIterator<
 	}
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.AbstractListIterator';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.AbstractListIterator',

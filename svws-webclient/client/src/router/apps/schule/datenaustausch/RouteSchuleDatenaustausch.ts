@@ -17,6 +17,7 @@ import { routeSchuleDatenaustauschWenom } from "~/router/apps/schule/datenaustau
 import { routeSchuleDatenaustauschSchulbewerbung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 
 import { RouteDataSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteDataSchuleDatenaustausch";
+import { routeSchuleDatenaustauschUntis } from "./RouteSchuleDatenaustauschUntis";
 
 
 const SSchuleDatenaustauschApp = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue")
@@ -36,6 +37,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 			routeSchuleDatenaustauschSchulbewerbung,
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
+			routeSchuleDatenaustauschUntis,
 		];
 		super.defaultChild = routeSchuleDatenaustauschLaufbahnplanung;
 	}

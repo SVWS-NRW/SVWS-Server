@@ -22,6 +22,10 @@ export class JavaShort extends JavaObject {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Short';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Short',

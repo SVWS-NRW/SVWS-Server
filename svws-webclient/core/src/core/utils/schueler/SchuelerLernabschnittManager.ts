@@ -488,6 +488,10 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		return this._schueler;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager'].includes(name);
 	}

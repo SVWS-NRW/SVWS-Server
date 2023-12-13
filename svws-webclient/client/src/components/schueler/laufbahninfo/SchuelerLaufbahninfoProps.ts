@@ -1,4 +1,4 @@
-import type { List, Sprachbelegung, Sprachpruefung } from "@core";
+import type { List, SchuelerListeManager, Sprachbelegung, Sprachpruefung } from "@core";
 
 export interface SchuelerLaufbahninfoProps {
 	sprachbelegungen: () => List<Sprachbelegung>;
@@ -9,4 +9,5 @@ export interface SchuelerLaufbahninfoProps {
 	patchSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<void>;
 	addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 	removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
+	schuelerListeManager: () => SchuelerListeManager;
 }

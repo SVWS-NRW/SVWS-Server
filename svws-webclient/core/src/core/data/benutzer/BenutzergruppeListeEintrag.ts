@@ -22,6 +22,10 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag'].includes(name);
 	}

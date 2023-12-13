@@ -57,6 +57,10 @@ export class JahrgangsListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag'].includes(name);
 	}

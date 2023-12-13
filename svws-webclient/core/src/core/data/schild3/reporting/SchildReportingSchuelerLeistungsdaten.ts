@@ -87,6 +87,10 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLeistungsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLeistungsdaten'].includes(name);
 	}

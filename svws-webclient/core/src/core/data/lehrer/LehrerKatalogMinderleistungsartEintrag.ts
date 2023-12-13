@@ -65,6 +65,10 @@ export class LehrerKatalogMinderleistungsartEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag'].includes(name);
 	}

@@ -53,6 +53,10 @@ export class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 		this.dynDaten.aktionZustandLadenK();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKSchnellW';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKSchnellW', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}

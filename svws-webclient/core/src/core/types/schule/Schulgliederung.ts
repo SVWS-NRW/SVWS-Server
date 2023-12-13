@@ -868,8 +868,12 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Schulgliederung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Schulgliederung', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Schulgliederung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

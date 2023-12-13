@@ -61,6 +61,10 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 			console.log(JSON.stringify(s));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.logger.LogConsumerConsole';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerConsole'].includes(name);
 	}

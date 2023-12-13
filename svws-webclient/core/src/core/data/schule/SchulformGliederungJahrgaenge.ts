@@ -24,6 +24,10 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge'].includes(name);
 	}

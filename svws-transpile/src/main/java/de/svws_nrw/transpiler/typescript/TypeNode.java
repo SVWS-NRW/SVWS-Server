@@ -2,6 +2,14 @@ package de.svws_nrw.transpiler.typescript;
 
 import java.util.List;
 
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.IdentifierTree;
@@ -29,6 +37,9 @@ public class TypeNode {
 	/** the {@link Tree} object of the java compiler */
 	private final Tree node;
 
+	/** the {@link TypeMirror} object of the java compiler */
+	private final TypeMirror typeMirror;
+
 	/** specifies whether the type is used during type declaration */
 	private final boolean decl;
 
@@ -49,6 +60,7 @@ public class TypeNode {
 	public TypeNode(final TranspilerTypeScriptPlugin plugin, final Tree node, final boolean decl, final boolean notNull) {
 		this.plugin = plugin;
 		this.node = node;
+		this.typeMirror = null;
 		this.decl = decl;
 		// Korrigiere ggf. die Information zur NotNull-Annotation, falls der Base-Type des parametrisierten Typs eine NotNull-Annotation hat
 		if ((node instanceof final ParameterizedTypeTree p) && (p.getType() != null) && (p.getType() instanceof final AnnotatedTypeTree att))
@@ -62,12 +74,30 @@ public class TypeNode {
 
 
 	/**
+	 * Creates a new variable with transpiled variable information.
+	 *
+	 * @param plugin      the {@link TranspilerTypeScriptPlugin} used
+	 * @param typeMirror  the {@link TypeMirror} object of the java compiler
+	 * @param decl        specifies whether the type is used during type declaration
+	 * @param notNull     true if the declaration has a not null annotation
+	 */
+	public TypeNode(final TranspilerTypeScriptPlugin plugin, final TypeMirror typeMirror, final boolean decl, final boolean notNull) {
+		this.plugin = plugin;
+		this.node = null;
+		this.typeMirror = typeMirror;
+		this.decl = decl;
+		this.notNull = notNull || Transpiler.hasNotNullAnnotation(typeMirror);
+		this.isVarArg = false;
+	}
+
+
+	/**
 	 * Returns a copy of this type without the flag that indicates that this type is used during declaration
 	 *
 	 * @return a copy of this type without the flag that indicates that this type is used during declaration
 	 */
 	public TypeNode getNoDeclarationType() {
-		return  new TypeNode(this.plugin, this.node, false, this.notNull);
+		return new TypeNode(this.plugin, this.node, false, this.notNull);
 	}
 
 
@@ -95,7 +125,7 @@ public class TypeNode {
 	 * @return true if this is a primitive type
 	 */
 	public boolean isPrimitive() {
-		return (node instanceof PrimitiveTypeTree);
+		return node == null ? typeMirror.getKind().isPrimitive() : (node instanceof PrimitiveTypeTree);
 	}
 
 
@@ -105,13 +135,18 @@ public class TypeNode {
 	 * @return true if this is a primitive integer type
 	 */
 	public boolean isPrimitveInteger() {
-		if (node instanceof final PrimitiveTypeTree ptt) {
-			return switch (ptt.getPrimitiveTypeKind()) {
-				case BYTE, SHORT, INT, LONG -> true;
-				default -> false;
-			};
+		TypeKind kind = null;
+		if ((node != null) && (node instanceof final PrimitiveTypeTree ptt)) {
+			kind = ptt.getPrimitiveTypeKind();
+		} else if ((typeMirror != null) && (typeMirror.getKind().isPrimitive())) {
+			kind = typeMirror.getKind();
 		}
-		return false;
+		if (kind == null)
+			return false;
+		return switch (kind) {
+			case BYTE, SHORT, INT, LONG -> true;
+			default -> false;
+		};
 	}
 
 
@@ -121,13 +156,18 @@ public class TypeNode {
 	 * @return true if this is a primitive floating point number type
 	 */
 	public boolean isPrimitveFloat() {
-		if (node instanceof final PrimitiveTypeTree ptt) {
-			return switch (ptt.getPrimitiveTypeKind()) {
-				case FLOAT, DOUBLE -> true;
-				default -> false;
-			};
+		TypeKind kind = null;
+		if ((node != null) && (node instanceof final PrimitiveTypeTree ptt)) {
+			kind = ptt.getPrimitiveTypeKind();
+		} else if ((typeMirror != null) && (typeMirror.getKind().isPrimitive())) {
+			kind = typeMirror.getKind();
 		}
-		return false;
+		if (kind == null)
+			return false;
+		return switch (kind) {
+			case FLOAT, DOUBLE -> true;
+			default -> false;
+		};
 	}
 
 
@@ -137,13 +177,18 @@ public class TypeNode {
 	 * @return true if this is a primitive boolean type
 	 */
 	public boolean isPrimitveBoolean() {
-		if (node instanceof final PrimitiveTypeTree ptt) {
-			return switch (ptt.getPrimitiveTypeKind()) {
-				case BOOLEAN -> true;
-				default -> false;
-			};
+		TypeKind kind = null;
+		if ((node != null) && (node instanceof final PrimitiveTypeTree ptt)) {
+			kind = ptt.getPrimitiveTypeKind();
+		} else if ((typeMirror != null) && (typeMirror.getKind().isPrimitive())) {
+			kind = typeMirror.getKind();
 		}
-		return false;
+		if (kind == null)
+			return false;
+		return switch (kind) {
+			case BOOLEAN -> true;
+			default -> false;
+		};
 	}
 
 
@@ -153,13 +198,18 @@ public class TypeNode {
 	 * @return true if this is a primitive char type
 	 */
 	public boolean isPrimitveChar() {
-		if (node instanceof final PrimitiveTypeTree ptt) {
-			return switch (ptt.getPrimitiveTypeKind()) {
-				case CHAR -> true;
-				default -> false;
-			};
+		TypeKind kind = null;
+		if ((node != null) && (node instanceof final PrimitiveTypeTree ptt)) {
+			kind = ptt.getPrimitiveTypeKind();
+		} else if ((typeMirror != null) && (typeMirror.getKind().isPrimitive())) {
+			kind = typeMirror.getKind();
 		}
-		return false;
+		if (kind == null)
+			return false;
+		return switch (kind) {
+			case CHAR -> true;
+			default -> false;
+		};
 	}
 
 
@@ -169,18 +219,22 @@ public class TypeNode {
 	 * @return true if the type is java.lang.String
 	 */
 	public boolean isString() {
-		if (node instanceof final IdentifierTree ident) {
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
-		} else if (node instanceof final AnnotatedTypeTree att) {
-			if (att.getUnderlyingType() instanceof ArrayTypeTree)
-				return false;
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
-			return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
+			} else if (node instanceof final AnnotatedTypeTree att) {
+				if (att.getUnderlyingType() instanceof ArrayTypeTree)
+					return false;
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
+				return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
+			}
+		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			return "java.lang.String".equals(te.getQualifiedName().toString());
 		}
 		return false;
 	}
@@ -192,18 +246,22 @@ public class TypeNode {
 	 * @return true if the type is java.lang.Boolean
 	 */
 	public boolean isBoolean() {
-		if (node instanceof final IdentifierTree ident) {
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
-		} else if (node instanceof final AnnotatedTypeTree att) {
-			if (att.getUnderlyingType() instanceof ArrayTypeTree)
-				return false;
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
-			return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
+			} else if (node instanceof final AnnotatedTypeTree att) {
+				if (att.getUnderlyingType() instanceof ArrayTypeTree)
+					return false;
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
+				return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
+			}
+		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			return "java.lang.Boolean".equals(te.getQualifiedName().toString());
 		}
 		return false;
 	}
@@ -215,35 +273,45 @@ public class TypeNode {
 	 * @return true if the type is a number class type
 	 */
 	public boolean isNumberClass() {
-		if (node instanceof final IdentifierTree ident) {
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof final ExpressionClassType classType)
-					&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
-		} else if (node instanceof final AnnotatedTypeTree att) {
-			if (att.getUnderlyingType() instanceof ArrayTypeTree)
-				return false;
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the annotated type " + att.toString());
-			return ((type instanceof final ExpressionClassType classType)
-					&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
-						|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				return ((type instanceof final ExpressionClassType classType)
+						&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+			} else if (node instanceof final AnnotatedTypeTree att) {
+				if (att.getUnderlyingType() instanceof ArrayTypeTree)
+					return false;
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the annotated type " + att.toString());
+				return ((type instanceof final ExpressionClassType classType)
+						&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+							|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+			}
+			if (node instanceof MemberSelectTree)
+				throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isNumberClass()");
+		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			return "java.lang.Number".equals(te.getQualifiedName().toString())
+				|| "java.lang.Byte".equals(te.getQualifiedName().toString())
+				|| "java.lang.Short".equals(te.getQualifiedName().toString())
+				|| "java.lang.Integer".equals(te.getQualifiedName().toString())
+				|| "java.lang.Long".equals(te.getQualifiedName().toString())
+				|| "java.lang.Float".equals(te.getQualifiedName().toString())
+				|| "java.lang.Double".equals(te.getQualifiedName().toString());
 		}
-		if (node instanceof MemberSelectTree)
-			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isNumberClass()");
 		return false;
 	}
 
@@ -255,16 +323,20 @@ public class TypeNode {
 	 * @return true if the type is a Java collection type
 	 */
 	public boolean isCollectionType() {
-		if (node instanceof final IdentifierTree ident) {
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return plugin.getTranspiler().checkForSuperclass(type, ExpressionClassType.getExpressionInterfaceType("Collection", "java.util")) >= 0;
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				return plugin.getTranspiler().checkForSuperclass(type, ExpressionClassType.getExpressionInterfaceType("Collection", "java.util")) >= 0;
+			}
+			if (node instanceof final ParameterizedTypeTree ptt)
+				return getParameterizedTypeBaseTypeNode(ptt).isCollectionType();
+			if (node instanceof MemberSelectTree)
+				throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isCollectionType()");
+		} else if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			return plugin.getTranspiler().checkForSuperclass(te, "java.util.Collection") >= 0;
 		}
-		if (node instanceof final ParameterizedTypeTree ptt)
-			return getParameterizedTypeBaseTypeNode(ptt).isCollectionType();
-		if (node instanceof MemberSelectTree)
-			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isCollectionType()");
 		return false;
 	}
 
@@ -278,11 +350,17 @@ public class TypeNode {
 	 * @return the type of the i-th type parameter or null if this type no parameterized type or i is invalid
 	 */
 	public TypeNode getParameterType(final int i, final boolean decl) {
-		if (node instanceof final ParameterizedTypeTree ptt) {
+		if (((node != null)) && (node instanceof final ParameterizedTypeTree ptt)) {
 			final List<? extends Tree> typeArgs = ptt.getTypeArguments();
 			if ((typeArgs == null) || (i < 0) || (i >= typeArgs.size()))
 				return null;
 			return new TypeNode(plugin, typeArgs.get(i), decl, false);
+		}
+		if ((typeMirror != null) && (typeMirror instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+			final List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
+			if ((typeParams == null) || (i < 0) || (i >= typeParams.size()))
+				return null;
+			return new TypeNode(plugin, typeParams.get(i).asType(), decl, false);
 		}
 		return null;
 	}
@@ -294,17 +372,20 @@ public class TypeNode {
 	 * @return true if the type is a Java array type
 	 */
 	public boolean isArrayType() {
-		if (node instanceof final IdentifierTree ident) {
-			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
-			if (type == null)
-				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return (type instanceof ExpressionArrayType);
+		if (node != null) {
+			if (node instanceof final IdentifierTree ident) {
+				final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+				if (type == null)
+					throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
+				return (type instanceof ExpressionArrayType);
+			}
+			if (node instanceof MemberSelectTree)
+				throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isArrayType()");
+			if ((node instanceof ArrayTypeTree) || ((node instanceof final AnnotatedTypeTree att) && (att.getUnderlyingType() instanceof ArrayTypeTree)))
+				return true;
+			throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method isArrayType()");
 		}
-		if (node instanceof MemberSelectTree)
-			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isArrayType()");
-		if ((node instanceof ArrayTypeTree) || ((node instanceof final AnnotatedTypeTree att) && (att.getUnderlyingType() instanceof ArrayTypeTree)))
-			return true;
-		throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method isArrayType()");
+		return (typeMirror instanceof ArrayType);
 	}
 
 
@@ -317,24 +398,29 @@ public class TypeNode {
 	 * @return the type node for the array content type
 	 */
 	public TypeNode getArrayContentType(final Transpiler transpiler) {
-		if (node instanceof final ArrayTypeTree att)
-			return new TypeNode(plugin, att.getType(), true, isVarArg && this.notNull);
-		if ((node instanceof final AnnotatedTypeTree ann) && (ann.getUnderlyingType() instanceof final ArrayTypeTree att)) {
-			final boolean notNullAnnotated = transpiler.hasNotNullAnnotation(ann);
-			return new TypeNode(plugin, att.getType(), true, (isVarArg && this.notNull) || notNullAnnotated);
+		if (node != null) {
+			if (node instanceof final ArrayTypeTree att)
+				return new TypeNode(plugin, att.getType(), true, isVarArg && this.notNull);
+			if ((node instanceof final AnnotatedTypeTree ann) && (ann.getUnderlyingType() instanceof final ArrayTypeTree att)) {
+				final boolean notNullAnnotated = transpiler.hasNotNullAnnotation(ann);
+				return new TypeNode(plugin, att.getType(), true, (isVarArg && this.notNull) || notNullAnnotated);
+			}
+			throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method getArrayContentType()");
 		}
-		throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method getArrayContentType()");
+		if (typeMirror instanceof final ArrayType at)
+			return new TypeNode(plugin, at.getComponentType(), true, isVarArg && this.notNull);
+		throw new TranspilerException("Transpiler Error: TypeMirrors of kind " + this.typeMirror.getKind() + " not yet supported in Method getArrayContentType()");
 	}
 
 
 
-	private static String transpilePrimitiveType(final PrimitiveTypeTree node) {
-		return switch (node.getPrimitiveTypeKind()) {
+	private static String transpilePrimitiveType(final TypeKind kind) {
+		return switch (kind) {
 			case VOID -> "void";
 			case BOOLEAN -> "boolean";
 			case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> "number";
 			case CHAR -> "string";
-			default -> throw new TranspilerException("Transpiler Error: " + node.getPrimitiveTypeKind() + " is not supported as a primitive type.");
+			default -> throw new TranspilerException("Transpiler Error: " + kind + " is not supported as a primitive type.");
 		};
 	}
 
@@ -373,6 +459,40 @@ public class TypeNode {
 	}
 
 
+	private String transpileDeclaredType(final DeclaredType dt, final boolean noTypeArgs) {
+		String typeString = "";
+		if (dt.asElement() instanceof final TypeElement te)
+			typeString = te.getSimpleName().toString();
+		else
+			throw new TranspilerException("Transpiler Error: Unhandled Declared Type of Kind " + dt.getKind());
+		final List<? extends TypeMirror> typeArgs = dt.getTypeArguments();
+		if (noTypeArgs || (typeArgs == null) || (typeArgs.isEmpty()))
+			return typeString + ((decl && !notNull) ? " | null" : "");
+		typeString += "<";
+		boolean first = true;
+		for (final TypeMirror t : typeArgs) {
+			if (!first)
+				typeString += ", ";
+			first = false;
+			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
+			typeString += typeArgNode.transpile(false);
+		}
+		typeString += ">" + ((decl && !notNull) ? " | null" : "");
+		return typeString;
+	}
+
+
+	private String transpileTypeVariable(final TypeVariable tv, final boolean withBounds) {
+		final String result = tv.asElement().getSimpleName().toString();
+		if (withBounds) {
+			// TODO final TypeMirror upper = tv.getUpperBound();
+			// TODO final TypeMirror lower = tv.getLowerBound();
+			throw new TranspilerException("Transpiler Exception: Bounds are not yet supported here");
+		}
+		return result;
+	}
+
+
 	private String transpileIdentifier(final IdentifierTree node) {
 		// TODO check it the identifier is valid, ...
 		return plugin.convertIdentifier(node) + ((decl && !notNull) ? " | null" : "");
@@ -399,7 +519,7 @@ public class TypeNode {
 
 	private String transpileWildcard(final WildcardTree node) {
 		return switch (node.getKind()) {
-			case UNBOUNDED_WILDCARD -> "unknown";
+			case UNBOUNDED_WILDCARD -> "any";
 			case SUPER_WILDCARD -> {
 				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
 				// TODO Partial is not really correct - try to find a better solution
@@ -414,23 +534,32 @@ public class TypeNode {
 	}
 
 	private String transpileInternal(final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull) {
-		if (node == null)
+		if ((node == null) && (typeMirror == null))
 			return "void";
-		if (node instanceof final PrimitiveTypeTree p)
-			return TypeNode.transpilePrimitiveType(p);
-		if (node instanceof final ArrayTypeTree a)
-			return this.transpileArrayType(a, noTypeArgs, parentNotNull, contentNotNull);
-		if (node instanceof final ParameterizedTypeTree p)
-			return this.transpileParameterizedType(p, noTypeArgs);
-		if (node instanceof final IdentifierTree i)
-			return this.transpileIdentifier(i);
-		if (node instanceof final MemberSelectTree mst)
-			return this.transpileMemberSelect(mst);
-		if (node instanceof final AnnotatedTypeTree att)
-			return this.transpileAnnotatedType(att, noTypeArgs, parentNotNull);
-		if (node instanceof final WildcardTree wt)
-			return this.transpileWildcard(wt);
-		throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		if (node != null) {
+			if (node instanceof final PrimitiveTypeTree p)
+				return TypeNode.transpilePrimitiveType(p.getPrimitiveTypeKind());
+			if (node instanceof final ArrayTypeTree a)
+				return this.transpileArrayType(a, noTypeArgs, parentNotNull, contentNotNull);
+			if (node instanceof final ParameterizedTypeTree p)
+				return this.transpileParameterizedType(p, noTypeArgs);
+			if (node instanceof final IdentifierTree i)
+				return this.transpileIdentifier(i);
+			if (node instanceof final MemberSelectTree mst)
+				return this.transpileMemberSelect(mst);
+			if (node instanceof final AnnotatedTypeTree att)
+				return this.transpileAnnotatedType(att, noTypeArgs, parentNotNull);
+			if (node instanceof final WildcardTree wt)
+				return this.transpileWildcard(wt);
+			throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		}
+		if (typeMirror.getKind().isPrimitive())
+			return TypeNode.transpilePrimitiveType(typeMirror.getKind());
+		if (typeMirror instanceof final DeclaredType dt)
+			return this.transpileDeclaredType(dt, noTypeArgs);
+		if (typeMirror instanceof final TypeVariable tv)
+			return this.transpileTypeVariable(tv, false);
+		throw new TranspilerException("Transpiler Error: Type mirror of kind " + typeMirror.getKind() + " not yet supported by the transpiler.");
 	}
 
 

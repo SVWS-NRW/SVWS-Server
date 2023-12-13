@@ -11,7 +11,7 @@
 					<i-ri-loop-right-line />
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="resetFachwahlen" />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
@@ -95,7 +95,6 @@
 	async function export_laufbahnplanung() {
 		const { data, name } = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
-		console.log(data, name)
 		link.href = URL.createObjectURL(data);
 		link.download = name;
 		link.target = "_blank";

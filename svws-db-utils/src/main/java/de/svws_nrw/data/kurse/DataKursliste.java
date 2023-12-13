@@ -56,6 +56,7 @@ public final class DataKursliste extends DataManager<Long> {
 					eintrag.idJahrgaenge.add(Long.parseLong(jahrgang));
 		eintrag.idFach = k.Fach_ID;
 		eintrag.lehrer = k.Lehrer_ID;
+		eintrag.kursartAllg = k.KursartAllg == null ? "" : k.KursartAllg;
 		eintrag.sortierung = k.Sortierung == null ? 32000 : k.Sortierung;
 		eintrag.istSichtbar = k.Sichtbar;
 		if ((k.Schienen != null) && (!k.Schienen.isBlank())) {

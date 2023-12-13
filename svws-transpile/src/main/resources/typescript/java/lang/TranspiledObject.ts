@@ -9,6 +9,8 @@ export interface TranspiledObject {
 
     toString() : string | null;
 
+    transpilerCanonicalName() : string;
+
     isTranspiledInstanceOf(name: string) : boolean;
 }
 

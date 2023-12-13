@@ -744,7 +744,7 @@ class TestStundenplanManagerRandomized {
 
 	private static void testZeitraster(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		testZeitrasterAdd(rnd, m1, m2);
-		testZeitrasterAddAll(rnd, m1, m2);
+		testZeitrasterAddAll(rnd, m1, m2); // TODO add all erzeugt ungleichen Zustand
 		testZeitrasterExistsByWochentag(rnd, m1, m2);
 		testZeitrasterExistsByWochentagAndStunde(rnd, m1, m2);
 	}

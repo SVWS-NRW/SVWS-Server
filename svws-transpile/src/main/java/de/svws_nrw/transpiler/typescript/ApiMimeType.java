@@ -25,7 +25,11 @@ public enum ApiMimeType {
 	SQLITE("", "application/vnd.sqlite3"),
 
 	/** PDF */
-	PDF("", "application/pdf");
+	PDF("", "application/pdf"),
+
+	/** PDF */
+	ZIP("", "application/zip");
+
 
 	private final String mediaType;
 	private final String mimetype;

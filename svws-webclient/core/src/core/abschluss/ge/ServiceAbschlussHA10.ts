@@ -173,6 +173,10 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, true);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10'].includes(name);
 	}

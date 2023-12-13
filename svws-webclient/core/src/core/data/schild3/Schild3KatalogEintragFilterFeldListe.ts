@@ -47,6 +47,10 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragFilterFeldListe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragFilterFeldListe'].includes(name);
 	}

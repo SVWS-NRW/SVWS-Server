@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Core-Type für den Katalog der Schulformen.
  */
-public enum Schulform implements CoreType<SchulformKatalogEintrag, Schulform> {
+public enum Schulform implements @NotNull CoreType<@NotNull SchulformKatalogEintrag, @NotNull Schulform> {
 
 	/** Berufskolleg */
 	BK,
@@ -105,12 +105,12 @@ public enum Schulform implements CoreType<SchulformKatalogEintrag, Schulform> {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static @NotNull List<@NotNull Schulform> getListMitGymOb(final int schuljahr) {
-		@NotNull List<@NotNull Schulform> result = _mapSchuljahrToSchulformenMitGymOb.get(schuljahr);
+		List<@NotNull Schulform> result = _mapSchuljahrToSchulformenMitGymOb.get(schuljahr);
 		if (result == null) {
 			result = new ArrayList<>(data().getWerteBySchuljahr(schuljahr));
 			for (int i = result.size() - 1; i >= 0; i--) {
 				final @NotNull Schulform sf = result.get(i);
-				final @NotNull SchulformKatalogEintrag eintrag = data().getEintragBySchuljahrUndWert(schuljahr, sf);
+				final SchulformKatalogEintrag eintrag = data().getEintragBySchuljahrUndWert(schuljahr, sf);
 				if ((eintrag == null) || (!eintrag.hatGymOb))
 					result.remove(i);
 				_mapSchuljahrToSchulformenMitGymOb.put(schuljahr, result);

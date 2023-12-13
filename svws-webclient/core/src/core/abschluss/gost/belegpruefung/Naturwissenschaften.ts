@@ -76,6 +76,10 @@ export class Naturwissenschaften extends GostBelegpruefung {
 		return this._anzahlDurchgehendSchriftlich;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}

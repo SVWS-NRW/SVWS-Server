@@ -47,6 +47,10 @@ export class HashMapEntry<K, V> extends JavaMapEntry<K, V> {
     	return JavaObject._hashCode(JSON.stringify(this._key)) ^ JavaObject._hashCode(JSON.stringify(this._val));
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashMapEntry';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
     	return [
     		'java.util.HashMapEntry',

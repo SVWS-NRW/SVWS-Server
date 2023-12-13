@@ -97,6 +97,10 @@ export class Map2DUtils extends JavaObject {
 			map2D.removeOrException(key1, key2);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.Map2DUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map2DUtils'].includes(name);
 	}

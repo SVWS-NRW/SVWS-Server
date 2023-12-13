@@ -274,8 +274,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
 			return "%s %s : %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false));
-		String strInitializer = convertExpression(initializer);
 		final ExpressionType typeInitializer = transpiler.getExpressionType(initializer);
+		if (initializer instanceof final SwitchExpressionTree set) {
+			final String strInitializer = convertSwitchExpression(set, node.getName().toString());
+			return "%s %s : %s;".formatted(strTsLet, node.getName(), typeNode.transpile(false))
+				+ System.lineSeparator() + getIndent() + "%s".formatted(strInitializer);
+		}
+		String  strInitializer = convertExpression(initializer);
 		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType) && (typeInitializer.isPrimitiveOrBoxedPrimitive()))
 			strInitializer += strTsValueOf;
 		return "%s %s : %s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false), strInitializer);
@@ -421,6 +426,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled member select statement
 	 */
 	public String convertMemberSelect(final MemberSelectTree node) {
+		if ("class".equals(node.getIdentifier().toString())) {
+			transpiler.getTranspilerUnit(node).imports.put("Class", "java.lang");
+			return "new Class<" + node.getExpression().toString() + ">(" + node.getExpression().toString() + ".prototype)";
+		}
 		final String result = switch (node.getExpression().toString()) {
 			case strBoolean -> switch (node.getIdentifier().toString()) {
 				case "parseBoolean" -> "JavaBoolean.parseBoolean";
@@ -712,16 +721,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	/**
 	 * Transpiles the switch expression.
 	 *
-	 * @param node   the switch expression tree node
+	 * @param node            the switch expression tree node
+	 * @param switchVarName   der Variablenname, welcher im switch verwendet werden soll
 	 *
 	 * @return the transpiled switch expression
 	 */
-	public String convertSwitchExpression(final SwitchExpressionTree node) {
-		final String tmpVar = "_sevar_" + node.hashCode();
-		final String tmpExprVar = "_seexpr_" + node.hashCode();
+	public String convertSwitchExpression(final SwitchExpressionTree node, final String switchVarName) {
+		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + node.toString().hashCode();
+		final String tmpExprVar = "_seexpr_" + node.toString().hashCode();
 		final StringBuilder sb = new StringBuilder();
-		sb.append("let ").append(tmpVar).append(";").append(System.lineSeparator());
-		sb.append(getIndent()).append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
+		if (switchVarName == null)
+			sb.append("let ").append(tmpVar).append(" : any;").append(System.lineSeparator()).append(getIndent());
+		sb.append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
 		boolean first = true;
 		for (final CaseTree ct : node.getCases()) {
 			if (ct.getCaseKind() == CaseKind.STATEMENT)
@@ -757,7 +768,36 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent());
 						sb.append("}");
 					}
-					case final ConstantCaseLabelTree cclt -> throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					case final ConstantCaseLabelTree cclt -> {
+						if ((node.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree swit))) {
+							final VariableTree varNode = transpiler.getDeclaration(swit);
+							final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
+							if (first) {
+								sb.append(System.lineSeparator()).append(getIndent());
+								first = false;
+							} else {
+								sb.append(" else ");
+							}
+							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString()).append(") {");
+							indentC++;
+							final boolean isBlock = ct.getBody() instanceof BlockTree;
+							sb.append(System.lineSeparator());
+							if (!isBlock)
+								sb.append(getIndent()).append(tmpVar).append(" = ");
+							switch (ct.getBody()) {
+								case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+								case final StatementTree st -> sb.append(convertStatement(st, true));
+								case final ExpressionTree et -> sb.append(convertExpression(et));
+								default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+							}
+							indentC--;
+							if (!isBlock)
+								sb.append(";").append(System.lineSeparator());
+							sb.append(getIndent());
+							sb.append("}");
+						} else
+							throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					}
 					case final DefaultCaseLabelTree dclt -> { /* Der Default Case muss immer der letzte in TS sein */ }
 					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
 				}
@@ -777,7 +817,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						if (!isBlock)
 							sb.append(getIndent()).append(tmpVar).append(" = ");
 						switch (ct.getBody()) {
-							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
 							case final StatementTree st -> sb.append(convertStatement(st, true));
 							case final ExpressionTree et -> sb.append(convertExpression(et));
 							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
@@ -822,7 +862,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case final TypeCastTree tc -> convertTypeCast(tc);
 			case final LambdaExpressionTree le -> convertLambdaExpression(le);
 			case final InstanceOfTree io -> convertInstanceOf(io);
-			case final SwitchExpressionTree se -> convertSwitchExpression(se);
+			case final SwitchExpressionTree se -> convertSwitchExpression(se, null);
 			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
 		};
 	}
@@ -1142,7 +1182,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 		if (node.getExpression() instanceof final SwitchExpressionTree set)
-			return converted + "return _sevar_" + set.hashCode() + ";";
+			return converted + "return _sevar_" + set.toString().hashCode() + ";";
 		return "return %s;".formatted(converted);
 	}
 
@@ -1671,7 +1711,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				getIndent(),
 				"return obj as ",
 				node.getSimpleName(),
-				convertTypeParameters(node.getTypeParameters(), true),
+				convertTypeParameters(node.getTypeParameters(), false),
 				";"
 			));
 		sb.append(System.lineSeparator());
@@ -1679,6 +1719,28 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent());
 		sb.append("}");
 		sb.append(System.lineSeparator());
+	}
+
+
+	/**
+	 * Appends a method that returns the classes canonical name for simulating
+	 * part of Javas refelction API.
+	 *
+	 * @param node   the class tree node
+	 *
+	 * @return the transpilerCanonicalName method code as a String
+	 */
+	public String appendTranspilerCanonicalName(final ClassTree node) {
+		String result = getIndent() + "transpilerCanonicalName(): string {" + System.lineSeparator();
+		indentC++;
+		if (transpiler.getElement(node) instanceof final TypeElement te) {
+			result += getIndent() + "return '" + te.getQualifiedName() + "';" + System.lineSeparator();
+		} else {
+			throw new TranspilerException("Transpiler Error: Type Element expected.");
+		}
+		indentC--;
+		result += getIndent() + "}" + System.lineSeparator();
+		return result;
 	}
 
 
@@ -1698,7 +1760,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		String strInstanceOfTypes = unit.superTypes.stream().collect(Collectors.joining("', '", "'", "'"));
 		if (node.getKind() == Kind.ENUM)
-			strInstanceOfTypes += ", 'java.lang.Enum'";
+			strInstanceOfTypes += ", 'java.lang.Enum', 'java.lang.Comparable'";
 		result += getIndent() + "return [" + strInstanceOfTypes + "].includes(name);" + System.lineSeparator();
 		indentC--;
 		result += getIndent() + "}" + System.lineSeparator();
@@ -2088,6 +2150,81 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Transpiles the class methods.
+	 *
+	 * @param sb           the StringBuilder where the output is written to
+	 * @param node         the class to be transpiled
+	 * @param methodNodes  the class methods to be transpiled
+	 */
+	public void transpileClassMethods(final StringBuilder sb, final ClassTree node, final List<MethodTree> methodNodes) {
+		final List<MethodNode> methods = methodNodes.stream()
+			.map(method -> new MethodNode(this, node, method, getIndent()))
+			.toList();
+		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
+		for (final MethodNode method : methods) {
+			final String methodName = method.getName();
+			final List<MethodNode> methodList = mapMethods.get(methodName);
+			if (methodList == null)
+				continue;
+			if (mapMethods.get(methodName).size() == 1) {
+				method.print(sb, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			} else {
+				MethodNode.setCommonAccessModifier(methodList);
+				mapMethods.remove(methodName);
+				for (final MethodNode m : methodList) {
+					m.printHead(sb);
+					sb.append(System.lineSeparator());
+				}
+				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			}
+		}
+	}
+
+
+	/**
+	 * Konvertiert die Parameter des übergebenen Methode nach Typescript
+	 *
+	 * @param method   die zu konvertierende Methode
+	 *
+	 * @return die Methoden-Parameter als String
+	 */
+	public String convertDefaultMethodParameters(final ExecutableElement method) {
+		String result = "";
+		final var params = method.getParameters();
+		for (int i = 0; i < params.size(); i++) {
+			final var param = params.get(i);
+			if (!"".equals(result))
+				result += ", ";
+			result += (new VariableNode(this, param, method.isVarArgs())).transpile();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erzeugt den Code für die Verwendung von Default-Methoden innerhalb der Klasse
+	 *
+	 * @param sb           the StringBuilder where the output is written to
+	 * @param node         the class or enum to be transpiled
+	 */
+	public void transpileDefaultMethodImplementations(final StringBuilder sb, final ClassTree node) {
+		final Set<ExecutableElement> methods = transpiler.getTranspilerUnit(node).allDefaultMethodsToBeImplemented;
+		for (final ExecutableElement method : methods) {
+			final String methodName = method.getSimpleName().toString();
+			final String methodParams = convertDefaultMethodParameters(method);
+			final String returnType = (new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method))).transpile(false);
+			// TODO Type Parameters
+			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnType).append(" {").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+	}
+
+
+	/**
 	 * Transpiles the class.
 	 *
 	 * @param sb       the StringBuilder where the output is written to
@@ -2150,30 +2287,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		// Generate Methods
-		final List<MethodNode> methods = Transpiler.getMethods(node).stream()
-			.map(method -> new MethodNode(this, node, method, getIndent()))
-			.toList();
-		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		for (final MethodNode method : methods) {
-			final String methodName = method.getName();
-			final List<MethodNode> methodList = mapMethods.get(methodName);
-			if (methodList == null)
-				continue;
-			if (mapMethods.get(methodName).size() == 1) {
-				method.print(sb, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			} else {
-				MethodNode.setCommonAccessModifier(methodList);
-				mapMethods.remove(methodName);
-				for (final MethodNode m : methodList) {
-					m.printHead(sb);
-					sb.append(System.lineSeparator());
-				}
-				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			}
-		}
+		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
+		sb.append(appendTranspilerCanonicalName(node));
+		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
 
@@ -2279,7 +2396,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(node.getSimpleName());
 		sb.append(" extends JavaEnum<");
 		sb.append(node.getSimpleName());
-		sb.append("> {");
+		sb.append(">");
+		final List<? extends Tree> implClause = node.getImplementsClause();
+		if (!implClause.isEmpty()) {
+			sb.append(" implements ");
+			for (int i = 0; i < implClause.size(); i++) {
+				final TypeNode typeNode = new TypeNode(this, implClause.get(i), false, false);
+				sb.append(typeNode.transpile(false));
+				if (i < implClause.size() - 1)
+					sb.append(", ");
+			}
+		}
+		sb.append(" {");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -2318,28 +2446,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		// Generate Methods
-		final List<MethodNode> methods = Transpiler.getMethods(node).stream()
-				.map(method -> new MethodNode(this, node, method, getIndent()))
-				.toList();
-		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		for (final MethodNode method : methods) {
-			final String methodName = method.getName();
-			final List<MethodNode> methodList = mapMethods.get(methodName);
-			if (methodList == null)
-				continue;
-			if (mapMethods.get(methodName).size() == 1) {
-				method.print(sb, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			} else {
-				mapMethods.remove(methodName);
-				for (final MethodNode m : methodList) {
-					m.printHead(sb);
-					sb.append(System.lineSeparator());
-				}
-				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			}
-		}
+		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
 		sb.append(
 			"""
@@ -2370,8 +2477,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			""".formatted(getIndent(), node.getSimpleName())
 		).append(System.lineSeparator());
 
+		transpileDefaultMethodImplementations(sb, node);
+
 		// TODO Typescript code for Iterable (see transpileClass - public [Symbol.iterator](): Iterator ...)
 
+		sb.append(appendTranspilerCanonicalName(node));
+		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
 
@@ -2379,6 +2490,51 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent());
 		sb.append("}");
 		sb.append(System.lineSeparator());
+		appendCast(sb, node);
+	}
+
+
+	/**
+	 * Transpiles the interface.
+	 *
+	 * @param sb       the StringBuilder where the output is written to
+	 * @param node     the class to be transpiled
+	 */
+	public void transpileInterface(final StringBuilder sb, final ClassTree node) {
+		sb.append(getIndent());
+		sb.append("export ");
+		sb.append("interface ");
+		sb.append(node.getSimpleName());
+		sb.append(convertTypeParameters(node.getTypeParameters(), true));
+		sb.append(" extends ");
+		if (node.getExtendsClause() == null)
+			sb.append("JavaObject");
+		else {
+			final TypeNode typeNode = new TypeNode(this, node.getExtendsClause(), false, false);
+			sb.append(typeNode.transpile(false));
+		}
+		sb.append(" {");
+		sb.append(System.lineSeparator());
+		sb.append(System.lineSeparator());
+		indentC++;
+
+		// Generate Attributes
+		for (final VariableTree attribute : transpiler.getAttributes(node)) {
+			sb.append(convertAttribute(attribute, null));
+			sb.append(System.lineSeparator());
+		}
+		sb.append(System.lineSeparator());
+
+		// Generate Code for non-default methods
+		transpileClassMethods(sb, node, Transpiler.getNonDefaultMethods(node));
+
+		indentC--;
+		sb.append(getIndent());
+		sb.append("}");
+		sb.append(System.lineSeparator());
+		sb.append(System.lineSeparator());
+		// Generate Code for default methods
+		transpileClassMethods(sb, node, Transpiler.getDefaultMethods(node));
 		appendCast(sb, node);
 	}
 
@@ -2567,6 +2723,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					transpileClass(sb, classTree);
 				} else if (classTree.getKind() == Tree.Kind.ENUM) {
 					transpileEnum(sb, classTree);
+				} else if (classTree.getKind() == Tree.Kind.INTERFACE) {
+					transpileInterface(sb, classTree);
 				}
 				final String data = sb.toString();
 				final String imports = getImports(transpilerUnit, strIgnoreJavaPackagePrefix, data);

@@ -47,6 +47,10 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke'].includes(name);
 	}

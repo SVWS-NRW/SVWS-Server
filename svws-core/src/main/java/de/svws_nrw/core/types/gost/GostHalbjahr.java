@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
-public enum GostHalbjahr implements Comparable<GostHalbjahr> {
+public enum GostHalbjahr {
 
 	/** Einführungsphase 1. Halbjahr = EF1 */
 	EF1(0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr"),

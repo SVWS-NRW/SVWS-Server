@@ -28,6 +28,10 @@
     "code" : "E1BEL_10",
     "art" : "BELEGUNG",
     "beschreibung" : "Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

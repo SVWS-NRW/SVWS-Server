@@ -63,6 +63,10 @@ export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 		throw new UnsupportedOperationException("remove")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.tree.MinHeapIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.tree.MinHeapIterator'].includes(name);
 	}

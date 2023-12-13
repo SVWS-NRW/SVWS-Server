@@ -31,6 +31,7 @@ import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { ConfigElement } from "~/components/Config";
 import SApp from "~/components/SApp.vue";
+import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -56,6 +57,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogAufsichtsbereiche,
 			routeKatalogPausenzeiten,
 			routeKatalogZeitraster,
+			routeKatalogSchulen,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,

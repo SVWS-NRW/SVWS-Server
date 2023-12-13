@@ -102,6 +102,10 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag'].includes(name);
 	}

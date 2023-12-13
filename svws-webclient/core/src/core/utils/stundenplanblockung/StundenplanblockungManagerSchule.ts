@@ -31,6 +31,10 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 		return StundenplanblockungManagerSchule._stunden_pro_tag;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule'].includes(name);
 	}

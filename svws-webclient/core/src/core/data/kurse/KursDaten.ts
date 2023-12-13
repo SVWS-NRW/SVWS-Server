@@ -36,6 +36,11 @@ export class KursDaten extends JavaObject {
 	public lehrer : number | null = null;
 
 	/**
+	 * Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
+	 */
+	public kursartAllg : string = "";
+
+	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
 	 */
 	public sortierung : number = 0;
@@ -58,6 +63,10 @@ export class KursDaten extends JavaObject {
 
 	public constructor() {
 		super();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kurse.KursDaten';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
@@ -85,6 +94,9 @@ export class KursDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
+		if (typeof obj.kursartAllg === "undefined")
+			 throw new Error('invalid json format, missing attribute kursartAllg');
+		result.kursartAllg = obj.kursartAllg;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -123,6 +135,7 @@ export class KursDaten extends JavaObject {
 		}
 		result += '"idFach" : ' + obj.idFach + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		if (!obj.schueler) {
@@ -184,6 +197,9 @@ export class KursDaten extends JavaObject {
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		}
+		if (typeof obj.kursartAllg !== "undefined") {
+			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

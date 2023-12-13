@@ -75,6 +75,10 @@ export class ENMBKAbschluss extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMBKAbschluss';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMBKAbschluss'].includes(name);
 	}

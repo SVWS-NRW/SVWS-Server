@@ -2,6 +2,10 @@ import { Exception } from './Exception';
 
 export class RuntimeException extends Exception {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.RuntimeException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.RuntimeException',

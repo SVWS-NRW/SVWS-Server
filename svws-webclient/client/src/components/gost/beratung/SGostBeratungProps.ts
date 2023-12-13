@@ -11,6 +11,7 @@ export interface GostBeratungProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
 	resetFachwahlen: () => Promise<void>;
+	resetFachwahlenAlle: () => Promise<void>;
 	beratungslehrer: () => List<GostBeratungslehrer>;
 	addBeratungslehrer: (id: number) => Promise<void>;
 	removeBeratungslehrer: (lehrer: GostBeratungslehrer[]) => Promise<void>;

@@ -26,6 +26,7 @@ import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fa
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { Note } from '../../../core/types/Note';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
@@ -140,6 +141,7 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(this.belegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
 		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
+		pruefungen.add(new FachWaehlbar(this, pruefungsArt));
 		return pruefungen;
 	}
 
@@ -1755,6 +1757,10 @@ export class AbiturdatenManager extends JavaObject {
 		for (const hj of GostHalbjahr.values())
 			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
 		return anzahl;
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.AbiturdatenManager';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

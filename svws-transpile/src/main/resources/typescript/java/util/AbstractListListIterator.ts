@@ -70,6 +70,10 @@ export class AbstractListListIterator<E> extends AbstractListIterator<E> impleme
 	}
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.AbstractListListIterator';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.AbstractListListIterator',

@@ -180,8 +180,12 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

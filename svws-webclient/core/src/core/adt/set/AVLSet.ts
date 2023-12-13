@@ -104,7 +104,7 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 		return this._set.remove(o);
 	}
 
-	public containsAll(c : Collection<unknown>) : boolean {
+	public containsAll(c : Collection<any>) : boolean {
 		return this._set.containsAll(c);
 	}
 
@@ -112,11 +112,11 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 		return this._set.addAll(c);
 	}
 
-	public retainAll(c : Collection<unknown>) : boolean {
+	public retainAll(c : Collection<any>) : boolean {
 		return this._set.retainAll(c);
 	}
 
-	public removeAll(c : Collection<unknown>) : boolean {
+	public removeAll(c : Collection<any>) : boolean {
 		return this._set.removeAll(c);
 	}
 
@@ -215,6 +215,10 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 			const fromElement : E = __param0 as unknown as E;
 			return this._set.tailSet(fromElement);
 		} else throw new Error('invalid method overload');
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.set.AVLSet';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

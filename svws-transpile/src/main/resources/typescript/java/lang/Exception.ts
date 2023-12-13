@@ -2,6 +2,10 @@ import { Throwable } from './Throwable';
 
 export class Exception extends Throwable {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Exception';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Exception',

@@ -537,6 +537,10 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		return this.wochenstundenQualifikationsphase;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
 	}

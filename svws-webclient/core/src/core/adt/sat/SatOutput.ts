@@ -118,6 +118,10 @@ export class SatOutput extends JavaObject {
 		return new SatOutput(pSolution, pOutput.type);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.sat.SatOutput';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatOutput'].includes(name);
 	}

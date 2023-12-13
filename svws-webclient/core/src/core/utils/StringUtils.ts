@@ -83,6 +83,10 @@ export class StringUtils extends JavaObject {
 		return sb.toString();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.StringUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.StringUtils'].includes(name);
 	}

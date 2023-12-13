@@ -70,6 +70,10 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		outputs.add(out);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
