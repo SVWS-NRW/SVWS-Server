@@ -44,8 +44,14 @@ public class Utils {
 //	 */
 //	public static String switchByTyp(final @NotNull Schulform sf) {
 //		final @NotNull String value = switch (sf) {
-//			case GY -> sf.daten(2018).kuerzel;
-//			case GE -> sf.daten(2018).kuerzel;
+//			case GY -> {
+//				final var tmp = sf.daten(2018);
+//				yield tmp == null ? null : tmp.kuerzel;
+//			}
+//			case GE -> {
+//				final var tmp = sf.daten(2018);
+//				yield tmp == null ? null : tmp.kuerzel;
+//			}
 //			default -> "none";
 //		};
 //		return value;

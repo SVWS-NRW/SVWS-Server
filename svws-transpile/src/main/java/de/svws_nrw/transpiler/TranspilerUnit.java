@@ -4,7 +4,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -97,13 +97,16 @@ public final class TranspilerUnit {
 	public final Map<MemberSelectTree, ExecutableElement> allInvokedMethods = new HashMap<>();
 
 	/** a set with all default methods of interfaces implemented by this unit (except this unit is an interface) */
-	public final Set<ExecutableElement> allDefaultMethodsToBeImplemented = new LinkedHashSet<>();
+	public final Map<ExecutableElement, List<TypeElement>> allDefaultMethodsToBeImplemented = new LinkedHashMap<>();
 
 	/** a list with all identifiers with the tree path that are visited */
 	public final List<AbstractMap.SimpleEntry<IdentifierTree, TreePath>> allIdentifier = new ArrayList<>();
 
 	/** a map with all identifiers that are not defined locally and must be imported */
 	public final Map<IdentifierTree, String> allImports = new HashMap<>();
+
+	/** a map with all imports for default method implementations */
+	public final Map<String, List<String>> allDefaultMethodImports = new HashMap<>();
 
 	/** a map with all identifiers in annotations that are not defined locally and must be imported bit are not in the import list of allImports */
 	public final Map<IdentifierTree, String> allImportsForAnnotations = new HashMap<>();
@@ -417,8 +420,9 @@ public final class TranspilerUnit {
 	 * as local methods / attributes at the specifed transpiler unit.
 	 *
 	 * @param elem   the type element
+	 * @param path    the path in the inheritance tree
 	 */
-	private void registerAttributeAndMethods(final TypeElement elem) {
+	private void registerAttributeAndMethods(final TypeElement elem, final List<TypeElement> path) {
 		final boolean isUnitElement = (elem == this.getElement());
 		for (final Element child : elem.getEnclosedElements()) {
 			final TreePath childPath = transpiler.getTreePath(child);
@@ -464,7 +468,7 @@ public final class TranspilerUnit {
 					methodElements.add(method);
 				}
 				if (this.getElement().getKind() != ElementKind.INTERFACE && method.isDefault())
-					allDefaultMethodsToBeImplemented.add(method);
+					allDefaultMethodsToBeImplemented.put(method, path);
 				if (!isUnitElement && (childPath != null)) {
 					// register method
 					final MethodTree methodTree = (MethodTree) childPath.getLeaf();
@@ -492,29 +496,31 @@ public final class TranspilerUnit {
 	/**
 	 * Determines all attributes and methods defined in super classes and interfaces recursively.
 	 *
-	 * @param elem         the element that is analyzed
+	 * @param elem    the element that is analyzed
+	 * @param path    the path in the inheritance tree
 	 */
-	public void determineInheritedMembers(final TypeElement elem) {
+	public void determineInheritedMembers(final TypeElement elem, final List<TypeElement> path) {
 		if ("Object".equals(elem.getSimpleName().toString())
 				|| "Constable".equals(elem.getSimpleName().toString())
 				|| "Enum".equals(elem.getSimpleName().toString()))
 			return;
+		path.add(elem);
 		// check whether the type element was already handled before - to avoid unnecessary class and avoid problems due to circular dependencies
 		superTypes.add(elem.getQualifiedName().toString());
 		// add the super class or interface to the list of imports from super classes
 		addImport(elem);
 		// register the methods
-		registerAttributeAndMethods(elem);
+		registerAttributeAndMethods(elem, path);
 		for (final TypeMirror type : elem.getInterfaces()) {
 			final Element ifaceElem = transpiler.getTypeUtils().asElement(type);
 			if (ifaceElem instanceof final TypeElement te)
-				determineInheritedMembers(te);
+				determineInheritedMembers(te, new ArrayList<>(path));
 		}
 		final TypeMirror superType = elem.getSuperclass();
 		if (superType.getKind() != TypeKind.NONE) {
 			final Element superElem = transpiler.getTypeUtils().asElement(superType);
 			if (superElem instanceof final TypeElement te)
-				determineInheritedMembers(te);
+				determineInheritedMembers(te, new ArrayList<>(path));
 		}
 	}
 

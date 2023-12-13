@@ -1,6 +1,8 @@
 package de.svws_nrw.transpiler.typescript;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -40,6 +42,9 @@ public class TypeNode {
 	/** the {@link TypeMirror} object of the java compiler */
 	private final TypeMirror typeMirror;
 
+	/** a map with a mapping from a type variable to its resolved type */
+	private final Map<String, TypeMirror> resolved;
+
 	/** specifies whether the type is used during type declaration */
 	private final boolean decl;
 
@@ -61,6 +66,7 @@ public class TypeNode {
 		this.plugin = plugin;
 		this.node = node;
 		this.typeMirror = null;
+		this.resolved = new HashMap<>();
 		this.decl = decl;
 		// Korrigiere ggf. die Information zur NotNull-Annotation, falls der Base-Type des parametrisierten Typs eine NotNull-Annotation hat
 		if ((node instanceof final ParameterizedTypeTree p) && (p.getType() != null) && (p.getType() instanceof final AnnotatedTypeTree att))
@@ -80,13 +86,15 @@ public class TypeNode {
 	 * @param typeMirror  the {@link TypeMirror} object of the java compiler
 	 * @param decl        specifies whether the type is used during type declaration
 	 * @param notNull     true if the declaration has a not null annotation
+	 * @param resolved    a map with a mapping from a type variable to its resolved type
 	 */
-	public TypeNode(final TranspilerTypeScriptPlugin plugin, final TypeMirror typeMirror, final boolean decl, final boolean notNull) {
+	public TypeNode(final TranspilerTypeScriptPlugin plugin, final TypeMirror typeMirror, final boolean decl, final boolean notNull, final Map<String, TypeMirror> resolved) {
 		this.plugin = plugin;
 		this.node = null;
 		this.typeMirror = typeMirror;
+		this.resolved = (resolved == null) ? new HashMap<>() : resolved;
 		this.decl = decl;
-		this.notNull = notNull || Transpiler.hasNotNullAnnotation(typeMirror);
+		this.notNull = notNull;
 		this.isVarArg = false;
 	}
 
@@ -360,7 +368,7 @@ public class TypeNode {
 			final List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
 			if ((typeParams == null) || (i < 0) || (i >= typeParams.size()))
 				return null;
-			return new TypeNode(plugin, typeParams.get(i).asType(), decl, false);
+			return new TypeNode(plugin, typeParams.get(i).asType(), decl, false, resolved);
 		}
 		return null;
 	}
@@ -408,7 +416,7 @@ public class TypeNode {
 			throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method getArrayContentType()");
 		}
 		if (typeMirror instanceof final ArrayType at)
-			return new TypeNode(plugin, at.getComponentType(), true, isVarArg && this.notNull);
+			return new TypeNode(plugin, at.getComponentType(), true, isVarArg && this.notNull, resolved);
 		throw new TranspilerException("Transpiler Error: TypeMirrors of kind " + this.typeMirror.getKind() + " not yet supported in Method getArrayContentType()");
 	}
 
@@ -474,7 +482,7 @@ public class TypeNode {
 			if (!first)
 				typeString += ", ";
 			first = false;
-			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
+			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false, resolved);
 			typeString += typeArgNode.transpile(false);
 		}
 		typeString += ">" + ((decl && !notNull) ? " | null" : "");
@@ -483,13 +491,18 @@ public class TypeNode {
 
 
 	private String transpileTypeVariable(final TypeVariable tv, final boolean withBounds) {
-		final String result = tv.asElement().getSimpleName().toString();
+		final String typeVar = tv.asElement().getSimpleName().toString();
+		if (resolved.containsKey(typeVar)) {
+			final TypeMirror tm = resolved.get(typeVar);
+			final TypeNode tn = new TypeNode(plugin, tm, true, Transpiler.hasNotNullAnnotation(tv), resolved);
+			return tn.transpile(false);
+		}
 		if (withBounds) {
 			// TODO final TypeMirror upper = tv.getUpperBound();
 			// TODO final TypeMirror lower = tv.getLowerBound();
 			throw new TranspilerException("Transpiler Exception: Bounds are not yet supported here");
 		}
-		return result;
+		return typeVar;
 	}
 
 

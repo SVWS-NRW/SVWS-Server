@@ -1,7 +1,10 @@
 package de.svws_nrw.transpiler.typescript;
 
+import java.util.Map;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.VariableTree;
 
@@ -53,18 +56,19 @@ public class VariableNode {
 	/**
 	 * Creates a new variable with transpiled variable information.
 	 *
-	 * @param plugin    the {@link TranspilerTypeScriptPlugin} used
-	 * @param varElem   the {@link VariableElement} object of the java compiler
-	 * @param isVarArg  specifies whether this variable node is a methods var arg parameter
+	 * @param plugin      the {@link TranspilerTypeScriptPlugin} used
+	 * @param varElem     the {@link VariableElement} object of the java compiler
+	 * @param isVarArg    specifies whether this variable node is a methods var arg parameter
+	 * @param resolved    a map with a mapping from a type variable to its resolved type
 	 */
-	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableElement varElem, final boolean isVarArg) {
+	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableElement varElem, final boolean isVarArg, final Map<String, TypeMirror> resolved) {
 		this.variable = null;
 		this.varElem = varElem;
 		this.isVarArg = isVarArg;
 		this.isStatic = varElem.getModifiers().contains(Modifier.STATIC);
 		this.isFinal = varElem.getModifiers().contains(Modifier.FINAL);
 		final boolean isNotNull = isVarArg || Transpiler.hasNotNullAnnotation(varElem);
-		this.typeNode = new TypeNode(plugin, varElem.asType(), true, isNotNull);
+		this.typeNode = new TypeNode(plugin, varElem.asType(), true, isNotNull, resolved);
 		if (this.isVarArg)
 			this.typeNode.setIsVarArg();
 	}

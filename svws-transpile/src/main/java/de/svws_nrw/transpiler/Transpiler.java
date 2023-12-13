@@ -73,7 +73,7 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
  * Java Compiler API (module java.compiler) and its abstract syntax tress
  * (AST, module jdk.compiler) are used.
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 @SupportedAnnotationTypes("*")
 public final class Transpiler extends AbstractProcessor {
 
@@ -1799,7 +1799,7 @@ public final class Transpiler extends AbstractProcessor {
 			for (final TranspilerUnit unit : mapUnits.values().stream().sorted((a, b) -> (a.getPackageName() + "." + a.getClassName()).compareTo(b.getPackageName() + "." + b.getClassName())).collect(Collectors.toList())) {
 				System.out.println("  -> Preparing: " + unit.getPackageName() + "." + unit.getClassName());
 				// determine all local attribute and method identifiers of super classes and instantiated interfaces
-				unit.determineInheritedMembers(unit.getElement());
+				unit.determineInheritedMembers(unit.getElement(), new ArrayList<>());
 				// filter all local identifiers and get all classes that should be imported somehow
 				unit.determineImports();
 				// determine all expression types in the transpiler unit

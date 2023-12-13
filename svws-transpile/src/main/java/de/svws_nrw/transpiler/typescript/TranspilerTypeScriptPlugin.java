@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +18,10 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 
@@ -68,6 +71,7 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
+import de.svws_nrw.transpiler.ElementUtils;
 import de.svws_nrw.transpiler.ExpressionArrayType;
 import de.svws_nrw.transpiler.ExpressionClassType;
 import de.svws_nrw.transpiler.ExpressionPrimitiveType;
@@ -727,8 +731,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled switch expression
 	 */
 	public String convertSwitchExpression(final SwitchExpressionTree node, final String switchVarName) {
-		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + node.toString().hashCode();
-		final String tmpExprVar = "_seexpr_" + node.toString().hashCode();
+		int nodeID = Math.abs(node.toString().hashCode());
+		if (nodeID < 0)
+			nodeID = 0;
+		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + nodeID;
+		final String tmpExprVar = "_seexpr_" + nodeID;
 		final StringBuilder sb = new StringBuilder();
 		if (switchVarName == null)
 			sb.append("let ").append(tmpVar).append(" : any;").append(System.lineSeparator()).append(getIndent());
@@ -2186,18 +2193,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	/**
 	 * Konvertiert die Parameter des übergebenen Methode nach Typescript
 	 *
-	 * @param method   die zu konvertierende Methode
+	 * @param method     die zu konvertierende Methode
+	 * @param resolved   eine Map mit den Typen von aufgelösten Typ-Variablen
 	 *
 	 * @return die Methoden-Parameter als String
 	 */
-	public String convertDefaultMethodParameters(final ExecutableElement method) {
+	public String convertDefaultMethodParameters(final ExecutableElement method, final Map<String, TypeMirror> resolved) {
 		String result = "";
 		final var params = method.getParameters();
 		for (int i = 0; i < params.size(); i++) {
 			final var param = params.get(i);
 			if (!"".equals(result))
 				result += ", ";
-			result += (new VariableNode(this, param, method.isVarArgs())).transpile();
+			result += (new VariableNode(this, param, method.isVarArgs(), resolved)).transpile();
 		}
 		return result;
 	}
@@ -2210,15 +2218,44 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @param node         the class or enum to be transpiled
 	 */
 	public void transpileDefaultMethodImplementations(final StringBuilder sb, final ClassTree node) {
-		final Set<ExecutableElement> methods = transpiler.getTranspilerUnit(node).allDefaultMethodsToBeImplemented;
-		for (final ExecutableElement method : methods) {
+		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
+		final Map<ExecutableElement, List<TypeElement>> methods = unit.allDefaultMethodsToBeImplemented;
+		for (final Map.Entry<ExecutableElement, List<TypeElement>> methodWithPath : methods.entrySet()) {
+			final ExecutableElement method = methodWithPath.getKey();
+			final List<TypeElement> path = methodWithPath.getValue();
+			final Map<String, TypeMirror> resolved = ElementUtils.resolveTypeVariables(path, null);
+			for (final TypeParameterElement tpe : method.getTypeParameters()) {
+				// TODO add the type parameters to resolved and transpile them (see TODO below)
+				throw new TranspilerException("Transpiler Error: Methods with type parameters are not yet supported here");
+			}
 			final String methodName = method.getSimpleName().toString();
-			final String methodParams = convertDefaultMethodParameters(method);
-			final String returnType = (new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method))).transpile(false);
-			// TODO Type Parameters
+			final String methodParams = convertDefaultMethodParameters(method, resolved);
+			final String returnType = (new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method), resolved)).transpile(false);
+			// TODO the methods type parameters
 			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnType).append(" {").append(System.lineSeparator());
-			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			indentC++;
+			sb.append(getIndent());
+			if (method.getReturnType().getKind() != TypeKind.VOID)
+				sb.append("return ");
+			if (method.getEnclosingElement() instanceof final TypeElement te) {
+				final String ifName = te.getQualifiedName().toString();
+				final String defaultMethodName = ifName.replaceAll("\\.", "_") + "_" + methodName;
+				sb.append(defaultMethodName);
+				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new ArrayList<>()).add(defaultMethodName);
+			}
+			sb.append("(");
+			boolean first = true;
+			for (final var param : method.getParameters()) {
+				if (first)
+					first = false;
+				else
+					sb.append(", ");
+				sb.append(param.getSimpleName().toString());
+			}
+			sb.append(");");
 			sb.append(System.lineSeparator());
+			indentC--;
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
 			sb.append(System.lineSeparator());
 		}
 	}
@@ -2672,8 +2709,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case "java.lang.Math" -> { /**/ }
 				case "java.io.PrintStream" -> { /**/ }
 				default -> {
+					final String importFullPackageName = getImportPackageName(key, value);
 					final String importName = getImportName(key, value);
-					final String importPackage = getImportPackageName(key, value).replace(strIgnoreJavaPackagePrefix + ".", "");
+					final String importPackage = importFullPackageName.replace(strIgnoreJavaPackagePrefix + ".", "");
 					final String importPath = importPathPrefix + importPackage.replace('.', '/') + "/";
 					final boolean hasClass = body.contains(importName);
 					final boolean hasCast = body.contains(importCast);
@@ -2682,19 +2720,23 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
 					if (renamedInterfaces.contains(importPackage + "." + importName))
 						isImportType = true;
-					if (hasClass && hasCast && !isImportType) {
-						sb.append("import { %s, %s } from '%s';".formatted(importName, importCast, importPath + importName));
+					final List<String> strImports = new ArrayList<>();
+					final List<String> strTypeImports = new ArrayList<>();
+					if (hasClass && isImportType)
+						strTypeImports.add(importName);
+					else if (hasClass && !isImportType)
+						strImports.add(importName);
+					if (hasCast)
+						strImports.add(importCast);
+					for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
+						strImports.add(m);
+					if (!strTypeImports.isEmpty()) {
+						sb.append(strTypeImports.stream().collect(Collectors.joining(", ", "import type { ", " } from '%s';".formatted(importPath + importName))));
 						sb.append(System.lineSeparator());
-					} else {
-						if (hasClass) {
-							final String strImport = isImportType ? "import type" : "import";
-							sb.append("%s { %s } from '%s';".formatted(strImport, importName, importPath + importName));
-							sb.append(System.lineSeparator());
-						}
-						if (hasCast) {
-							sb.append("import { %s } from '%s';".formatted(importCast, importPath + importName));
-							sb.append(System.lineSeparator());
-						}
+					}
+					if (!strImports.isEmpty()) {
+						sb.append(strImports.stream().collect(Collectors.joining(", ", "import { ", " } from '%s';".formatted(importPath + importName))));
+						sb.append(System.lineSeparator());
 					}
 				}
 			}

@@ -1,16 +1,28 @@
 package de.svws_nrw.transpiler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.IntersectionType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.UnionType;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -373,5 +385,98 @@ public final class ElementUtils {
 		return (type == null) ? null : getTypeOfTypeParameter(type, index);
 	}
 
+
+	/**
+	 * Ermittelt alle Type-Variablen, welche bei der Methode bei den Typen der Rückgabe
+	 * und der Parameter genutzt werden.
+	 *
+	 * @param execElem   die Methode, der Konstruktor oder der Iniatializer
+	 *
+	 * @return die Map mit den genutzten Typ-Variablen zu geodnet zu ihren Bezeichnern
+	 */
+	public static Map<String, TypeVariable> getUsedTypeVariables(final ExecutableElement execElem) {
+		final Map<String, TypeVariable> result = new HashMap<>();
+		final List<TypeMirror> types = execElem.getParameters().stream().map(Element::asType).collect(Collectors.toList());
+		types.add(execElem.getReturnType());
+		while (!types.isEmpty()) {
+			final TypeMirror type = types.getLast();
+			types.removeLast();
+			switch (type) {
+				case final NoType nt -> { /**/ }
+				case final PrimitiveType pt -> { /**/ }
+				case final TypeVariable tv -> result.put(tv.asElement().getSimpleName().toString(), tv);
+				case final DeclaredType dt -> types.addAll(dt.getTypeArguments());
+				case final ArrayType at -> types.add(at.getComponentType());
+				case final IntersectionType it -> types.addAll(it.getBounds());
+				case final UnionType ut -> types.addAll(ut.getAlternatives());
+				default -> throw new TranspilerException("TranspilerError: Unhandled type kind " + type.getKind());
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * Ermittelt für das angegeben TypeElement cur den Typ des direkten Vorgängers im Vererbungsbaum.
+	 * Kann ancestor nicht als direkter Vorgänger gefunden werden, so wird null zurückgegeben.
+	 *
+	 * @param cur        das TypeElement
+	 * @param ancestor   der Vorgänger
+	 *
+	 * @return der type des Vorgängers oder null
+	 */
+	public static DeclaredType getDirectAncestorType(final TypeElement cur, final TypeElement ancestor) {
+		final List<TypeMirror> ancTypes = new ArrayList<>(cur.getInterfaces());
+		ancTypes.add(cur.getSuperclass());
+		for (final TypeMirror ifType : ancTypes)
+			if ((ifType instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement anc)
+					&& (anc.getQualifiedName().equals(ancestor.getQualifiedName())))
+				return dt;
+		return null;
+	}
+
+
+	/**
+	 * Löst die Typ-Parameter von elem in dem Vererbungspfades path auf, indem die Typ-Variablen rückwärts
+	 * durch die jeweiligen Typ-Parameter bis zum Anfang des Pfades ersetzt werden. Wird elem mit null
+	 * aufgerufen, so wird das letzte Element des Pfades als Elem angenommen.
+	 *
+	 * @param path   der Vererbungspfad
+	 * @param elem   das Element, dessen type-Parameter mithilfe des Pfades aufgelöst werden
+	 *
+	 * @return eine Map von dem Typ-Parameter zu dem TypeMirror-Objekt (z.B. TypeVariable oder DeclaredType)
+	 */
+	public static Map<String, TypeMirror> resolveTypeVariables(final List<TypeElement> path, final TypeElement elem) {
+		if ((elem == null) && ((path == null) || (path.isEmpty())))
+			throw new TranspilerException("Transpiler Error: Fehlerhafter Aufruf der Methode.");
+		// Ist der Pfad leer so erfolgt keine weitere Auflösung und die Typ-Variablen werden selbst als Ergebnis zurückgegeben
+		if (path.isEmpty()) {
+			final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
+			for (final TypeParameterElement typeParam : elem.getTypeParameters())
+				resolved.put(typeParam.getSimpleName().toString(), typeParam.asType());
+			return resolved;
+		}
+		// Führe zunächst den rekursiven Aufruf entlang des Pfades aus und benutze das Ergebnis für das Auflösen der typ-Variablen von elem
+		final List<TypeElement> tmpList = new ArrayList<>(path);
+		tmpList.removeLast();
+		final Map<String, TypeMirror> lastResolved = resolveTypeVariables(tmpList, path.getLast());
+		if (elem == null)
+			return lastResolved;
+		// Benutzer die Auflösung der Typ-Variablen des vorigen Element (rekursiver Aufruf) für das Auflösen der TypVariablen des aktuellen Elements
+		final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
+		final DeclaredType ancestor = ElementUtils.getDirectAncestorType(path.getLast(), elem);
+		if (ancestor.getTypeArguments().size() != elem.getTypeParameters().size())
+			throw new TranspilerException("Transpiler Error: Invalid size of type parameter list.");
+		for (int i = 0; i < elem.getTypeParameters().size(); i++) {
+			final String typeVarName = elem.getTypeParameters().get(i).getSimpleName().toString();
+			if (ancestor.getTypeArguments().get(i) instanceof final DeclaredType dt)
+				resolved.put(typeVarName, dt);
+			else if (ancestor.getTypeArguments().get(i) instanceof final TypeVariable tv)
+				resolved.put(typeVarName, lastResolved.get(tv.asElement().getSimpleName().toString()));
+			else
+				throw new TranspilerException("Transpiler Error: Unhandled Type argument of type kind " + ancestor.getTypeArguments().get(i).getKind());
+		}
+		return resolved;
+	}
 
 }
