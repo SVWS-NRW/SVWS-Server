@@ -112,7 +112,7 @@
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
 	const wochentyp = ref<number>(-1);
-	const doppelstundenModus = ref<boolean>(true);
+	const doppelstundenModus = ref<boolean>(false);
 
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
@@ -191,7 +191,7 @@
 			const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
 			const arr = [];
 			arr.push(stunde);
-			if (doppelstundenModus.value === true) {
+			if (doppelstundenModus.value === true && props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
 				if (next)
 					arr.push({ idZeitraster: next.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
@@ -211,7 +211,8 @@
 			const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer };
 			const arr = [];
 			arr.push(stunde);
-			if (doppelstundenModus.value === true) {
+			//stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach)
+			if (doppelstundenModus.value === true && props.stundenplanManager().kursGetWochenstundenREST(dragData.value.id) >= 2) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
 				if (next)
 					arr.push({ idZeitraster: next.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer });
