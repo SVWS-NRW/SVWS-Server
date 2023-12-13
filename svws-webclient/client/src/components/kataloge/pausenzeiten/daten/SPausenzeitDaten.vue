@@ -1,6 +1,6 @@
 <template>
-	<div class="app-container">
-		<s-card-pausenzeit-daten :data="data" @patch="patch" />
+	<div class="page--content">
+		<s-card-pausenzeit-daten :data="data" :patch="patch" />
 	</div>
 </template>
 

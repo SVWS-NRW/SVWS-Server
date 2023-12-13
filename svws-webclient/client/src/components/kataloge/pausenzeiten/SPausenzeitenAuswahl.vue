@@ -13,14 +13,14 @@
 		<template #content>
 			<div class="container">
 				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
-					<template #cell(wochentag)="{ rowData }">
-						{{ Wochentag.fromIDorException(rowData.wochentag).beschreibung }}
+					<template #cell(wochentag)="{ value }">
+						{{ Wochentag.fromIDorException(value).beschreibung }}
 					</template>
-					<template #cell(beginn)="{ rowData }">
-						{{ rowData.beginn }}
+					<template #cell(beginn)="{ value }">
+						{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
 					</template>
-					<template #cell(ende)="{ rowData }">
-						{{ rowData.ende }}
+					<template #cell(ende)="{ value }">
+						{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
 					</template>
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
@@ -40,14 +40,16 @@
 
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
 	import type { StundenplanPausenzeit } from "@core";
-	import { Wochentag } from "@core";
+	import { Wochentag , DateUtils } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const selected = ref<StundenplanPausenzeit[]>([]);
 
 	const cols = [
-		{key: 'wochentag', label: 'Wochentag', span: 2}, {key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
+		{key: 'wochentag', label: 'Wochentag', span: 2},
+		{key: 'beginn', label: 'Beginn', span: 1},
+		{key: 'ende', label: 'Ende', span: 1}
 	]
 
 	async function doDeleteEintraege() {

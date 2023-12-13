@@ -1,8 +1,7 @@
-import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { StundenplanAufsichtsbereich} from "@core";
-import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import type { StundenplanAufsichtsbereich } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -13,113 +12,11 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
 import { routeKatalogAufsichtsbereichDaten } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereichDaten";
 
-import type { AufsichtsbereicheAuswahlProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
-import type { AufsichtsbereicheAppProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { AufsichtsbereicheAppProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAppProps";
+import type { AufsichtsbereicheAuswahlProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
+import { RouteDataKatalogAufsichtsbereiche } from "./RouteDataKatalogAufsichtsbereiche";
 
-interface RouteStateKatalogAufsichtsbereiche {
-	auswahl: StundenplanAufsichtsbereich | undefined;
-	daten: StundenplanAufsichtsbereich | undefined;
-	mapKatalogeintraege: Map<number, StundenplanAufsichtsbereich>;
-	view: RouteNode<any, any>;
-}
-
-export class RouteDataKatalogAufsichtsbereiche {
-
-	private static _defaultState: RouteStateKatalogAufsichtsbereiche = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogAufsichtsbereichDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogAufsichtsbereiche._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogAufsichtsbereiche._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogAufsichtsbereiche.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-
-	get auswahl(): StundenplanAufsichtsbereich | undefined {
-		return this._state.value.auswahl;
-	}
-
-	get mapKatalogeintraege(): Map<number, StundenplanAufsichtsbereich> {
-		return this._state.value.mapKatalogeintraege;
-	}
-
-	get daten(): StundenplanAufsichtsbereich {
-		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
-		return this._state.value.daten;
-	}
-
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getAufsichtsbereiche(api.schema);
-		const mapKatalogeintraege = new Map<number, StundenplanAufsichtsbereich>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
-	}
-
-	setEintrag = async (auswahl: StundenplanAufsichtsbereich) => {
-		const daten = this.mapKatalogeintraege.get(auswahl.id);
-		this.setPatchedState({ auswahl, daten })
-	}
-
-	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => {
-		await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(eintrag.id));
-	}
-
-	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
-		delete eintrag.id;
-		const raum = await api.server.addAufsichtsbereich(eintrag, api.schema);
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(raum.id, raum);
-		this.setPatchedState({mapKatalogeintraege});
-		await this.gotoEintrag(raum);
-	}
-
-	deleteEintraege = async (eintraege: StundenplanAufsichtsbereich[]) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		const list = new ArrayList<number>();
-		for (const eintrag of eintraege) {
-			mapKatalogeintraege.delete(eintrag.id);
-			list.add(eintrag.id);
-		}
-		let auswahl;
-		await api.server.deleteAufsichtsbereiche(list, api.schema);
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
-	}
-
-	patch = async (eintrag : Partial<StundenplanAufsichtsbereich>) => {
-		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
-		const auswahl = this.auswahl;
-		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
-	}
-}
 
 const SAufsichtsbereicheAuswahl = () => import("~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue")
 const SAufsichtsbereicheApp = () => import("~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheApp.vue")

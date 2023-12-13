@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-aufsichtsbereich-daten :data="data" @patch="patch" />
 	</div>
 </template>

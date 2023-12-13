@@ -11,14 +11,15 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || (!item.beginn || !item.ende)"> Pausenzeit Hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || !item.beginn"> Pausenzeit Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { StundenplanPausenzeit, Wochentag, DateUtils } from "@core";
 	import { ref } from "vue";
+	import type { StundenplanPausenzeit} from "@core";
+	import { Wochentag, DateUtils } from "@core";
 
 	const props = defineProps<{
 		addPausenzeit: (raum: Partial<StundenplanPausenzeit>) => Promise<void>;
@@ -35,7 +36,7 @@
 
 	async function importer() {
 		await props.addPausenzeit(item.value);
-		item.value = new StundenplanPausenzeit();
+		item.value = { wochentag: 1, beginn: 620, ende: 645, bezeichnung: 'Pause' };
 		showModal().value = false;
 	}
 
