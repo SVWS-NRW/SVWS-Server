@@ -87,7 +87,7 @@ build_windows:
         SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
     image: svwsnrw/dockerrunner-win-nano
     script:
-        - copy .\\build\buildconfig.json buildconfig.json /y
+        - copy .\build\buildconfig.json buildconfig.json /y
         - c:\tmp\download-secure-files-windows-amd64.exe
         - copy .\gradle_secure.properties c:\Users\ContainerAdministrator\.gradle\gradle.properties
         - .\gradlew :deployment:windows-installer:doZip
