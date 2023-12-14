@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.set.AVLSet;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
@@ -136,6 +137,7 @@ public class StundenplanManager {
 
 	// StundenplanAufsichtsbereich
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereich_by_id = new HashMap<>();
+	private final @NotNull HashMap<@NotNull String, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereich_by_kuerzel = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanAufsichtsbereich> _aufsichtsbereichmenge_sortiert = new ArrayList<>();
 
 	// StundenplanFach
@@ -200,7 +202,8 @@ public class StundenplanManager {
 
 	// StundenplanPausenzeit
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _pausenzeit_by_id = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanPausenzeit> _pausenzeitmenge = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull LongArrayKey, @NotNull StundenplanPausenzeit> _pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanPausenzeit> _pausenzeitmenge_sortiert = new ArrayList<>();
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _pausenzeitmengeOhneLeere_sortiert = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_wochentag = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitmenge_by_idKlasse = new HashMap<>();
@@ -218,6 +221,7 @@ public class StundenplanManager {
 
 	// StundenplanRaum
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _raum_by_id = new HashMap<>();
+	private final @NotNull HashMap<@NotNull String, @NotNull StundenplanRaum> _raum_by_kuerzel = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanRaum> _raummenge_sortiert = new ArrayList<>();
 
 	// StundenplanSchiene
@@ -453,12 +457,15 @@ public class StundenplanManager {
 		update_unterrichtmenge();                                    // ---
 		update_zeitrastermenge();                                    // ---
 		update_pausenaufsichtmenge_by_idPausenzeit();                // _pausenaufsichtmenge
-		update_pausenzeitmengeOhnePausenaufsicht();                  // _pausenzeitmenge,  _pausenaufsichtmenge_by_idPausenzeit
+		update_pausenzeitmengeOhnePausenaufsicht();                  // _pausenzeitmenge_sortiert,  _pausenaufsichtmenge_by_idPausenzeit
 		update_unterrichtmenge_by_idZeitraster();                    // _unterrichtmenge
 		update_zeitrastermengeOhneLeereUnterrichtmenge();            // _zeitrastermenge, _unterrichtmenge_by_idZeitraster
 
 		// 1. Ordnung (nur Referenzen zu den sortierten Mengen)
 
+		update_pausenzeit_by_tag_and_beginn_and_ende();              // _pausenzeitmenge_sortiert
+		update_aufsichtsbereich_by_kuerzel();                        // _aufsichtsbereichmenge_sortiert
+		update_raum_by_kuerzel();                                    // _raummenge_sortiert
 		update_klassenmenge_by_idJahrgang();                         // _klassenmenge
 		update_jahrgangmenge_by_idKlasse();                          // _klassenmenge
 		update_klassenunterrichtmenge_by_idKlasse();                 // _klassenunterrichtmenge
@@ -524,8 +531,28 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idSchueler_and_idZeitraster();     // _unterrichtmenge_by_idSchueler
 		update_schienenmenge_by_idKlasse();                          // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
+	}
 
+	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
+		_pausenzeit_by_tag_and_beginn_and_ende.clear();
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert) {
+			final long beginn = pausenzeit.beginn == null ? -1 : pausenzeit.beginn;
+			final long ende = pausenzeit.ende == null ? -1 : pausenzeit.ende;
+			final @NotNull LongArrayKey key = new LongArrayKey(new long[] {pausenzeit.wochentag, beginn, ende});
+			_pausenzeit_by_tag_and_beginn_and_ende.put(key, pausenzeit);
+		}
+	}
 
+	private void update_aufsichtsbereich_by_kuerzel() {
+		_aufsichtsbereich_by_kuerzel.clear();
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : _aufsichtsbereichmenge_sortiert)
+			_aufsichtsbereich_by_kuerzel.put(aufsichtsbereich.kuerzel, aufsichtsbereich);
+	}
+
+	private void update_raum_by_kuerzel() {
+		_raum_by_kuerzel.clear();
+		for (final @NotNull StundenplanRaum raum : _raummenge_sortiert)
+			_raum_by_kuerzel.put(raum.kuerzel, raum);
 	}
 
 	private void update_unterrichtmenge_by_idUnterricht() {
@@ -659,7 +686,7 @@ public class StundenplanManager {
 
 	private void update_klassenmenge_by_idPausenzeit() {
 		_klassenmenge_by_idPausenzeit.clear();
-		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
 			if (pausenzeit.klassen.isEmpty()) {
 				MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id).addAll(_klassenmenge_sortiert);
 			} else {
@@ -799,13 +826,13 @@ public class StundenplanManager {
 	}
 
 	private void update_pausenzeitmenge() {
-		_pausenzeitmenge.clear();
-		_pausenzeitmenge.addAll(_pausenzeit_by_id.values());
-		_pausenzeitmenge.sort(_compPausenzeit);
+		_pausenzeitmenge_sortiert.clear();
+		_pausenzeitmenge_sortiert.addAll(_pausenzeit_by_id.values());
+		_pausenzeitmenge_sortiert.sort(_compPausenzeit);
 
 		_pausenzeitMinutenMin = null;
 		_pausenzeitMinutenMax = null;
-		for (final @NotNull StundenplanPausenzeit p : _pausenzeitmenge) {
+		for (final @NotNull StundenplanPausenzeit p : _pausenzeitmenge_sortiert) {
 			_pausenzeitMinutenMin = BlockungsUtils.minII(_pausenzeitMinutenMin, p.beginn);
 			_pausenzeitMinutenMax = BlockungsUtils.maxII(_pausenzeitMinutenMax, p.ende);
 		}
@@ -813,7 +840,7 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmengeOhnePausenaufsicht() {
 		_pausenzeitmengeOhneLeere_sortiert.clear();
-		for (final @NotNull StundenplanPausenzeit zeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit zeit : _pausenzeitmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(_pausenaufsichtmenge_by_idPausenzeit, zeit.id).isEmpty())
 				_pausenzeitmengeOhneLeere_sortiert.add(zeit);
 
@@ -827,13 +854,13 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_wochentag() {
 		_pausenzeitmenge_by_wochentag.clear();
-		for (final @NotNull StundenplanPausenzeit zeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit zeit : _pausenzeitmenge_sortiert)
 			MapUtils.addToList(_pausenzeitmenge_by_wochentag, zeit.wochentag, zeit);
 	}
 
 	private void update_pausenzeitmenge_by_idSchueler() {
 		_pausenzeitmenge_by_idSchueler.clear();
-		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
 			for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (final @NotNull StundenplanSchueler schueler : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKlasse, klasse.id))
 					MapUtils.addToList(_pausenzeitmenge_by_idSchueler, schueler.id, pausenzeit);
@@ -848,7 +875,7 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_idKlasse() {
 		_pausenzeitmenge_by_idKlasse.clear();
-		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
 			for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
 				MapUtils.addToList(_pausenzeitmenge_by_idKlasse, klasse.id, pausenzeit);
 	}
@@ -885,7 +912,7 @@ public class StundenplanManager {
 
 	private void update_pausenzeitmenge_by_idJahrgang() {
 		_pausenzeitmenge_by_idJahrgang.clear();
-		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge)
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _pausenzeitmenge_sortiert)
 			for (final @NotNull StundenplanKlasse  klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (final @NotNull Long idJahrgang : klasse.jahrgaenge)
 					MapUtils.addToListIfNotExists(_pausenzeitmenge_by_idJahrgang, idJahrgang, pausenzeit);
@@ -1369,6 +1396,18 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
 		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
 		// aufsicht.beschreibung darf "blank" sein
+	}
+
+	/**
+	 * Liefert TRUE, falls ein {@link StundenplanAufsichtsbereich}-Objekt mit dem Kürzel existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzel  Das Kürzel des {@link StundenplanAufsichtsbereich}-Objektes.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanAufsichtsbereich}-Objekt mit dem Kürzel existiert.
+	 */
+	public boolean aufsichtsbereichExistsByKuerzel(final @NotNull String kuerzel) {
+		return _aufsichtsbereich_by_kuerzel.containsKey(kuerzel);
 	}
 
 	/**
@@ -3090,6 +3129,23 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls ein {@link StundenplanPausenzeit}-Objekt mit (Tag, Beginn, Ende) existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochentag     Der {@link Wochentag}  des {@link StundenplanPausenzeit}-Objektes.
+	 * @param beginnOrNull  Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt. NULL bedeutet "noch nicht definiert".
+	 * @param endeOrNull    Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause endet. NULL bedeutet "noch nicht definiert".
+	 *
+	 * @return TRUE, falls ein {@link StundenplanPausenzeit}-Objekt mit (Tag, Beginn, Ende) existiert.
+	 */
+	public boolean pausenzeitExistsByWochentagAndBeginnAndEnde(final int wochentag, final Integer beginnOrNull, final Integer endeOrNull) {
+		final long beginn = beginnOrNull == null ? -1 : beginnOrNull;
+		final long ende = endeOrNull == null ? -1 : endeOrNull;
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {wochentag, beginn, ende});
+		return _pausenzeit_by_tag_and_beginn_and_ende.containsKey(key);
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -3136,7 +3192,7 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeitGetMengeAsList() {
-		return _pausenzeitmenge;
+		return _pausenzeitmenge_sortiert;
 	}
 
 	/**
@@ -3424,6 +3480,18 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
 		// raum.beschreibung darf "blank" sein!
 		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+	}
+
+	/**
+	 * Liefert TRUE, falls ein {@link StundenplanRaum}-Objekt mit dem Kürzel existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kuerzel  Das Kürzel des {@link StundenplanRaum}-Objektes.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanRaum}-Objekt mit dem Kürzel existiert.
+	 */
+	public boolean raumExistsByKuerzel(final @NotNull String kuerzel) {
+		return _raum_by_kuerzel.containsKey(kuerzel);
 	}
 
 	/**
@@ -4834,6 +4902,19 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit (Tag, Stunde) existiert.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des {@link StundenplanZeitraster}-Objekts.
+	 * @param stunde     Die Unterrichtsstunde des {@link StundenplanZeitraster}-Objekts.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit (Tag, Stunde) existiert.
+	 */
+	public boolean zeitrasterExistsByWochentagAndStunde(final int wochentag, final int stunde) {
+		return _zeitraster_by_wochentag_and_stunde.contains(wochentag, stunde);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanZeitraster}-Objekte.
 	 *
 	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte.
@@ -4945,14 +5026,14 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag, oder NULL.
 	 *
 	 * @param zeitraster Das aktuelle {@link StundenplanZeitraster}-Objekt.
 	 *
-	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag, oder NULL.
 	 */
-	public @NotNull StundenplanZeitraster getZeitrasterNext(final @NotNull StundenplanZeitraster zeitraster) {
-		return _zeitraster_by_wochentag_and_stunde.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
+	public StundenplanZeitraster getZeitrasterNext(final @NotNull StundenplanZeitraster zeitraster) {
+		return _zeitraster_by_wochentag_and_stunde.getOrNull(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
 	}
 
 	/**
@@ -5481,18 +5562,6 @@ public class StundenplanManager {
 					return true;
 
 		return false;
-	}
-
-	/**
-	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
-	 *
-	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des Zeitrasters.
-	 * @param stunde     Die Unterrichtsstunde des Zeitrasters.
-	 *
-	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
-	 */
-	public boolean zeitrasterExistsByWochentagAndStunde(final int wochentag, final int stunde) {
-		return _zeitraster_by_wochentag_and_stunde.contains(wochentag, stunde);
 	}
 
 	/**
