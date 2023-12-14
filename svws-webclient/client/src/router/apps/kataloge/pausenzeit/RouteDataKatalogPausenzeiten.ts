@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, DeveloperNotificationException, StundenplanKomplett, StundenplanManager, type StundenplanPausenzeit } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, UserNotificationException, type StundenplanPausenzeit, DeveloperNotificationException } from "@core";
 import { routeKatalogPausenzeitDaten } from "./RouteKatalogPausenzeitDaten";
 import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
@@ -93,7 +93,7 @@ export class RouteDataKatalogPausenzeiten {
 
 	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
 		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
-			throw new DeveloperNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
+			throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 		delete eintrag.id;
 		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
 		this.stundenplanManager.pausenzeitAdd(pausenzeit);
@@ -119,7 +119,9 @@ export class RouteDataKatalogPausenzeiten {
 
 	patch = async (eintrag : Partial<StundenplanPausenzeit>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
+			throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 		await api.server.patchStundenplanPausenzeit(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});

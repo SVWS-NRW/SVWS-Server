@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 import type { StundenplanAufsichtsbereich} from "@core";
-import { StundenplanKomplett, StundenplanManager, ArrayList, DeveloperNotificationException } from "@core";
+import { StundenplanKomplett, StundenplanManager, ArrayList, UserNotificationException, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
@@ -94,7 +94,7 @@ export class RouteDataKatalogAufsichtsbereiche {
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
 		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
-			throw new DeveloperNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
+			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);
 		this.stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);
@@ -120,7 +120,9 @@ export class RouteDataKatalogAufsichtsbereiche {
 
 	patch = async (eintrag : Partial<StundenplanAufsichtsbereich>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
+			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});

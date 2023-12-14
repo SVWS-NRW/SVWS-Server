@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum, DeveloperNotificationException } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum, UserNotificationException, DeveloperNotificationException } from "@core";
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 
@@ -95,7 +95,7 @@ export class RouteDataKatalogRaeume {
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
 		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
-			throw new DeveloperNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
+			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
 		this.stundenplanManager.raumAdd(raum);
@@ -121,7 +121,9 @@ export class RouteDataKatalogRaeume {
 
 	patch = async (eintrag : Partial<Raum>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
+			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
