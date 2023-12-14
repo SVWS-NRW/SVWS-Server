@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, StundenplanKomplett, StundenplanManager, type StundenplanPausenzeit } from "@core";
+import { ArrayList, DeveloperNotificationException, StundenplanKomplett, StundenplanManager, type StundenplanPausenzeit } from "@core";
 import { routeKatalogPausenzeitDaten } from "./RouteKatalogPausenzeitDaten";
 import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
@@ -93,7 +93,7 @@ export class RouteDataKatalogPausenzeiten {
 
 	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
 		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
-			return;
+			throw new DeveloperNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 		delete eintrag.id;
 		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
 		this.stundenplanManager.pausenzeitAdd(pausenzeit);

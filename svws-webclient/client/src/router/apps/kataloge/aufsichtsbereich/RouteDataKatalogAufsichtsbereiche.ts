@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 import type { StundenplanAufsichtsbereich} from "@core";
-import { StundenplanKomplett, StundenplanManager, ArrayList } from "@core";
+import { StundenplanKomplett, StundenplanManager, ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
@@ -94,7 +94,7 @@ export class RouteDataKatalogAufsichtsbereiche {
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
 		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
-			return;
+			throw new DeveloperNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);
 		this.stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);

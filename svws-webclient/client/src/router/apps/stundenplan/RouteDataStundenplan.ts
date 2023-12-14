@@ -104,8 +104,8 @@ export class RouteDataStundenplan {
 		return this._state.value.selected;
 	}
 
-	public setSelection = (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
-		this.setPatchedState({selected: value});
+	public setSelection = (selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
+		this.setPatchedState({selected});
 	}
 
 	patch = async (data : Partial<Stundenplan>) => {
@@ -131,6 +131,8 @@ export class RouteDataStundenplan {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!raum.kuerzel || this.stundenplanManager.raumExistsByKuerzel(raum.kuerzel))
+			throw new DeveloperNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete raum.id;
 		api.status.start();
 		const _raum = await api.server.addStundenplanRaum(raum, api.schema, id)
@@ -142,6 +144,8 @@ export class RouteDataStundenplan {
 	patchRaum = async (data : Partial<StundenplanRaum>, id: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!data.kuerzel || this.stundenplanManager.raumExistsByKuerzel(data.kuerzel))
+			throw new DeveloperNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete data.id;
 		api.status.start();
 		await api.server.patchStundenplanRaum(data, api.schema, id);
@@ -187,6 +191,8 @@ export class RouteDataStundenplan {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!pausenzeit.wochentag || !pausenzeit.beginn || !pausenzeit.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(pausenzeit.wochentag, pausenzeit.beginn, pausenzeit.ende))
+			throw new DeveloperNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 		delete pausenzeit.id;
 		api.status.start();
 		const _pausenzeit = await api.server.addStundenplanPausenzeit(pausenzeit, api.schema, id)
@@ -251,6 +257,8 @@ export class RouteDataStundenplan {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!aufsichtsbereich.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(aufsichtsbereich.kuerzel))
+			throw new DeveloperNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete aufsichtsbereich.id;
 		api.status.start();
 		const _aufsichtsbereich = await api.server.addStundenplanAufsichtsbereich(aufsichtsbereich, api.schema, id)

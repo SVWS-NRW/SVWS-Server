@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum, DeveloperNotificationException } from "@core";
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 
@@ -95,7 +95,7 @@ export class RouteDataKatalogRaeume {
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
 		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
-			return;
+			throw new DeveloperNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
 		this.stundenplanManager.raumAdd(raum);
