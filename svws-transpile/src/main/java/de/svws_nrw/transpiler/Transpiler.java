@@ -972,7 +972,7 @@ public final class Transpiler extends AbstractProcessor {
 			for (final AnnotationTree annotation : annotations) {
 				if ("TranspilerDTO".equals(annotation.getAnnotationType().toString())) {
 					final String packageName = tu.allAnnotations.get(annotation.getAnnotationType());
-					if ("de.svws_nrw.core.transpiler".equals(packageName))
+					if ("de.svws_nrw.core.transpiler".equals(packageName) || "de.svws_nrw.asd.annotation".equals(packageName))
 						return true;
 				}
 			}
