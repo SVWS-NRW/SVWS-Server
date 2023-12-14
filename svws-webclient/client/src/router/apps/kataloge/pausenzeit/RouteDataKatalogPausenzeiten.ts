@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, type StundenplanPausenzeit } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, type StundenplanPausenzeit } from "@core";
 import { routeKatalogPausenzeitDaten } from "./RouteKatalogPausenzeitDaten";
 import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
@@ -10,6 +10,7 @@ interface RouteStateKatalogPausenzeiten {
 	auswahl: StundenplanPausenzeit | undefined;
 	daten: StundenplanPausenzeit | undefined;
 	mapKatalogeintraege: Map<number, StundenplanPausenzeit>;
+	stundenplanManager: StundenplanManager | undefined;
 	view: RouteNode<any, any>;
 }
 
@@ -19,6 +20,7 @@ export class RouteDataKatalogPausenzeiten {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
+		stundenplanManager: undefined,
 		view: routeKatalogPausenzeitDaten,
 	}
 	private _state = shallowRef(RouteDataKatalogPausenzeiten._defaultState);
@@ -54,6 +56,12 @@ export class RouteDataKatalogPausenzeiten {
 		return new Map(this._state.value.mapKatalogeintraege);
 	}
 
+	get stundenplanManager(): StundenplanManager {
+		if (this._state.value.stundenplanManager === undefined)
+			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		return this._state.value.stundenplanManager;
+	}
+
 	get daten(): StundenplanPausenzeit {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Pausenzeitdaten nicht initialisiert");
@@ -64,9 +72,14 @@ export class RouteDataKatalogPausenzeiten {
 		const listKatalogeintraege = await api.server.getPausenzeiten(api.schema);
 		const mapKatalogeintraege = new Map<number, StundenplanPausenzeit>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		const stundenplanKomplett = new StundenplanKomplett();
+		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
+		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
+		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
+		stundenplanManager.pausenzeitAddAll(listKatalogeintraege);
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, stundenplanManager })
 	}
 
 	setEintrag = async (auswahl: StundenplanPausenzeit) => {
@@ -79,8 +92,11 @@ export class RouteDataKatalogPausenzeiten {
 	}
 
 	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
+		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
+			return;
 		delete eintrag.id;
 		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
+		this.stundenplanManager.pausenzeitAdd(pausenzeit);
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		mapKatalogeintraege.set(pausenzeit.id, pausenzeit);
 		this.setPatchedState({mapKatalogeintraege});

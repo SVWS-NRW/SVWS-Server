@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { ArrayList, type Raum } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum } from "@core";
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 
@@ -10,15 +10,19 @@ interface RouteStateKatalogRaeume {
 	auswahl: Raum | undefined;
 	daten: Raum | undefined;
 	mapKatalogeintraege: Map<number, Raum>;
+	stundenplanManager: StundenplanManager | undefined;
 	view: RouteNode<any, any>;
 }
 
 export class RouteDataKatalogRaeume {
 
+	private stundenplanKomplett = new StundenplanKomplett();
+
 	private static _defaultState: RouteStateKatalogRaeume = {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
+		stundenplanManager: undefined,
 		view: routeKatalogRaumDaten,
 	}
 	private _state = shallowRef(RouteDataKatalogRaeume._defaultState);
@@ -54,6 +58,12 @@ export class RouteDataKatalogRaeume {
 		return new Map(this._state.value.mapKatalogeintraege);
 	}
 
+	get stundenplanManager(): StundenplanManager {
+		if (this._state.value.stundenplanManager === undefined)
+			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		return this._state.value.stundenplanManager;
+	}
+
 	get daten(): Raum {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
@@ -64,9 +74,14 @@ export class RouteDataKatalogRaeume {
 		const listKatalogeintraege = await api.server.getRaeume(api.schema);
 		const mapKatalogeintraege = new Map<number, Raum>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		const stundenplanKomplett = new StundenplanKomplett();
+		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
+		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
+		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
+		stundenplanManager.raumAddAll(listKatalogeintraege);
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, stundenplanManager })
 	}
 
 	setEintrag = async (auswahl: Raum) => {
@@ -79,8 +94,11 @@ export class RouteDataKatalogRaeume {
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
+		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
+			return;
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
+		this.stundenplanManager.raumAdd(raum);
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		mapKatalogeintraege.set(raum.id, raum);
 		this.setPatchedState({mapKatalogeintraege});

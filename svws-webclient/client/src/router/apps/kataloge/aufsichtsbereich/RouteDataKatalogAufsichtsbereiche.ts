@@ -1,6 +1,6 @@
-import type { StundenplanAufsichtsbereich } from "@core";
-import { ArrayList } from "@core";
 import { shallowRef } from "vue";
+import type { StundenplanAufsichtsbereich} from "@core";
+import { StundenplanKomplett, StundenplanManager, ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
@@ -11,6 +11,7 @@ interface RouteStateKatalogAufsichtsbereiche {
 	auswahl: StundenplanAufsichtsbereich | undefined;
 	daten: StundenplanAufsichtsbereich | undefined;
 	mapKatalogeintraege: Map<number, StundenplanAufsichtsbereich>;
+	stundenplanManager: StundenplanManager | undefined;
 	view: RouteNode<any, any>;
 }
 
@@ -20,6 +21,7 @@ export class RouteDataKatalogAufsichtsbereiche {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
+		stundenplanManager: undefined,
 		view: routeKatalogAufsichtsbereichDaten,
 	}
 	private _state = shallowRef(RouteDataKatalogAufsichtsbereiche._defaultState);
@@ -55,6 +57,12 @@ export class RouteDataKatalogAufsichtsbereiche {
 		return new Map(this._state.value.mapKatalogeintraege);
 	}
 
+	get stundenplanManager(): StundenplanManager {
+		if (this._state.value.stundenplanManager === undefined)
+			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		return this._state.value.stundenplanManager;
+	}
+
 	get daten(): StundenplanAufsichtsbereich {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
@@ -65,9 +73,14 @@ export class RouteDataKatalogAufsichtsbereiche {
 		const listKatalogeintraege = await api.server.getAufsichtsbereiche(api.schema);
 		const mapKatalogeintraege = new Map<number, StundenplanAufsichtsbereich>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		const stundenplanKomplett = new StundenplanKomplett();
+		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
+		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
+		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
+		stundenplanManager.aufsichtsbereichAddAll(listKatalogeintraege);
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, stundenplanManager })
 	}
 
 	setEintrag = async (auswahl: StundenplanAufsichtsbereich) => {
@@ -80,12 +93,15 @@ export class RouteDataKatalogAufsichtsbereiche {
 	}
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
+		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
+			return;
 		delete eintrag.id;
-		const raum = await api.server.addAufsichtsbereich(eintrag, api.schema);
+		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);
+		this.stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);
 		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(raum.id, raum);
+		mapKatalogeintraege.set(aufsichtsbereich.id, aufsichtsbereich);
 		this.setPatchedState({mapKatalogeintraege});
-		await this.gotoEintrag(raum);
+		await this.gotoEintrag(aufsichtsbereich);
 	}
 
 	deleteEintraege = async (eintraege: StundenplanAufsichtsbereich[]) => {
