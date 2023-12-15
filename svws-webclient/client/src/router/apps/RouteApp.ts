@@ -96,7 +96,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		while (cur.parent !== this)
 		  cur = cur.parent;
 		if (cur !== this.data.view)
-			await this.data.setView(cur);
+			this.data.setView(cur, this.children);
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
@@ -144,7 +144,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: {  } });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

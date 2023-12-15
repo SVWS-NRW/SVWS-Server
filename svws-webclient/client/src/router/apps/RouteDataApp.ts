@@ -1,43 +1,32 @@
 import type { WritableComputedRef } from "vue";
-import { computed, shallowRef } from "vue";
+import { computed } from "vue";
 
 import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import { Schuljahresabschnitt } from "@core";
 
-import type { RouteNode } from "~/router/RouteNode";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
 
-interface RouteStateApp {
+interface RouteStateApp extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataApp {
+const defaultState = <RouteStateApp>{
+	idSchuljahresabschnitt: -1,
+	mapOrte: new Map(),
+	mapOrtsteile: new Map(),
+	view: routeSchueler
+};
 
-	private static _defaultState : RouteStateApp = {
-		idSchuljahresabschnitt: -1,
-		mapOrte: new Map(),
-		mapOrtsteile: new Map(),
-		view: routeSchueler
-	}
+export class RouteDataApp extends RouteData<RouteStateApp> {
 
-	private _state = shallowRef<RouteStateApp>(RouteDataApp._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateApp>) {
-		this._state.value = Object.assign({ ... RouteDataApp._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateApp>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	aktAbschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
@@ -66,7 +55,7 @@ export class RouteDataApp {
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt?: number) {
 		if (idSchuljahresabschnitt === undefined) {
-			this._state.value = RouteDataApp._defaultState;
+			this._state.value = this._defaultState;
 			return;
 		}
 		// Lade den Katalog der Orte
@@ -79,19 +68,11 @@ export class RouteDataApp {
 		const mapOrtsteile = new Map();
 		for (const o of ortsteile)
 			mapOrtsteile.set(o.id, o);
-		this.setPatchedDefaultState({
+		this.setPatchedDefaultStateKeepView({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			mapOrte,
-			mapOrtsteile,
-			view: this._state.value.view,
+			mapOrtsteile
 		});
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeApp.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get mapOrte() {
@@ -100,10 +81,6 @@ export class RouteDataApp {
 
 	public get mapOrtsteile() {
 		return this._state.value.mapOrtsteile;
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
 	}
 
 }
