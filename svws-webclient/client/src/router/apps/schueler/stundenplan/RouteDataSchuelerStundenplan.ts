@@ -1,8 +1,7 @@
-import { shallowRef } from "vue";
-
 import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, StundenplanManager } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -10,7 +9,7 @@ import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 
 
-interface RouteStateSchuelerDataStundenplan {
+interface RouteStateSchuelerDataStundenplan extends RouteStateInterface {
 	idSchueler: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -19,29 +18,20 @@ interface RouteStateSchuelerDataStundenplan {
 	kalenderwoche: StundenplanKalenderwochenzuordnung | undefined,
 }
 
-export class RouteDataSchuelerStundenplan {
+const defaultState = <RouteStateSchuelerDataStundenplan> {
+	idSchueler: undefined,
+	auswahl: undefined,
+	mapStundenplaene: new Map(),
+	manager: undefined,
+	wochentyp: 0,
+	kalenderwoche: undefined,
+};
 
-	private static _defaultState: RouteStateSchuelerDataStundenplan = {
-		idSchueler: undefined,
-		auswahl: undefined,
-		mapStundenplaene: new Map(),
-		manager: undefined,
-		wochentyp: 0,
-		kalenderwoche: undefined,
-	}
 
-	private _state = shallowRef(RouteDataSchuelerStundenplan._defaultState);
+export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDataStundenplan> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateSchuelerDataStundenplan>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerStundenplan._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateSchuelerDataStundenplan>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get wochentyp(): number {

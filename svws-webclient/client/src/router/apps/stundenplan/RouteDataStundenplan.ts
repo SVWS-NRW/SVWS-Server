@@ -1,16 +1,18 @@
 import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsListeEintrag, LehrerListeEintrag} from "@core";
-import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
-import type { RouteNode } from "~/router/RouteNode";
-import { shallowRef } from "vue";
+import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager,
+	DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
+
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
 import { routeKatalogPausenzeiten } from "../kataloge/pausenzeit/RouteKatalogPausenzeiten";
 import { routeKatalogAufsichtsbereiche } from "../kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogRaeume } from "../kataloge/raum/RouteKatalogRaeume";
 
-interface RouteStateStundenplan {
+interface RouteStateStundenplan extends RouteStateInterface {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 	daten: Stundenplan | undefined;
@@ -21,46 +23,26 @@ interface RouteStateStundenplan {
 	listJahrgaenge: List<JahrgangsListeEintrag>;
 	listLehrer: List<LehrerListeEintrag>;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
-	view: RouteNode<any, any>;
 }
-export class RouteDataStundenplan {
 
-	private static _defaultState: RouteStateStundenplan = {
-		auswahl: undefined,
-		mapKatalogeintraege: new Map(),
-		daten: undefined,
-		stundenplanManager: undefined,
-		listRaeume: new ArrayList(),
-		listPausenzeiten: new ArrayList(),
-		listAufsichtsbereiche: new ArrayList(),
-		listJahrgaenge: new ArrayList(),
-		listLehrer: new ArrayList(),
-		selected: undefined,
-		view: routeStundenplanDaten,
-	}
-	private _state = shallowRef(RouteDataStundenplan._defaultState);
+const defaultState = <RouteStateStundenplan> {
+	auswahl: undefined,
+	mapKatalogeintraege: new Map(),
+	daten: undefined,
+	stundenplanManager: undefined,
+	listRaeume: new ArrayList(),
+	listPausenzeiten: new ArrayList(),
+	listAufsichtsbereiche: new ArrayList(),
+	listJahrgaenge: new ArrayList(),
+	listLehrer: new ArrayList(),
+	selected: undefined,
+	view: routeStundenplanDaten,
+};
 
-	private setPatchedDefaultState(patch: Partial<RouteStateStundenplan>) {
-		this._state.value = Object.assign({ ... RouteDataStundenplan._defaultState }, patch);
-	}
+export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 
-	private setPatchedState(patch: Partial<RouteStateStundenplan>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeStundenplan.children.includes(view))
-			this.setPatchedState({ view });
-		else
-			throw new Error("Diese für die Stundenpläne gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): StundenplanListeEintrag | undefined {

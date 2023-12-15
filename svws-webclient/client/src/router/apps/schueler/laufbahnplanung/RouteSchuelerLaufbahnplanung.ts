@@ -19,7 +19,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
-		super.isHidden = (params?: RouteParams) => {
+		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
 				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
 			if (!routeSchueler.data.schuelerListeManager.hasDaten())

@@ -19,7 +19,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
-		super.isHidden = (params?: RouteParams) => {
+		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id instanceof Array))
 				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
 			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute(parseInt(params.id));

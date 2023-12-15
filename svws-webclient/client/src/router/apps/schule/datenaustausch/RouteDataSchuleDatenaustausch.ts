@@ -1,10 +1,8 @@
-import { shallowRef } from "vue";
-
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
 import { api } from "~/router/Api";
-import type { RouteNode } from "~/router/RouteNode";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschLupo";
@@ -12,31 +10,18 @@ import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/d
 import { OpenApiError, SimpleOperationResponse } from "@core";
 
 
-interface RouteStateDatenaustausch {
-	view: RouteNode<any, any>;
+interface RouteStateDatenaustausch extends RouteStateInterface {
 }
 
-export class RouteDataSchuleDatenaustausch {
+const defaultState = <RouteStateDatenaustausch> {
+	view: routeSchuleDatenaustauschLaufbahnplanung
+};
 
-	private static _defaultState : RouteStateDatenaustausch = {
-		view: routeSchuleDatenaustauschLaufbahnplanung
-	}
 
-	private _state = shallowRef<RouteStateDatenaustausch>(RouteDataSchuleDatenaustausch._defaultState);
+export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaustausch> {
 
-	private setPatchedState(patch: Partial<RouteStateDatenaustausch>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeSchuleDatenaustausch.children.includes(view))
-			this.setPatchedState({ view });
-		else
-			throw new Error("Diese für den Datenaustausch gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all') : Promise<SimpleOperationResponse> => {

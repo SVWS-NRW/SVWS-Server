@@ -119,7 +119,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			name: value.name,
 			params: { id: this.data.auswahl?.id },
 		});
-		await this.data.setView(node);
+		this.data.setView(node, routeSchule.children);
 	};
 
 }

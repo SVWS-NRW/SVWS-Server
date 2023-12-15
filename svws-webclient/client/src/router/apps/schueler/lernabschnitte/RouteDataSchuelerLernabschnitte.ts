@@ -1,17 +1,15 @@
-import { shallowRef } from "vue";
-
 import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen} from "@core";
-import { ArrayList, SchuelerLernabschnittManager, SchuelerListeEintrag } from "@core";
+import { ArrayList, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import { type RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
 
 
-interface RouteStateDataSchuelerLernabschnitte {
+interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
 	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
@@ -23,41 +21,27 @@ interface RouteStateDataSchuelerLernabschnitte {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
 	manager: SchuelerLernabschnittManager | undefined;
-	// und die ausgewählte View
-	view: RouteNode<any, any>;
 }
 
+const defaultState = <RouteStateDataSchuelerLernabschnitte> {
+	idSchueler: -1,
+	listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
+	listFaecher: new ArrayList(),
+	listFoerderschwerpunkte: new ArrayList(),
+	listJahrgaenge: new ArrayList(),
+	listLehrer: new ArrayList(),
+	auswahl: undefined,
+	daten: undefined,
+	manager: undefined,
+	view: routeSchuelerLernabschnittLeistungen,
+};
 
-export class RouteDataSchuelerLernabschnitte {
 
-	private static _defaultState: RouteStateDataSchuelerLernabschnitte = {
-		idSchueler: -1,
-		listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
-		listFaecher: new ArrayList(),
-		listFoerderschwerpunkte: new ArrayList(),
-		listJahrgaenge: new ArrayList(),
-		listLehrer: new ArrayList(),
-		auswahl: undefined,
-		daten: undefined,
-		manager: undefined,
-		view: routeSchuelerLernabschnittLeistungen,
+export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSchuelerLernabschnitte> {
+
+	public constructor() {
+		super(defaultState);
 	}
-
-	private _state = shallowRef(RouteDataSchuelerLernabschnitte._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerLernabschnitte>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerLernabschnitte._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerLernabschnitte>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-
 
 	get idSchueler(): number {
 		return this._state.value.idSchueler;
@@ -132,14 +116,6 @@ export class RouteDataSchuelerLernabschnitte {
 		this.setPatchedDefaultState(newState)
 	}
 
-	public async setView(view: RouteNode<any,any>) {
-		this.setPatchedState({ view: view });
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-
 	get hatAuswahl() : boolean {
 		return (this._state.value.auswahl !== undefined);
 	}
@@ -165,7 +141,7 @@ export class RouteDataSchuelerLernabschnitte {
 	}
 
 	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag) => {
-		await RouteManager.doRoute({ name: this._state.value.view.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
+		await RouteManager.doRoute({ name: this.view.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
 	}
 
 	patchLernabschnitt = async (data : Partial<SchuelerLernabschnittsdaten>) => {

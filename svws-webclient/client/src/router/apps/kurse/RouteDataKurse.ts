@@ -1,8 +1,7 @@
-import { shallowRef } from "vue";
-
 import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { type RouteNode } from "~/router/RouteNode";
 
@@ -12,48 +11,27 @@ import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 
 
-interface RouteStateKurse {
+interface RouteStateKurse extends RouteStateInterface {
 	auswahl: KursListeEintrag | undefined;
 	daten: KursDaten | undefined;
 	mapKatalogeintraege: Map<number, KursListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKurse {
+const defaultState = <RouteStateKurse> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	mapLehrer: new Map(),
+	mapJahrgaenge: new Map(),
+	view: routeKursDaten,
+};
 
-	private static _defaultState: RouteStateKurse = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		mapLehrer: new Map(),
-		mapJahrgaenge: new Map(),
-		view: routeKursDaten,
-	}
-	private _state = shallowRef(RouteDataKurse._defaultState);
+export class RouteDataKurse extends RouteData<RouteStateKurse> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKurse>) {
-		this._state.value = Object.assign({ ... RouteDataKurse._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKurse>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKurse.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Kurse gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): KursListeEintrag | undefined {

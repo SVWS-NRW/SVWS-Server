@@ -1,8 +1,7 @@
-import { shallowRef } from "vue";
-
 import { type StundenplanListeEintrag, type StundenplanKalenderwochenzuordnung, StundenplanManager} from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -10,7 +9,7 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 
 
-interface RouteStateLehrerDataStundenplan {
+interface RouteStateLehrerDataStundenplan extends RouteStateInterface {
 	idLehrer: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -19,29 +18,20 @@ interface RouteStateLehrerDataStundenplan {
 	kalenderwoche: StundenplanKalenderwochenzuordnung | undefined,
 }
 
-export class RouteDataLehrerStundenplan {
+const defaultState = <RouteStateLehrerDataStundenplan> {
+	idLehrer: undefined,
+	auswahl: undefined,
+	mapStundenplaene: new Map(),
+	manager: undefined,
+	wochentyp: 0,
+	kalenderwoche: undefined,
+};
 
-	private static _defaultState: RouteStateLehrerDataStundenplan = {
-		idLehrer: undefined,
-		auswahl: undefined,
-		mapStundenplaene: new Map(),
-		manager: undefined,
-		wochentyp: 0,
-		kalenderwoche: undefined,
-	}
 
-	private _state = shallowRef(RouteDataLehrerStundenplan._defaultState);
+export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataStundenplan> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateLehrerDataStundenplan>) {
-		this._state.value = Object.assign({ ... RouteDataLehrerStundenplan._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateLehrerDataStundenplan>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get wochentyp(): number {

@@ -1,50 +1,37 @@
-import { shallowRef } from "vue";
-
 import type { BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@core";
 import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteSchuleBenutzerDaten";
 
 
-interface RouteStateSchuleBenutzer {
+interface RouteStateSchuleBenutzer extends RouteStateInterface {
 	auswahl: BenutzerListeEintrag | undefined;
 	listBenutzer: List<BenutzerListeEintrag> ;
 	mapBenutzer: Map<number, BenutzerListeEintrag>;
 	benutzerManager: BenutzerManager;
 	listBenutzergruppen: List<BenutzergruppeListeEintrag>;
 	daten: BenutzerDaten | undefined;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataSchuleBenutzer {
+const defaultState = <RouteStateSchuleBenutzer> {
+	auswahl: undefined,
+	listBenutzer: new ArrayList(),
+	mapBenutzer: new Map<number, BenutzerListeEintrag>,
+	benutzerManager: new BenutzerManager(new BenutzerDaten()),
+	listBenutzergruppen: new ArrayList(),
+	daten: undefined,
+	view: routeSchuleBenutzerDaten,
+};
 
-	private static _defaultState : RouteStateSchuleBenutzer = {
-		auswahl: undefined,
-		listBenutzer: new ArrayList(),
-		mapBenutzer: new Map<number, BenutzerListeEintrag>,
-		benutzerManager: new BenutzerManager(new BenutzerDaten()),
-		listBenutzergruppen: new ArrayList(),
-		daten: undefined,
-		view: routeSchuleBenutzerDaten,
-	}
 
-	private _state = shallowRef<RouteStateSchuleBenutzer>(RouteDataSchuleBenutzer._defaultState);
+export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateSchuleBenutzer>) {
-		this._state.value = Object.assign({ ... RouteDataSchuleBenutzer._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateSchuleBenutzer>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	private firstBenutzer(mapBenutzer: Map<number, BenutzerListeEintrag>): BenutzerListeEintrag | undefined {
@@ -114,17 +101,6 @@ export class RouteDataSchuleBenutzer {
 
 	getBenutzerManager = () => {
 		return this._state.value.benutzerManager;
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeSchule.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für Schule gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
 	}
 
 	get auswahl(): BenutzerListeEintrag | undefined {

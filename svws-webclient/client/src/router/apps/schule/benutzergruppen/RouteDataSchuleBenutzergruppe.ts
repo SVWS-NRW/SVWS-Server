@@ -1,18 +1,15 @@
-import { shallowRef } from "vue";
-
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@core";
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppeDaten";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 
 
-interface RoutStateSchuleBenutzergruppe {
+interface RoutStateSchuleBenutzergruppe extends RouteStateInterface {
     auswahl: BenutzergruppeListeEintrag | undefined;
 	mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>;
 	benutzergruppenManager: BenutzergruppenManager;
@@ -20,33 +17,23 @@ interface RoutStateSchuleBenutzergruppe {
 	daten: BenutzergruppeDaten | undefined;
 	listBenutzerAlle: List<BenutzerListeEintrag>;
 	listBenutzergruppenBenutzer: List<BenutzerListeEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataSchuleBenutzergruppe {
-	private static _defaultState : RoutStateSchuleBenutzergruppe = {
-		auswahl: undefined,
-		listBenutzergruppe: new ArrayList(),
-		mapBenutzergruppe: new Map<number, BenutzergruppeListeEintrag>,
-		benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
-		listBenutzerAlle: new ArrayList(),
-		listBenutzergruppenBenutzer: new ArrayList(),
-		daten: undefined,
-		view: routeSchuleBenutzergruppeDaten,
-	}
+const defaultState = <RoutStateSchuleBenutzergruppe> {
+	auswahl: undefined,
+	listBenutzergruppe: new ArrayList(),
+	mapBenutzergruppe: new Map<number, BenutzergruppeListeEintrag>,
+	benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
+	listBenutzerAlle: new ArrayList(),
+	listBenutzergruppenBenutzer: new ArrayList(),
+	daten: undefined,
+	view: routeSchuleBenutzergruppeDaten,
+};
 
-	private _state = shallowRef<RoutStateSchuleBenutzergruppe>(RouteDataSchuleBenutzergruppe._defaultState);
+export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenutzergruppe> {
 
-	private setPatchedDefaultState(patch: Partial<RoutStateSchuleBenutzergruppe>) {
-		this._state.value = Object.assign({ ... RouteDataSchuleBenutzergruppe._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RoutStateSchuleBenutzergruppe>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	private firstBenutzer(mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>): BenutzergruppeListeEintrag | undefined {
@@ -112,17 +99,6 @@ export class RouteDataSchuleBenutzergruppe {
 
 	getBenutzergruppenManager = () => {
 		return this._state.value.benutzergruppenManager;
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeSchule.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für Schule gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
 	}
 
 	get benutzergruppenManager(): BenutzergruppenManager {

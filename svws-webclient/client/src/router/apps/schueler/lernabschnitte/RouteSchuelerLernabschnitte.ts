@@ -95,7 +95,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			abschnitt: this.data.auswahl.schuljahresabschnitt,
 			wechselNr: this.data.auswahl.wechselNr
 		} });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

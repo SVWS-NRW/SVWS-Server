@@ -1,33 +1,19 @@
-import { shallowRef } from "vue";
+import type { SchuelerListeEintrag, SchuelerKAoADaten } from "@core";
 
-import type { SchuelerListeEintrag} from "@core";
-import { SchuelerKAoADaten } from "@core";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-
-interface RouteStateSchuelerKAoA {
+interface RouteStateSchuelerKAoA extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
 	data: SchuelerKAoADaten;
 }
 
-export class RouteDataSchuelerKAoA {
+const defaultState = <RouteStateSchuelerKAoA> {
+};
 
-	private static _defaultState : RouteStateSchuelerKAoA = {
-		auswahl: undefined,
-		data: new SchuelerKAoADaten(),
-	}
+export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 
-	private _state = shallowRef<RouteStateSchuelerKAoA>(RouteDataSchuelerKAoA._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateSchuelerKAoA>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerKAoA._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateSchuelerKAoA>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): SchuelerListeEintrag {

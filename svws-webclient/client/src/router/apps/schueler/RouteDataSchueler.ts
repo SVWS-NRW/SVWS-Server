@@ -1,43 +1,31 @@
 import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt } from "@core";
-import type { RouteNode } from "~/router/RouteNode";
-import { shallowRef } from "vue";
 
 import { SchuelerListeManager, ArrayList, DeveloperNotificationException } from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 
 
-interface RouteStateSchueler {
+interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
 	schuelerListeManager: SchuelerListeManager;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataSchueler {
-	
-	private static _defaultState : RouteStateSchueler = {
-		idSchuljahresabschnitt: -1,
-		schuelerListeManager: new SchuelerListeManager(null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
-		view: routeSchuelerIndividualdaten,
-	};
+const defaultState = <RouteStateSchueler> {
+	idSchuljahresabschnitt: -1,
+	schuelerListeManager: new SchuelerListeManager(null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+	view: routeSchuelerIndividualdaten,
+};
 
-	private _state = shallowRef(RouteDataSchueler._defaultState);
+export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateSchueler>) {
-		this._state.value = Object.assign({ ... RouteDataSchueler._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateSchueler>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	private async ladeStammdaten(eintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
@@ -100,17 +88,6 @@ export class RouteDataSchueler {
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.schuelerListeManager.setDaten(stammdaten);
 		this.commit();
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeSchueler.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new DeveloperNotificationException("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
 	}
 
 	get schuelerListeManager(): SchuelerListeManager {

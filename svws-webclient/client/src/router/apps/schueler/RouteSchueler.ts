@@ -74,7 +74,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
-					await this.data.setView(child);
+					this.data.setView(child, this.children);
 	}
 
 
@@ -131,7 +131,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

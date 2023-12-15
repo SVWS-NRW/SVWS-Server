@@ -82,7 +82,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: {} });
-		await this.data.setView(node);
+		this.data.setView(node, routeSchule.menu);
 	}
 
 	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: {} });

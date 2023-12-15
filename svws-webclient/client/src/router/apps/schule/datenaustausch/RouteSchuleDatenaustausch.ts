@@ -88,7 +88,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: {} });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

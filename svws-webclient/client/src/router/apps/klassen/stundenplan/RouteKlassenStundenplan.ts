@@ -38,7 +38,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 			return routeKlassen.getRoute(undefined);
 		// Prüfe, ob diese Route als aktuelle View für die Tab-Bar gesetzt ist
 		if (routeKlassen.data.view !== this)
-			await routeKlassen.data.setView(this);
+			routeKlassen.data.setView(this, routeKlassen.children);
 		// Prüfe, ob diese Route das Ziel ist. Wenn dies der fall ist, dann muss ggf. noch ein Stundenplan geladen werden
 		if (to.name === this.name) {
 			// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist

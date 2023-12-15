@@ -1,11 +1,10 @@
-import { shallowRef} from "vue";
-
 import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
 import { ArrayList } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-interface RouteStateDataSchuelerAusbildungsbetriebe {
+interface RouteStateDataSchuelerAusbildungsbetriebe extends RouteStateInterface {
 	daten: BetriebStammdaten | undefined;
 	idSchueler: number | undefined;
 	betrieb: SchuelerBetriebsdaten | undefined;
@@ -17,37 +16,28 @@ interface RouteStateDataSchuelerAusbildungsbetriebe {
 	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 }
 
-export class RouteDataSchuelerAusbildungsbetriebe {
+const defaultState = <RouteStateDataSchuelerAusbildungsbetriebe> {
+	daten: undefined,
+	idSchueler: undefined,
+	betrieb: undefined,
+	listSchuelerbetriebe : new ArrayList(),
+	mapBeschaeftigungsarten: new Map(),
+	mapLehrer: new Map(),
+	mapBetriebe: new Map(),
+	listAnsprechpartner: new ArrayList(),
+	mapAnsprechpartner: new Map(),
+};
 
-	private static _defaultState: RouteStateDataSchuelerAusbildungsbetriebe = {
-		daten: undefined,
-		idSchueler: undefined,
-		betrieb: undefined,
-		listSchuelerbetriebe : new ArrayList(),
-		mapBeschaeftigungsarten: new Map(),
-		mapLehrer: new Map(),
-		mapBetriebe: new Map(),
-		listAnsprechpartner: new ArrayList(),
-		mapAnsprechpartner: new Map(),
-	}
+export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDataSchuelerAusbildungsbetriebe> {
 
-	private _state = shallowRef(RouteDataSchuelerAusbildungsbetriebe._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerAusbildungsbetriebe>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerAusbildungsbetriebe._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerAusbildungsbetriebe>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get idSchueler(): number | undefined {
 		return this._state.value.idSchueler;
 	}
+
 	get daten(): BetriebStammdaten | undefined {
 		return this._state.value.daten;
 	}

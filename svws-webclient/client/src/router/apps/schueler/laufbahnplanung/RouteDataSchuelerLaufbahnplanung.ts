@@ -1,10 +1,12 @@
-import { shallowRef } from "vue";
-import { api } from "~/router/Api";
 import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
+	GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateSchuelerLaufbahnplanung {
+interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
@@ -17,33 +19,23 @@ interface RouteStateSchuelerLaufbahnplanung {
 	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
 }
 
-export class RouteDataSchuelerLaufbahnplanung {
+const defaultState = <RouteStateSchuelerLaufbahnplanung> {
+	auswahl: undefined,
+	abiturdaten: undefined,
+	abiturdatenManager: undefined,
+	faecherManager: new GostFaecherManager(),
+	gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
+	gostJahrgang: new GostJahrgang(),
+	gostJahrgangsdaten: new GostJahrgangsdaten(),
+	gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
+	mapLehrer: new Map(),
+	zwischenspeicher: undefined,
+};
 
-	private static _defaultState : RouteStateSchuelerLaufbahnplanung = {
-		auswahl: undefined,
-		abiturdaten: undefined,
-		abiturdatenManager: undefined,
-		faecherManager: new GostFaecherManager(),
-		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
-		gostJahrgang: new GostJahrgang(),
-		gostJahrgangsdaten: new GostJahrgangsdaten(),
-		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
-		mapLehrer: new Map(),
-		zwischenspeicher: undefined,
-	}
+export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuelerLaufbahnplanung> {
 
-	private _state = shallowRef<RouteStateSchuelerLaufbahnplanung>(RouteDataSchuelerLaufbahnplanung._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateSchuelerLaufbahnplanung>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerLaufbahnplanung._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateSchuelerLaufbahnplanung>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	public async clear() {

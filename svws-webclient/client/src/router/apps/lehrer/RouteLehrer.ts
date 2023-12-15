@@ -66,7 +66,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
-					await this.data.setView(child);
+					this.data.setView(child, this.children);
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
@@ -122,7 +122,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { id: this.data.lehrerListeManager.auswahlID() } });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

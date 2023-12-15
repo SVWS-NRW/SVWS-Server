@@ -1,55 +1,32 @@
 
 import type { KlassenDaten, KlassenListeEintrag, Schueler} from "@core";
 import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
 import { type RouteNode } from "~/router/RouteNode";
 
-import { shallowRef } from "vue";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
-import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 
-
-interface RouteStateKlassen {
+interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	klassenListeManager: KlassenListeManager;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKlassen {
+const defaultState = <RouteStateKlassen> {
+	idSchuljahresabschnitt: -1,
+	klassenListeManager: new KlassenListeManager(null, new ArrayList(), new ArrayList(), new ArrayList()),
+	view: routeKlasseDaten,
+};
 
-	private static _defaultState: RouteStateKlassen = {
-		idSchuljahresabschnitt: -1,
-		klassenListeManager: new KlassenListeManager(null, new ArrayList(), new ArrayList(), new ArrayList()),
-		view: routeKlasseDaten,
-	}
+export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
-	private _state = shallowRef(RouteDataKlassen._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateKlassen>) {
-		this._state.value = Object.assign({ ...RouteDataKlassen._defaultState }, patch);
-	}
-
-
-	private setPatchedState(patch: Partial<RouteStateKlassen>) {
-		this._state.value = Object.assign({ ...this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ...this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKlassen.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new DeveloperNotificationException("Diese für die Klassen gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get klassenListeManager(): KlassenListeManager {
@@ -100,7 +77,7 @@ export class RouteDataKlassen {
 	}
 
 	gotoEintrag = async (eintrag: KlassenListeEintrag) => {
-		await RouteManager.doRoute(this._state.value.view.getRoute(eintrag.id));
+		await RouteManager.doRoute(this.view.getRoute(eintrag.id));
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {

@@ -1,54 +1,31 @@
-import { shallowRef } from "vue";
-
 import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
 import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 
-interface RouteStateLehrer {
+interface RouteStateLehrer extends RouteStateInterface {
 	// Daten, allgemein
 	idSchuljahresabschnitt: number,
 	lehrerListeManager: LehrerListeManager;
 	// TODO Unterrichtsdaten
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataLehrer {
+const defaultState = <RouteStateLehrer> {
+	idSchuljahresabschnitt: -1,
+	lehrerListeManager: new LehrerListeManager(null, new ArrayList()),
+	view: routeLehrerIndividualdaten
+};
 
-	private static _defaultState : RouteStateLehrer = {
-		idSchuljahresabschnitt: -1,
-		lehrerListeManager: new LehrerListeManager(null, new ArrayList()),
-		view: routeLehrerIndividualdaten
-	}
+export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 
-	private _state = shallowRef<RouteStateLehrer>(RouteDataLehrer._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateLehrer>) {
-		this._state.value = Object.assign({ ... RouteDataLehrer._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateLehrer>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeLehrer.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für Lehrer gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	private async ladePersonaldaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerPersonaldaten | undefined> {

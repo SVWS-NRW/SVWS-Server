@@ -1,36 +1,25 @@
-import { shallowRef } from "vue";
-
 import type { Erzieherart, ErzieherStammdaten, List} from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateDataSchuelerErziehungsberechtigte {
+interface RouteStateDataSchuelerErziehungsberechtigte extends RouteStateInterface {
 	daten: List<ErzieherStammdaten> | undefined;
 	idSchueler: number | undefined;
 	mapErzieherarten: Map<number, Erzieherart>;
 }
 
-export class RouteDataSchuelerErziehungsberechtigte {
+const defaultState = <RouteStateDataSchuelerErziehungsberechtigte> {
+	daten: undefined,
+	idSchueler: undefined,
+	mapErzieherarten: new Map(),
+};
 
-	private static _defaultState: RouteStateDataSchuelerErziehungsberechtigte = {
-		daten: undefined,
-		idSchueler: undefined,
-		mapErzieherarten: new Map(),
-	}
+export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteStateDataSchuelerErziehungsberechtigte> {
 
-	private _state = shallowRef(RouteDataSchuelerErziehungsberechtigte._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerErziehungsberechtigte>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerErziehungsberechtigte._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerErziehungsberechtigte>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get daten(): List<ErzieherStammdaten> {

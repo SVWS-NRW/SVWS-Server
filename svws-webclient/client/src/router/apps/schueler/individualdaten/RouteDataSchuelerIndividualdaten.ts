@@ -1,12 +1,11 @@
-import { shallowRef } from "vue";
-
 import { HashMap, Schulform } from "@core";
 import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchulEintrag, SchulformKatalogEintrag } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateDataSchuelerIndividualdaten {
+interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	mapFahrschuelerarten: Map<number, KatalogEintrag>;
 	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	mapHaltestellen: Map<number, KatalogEintrag>;
@@ -14,28 +13,19 @@ interface RouteStateDataSchuelerIndividualdaten {
 	mapSchulen: HashMap<string, SchulEintrag>;
 }
 
-export class RouteDataSchuelerIndividualdaten {
+const defaultState = <RouteStateDataSchuelerIndividualdaten> {
+	mapFahrschuelerarten: new Map(),
+	mapFoerderschwerpunkte: new Map(),
+	mapHaltestellen: new Map(),
+	mapReligionen: new Map(),
+	mapSchulen: new HashMap<string, SchulEintrag>(),
+};
 
-	private static _defaultState: RouteStateDataSchuelerIndividualdaten = {
-		mapFahrschuelerarten: new Map(),
-		mapFoerderschwerpunkte: new Map(),
-		mapHaltestellen: new Map(),
-		mapReligionen: new Map(),
-		mapSchulen: new HashMap<string, SchulEintrag>(),
-	}
 
-	private _state = shallowRef(RouteDataSchuelerIndividualdaten._defaultState);
+export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSchuelerIndividualdaten> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerIndividualdaten>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerIndividualdaten._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerIndividualdaten>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
