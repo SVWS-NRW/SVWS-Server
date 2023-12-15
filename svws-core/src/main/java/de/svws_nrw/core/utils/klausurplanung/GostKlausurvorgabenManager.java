@@ -341,8 +341,11 @@ public class GostKlausurvorgabenManager {
 	 */
 	public GostKlausurvorgabe getPrevious(final @NotNull GostKlausurvorgabe vorgabe) {
 		List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
-		if (vorgabe.halbjahr % 2 == 1)
-			vorgabenSchuljahr.addAll(_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach));
+		if (vorgabe.halbjahr % 2 == 1) {
+			List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
+			if (vorgabenVorhalbjahr != null)
+				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
+		}
 		vorgabenSchuljahr.sort(_compVorgabe);
 		int listIndex = vorgabenSchuljahr.indexOf(vorgabe);
 		if (listIndex == 0)

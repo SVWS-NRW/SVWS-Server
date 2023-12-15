@@ -291,8 +291,11 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public getPrevious(vorgabe : GostKlausurvorgabe) : GostKlausurvorgabe | null {
 		let vorgabenSchuljahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
-		if (vorgabe.halbjahr % 2 === 1)
-			vorgabenSchuljahr.addAll(this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach));
+		if (vorgabe.halbjahr % 2 === 1) {
+			let vorgabenVorhalbjahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
+			if (vorgabenVorhalbjahr !== null)
+				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
+		}
 		vorgabenSchuljahr.sort(this._compVorgabe);
 		let listIndex : number = vorgabenSchuljahr.indexOf(vorgabe);
 		if (listIndex === 0)
