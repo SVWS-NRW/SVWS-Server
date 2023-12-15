@@ -1,49 +1,29 @@
 import type { FoerderschwerpunktEintrag } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
+
 import { routeKatalogFoerderschwerpunktDaten } from "./RouteKatalogFoerderschwerpunktDaten";
 import { routeKatalogFoerderschwerpunkte } from "./RouteKatalogFoerderschwerpunkte";
 
-interface RouteStateKatalogFoerderschwerpunkte {
+interface RouteStateKatalogFoerderschwerpunkte extends RouteStateInterface {
 	auswahl: FoerderschwerpunktEintrag | undefined;
 	daten: FoerderschwerpunktEintrag | undefined;
 	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogFoerderschwerpunkte {
+const defaultState = <RouteStateKatalogFoerderschwerpunkte> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	view: routeKatalogFoerderschwerpunktDaten,
+};
 
-	private static _defaultState: RouteStateKatalogFoerderschwerpunkte = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogFoerderschwerpunktDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogFoerderschwerpunkte._defaultState);
+export class RouteDataKatalogFoerderschwerpunkte extends RouteData<RouteStateKatalogFoerderschwerpunkte> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogFoerderschwerpunkte>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogFoerderschwerpunkte._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogFoerderschwerpunkte>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogFoerderschwerpunkte.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): FoerderschwerpunktEintrag | undefined {

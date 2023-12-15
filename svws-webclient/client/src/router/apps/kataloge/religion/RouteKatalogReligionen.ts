@@ -105,7 +105,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 }
 

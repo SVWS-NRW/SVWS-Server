@@ -1,52 +1,33 @@
-import { shallowRef } from "vue";
 import type { StundenplanAufsichtsbereich} from "@core";
 import { StundenplanKomplett, StundenplanManager, ArrayList, UserNotificationException, DeveloperNotificationException } from "@core";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+
 import { routeKatalogAufsichtsbereichDaten } from "./RouteKatalogAufsichtsbereichDaten";
 import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
 
-interface RouteStateKatalogAufsichtsbereiche {
+interface RouteStateKatalogAufsichtsbereiche extends RouteStateInterface {
 	auswahl: StundenplanAufsichtsbereich | undefined;
 	daten: StundenplanAufsichtsbereich | undefined;
 	mapKatalogeintraege: Map<number, StundenplanAufsichtsbereich>;
 	stundenplanManager: StundenplanManager | undefined;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogAufsichtsbereiche {
+const defaultState = <RouteStateKatalogAufsichtsbereiche> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	stundenplanManager: undefined,
+	view: routeKatalogAufsichtsbereichDaten,
+};
 
-	private static _defaultState: RouteStateKatalogAufsichtsbereiche = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		stundenplanManager: undefined,
-		view: routeKatalogAufsichtsbereichDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogAufsichtsbereiche._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogAufsichtsbereiche._defaultState }, patch);
-	}
+export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatalogAufsichtsbereiche> {
 
-	private setPatchedState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogAufsichtsbereiche.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): StundenplanAufsichtsbereich | undefined {
@@ -127,4 +108,5 @@ export class RouteDataKatalogAufsichtsbereiche {
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
 	}
+
 }

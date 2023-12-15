@@ -1,49 +1,28 @@
-import { shallowRef } from "vue";
 import type { List, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
 import { ArrayList, Stundenplan, StundenplanManager } from "@core";
-import { api } from "~/router/Api";
-import type { RouteNode } from "~/router/RouteNode";
-import { routeKatalogZeitrasterDaten } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitrasterDaten";
-import { routeKatalogZeitraster } from "./RouteKatalogZeitraster";
 
-interface RouteStateKatalogZeitraster {
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+
+import { routeKatalogZeitrasterDaten } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitrasterDaten";
+
+interface RouteStateKatalogZeitraster extends RouteStateInterface {
 	listKatalogeintraege: List<StundenplanZeitraster>;
 	stundenplanManager: StundenplanManager | undefined;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogZeitraster {
+const defaultState = <RouteStateKatalogZeitraster> {
+	listKatalogeintraege: new ArrayList(),
+	stundenplanManager: undefined,
+	selected: undefined,
+	view: routeKatalogZeitrasterDaten,
+};
 
-	private static _defaultState: RouteStateKatalogZeitraster = {
-		listKatalogeintraege: new ArrayList(),
-		stundenplanManager: undefined,
-		selected: undefined,
-		view: routeKatalogZeitrasterDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogZeitraster._defaultState);
+export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitraster> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogZeitraster>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogZeitraster._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogZeitraster>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogZeitraster.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get stundenplanManager(): StundenplanManager {

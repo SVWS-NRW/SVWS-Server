@@ -1,49 +1,31 @@
 import type { JahrgangsDaten, JahrgangsListeEintrag } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
+
 import { routeKatalogJahrgaenge } from "./RouteKatalogJahrgaenge";
 import { routeKatalogJahrgaengeDaten } from "./RouteKatalogJahrgaengeDaten";
 
-interface RouteStateKatalogJahrgaenge {
+interface RouteStateKatalogJahrgaenge extends RouteStateInterface {
 	auswahl: JahrgangsListeEintrag | undefined;
 	daten: JahrgangsDaten | undefined;
 	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogJahrgaenge {
+const defaultState = <RouteStateKatalogJahrgaenge> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	view: routeKatalogJahrgaengeDaten,
+};
 
-	private static _defaultState: RouteStateKatalogJahrgaenge = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogJahrgaengeDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogJahrgaenge._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogJahrgaenge>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogJahrgaenge._defaultState }, patch);
-	}
+export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrgaenge> {
 
-	private setPatchedState(patch: Partial<RouteStateKatalogJahrgaenge>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogJahrgaenge.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): JahrgangsListeEintrag | undefined {

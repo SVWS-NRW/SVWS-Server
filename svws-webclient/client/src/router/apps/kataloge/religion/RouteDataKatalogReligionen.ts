@@ -1,46 +1,27 @@
 import type { ReligionEintrag } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
+
 import { routeKatalogReligionDaten } from "./RouteKatalogReligionDaten";
 import { routeKatalogReligion } from "./RouteKatalogReligionen";
 
-interface RouteStateKatalogeReligionen {
+interface RouteStateKatalogeReligionen extends RouteStateInterface {
 	auswahl: ReligionEintrag | undefined;
 	mapKatalogeintraege: Map<number, ReligionEintrag>;
-	view: RouteNode<any, any>;
 }
-export class RouteDataKatalogReligionen {
 
-	private static _defaultState: RouteStateKatalogeReligionen = {
-		auswahl: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogReligionDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogReligionen._defaultState);
+const defaultState = <RouteStateKatalogeReligionen> {
+	auswahl: undefined,
+	mapKatalogeintraege: new Map(),
+	view: routeKatalogReligionDaten,
+};
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogeReligionen>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogReligionen._defaultState }, patch);
-	}
+export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReligionen> {
 
-	private setPatchedState(patch: Partial<RouteStateKatalogeReligionen>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogReligion.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): ReligionEintrag | undefined {

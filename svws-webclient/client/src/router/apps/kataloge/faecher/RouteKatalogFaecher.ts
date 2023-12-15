@@ -103,7 +103,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-		await this.data.setView(node);
+		await this.data.setView(node, this.children);
 	}
 }
 

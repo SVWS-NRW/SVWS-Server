@@ -1,53 +1,36 @@
 import type { BetriebAnsprechpartner, BetriebStammdaten, KatalogEintrag } from "@core";
 import { ArrayList, BetriebListeEintrag, DeveloperNotificationException } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
+
 import { routeKatalogBetriebe } from "./RouteKatalogBetriebe";
 import { routeKatalogBetriebeDaten } from "./RouteKatalogBetriebeDaten";
 
-interface RouteStateKatalogBetriebe{
+interface RouteStateKatalogBetriebe extends RouteStateInterface {
 	auswahl: BetriebListeEintrag | undefined;
 	daten: BetriebStammdaten | undefined;
 	mapKatalogeintraege: Map<number,BetriebListeEintrag>;
 	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
-	view: RouteNode<any,any>;
 }
 
-export class RouteDataKatalogBetriebe {
-	private static _defaultState: RouteStateKatalogBetriebe = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		mapAnsprechpartner: new Map(),
-		mapBeschaeftigungsarten: new Map(),
-		view: routeKatalogBetriebeDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogBetriebe._defaultState);
+const defaultState = <RouteStateKatalogBetriebe> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	mapAnsprechpartner: new Map(),
+	mapBeschaeftigungsarten: new Map(),
+	view: routeKatalogBetriebeDaten,
+};
 
-	private setPatchedDefaultState(patch: Partial<RouteDataKatalogBetriebe>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogBetriebe._defaultState }, patch);
-	}
 
-	private setPatchedState(patch: Partial<RouteDataKatalogBetriebe>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
+export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetriebe> {
 
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogBetriebe.children.includes(view))
-			this.setPatchedState({ view: view})
-		else
-			throw new Error("Diese für die Fächer gewählte Ansicht wird nicht unterstütz.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): BetriebListeEintrag | undefined {

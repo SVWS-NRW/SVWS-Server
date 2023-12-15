@@ -1,49 +1,30 @@
-import { shallowRef } from "vue";
 import type { FachDaten, FaecherListeEintrag } from "@core";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
+
 import { routeKatalogFachDaten } from "./RouteKatalogFachDaten";
 import { routeKatalogFaecher } from "./RouteKatalogFaecher";
 
-interface RouteStateKatalogFaecher {
+interface RouteStateKatalogFaecher extends RouteStateInterface {
 	auswahl: FaecherListeEintrag | undefined;
 	daten: FachDaten | undefined;
 	mapKatalogeintraege: Map<number, FaecherListeEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogFaecher {
+const defaultState = <RouteStateKatalogFaecher> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	view: routeKatalogFachDaten,
+};
 
-	private static _defaultState: RouteStateKatalogFaecher = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogFachDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogFaecher._defaultState);
+export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogFaecher>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogFaecher._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogFaecher>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogFaecher.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Fächer gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): FaecherListeEintrag | undefined {

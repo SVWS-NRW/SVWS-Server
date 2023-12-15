@@ -1,51 +1,31 @@
-import { shallowRef } from "vue";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 import { ArrayList, StundenplanKomplett, StundenplanManager, UserNotificationException, type StundenplanPausenzeit, DeveloperNotificationException } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+
 import { routeKatalogPausenzeitDaten } from "./RouteKatalogPausenzeitDaten";
 import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
-interface RouteStateKatalogPausenzeiten {
+interface RouteStateKatalogPausenzeiten extends RouteStateInterface {
 	auswahl: StundenplanPausenzeit | undefined;
 	daten: StundenplanPausenzeit | undefined;
 	mapKatalogeintraege: Map<number, StundenplanPausenzeit>;
 	stundenplanManager: StundenplanManager | undefined;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogPausenzeiten {
+const defaultState = <RouteStateKatalogPausenzeiten> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	stundenplanManager: undefined,
+	view: routeKatalogPausenzeitDaten,
+};
 
-	private static _defaultState: RouteStateKatalogPausenzeiten = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		stundenplanManager: undefined,
-		view: routeKatalogPausenzeitDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogPausenzeiten._defaultState);
+export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPausenzeiten> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogPausenzeiten>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogPausenzeiten._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogPausenzeiten>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogPausenzeiten.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Pausenzeiten gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): StundenplanPausenzeit | undefined {

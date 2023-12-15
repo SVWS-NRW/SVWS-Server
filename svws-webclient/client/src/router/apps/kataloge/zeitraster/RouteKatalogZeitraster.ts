@@ -80,7 +80,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 }
 

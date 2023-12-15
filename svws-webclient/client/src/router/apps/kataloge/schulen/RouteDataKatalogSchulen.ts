@@ -1,48 +1,29 @@
-import { shallowRef } from "vue";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
 import type { SchulEintrag } from "@core";
 import { ArrayList } from "@core";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { type RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+
 import { routeKatalogSchuleDaten } from "./RouteKatalogSchuleDaten";
 import { routeKatalogSchulen } from "./RouteKatalogSchulen";
 
-interface RouteStateKatalogSchulen {
+interface RouteStateKatalogSchulen extends RouteStateInterface {
 	auswahl: SchulEintrag | undefined;
 	mapKatalogeintraege: Map<number, SchulEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogSchulen {
+const defaultState = <RouteStateKatalogSchulen> {
+	auswahl: undefined,
+	mapKatalogeintraege: new Map(),
+	view: routeKatalogSchuleDaten,
+};
 
-	private static _defaultState: RouteStateKatalogSchulen = {
-		auswahl: undefined,
-		mapKatalogeintraege: new Map(),
-		view: routeKatalogSchuleDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogSchulen._defaultState);
+export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogSchulen>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogSchulen._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogSchulen>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogSchulen.children.includes(view))
-			this.setPatchedState({ view });
-		else
-			throw new Error("Diese für die Fächer gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): SchulEintrag | undefined {

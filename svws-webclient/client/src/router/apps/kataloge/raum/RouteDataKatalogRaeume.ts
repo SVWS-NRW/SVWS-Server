@@ -1,53 +1,33 @@
-import { shallowRef } from "vue";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 import { ArrayList, StundenplanKomplett, StundenplanManager, type Raum, UserNotificationException, DeveloperNotificationException } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 
-interface RouteStateKatalogRaeume {
+interface RouteStateKatalogRaeume extends RouteStateInterface {
 	auswahl: Raum | undefined;
 	daten: Raum | undefined;
 	mapKatalogeintraege: Map<number, Raum>;
 	stundenplanManager: StundenplanManager | undefined;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogRaeume {
+const defaultState = <RouteStateKatalogRaeume> {
+	auswahl: undefined,
+	daten: undefined,
+	mapKatalogeintraege: new Map(),
+	stundenplanManager: undefined,
+	view: routeKatalogRaumDaten,
+};
+
+export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 
 	private stundenplanKomplett = new StundenplanKomplett();
 
-	private static _defaultState: RouteStateKatalogRaeume = {
-		auswahl: undefined,
-		daten: undefined,
-		mapKatalogeintraege: new Map(),
-		stundenplanManager: undefined,
-		view: routeKatalogRaumDaten,
-	}
-	private _state = shallowRef(RouteDataKatalogRaeume._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogRaeume>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogRaeume._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKatalogRaeume>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogRaeume.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
+	public constructor() {
+		super(defaultState);
 	}
 
 	get auswahl(): Raum | undefined {
