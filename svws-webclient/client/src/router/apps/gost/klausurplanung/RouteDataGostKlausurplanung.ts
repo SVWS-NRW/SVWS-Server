@@ -7,6 +7,7 @@ import { GostKlausurtermin, ArrayList} from "@core";
 import { computed, shallowRef } from "vue";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
@@ -15,7 +16,7 @@ import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausur
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 
-interface RouteStateGostKlausurplanung {
+interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
 	abiturjahr: number | undefined;
 	abschnitt : Schuljahresabschnitt | undefined;
@@ -31,41 +32,30 @@ interface RouteStateGostKlausurplanung {
 	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
 	quartalsauswahl: 0 | 1 | 2 ;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataGostKlausurplanung {
+const defaultState = <RouteStateGostKlausurplanung> {
+	abiturjahr: undefined,
+	abschnitt: undefined,
+	jahrgangsdaten: undefined,
+	mapSchueler: new Map(),
+	faecherManager: new GostFaecherManager(),
+	mapLehrer: new Map(),
+	halbjahr: GostHalbjahr.EF1,
+	kursklausurmanager: undefined,
+	klausurvorgabenmanager: undefined,
+	stundenplanmanager: undefined,
+	kursmanager: new KursManager(),
+	quartalsauswahl: 0,
+	view: routeGostKlausurplanungVorgaben,
+};
 
-	private static _defaultState : RouteStateGostKlausurplanung = {
-		abiturjahr: undefined,
-		abschnitt: undefined,
-		jahrgangsdaten: undefined,
-		mapSchueler: new Map(),
-		faecherManager: new GostFaecherManager(),
-		mapLehrer: new Map(),
-		halbjahr: GostHalbjahr.EF1,
-		kursklausurmanager: undefined,
-		klausurvorgabenmanager: undefined,
-		stundenplanmanager: undefined,
-		kursmanager: new KursManager(),
-		quartalsauswahl: 0,
-		view: routeGostKlausurplanungVorgaben,
+
+export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausurplanung> {
+
+	public constructor() {
+		super(defaultState);
 	}
-
-	private _state = shallowRef<RouteStateGostKlausurplanung>(RouteDataGostKlausurplanung._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateGostKlausurplanung>) {
-		this._state.value = Object.assign({ ... RouteDataGostKlausurplanung._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateGostKlausurplanung>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
 
 	public get hatAbiturjahr(): boolean {
 		return this._state.value.abiturjahr !== undefined;
@@ -85,7 +75,7 @@ export class RouteDataGostKlausurplanung {
 		if (abiturjahr === this._state.value.abiturjahr)
 			return;
 		if (abiturjahr === undefined) {
-			this._state.value = RouteDataGostKlausurplanung._defaultState;
+			this._state.value = this._defaultState;
 			return;
 		}
 		try {
@@ -96,7 +86,7 @@ export class RouteDataGostKlausurplanung {
 			const faecherManager = new GostFaecherManager(listFaecher);
 			const mapSchueler = new Map<number, SchuelerListeEintrag>();
 			const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
-			let view: RouteNode<any, any> = this._state.value.view;
+			let view: RouteNode<any, any> = this.view;
 			// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
 			const listKurse = await api.server.getKurse(api.schema);
 			const kursManager = new KursManager(listKurse);
@@ -261,21 +251,6 @@ export class RouteDataGostKlausurplanung {
 			this.commit();
 		}
 	  });
-
-	public async setView(view: RouteNode<any,any>) {
-		if ((view !== routeGostKlausurplanungVorgaben) &&
-			(view !== routeGostKlausurplanungSchienen) &&
-			(view !== routeGostKlausurplanungKalender) &&
-			(view !== routeGostKlausurplanungRaumzeit) &&
-			(view !== routeGostKlausurplanungDetailAnsicht))
-			throw new Error("Die gewählte Ansicht für die Klausurplanung wird nicht unterstützt. ");
-		this.setPatchedState({ view: view });
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));

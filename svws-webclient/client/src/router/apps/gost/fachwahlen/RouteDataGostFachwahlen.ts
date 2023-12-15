@@ -5,6 +5,7 @@ import type { GostHalbjahr, GostStatistikFachwahl, List, SchuelerListeEintrag } 
 import { ArrayList, SchuelerStatus, GostJahrgangsFachwahlenManager, GostJahrgangFachwahlen } from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeGostFachwahlenAllgemein } from "./RouteGostFachwahlenAllgemein";
 import { routeGostFachwahlenAbitur } from "./RouteGostFachwahlenAbitur";
@@ -15,34 +16,24 @@ import { routeGostFachwahlenHalbjahr } from "./RouteGostFachwahlenHalbjahr";
 import { routeGostFachwahlenLeistungskurse } from "./RouteGostFachwahlenLeistungskurse";
 import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse";
 
-interface RouteStateDataGostFachwahlen {
+interface RouteStateDataGostFachwahlen extends RouteStateInterface {
 	abiturjahr: number;
 	fachwahlstatistik: List<GostStatistikFachwahl>;
 	fachwahlenManager: GostJahrgangsFachwahlenManager;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 }
 
-export class RouteDataGostFachwahlen  {
+const defaultState = <RouteStateDataGostFachwahlen> {
+	abiturjahr: -1,
+	fachwahlstatistik: new ArrayList<GostStatistikFachwahl>(),
+	fachwahlenManager: new GostJahrgangsFachwahlenManager(new GostJahrgangFachwahlen()),
+	mapSchueler: new Map<number, SchuelerListeEintrag>(),
+};
 
-	private static _defaultState: RouteStateDataGostFachwahlen = {
-		abiturjahr: -1,
-		fachwahlstatistik: new ArrayList<GostStatistikFachwahl>(),
-		fachwahlenManager: new GostJahrgangsFachwahlenManager(new GostJahrgangFachwahlen()),
-		mapSchueler: new Map<number, SchuelerListeEintrag>(),
-	}
+export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwahlen> {
 
-	private _state = shallowRef(RouteDataGostFachwahlen._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataGostFachwahlen>) {
-		this._state.value = Object.assign({ ... RouteDataGostFachwahlen._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataGostFachwahlen>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get abiturjahr(): number {

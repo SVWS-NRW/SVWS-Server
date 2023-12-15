@@ -1,17 +1,16 @@
 import type { RouteParams } from "vue-router";
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
-import type { RouteNode } from "~/router/RouteNode";
-import { shallowRef } from "vue";
 import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
 
-interface RouteStateGost {
+interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
 	idSchuljahresabschnitt: number,
 	auswahl: GostJahrgang | undefined;
@@ -20,35 +19,24 @@ interface RouteStateGost {
 	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
-	view: RouteNode<any, any>;
 }
 
-export class RouteDataGost {
+const defaultState = <RouteStateGost> {
+	params: {abiturjahr: '-1'},
+	idSchuljahresabschnitt: -1,
+	auswahl: undefined,
+	jahrgangsdaten: undefined,
+	faecherManager: new GostFaecherManager(new ArrayList()),
+	mapAbiturjahrgaenge: new Map(),
+	mapJahrgaenge: new Map(),
+	mapJahrgaengeOhneAbiJahrgang: new Map(),
+	view: routeGostBeratung
+};
 
-	private static _defaultState : RouteStateGost = {
-		params: {abiturjahr: '-1'},
-		idSchuljahresabschnitt: -1,
-		auswahl: undefined,
-		jahrgangsdaten: undefined,
-		faecherManager: new GostFaecherManager(new ArrayList()),
-		mapAbiturjahrgaenge: new Map(),
-		mapJahrgaenge: new Map(),
-		mapJahrgaengeOhneAbiJahrgang: new Map(),
-		view: routeGostBeratung
-	}
+export class RouteDataGost extends RouteData<RouteStateGost> {
 
-	private _state = shallowRef<RouteStateGost>(RouteDataGost._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateGost>) {
-		this._state.value = Object.assign({ ... RouteDataGost._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateGost>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	private firstAbiturjahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>): GostJahrgang | undefined {
@@ -141,13 +129,6 @@ export class RouteDataGost {
 		return this._state.value.jahrgangsdaten;
 	}
 
-	public async setView(view: RouteNode<any,any>) {
-		if (routeGost.children.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Gost gewählte Ansicht wird nicht unterstützt.");
-	}
-
 	get params() {
 		return this._state.value.params;
 	}
@@ -158,10 +139,6 @@ export class RouteDataGost {
 
 	public get idSchuljahresabschnitt(): number {
 		return this._state.value.idSchuljahresabschnitt;
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
 	}
 
 	get auswahl(): GostJahrgang | undefined {
@@ -222,7 +199,7 @@ export class RouteDataGost {
 		if (jahrgang && jahrgang.abiturjahr === curState.auswahl?.abiturjahr && curState.jahrgangsdaten !== undefined)
 			return curState;
 		if (jahrgang === undefined || jahrgang === null || this.mapJahrgaenge.size === 0) {
-			return Object.assign({ ... RouteDataGost._defaultState }, {
+			return Object.assign({ ... this._defaultState }, {
 				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 			});
 		}

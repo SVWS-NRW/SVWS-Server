@@ -42,6 +42,14 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 
 
 	/**
+	 * Setzt den aktuellen State auf den Default-State.
+	 */
+	protected setDefaultState() {
+		this._state.value = this._defaultState;
+	}
+
+
+	/**
 	 * Setzt den aktuellen State auf den Default-State gepatched mit dem übergebenen patch.
 	 *
 	 * @param patch   der Patch, welcher auf den Default-State angewendet wird.

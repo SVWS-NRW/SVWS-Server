@@ -1,10 +1,13 @@
+import { shallowRef } from "vue";
+
 import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag, List , GostBeratungslehrer } from "@core";
 import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateDataGostBeratung {
+interface RouteStateDataGostBeratung extends RouteStateInterface {
 	auswahl: number | undefined;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
@@ -15,31 +18,21 @@ interface RouteStateDataGostBeratung {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 }
 
-export class RouteDataGostBeratung  {
+const defaultState = <RouteStateDataGostBeratung> {
+	auswahl: undefined,
+	abiturdaten: undefined,
+	abiturdatenManager: undefined,
+	faecherManager: new GostFaecherManager(),
+	gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
+	gostJahrgang: new GostJahrgang(),
+	gostJahrgangsdaten: new GostJahrgangsdaten(),
+	mapLehrer: new Map(),
+};
 
-	private static _defaultState: RouteStateDataGostBeratung = {
-		auswahl: undefined,
-		abiturdaten: undefined,
-		abiturdatenManager: undefined,
-		faecherManager: new GostFaecherManager(),
-		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
-		gostJahrgang: new GostJahrgang(),
-		gostJahrgangsdaten: new GostJahrgangsdaten(),
-		mapLehrer: new Map(),
-	}
+export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung> {
 
-	private _state = shallowRef(RouteDataGostBeratung._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataGostBeratung>) {
-		this._state.value = Object.assign({ ... RouteDataGostBeratung._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataGostBeratung>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	public async ladeFachkombinationen() {

@@ -6,7 +6,6 @@ import { Schuljahresabschnitt } from "@core";
 
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
 

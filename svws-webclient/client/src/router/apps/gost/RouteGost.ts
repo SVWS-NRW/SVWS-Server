@@ -58,7 +58,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		while (cur.parent !== this)
 			cur = cur.parent;
 		if (cur !== this.data.view)
-			await this.data.setView(cur);
+			this.data.setView(cur, this.children);
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 		if (abiturjahr === undefined)
 			return this.getRoute();
@@ -131,7 +131,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { abiturjahr: this.data.auswahl?.abiturjahr || -1 } });
-		await this.data.setView(node);
+		this.data.setView(node, this.children);
 	}
 
 }

@@ -3,33 +3,25 @@ import { shallowRef} from "vue";
 import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@core";
 
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateDataGostFaecher {
+interface RouteStateDataGostFaecher extends RouteStateInterface {
 	abiturjahr: number | undefined;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination> | undefined;
 }
 
-export class RouteDataGostFaecher  {
+const defaultState = <RouteStateDataGostFaecher> {
+	abiturjahr: undefined,
+	mapFachkombinationen: undefined,
+};
 
-	private static _defaultState: RouteStateDataGostFaecher = {
-		abiturjahr: undefined,
-		mapFachkombinationen: undefined,
+export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
+
+	public constructor() {
+		super(defaultState);
 	}
 
-	private _state = shallowRef(RouteDataGostFaecher._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataGostFaecher>) {
-		this._state.value = Object.assign({ ... RouteDataGostFaecher._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataGostFaecher>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
 	get abiturjahr(): number {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Jahrgang nicht festgelegt, es können keine Informationen zu den Fächern abgerufen oder eingegeben werden.");

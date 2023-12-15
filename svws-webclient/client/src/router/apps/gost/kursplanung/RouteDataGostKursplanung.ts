@@ -6,12 +6,13 @@ import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, G
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 
-interface RouteStateGostKursplanung {
+interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
 	abiturjahr: number | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
@@ -35,41 +36,33 @@ interface RouteStateGostKursplanung {
 	auswahlSchueler: SchuelerListeEintrag | undefined;
 }
 
-export class RouteDataGostKursplanung {
+const defaultState = <RouteStateGostKursplanung> {
+	abiturjahr: undefined,
+	jahrgangsdaten: undefined,
+	mapSchueler: new Map(),
+	faecherManager: new GostFaecherManager(),
+	mapFachwahlStatistik: new Map(),
+	mapLehrer: new Map(),
+	halbjahr: GostHalbjahr.EF1,
+	mapBlockungen: new Map(),
+	existiertSchuljahresabschnitt: false,
+	auswahlBlockung: undefined,
+	datenmanager: undefined,
+	auswahlErgebnis: undefined,
+	ergebnismanager: undefined,
+	schuelerFilter: undefined,
+	auswahlSchueler: undefined,
+};
 
-	private static _defaultState : RouteStateGostKursplanung = {
-		abiturjahr: undefined,
-		jahrgangsdaten: undefined,
-		mapSchueler: new Map(),
-		faecherManager: new GostFaecherManager(),
-		mapFachwahlStatistik: new Map(),
-		mapLehrer: new Map(),
-		halbjahr: GostHalbjahr.EF1,
-		mapBlockungen: new Map(),
-		existiertSchuljahresabschnitt: false,
-		auswahlBlockung: undefined,
-		datenmanager: undefined,
-		auswahlErgebnis: undefined,
-		ergebnismanager: undefined,
-		schuelerFilter: undefined,
-		auswahlSchueler: undefined,
+
+export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanung> {
+
+	public constructor() {
+		super(defaultState);
 	}
-
-	private _state = shallowRef<RouteStateGostKursplanung>(RouteDataGostKursplanung._defaultState);
 
 	private _kursauswahl = ref<Set<number>>(new Set<number>());
 
-	private setPatchedDefaultState(patch: Partial<RouteStateGostKursplanung>) {
-		this._state.value = Object.assign({ ... RouteDataGostKursplanung._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateGostKursplanung>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
 
 	public get hatAbiturjahr(): boolean {
 		return this._state.value.abiturjahr !== undefined;
@@ -89,7 +82,7 @@ export class RouteDataGostKursplanung {
 		if (abiturjahr === this._state.value.abiturjahr)
 			return;
 		if (abiturjahr === undefined) {
-			this._state.value = RouteDataGostKursplanung._defaultState;
+			this.setDefaultState();
 			return;
 		}
 		api.status.start();

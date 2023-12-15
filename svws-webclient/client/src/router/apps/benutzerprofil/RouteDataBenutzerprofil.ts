@@ -1,27 +1,19 @@
 import type { BenutzerDaten } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
-interface RouteStateBenutzerprofil {
+interface RouteStateBenutzerprofil extends RouteStateInterface {
 }
 
-export class RouteDataBenutzerprofil {
+const defaultState = <RouteStateBenutzerprofil> {
+};
 
-	private static _defaultState: RouteStateBenutzerprofil = {
-	}
-	private _state = shallowRef(RouteDataBenutzerprofil._defaultState);
+export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil> {
 
-	private setPatchedDefaultState(patch: Partial<RouteStateBenutzerprofil>) {
-		this._state.value = Object.assign({ ... RouteDataBenutzerprofil._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateBenutzerprofil>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	public get benutzer(): BenutzerDaten {

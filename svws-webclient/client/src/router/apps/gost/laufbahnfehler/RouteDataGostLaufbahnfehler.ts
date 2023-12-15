@@ -5,36 +5,27 @@ import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenA
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 
 
-interface RouteStateDataGostLaufbahnfehler {
+interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {
 	abiturjahr: number;
 	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: GostBelegpruefungsArt;
 }
 
-export class RouteDataGostLaufbahnfehler  {
+const defaultState = <RouteStateDataGostLaufbahnfehler> {
+	abiturjahr: -1,
+	listBelegpruefungsErgebnisse: new ArrayList(),
+	gostBelegpruefungsArt: GostBelegpruefungsArt.GESAMT,
+};
 
-	private static _defaultState: RouteStateDataGostLaufbahnfehler = {
-		abiturjahr: -1,
-		listBelegpruefungsErgebnisse: new ArrayList(),
-		gostBelegpruefungsArt: GostBelegpruefungsArt.GESAMT,
-	}
+export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLaufbahnfehler> {
 
-	private _state = shallowRef(RouteDataGostLaufbahnfehler._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateDataGostLaufbahnfehler>) {
-		this._state.value = Object.assign({ ... RouteDataGostLaufbahnfehler._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateDataGostLaufbahnfehler>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
+	public constructor() {
+		super(defaultState);
 	}
 
 	get gostBelegpruefungsArt(): GostBelegpruefungsArt {
