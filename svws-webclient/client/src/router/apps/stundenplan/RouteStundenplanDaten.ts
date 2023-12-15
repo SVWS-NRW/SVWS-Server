@@ -46,6 +46,7 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 			listJahrgaenge: routeStundenplan.data.listJahrgaenge,
 			addJahrgang: routeStundenplan.data.addJahrgang,
 			removeJahrgang: routeStundenplan.data.removeJahrgang,
+			gotoKatalog: routeStundenplan.data.gotoKatalog,
 		};
 	}
 

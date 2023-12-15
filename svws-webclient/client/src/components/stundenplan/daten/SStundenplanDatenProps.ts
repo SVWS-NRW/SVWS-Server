@@ -21,4 +21,5 @@ export interface StundenplanDatenProps {
 	listJahrgaenge: List<JahrgangsListeEintrag>;
 	addJahrgang: (id: number) => Promise<void>;
 	removeJahrgang: (id: number) => Promise<void>;
+	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 }

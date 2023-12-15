@@ -11,6 +11,7 @@
 				<svws-ui-text-input :model-value="rowData.beschreibung" @change="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
 			</template>
 			<template #actions>
+				<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
 				<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="listRaeume">
 					<svws-ui-button @click="openModal()" type="transparent" title="Räume importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
 				</s-card-stundenplan-import-raeume-modal>
@@ -35,6 +36,7 @@
 		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 		importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 		listRaeume: () => List<Raum>;
+		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
 	watch(()=>props.stundenplanManager, neu => {

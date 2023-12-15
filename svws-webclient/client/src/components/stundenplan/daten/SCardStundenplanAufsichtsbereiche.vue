@@ -8,6 +8,7 @@
 				<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
 			</template>
 			<template #actions>
+				<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
 				<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereiche" :import-aufsichtsbereiche="importAufsichtsbereiche">
 					<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
 				</s-card-stundenplan-import-aufsichtsbereiche-modal>
@@ -32,6 +33,7 @@
 		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
 		listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
+		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();

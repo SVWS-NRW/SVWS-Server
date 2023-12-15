@@ -1,11 +1,11 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal">
+	<svws-ui-modal :show="showModal" :type="listAufsichtsbereiche().size() < 1 ? 'danger' : 'default'" size="medium">
 		<template #modalTitle>Aufsichtsbereiche aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-table v-if="listAufsichtsbereiche().size()" :items="listAufsichtsbereiche()" clickable :clicked="aufsichtsbereich" selectable v-model="selected" />
-				<div v-else>Keine Einträge im Aufsichtsbereiche-Katalog hinterlegt.</div>
+				<div v-else>Importieren nicht möglich, keine Einträge im Aufsichtsbereiche-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Aufsichtsbereiche-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
 			</div>
@@ -30,7 +30,8 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const selected = ref<StundenplanAufsichtsbereich[]>([]);
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const selected = ref<StundenplanAufsichtsbereich[]>([...props.listAufsichtsbereiche()]);
 	const aufsichtsbereich = ref<StundenplanAufsichtsbereich>()
 
 	const openModal = () => {

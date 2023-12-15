@@ -11,6 +11,7 @@
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchEnde(ende, rowData.id)" headless />
 			</template>
 			<template #actions>
+				<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
 				<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeiten">
 					<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
 				</s-card-stundenplan-import-pausenzeiten-modal>
@@ -36,6 +37,7 @@
 		removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		listPausenzeiten: () => List<StundenplanPausenzeit>;
+		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();

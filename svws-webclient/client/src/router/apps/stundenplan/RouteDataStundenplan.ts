@@ -6,6 +6,9 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
+import { routeKatalogPausenzeiten } from "../kataloge/pausenzeit/RouteKatalogPausenzeiten";
+import { routeKatalogAufsichtsbereiche } from "../kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
+import { routeKatalogRaeume } from "../kataloge/raum/RouteKatalogRaeume";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
@@ -430,6 +433,19 @@ export class RouteDataStundenplan {
 		this.stundenplanManager.jahrgangRemoveById(id);
 		this.commit();
 		api.status.stop();
+	}
+
+	gotoKatalog = async (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => {
+		switch (katalog) {
+			case 'aufsichtsbereiche':
+				return await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(undefined));
+			case 'pausenzeiten':
+				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(undefined));
+			case 'raeume':
+				return await RouteManager.doRoute(routeKatalogRaeume.getRoute(undefined));
+			default:
+				return;
+		}
 	}
 
 	public async ladeListe() {
