@@ -1,11 +1,10 @@
 <template>
-	<template v-if="visible">
+	<template v-if="auswahl">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3">{{ auswahl?.kuerzel }}</span>
+				<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ auswahl?.id }}
+					ID: {{ auswahl.id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
@@ -21,11 +20,7 @@
 <script setup lang="ts">
 
 	import type { RaeumeAppProps } from "./SRaeumeAppProps";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<RaeumeAppProps>();
-
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

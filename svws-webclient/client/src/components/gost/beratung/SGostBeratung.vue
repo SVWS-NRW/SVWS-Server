@@ -1,5 +1,5 @@
 <template>
-	<div v-if="jahrgangsdaten !== undefined" class="page--content page--content--full relative">
+	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full relative">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<svws-ui-button :type="!istManuellerModus ? 'transparent' : 'danger'" @click="switchManuellerModus" title="Modus wechseln">

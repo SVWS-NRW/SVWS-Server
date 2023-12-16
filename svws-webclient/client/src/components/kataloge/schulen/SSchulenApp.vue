@@ -4,8 +4,7 @@
 			<div>
 				<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					Schulnummer:
-					{{ auswahl.schulnummer }}
+					Schulnummer: {{ auswahl.schulnummer }}
 				</svws-ui-badge>
 			</div>
 			<div>

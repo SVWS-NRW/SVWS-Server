@@ -5,7 +5,7 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input v-model="item.kuerzel" required placeholder="Kürzel" />
-				<svws-ui-text-input type="number" v-model="item.groesse" required placeholder="Raumgröße" />
+				<svws-ui-input-number v-model="item.groesse" required placeholder="Raumgröße" :min="1" />
 				<svws-ui-text-input v-model="item.beschreibung" placeholder="Beschreibung" span="full" />
 			</svws-ui-input-wrapper>
 		</template>
@@ -29,6 +29,7 @@
 	const showModal = () => _showModal;
 
 	const item = ref<Raum>(new Raum());
+	item.value.groesse = 1;
 
 	const openModal = () => {
 		showModal().value = true;

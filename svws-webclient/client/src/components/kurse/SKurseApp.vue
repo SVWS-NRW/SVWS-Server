@@ -1,11 +1,11 @@
 <template>
-	<template v-if="visible">
+	<template v-if="auswahl">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3">{{ kuerzel }}</span>
+				<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 					ID:
-					{{ auswahl?.id }}
+					{{ auswahl.id }}
 				</svws-ui-badge>
 			</div>
 			<div v-if="inputFachlehrer">
@@ -23,15 +23,12 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { KurseAppProps } from "./SKurseAppProps";
 
 	const props = defineProps<KurseAppProps>();
 
-	const kuerzel: ComputedRef<string> = computed(() => props.auswahl?.kuerzel ?? "");
-
-	const inputFachlehrer: ComputedRef<string> = computed(() => {
+	const inputFachlehrer = computed<string>(() => {
 		const id = props.auswahl?.lehrer;
 		const leer = "kein Lehrer festgelegt";
 		if (!id)
@@ -39,7 +36,5 @@
 		const lehrer = props.mapLehrer.get(id);
 		return lehrer?.kuerzel ?? leer;
 	});
-
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

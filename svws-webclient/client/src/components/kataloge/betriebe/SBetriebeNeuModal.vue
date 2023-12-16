@@ -7,7 +7,7 @@
 			<svws-ui-content-card title="Basisdaten">
 				<div class="input-wrapper">
 					<svws-ui-text-input placeholder="Name" v-model="betrieb.name1" type="text" />
-					<svws-ui-select title="Beschäftigungsart" v-model="inputBeschaeftigungsarten" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+					<svws-ui-select title="Beschäftigungsart" v-model="undefined" :items="mapBeschaeftigungsarten" :item-text="i => i.text ?? ''" />
 					<svws-ui-text-input placeholder="Namensergänzung" v-model="betrieb.name2" type="text" />
 					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="betrieb.telefon1" type="text" />
 					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="betrieb.telefon2" type="text" />
@@ -55,8 +55,10 @@
 
 <script setup lang="ts">
 
-	import { BetriebStammdaten, type KatalogEintrag, type OrtKatalogEintrag, type OrtsteilKatalogEintrag } from "@core";
-	import { computed, ref, type ComputedRef, type WritableComputedRef } from "vue";
+	import type { WritableComputedRef} from "vue";
+	import { ref, computed } from "vue";
+	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BetriebStammdaten } from "@core";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{
@@ -71,10 +73,6 @@
 	const showModal = () => _showModal;
 
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
-
-	const inputBeschaeftigungsarten: ComputedRef<Array<KatalogEintrag>> = computed(()=>
-		[...props.mapBeschaeftigungsarten.values()]
-	);
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => betrieb.value.ort_id ? props.mapOrte.get(betrieb.value.ort_id) : undefined,

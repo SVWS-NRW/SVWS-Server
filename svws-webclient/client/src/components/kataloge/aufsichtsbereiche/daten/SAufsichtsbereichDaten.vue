@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<s-card-aufsichtsbereich-daten :data="data" @patch="patch" />
+		<s-card-aufsichtsbereich-daten :data="data" :patch="patch" />
 	</div>
 </template>
 

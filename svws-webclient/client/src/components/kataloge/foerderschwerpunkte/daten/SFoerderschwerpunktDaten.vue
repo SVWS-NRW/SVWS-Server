@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<s-card-foerderschwerpunkt-daten :data="data" @patch="patch" />
+		<s-card-foerderschwerpunkt-daten :data="data" :patch="patch" />
 	</div>
 </template>
 

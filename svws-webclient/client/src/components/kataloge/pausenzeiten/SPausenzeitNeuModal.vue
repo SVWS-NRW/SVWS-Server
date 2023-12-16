@@ -5,8 +5,8 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-select :model-value="Wochentag.fromIDorException(item.wochentag!)" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentag" />
-				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Stundenbeginn" />
-				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Stundenende" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
 			</div>
 		</template>
 		<template #modalActions>

@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<s-card-religion-daten :data="auswahl" @patch="patch" />
+		<s-card-religion-daten :data="auswahl" :patch="patch" />
 	</div>
 </template>
 

@@ -1,4 +1,4 @@
-import type { ReligionEintrag } from "@core";
+import { ArrayList, DeveloperNotificationException, type ReligionEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -64,4 +64,19 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchReligion(data, api.schema, this.auswahl.id)
 	}
-}
+
+	deleteEintraege = async (eintraege: ReligionEintrag[]) => {
+		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const listID = new ArrayList<number>;
+		for (const eintrag of eintraege) {
+			listID.add(eintrag.id);
+			mapKatalogeintraege.delete(eintrag.id);
+		}
+		let auswahl;
+		// TODO Apiaufruf ergänzen
+		const raeume = new ArrayList()//await api.server.religion
+		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
+			auswahl = mapKatalogeintraege.values().next().value;
+		this.setPatchedState({mapKatalogeintraege, auswahl});
+		throw new DeveloperNotificationException('Api-Methode noch nicht implementiert');
+	}}

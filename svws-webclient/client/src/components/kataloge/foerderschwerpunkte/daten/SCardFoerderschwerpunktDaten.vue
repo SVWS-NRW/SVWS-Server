@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input placeholder="ID" :model-value="data.id" @change="id=>doPatch({id: Number(id)})" type="text" />
-			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
-			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @change="text=>doPatch({text})" type="text" span="full" />
+			<svws-ui-input-number placeholder="ID" :model-value="data.id" @change="id=> id && patch({id})" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>patch({kuerzel})" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @change="text=>patch({text})" type="text" span="full" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
@@ -27,20 +27,13 @@
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		data: FoerderschwerpunktEintrag
+		data: FoerderschwerpunktEintrag;
+		patch: (data : Partial<FoerderschwerpunktEintrag>) => Promise<void>;
 	}>();
-
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<FoerderschwerpunktEintrag>): void;
-	}>()
-
-	function doPatch(data: Partial<FoerderschwerpunktEintrag>) {
-		emit('patch', data);
-	}
 
 	const statistikEintrag = computed<Foerderschwerpunkt | undefined>({
 		get: () => Foerderschwerpunkt.getByKuerzel(props.data.kuerzelStatistik) ?? undefined,
-		set: (value) => doPatch({ kuerzelStatistik: value?.daten.kuerzel })
+		set: (value) => void props.patch({ kuerzelStatistik: value?.daten.kuerzel })
 	});
 
 </script>

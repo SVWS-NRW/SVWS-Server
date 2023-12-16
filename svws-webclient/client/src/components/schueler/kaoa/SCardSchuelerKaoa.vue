@@ -12,12 +12,4 @@
 		data: SchuelerKAoADaten;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<SchuelerKAoADaten>): void;
-	}>()
-
-	function doPatch(data: Partial<SchuelerKAoADaten>) {
-		emit('patch', data);
-	}
-
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<template v-if="visible">
+	<template v-if="true">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">Zeitraster</span>
@@ -17,11 +17,7 @@
 <script setup lang="ts">
 
 	import type { ZeitrasterAppProps } from "./SZeitrasterAppProps";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<ZeitrasterAppProps>();
-
-	const visible: ComputedRef<boolean> = computed(() => true);
 
 </script>

@@ -5,8 +5,10 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper>
 				<svws-ui-select :model-value="Wochentag.fromIDorException(item.id)" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
-				<svws-ui-text-input type="number" v-model="item.beginn" required placeholder="Beginn" />
-				<svws-ui-text-input type="number" v-model="item.ende" required placeholder="Ende" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
+				<svws-ui-text-input v-model="item.beginn" required placeholder="Beginn" />
+				<svws-ui-text-input v-model="item.ende" required placeholder="Ende" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -18,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import { StundenplanPausenzeit, Wochentag } from "@core";
+	import { DateUtils, StundenplanPausenzeit, Wochentag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -32,6 +34,19 @@
 
 	const openModal = () => {
 		showModal().value = true;
+	}
+	async function patchBeginn(start: string | null) {
+		if (start === null)
+			return;
+		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
+		item.value.beginn = stundenbeginn;
+	}
+
+	async function patchEnde(ende: string | null) {
+		if (ende === null)
+			return;
+		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
+		item.value.ende = stundenende;
 	}
 
 	async function importer() {

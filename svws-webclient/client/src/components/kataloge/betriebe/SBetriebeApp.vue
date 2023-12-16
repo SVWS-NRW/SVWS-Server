@@ -1,11 +1,11 @@
 <template>
-	<template v-if="true">
+	<template v-if="auswahl">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3">{{ auswahl?.name1 }}</span>
+				<span class="inline-block mr-3">{{ auswahl.name1 }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 					ID:
-					{{ auswahl?.id }}
+					{{ auswahl.id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
@@ -18,16 +18,9 @@
 	</div>
 </template>
 <script setup lang="ts">
-	import type { ComputedRef } from 'vue';
-	import { computed } from 'vue';
 	import type { BetriebeAppProps } from './SBetriebeAppProps';
 
-
 	const props = defineProps<BetriebeAppProps>();
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return props.auswahl !== undefined;
-	});
 
 </script>
 

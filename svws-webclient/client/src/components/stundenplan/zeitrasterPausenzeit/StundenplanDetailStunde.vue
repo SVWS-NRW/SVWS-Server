@@ -5,7 +5,7 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @blur="ende = $event" />
 			<svws-ui-button v-if="start !== null || ende !== null" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
 			<div class="col-span-full">
-				<svws-ui-input-number :model-value="item" type="number" required placeholder="Bezeichnung" @change="patchStunde" />
+				<svws-ui-input-number :model-value="item" required placeholder="Bezeichnung" @change="patchStunde" />
 			</div>
 			<div class="col-span-full">
 				<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" @click="add(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>

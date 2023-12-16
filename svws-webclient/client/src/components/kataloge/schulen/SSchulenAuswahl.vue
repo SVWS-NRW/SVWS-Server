@@ -38,6 +38,7 @@
 
 	async function remove() {
 		await props.removeEintraege(liste.value);
+		liste.value = [];
 	}
 
 	async function add() {

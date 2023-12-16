@@ -7,7 +7,7 @@
 					:items="ZulaessigesFach.values()" :item-text="(z: ZulaessigesFach) => z.daten.kuerzelASD + ' : ' + z.daten.bezeichnung" />
 				<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @change="bezeichnung => patch({ bezeichnung })" type="text" />
-				<svws-ui-text-input placeholder="Sortierung" :model-value="data.sortierung" @change="value => patch({ sortierung: value === undefined ? 32000 : Number(value) })" type="number" />
+				<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="value => patch({ sortierung: value === null ? 32000 : value })" />
 				<svws-ui-select title="Bilinguale Sachfachsprache" :model-value="BilingualeSprache.getByKuerzel(data.bilingualeSprache)"
 					@update:model-value="value => patch({ bilingualeSprache: (value === undefined) || (value === null) ? null : value.daten.kuerzel })"
 					:items="BilingualeSprache.values()" :item-text="(b: BilingualeSprache) => b.daten.kuerzel" />
@@ -39,7 +39,7 @@
 				<svws-ui-checkbox :model-value="data.holeAusAltenLernabschnitten" @update:model-value="value => patch({ holeAusAltenLernabschnitten: value === true ? true : false })">
 					Berücksichtigen beim Holen von abgeschlossenen Fächern
 				</svws-ui-checkbox>
-				<svws-ui-text-input placeholder="maximale Zeichenanzahl in Fachbemerkungen" :model-value="data.maxZeichenInFachbemerkungen" @change="value => patch({ maxZeichenInFachbemerkungen: Number(value) })" type="number" />
+				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" :model-value="data.maxZeichenInFachbemerkungen" @change="maxZeichenInFachbemerkungen => patch({ maxZeichenInFachbemerkungen: maxZeichenInFachbemerkungen || undefined })" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

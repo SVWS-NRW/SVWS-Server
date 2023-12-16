@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<s-card-raum-daten :data="data" @patch="patch" />
+		<s-card-raum-daten :data="data" :patch="patch" />
 	</div>
 </template>
 

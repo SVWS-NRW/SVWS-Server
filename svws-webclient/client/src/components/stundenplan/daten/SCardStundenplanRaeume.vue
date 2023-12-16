@@ -2,13 +2,13 @@
 	<svws-ui-content-card title="Räume">
 		<svws-ui-table :columns="cols" :items="items" v-model:clicked="raum" selectable v-model="selected" count>
 			<template #cell(kuerzel)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.kuerzel" @change="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.kuerzel" @change="kuerzel => patchRaum({kuerzel}, rowData.id)" headless required />
 			</template>
 			<template #cell(groesse)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.groesse" @change="patchRaum({groesse: Number($event)}, rowData.id)" headless required />
+				<svws-ui-input-number :model-value="rowData.groesse" @change="groesse => groesse && patchRaum({groesse}, rowData.id)" headless required />
 			</template>
 			<template #cell(beschreibung)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.beschreibung" @change="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung => patchRaum({beschreibung}, rowData.id)" headless />
 			</template>
 			<template #actions>
 				<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>

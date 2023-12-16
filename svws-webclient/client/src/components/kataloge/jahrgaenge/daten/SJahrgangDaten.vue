@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<s-card-jahrgang-basisdaten :data="data" :map-jahrgaenge="mapKatalogeintraege" @patch="patch" />
+		<s-card-jahrgang-basisdaten :data="data" :map-jahrgaenge="mapKatalogeintraege" :patch="patch" />
 	</div>
 </template>
 
