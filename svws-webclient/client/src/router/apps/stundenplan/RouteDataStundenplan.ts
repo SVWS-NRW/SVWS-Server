@@ -224,6 +224,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const item of pausenzeiten) {
 			delete item.id;
+			delete item.klassen;
 			list.add(item);
 		}
 		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
@@ -294,6 +295,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			list.add(item);
 		}
 		const bereich = await api.server.addStundenplanAufsichtsbereiche(list, api.schema, id);
+		console.log(bereich)
 		this.stundenplanManager.aufsichtsbereichAddAll(bereich);
 		api.status.stop();
 	}
@@ -425,8 +427,6 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(undefined));
 			case 'raeume':
 				return await RouteManager.doRoute(routeKatalogRaeume.getRoute(undefined));
-			default:
-				return;
 		}
 	}
 
