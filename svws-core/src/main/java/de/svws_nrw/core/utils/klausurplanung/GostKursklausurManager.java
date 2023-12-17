@@ -20,6 +20,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
@@ -78,7 +79,6 @@ public class GostKursklausurManager {
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idTermin = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idVorgabe = new HashMap<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_halbjahr_and_idTermin_and_quartal = new HashMap3D<>();
-//	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_kursart_and_idTermin = new HashMap3D<>();
 	private final @NotNull HashMap3D<@NotNull Long, @NotNull Integer, @NotNull Integer, @NotNull GostKursklausur> _kursklausur_by_idKurs_and_halbjahr_and_quartal = new HashMap3D<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_kw_and_schuelerId = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_terminId_and_schuelerId = new HashMap2D<>();
@@ -107,19 +107,6 @@ public class GostKursklausurManager {
 		initAll(listKlausuren, listTermine);
 	}
 
-//	/**
-//	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
-//	 * und erzeugt die privaten Attribute.
-//	 *
-//	 * @param vorgabenManager der Klausurvorgaben-Manager
-//	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-//	 *                      und Gost-Halbjahres
-//	 */
-//	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren) {
-//		_vorgabenManager = vorgabenManager;
-//		initAll(listKlausuren, new ArrayList<>());
-//	}
-
 	private void initAll(final @NotNull List<@NotNull GostKursklausur> listKlausuren, final List<@NotNull GostKlausurtermin> listTermine) {
 
 		kursklausurAddAll(listKlausuren);
@@ -139,7 +126,6 @@ public class GostKursklausurManager {
 		update_kursklausurmenge_by_idVorgabe();
 		update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
-//		update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		update_terminmenge_by_halbjahr_and_quartal();
 		update_terminmenge_by_datum();
 		update_kursklausurmenge_by_terminId_and_schuelerId();
@@ -152,7 +138,6 @@ public class GostKursklausurManager {
 		_kursklausurmenge_by_halbjahr_and_quartal.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
 			Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_quartal, kk.halbjahr, kk.quartal).add(kk);
-//			Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_quartal, kk.halbjahr, 0).add(kk);
 		}
 	}
 
@@ -172,15 +157,8 @@ public class GostKursklausurManager {
 		_kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
 			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, kk.halbjahr, kk.idTermin != null ? kk.idTermin : -1, kk.quartal).add(kk);
-//			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin, kk.halbjahr, 0, kk.idTermin != null ? kk.idTermin : -1).add(kk);
 		}
 	}
-
-//	private void update_kursklausurmenge_by_quartal_and_kursart_and_idTermin() {
-//		_kursklausurmenge_by_quartal_and_kursart_and_idTermin.clear();
-//		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
-//			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_quartal_and_kursart_and_idTermin, GostKlausurvorgabenManager.getInternalQuartalsIdWithHalbjahrid(kk.halbjahr, kk.quartal), kk.kursart, kk.idTermin != null ? kk.idTermin : -1).add(kk);
-//	}
 
 	private void update_kursklausur_by_idKurs_and_halbjahr_and_quartal() {
 		_kursklausur_by_idKurs_and_halbjahr_and_quartal.clear();
@@ -210,7 +188,6 @@ public class GostKursklausurManager {
 				for (final @NotNull GostKursklausur k : klausurenZuTermin)
 					listSchuelerIds.addAll(k.schuelerIds);
 		}
-
 	}
 
 	private void update_kursklausurmenge_by_kw_and_schuelerId() {
@@ -247,11 +224,6 @@ public class GostKursklausurManager {
 		_kursklausurmenge.sort(_compKursklausur);
 	}
 
-	private void kursklausurAddOhneUpdate(final @NotNull GostKursklausur kursklausur) {
-		kursklausurCheck(kursklausur);
-		DeveloperNotificationException.ifMapPutOverwrites(_kursklausur_by_id, kursklausur.id, kursklausur);
-	}
-
 	/**
 	 * Fügt ein {@link GostKursklausur}-Objekt hinzu.
 	 *
@@ -259,14 +231,22 @@ public class GostKursklausurManager {
 	 *                    werden soll.
 	 */
 	public void kursklausurAdd(final @NotNull GostKursklausur kursklausur) {
-		kursklausurAddOhneUpdate(kursklausur);
-
+		kursklausurAddAll(ListUtils.create1(kursklausur));
 		update_all();
 	}
 
-	private void kursklausurAddAllOhneUpdate(final @NotNull List<@NotNull GostKursklausur> listKursklausuren) {
-		for (final @NotNull GostKursklausur kursklausur : listKursklausuren)
-			kursklausurAddOhneUpdate(kursklausur);
+	private void kursklausurAddAllOhneUpdate(final @NotNull List<@NotNull GostKursklausur> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostKursklausur klausur : list) {
+			kursklausurCheck(klausur);
+			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", _kursklausur_by_id.containsKey(klausur.id));
+			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!", !setOfIDs.add(klausur.id));
+		}
+
+		// add all
+		for (final @NotNull GostKursklausur klausur : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_kursklausur_by_id, klausur.id, klausur);
 	}
 
 	/**
@@ -360,11 +340,6 @@ public class GostKursklausurManager {
 		_terminmenge.sort(_compTermin);
 	}
 
-	private void terminAddOhneUpdate(final @NotNull GostKlausurtermin termin) {
-		terminCheck(termin);
-		DeveloperNotificationException.ifMapPutOverwrites(_termin_by_id, termin.id, termin);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurtermin}-Objekt hinzu.
 	 *
@@ -372,14 +347,21 @@ public class GostKursklausurManager {
 	 *               werden soll.
 	 */
 	public void terminAdd(final @NotNull GostKlausurtermin termin) {
-		terminAddOhneUpdate(termin);
-
-		update_all();
+		terminAddAll(ListUtils.create1(termin));
 	}
 
-	private void terminAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurtermin> listTermine) {
-		for (final @NotNull GostKlausurtermin termin : listTermine)
-			terminAddOhneUpdate(termin);
+	private void terminAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurtermin> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostKlausurtermin termin : list) {
+			terminCheck(termin);
+			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " existiert bereits!", _termin_by_id.containsKey(termin.id));
+			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " doppelt in der Liste!", !setOfIDs.add(termin.id));
+		}
+
+		// add all
+		for (final @NotNull GostKlausurtermin termin : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_termin_by_id, termin.id, termin);
 	}
 
 	/**
@@ -394,7 +376,7 @@ public class GostKursklausurManager {
 	}
 
 	private static void terminCheck(final @NotNull GostKlausurtermin termin) {
-		DeveloperNotificationException.ifInvalidID("kursklausur.id", termin.id);
+		DeveloperNotificationException.ifInvalidID("termin.id", termin.id);
 	}
 
 	/**

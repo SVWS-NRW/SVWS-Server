@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.klausurplanung;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurraumstunde;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
@@ -218,11 +220,6 @@ public class GostKlausurraumManager {
 		_raummenge.sort(_compRaum);
 	}
 
-	private void raumAddOhneUpdate(final @NotNull GostKlausurraum raum) {
-		raumCheck(raum);
-		DeveloperNotificationException.ifMapPutOverwrites(_raum_by_id, raum.id, raum);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurraum}-Objekt hinzu.
 	 *
@@ -230,14 +227,21 @@ public class GostKlausurraumManager {
 	 *             soll.
 	 */
 	public void raumAdd(final @NotNull GostKlausurraum raum) {
-		raumAddOhneUpdate(raum);
-
-		update_all();
+		raumAddAll(ListUtils.create1(raum));
 	}
 
-	private void raumAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurraum> listRaum) {
-		for (final @NotNull GostKlausurraum raum : listRaum)
-			raumAddOhneUpdate(raum);
+	private void raumAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurraum> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostKlausurraum raum : list) {
+			raumCheck(raum);
+			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", _raum_by_id.containsKey(raum.id));
+			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " doppelt in der Liste!", !setOfIDs.add(raum.id));
+		}
+
+		// add all
+		for (final @NotNull GostKlausurraum raum : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_raum_by_id, raum.id, raum);
 	}
 
 	/**
@@ -335,11 +339,6 @@ public class GostKlausurraumManager {
 //		_raumstundenmenge.sort(_compRaum);
 	}
 
-	private void raumstundeAddOhneUpdate(final @NotNull GostKlausurraumstunde raumstunde) {
-		raumstundeCheck(raumstunde);
-		DeveloperNotificationException.ifMapPutOverwrites(_raumstunde_by_id, raumstunde.id, raumstunde);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurraumstunde}-Objekt hinzu.
 	 *
@@ -347,14 +346,21 @@ public class GostKlausurraumManager {
 	 *                   hinzugefügt werden soll.
 	 */
 	public void raumstundeAdd(final @NotNull GostKlausurraumstunde raumstunde) {
-		raumstundeAddOhneUpdate(raumstunde);
-
-		update_all();
+		raumstundeAddAll(ListUtils.create1(raumstunde));
 	}
 
-	private void raumstundeAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurraumstunde> listRaumstunde) {
-		for (final @NotNull GostKlausurraumstunde raumstunde : listRaumstunde)
-			raumstundeAddOhneUpdate(raumstunde);
+	private void raumstundeAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurraumstunde> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostKlausurraumstunde raumstunde : list) {
+			raumstundeCheck(raumstunde);
+			DeveloperNotificationException.ifTrue("raumstundeAddAllOhneUpdate: ID=" + raumstunde.id + " existiert bereits!", _raumstunde_by_id.containsKey(raumstunde.id));
+			DeveloperNotificationException.ifTrue("raumstundeAddAllOhneUpdate: ID=" + raumstunde.id + " doppelt in der Liste!", !setOfIDs.add(raumstunde.id));
+		}
+
+		// add all
+		for (final @NotNull GostKlausurraumstunde raumstunde : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_raumstunde_by_id, raumstunde.id, raumstunde);
 	}
 
 	/**
@@ -452,11 +458,6 @@ public class GostKlausurraumManager {
 //		_schuelerklausurmenge.sort(_compRaum);
 	}
 
-	private void schuelerklausurAddOhneUpdate(final @NotNull GostSchuelerklausur schuelerklausur) {
-		schuelerklausurCheck(schuelerklausur);
-		DeveloperNotificationException.ifMapPutOverwrites(_schuelerklausur_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
-	}
-
 	/**
 	 * Fügt ein {@link GostSchuelerklausur}-Objekt hinzu.
 	 *
@@ -464,14 +465,21 @@ public class GostKlausurraumManager {
 	 *                        hinzugefügt werden soll.
 	 */
 	public void schuelerklausurAdd(final @NotNull GostSchuelerklausur schuelerklausur) {
-		schuelerklausurAddOhneUpdate(schuelerklausur);
-
-		update_all();
+		schuelerklausurAddAll(ListUtils.create1(schuelerklausur));
 	}
 
-	private void schuelerklausurAddAllOhneUpdate(final @NotNull List<@NotNull GostSchuelerklausur> listSchuelerklausur) {
-		for (final @NotNull GostSchuelerklausur schuelerklausur : listSchuelerklausur)
-			schuelerklausurAddOhneUpdate(schuelerklausur);
+	private void schuelerklausurAddAllOhneUpdate(final @NotNull List<@NotNull GostSchuelerklausur> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostSchuelerklausur schuelerklausur : list) {
+			schuelerklausurCheck(schuelerklausur);
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + schuelerklausur.idSchuelerklausur + " existiert bereits!", _schuelerklausur_by_id.containsKey(schuelerklausur.idSchuelerklausur));
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + schuelerklausur.idSchuelerklausur + " doppelt in der Liste!", !setOfIDs.add(schuelerklausur.idSchuelerklausur));
+		}
+
+		// add all
+		for (final @NotNull GostSchuelerklausur schuelerklausur : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_schuelerklausur_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
 	}
 
 	/**
@@ -567,12 +575,6 @@ public class GostKlausurraumManager {
 //		_schuelerklausurraumstundenmenge.sort(_compRaum);
 	}
 
-	private void schuelerklausurraumstundeAddOhneUpdate(final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde) {
-		schuelerklausurraumstundeCheck(schuelerklausurraumstunde);
-		DeveloperNotificationException.ifMap2DPutOverwrites(_schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausur,
-				schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
-	}
-
 	/**
 	 * Fügt ein {@link GostSchuelerklausurraumstunde}-Objekt hinzu.
 	 *
@@ -581,14 +583,22 @@ public class GostKlausurraumManager {
 	 *                                  welches hinzugefügt werden soll.
 	 */
 	public void schuelerklausurraumstundeAdd(final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde) {
-		schuelerklausurraumstundeAddOhneUpdate(schuelerklausurraumstunde);
-
-		update_all();
+		schuelerklausurraumstundeAddAll(ListUtils.create1(schuelerklausurraumstunde));
 	}
 
-	private void schuelerklausurraumstundeAddAllOhneUpdate(final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSchuelerklausurraumstunde) {
-		for (final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde : listSchuelerklausurraumstunde)
-			schuelerklausurraumstundeAddOhneUpdate(schuelerklausurraumstunde);
+	private void schuelerklausurraumstundeAddAllOhneUpdate(final @NotNull List<@NotNull GostSchuelerklausurraumstunde> list) {
+		// check all
+		final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull GostSchuelerklausurraumstunde> setOfIDs = new HashMap2D<>();
+		for (final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde : list) {
+			schuelerklausurraumstundeCheck(schuelerklausurraumstunde);
+			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=(" + schuelerklausurraumstunde.idSchuelerklausur + "," + schuelerklausurraumstunde.idRaumstunde + ") existiert bereits!", _schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde.contains(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde));
+			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=" + schuelerklausurraumstunde.idSchuelerklausur + "," + schuelerklausurraumstunde.idRaumstunde + ") doppelt in der Liste!", setOfIDs.contains(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde));
+			setOfIDs.put(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
+		}
+
+		// add all
+		for (final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde : list)
+			DeveloperNotificationException.ifMap2DPutOverwrites(_schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
 	}
 
 	/**
@@ -604,8 +614,8 @@ public class GostKlausurraumManager {
 	}
 
 	private static void schuelerklausurraumstundeCheck(final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde) {
-		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.id", schuelerklausurraumstunde.idSchuelerklausur);
-		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.id", schuelerklausurraumstunde.idRaumstunde);
+		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.idSchuelerklausur", schuelerklausurraumstunde.idSchuelerklausur);
+		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.idRaumstunde", schuelerklausurraumstunde.idRaumstunde);
 	}
 
 	/**

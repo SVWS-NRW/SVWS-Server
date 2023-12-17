@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.klausurplanung;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -54,31 +56,6 @@ public class GostKlausurvorgabenManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_quartal = new HashMap2D<>();
 	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach = new HashMap4D<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach = new HashMap3D<>();
-
-
-//	/**
-//	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-//	 *
-//	 * @param halbjahr das Gost-Halbjahr
-//	 * @param quartal   das Quartal
-//	 *
-//	 * @return die intern verwendete Quartals-Id
-//	 */
-//	public static int getInternalQuartalIdWithGosthalbjahr(final @NotNull GostHalbjahr halbjahr, final int quartal) {
-//		return getInternalQuartalsIdWithHalbjahrid(halbjahr.id, quartal);
-//	}
-//
-//	/**
-//	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-//	 *
-//	 * @param halbjahr die Id des Gost-Halbjahres
-//	 * @param quartal   das Quartal
-//	 *
-//	 * @return die intern verwendete Quartals-Id
-//	 */
-//	public static int getInternalQuartalsIdWithHalbjahrid(final int halbjahr, final int quartal) {
-//		return halbjahr * 10 + quartal;
-//	}
 
 
 	/**
@@ -126,7 +103,6 @@ public class GostKlausurvorgabenManager {
 		_vorgabenmenge_by_halbjahr_and_quartal.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge) {
 			Map2DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(v);
-//			Map2DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, 0).add(v);
 		}
 	}
 
@@ -153,11 +129,6 @@ public class GostKlausurvorgabenManager {
 		_vorgabenmenge.sort(_compVorgabe);
 	}
 
-	private void vorgabeAddOhneUpdate(final @NotNull GostKlausurvorgabe vorgabe) {
-		vorgabeCheck(vorgabe);
-		DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurvorgabe}-Objekt hinzu.
 	 *
@@ -165,15 +136,21 @@ public class GostKlausurvorgabenManager {
 	 *                    werden soll.
 	 */
 	public void vorgabeAdd(final @NotNull GostKlausurvorgabe vorgabe) {
-		vorgabeAddOhneUpdate(vorgabe);
-
-		update_all();
+		vorgabeAddAll(ListUtils.create1(vorgabe));
 	}
 
-	private void vorgabeAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
-		for (final @NotNull GostKlausurvorgabe vorgabe : listVorgaben)
-			vorgabeAddOhneUpdate(vorgabe);
-	}
+	private void vorgabeAddAllOhneUpdate(final @NotNull List<@NotNull GostKlausurvorgabe> list) {
+		// check all
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull GostKlausurvorgabe vorgabe : list) {
+			vorgabeCheck(vorgabe);
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " existiert bereits!", _vorgabe_by_id.containsKey(vorgabe.idVorgabe));
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " doppelt in der Liste!", !setOfIDs.add(vorgabe.idVorgabe));
+		}
+
+		// add all
+		for (final @NotNull GostKlausurvorgabe vorgabe : list)
+			DeveloperNotificationException.ifMapPutOverwrites(_vorgabe_by_id, vorgabe.idVorgabe, vorgabe);	}
 
 	/**
 	 * Fügt alle {@link GostKlausurvorgabe}-Objekte hinzu.
@@ -187,7 +164,7 @@ public class GostKlausurvorgabenManager {
 	}
 
 	private static void vorgabeCheck(final @NotNull GostKlausurvorgabe vorgabe) {
-		DeveloperNotificationException.ifInvalidID("kursklausur.id", vorgabe.idVorgabe);
+		DeveloperNotificationException.ifInvalidID("vorgabe.idVorgabe", vorgabe.idVorgabe);
 	}
 
 	/**

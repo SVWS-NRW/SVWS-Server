@@ -14,9 +14,11 @@ import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../java/util/List';
+import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap4D } from '../../../core/adt/map/HashMap4D';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
+import { HashSet } from '../../../java/util/HashSet';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
@@ -113,11 +115,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		this._vorgabenmenge.sort(this._compVorgabe);
 	}
 
-	private vorgabeAddOhneUpdate(vorgabe : GostKlausurvorgabe) : void {
-		GostKlausurvorgabenManager.vorgabeCheck(vorgabe);
-		DeveloperNotificationException.ifMapPutOverwrites(this._vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurvorgabe}-Objekt hinzu.
 	 *
@@ -125,13 +122,18 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *                    werden soll.
 	 */
 	public vorgabeAdd(vorgabe : GostKlausurvorgabe) : void {
-		this.vorgabeAddOhneUpdate(vorgabe);
-		this.update_all();
+		this.vorgabeAddAll(ListUtils.create1(vorgabe));
 	}
 
-	private vorgabeAddAllOhneUpdate(listVorgaben : List<GostKlausurvorgabe>) : void {
-		for (const vorgabe of listVorgaben)
-			this.vorgabeAddOhneUpdate(vorgabe);
+	private vorgabeAddAllOhneUpdate(list : List<GostKlausurvorgabe>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const vorgabe of list) {
+			GostKlausurvorgabenManager.vorgabeCheck(vorgabe);
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " existiert bereits!", this._vorgabe_by_id.containsKey(vorgabe.idVorgabe));
+			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " doppelt in der Liste!", !setOfIDs.add(vorgabe.idVorgabe));
+		}
+		for (const vorgabe of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
 	}
 
 	/**
@@ -146,7 +148,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private static vorgabeCheck(vorgabe : GostKlausurvorgabe) : void {
-		DeveloperNotificationException.ifInvalidID("kursklausur.id", vorgabe.idVorgabe);
+		DeveloperNotificationException.ifInvalidID("vorgabe.idVorgabe", vorgabe.idVorgabe);
 	}
 
 	/**

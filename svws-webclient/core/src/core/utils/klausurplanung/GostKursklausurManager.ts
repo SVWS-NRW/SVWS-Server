@@ -22,6 +22,7 @@ import { StundenplanZeitraster } from '../../../core/data/stundenplan/Stundenpla
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { GostKlausurvorgabenManager } from '../../../core/utils/klausurplanung/GostKlausurvorgabenManager';
 import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { ListUtils } from '../../../core/utils/ListUtils';
 import { Wochentag } from '../../../core/types/Wochentag';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -215,11 +216,6 @@ export class GostKursklausurManager extends JavaObject {
 		this._kursklausurmenge.sort(this._compKursklausur);
 	}
 
-	private kursklausurAddOhneUpdate(kursklausur : GostKursklausur) : void {
-		GostKursklausurManager.kursklausurCheck(kursklausur);
-		DeveloperNotificationException.ifMapPutOverwrites(this._kursklausur_by_id, kursklausur.id, kursklausur);
-	}
-
 	/**
 	 * Fügt ein {@link GostKursklausur}-Objekt hinzu.
 	 *
@@ -227,13 +223,19 @@ export class GostKursklausurManager extends JavaObject {
 	 *                    werden soll.
 	 */
 	public kursklausurAdd(kursklausur : GostKursklausur) : void {
-		this.kursklausurAddOhneUpdate(kursklausur);
+		this.kursklausurAddAll(ListUtils.create1(kursklausur));
 		this.update_all();
 	}
 
-	private kursklausurAddAllOhneUpdate(listKursklausuren : List<GostKursklausur>) : void {
-		for (const kursklausur of listKursklausuren)
-			this.kursklausurAddOhneUpdate(kursklausur);
+	private kursklausurAddAllOhneUpdate(list : List<GostKursklausur>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const klausur of list) {
+			GostKursklausurManager.kursklausurCheck(klausur);
+			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._kursklausur_by_id.containsKey(klausur.id));
+			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!", !setOfIDs.add(klausur.id));
+		}
+		for (const klausur of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._kursklausur_by_id, klausur.id, klausur);
 	}
 
 	/**
@@ -318,11 +320,6 @@ export class GostKursklausurManager extends JavaObject {
 		this._terminmenge.sort(GostKursklausurManager._compTermin);
 	}
 
-	private terminAddOhneUpdate(termin : GostKlausurtermin) : void {
-		GostKursklausurManager.terminCheck(termin);
-		DeveloperNotificationException.ifMapPutOverwrites(this._termin_by_id, termin.id, termin);
-	}
-
 	/**
 	 * Fügt ein {@link GostKlausurtermin}-Objekt hinzu.
 	 *
@@ -330,13 +327,18 @@ export class GostKursklausurManager extends JavaObject {
 	 *               werden soll.
 	 */
 	public terminAdd(termin : GostKlausurtermin) : void {
-		this.terminAddOhneUpdate(termin);
-		this.update_all();
+		this.terminAddAll(ListUtils.create1(termin));
 	}
 
-	private terminAddAllOhneUpdate(listTermine : List<GostKlausurtermin>) : void {
-		for (const termin of listTermine)
-			this.terminAddOhneUpdate(termin);
+	private terminAddAllOhneUpdate(list : List<GostKlausurtermin>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const termin of list) {
+			GostKursklausurManager.terminCheck(termin);
+			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " existiert bereits!", this._termin_by_id.containsKey(termin.id));
+			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " doppelt in der Liste!", !setOfIDs.add(termin.id));
+		}
+		for (const termin of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._termin_by_id, termin.id, termin);
 	}
 
 	/**
@@ -351,7 +353,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private static terminCheck(termin : GostKlausurtermin) : void {
-		DeveloperNotificationException.ifInvalidID("kursklausur.id", termin.id);
+		DeveloperNotificationException.ifInvalidID("termin.id", termin.id);
 	}
 
 	/**
