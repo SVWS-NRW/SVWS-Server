@@ -16,6 +16,7 @@
   CheckBoxMigrateSchema: TNewCheckBox;
 
   ZertifikatInputPage: TWizardPage;
+  StaticTextEditHostname: TNewStaticText;
   StaticTextEditZertifikatHostname: TNewStaticText;
   EditZertifikatHostname: TNewEdit;
   StaticTextEditZertifikatSchulname: TNewStaticText;
@@ -96,6 +97,8 @@ procedure CheckBoxMigrateSchemaOnClick(Sender: TObject);
 procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integer);
   var 
     IsSVWSServerUpdate: Boolean;
+    HostName: String;
+    IsValidHostName: Boolean;
   begin
     IsSVWSServerUpdate := (CompareStr(SVWSExistingVersion, '') <> 0);
 
@@ -186,11 +189,24 @@ procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integ
       begin
         ZertifikatInputPage := CreateCustomPage(Page.ID, 'Zertifikatsinformationen', 'Information für das Server-Zertifikat');
 
+        StaticTextEditHostname := TNewStaticText.Create(ZertifikatInputPage);
+        StaticTextEditHostname.Left := ScaleX(0);
+        StaticTextEditHostname.Top := ScaleY(8);
+        StaticTextEditHostname.AutoSize := True;
+        Hostname := GetComputerNameString;
+        IsValidHostName := CheckCertificateHostname(Hostname);
+        if (IsValidHostName) then
+          StaticTextEditHostname.Caption := 'Hostname (genutzt für das Zertifikat): ' + Hostname
+        else
+          StaticTextEditHostname.Caption := 'Hostname (genutzt für das Zertifikat): ' + Hostname + ' enthält ungültige Zeichen!';
+        StaticTextEditHostname.Enabled := InstallSVWSServer;
+        StaticTextEditHostname.Parent := ZertifikatInputPage.Surface;
+
         StaticTextEditZertifikatHostname := TNewStaticText.Create(ZertifikatInputPage);
         StaticTextEditZertifikatHostname.Left := ScaleX(0);
-        StaticTextEditZertifikatHostname.Top := ScaleY(8);
+        StaticTextEditZertifikatHostname.Top := StaticTextEditHostname.Top + StaticTextEditHostname.Height + ScaleY(8);
         StaticTextEditZertifikatHostname.AutoSize := True;
-        StaticTextEditZertifikatHostname.Caption := 'Zertifikat-Hostname: ';
+        StaticTextEditZertifikatHostname.Caption := 'Weiterer Zertifikat-Hostname: ';
         StaticTextEditZertifikatHostname.Enabled := InstallSVWSServer;
         StaticTextEditZertifikatHostname.Parent := ZertifikatInputPage.Surface;
 
@@ -431,7 +447,7 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
     else if (not FileExists(SVWSDataDir + '\res\keystore')) and (CurPageID = ZertifikatInputPage.ID) then
       begin
         ZertifikatHostname := EditZertifikatHostname.Text;
-        if not CheckCertificateHostname(ZertifikatHostname) then
+        if not CheckCertificateHostname(ZertifikatHostname) or not CheckCertificateHostname(GetComputerNameString) then
           begin
             MsgBox('Ein gültiger Hostname besteht nur aus eine Kombination der folgenden Zeichen: Buchstabe, Zahl und Bindestrich (ohn ä, ö, ü und ß). Dies muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
