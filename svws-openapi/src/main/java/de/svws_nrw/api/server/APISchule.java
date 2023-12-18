@@ -704,7 +704,7 @@ public class APISchule {
     		@RequestBody(description = "Der Post für die Religion-Daten", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).create(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
@@ -763,6 +763,62 @@ public class APISchule {
     public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAll(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Religion-Katalog-Eintrags der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Religion-Katalog-Eintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Religion-Katalog-Eintrag
+     */
+    @DELETE
+    @Path("/religionen/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Religion-Katalog-Eintrag der Schule.",
+    description = "Entfernt einen Religion-Katalog-Eintrag der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReligionEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Religion-Katalog-Eintrag vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteReligionEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Religion-Katalog-Einträge der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Religion-Katalog-Einträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Religion-Katalog-Einträgen
+     */
+    @DELETE
+    @Path("/religionen/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Religion-Katalog-Einträge der Schule.",
+    description = "Entfernt mehrere Religion-Katalog-Einträge der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Religion-Katalog-Einträge wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteReligionEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Religion-Katalog-Einträge", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
