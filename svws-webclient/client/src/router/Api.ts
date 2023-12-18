@@ -373,6 +373,29 @@ class Api {
 		return mapJahrgaenge;
 	}
 
+
+	/// --- Methoden für einen Api-Zugriff, welcher den API-Status korrekt setzt
+
+
+	/**
+	 * Führt die übergebene Funktion als API-Zugriff aus, um welche der API-Status korrekt gesetzt wird.
+	 *
+	 * @param func     die auszuführende API-Funktion
+	 * @param params   die Parameter für die API-Funktion
+	 *
+	 * @returns die Rückgabe der API-Funktion
+	 */
+	public call = <T extends Array<any>, U>(func: (...params: T) => U) => {
+		this.status.start();
+		try {
+			const res = (...params: T): U => func(...params);
+			this.status.stop();
+			return res;
+		} finally {
+			this.status.stop();
+		}
+	}
+
 }
 
 /** Die Api-Instanz zur Verwendung im SVWS-Client */
