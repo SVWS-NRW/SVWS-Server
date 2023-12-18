@@ -100,8 +100,10 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	patch = async (eintrag : Partial<StundenplanPausenzeit>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchStundenplanPausenzeit(eintrag, api.schema, this.auswahl.id);
+		await api.server.patchPausenzeit(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
-		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
+		Object.assign(auswahl, eintrag);
+		this.stundenplanManager.pausenzeitPatchAttributes(auswahl);
+		this.commit();
 	}
 }

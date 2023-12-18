@@ -106,6 +106,8 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 			throw new DeveloperNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
 		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
-		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
+		Object.assign(auswahl, eintrag);
+		this.stundenplanManager.raumPatchAttributes(auswahl);
+		this.commit();
 	}
 }

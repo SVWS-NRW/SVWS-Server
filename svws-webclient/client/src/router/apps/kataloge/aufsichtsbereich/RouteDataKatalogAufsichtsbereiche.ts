@@ -104,7 +104,9 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
-		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
+		Object.assign(auswahl, eintrag);
+		this.stundenplanManager.aufsichtsbereichPatchAttributes(auswahl);
+		this.commit();
 	}
 
 }

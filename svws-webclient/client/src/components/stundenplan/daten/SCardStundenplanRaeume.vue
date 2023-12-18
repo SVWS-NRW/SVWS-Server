@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { List, Raum, StundenplanManager, StundenplanRaum } from "@core";
-	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -35,20 +35,18 @@
 		addRaum: (raum: StundenplanRaum) => Promise<void>;
 		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 		importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
-		listRaeume: () => List<Raum>;
+		listRaeume: List<Raum>;
 		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
-	watch(()=>props.stundenplanManager, neu => {
-		items.value = [...neu().raumGetMengeAsList()]
-	})
-
 	const raum = ref<StundenplanRaum | undefined>();
 	const selected = ref<StundenplanRaum[]>([]);
-	const items = ref<StundenplanRaum[]>([])
+	const items = computed(()=>[...props.stundenplanManager().raumGetMengeAsList()]);
 
 	const cols = [
-		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'groesse', label: 'Größe', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}
+		{key: 'kuerzel', label: 'Kürzel', span: 1},
+		{key: 'groesse', label: 'Größe', span: 1},
+		{key: 'beschreibung', label: 'Beschreibung', span: 3}
 	]
 
 </script>

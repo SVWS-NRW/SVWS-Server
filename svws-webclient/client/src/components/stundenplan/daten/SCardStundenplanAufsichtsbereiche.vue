@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { List, StundenplanAufsichtsbereich, StundenplanManager } from "@core";
-	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -32,19 +32,17 @@
 		addAufsichtsbereich: (aufsichtsbereich: StundenplanAufsichtsbereich) => Promise<void>;
 		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
-		listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
+		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();
 	const selected = ref<StundenplanAufsichtsbereich[]>([]);
-	const items = ref<StundenplanAufsichtsbereich[]>([]);
 
-	watch(()=>props.stundenplanManager, neu => {
-		items.value = [...neu().aufsichtsbereichGetMengeAsList()]
-	})
+	const items = computed(()=>[...props.stundenplanManager().aufsichtsbereichGetMengeAsList()]);
 
 	const cols = [
-		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}
+		{key: 'kuerzel', label: 'Kürzel', span: 1},
+		{key: 'beschreibung', label: 'Beschreibung', span: 3}
 	]
 </script>

@@ -26,9 +26,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { List, StundenplanManager, StundenplanPausenzeit} from "@core";
 	import { Wochentag, DateUtils } from "@core";
-	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -36,20 +36,18 @@
 		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
-		listPausenzeiten: () => List<StundenplanPausenzeit>;
+		listPausenzeiten: List<StundenplanPausenzeit>;
 		gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
 	}>();
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();
 	const selected = ref<StundenplanPausenzeit[]>([]);
-	const items = ref<StundenplanPausenzeit[]>([]);
 
-	watch(()=>props.stundenplanManager, neu => {
-		items.value = [...neu().pausenzeitGetMengeAsList()]
-	})
+	const items = computed(()=>[...props.stundenplanManager().pausenzeitGetMengeAsList()]);
 
 	const cols = [
-		{key: 'wochentag', label: 'Wochentag', span: 1}, {key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
+		{key: 'wochentag', label: 'Wochentag', span: 1},
+		{key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
 	]
 
 	async function patchBeginn(minuten: string, id: number) {
