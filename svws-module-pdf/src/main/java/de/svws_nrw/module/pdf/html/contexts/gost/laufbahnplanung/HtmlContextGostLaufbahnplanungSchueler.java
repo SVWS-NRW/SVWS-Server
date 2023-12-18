@@ -106,7 +106,7 @@ public final class HtmlContextGostLaufbahnplanungSchueler extends HtmlContext {
 		// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		} catch (WebApplicationException ex) {
+		} catch (final WebApplicationException ex) {
 			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
@@ -172,7 +172,8 @@ public final class HtmlContextGostLaufbahnplanungSchueler extends HtmlContext {
 				// Ergänze ggf. die Maps zu den Klassen und Jahrgängen.
 				final Long schuelerJahrgangID = mapSchuelerLernabschnittsdaten.get(schuelerID).jahrgangID;
 				final Long schuelerKlasseID = mapSchuelerLernabschnittsdaten.get(schuelerID).klassenID;
-				mapJahrgangsdaten.computeIfAbsent(schuelerJahrgangID, k -> new DataJahrgangsdaten(conn).getFromID(schuelerJahrgangID));
+				final JahrgangsDaten schuelerJahrgangsdaten = mapJahrgangsdaten.computeIfAbsent(schuelerJahrgangID, k -> new DataJahrgangsdaten(conn).getFromID(schuelerJahrgangID));
+				final JahrgangsDaten schuelerFolgeJahrgangsdaten = mapJahrgangsdaten.computeIfAbsent(schuelerJahrgangsdaten.idFolgejahrgang, k -> new DataJahrgangsdaten(conn).getFromID(schuelerJahrgangsdaten.idFolgejahrgang));
 				mapKlassendatenOhneSchueler.computeIfAbsent(schuelerKlasseID, k -> new DataKlassendaten(conn).getFromIDOhneSchueler(schuelerKlasseID));
 
 				// Erstelle die Maps, welche zum Abiturjahr die Jahrgangsdaten und den FächerManager liefern, und ergänze sie jeweils bei Bedarf.
@@ -188,7 +189,6 @@ public final class HtmlContextGostLaufbahnplanungSchueler extends HtmlContext {
 				final GostFaecherManager gostFaecherManager = mapGostFaecherManager.get(abiturdaten.abiturjahr);
 				final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 				final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = mapGostBeratungsdaten.get(schuelerID);
-				final JahrgangsDaten schuelerJahrgangsdaten = mapJahrgangsdaten.get(schuelerJahrgangID);
 
 				final int[] kurse = abiturdatenManager.getAnrechenbareKurse();
 				final int[] wstd = abiturdatenManager.getWochenstunden();
@@ -202,7 +202,7 @@ public final class HtmlContextGostLaufbahnplanungSchueler extends HtmlContext {
 				schuelerLaufbahnplanung.emailText = gostJahrgangsdaten.textMailversand;
 				schuelerLaufbahnplanung.aktuellesGOStHalbjahr = schuelerJahrgangsdaten.kuerzelStatistik + '.' + aktuellesHalbjahr;
 				schuelerLaufbahnplanung.aktuelleKlasse = mapKlassendatenOhneSchueler.get(schuelerKlasseID).kuerzel;
-				eintragBeratungGostHalbjahrErgaenzen(schuelerLaufbahnplanung, schuelerJahrgangsdaten, mapJahrgangsdaten.get(schuelerJahrgangsdaten.idFolgejahrgang), folgeHalbjahr);
+				eintragBeratungGostHalbjahrErgaenzen(schuelerLaufbahnplanung, schuelerJahrgangsdaten, schuelerFolgeJahrgangsdaten, folgeHalbjahr);
 				eintragBeratungslehrkraefteErgaenzen(schuelerLaufbahnplanung, conn, schuelerBeratungsdaten, gostJahrgangsdaten);
 				schuelerLaufbahnplanung.ruecklaufdatum = schuelerBeratungsdaten.beratungsdatum;
 				schuelerLaufbahnplanung.beratungsdatum = schuelerBeratungsdaten.beratungsdatum;
