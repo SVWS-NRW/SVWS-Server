@@ -64,7 +64,10 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		const name = this.data.mapKatalogeintraege.size === 0
+			? this.name
+			: this.defaultChild!.name;
+		return { name, params: { id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): RaeumeAuswahlProps {

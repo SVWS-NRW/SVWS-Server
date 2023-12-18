@@ -102,8 +102,8 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	patch = async (eintrag : Partial<Raum>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		if (!eintrag.kuerzel || this.stundenplanManager.raumExistsByKuerzel(eintrag.kuerzel))
-			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
+		if (eintrag.groesse && eintrag.groesse < 1)
+			throw new DeveloperNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
 		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});

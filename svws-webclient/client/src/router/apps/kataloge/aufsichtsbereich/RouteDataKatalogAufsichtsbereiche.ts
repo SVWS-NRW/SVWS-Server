@@ -102,8 +102,6 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	patch = async (eintrag : Partial<StundenplanAufsichtsbereich>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
-			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
