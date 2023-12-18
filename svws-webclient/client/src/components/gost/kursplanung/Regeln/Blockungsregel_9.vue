@@ -1,5 +1,5 @@
 <template>
-	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
+	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln" :get-ergebnismanager="getErgebnismanager"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
 		<template #regelRead="{regel: r}">
 			<div class="svws-ui-td" role="cell">
@@ -18,12 +18,13 @@
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef } from "vue";
-	import { GostBlockungKurs, type List, type GostBlockungRegel, type GostFach, type GostBlockungsdatenManager, ArrayList, GostKursblockungRegelTyp } from "@core";
 	import { computed } from "vue";
-	import type {DataTableColumn} from "@ui";
+	import type { DataTableColumn } from "@ui";
+	import type { GostBlockungsergebnisManager, List, GostFach, GostBlockungsdatenManager, GostBlockungRegel } from "@core";
+	import { GostBlockungKurs, ArrayList, GostKursblockungRegelTyp } from "@core";
 
 	const props = defineProps<{
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		modelValue: GostBlockungRegel | undefined;
 		mapFaecher: Map<number, GostFach>;
@@ -37,7 +38,7 @@
 		(e: 'regelEntfernen', v: GostBlockungRegel): void;
 	}>()
 
-	const regel: WritableComputedRef<GostBlockungRegel | undefined> = computed({
+	const regel = computed<GostBlockungRegel | undefined>({
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	});
@@ -55,7 +56,7 @@
 		return result;
 	});
 
-	const kurs1 : WritableComputedRef<GostBlockungKurs> = computed({
+	const kurs1 = computed<GostBlockungKurs>({
 		get: () => {
 			if (regel.value === undefined)
 				return new GostBlockungKurs();
@@ -68,7 +69,7 @@
 		}
 	});
 
-	const anzahl : WritableComputedRef<number> = computed({
+	const anzahl = computed<number>({
 		get: () => {
 			if (regel.value === undefined)
 				return 0;

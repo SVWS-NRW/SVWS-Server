@@ -1,5 +1,5 @@
 <template>
-	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
+	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln" :get-ergebnismanager="getErgebnismanager"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
 		<template #regelRead="{regel: r}">
 			<div class="svws-ui-td" role="cell">
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach } from "@core";
+	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisManager, GostFach } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { getKursbezeichnung, useRegelParameterKurs, useRegelParameterSchiene, getKursFromId  } from '../composables';
 	import { GostKursblockungRegelTyp } from "@core";
@@ -26,6 +26,7 @@
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		modelValue: GostBlockungRegel | undefined;
 		mapFaecher: Map<number, GostFach>;
 		kurse: Iterable<GostBlockungKurs>;

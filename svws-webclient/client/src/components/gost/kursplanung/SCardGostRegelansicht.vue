@@ -1,15 +1,16 @@
 <template>
 	<div class="mt-6 -mx-6">
 		<div>
-			<Blockungsregel_1 v-model="regel" :schienen="schienen" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_6 v-model="regel" :schienen="schienen" :regeln="regeln[6].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_2 v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[2].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_3 v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[3].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_7 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_8 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_9 v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_4 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-			<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
+			<svws-ui-checkbox type="toggle" v-model="nurRegelverletzungen" class="mx-6"> Nur Regelverletzungen anzeigen </svws-ui-checkbox>
+			<Blockungsregel_1 v-if="!nurRegelverletzungen || regeln[1].value.length" v-model="regel" :schienen="schienen" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_6 v-if="!nurRegelverletzungen || regeln[6].value.length" v-model="regel" :schienen="schienen" :regeln="regeln[6].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_2 v-if="!nurRegelverletzungen || regeln[2].value.length" v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[2].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_3 v-if="!nurRegelverletzungen || regeln[3].value.length" v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[3].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_7 v-if="!nurRegelverletzungen || regeln[7].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_8 v-if="!nurRegelverletzungen || regeln[8].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_9 v-if="!nurRegelverletzungen || regeln[9].value.length" v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_4 v-if="!nurRegelverletzungen || regeln[4].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_5 v-if="!nurRegelverletzungen || regeln[5].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 		</div>
 		<Blockungsregel_10 v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 	</div>
@@ -17,19 +18,22 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
 	import { GostKursblockungRegelTyp } from "@core";
 	import type { ComputedRef } from 'vue';
 	import { computed, shallowRef, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		faecherManager: GostFaecherManager;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
+
+	const nurRegelverletzungen = ref<boolean>(false);
 
 	const mapFaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
 		const result = new Map<number, GostFach>();
@@ -63,6 +67,8 @@
 		}
 	})
 
+	const verletzungen = computed(()=> new Set(props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen));
+
 	const alle_regeln = computed<List<GostBlockungRegel>>(() => props.getDatenmanager().regelGetListe());
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 	for (let i = 1; i < 11; i++)
@@ -70,7 +76,8 @@
 			const a = [];
 			for (const r of alle_regeln.value)
 				if (r.typ === i)
-					a.push(r);
+					if (!nurRegelverletzungen.value || verletzungen.value.has(r.id))
+						a.push(r);
 			return a;
 		});
 

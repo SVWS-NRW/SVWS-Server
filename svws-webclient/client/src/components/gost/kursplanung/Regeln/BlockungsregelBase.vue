@@ -7,7 +7,7 @@
 				</div>
 			</template>
 			<template #body>
-				<div v-for="r in regeln" :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id}" role="row" @click="select_regel(r)">
+				<div v-for="r in regeln" :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
 					<slot name="regelRead" :regel="r" />
 					<div class="svws-ui-td" role="cell">
 						<svws-ui-button type="icon" @click.stop="regel_entfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKursblockungRegelTyp } from "@core";
+	import type { GostBlockungsergebnisManager, GostKursblockungRegelTyp } from "@core";
 	import { GostBlockungRegel } from "@core";
 	import type {DataTableColumn} from "@ui";
 	import {api} from "~/router/Api";
@@ -45,6 +45,7 @@
 	type DataTableColumnSource = DataTableColumn | string
 
 	const props = defineProps<{
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
 		regeln: GostBlockungRegel[];
@@ -79,6 +80,13 @@
 
 	const regel_entfernen = async (r: GostBlockungRegel) => {
 		emit('regelEntfernen', r)
+	}
+
+	function regelverletzung(r: GostBlockungRegel) {
+		for (const v of props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen)
+			if (v === r.id)
+				return true;
+		return false;
 	}
 
 </script>

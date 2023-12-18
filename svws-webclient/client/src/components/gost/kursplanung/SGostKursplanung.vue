@@ -74,7 +74,7 @@
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
 						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
-							:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" />
+							:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" :get-ergebnismanager="getErgebnismanager" />
 					</div>
 				</aside>
 			</Teleport>
