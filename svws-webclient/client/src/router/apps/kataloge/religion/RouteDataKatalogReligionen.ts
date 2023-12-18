@@ -65,18 +65,16 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		await api.server.patchReligion(data, api.schema, this.auswahl.id)
 	}
 
-	deleteEintraege = async (eintraege: ReligionEintrag[]) => {
+	deleteEintraege = async (eintraege: Iterable<ReligionEintrag>) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		const listID = new ArrayList<number>;
-		for (const eintrag of eintraege) {
+		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
+		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
+		for (const eintrag of religionen)
 			mapKatalogeintraege.delete(eintrag.id);
-		}
-		let auswahl;
-		// TODO Apiaufruf ergänzen
-		const raeume = new ArrayList()//await api.server.religion
+		let auswahl = this.auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
 		this.setPatchedState({mapKatalogeintraege, auswahl});
-		throw new DeveloperNotificationException('Api-Methode noch nicht implementiert');
 	}}
