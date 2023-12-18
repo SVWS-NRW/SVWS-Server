@@ -374,7 +374,8 @@ task copyInstallerScript(type:Copy) {
 		filteringCharset = 'ISO-8859-1'
 		if (System.getenv("SVWS_SIGNTOOL_PATH") && project.hasProperty("jarsign_keystoreFile") && project.hasProperty("jarsign_keystorepass")) {
 			filter(ReplaceTokens, tokens: [
-				version: project.version,
+				version: project.version.replace("-SNAPSHOT", ""),
+				snapshot: "0.4.1-SNAPSHOT".endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "",
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
@@ -387,7 +388,8 @@ task copyInstallerScript(type:Copy) {
 			])
 		} else {
 			filter(ReplaceTokens, tokens: [
-				version: project.version,
+				version: project.version.replace("-SNAPSHOT", ""),
+				snapshot: "0.4.1-SNAPSHOT".endsWith("-SNAPSHOT") ? "-SNAPSHOT" : "",
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
@@ -430,6 +432,7 @@ task buildPrepare {
 
 
 task buildCreateInstaller(type:Exec) {
+	group 'svws'
 	if (System.getenv("SVWS_SIGNTOOL_PATH") && project.hasProperty("jarsign_keystoreFile") && project.hasProperty("jarsign_keystorepass")) {
 		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + jarsign_keystoreFile  + " /p " + jarsign_keystorepass + ' -tr http://timestamp.digicert.com -td sha256 \$f'
 	} else {

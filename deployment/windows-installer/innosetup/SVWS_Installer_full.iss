@@ -1,6 +1,6 @@
 ﻿[Setup]
 AppName="SVWS Server"
-AppVerName="SVWS Server @version@"
+AppVerName="SVWS Server @version@@snapshot@"
 AppPublisher=Ministerium für Schule und Bildung NRW
 AppPublisherURL=https://www.svws.nrw.de
 AppSupportURL=https://www.svws.nrw.de/forum-0
@@ -8,7 +8,7 @@ AppUpdatesURL=https://www.svws.nrw.de
 VersionInfoVersion=@version@
 VersionInfoCompany=Ministerium für Schule und Bildung NRW
 VersionInfoCopyright=Ministerium für Schule und Bildung NRW
-VersionInfoProductName="SVWS Server @version@"
+VersionInfoProductName="SVWS Server @version@@snapshot@"
 VersionInfoProductVersion=@version@
 WizardImageFile=img/NRWLogo.bmp
 WizardSmallImageFile=img/NRWLogoSmall.bmp
@@ -16,7 +16,7 @@ WizardImageStretch=no
 WizardSizePercent=120
 
 OutputDir=../output
-OutputBaseFilename=win64-installer-@version@
+OutputBaseFilename=win64-installer-@version@@snapshot@
 MinVersion=10.0
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
