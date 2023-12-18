@@ -1,7 +1,7 @@
-{ Prüft, ob der angebene Hostname für ein Zertifkat nur gültige Zeichen beinhaltet,
+ï»¿{ PrÃ¼ft, ob der angebene Hostname fÃ¼r ein Zertifkat nur gÃ¼ltige Zeichen beinhaltet,
   d.h. Ziffern, Buchstaben und ein Bindestrich
-  @param name   der zu prüfende Name
-  @return true, falls nur gültige Zeichen enthalten sind und ansonsten false
+  @param name   der zu prÃ¼fende Name
+  @return true, falls nur gÃ¼ltige Zeichen enthalten sind und ansonsten false
 }
 function CheckCertificateHostname(name : String): Boolean;
   var i : Integer;
@@ -36,8 +36,8 @@ function GetVersionFromString(v: String) : array[0..2] of Integer;
     result[2] := StrToIntDef(Copy(tmp, p+1, Length(tmp) - p), -1);
   end;
 
-{ Vergleicht die beiden als String übergebenen Versionen miteinander und gibt
-  zurück, welche größer (>0) bzw. kleiner (<0) ist oder ob sie identisch sind (=0)
+{ Vergleicht die beiden als String Ã¼bergebenen Versionen miteinander und gibt
+  zurÃ¼ck, welche grÃ¶ÃŸer (>0) bzw. kleiner (<0) ist oder ob sie identisch sind (=0)
   @param a   die erste Version
   @param b   die zweite Version
   @return <0, falls a < b, >0, falls a > b und =0, falls a = b}
@@ -58,10 +58,10 @@ function CompareVersions(a, b: String) : Integer;
   end;
 
 
-{ Ermittelt den vollständigen Domainnamen mithilfe der Umgebungsvariable 
-  'UserDnsDomain' und gibt diesen zurück. Ist die Variable nicht gesetzt, so 
-  wird ein leerer String zurückgegeben.
-  @return der vollständige Domainname oder ein leerer String }
+{ Ermittelt den vollstÃ¤ndigen Domainnamen mithilfe der Umgebungsvariable 
+  'UserDnsDomain' und gibt diesen zurÃ¼ck. Ist die Variable nicht gesetzt, so 
+  wird ein leerer String zurÃ¼ckgegeben.
+  @return der vollstÃ¤ndige Domainname oder ein leerer String }
 function GetFullHostname(): String;
   var DNSDomain: String;
       HostName: String;
@@ -78,7 +78,7 @@ function GetFullHostname(): String;
 
 
 { Ermittelt die Hostnamen unter denen der Host im Netzwerk 
-  bekannt ist und liefert diese in einem SAN-String (ServerAlternateName) zurück. 
+  bekannt ist und liefert diese in einem SAN-String (ServerAlternateName) zurÃ¼ck. 
   @param ManualHostname   ein manuell eingegebener Hostname, der auch eingetragen werden soll
   @return der SAN-String }
 function GetHostNames4Certificates(ManualHostname: String) : String;
@@ -96,19 +96,19 @@ function GetHostNames4Certificates(ManualHostname: String) : String;
   end;
 
 
-{ Prüft mit netstat, ob das angegebene Port derzeit genutzt wird oder nicht.
-  @param Port   der zu prüfende Port
+{ PrÃ¼ft mit netstat, ob das angegebene Port derzeit genutzt wird oder nicht.
+  @param Port   der zu prÃ¼fende Port
   @return true, falls das Port genutzt wird, sonst false }
 function IsPortUsed(Port: Integer): Boolean;
   var
     ResultCode: Integer;
   begin
-    Log('Prüfe, ob Port ' + IntToStr(Port) + ' in Nutzung ist...');
+    Log('PrÃ¼fe, ob Port ' + IntToStr(Port) + ' in Nutzung ist...');
     if not FileExists(ExpandConstant('{tmp}/check_port.cmd')) then 
       begin
         if not SaveStringToFile(ExpandConstant('{tmp}/check_port.cmd'), '@netstat -p TCP -an | findstr "0.0:%1" >nul 2>&1', True) then
           begin
-            Log('  -> Prüfung fehlgeschlagen. (Fehler beim Anlegen des Batch-Skriptes)');
+            Log('  -> PrÃ¼fung fehlgeschlagen. (Fehler beim Anlegen des Batch-Skriptes)');
             result := False;
             Exit;
           end;
@@ -130,14 +130,14 @@ function IsPortUsed(Port: Integer): Boolean;
   end;
 
 
-{ Wartet darauf, dass das angegebene Port genutzt wird. Es finden soviele Prüfungen
-  statt, wie in dem Parameter Retries angegeben sind. Zwischen den Prüfungen wird solange pausiert,
-  wir in dem Parameter IntervalMS angebeben ist. Wurden alle Prüfungen durchgeführt und das Port 
-  wurde noch nicht genutzt, so wird false zurückgegeben. Ansonsten wird true zurückgegeben.
-  @param Port   das zu prüfende Port
-  @param Retries   die max. Anzahl durchzuführender Prüfungen
-  @param IntervalMS   das Zeitintervall zum Warten zwischen zwei Prüfungen
-  @return true, sobald das Port genutzt ist, und false, falls alle Prüfungen fehlschlagen
+{ Wartet darauf, dass das angegebene Port genutzt wird. Es finden soviele PrÃ¼fungen
+  statt, wie in dem Parameter Retries angegeben sind. Zwischen den PrÃ¼fungen wird solange pausiert,
+  wir in dem Parameter IntervalMS angebeben ist. Wurden alle PrÃ¼fungen durchgefÃ¼hrt und das Port 
+  wurde noch nicht genutzt, so wird false zurÃ¼ckgegeben. Ansonsten wird true zurÃ¼ckgegeben.
+  @param Port   das zu prÃ¼fende Port
+  @param Retries   die max. Anzahl durchzufÃ¼hrender PrÃ¼fungen
+  @param IntervalMS   das Zeitintervall zum Warten zwischen zwei PrÃ¼fungen
+  @return true, sobald das Port genutzt ist, und false, falls alle PrÃ¼fungen fehlschlagen
 }
 function WaitTillPortUsed(Port: Integer; Retries: Integer; IntervalMS: Integer): Boolean;
   var
@@ -156,14 +156,14 @@ function WaitTillPortUsed(Port: Integer; Retries: Integer; IntervalMS: Integer):
   end;
 
 
-{ Wartet darauf, dass das angegebene Port frei wird. Es finden soviele Prüfungen
-  statt, wie in dem Parameter Retries angegeben sind. Zwischen den Prüfungen wird solange pausiert,
-  wir in dem Parameter IntervalMS angebeben ist. Wurden alle Prüfungen durchgeführt und das Port 
-  ist noch nicht frei, so wird false zurückgegeben. Ansonsten wird true zurückgegeben.
-  @param Port   das zu prüfende Port
-  @param Retries   die max. Anzahl durchzuführender Prüfungen
-  @param IntervalMS   das Zeitintervall zum Warten zwischen zwei Prüfungen
-  @return true, sobald das Port frei ist, und false, falls alle Prüfungen fehlschlagen
+{ Wartet darauf, dass das angegebene Port frei wird. Es finden soviele PrÃ¼fungen
+  statt, wie in dem Parameter Retries angegeben sind. Zwischen den PrÃ¼fungen wird solange pausiert,
+  wir in dem Parameter IntervalMS angebeben ist. Wurden alle PrÃ¼fungen durchgefÃ¼hrt und das Port 
+  ist noch nicht frei, so wird false zurÃ¼ckgegeben. Ansonsten wird true zurÃ¼ckgegeben.
+  @param Port   das zu prÃ¼fende Port
+  @param Retries   die max. Anzahl durchzufÃ¼hrender PrÃ¼fungen
+  @param IntervalMS   das Zeitintervall zum Warten zwischen zwei PrÃ¼fungen
+  @return true, sobald das Port frei ist, und false, falls alle PrÃ¼fungen fehlschlagen
 }
 function WaitTillPortFree(Port: Integer; Retries: Integer; IntervalMS: Integer): Boolean;
   var
@@ -182,7 +182,7 @@ function WaitTillPortFree(Port: Integer; Retries: Integer; IntervalMS: Integer):
   end;
 
 
-{ Konstanten, die bei der Generierung eines zufälligen Kennwortes genutzt werden }
+{ Konstanten, die bei der Generierung eines zufÃ¤lligen Kennwortes genutzt werden }
 const
   PasswordChars_Numbers = '0123456789';
   PasswordChars_Lowercase = 'abcdefghijklmnopqrstuvwxyz';
@@ -190,9 +190,9 @@ const
   PasswordChars_Special = '+-*!?$%@=#';
   PasswordChars_All = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-*!?$%@=#';
 
-{ Erstellt ein neues Passwort mit der angegebenen Länge.
-  @param Length   die Länge des neuen Passwortes
-  @return das generierte Passwort mit der angegebenen Länge }
+{ Erstellt ein neues Passwort mit der angegebenen LÃ¤nge.
+  @param Length   die LÃ¤nge des neuen Passwortes
+  @return das generierte Passwort mit der angegebenen LÃ¤nge }
 function CreateRandomPassword(Length: Integer): String;
   var
    i: Integer;
@@ -207,7 +207,7 @@ function CreateRandomPassword(Length: Integer): String;
   end;
 
 
-{ Deaktiviert das vererben von ACL-Informationen an diesen Ordner von übergeordneten Ordnern }
+{ Deaktiviert das vererben von ACL-Informationen an diesen Ordner von Ã¼bergeordneten Ordnern }
 procedure DisableACLInheritance(FolderWithConstants: String);
   var
     Folder: String;
@@ -219,13 +219,13 @@ procedure DisableACLInheritance(FolderWithConstants: String);
             '"' + Folder + '" /inheritance:r', 
             ExpandConstant('{sys}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-      Log('  -> Vererbung der Rechte durch den übergeordneten Ordner deaktiviert.')
+      Log('  -> Vererbung der Rechte durch den Ã¼bergeordneten Ordner deaktiviert.')
     else
-      Log('  -> Fehler: Vererbung der Rechte durch den übergeordneten Ordner konnte nicht deaktiviert werden!');
+      Log('  -> Fehler: Vererbung der Rechte durch den Ã¼bergeordneten Ordner konnte nicht deaktiviert werden!');
   end;
 
 
-{ Fügt die expliziten ACls dem angegebenen Ordner hinzu }
+{ FÃ¼gt die expliziten ACls dem angegebenen Ordner hinzu }
 procedure AddExplicitACLs(FolderWithConstants: String; setService: String; setSystem: Boolean; setAdmins: Boolean; setNetworkService: Boolean);
   var
     Folder: String;
@@ -283,7 +283,7 @@ function StartWindowsService(ServiceName: String; ServiceDescription: String): B
   var
     ResultCode: Integer;
   begin
-    // TODO Prüfe, ob der Dienst eingerichtet wurde und starte ihn nur in diesem Fall
+    // TODO PrÃ¼fe, ob der Dienst eingerichtet wurde und starte ihn nur in diesem Fall
     Log('Starte den Dienst ' + ServiceDescription + '...');
     if Exec(ExpandConstant('.\sc.exe'), 
             'start ' + ServiceName,
@@ -309,7 +309,7 @@ function StopWindowsService(ServiceName: String; ServiceDescription: String): Bo
   var
     ResultCode: Integer;
   begin
-    Log('Prüfe, ob der Dienst ' + ServiceDescription + ' existiert und stoppe diesen, falls er existiert...');
+    Log('PrÃ¼fe, ob der Dienst ' + ServiceDescription + ' existiert und stoppe diesen, falls er existiert...');
     if Exec(ExpandConstant('.\sc.exe'), 
             'query ' + ServiceName,
             ExpandConstant('{sys}'),

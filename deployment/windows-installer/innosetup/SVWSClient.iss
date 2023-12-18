@@ -1,15 +1,15 @@
-var
+ï»¿var
   CheckBoxInstallSVWSClient: TNewCheckBox;
 
 
-{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation des SVWS-Clients geändert wird. }
+{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation des SVWS-Clients geÃ¤ndert wird. }
 procedure CheckBoxInstallSVWSClientOnClick(Sender: TObject);
   begin
     InstallSVWSClient := CheckBoxInstallSVWSClient.Checked;
   end;
 
 
-{ Initialisiert den Bereich für die SVWS-Client-Konfiguration
+{ Initialisiert den Bereich fÃ¼r die SVWS-Client-Konfiguration
   @param Page   die Konfigurationsseite 
   @param Top    die Position in y-Richtung ab der der Bereich gezeichnet wird }
 procedure InitializeSVWSClientConfigurationSection(Page: TWizardPage; Top: Integer);
@@ -32,7 +32,7 @@ procedure InitializeSVWSClientConfigurationSection(Page: TWizardPage; Top: Integ
   end;
 
 
-{ Gibt das untere Ende für den Bereich der SVWS-Client-Konfiguration zurück
+{ Gibt das untere Ende fÃ¼r den Bereich der SVWS-Client-Konfiguration zurÃ¼ck
   @return das untere Ende des Konfigurationsbereichs }
 function GetSVWSClientConfigurationSectionBottom : Integer;
   begin
@@ -41,9 +41,9 @@ function GetSVWSClientConfigurationSectionBottom : Integer;
 
 
 
-{ Prüft, ob die Eintragungen im Bereich der SVWS-Client-Konfiguration korrekt sind 
-  @param CurPageID   die Page-ID der Konfigurationsseite, für die der Check durchgeführt wird.
-  @return True, falls die Prüfung erfolgreich war, sonst False }
+{ PrÃ¼ft, ob die Eintragungen im Bereich der SVWS-Client-Konfiguration korrekt sind 
+  @param CurPageID   die Page-ID der Konfigurationsseite, fÃ¼r die der Check durchgefÃ¼hrt wird.
+  @return True, falls die PrÃ¼fung erfolgreich war, sonst False }
 function CheckSVWSClientConfigurationSectionValues(CurPageID: Integer) : Boolean;
   begin
     result := True;
@@ -58,7 +58,7 @@ procedure FinishSVWSClientInstall();
   end;
 
 
-{ Deinstalliere den SVWS-Client. Führe dabei die einzelnen Schritte der Installation in umgekehrter Reihenfolge durch. }
+{ Deinstalliere den SVWS-Client. FÃ¼hre dabei die einzelnen Schritte der Installation in umgekehrter Reihenfolge durch. }
 procedure UninstallSVWSClient;
   var
     KeyExists : Boolean;

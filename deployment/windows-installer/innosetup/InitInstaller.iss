@@ -1,4 +1,4 @@
-var
+ï»¿var
   SVWSExisting: Boolean;
   SVWSExistingDataDirectory: Boolean;
   SVWSExistingDirectory: String;
@@ -37,7 +37,7 @@ function GetDataDir(Param: String): String;
   end;
 
 
-{ Gibt zurück, ob eine SVWS-Client-Installation vorgenommen werden soll
+{ Gibt zurÃ¼ck, ob eine SVWS-Client-Installation vorgenommen werden soll
   @return true, falls der SVWS-Client installiert werden soll, sonst false }
 function IsInstallSVWSClient(): Boolean;
   begin
@@ -45,7 +45,7 @@ function IsInstallSVWSClient(): Boolean;
   end;
 
 
-{ Gibt zurück, ob eine MariaDB-Installation vorgenommen werden soll
+{ Gibt zurÃ¼ck, ob eine MariaDB-Installation vorgenommen werden soll
   @return true, falls MariaDB installiert werden soll, sonst false }
 function IsInstallMariaDB(): Boolean;
   begin
@@ -53,7 +53,7 @@ function IsInstallMariaDB(): Boolean;
   end;
 
 
-{ Gibt zurück, ob eine Java-Installation vorgenommen werden soll
+{ Gibt zurÃ¼ck, ob eine Java-Installation vorgenommen werden soll
   @return true, falls Java installiert werden soll, sonst false }
 function IsInstallJava(): Boolean;
   begin
@@ -61,7 +61,7 @@ function IsInstallJava(): Boolean;
   end;
 
 
-{ Gibt zurück, ob eine Windows-Service-Wrapper-Installation vorgenommen werden soll
+{ Gibt zurÃ¼ck, ob eine Windows-Service-Wrapper-Installation vorgenommen werden soll
   @return true, falls der Windows-Service-Wrapper installiert werden soll, sonst false }
 function IsInstallWSW(): Boolean;
   begin
@@ -69,7 +69,7 @@ function IsInstallWSW(): Boolean;
   end;
 
 
-{ Gibt zurück, ob eine Curl-Installation vorgenommen werden soll
+{ Gibt zurÃ¼ck, ob eine Curl-Installation vorgenommen werden soll
   @return true, falls Curl installiert werden soll, sonst false }
 function IsInstallCurl(): Boolean;
   begin
@@ -78,13 +78,13 @@ function IsInstallCurl(): Boolean;
 
 
 
-{ Initialisiert das Setup und prüft, ob bereits eine Installation vorhanden ist.
-  @return true, falls die Installation ausgeführt werden soll und false, falls nicht }
+{ Initialisiert das Setup und prÃ¼ft, ob bereits eine Installation vorhanden ist.
+  @return true, falls die Installation ausgefÃ¼hrt werden soll und false, falls nicht }
 function InitializeSetup(): Boolean;
   var msgBoxResult: Integer;
   begin
     // Setze die neuen, in diesem Installer verwendeten Versionen
-    Log('Initialisiere den Installer für den SVWS-Server @version@ (Java-Version @jdk_version@, MariaDB-Version @mariadb_version@)');
+    Log('Initialisiere den Installer fÃ¼r den SVWS-Server @version@ (Java-Version @jdk_version@, MariaDB-Version @mariadb_version@)');
     SVWSNewVersion := '@version@';
     SVWSNewClientVersion := '@svws_client_version@';
     SVWSNewJavaVersion := '@jdk_version@';
@@ -93,7 +93,7 @@ function InitializeSetup(): Boolean;
     SVWSNewWSWVersion := '@windowsservicewrapper_version@';
     InstallSVWSServer := True;
 
-    // Registry: Prüfe, ob der SVWS-Server bereits zuvor installiert wurde
+    // Registry: PrÃ¼fe, ob der SVWS-Server bereits zuvor installiert wurde
     SVWSExisting := RegKeyExists(HKLM, 'SOFTWARE\SVWSServer');
     if not SVWSExisting then
       Log('  - Eine Neuinstallation wird gestartet.');
@@ -119,20 +119,20 @@ function InitializeSetup(): Boolean;
     if SVWSExisting then
       Log('    * SVWS-Server-Version: "' + SVWSExistingVersion + '"');
 
-    // Prüfe, ob die zu installierende SVWS-Server-Version neuer ist als eine bereits installierte
+    // PrÃ¼fe, ob die zu installierende SVWS-Server-Version neuer ist als eine bereits installierte
     if CompareStr(SVWSExistingVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewVersion, SVWSExistingVersion) < 0 then
           begin
-            Log('FEHLER: Die SVWS-Server-Version ' + SVWSNewVersion + ' ist älter als die bereits installierte Version ' + SVWSExistingVersion + '. Die Installation wird abgebrochen!');
-            msgBoxResult := MsgBox('Die Version ' + SVWSNewVersion + ' ist älter als die bereits installierte Version ' + SVWSExistingVersion + '. Die Installation wird abgebrochen!', mbCriticalError, MB_OK);
+            Log('FEHLER: Die SVWS-Server-Version ' + SVWSNewVersion + ' ist Ã¤lter als die bereits installierte Version ' + SVWSExistingVersion + '. Die Installation wird abgebrochen!');
+            msgBoxResult := MsgBox('Die Version ' + SVWSNewVersion + ' ist Ã¤lter als die bereits installierte Version ' + SVWSExistingVersion + '. Die Installation wird abgebrochen!', mbCriticalError, MB_OK);
             result := false;
             Exit;
           end;
         if CompareVersions(SVWSNewVersion, SVWSExistingVersion) = 0 then
           begin
             Log('WARNUNG: Die SVWS-Server-Version ' + SVWSNewVersion + ' ist bereits installiert.');
-            msgBoxResult := MsgBox('Die Version ' + SVWSNewVersion + ' ist bereits installiert. Soll die Installation dennoch fortgesetzt und die bestehenden Programmdateien überschrieben werden?', mbConfirmation, MB_YESNO);
+            msgBoxResult := MsgBox('Die Version ' + SVWSNewVersion + ' ist bereits installiert. Soll die Installation dennoch fortgesetzt und die bestehenden Programmdateien Ã¼berschrieben werden?', mbConfirmation, MB_YESNO);
             if msgBoxResult = IDNO then
               begin
                 Log('ABBRUCH: Die Installation wurde vom Benutzer abgebrochen.');
@@ -150,13 +150,13 @@ function InitializeSetup(): Boolean;
     if SVWSExisting then
       Log('    * SVWS-Client-Version: "' + SVWSExistingClientVersion + '"');
 
-    // Prüfe, ob die zu installierende SVWS-Client-Version neuer ist als eine bereits installierte
+    // PrÃ¼fe, ob die zu installierende SVWS-Client-Version neuer ist als eine bereits installierte
     InstallSVWSClient := true;
     if CompareStr(SVWSExistingClientVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewClientVersion, SVWSExistingClientVersion) < 0 then
           begin
-            Log('      ist älter als die bereits installierte SVWS-Client-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
+            Log('      ist Ã¤lter als die bereits installierte SVWS-Client-Version und wird daher nicht installiert. Die Installation sollte geprÃ¼ft werden!');
             InstallSVWSClient := false;
           end;
         if CompareVersions(SVWSNewClientVersion, SVWSExistingClientVersion) = 0 then
@@ -166,19 +166,19 @@ function InitializeSetup(): Boolean;
           end;
       end;
 
-    // Registry: Lese die bereits installierte Version der für den SVWS-Server verwendeten Java Installation aus
+    // Registry: Lese die bereits installierte Version der fÃ¼r den SVWS-Server verwendeten Java Installation aus
     SVWSExistingJavaVersion := '';
     RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'JavaVersion', SVWSExistingJavaVersion);
     if SVWSExisting then
       Log('    * Java-Version: "' + SVWSExistingJavaVersion + '"');
 
-    // Prüfe, ob Java installiert werden muss
+    // PrÃ¼fe, ob Java installiert werden muss
     InstallJava := true;
     if CompareStr(SVWSExistingJavaVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewJavaVersion, SVWSExistingJavaVersion) < 0 then
           begin
-            Log('      ist älter als die bereits installierte Java-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
+            Log('      ist Ã¤lter als die bereits installierte Java-Version und wird daher nicht installiert. Die Installation sollte geprÃ¼ft werden!');
             InstallJava := false;
           end;
         if CompareVersions(SVWSNewJavaVersion, SVWSExistingJavaVersion) = 0 then
@@ -188,19 +188,19 @@ function InitializeSetup(): Boolean;
           end;
       end;
 
-    // Registry: Lese die bereits installierte Version der für den SVWS-Server verwendeten SVWS-MariaDB-Installation aus
+    // Registry: Lese die bereits installierte Version der fÃ¼r den SVWS-Server verwendeten SVWS-MariaDB-Installation aus
     SVWSExistingMariaDBVersion := '';
     RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'MariaDBVersion', SVWSExistingMariaDBVersion);
     if SVWSExisting then
       Log('    * MariaDB-Version: "' + SVWSExistingMariaDBVersion + '"');
 
-    // Prüfe, ob MariaDB installiert werden muss
+    // PrÃ¼fe, ob MariaDB installiert werden muss
     InstallMariaDB := true;
     if CompareStr(SVWSExistingMariaDBVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewMariaDBVersion, SVWSExistingMariaDBVersion) < 0 then
           begin
-            Log('      ist älter als die bereits installierte MariaDB-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
+            Log('      ist Ã¤lter als die bereits installierte MariaDB-Version und wird daher nicht installiert. Die Installation sollte geprÃ¼ft werden!');
             InstallMariaDB := false;
           end;
         if CompareVersions(SVWSNewMariaDBVersion, SVWSExistingMariaDBVersion) = 0 then
@@ -216,13 +216,13 @@ function InitializeSetup(): Boolean;
     if SVWSExisting then
       Log('    * Windows-Service-Wrapper-Version: "' + SVWSExistingWSWVersion + '"');
 
-    // Prüfe, ob der Windows-Service-Wrapper installiert werden muss
+    // PrÃ¼fe, ob der Windows-Service-Wrapper installiert werden muss
     InstallWSW := true;
     if CompareStr(SVWSExistingWSWVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewWSWVersion, SVWSExistingWSWVersion) < 0 then
           begin
-            Log('      ist älter als die bereits installierte Windows-Service-Wrapper-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
+            Log('      ist Ã¤lter als die bereits installierte Windows-Service-Wrapper-Version und wird daher nicht installiert. Die Installation sollte geprÃ¼ft werden!');
             InstallWSW := false;
           end;
         if CompareVersions(SVWSNewWSWVersion, SVWSExistingWSWVersion) = 0 then
@@ -238,13 +238,13 @@ function InitializeSetup(): Boolean;
     if SVWSExisting then
       Log('    * Curl-Version: "' + SVWSExistingCurlVersion + '"');
 
-    // Prüfe, ob Curl installiert werden muss
+    // PrÃ¼fe, ob Curl installiert werden muss
     InstallCurl := true;
     if CompareStr(SVWSExistingCurlVersion, '') <> 0 then
       begin
         if CompareVersions(SVWSNewCurlVersion, SVWSExistingCurlVersion) < 0 then
           begin
-            Log('      ist älter als die bereits installierte Curl-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
+            Log('      ist Ã¤lter als die bereits installierte Curl-Version und wird daher nicht installiert. Die Installation sollte geprÃ¼ft werden!');
             InstallCurl := false;
           end;
         if CompareVersions(SVWSNewCurlVersion, SVWSExistingCurlVersion) = 0 then
@@ -267,7 +267,7 @@ procedure InitProgressPage();
 
     TmpControl := GetWizardForm.InstallingPage.Controls[GetWizardForm.InstallingPage.ControlCount-1];
 
-    // Erstelle ein neues Feld auf der Progress-Page, um Kommentare einblenden zu können
+    // Erstelle ein neues Feld auf der Progress-Page, um Kommentare einblenden zu kÃ¶nnen
     ProgressMemo := TNewMemo.Create(ProgressPage);
     with ProgressMemo do
       begin
@@ -286,7 +286,7 @@ procedure InitProgressPage();
 { Prepare the Uninstaller }
 function InitializeUninstall(): Boolean;
   begin
-    Log('Initialisiere den Uninstaller für den SVWS-Server @version@(Java-Version @jdk_version@, MariaDB-Version @mariadb_version@)');
+    Log('Initialisiere den Uninstaller fÃ¼r den SVWS-Server @version@(Java-Version @jdk_version@, MariaDB-Version @mariadb_version@)');
     SVWSNewVersion := '@version@';
     SVWSNewClientVersion := '@svws_client_version@';
     SVWSNewJavaVersion := '@jdk_version@';
@@ -294,9 +294,9 @@ function InitializeUninstall(): Boolean;
     SVWSNewCurlVersion := '@curl_version@';
     SVWSNewWSWVersion := '@windowsservicewrapper_version@';
 
-    Log('Prüfe, welche Komponenten deinstalliert werden können...');
+    Log('PrÃ¼fe, welche Komponenten deinstalliert werden kÃ¶nnen...');
 
-    // Prüfe, ob der SVWS-Server überhaupt installiert ist
+    // PrÃ¼fe, ob der SVWS-Server Ã¼berhaupt installiert ist
     SVWSExisting := RegKeyExists(HKLM, 'SOFTWARE\SVWSServer');
     if not SVWSExisting then
       begin
@@ -305,7 +305,7 @@ function InitializeUninstall(): Boolean;
         Exit;
       end;
 
-    // Prüfe, ob die SVWS-Server-Version deinstalliert werden kann (ist der Uninstaller passend?)
+    // PrÃ¼fe, ob die SVWS-Server-Version deinstalliert werden kann (ist der Uninstaller passend?)
     IsUninstallSVWSServer := False;
     if RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'Version', SVWSExistingVersion) then
       begin
@@ -317,7 +317,7 @@ function InitializeUninstall(): Boolean;
     else
       Log('  - SVWS-Server wird nicht deinstalliert');
 
-    // Prüfe, ob die Java-Version deinstalliert werden kann (ist es installiert und der Uninstaller passend?)
+    // PrÃ¼fe, ob die Java-Version deinstalliert werden kann (ist es installiert und der Uninstaller passend?)
     IsUninstallJava := False;
     if RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'JavaVersion', SVWSExistingJavaVersion) then
       begin
@@ -329,7 +329,7 @@ function InitializeUninstall(): Boolean;
     else
       Log('  - Java wird nicht deinstalliert');
 
-    // Prüfe, ob die MariaDB-Version deinstalliert werden kann (ist es installiert und der Uninstaller passend?)
+    // PrÃ¼fe, ob die MariaDB-Version deinstalliert werden kann (ist es installiert und der Uninstaller passend?)
     IsUninstallMariaDB := False;
     if RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'MariaDBVersion', SVWSExistingMariaDBVersion) then
       begin
@@ -341,7 +341,7 @@ function InitializeUninstall(): Boolean;
     else
       Log('  - MariaDB wird nicht deinstalliert');
 
-    // Prüfe, ob die SVWS-Client-Version deinstalliert werden kann (ist er installiert und der Uninstaller passend?)
+    // PrÃ¼fe, ob die SVWS-Client-Version deinstalliert werden kann (ist er installiert und der Uninstaller passend?)
     IsUninstallSVWSClient := False;
     if RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'SVWSClientVersion', SVWSExistingClientVersion) then
       begin

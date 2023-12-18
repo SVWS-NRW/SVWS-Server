@@ -1,4 +1,4 @@
-var
+ï»¿var
   MariaDBRootPasswort: String;
   MariaDBPort: Integer;
   CheckBoxInstallMariaDB: TNewCheckBox;
@@ -8,7 +8,7 @@ var
   EditMariaDBPort: TNewEdit;
 
 
-{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation von MariaDB geändert wird. }
+{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation von MariaDB geÃ¤ndert wird. }
 procedure CheckBoxInstallMariaDBOnClick(Sender: TObject);
   begin
     InstallMariaDB := CheckBoxInstallMariaDB.Checked;
@@ -19,7 +19,7 @@ procedure CheckBoxInstallMariaDBOnClick(Sender: TObject);
   end;
 
 
-{ Initialisiert den Bereich für die MariaDB-Konfiguration
+{ Initialisiert den Bereich fÃ¼r die MariaDB-Konfiguration
   @param Page   die Konfigurationsseite 
   @param Top    die Position in y-Richtung ab der der Bereich gezeichnet wird }
 procedure InitializeMariaDBConfigurationSection(Page: TWizardPage; Top: Integer);
@@ -87,7 +87,7 @@ procedure InitializeMariaDBConfigurationSection(Page: TWizardPage; Top: Integer)
   end;
 
 
-{ Gibt das untere Ende für den Bereich der MariaDB-Konfiguration zurück
+{ Gibt das untere Ende fÃ¼r den Bereich der MariaDB-Konfiguration zurÃ¼ck
   @return das untere Ende des Konfigurationsbereichs }
 function GetMariaDBConfigurationSectionBottom : Integer;
   begin
@@ -96,19 +96,19 @@ function GetMariaDBConfigurationSectionBottom : Integer;
 
 
 
-{ Prüft, ob die Eintragungen im Bereich der MariaDB-Konfiguration korrekt sind 
-  @param CurPageID   die Page-ID der Konfigurationsseite, für die der Check durchgeführt wird.
-  @return True, falls die Prüfung erfolgreich war, sonst False }
+{ PrÃ¼ft, ob die Eintragungen im Bereich der MariaDB-Konfiguration korrekt sind 
+  @param CurPageID   die Page-ID der Konfigurationsseite, fÃ¼r die der Check durchgefÃ¼hrt wird.
+  @return True, falls die PrÃ¼fung erfolgreich war, sonst False }
 function CheckMariaDBConfigurationSectionValues(CurPageID: Integer) : Boolean;
   begin
     if CurPageID = SVWSConfigurationPage.ID then
       begin
-        // TODO Warnung bei unsicheren Kennwörtern, Prüfung nur, wenn es später benötigt wird (also bei einer Neuinstallation des Servers)...
+        // TODO Warnung bei unsicheren KennwÃ¶rtern, PrÃ¼fung nur, wenn es spÃ¤ter benÃ¶tigt wird (also bei einer Neuinstallation des Servers)...
         MariaDBRootPasswort := EditMariaDBRootPassword.Text;
         MariaDBPort := StrToIntDef(EditMariaDBPort.Text, -1);
         if (MariaDBPort < 1024) or (MariaDBPort > 65535) then
           begin
-            MsgBox('Der angegebene Port für MariaDB ist nicht zulässig. Der Wert muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Der angegebene Port fÃ¼r MariaDB ist nicht zulÃ¤ssig. Der Wert muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
@@ -117,7 +117,7 @@ function CheckMariaDBConfigurationSectionValues(CurPageID: Integer) : Boolean;
   end;
 
 
-{ Prüfe, ob der MariaDB-Dienst existiert und stoppe diesen in diesem Fall }
+{ PrÃ¼fe, ob der MariaDB-Dienst existiert und stoppe diesen in diesem Fall }
 procedure StopServiceMariaDB;
   begin
     StopWindowsService('svws_server_mariadb', 'SVWS-Server-MariaDB');
@@ -131,13 +131,13 @@ procedure StartServiceMariaDB;
   begin
     if not StartWindowsService('svws_server_mariadb', 'SVWS-Server-MariaDB') then
       begin
-        msgBoxResult := MsgBox('Fehler beim Starten des MariaDB-Dienstes. Überprüfen Sie Ihre System-Konfiguration. Ist evtl. schon ein anderer Datenbankdienst unter der gleichen Port-Adresse vorhanden? Die Installation wird dennoch fortgesetzt. Sie müssen den Dienst manuell starten.', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Starten des MariaDB-Dienstes. ÃœberprÃ¼fen Sie Ihre System-Konfiguration. Ist evtl. schon ein anderer Datenbankdienst unter der gleichen Port-Adresse vorhanden? Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen den Dienst manuell starten.', mbError, MB_OK);
       end;
   end;
 
 
-{ Erstellt das Datenbankverzeichnis für den Service neu - falls es nicht bereits existiert - 
-  und erstellt den MariaDB-Service für dieses Verzeichnis }
+{ Erstellt das Datenbankverzeichnis fÃ¼r den Service neu - falls es nicht bereits existiert - 
+  und erstellt den MariaDB-Service fÃ¼r dieses Verzeichnis }
 procedure CreateServiceMariaDB;
   var
     ResultCode: Integer;
@@ -146,13 +146,13 @@ procedure CreateServiceMariaDB;
   begin
     if not InstallMariaDB then
       Exit;
-    Log('Prüfe, ob das Datenverzeichnis von MariaDB eingerichtet werden muss...');
+    Log('PrÃ¼fe, ob das Datenverzeichnis von MariaDB eingerichtet werden muss...');
     if FileExists(SVWSDataDir + '\data\my.ini') then
       begin
-        Log('  -> Ist bereits vorhanden (my.ini gefunden). Eine Einrichtung ist somit nicht nötig!');
+        Log('  -> Ist bereits vorhanden (my.ini gefunden). Eine Einrichtung ist somit nicht nÃ¶tig!');
         Exit;
       end;
-    Log('  -> Nicht vorhanden (my.ini nicht gefunden). Richte das Verzeichnis und den zugehörigen Dienst ein...');
+    Log('  -> Nicht vorhanden (my.ini nicht gefunden). Richte das Verzeichnis und den zugehÃ¶rigen Dienst ein...');
     ServiceName := 'svws_server_mariadb';
     if Exec(ExpandConstant('cmd'), 
             ExpandConstant('/C .\mariaDB_Create_Data_Directory.cmd "' + SVWSDataDir + '\data" "' + ServiceName + '" "' + MariaDBRootPasswort + '" ' + IntToStr(MariaDBPort)),
@@ -185,7 +185,7 @@ procedure DestroyServiceMariaDB;
   var
     ResultCode: Integer;
   begin
-    Log('Prüfe, ob der MariaDB-Dienst existiert und entferne diesen, falls er existiert...');
+    Log('PrÃ¼fe, ob der MariaDB-Dienst existiert und entferne diesen, falls er existiert...');
     if Exec(ExpandConstant('.\sc.exe'), 
             'query svws_server_mariadb', 
             ExpandConstant('{sys}'),
@@ -217,18 +217,18 @@ procedure AddMariaDBFirewallRules();
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    Log('  -> Anlegen der Firewall-Regeln für den MariaDB-Server (Freischalten von Port ' + IntToStr(MariaDBPort) + ' für ein- und ausgehende Datenbank-Anfragen)');
+    Log('  -> Anlegen der Firewall-Regeln fÃ¼r den MariaDB-Server (Freischalten von Port ' + IntToStr(MariaDBPort) + ' fÃ¼r ein- und ausgehende Datenbank-Anfragen)');
     if Exec(ExpandConstant('{sys}\cmd.exe'), 
             '/C .\firewall_mariadb_add.cmd ' + IntToStr(MariaDBPort),
             ExpandConstant('{app}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
       begin
-        Log('  -> Firewall-Regeln für den MariaDB-Server erfolgreich angelegt. (ResultCode=' + IntToStr(ResultCode) + ')');
+        Log('  -> Firewall-Regeln fÃ¼r den MariaDB-Server erfolgreich angelegt. (ResultCode=' + IntToStr(ResultCode) + ')');
       end
     else
       begin
-        Log('  -> Firewall-Regeln für den MariaDB-Server konnten nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Erzeugen der Firewall-Regeln. Die Installation wird dennoch fortgesetzt. Die Regeln müssen später ggf. von Hand erzeugt werden!', mbError, MB_OK);
+        Log('  -> Firewall-Regeln fÃ¼r den MariaDB-Server konnten nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
+        msgBoxResult := MsgBox('Fehler beim Erzeugen der Firewall-Regeln. Die Installation wird dennoch fortgesetzt. Die Regeln mÃ¼ssen spÃ¤ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
       end;
   end;
 
@@ -239,18 +239,18 @@ procedure RemoveMariaDBFirewallRules();
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    Log('  -> Entfernen der Firewall-Regeln für den MariaDB-Server für ein- und ausgehende Datenbank-Anfragen');
+    Log('  -> Entfernen der Firewall-Regeln fÃ¼r den MariaDB-Server fÃ¼r ein- und ausgehende Datenbank-Anfragen');
     if Exec(ExpandConstant('{sys}\cmd.exe'), 
             '/C .\firewall_mariadb_remove.cmd', 
             ExpandConstant('{app}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
       begin
-        Log('  -> Firewall-Regeln für den MariaDB-Server erfolgreich entfernt. (ResultCode=' + IntToStr(ResultCode) + ')');
+        Log('  -> Firewall-Regeln fÃ¼r den MariaDB-Server erfolgreich entfernt. (ResultCode=' + IntToStr(ResultCode) + ')');
       end
     else
       begin
-        Log('  -> Firewall-Regeln für den MariaDB-Server konnten nicht entfernt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Entfernen der Firewall-Regeln. Die Regeln müssen später ggf. von Hand entfernt werden!', mbError, MB_OK);
+        Log('  -> Firewall-Regeln fÃ¼r den MariaDB-Server konnten nicht entfernt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
+        msgBoxResult := MsgBox('Fehler beim Entfernen der Firewall-Regeln. Die Regeln mÃ¼ssen spÃ¤ter ggf. von Hand entfernt werden!', mbError, MB_OK);
       end;
   end;
 
@@ -284,7 +284,7 @@ procedure FinishMariaDBInstall;
         // Erstelle ggf. den MariaDB-Service
         CreateServiceMariaDB;
 
-        // Füge die Firewall-Regeln hinzu
+        // FÃ¼ge die Firewall-Regeln hinzu
         AddMariaDBFirewallRules;
 
         ProgressMemo.Lines.Append('MariaDB-Installation fertig!');
@@ -293,7 +293,7 @@ procedure FinishMariaDBInstall;
   end;
 
 
-{ Deinstalliere den MariaDB-Server. Führe dabei die einzelnen Schritte der Installation in umgekehrter Reihenfolge durch. }
+{ Deinstalliere den MariaDB-Server. FÃ¼hre dabei die einzelnen Schritte der Installation in umgekehrter Reihenfolge durch. }
 procedure UninstallMariaDB;
   var
     KeyExists : Boolean;
@@ -307,7 +307,7 @@ procedure UninstallMariaDB;
         Log('  - Stoppe den MariaDB-Dienst');
         StopServiceMariaDB();
 
-        // Warte darauf, dass der MariaDB-Server schon vollständig beendet wurde...
+        // Warte darauf, dass der MariaDB-Server schon vollstÃ¤ndig beendet wurde...
         if not RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'MariaDBPort', Port) then
           Port := '3306';
         if WaitTillPortFree(StrToInt(Port),20,100) then

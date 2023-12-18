@@ -1,4 +1,4 @@
-var
+﻿var
   Schild2AccessPassword: String;
   QueryAccessPassword: Boolean;
   MigrationPage: TInputFileWizardPage;

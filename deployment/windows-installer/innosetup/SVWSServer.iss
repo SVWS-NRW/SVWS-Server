@@ -1,4 +1,4 @@
-var
+ï»¿var
   SVWSDBSchema: String;
   SVWSDBUser: String;
   SVWSDBPassword: String;
@@ -58,7 +58,7 @@ procedure UpdateSVWSServerSchemaInfosEnabled();
     EditSVWSServerDBPassword.Enabled := EnableSchemaInfos;
   end;
 
-{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation des SVWS-Servers geändert wird. }
+{ Wird aufgerufen, wenn der Zustand der Checkbox zur Installation des SVWS-Servers geÃ¤ndert wird. }
 procedure CheckBoxInstallSVWSServerOnClick(Sender: TObject);
   begin
     InstallSVWSServer := CheckBoxInstallSVWSServer.Checked;
@@ -68,7 +68,7 @@ procedure CheckBoxInstallSVWSServerOnClick(Sender: TObject);
   end;
 
 
-{ Wird aufgerufen, wenn der Zustand der Checkbox wegen dem Erstellen eines neuen Datenbank-Schemas geändert wird. }
+{ Wird aufgerufen, wenn der Zustand der Checkbox wegen dem Erstellen eines neuen Datenbank-Schemas geÃ¤ndert wird. }
 procedure CheckBoxCreateSchemaOnClick(Sender: TObject);
   begin
     if CheckBoxCreateSchema.Checked then
@@ -79,7 +79,7 @@ procedure CheckBoxCreateSchemaOnClick(Sender: TObject);
   end;
 
 
-{ Wird aufgerufen, wenn der Zustand der Checkbox wegen dem Migrieren eines Schild 2 - Schemas geändert wird. }
+{ Wird aufgerufen, wenn der Zustand der Checkbox wegen dem Migrieren eines Schild 2 - Schemas geÃ¤ndert wird. }
 procedure CheckBoxMigrateSchemaOnClick(Sender: TObject);
   begin
     if CheckBoxMigrateSchema.Checked then
@@ -90,7 +90,7 @@ procedure CheckBoxMigrateSchemaOnClick(Sender: TObject);
   end;
 
 
-{ Initialisiert den Bereich für die SVWS-Server-Konfiguration
+{ Initialisiert den Bereich fÃ¼r die SVWS-Server-Konfiguration
   @param Page   die Konfigurationsseite 
   @param Top    die Position in y-Richtung ab der der Bereich gezeichnet wird }
 procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integer);
@@ -184,7 +184,7 @@ procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integ
 
     if not FileExists(ExpandConstant('{code:GetDataDir}\res\keystore')) then
       begin
-        ZertifikatInputPage := CreateCustomPage(Page.ID, 'Zertifikatsinformationen', 'Information für das Server-Zertifikat');
+        ZertifikatInputPage := CreateCustomPage(Page.ID, 'Zertifikatsinformationen', 'Information fÃ¼r das Server-Zertifikat');
 
         StaticTextEditZertifikatHostname := TNewStaticText.Create(ZertifikatInputPage);
         StaticTextEditZertifikatHostname.Left := ScaleX(0);
@@ -242,7 +242,7 @@ procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integ
   end;
 
 
-{ Gibt das untere Ende für den Bereich der SVWS-Server-Konfiguration zurück
+{ Gibt das untere Ende fÃ¼r den Bereich der SVWS-Server-Konfiguration zurÃ¼ck
   @return das untere Ende des Konfigurationsbereichs }
 function GetSVWSServerConfigurationSectionBottom : Integer;
   begin
@@ -250,27 +250,27 @@ function GetSVWSServerConfigurationSectionBottom : Integer;
   end;
 
 
-{ Wird aufgerufen, wenn der Zustand der Combobox zur Auswahl des DBMS bei manueller DB-Konfigurationgeändert wurde. }
+{ Wird aufgerufen, wenn der Zustand der Combobox zur Auswahl des DBMS bei manueller DB-KonfigurationgeÃ¤ndert wurde. }
 procedure ManualSVWSConfigDBMSComboBoxOnChange(Sender: TObject);
   begin
     case ManualSVWSConfigDBMSComboBox.ItemIndex of
       0:
         begin
           ManualSVWSConfigDBPort.Text := '3306';
-          StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort für root: ';
+          StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort fÃ¼r root: ';
         end;
       1:
         begin
           ManualSVWSConfigDBPort.Text := '1433';
-          StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort für sa: ';
+          StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort fÃ¼r sa: ';
         end;
     end;    
   end;
 
 
-{ Prüft, ob die Eintragungen im Bereich der SVWS-Server-Konfiguration korrekt sind.
-  @param CurPageID   die Page-ID der Konfigurationsseite, für die der Check durchgeführt wird.
-  @return True, falls die Prüfung erfolgreich war, sonst False }
+{ PrÃ¼ft, ob die Eintragungen im Bereich der SVWS-Server-Konfiguration korrekt sind.
+  @param CurPageID   die Page-ID der Konfigurationsseite, fÃ¼r die der Check durchgefÃ¼hrt wird.
+  @return True, falls die PrÃ¼fung erfolgreich war, sonst False }
 function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean;
   var
     PrevPage: TWizardPage;
@@ -280,22 +280,22 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
         SVWSDBSchema := EditSVWSServerDBSchema.Text;
         if SVWSDBSchema = '' then
           begin
-            MsgBox('Es muss ein gültiges Datenbank-Schema angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Es muss ein gÃ¼ltiges Datenbank-Schema angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
         SVWSDBUser := EditSVWSServerDBUser.Text;
         if SVWSDBSchema = '' then
           begin
-            MsgBox('Es muss ein gültiger Datenbank-Benutzer angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Es muss ein gÃ¼ltiger Datenbank-Benutzer angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
-        // TODO Warnung bei unsicheren Kennwörtern
+        // TODO Warnung bei unsicheren KennwÃ¶rtern
         SVWSDBPassword := EditSVWSServerDBPassword.Text;
         if SVWSDBPassword = '' then
           begin
-            MsgBox('Es muss ein gültiges Kennwort für den Datenbank-Benutzer angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Es muss ein gÃ¼ltiges Kennwort fÃ¼r den Datenbank-Benutzer angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
@@ -382,14 +382,14 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
             if IsCreateSchema or IsMigrateSchema then
               begin
                 QueryDBRootPassword := True;
-                DBRootPasswordInputPage := CreateCustomPage(PrevPage.ID, 'DB-Admin-Zugriff erlauben', 'Administrativen Zugriff für das Erstellen des DB-Schemas erlauben');
+                DBRootPasswordInputPage := CreateCustomPage(PrevPage.ID, 'DB-Admin-Zugriff erlauben', 'Administrativen Zugriff fÃ¼r das Erstellen des DB-Schemas erlauben');
                 PrevPage := DBRootPasswordInputPage;
 
                 StaticTextEditDBRootPassword := TNewStaticText.Create(DBRootPasswordInputPage);
                 StaticTextEditDBRootPassword.Left := ScaleX(0);
                 StaticTextEditDBRootPassword.Top := ScaleY(8);
                 StaticTextEditDBRootPassword.AutoSize := True;
-                StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort für root: ';
+                StaticTextEditDBRootPassword.Caption := 'Datenbank-Kennwort fÃ¼r root: ';
                 StaticTextEditDBRootPassword.Enabled := True;
                 StaticTextEditDBRootPassword.Parent := DBRootPasswordInputPage.Surface;
 
@@ -403,7 +403,7 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
                 StaticTextEditDBRootPassword.Height := EditDBRootPassword.Height;
               end;
           end;
-        // Hinzufügen der Seite mit den Migrations-Informationen zur Quelldatenbank
+        // HinzufÃ¼gen der Seite mit den Migrations-Informationen zur Quelldatenbank
         if IsMigrateSchema then
           InitializeMigrationPage(PrevPage);
       end
@@ -423,7 +423,7 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
         SVWSConfigDBPort := StrToIntDef(ManualSVWSConfigDBPort.Text, -1);
         if (SVWSConfigDBPort < 1024) or (SVWSConfigDBPort > 65535) then
           begin
-            MsgBox('Der angegebene Port ist nicht zulässig. Der Wert muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Der angegebene Port ist nicht zulÃ¤ssig. Der Wert muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
@@ -433,21 +433,21 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
         ZertifikatHostname := EditZertifikatHostname.Text;
         if not CheckCertificateHostname(ZertifikatHostname) then
           begin
-            MsgBox('Ein gültiger Hostname besteht nur aus eine Kombination der folgenden Zeichen: Buchstabe, Zahl und Bindestrich (ohn ä, ö, ü und ß). Dies muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Ein gÃ¼ltiger Hostname besteht nur aus eine Kombination der folgenden Zeichen: Buchstabe, Zahl und Bindestrich (ohn Ã¤, Ã¶, Ã¼ und ÃŸ). Dies muss korrigiert werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
         ZertifikatSchulname := EditZertifikatSchulname.Text;
         if ZertifikatSchulname = '' then
           begin
-            MsgBox('Es muss ein gültiger Schulname für das Server-Zertifikat eingegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Es muss ein gÃ¼ltiger Schulname fÃ¼r das Server-Zertifikat eingegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
         ZertifikatOrtsname := EditZertifikatOrtsname.Text;
         if ZertifikatOrtsname = '' then
           begin
-            MsgBox('Es muss ein gültiger Ort, wo sich die Schule befindet, für das Server-Zertifikat eingegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+            MsgBox('Es muss ein gÃ¼ltiger Ort, wo sich die Schule befindet, fÃ¼r das Server-Zertifikat eingegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
@@ -458,13 +458,13 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
         if MariaDBRootPasswort = '' then
           begin
             if IsCreateSchema then
-              MsgBox('Es muss ein gültiges Root-Kennwort für den Datenbank-Zugriff eingegeben werden, damit ein neues Schema erstellt werden kann.', mbInformation, mb_Ok)
+              MsgBox('Es muss ein gÃ¼ltiges Root-Kennwort fÃ¼r den Datenbank-Zugriff eingegeben werden, damit ein neues Schema erstellt werden kann.', mbInformation, mb_Ok)
             else
-              MsgBox('Es muss ein gültiges Root-Kennwort für den Datenbank-Zugriff eingegeben werden, damit eine Schild2-Datenbank migriert werden kann.', mbInformation, mb_Ok);
+              MsgBox('Es muss ein gÃ¼ltiges Root-Kennwort fÃ¼r den Datenbank-Zugriff eingegeben werden, damit eine Schild2-Datenbank migriert werden kann.', mbInformation, mb_Ok);
             result := False;
             Exit;
           end;
-        Log('  -> Datenbankkennwort für den Root-Zugriff zum Anlegen eines Schemas wurde eingegeben.');
+        Log('  -> Datenbankkennwort fÃ¼r den Root-Zugriff zum Anlegen eines Schemas wurde eingegeben.');
       end
     else if IsMigrateSchema then
       begin
@@ -476,7 +476,7 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
   end;
 
 
-{ Prüfe, ob der SVWS-Server-Dienst existiert und stoppe diesen in diesem Fall }
+{ PrÃ¼fe, ob der SVWS-Server-Dienst existiert und stoppe diesen in diesem Fall }
 procedure StopServiceSVWSServer;
   begin
     StopWindowsService('svws_server_service', 'SVWS-Server-Java');
@@ -490,19 +490,19 @@ procedure StartServiceSVWSServer;
   begin
     if not StartWindowsService('svws_server_service', 'SVWS-Server-Java') then
       begin
-        msgBoxResult := MsgBox('Fehler beim Starten des SVWS-Server-Java-Dienstes. Die Installation wird dennoch fortgesetzt. Sie müssen den SVWS-Server-Java-Dienst überprüfen und ggf. später manuell starten!', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Starten des SVWS-Server-Java-Dienstes. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen den SVWS-Server-Java-Dienst Ã¼berprÃ¼fen und ggf. spÃ¤ter manuell starten!', mbError, MB_OK);
       end;    
   end;
 
 
-{ Erstellt den Dienst für den SVWS-Java-Server }
+{ Erstellt den Dienst fÃ¼r den SVWS-Java-Server }
 procedure CreateServiceSVWSServer;
   var
     ResultCode: Integer;
     msgBoxResult: Integer;
     serviceConfig: String;
   begin
-    // Erzeuge die Konfiguration für den SVWS-Java-Server-Dienst
+    // Erzeuge die Konfiguration fÃ¼r den SVWS-Java-Server-Dienst
     serviceConfig := AnsiString(ExpandConstant(
       '<service>' + #13#10 +
       '  <id>svws_server_service</id>' + #13#10 +
@@ -520,11 +520,11 @@ procedure CreateServiceSVWSServer;
     ));
     if SaveStringToFile(ExpandConstant('{app}/svws_server_service.xml'), serviceConfig, false) then
       begin
-        Log('  -> Fertig: Konfiguration für den SVWS-Java-Server-Dienst gespeichert.');
+        Log('  -> Fertig: Konfiguration fÃ¼r den SVWS-Java-Server-Dienst gespeichert.');
       end
     else
       begin
-        Log('  -> Fehler beim Speichern der Konfiguration für den SVWS-Java-Server-Dienst!');
+        Log('  -> Fehler beim Speichern der Konfiguration fÃ¼r den SVWS-Java-Server-Dienst!');
         // TODO error
       end;
 
@@ -540,13 +540,13 @@ procedure CreateServiceSVWSServer;
     else
       begin
         Log('  -> SVWS-Server-Java-Dienst konnte nicht eingerichtet werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Server-Java-Dienst. Die Installation wird dennoch fortgesetzt. Sie müssen den SVWS-Server-Java-Dienst überprüfen und ggf. später manuell einrichten!', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Server-Java-Dienst. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen den SVWS-Server-Java-Dienst Ã¼berprÃ¼fen und ggf. spÃ¤ter manuell einrichten!', mbError, MB_OK);
       end;
   end;
 
 
 
-{ Entfernt den Dienst für den SVWS-Java-Server }
+{ Entfernt den Dienst fÃ¼r den SVWS-Java-Server }
 procedure DestroyServiceSVWSServer;
   var
     ResultCode: Integer;
@@ -563,23 +563,23 @@ procedure DestroyServiceSVWSServer;
     else
       begin
         Log('  -> SVWS-Server-Java-Dienst konnte nicht entfernt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Entfernen des SVWS-Server-Java-Dienst. Sie müssen den SVWS-Server-Java-Dienst ggf. später manuell entfernen!', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Entfernen des SVWS-Server-Java-Dienst. Sie mÃ¼ssen den SVWS-Server-Java-Dienst ggf. spÃ¤ter manuell entfernen!', mbError, MB_OK);
       end;
 
-    // Lösche die Konfiguration für den SVWS-Java-Server-Dienst
+    // LÃ¶sche die Konfiguration fÃ¼r den SVWS-Java-Server-Dienst
     if DeleteFile(ExpandConstant('{app}/svws_server_service.xml')) then
       begin
-        Log('  -> Konfiguration für den SVWS-Java-Server-Dienst gelöscht.');
+        Log('  -> Konfiguration fÃ¼r den SVWS-Java-Server-Dienst gelÃ¶scht.');
       end
     else
       begin
-        Log('  -> Fehler beim Löschen der Konfiguration für den SVWS-Java-Server-Dienst!');
+        Log('  -> Fehler beim LÃ¶schen der Konfiguration fÃ¼r den SVWS-Java-Server-Dienst!');
       end;
   end;
 
 
 
-{ Passt den Classpath in run_server.cmd und für den Windows-Service so an, dass die Konfigurationsdatei für den Server auch in commmonappdata/svws-server gefunden wird. }
+{ Passt den Classpath in run_server.cmd und fÃ¼r den Windows-Service so an, dass die Konfigurationsdatei fÃ¼r den Server auch in commmonappdata/svws-server gefunden wird. }
 procedure AdjustClasspathSVWSServer();
   var
     codeAnsi: AnsiString;
@@ -587,17 +587,17 @@ procedure AdjustClasspathSVWSServer();
     codeService: String;
     filename: String;
   begin
-    Log('Ergänze ' + SVWSDataDir + '\res zum Java-Classpath des SVWS-Servers');
+    Log('ErgÃ¤nze ' + SVWSDataDir + '\res zum Java-Classpath des SVWS-Servers');
     filename := ExpandConstant('{app}/run_server.cmd');
     if LoadStringFromFile(filename, codeAnsi) then
       begin
         code := String(codeAnsi);
         codeService := code;
-        Log('  -> Datei zum Ergänzen geladen:' + code);
-        // Anpassungen für die Datei run_server.cmd
+        Log('  -> Datei zum ErgÃ¤nzen geladen:' + code);
+        // Anpassungen fÃ¼r die Datei run_server.cmd
         if StringChangeEx(code, '--class-path ', ExpandConstant('--class-path ' + SVWSDataDir + '\res;'), false) = 1 then
           begin
-            Log('  -> Ergänzung hinzugefügt');
+            Log('  -> ErgÃ¤nzung hinzugefÃ¼gt');
             code := ExpandConstant('cd {app}') + #13#10 + code;
             codeAnsi := AnsiString(code);
             if SaveStringToFile(filename, codeAnsi, false) then
@@ -612,7 +612,7 @@ procedure AdjustClasspathSVWSServer();
           end
         else
           begin
-            Log('  -> Die zu korrigierende Stelle in der Datei konnte nicht um den Pfad ergänzt werden!');
+            Log('  -> Die zu korrigierende Stelle in der Datei konnte nicht um den Pfad ergÃ¤nzt werden!');
             // TODO error
           end;
       end
@@ -630,12 +630,12 @@ procedure CreateDefaultSVWSServerConfiguration;
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    // Prüfe zunächst, ob bereits eine Konfigurationsdatei vorliegt
+    // PrÃ¼fe zunÃ¤chst, ob bereits eine Konfigurationsdatei vorliegt
     if FileExists(SVWSDataDir + '\res\svwsconfig.json') then
       begin
-        // TODO Ergänze die Konfigurationsoptionen um einen Eintrag, so dass die Konfiguration gezielt überschrieben werden kann
+        // TODO ErgÃ¤nze die Konfigurationsoptionen um einen Eintrag, so dass die Konfiguration gezielt Ã¼berschrieben werden kann
         // ODER: Frage nach, ob diese ersetzt werden soll
-        Log('  -> SVWS-Konfigurationsdatei exisitiert bereits. Sie wird nicht überschrieben!');
+        Log('  -> SVWS-Konfigurationsdatei exisitiert bereits. Sie wird nicht Ã¼berschrieben!');
         Exit;
       end;
 
@@ -665,27 +665,27 @@ procedure CreateDefaultSVWSServerConfiguration;
     else
       begin
         Log('  -> SVWS-Konfigurationsdatei konnte nicht geschrieben werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Erstellen der SVWS-Konfigurationsdatei. Die Installation wird dennoch fortgesetzt. Sie müssen die SVWS-Konfigurationsdatei später manuell anlegen!', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Erstellen der SVWS-Konfigurationsdatei. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen die SVWS-Konfigurationsdatei spÃ¤ter manuell anlegen!', mbError, MB_OK);
       end;
   end;
 
 
-{ Erstelle einen neuen Keystore für den SVWS-Server zur Nutzung bei dem https-Zugriff }
+{ Erstelle einen neuen Keystore fÃ¼r den SVWS-Server zur Nutzung bei dem https-Zugriff }
 procedure CreateDefaultKeystoreSelfSigned;
   var
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    // Prüfe zunächst, ob ein Keystore bereits existiert
+    // PrÃ¼fe zunÃ¤chst, ob ein Keystore bereits existiert
     if FileExists(SVWSDataDir + '\res\keystore') then
       begin
-        // TODO Ergänze die Konfigurationsoptionen um einen Eintrag, so dass der Keystore gezielt überschrieben werden kann
+        // TODO ErgÃ¤nze die Konfigurationsoptionen um einen Eintrag, so dass der Keystore gezielt Ã¼berschrieben werden kann
         // ODER: Frage nach, ob dieser ersetzt werden soll
-        Log('  -> SVWS-Keystore exisitiert bereits. Er wird nicht überschrieben!');
+        Log('  -> SVWS-Keystore exisitiert bereits. Er wird nicht Ã¼berschrieben!');
         Exit;
       end;
 
-    // Erzeuge ggf. das Log-Verzeichnis, um das Fehler-Log beim Erzeugen eines keystore schreiben zu können
+    // Erzeuge ggf. das Log-Verzeichnis, um das Fehler-Log beim Erzeugen eines keystore schreiben zu kÃ¶nnen
     if not DirExists(SVWSDataDir + '/logs') then
       begin
         Log('  -> Lege Log-Verzeichnis unter "' + SVWSDataDir + '/logs" an...');
@@ -728,25 +728,25 @@ procedure CreateDefaultKeystoreSelfSigned;
                 else
                   begin
                     Log('  -> SVWS-Zertifikat konnte nicht extrahiert werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-                    msgBoxResult := MsgBox('Fehler beim Extrahieren des generierten Zertifikats. Die Installation wird dennoch fortgesetzt. Sie müssen das Zertifikat später ggf. manuell extrahieren!', mbError, MB_OK);
+                    msgBoxResult := MsgBox('Fehler beim Extrahieren des generierten Zertifikats. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen das Zertifikat spÃ¤ter ggf. manuell extrahieren!', mbError, MB_OK);
                   end;
               end
             else
               begin
                 Log('  -> SVWS-Zertifikat konnte nicht extrahiert werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-                msgBoxResult := MsgBox('Fehler beim Extrahieren des generierten Zertifikats. Die Installation wird dennoch fortgesetzt. Sie müssen das Zertifikat später ggf. manuell extrahieren!', mbError, MB_OK);
+                msgBoxResult := MsgBox('Fehler beim Extrahieren des generierten Zertifikats. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen das Zertifikat spÃ¤ter ggf. manuell extrahieren!', mbError, MB_OK);
               end;
           end
         else
           begin
             Log('  -> SVWS-Keystore konnte nicht erzeugt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-            msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Keystores. Die Installation wird dennoch fortgesetzt. Sie müssen den SVWS-Keystore überprüfen und ggf. später manuell anlegen!', mbError, MB_OK);
+            msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Keystores. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen den SVWS-Keystore Ã¼berprÃ¼fen und ggf. spÃ¤ter manuell anlegen!', mbError, MB_OK);
           end;
       end
     else
       begin
         Log('  -> SVWS-Keystore konnte nicht erzeugt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Keystores. Die Installation wird dennoch fortgesetzt. Sie müssen den SVWS-Keystore überprüfen und ggf. später manuell anlegen!', mbError, MB_OK);
+        msgBoxResult := MsgBox('Fehler beim Erzeugen des SVWS-Keystores. Die Installation wird dennoch fortgesetzt. Sie mÃ¼ssen den SVWS-Keystore Ã¼berprÃ¼fen und ggf. spÃ¤ter manuell anlegen!', mbError, MB_OK);
       end;
   end;
 
@@ -757,7 +757,7 @@ procedure CreateSVWSSchema;
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    // Prüfe, ob überhaupt ein Schema angelegt werden soll
+    // PrÃ¼fe, ob Ã¼berhaupt ein Schema angelegt werden soll
     if not IsCreateSchema and not IsMigrateSchema then
       begin
         Exit;
@@ -766,13 +766,13 @@ procedure CreateSVWSSchema;
     ProgressMemo.Lines.Append('Warte bis der SVWS-Server gestartet ist...');
     WizardForm.ProgressGauge.Position := 75 * WizardForm.ProgressGauge.Max div 100;
 
-    // Warte darauf, dass der Server schon vollständig gestartet wurde...
+    // Warte darauf, dass der Server schon vollstÃ¤ndig gestartet wurde...
     while not WaitTillPortUsed(443,100,100) do
       begin
-        msgBoxResult := MsgBox('Fehler beim Erzeugen des Schemas. Das Warten auf den Start des SVWS-Servers dauert ungewöhnlich lange. ' +
-                               'Sie können entweder weiter warten oder die Installation fortsetzen. Wird die Installation ohne Verfügbarkeit ' +
-                               'des Servers fortgesetzt, so muss dann ein neues Schema dann später ggf. von Hand erzeugt werden. ' +
-                               'Möchten Sie weiter auf den Start des Servers warten?', mbError, MB_YESNO);
+        msgBoxResult := MsgBox('Fehler beim Erzeugen des Schemas. Das Warten auf den Start des SVWS-Servers dauert ungewÃ¶hnlich lange. ' +
+                               'Sie kÃ¶nnen entweder weiter warten oder die Installation fortsetzen. Wird die Installation ohne VerfÃ¼gbarkeit ' +
+                               'des Servers fortgesetzt, so muss dann ein neues Schema dann spÃ¤ter ggf. von Hand erzeugt werden. ' +
+                               'MÃ¶chten Sie weiter auf den Start des Servers warten?', mbError, MB_YESNO);
         if msgBoxResult = IDNO then
           begin
             Log('  -> Schema konnte nicht angelegt werden.');
@@ -786,7 +786,7 @@ procedure CreateSVWSSchema;
     if IsCreateSchema then
       begin
         ProgressMemo.Lines.Append('Erzeuge ein neues Datenbankschema... (dies dauert mehrere Minuten!)');
-        // TODO Prüfe, ob eine neue DB angelegt werden muss und frage ggf. nach (MsgBox)
+        // TODO PrÃ¼fe, ob eine neue DB angelegt werden muss und frage ggf. nach (MsgBox)
         if Exec(ExpandConstant('{sys}\cmd.exe'), 
                 '/C .\create_default_schema.cmd ' +
                 '"root" ' +
@@ -804,7 +804,7 @@ procedure CreateSVWSSchema;
         else
           begin
             Log('  -> Schema konnte nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-            msgBoxResult := MsgBox('Fehler beim Erzeugen des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss später ggf. von Hand erzeugt werden!', mbError, MB_OK);
+            msgBoxResult := MsgBox('Fehler beim Erzeugen des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss spÃ¤ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
           end;
       end
     else if IsMigrateSchema then
@@ -820,18 +820,18 @@ procedure AddSVWSServerFirewallRules();
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    Log('  -> Anlegen der Firewall-Regeln für den SVWS-Server (Freischalten von Port 443 für ein- und ausgehenden Traffic))');
+    Log('  -> Anlegen der Firewall-Regeln fÃ¼r den SVWS-Server (Freischalten von Port 443 fÃ¼r ein- und ausgehenden Traffic))');
     if Exec(ExpandConstant('{sys}\cmd.exe'), 
             '/C .\firewall_add.cmd', 
             ExpandConstant('{app}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
       begin
-        Log('  -> Firewall-Regeln für den SVWS-Server erfolgreich angelegt. (ResultCode=' + IntToStr(ResultCode) + ')');
+        Log('  -> Firewall-Regeln fÃ¼r den SVWS-Server erfolgreich angelegt. (ResultCode=' + IntToStr(ResultCode) + ')');
       end
     else
       begin
-        Log('  -> Firewall-Regeln für den SVWS-Server konnten nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Erzeugen der Firewall-Regeln. Die Installation wird dennoch fortgesetzt. Die Regeln müssen später ggf. von Hand erzeugt werden!', mbError, MB_OK);
+        Log('  -> Firewall-Regeln fÃ¼r den SVWS-Server konnten nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
+        msgBoxResult := MsgBox('Fehler beim Erzeugen der Firewall-Regeln. Die Installation wird dennoch fortgesetzt. Die Regeln mÃ¼ssen spÃ¤ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
       end;
   end;
 
@@ -842,18 +842,18 @@ procedure RemoveSVWSServerFirewallRules();
     ResultCode: Integer;
     msgBoxResult: Integer;
   begin
-    Log('  -> Entfernen der Firewall-Regeln für den SVWS-Server (Freischalten von Port 443 für ein- und ausgehenden Traffic))');
+    Log('  -> Entfernen der Firewall-Regeln fÃ¼r den SVWS-Server (Freischalten von Port 443 fÃ¼r ein- und ausgehenden Traffic))');
     if Exec(ExpandConstant('{sys}\cmd.exe'), 
             '/C .\firewall_remove.cmd', 
             ExpandConstant('{app}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
       begin
-        Log('  -> Firewall-Regeln für den SVWS-Server erfolgreich entfernt. (ResultCode=' + IntToStr(ResultCode) + ')');
+        Log('  -> Firewall-Regeln fÃ¼r den SVWS-Server erfolgreich entfernt. (ResultCode=' + IntToStr(ResultCode) + ')');
       end
     else
       begin
-        Log('  -> Firewall-Regeln für den SVWS-Server konnten nicht entfernt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-        msgBoxResult := MsgBox('Fehler beim Entfernen der Firewall-Regeln. Die Regeln müssen später ggf. von Hand entfernt werden!', mbError, MB_OK);
+        Log('  -> Firewall-Regeln fÃ¼r den SVWS-Server konnten nicht entfernt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
+        msgBoxResult := MsgBox('Fehler beim Entfernen der Firewall-Regeln. Die Regeln mÃ¼ssen spÃ¤ter ggf. von Hand entfernt werden!', mbError, MB_OK);
       end;
   end;
 
@@ -917,7 +917,7 @@ procedure FinishSVWSServerInstall();
     WizardForm.ProgressGauge.Position := 63 * WizardForm.ProgressGauge.Max div 100;
     CreateDefaultKeystoreSelfSigned;
 
-    // Passe den Classpath-Pfad für das Starten des SVWS-Servers an, so dass die Konfigurationsdatei und der Keystore gefunden werden
+    // Passe den Classpath-Pfad fÃ¼r das Starten des SVWS-Servers an, so dass die Konfigurationsdatei und der Keystore gefunden werden
     AdjustClasspathSVWSServer;
 
     // Erstelle ggf. den SVWS-Server-Java-Dienst
@@ -926,7 +926,7 @@ procedure FinishSVWSServerInstall();
     if IsInstallWSW then
       CreateServiceSVWSServer;
 
-    // Füge die Firewall-Regeln hinzu
+    // FÃ¼ge die Firewall-Regeln hinzu
     AddSVWSServerFirewallRules;
 
     Log('- FERTIG: SVWS-Server auf Version ' + SVWSNewVersion + ' aktualisiert!');
@@ -935,7 +935,7 @@ procedure FinishSVWSServerInstall();
   end;
 
 
-{ Deinstalliere den SVWS-Server. Führe dabei die einzelnen Schritte in umgekehrter Reihenfolge durch. }
+{ Deinstalliere den SVWS-Server. FÃ¼hre dabei die einzelnen Schritte in umgekehrter Reihenfolge durch. }
 procedure UninstallSVWSServer();
   var
     KeyExists : Boolean;
@@ -947,7 +947,7 @@ procedure UninstallSVWSServer();
         Log('- Stoppe den SVWS-Server-Dienst');
         StopServiceSVWSServer;
 
-        // Warte darauf, dass der SVWS-Server-Dienst schon vollständig beendet wurde...
+        // Warte darauf, dass der SVWS-Server-Dienst schon vollstÃ¤ndig beendet wurde...
         if WaitTillPortFree(443,30,100) then
           begin
             Log('  - SVWS-Server-Dienst beendet');
