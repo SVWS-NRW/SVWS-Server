@@ -388,9 +388,7 @@ class Api {
 	public call = <T extends Array<any>, U>(func: (...params: T) => U) => {
 		this.status.start();
 		try {
-			const res = (...params: T): U => func(...params);
-			this.status.stop();
-			return res;
+			return (...params: T): U => func(...params);
 		} finally {
 			this.status.stop();
 		}
