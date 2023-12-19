@@ -666,7 +666,7 @@ procedure CreateDefaultSVWSServerConfiguration;
             '/C .\config_writer.cmd ' +
             '"' + SVWSDataDir + '/res/svwsconfig.json" ' + 
             '"' + SVWSDataDir + '/client" ' +
-            '"' + SVWSDataDir + '/adminiclient" ' +
+            '"' + SVWSDataDir + '/adminclient" ' +
             '"' + SVWSDataDir + '/logs" ' +
             '"' + SVWSDataDir + '/temp" ' +
             '"' + SVWSDataDir + '/res" ' +
