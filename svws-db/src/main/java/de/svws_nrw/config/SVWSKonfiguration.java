@@ -273,6 +273,7 @@ public final class SVWSKonfiguration {
 	 * Erzeugt eine neue SVWS-Konfiguration mit Defaultwerten und ggf. angepassten Werten, falls diese nicht null sind.
 	 *
 	 * @param clientPath         der Pfad, in dem die Web-Client-Dateien zu finden sind
+	 * @param adminClientPath    der Pfad, in dem die Admin-Web-Client-Dateien zu finden sind
 	 * @param loggingPath        der Pfad, in welchem Logging-Dateien des Servers erzeugt werden. Null um Logging zu deaktivieren
 	 * @param tempPath           der Pfad, in welchem tmeporäre Dateien des Servers angelegt werden.
 	 * @param keystorePath       der Pfad, in welchem der Keystore für die TLS-Verbindung gesucht wird
@@ -287,12 +288,13 @@ public final class SVWSKonfiguration {
 	 *
 	 * @return die neue SVWS-Konfiguration oder null im Fehlerfall
 	 */
-	public static SVWSKonfiguration getDefault(final String clientPath, final String loggingPath, final String tempPath, final String keystorePath, final String keystorePassword, final DBDriver dbms,
+	public static SVWSKonfiguration getDefault(final String clientPath, final String adminClientPath, final String loggingPath, final String tempPath, final String keystorePath, final String keystorePassword, final DBDriver dbms,
 			final String dbLocation, final int dbPort, final boolean noSchema, final String schema, final String schemaUser, final String schemaPassword) {
 		instanceConfig = new SVWSKonfiguration();
 		instanceConfig.dto = new SVWSKonfigurationDTO();
 		instanceConfig.dto.useCORSHeader = default_use_cors_header;
 		instanceConfig.dto.clientPath = ((clientPath == null) || "".equals(clientPath)) ? default_webclient_path : clientPath;
+		instanceConfig.dto.adminClientPath = ((adminClientPath == null) || "".equals(adminClientPath)) ? null : adminClientPath;
 		instanceConfig.dto.loggingEnabled = (loggingPath != null);
 		instanceConfig.dto.loggingPath = ((loggingPath == null) || "".equals(loggingPath)) ? "logs" : loggingPath;
 		instanceConfig.dto.tempPath = ((tempPath == null) || "".equals(tempPath)) ? "tmp" : tempPath;

@@ -30,6 +30,7 @@ public class SVWSConfigFileWriter {
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Dateiname mit Pfad von der anzulegenden Konfigurationsdatei"));
 			cmdLine.addOption(new CommandLineOption("c", "clientpath", true, "Der Pfad, in welchem der Server die Dateien für den Webclient sucht"));
+			cmdLine.addOption(new CommandLineOption("a", "adminclientpath", true, "Der Pfad, in welchem der Server die Dateien für den Admin-Webclient sucht"));
 			cmdLine.addOption(new CommandLineOption("l", "loggingpath", true, "Der Pfad, in welchem der Server Log-Dateien anlegt"));
 			cmdLine.addOption(new CommandLineOption("t", "temppath", true, "Der Pfad, in welchem temporäre Dateien angelegt werden"));
 			cmdLine.addOption(new CommandLineOption("k", "keystorepath", true, "Der Pfad, in welchem der Server den Keystore für die TLS-Verbindung sucht"));
@@ -45,6 +46,7 @@ public class SVWSConfigFileWriter {
 		    // Lese die Kommandozeilenparameter ein und setze ggf. Default-Werte, falls diese nicht angegeben sind.
 		    final String outputFile = cmdLine.getValue("o", "svwsconfig.json");
 			final String clientPath = cmdLine.getValue("c");
+			final String adminclientPath = cmdLine.getValue("a");
 			final String loggingPath = cmdLine.getValue("l");
 			final String tempPath = cmdLine.getValue("t");
 			final String keystorePath = cmdLine.getValue("k");
@@ -59,7 +61,7 @@ public class SVWSConfigFileWriter {
 			final String schemaPassword = cmdLine.getValue("p");
 
 			// Erstelle die Default-Konfiguration
-			final SVWSKonfiguration config = SVWSKonfiguration.getDefault(clientPath, loggingPath, tempPath, keystorePath, keystorePassword,
+			final SVWSKonfiguration config = SVWSKonfiguration.getDefault(clientPath, adminclientPath, loggingPath, tempPath, keystorePath, keystorePassword,
 					dbms, dbLocation, dbPort, noSchema, schema, schemaUser, schemaPassword);
 
 			// Schreibe die Konfiguration in die angegeben Datei

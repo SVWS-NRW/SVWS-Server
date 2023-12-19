@@ -666,13 +666,13 @@ procedure CreateDefaultSVWSServerConfiguration;
             '/C .\config_writer.cmd ' +
             '"' + SVWSDataDir + '/res/svwsconfig.json" ' + 
             '"' + SVWSDataDir + '/client" ' +
+            '"' + SVWSDataDir + '/adminiclient" ' +
             '"' + SVWSDataDir + '/logs" ' +
             '"' + SVWSDataDir + '/temp" ' +
             '"' + SVWSDataDir + '/res" ' +
             '"' + SVWSKeyStorePassword + '" ' +
             '"' + SVWSConfigDBHost + '" ' +
-            '"' + IntToStr(SVWSConfigDBPort) + '" ' +
-            '"' + SVWSConfigDBMS + '"', 
+            '"' + IntToStr(SVWSConfigDBPort) + '" ', 
             ExpandConstant('{app}'),
             SW_HIDE, ewWaitUntilTerminated, ResultCode) then
       begin

@@ -130,34 +130,34 @@ task downloadJarsAll(type: Copy) {
 	doLast {
 		file("download/svws-" + project.version + "/run_server.cmd").text =
 			'@echo off' + System.lineSeparator() +
-                '.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
-				System.lineSeparator() +
-				'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
-				'IF %exitcode% EQU 42 (' + System.lineSeparator() +
-				'  echo SVWS-Server wurde mit dem Fehler %exitcode% beendet' + System.lineSeparator() +
-				'  if defined WINSW_EXECUTABLE (' + System.lineSeparator() +
-				'    echo SVWS-Server-Dienst wird neu gestartet...' + System.lineSeparator() +
-				'    "%WINSW_EXECUTABLE%" restart!' + System.lineSeparator() +
-				'  )' + System.lineSeparator() +
-				') else (' + System.lineSeparator() +
-				'  echo SVWS-Server wurde normal beendet' + System.lineSeparator() +
-				')'
+			'.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
+			System.lineSeparator() +
+			'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
+			'IF %exitcode% EQU 42 (' + System.lineSeparator() +
+			'  echo SVWS-Server wurde mit dem Fehler %exitcode% beendet' + System.lineSeparator() +
+			'  if defined WINSW_EXECUTABLE (' + System.lineSeparator() +
+			'    echo SVWS-Server-Dienst wird neu gestartet...' + System.lineSeparator() +
+			'    "%WINSW_EXECUTABLE%" restart!' + System.lineSeparator() +
+			'  )' + System.lineSeparator() +
+			') else (' + System.lineSeparator() +
+			'  echo SVWS-Server wurde normal beendet' + System.lineSeparator() +
+			')'
 		file("download/svws-" + project.version + "/run_server.sh").text =
 			'#!/bin/sh' + '\n' +
-				'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
-				System.lineSeparator()
+			'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
+			System.lineSeparator()
 		file("download/svws-" + project.version + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
-				"set clientpath=%2" + System.lineSeparator() +
-				"set loggingpath=%3" + System.lineSeparator() +
-				"set temppath=%4" + System.lineSeparator() +
-				"set keystorepath=%5" + System.lineSeparator() +
-				"set keystorepassword=%6" + System.lineSeparator() +
-				"set dbhost=%7" + System.lineSeparator() +
-				"set dbport=%8" + System.lineSeparator() +
-				"set dbms=%9" + System.lineSeparator() +
-				".\\java\\bin\\java.exe --class-path " + configurations.implementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --dbms %dbms% --output %outputfile% --clientpath %clientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
-			}
+			"set clientpath=%2" + System.lineSeparator() +
+			"set adminclientpath=%3" + System.lineSeparator() + 
+			"set loggingpath=%4" + System.lineSeparator() +
+			"set temppath=%5" + System.lineSeparator() +
+			"set keystorepath=%6" + System.lineSeparator() +
+			"set keystorepassword=%7" + System.lineSeparator() +
+			"set dbhost=%8" + System.lineSeparator() +
+			"set dbport=%9" + System.lineSeparator() +
+			".\\java\\bin\\java.exe --class-path " + configurations.implementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
+	}
 }
 
 
