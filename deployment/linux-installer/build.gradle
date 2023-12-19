@@ -31,13 +31,7 @@ task copyArtifacts(type: Copy) {
 		from (configurations.runtimeClasspath) {
 			include "svws-*.jar"
 		}
-		from "../../svws-webclient/client/build/SVWS-Client.zip"
-	}
-	into ("/") {
-		from (configurations.runtimeClasspath) {
-			include "svws-*.jar"
-		}
-		from "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
+		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
 }
 
