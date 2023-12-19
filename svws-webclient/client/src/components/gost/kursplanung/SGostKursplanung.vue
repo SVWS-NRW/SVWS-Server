@@ -109,7 +109,7 @@
 
 	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id+1]);
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
-	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value);
+	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
 	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
 
 	const isMounted = ref(false);
