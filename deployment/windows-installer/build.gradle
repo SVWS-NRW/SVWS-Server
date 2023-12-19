@@ -101,43 +101,6 @@ dependencies {
 	implementation project(':svws-server-app')
 }
 
-/*
-publishing {
-	repositories {
-		maven {
-			name = "GitHubPackagesSVWSInstaller"
-			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
-			credentials {
-				username = getGithubActor()
-				password = getGithubToken()
-			}
-		}
-	}
-	publications {
-		mavenZipWin(MavenPublication) {
-			artifact  'build/SVWS-Server-Installer-win.zip'
-			artifactId = 'svws-server-installer-win'
-			pom {
-				name = 'SVWS-Server-Installer Windows Version'
-				description = 'Stellt den SVWS-Server-Installer für Windows zur Verfügung.'
-				url = 'http://www.svws.nrw.de'
-				licenses {
-					license {
-						name = 'The BSD-3-Clause License'
-						url = 'https://opensource.org/licenses/BSD-3-Clause'
-					}
-				}
-				scm {
-					connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
-					developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
-					url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
-				}
-			}
-		}
-	}
-}
-*/
-
 task printDependencies2 {
 	group = 'svws'
 	doLast {
@@ -146,10 +109,21 @@ task printDependencies2 {
 	}
 }
 
+task downloadSVWSAdminClient(type: Copy) {
+	from "../../svws-webclient/Admin/build/SVWS-Admin-Client.zip"
+	into "download/svws-" + project.version + "/"
+}
+
+
+task downloadSVWSClient(type: Copy) {
+	from "../../svws-webclient/client/build/SVWS-Client.zip"
+	into "download/svws-" + project.version + "/"
+}
+
+
 task downloadJarsAll(type: Copy) {
-	//dependsOn "downloadJarsSources"
-	//dependsOn "downloadJarsJavadocs"
-	dependsOn "downloadSVWSClient"
+	dependsOn downloadSVWSClient
+	dependsOn downloadSVWSAdminClient
 	from configurations.runtimeClasspath
 	into "download/svws-" + project.version + "/jar/"
 	include "*.jar"
@@ -186,34 +160,6 @@ task downloadJarsAll(type: Copy) {
 			}
 }
 
-
-task downloadSVWSClient(type: Copy) {
-	from "../../svws-webclient/client/build/SVWS-Client.zip"
-	into "download/svws-" + project.version + "/"
-}
-
-/*
-task downloadJarsSources( type: Copy ) {
-	def sources = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
-		artifact -> project.dependencies.create(
-			[ group: artifact.moduleVersion.id.group, name: artifact.moduleVersion.id.name, version: artifact.moduleVersion.id.version, classifier: 'sources' ]
-		)
-	}
-	from configurations.detachedConfiguration( sources as Dependency[] ).resolvedConfiguration.lenientConfiguration.getFiles( Specs.SATISFIES_ALL )
-	into "download/svws-" + project.version + "/jar-source/"
-}
-
-
-task downloadJarsJavadocs( type: Copy ) {
-	def sources = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
-		artifact -> project.dependencies.create(
-			[ group: artifact.moduleVersion.id.group, name: artifact.moduleVersion.id.name, version: artifact.moduleVersion.id.version, classifier: 'javadoc' ]
-		)
-	}
-	from configurations.detachedConfiguration( sources as Dependency[] ).resolvedConfiguration.lenientConfiguration.getFiles( Specs.SATISFIES_ALL )
-	into "download/svws-" + project.version + "/jar-javadoc/"
-}
-*/
 
 task downloadJDK {
 	doLast {
@@ -361,6 +307,12 @@ task extractClient(type:Copy) {
 }
 
 
+task extractAdminClient(type:Copy) {
+	dependsOn "extract"
+	from zipTree(file("${projectDir}/download/svws-${project.version}/SVWS-Admin-Client.zip"))
+	into "${buildDir}/installer/files/adminclient/"
+}
+
 
 task copyInstallerScript(type:Copy) {
 	dependsOn "download"
@@ -425,6 +377,7 @@ task buildPrepare {
 	group 'build'
 	dependsOn "extract"
 	dependsOn "extractClient"
+	dependsOn "extractAdminClient"
 	dependsOn "copyInnoExtractor"
 	dependsOn "extractInnoSetup"
 	dependsOn "copyInstallerScript"

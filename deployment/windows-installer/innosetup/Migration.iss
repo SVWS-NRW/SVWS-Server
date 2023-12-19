@@ -56,7 +56,7 @@ procedure ComboboxDBMSOnChange(Sender: TObject);
   end;
 
 
-{ Initialisiert den Bereich f¸r die SVWS-Server-Konfiguration
+{ Initialisiert den Bereich f√ºr die SVWS-Server-Konfiguration
   @param Page   die vorherige Konfigurationsseite 
 }
 procedure InitializeMigrationPage(Page: TWizardPage);
@@ -83,7 +83,7 @@ procedure InitializeMigrationPage(Page: TWizardPage);
 
     with MigrationPage do
       begin
-        Add('W‰hlen Sie die Schild2-Access-Datenbank aus:', 'MDB|*.mdb', '*.mdb');
+        Add('W√§hlen Sie die Schild2-Access-Datenbank aus:', 'MDB|*.mdb', '*.mdb');
         if FileExists('C:\SchILD-NRW\DB\SchILD2000n.mdb') then
           Values[0] := 'C:\SchILD-NRW\DB\SchILD2000n.mdb'
         else
@@ -229,7 +229,7 @@ function CheckMigrationConfigurationValues(CurPageID: Integer) : Boolean;
             MDBFileLocation := MigrationPage.Values[0];
             if not FileExists(MDBFileLocation) then
               begin
-                MsgBox('Die angegebene Schild2-Datenbank existiert nicht. W‰hlen Sie eine g¸ltige Datenbank aus!', mbInformation, mb_Ok);
+                MsgBox('Die angegebene Schild2-Datenbank existiert nicht. W√§hlen Sie eine g√ºltige Datenbank aus!', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;
@@ -239,7 +239,7 @@ function CheckMigrationConfigurationValues(CurPageID: Integer) : Boolean;
                 MDBPassword := Schild2AccessPassword;
             if MDBPassword = '' then
               begin
-                MsgBox('Es muss ein g¸ltiges Kennwort f¸r die Access-Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+                MsgBox('Es muss ein g√ºltiges Kennwort f√ºr die Access-Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;
@@ -249,21 +249,21 @@ function CheckMigrationConfigurationValues(CurPageID: Integer) : Boolean;
             SrcUsername := EditSrcUsername.Text;
             if SrcUsername = '' then
               begin
-                MsgBox('Es muss ein g¸ltiger Benutzername f¸r die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+                MsgBox('Es muss ein g√ºltiger Benutzername f√ºr die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;
             SrcPassword := EditSrcPassword.Text;
             if SrcPassword = '' then
               begin
-                MsgBox('Es muss ein g¸ltiges Kennwort f¸r die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+                MsgBox('Es muss ein g√ºltiges Kennwort f√ºr die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;
             SrcLocation := EditSrcLocation.Text;
             if SrcLocation = '' then
               begin
-                MsgBox('Es muss ein g¸ltiger Ort f¸r die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+                MsgBox('Es muss ein g√ºltiger Ort f√ºr die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;
@@ -271,7 +271,7 @@ function CheckMigrationConfigurationValues(CurPageID: Integer) : Boolean;
             SrcSchema := EditSrcSchema.Text;
             if SrcSchema = '' then
               begin
-                MsgBox('Es muss ein g¸ltiges Schema f¸r die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
+                MsgBox('Es muss ein g√ºltiges Schema f√ºr die Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
                 result := False;
                 Exit;
               end;            
@@ -317,7 +317,7 @@ procedure DoMigration;
           else
             begin
               Log('  -> Schema durch Migration konnte nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp‰ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
+              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp√§ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
             end;
         end;
       1: // MariaDB
@@ -340,7 +340,7 @@ procedure DoMigration;
           else
             begin
               Log('  -> Schema durch Migration konnte nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp‰ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
+              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp√§ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
             end;
         end;
       2: // MySQL
@@ -363,7 +363,7 @@ procedure DoMigration;
           else
             begin
               Log('  -> Schema durch Migration konnte nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp‰ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
+              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp√§ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
             end;
         end;
       3: // SQL Server
@@ -386,7 +386,7 @@ procedure DoMigration;
           else
             begin
               Log('  -> Schema durch Migration konnte nicht angelegt werden. (ResultCode=' + IntToStr(ResultCode) + ')');
-              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp‰ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
+              msgBoxResult := MsgBox('Fehler beim Migrieren des Schema. Die Installation wird dennoch fortgesetzt. Ein neues Schema muss sp√§ter ggf. von Hand erzeugt werden!', mbError, MB_OK);
             end;
         end;
     end;    
