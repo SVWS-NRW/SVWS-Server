@@ -1,7 +1,7 @@
 BSD 3-Clause License
 
-Copyright (c) 2019 - 2022 Ministerium für Schule und Bildung des Landes NRW
-Referat 133, Völklingerstraße 49, 40221 Düsseldorf
+Copyright (c) 2019 - 2022 Ministerium fï¿½r Schule und Bildung des Landes NRW
+Referat 135, Vï¿½lklingerstraï¿½e 49, 40221 Dï¿½sseldorf
 E-Mail: svws@schule.nrw.de
 
 Redistribution and use in source and binary forms, with or without
