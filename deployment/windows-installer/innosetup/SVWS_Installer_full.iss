@@ -65,7 +65,8 @@ Source: "mariaDB_Create_Data_Directory.cmd"; DestDir: "{app}\db"; Check: IsInsta
 Source: "files\jdk-@jdk_version@\*"; DestDir: "{app}/java"; Flags: recursesubdirs; Check: IsInstallJava
 Source: "files\curl-@curl_version@-win64-mingw\*"; DestDir: "{app}\curl"; Flags: recursesubdirs; Check: IsInstallCurl
 Source: "files\servicewrapper-v@windowsservicewrapper_version@-windows.exe"; DestDir: "{app}"; DestName: "svws_server_service.exe"; Check: IsInstallWSW
-Source: "files\client\*"; DestDir: "{code:GetDataDir}\client"; Flags: recursesubdirs; Check: IsInstallSVWSClient
+Source: "files\client\*"; DestDir: "{code:GetDataDir}\client"; Flags: recursesubdirs
+Source: "files\adminclient\*"; DestDir: "{code:GetDataDir}\adminclient"; Flags: recursesubdirs
 Source: "files\jar\*"; DestDir: "{app}/svws-server"; Flags: recursesubdirs
 Source: "check_port.cmd"; DestDir: "{app}"
 Source: "files/run_server.cmd"; DestDir: "{app}"
@@ -118,7 +119,6 @@ var
 #include "InitInstaller.iss"
 #include "MariaDB.iss"
 #include "SVWSServer.iss"
-#include "SVWSClient.iss"
 
 
 procedure SVWSDataDirBrowseButtonClick(Sender: TObject);
@@ -179,9 +179,6 @@ procedure InitializeWizard;
 
     // Initialisiere den Konfigurationsbereich für die Installation des SVWS-Servers
     InitializeSVWSServerConfigurationSection(SVWSConfigurationPage, GetMariaDBConfigurationSectionBottom);
-
-    // Initialisiere den Konfigurationsbereich für die Installation des SVWS-Clients
-    InitializeSVWSClientConfigurationSection(SVWSConfigurationPage, GetSVWSServerConfigurationSectionBottom);
   end;
 
 
@@ -202,8 +199,7 @@ function NextButtonClick(CurPageID: Integer): Boolean;
     // Prüfe die SVWS-Server-Konfiguration, bevor diese verlassen werden kann
     result := 
       CheckMariaDBConfigurationSectionValues(CurPageID) and 
-      CheckSVWSServerConfigurationSectionValues(CurPageID) and 
-      CheckSVWSClientConfigurationSectionValues(CurPageID);
+      CheckSVWSServerConfigurationSectionValues(CurPageID);
   end;
 
 
@@ -234,9 +230,6 @@ procedure StartInstall();
 { Wird nach dem Kopieren aller Dateien ausgeführt... }
 procedure FinishInstall();
   begin
-    // Beende die SVWS-Client-Installation
-    FinishSVWSClientInstall;
-
     // Beende die MariaDB-Installation
     FinishMariaDBInstall;
 
@@ -265,7 +258,6 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
         // Deinstalliere die einzelnen Komponenten
         UninstallSVWSServer();
         UninstallMariaDB();
-        UninstallSVWSClient();
 
         // Delete Registry Entries
         KeyExists := RegDeleteKeyIncludingSubkeys(HKLM, 'SOFTWARE\SVWSServer');

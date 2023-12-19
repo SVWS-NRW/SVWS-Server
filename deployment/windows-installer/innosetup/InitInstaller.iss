@@ -16,14 +16,12 @@
   SVWSNewWSWVersion: String;
   SVWSDataDir: String;
   InstallSVWSServer: Boolean;
-  InstallSVWSClient: Boolean;
   InstallJava: Boolean;
   InstallMariaDB: Boolean;
   InstallCurl: Boolean;
   InstallWSW: Boolean;
   ProgressPage: TWizardPage;
   ProgressMemo: TNewMemo;
-  IsUninstallSVWSClient: Boolean;
   IsUninstallSVWSServer: Boolean;
   IsUninstallJava: Boolean;
   IsUninstallMariaDB: Boolean;
@@ -34,14 +32,6 @@
 function GetDataDir(Param: String): String;
   begin
     result := SVWSDataDir;
-  end;
-
-
-{ Gibt zurück, ob eine SVWS-Client-Installation vorgenommen werden soll
-  @return true, falls der SVWS-Client installiert werden soll, sonst false }
-function IsInstallSVWSClient(): Boolean;
-  begin
-    result := InstallSVWSClient;
   end;
 
 
@@ -85,7 +75,7 @@ function InitializeSetup(): Boolean;
   begin
     // Setze die neuen, in diesem Installer verwendeten Versionen
     Log('Initialisiere den Installer für den SVWS-Server @version@ (Java-Version @jdk_version@, MariaDB-Version @mariadb_version@)');
-    SVWSNewVersion := '@version@';
+    SVWSNewVersion := '@version@@snapshot@';
     SVWSNewClientVersion := '@svws_client_version@';
     SVWSNewJavaVersion := '@jdk_version@';
     SVWSNewMariaDBVersion := '@mariadb_version@';
@@ -140,29 +130,6 @@ function InitializeSetup(): Boolean;
                 Exit;
               end;
             Log('HINWEIS: Die Installation wird auf Wunsch des Benutzers fortgesetzt.');
-          end;
-      end;
-
-
-    // Registry: Lese die bereits installierte Version des SVWS-Clients aus
-    SVWSExistingClientVersion := '';
-    RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'SVWSClientVersion', SVWSExistingClientVersion);
-    if SVWSExisting then
-      Log('    * SVWS-Client-Version: "' + SVWSExistingClientVersion + '"');
-
-    // Prüfe, ob die zu installierende SVWS-Client-Version neuer ist als eine bereits installierte
-    InstallSVWSClient := true;
-    if CompareStr(SVWSExistingClientVersion, '') <> 0 then
-      begin
-        if CompareVersions(SVWSNewClientVersion, SVWSExistingClientVersion) < 0 then
-          begin
-            Log('      ist älter als die bereits installierte SVWS-Client-Version und wird daher nicht installiert. Die Installation sollte geprüft werden!');
-            InstallSVWSClient := false;
-          end;
-        if CompareVersions(SVWSNewClientVersion, SVWSExistingClientVersion) = 0 then
-          begin
-            Log('      ist bereits installiert und wird daher nicht nochmal installiert.');
-            InstallSVWSClient := false;
           end;
       end;
 
@@ -340,18 +307,6 @@ function InitializeUninstall(): Boolean;
       Log('  - Deinstalliere MariaDB')
     else
       Log('  - MariaDB wird nicht deinstalliert');
-
-    // Prüfe, ob die SVWS-Client-Version deinstalliert werden kann (ist er installiert und der Uninstaller passend?)
-    IsUninstallSVWSClient := False;
-    if RegQueryStringValue(HKLM, 'SOFTWARE\SVWSServer', 'SVWSClientVersion', SVWSExistingClientVersion) then
-      begin
-        Log('  - SVWS-Client-Version: "' + SVWSExistingClientVersion + '"');
-        IsUninstallSVWSClient := (SVWSExistingClientVersion = SVWSNewClientVersion);
-      end;
-    if IsUninstallSVWSClient then
-      Log('  - Deinstalliere SVWS-Client')
-    else
-      Log('  - SVWS-Client wird nicht deinstalliert');
 
     Result := True;
   end;
