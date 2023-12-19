@@ -1,9 +1,9 @@
 import type { ComputedRef} from "vue";
 import { computed } from "vue";
 
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode } from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp } from "@core";
+import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
+	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, SimpleOperationResponse } from "@core";
+import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";
@@ -393,6 +393,31 @@ class Api {
 			this.status.stop();
 		}
 	}
+
+
+	/**
+	 * Führt eine "einfache" API-Operation aus, welche mithilfe einer SimpleOperationResponse antwortet.
+	 *
+	 * @param op               die auszuführende API-Operation
+	 * @param errorResponses   ein Array mit den HTTP-Response-Codes, welche direkt eine SimpleOperationResponse vom Server liefern
+	 *
+	 * @returns die SimpleOperationResponse der API-Operation
+	 */
+	public runSimpleOperation = async (op : () => Promise<SimpleOperationResponse>, errorResponses: Array<number>) : Promise<SimpleOperationResponse> => {
+		try {
+			return await op();
+		} catch(e) {
+			if ((e instanceof OpenApiError) && (e.response != null) && (errorResponses.includes(e.response.status))) {
+				const json : string = await e.response.text();
+				return SimpleOperationResponse.transpilerFromJSON(json);
+			}
+			const result = new SimpleOperationResponse();
+			result.log.add("Fehler bei der Server-Anfrage!");
+			if (e instanceof Error)
+				result.log.add("  " + e.message);
+			return result;
+		}
+	};
 
 }
 

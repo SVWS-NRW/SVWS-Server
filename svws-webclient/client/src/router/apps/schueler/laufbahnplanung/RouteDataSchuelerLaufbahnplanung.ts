@@ -156,7 +156,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	});
 
 	importLaufbahnplanung = api.call(async (data: FormData): Promise<boolean> => {
-		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
+		const res = await api.runSimpleOperation(async () => {
+			return await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
+		}, [ 400, 409 ]);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
