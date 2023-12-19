@@ -108,7 +108,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
 	}
 
-	createAbiturdatenmanager = async (daten?: Abiturdaten): Promise<AbiturdatenManager | undefined> => {
+	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined)
 			return;
@@ -124,19 +124,19 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
-		const abiturdatenManager = await this.createAbiturdatenmanager();
+		const abiturdatenManager = this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
-	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
+	setWahl = api.call(async (fachID: number, wahl: GostSchuelerFachwahl) => {
 		await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.auswahl.id, fachID);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();
-	}
+	});
 
 	getPdfWahlbogen = async(title: string) => {
 		const list = new ArrayList<number>();
@@ -151,43 +151,43 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 	}
 
-	exportLaufbahnplanung = async (): Promise<ApiFile> => {
+	exportLaufbahnplanung = api.call(async (): Promise<ApiFile> => {
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-	}
+	});
 
-	importLaufbahnplanung = async (data: FormData): Promise<boolean> => {
+	importLaufbahnplanung = api.call(async (data: FormData): Promise<boolean> => {
 		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = await this.createAbiturdatenmanager(abiturdaten);
+		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
 			return false;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
 		return res.success;
-	}
+	});
 
-	patchBeratungsdaten = async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
+	patchBeratungsdaten = api.call(async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
 		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.auswahl.id);
 		const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
 		this.setPatchedState({gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data)});
-	}
+	});
 
-	saveLaufbahnplanung = async (): Promise<void> => {
+	saveLaufbahnplanung = api.call(async (): Promise<void> => {
 		const zwischenspeicher = await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.auswahl.id);
 		this.setPatchedState({zwischenspeicher});
-	}
+	});
 
-	restoreLaufbahnplanung = async (): Promise<void> => {
+	restoreLaufbahnplanung = api.call(async (): Promise<void> => {
 		if (this._state.value.zwischenspeicher === undefined)
 			return;
 		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = await this.createAbiturdatenmanager(abiturdaten);
+		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
-	}
+	});
 
 	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
 		const s = api.config.getValue("app.gost.belegpruefungsart");
@@ -232,12 +232,12 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 	}
 
-	resetFachwahlen = async () => {
+	resetFachwahlen = api.call(async () => {
 		await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();
-	}
+	});
 
 }
 
