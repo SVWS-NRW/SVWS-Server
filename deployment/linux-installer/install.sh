@@ -96,6 +96,12 @@ if [[ "$1" == "--update" ]]; then
     # Lösche die entpackte Client-Datei
     rm -rf $APP_PATH/app/SVWS-Client*.zip
 
+    # Entpacke den Admin-Client in das Admin-Client-Verzeichnis
+    unzip -d $APP_PATH/adminclient $APP_PATH/app/SVWS-Admin-Client*.zip
+
+    # Lösche die entpackte Admin-Client-Datei
+    rm -rf $APP_PATH/app/SVWS-Admin-Client*.zip
+
     # Erstelle einen symbolischen Link zur Konfigurationsdatei
     ln -f $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
@@ -320,6 +326,7 @@ tar xzf ./LINUX_INSTALLER_FILE_NAME
 # Erstelle Verzeichnisse
 mkdir -p $APP_PATH
 mkdir $APP_PATH/client
+mkdir $APP_PATH/adminclient
 mkdir $APP_PATH/conf
 mkdir -p ${CONF_PATH%/*}
 
@@ -332,6 +339,12 @@ unzip -d $APP_PATH/client $APP_PATH/app/SVWS-Client*.zip
 
 # Lösche die entpackte Client-Datei
 rm -rf $APP_PATH/app/SVWS-Client*.zip
+
+# Entpacke den Admin-Client in das Admin-Client-Verzeichnis
+unzip -d $APP_PATH/adminclient $APP_PATH/app/SVWS-Admin-Client*.zip
+
+# Lösche die entpackte Admin-Client-Datei
+rm -rf $APP_PATH/app/SVWS-Admin-Client*.zip
 
 # Erstelle Service-Datei und kopiere sie in das System-Verzeichnis
 envsubst < ./svws/svws-template.service > ./svws/svws.service

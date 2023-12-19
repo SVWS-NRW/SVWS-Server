@@ -20,6 +20,7 @@ task copyArtifacts(type: Copy) {
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
+	mustRunAfter(':svws-webclient:admin:doZip')
 	into linuxfileAppDir
 	into ("lib/") {
 		from (configurations.runtimeClasspath) {
@@ -31,6 +32,12 @@ task copyArtifacts(type: Copy) {
 			include "svws-*.jar"
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip"
+	}
+	into ("/") {
+		from (configurations.runtimeClasspath) {
+			include "svws-*.jar"
+		}
+		from "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
 }
 
