@@ -322,7 +322,7 @@ public class APIAdressbuch {
 	/**
 	 * Debug Option, damit Requests nach Insomnia übertragen werden können
 	 */
-	private static final boolean LOG_INPUTSTREAM = false;
+	private static final boolean LOG_INPUTSTREAM = true;
 
 	/**
 	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie

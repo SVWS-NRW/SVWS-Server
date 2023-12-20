@@ -75,25 +75,23 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 		try (ByteArrayOutputStream inputStreamAsByteArray = new ByteArrayOutputStream()) {
 			inputStream.transferTo(inputStreamAsByteArray);
 			try (InputStream inputStreamClone1 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-				final Optional<AddressbookMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
+				final AddressbookMultiget multiget = XmlUnmarshallingUtil.unmarshal(inputStreamClone1,
 						AddressbookMultiget.class);
-				if (multiget.isPresent()) {
-					return this.handleAdressbookMultigetRequest(adressbuch.get(), multiget.get());
-				}
-			}
-
-			try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-				final Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
-						SyncCollection.class);
-				if (syncCollection.isPresent()) {
-					return this.handleSyncCollectionRequest(adressbuch.get(), syncCollection.get());
+				return this.handleAdressbookMultigetRequest(adressbuch.get(), multiget);
+			} catch (IOException e) {
+				try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
+					final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
+							SyncCollection.class);
+					return this.handleSyncCollectionRequest(adressbuch.get(), syncCollection);
+				} catch (final IOException e2) {
+					throw new UnsupportedOperationException("Error beim Unmarshalling des Inputstreams (Weder Multiget noch Sync-Collection bei REPORT Addressbook): " + e2.getMessage(), e2);
 				}
 			}
 		}
 
 		// Input muss entweder ein Adressbook-Multiget oder ein Sync-Collection Request
 		// sein
-		throw new UnsupportedOperationException();
+
 	}
 
 	/**

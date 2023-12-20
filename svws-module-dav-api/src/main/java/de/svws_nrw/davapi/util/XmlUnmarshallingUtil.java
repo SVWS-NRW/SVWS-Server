@@ -64,29 +64,6 @@ public final class XmlUnmarshallingUtil {
 	}
 
 	/**
-	 * Deserialisiert einen InputStream mit XML-Daten in eine Java-Klasse eines
-	 * angegebenen Typs. Fehlende XML-Mappings oder fehlerhaftes XML führen in
-	 * dieser Methode nicht zu einer IOException, sondern zur Rückgabe von
-	 * Optional.empty(). Diese Methode kann dazu verwendet werden zu prüfen, ob ein
-	 * InputStream in die angegebene Typklasse deserialisiert werden kann.
-	 *
-	 * @param inputstream InputStream mit XML-Daten
-	 * @param typeClass   Java-Klasse, die das Ziel der Deserialisierung sein soll
-	 *                    (z.B. Profind.class)
-	 * @param <T>         Generischer Typ
-	 * @return Optional der angegebenen Typ-Klasse. Falls die Deserialisierung nicht
-	 *         erfolgreich war, wird das Optional.empty() zurückgegeben.
-	 */
-	public static <T> Optional<T> tryUnmarshal(final InputStream inputstream, final Class<T> typeClass) {
-		try {
-			return Optional.of(unmarshal(inputstream, typeClass));
-		} catch (final IOException e) {
-			logger.log("Error beim Unmarshalling des Inputstreams: " + e.getMessage());
-			return Optional.empty();
-		}
-	}
-
-	/**
 	 * Deserialisiert einen String mit XML-Daten in eine Java-Klasse eines
 	 * angegebenen Typs. Fehlende XML-Mappings oder fehlerhaftes XML führen in
 	 * dieser Methode nicht zu einer IOException, sondern zur Rückgabe von

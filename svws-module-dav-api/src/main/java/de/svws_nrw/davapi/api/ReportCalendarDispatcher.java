@@ -81,33 +81,32 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 		final ByteArrayOutputStream inputStreamAsByteArray = new ByteArrayOutputStream();
 		inputStream.transferTo(inputStreamAsByteArray);
 		try (InputStream inputStreamClone1 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			final Optional<CalendarMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
+			//Versuche Multiget
+			final CalendarMultiget multiget = XmlUnmarshallingUtil.unmarshal(inputStreamClone1,
 					CalendarMultiget.class);
-			if (multiget.isPresent()) {
 				inputStreamAsByteArray.close();
-				return this.handleCalendarMultigetRequest(kalender.get(), multiget.get());
+				return this.handleCalendarMultigetRequest(kalender.get(), multiget);
+		} catch (IOException e1) {
+			// Kein Multiget, versuche Sync-Collection
+			try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
+				final SyncCollection syncCollection = XmlUnmarshallingUtil.unmarshal(inputStreamClone2,
+						SyncCollection.class);
+					inputStreamAsByteArray.close();
+					return this.handleSyncCollectionRequest(kalender.get(), syncCollection);
+			} catch (Exception e2) {
+				// Kein Sync-Collection, Versuche CalendarQuery
+				try (InputStream inputStreamClone3 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
+					final CalendarQuery calendarQuery = XmlUnmarshallingUtil.unmarshal(inputStreamClone3,
+							CalendarQuery.class);
+						inputStreamAsByteArray.close();
+						return this.handleCalendarQueryRequest(kalender.get(), calendarQuery);
+				} catch (Exception e3) {
+					throw new UnsupportedOperationException("Weder Multiget noch Sync-Collection noch CalendarQuery bei REPORT Calendar: " + e3.getMessage(), e3);
+				}
 			}
 		}
-
-		try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			final Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
-					SyncCollection.class);
-			if (syncCollection.isPresent()) {
-				inputStreamAsByteArray.close();
-				return this.handleSyncCollectionRequest(kalender.get(), syncCollection.get());
-			}
-		}
-		try (InputStream inputStreamClone3 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			final Optional<CalendarQuery> calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone3,
-					CalendarQuery.class);
-			if (calendarQuery.isPresent()) {
-				inputStreamAsByteArray.close();
-				return this.handleCalendarQueryRequest(kalender.get(), calendarQuery.get());
-			}
-		}
-
-		throw new UnsupportedOperationException();
 	}
+
 
 	/**
 	 * Ermittelt das Ergebnisobjekt für den Fall, dass ein
