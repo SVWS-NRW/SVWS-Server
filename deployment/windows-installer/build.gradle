@@ -64,37 +64,6 @@ ext.getSchild2AccessPassword = { ->
 	return '';
 }
 
-ext.getGithubActor = { ->
-	if (properties.containsKey('github_actor'))
-		return github_actor;
-	def username = System.getenv("GITHUB_ACTOR")
-	if (username != null)
-		return username;
-	throw new GradleException('Fehler: Der Github benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
-}
-
-ext.getGithubToken = { ->
-	if (properties.containsKey('github_token'))
-		return github_token;
-	def token = System.getenv("GITHUB_TOKEN")
-	if (token != null)
-		return token;
-	throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
-}
-
-
-repositories {
-	maven {
-		name = "GitHubPackagesServer"
-		url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
-		credentials {
-			username = getGithubActor()
-			password = getGithubToken()
-		}
-	}
-	mavenCentral()
-}
-
 configurations.implementation.setCanBeResolved(true)
 
 dependencies {
@@ -384,8 +353,8 @@ task buildPrepare {
 }
 
 
-task buildCreateInstaller(type:Exec) {
-	group 'svws'
+task buildWindowsInstaller(type:Exec) {
+	group 'build'
 	if (System.getenv("SVWS_SIGNTOOL_PATH") && project.hasProperty("jarsign_keystoreFile") && project.hasProperty("jarsign_keystorepass")) {
 		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + jarsign_keystoreFile  + " /p " + jarsign_keystorepass + ' -tr http://timestamp.digicert.com -td sha256 \$f'
 	} else {
@@ -405,7 +374,7 @@ task doZip(type: Zip) {
 	from "$buildDir/output/win64-installer-${version}.exe"
 }
 
-doZip.dependsOn buildCreateInstaller
+doZip.dependsOn buildWindowsInstaller
 
 clean.doLast {
 	file("${downloadDir}").deleteDir()
