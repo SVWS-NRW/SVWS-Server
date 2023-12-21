@@ -7,7 +7,7 @@
 			<svws-ui-content-card title="Basisdaten">
 				<div class="input-wrapper">
 					<svws-ui-text-input placeholder="Name" v-model="betrieb.name1" type="text" />
-					<svws-ui-select title="Beschäftigungsart" v-model="undefined" :items="mapBeschaeftigungsarten" :item-text="i => i.text ?? ''" />
+					<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="i => i.text ?? ''" />
 					<svws-ui-text-input placeholder="Namensergänzung" v-model="betrieb.name2" type="text" />
 					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="betrieb.telefon1" type="text" />
 					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="betrieb.telefon2" type="text" />
@@ -73,6 +73,7 @@
 	const showModal = () => _showModal;
 
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
+	const beschaeftigungsart = ref<KatalogEintrag>();
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => betrieb.value.ort_id ? props.mapOrte.get(betrieb.value.ort_id) : undefined,
