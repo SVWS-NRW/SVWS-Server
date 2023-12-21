@@ -131,13 +131,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	/**
 	 * Prüft, ob der Schüler bei dem angegebehen GOSt-Halbjahr des angegeben Halbjahres an der Schule gewesen ist.
 	 *
+	 * @param conn          die Datenbankverbindung
 	 * @param dto           der Schüler
 	 * @param halbjahr      das GOSt-Halbjahr
 	 * @param abijahrgang   der Abiturjahrgang
 	 *
 	 * @return true, wenn der Schüler an der Schule ist, und ansonsten false
 	 */
-	private boolean checkIstAnSchule(final DTOSchueler dto, final GostHalbjahr halbjahr, final int abijahrgang) {
+	public static boolean checkIstAnSchule(final DBEntityManager conn, final DTOSchueler dto, final GostHalbjahr halbjahr, final int abijahrgang) {
 		// Ist ein aktueller Schuljahresabschnitt zugewiesen? Das ist notwendig, wenn der Schüler an der Schule ist oder war
 		if (dto.Schuljahresabschnitts_ID == null)
 			return false;
@@ -258,7 +259,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
-			if (!checkIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang))
+			if (!checkIstAnSchule(conn, dto, blockung.Halbjahr, blockung.Abi_Jahrgang))
 				continue;
 			final Schueler daten = new Schueler();
 			daten.id = dto.ID;
@@ -948,7 +949,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					mapLernabschnitte.remove(laid);
 				} else {
 					final DTOSchueler dtoSchueler = mapSchueler.get(la.Schueler_ID);
-					if ((dtoSchueler == null) || (!checkIstAnSchule(dtoSchueler, halbjahr, abiturjahr)))
+					if ((dtoSchueler == null) || (!checkIstAnSchule(conn, dtoSchueler, halbjahr, abiturjahr)))
 						mapLernabschnitte.remove(laid);
 				}
 			}

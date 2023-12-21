@@ -251,10 +251,15 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
     	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
 		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 	        return new GostJahrgangFachwahlenHalbjahr();
-		// Bestimme die Schülernamen
+		// Bestimme die Schüler und prüfe im Falle von Abgängern, ob diese in dem Halbjahr an der Schule waren
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
 	        return new GostJahrgangFachwahlenHalbjahr();
+		for (int i = schuelerListe.size() - 1; i >= 0; i--) {
+			final DTOSchueler schueler = schuelerListe.get(i);
+			if (!DataGostBlockungsdaten.checkIstAnSchule(conn, schueler, halbjahr, abijahr))
+				schuelerListe.remove(i);
+		}
 		final Map<Long, DTOSchueler> schuelerMap = schuelerListe.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
