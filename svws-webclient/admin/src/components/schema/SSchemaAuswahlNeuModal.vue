@@ -5,15 +5,15 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
+					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" :disabled="loading" />
 					<template v-if="loading">
 						<div class="flex">
 							<svws-ui-spinner :spinning="true" /> Das Schema wird angelegt…
 						</div>
 					</template>
 					<svws-ui-spacing />
-					<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-					<svws-ui-text-input v-model="password" required placeholder="Passwort" />
+					<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
+					<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" />
 				</svws-ui-input-wrapper>
 			</div>
 		</template>
@@ -68,6 +68,8 @@
 		schema.value = '';
 		user.value = '';
 		password.value = '';
+		if (result.success)
+			close();
 	}
 
 	function close() {

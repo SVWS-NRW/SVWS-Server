@@ -58,6 +58,8 @@
 	import type { ErrorProps } from "./SErrorProps";
 
 	const props = defineProps<ErrorProps>();
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	console.log(props.error);
 
 	function goBack() {
 		window.history.back();

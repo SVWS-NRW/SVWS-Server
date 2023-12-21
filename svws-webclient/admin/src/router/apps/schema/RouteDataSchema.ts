@@ -164,7 +164,7 @@ export class RouteDataSchema {
 
 	gotoSchema = async (value: SchemaListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeSchema.name, params: { } });
+			await RouteManager.doRoute({ name: routeSchema.name });
 			return;
 		}
 		const redirect_name: string = (routeSchema.selectedChild === undefined) ? routeSchemaUebersicht.name : routeSchema.selectedChild.name;
