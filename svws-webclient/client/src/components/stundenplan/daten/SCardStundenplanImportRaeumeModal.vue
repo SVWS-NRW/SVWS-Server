@@ -4,7 +4,7 @@
 		<template #modalTitle>Räume aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-model="selected" />
+				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-model="selected" :columns="cols" />
 				<div v-else>Importieren nicht möglich, keine (zusätzlichen) Einträge im Raum-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Raum-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
@@ -33,6 +33,12 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const selected = ref<Raum[]>([...props.listRaeume]);
 	const raum = ref<Raum>()
+
+	const cols = [
+		{key: 'kuerzel', label: 'Kürzel', span: 1},
+		{key: 'beschreibung', label: 'Beschreibung', span: 3},
+		{key: 'groesse', label: 'Größe', span: 1},
+	]
 
 	const openModal = () => {
 		showModal().value = true;

@@ -297,8 +297,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			list.add(item);
 		}
 		const bereich = await api.server.addStundenplanAufsichtsbereiche(list, api.schema, id);
-		console.log(bereich)
 		this.stundenplanManager.aufsichtsbereichAddAll(bereich);
+		this.commit();
 		api.status.stop();
 	}
 

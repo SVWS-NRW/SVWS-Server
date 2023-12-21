@@ -45,8 +45,8 @@
 
 	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1},
+		{key: 'beschreibung', label: 'Beschreibung', span: 3},
 		{key: 'groesse', label: 'Größe', span: 1},
-		{key: 'beschreibung', label: 'Beschreibung', span: 3}
 	]
 
 </script>
