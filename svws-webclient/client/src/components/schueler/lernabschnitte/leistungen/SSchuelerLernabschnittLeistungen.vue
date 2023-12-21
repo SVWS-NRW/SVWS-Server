@@ -73,9 +73,9 @@
 				:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt"
 				@change="fehlstundenUnentschuldigt => patch({ fehlstundenUnentschuldigt: fehlstundenUnentschuldigt ?? undefined })" />
 		</svws-ui-input-wrapper>
-		<svws-ui-todo title="Fehlzeiten" class="mt-10">
+		<!-- <svws-ui-todo title="Fehlzeiten" class="mt-10">
 			Hier könnte demnächst die Übersicht über die Fehlzeiten implementiert werden.
-		</svws-ui-todo>
+		</svws-ui-todo> -->
 	</svws-ui-content-card>
 </template>
 
