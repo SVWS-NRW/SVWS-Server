@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -117,8 +118,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             final var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
             for (final var ks : listSchienenKurse)
                 manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
-            for (final var ks : listKursSchueler)
-                manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
+            for (final var ks : listKursSchueler) {
+            	try {
+            		manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
+            	} catch (@SuppressWarnings("unused") final DeveloperNotificationException e) {
+            		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
+            	}
+            }
             final GostBlockungsergebnis ergebnis = manager.getErgebnis();
             ergebnis.istMarkiert = erg.IstMarkiert != null && erg.IstMarkiert;
             ergebnis.istVorlage = erg.IstVorlage != null && erg.IstVorlage;
@@ -159,8 +165,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
         for (final DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
             manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
-        for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
-            manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
+        for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) {
+        	try {
+        		manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
+        	} catch (@SuppressWarnings("unused") final DeveloperNotificationException e) {
+        		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
+        	}
+        }
         final GostBlockungsergebnis daten = manager.getErgebnis();
         daten.istMarkiert = ergebnis.IstMarkiert != null && ergebnis.IstMarkiert;
         daten.istVorlage = ergebnis.IstVorlage != null && ergebnis.IstVorlage;
