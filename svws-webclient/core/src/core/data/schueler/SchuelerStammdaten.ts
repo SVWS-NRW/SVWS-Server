@@ -130,7 +130,7 @@ export class SchuelerStammdaten extends JavaObject {
 	/**
 	 * Das Zuzugsjahr des Schülerdatensatzes.
 	 */
-	public zuzugsjahr : string | null = null;
+	public zuzugsjahr : number | null = null;
 
 	/**
 	 * Das Geburtsland des Schülerdatensatzes.
@@ -344,7 +344,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"religionabmeldung" : ' + ((!obj.religionabmeldung) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
 		result += '"religionanmeldung" : ' + ((!obj.religionanmeldung) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund + ',';
-		result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : JSON.stringify(obj.zuzugsjahr)) + ',';
+		result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : obj.zuzugsjahr) + ',';
 		result += '"geburtsland" : ' + ((!obj.geburtsland) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
 		result += '"verkehrspracheFamilie" : ' + ((!obj.verkehrspracheFamilie) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
 		result += '"geburtslandVater" : ' + ((!obj.geburtslandVater) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
@@ -447,7 +447,7 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund + ',';
 		}
 		if (typeof obj.zuzugsjahr !== "undefined") {
-			result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : JSON.stringify(obj.zuzugsjahr)) + ',';
+			result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : obj.zuzugsjahr) + ',';
 		}
 		if (typeof obj.geburtsland !== "undefined") {
 			result += '"geburtsland" : ' + ((!obj.geburtsland) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';

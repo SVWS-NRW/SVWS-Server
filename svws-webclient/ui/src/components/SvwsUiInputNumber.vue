@@ -49,7 +49,7 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="input" class="svws-input-stepper">
+		<span v-if="input && !hideStepper" class="svws-input-stepper">
 			<button role="button" :disabled="disabled" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><i-ri-subtract-line /></button>
 			<button role="button" :disabled="disabled" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><i-ri-add-line /></button>
 		</span>
@@ -79,6 +79,7 @@
 		headless?: boolean;
 		focus?: boolean;
 		rounded?: boolean;
+		hideStepper?: boolean;
 		span?: 'full' | '2';
 	}>(), {
 		placeholder: "",
@@ -90,6 +91,7 @@
 		headless: false,
 		focus: false,
 		rounded: false,
+		hideStepper: false,
 		span: undefined,
 	});
 

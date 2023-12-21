@@ -82,7 +82,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// Daten zum Migrationshintergrund
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
 		daten.hatMigrationshintergrund = schueler.Migrationshintergrund != null && schueler.Migrationshintergrund;
-		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug.toString();
+		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug;
 		daten.geburtsland = schueler.GeburtslandSchueler == null ? null : schueler.GeburtslandSchueler.daten.iso3;
 		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
 		daten.geburtslandVater = schueler.GeburtslandVater == null ? null : schueler.GeburtslandVater.daten.iso3;
@@ -254,18 +254,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			// Daten zum Migrationshintergrund
 			Map.entry("hatMigrationshintergrund", (conn, schueler, value, map) -> schueler.Migrationshintergrund = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("zuzugsjahr", (conn, schueler, value, map) -> {
-				final String text = JSONMapper.convertToString(value, true, true, null);
-				Integer jahr = null;
-				if ((text != null) && (!"".equals(text))) {
-					try {
-						jahr = Integer.parseUnsignedInt(text);
-						if ((jahr <= 1900) || (jahr > 3000))   // TODO Bestimme das aktuelle Jahr für die obere Grenze des Bereichs
-							throw OperationError.BAD_REQUEST.exception();
-					} catch (final NumberFormatException e) {
-						throw OperationError.BAD_REQUEST.exception(e);
-					}
-				}
-				schueler.JahrZuzug = jahr;
+				// TODO Bestimme das aktuelle Jahr für die obere Grenze des Bereichs
+				schueler.JahrZuzug = JSONMapper.convertToIntegerInRange(value, true, 1900, 3000);
 			}),
 			Map.entry("geburtsland", (conn, schueler, value, map) -> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);

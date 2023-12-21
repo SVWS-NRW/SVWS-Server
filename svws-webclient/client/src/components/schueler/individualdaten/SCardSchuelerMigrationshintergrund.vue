@@ -4,7 +4,7 @@
 			<svws-ui-checkbox v-model="hatMigrationshintergrund" statistics>Migrationshintergrund vorhanden</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})" type="text" :disabled="!hatMigrationshintergrund" statistics />
+			<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})" :disabled="!hatMigrationshintergrund" statistics hide-stepper />
 			<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 			<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
 				:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"

@@ -127,7 +127,7 @@ public class SchuelerStammdaten {
 
 	/** Das Zuzugsjahr des Schülerdatensatzes. */
 	@Schema(description = "ggf. das Zuzugsjahr", example = "2013")
-	public String zuzugsjahr;
+	public Integer zuzugsjahr;
 
 	/** Das Geburtsland des Schülerdatensatzes. */
 	@Schema(description = "ggf. das Geburtsland", example = "Brasilien")
