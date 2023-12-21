@@ -78,7 +78,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
     		eintrag.id = k.ID;
     		eintrag.kuerzel = k.Klasse;
     		eintrag.idJahrgang = k.Jahrgang_ID;
-    		eintrag.parallelitaet = k.ASDKlasse.length() < 3 ? null : k.ASDKlasse.substring(2, 3);
+    		eintrag.parallelitaet = ((k.ASDKlasse == null) || (k.ASDKlasse.length() < 3)) ? null : k.ASDKlasse.substring(2, 3);
     		eintrag.sortierung = k.Sortierung;
     		eintrag.istSichtbar = k.Sichtbar;
     		final var klListe = klassenLeitungen.get(k.ID);
