@@ -1242,6 +1242,31 @@ public class GostBlockungsdatenManager {
 		return regelDummy;
 	}
 
+
+	/**
+	 * Liefert die Regel, welche den Schüler in einem Kurs fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche den Schüler in einem Kurs fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 */
+	public @NotNull GostBlockungRegel regelGetRegelOrDummySchuelerInKursFixierung(final long idSchueler, final long idKurs) {
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+
+		final GostBlockungRegel regel = _map_multikey_regeln.get(key);
+		if (regel != null)
+			return regel;
+
+		final @NotNull GostBlockungRegel regelDummy = new GostBlockungRegel();
+		regelDummy.id = -1;
+		regelDummy.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		regelDummy.parameter.add(idSchueler);
+		regelDummy.parameter.add(idKurs);
+
+		return regelDummy;
+	}
+
 	/**
 	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
 	 *
@@ -1790,5 +1815,6 @@ public class GostBlockungsdatenManager {
 	public @NotNull Comparator<@NotNull GostBlockungKurs> getComparatorKurs_fach_kursart_kursnummer() {
 		return _compKurs_fach_kursart_kursnummer;
 	}
+
 
 }

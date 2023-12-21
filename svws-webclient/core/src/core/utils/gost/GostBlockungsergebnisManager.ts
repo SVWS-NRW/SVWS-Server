@@ -2299,11 +2299,68 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (!aktiv)
 				continue;
 			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
-				const schieneG : GostBlockungSchiene | null = this.getSchieneG(schieneE.id);
+				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
 				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
 					regeln.add(this._parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
 				}
 			}
+		}
+		return regeln;
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 * <br>Hinweis: Wenn ein Multi-Kurs zum Teil im Auswahl-Rechteck liegt, wird der Kurs ebenso beachtet.
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public regelGetListeToggleSchuelerfixierung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
+		const listKurse : List<GostBlockungKurs> = new ArrayList();
+		let aktiv : boolean = false;
+		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
+		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
+		for (const kurs of list) {
+			if ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown))
+				aktiv = !aktiv;
+			if (!aktiv)
+				continue;
+			let istKursMarkiert : boolean = false;
+			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
+				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
+					istKursMarkiert = true;
+			}
+			if (istKursMarkiert)
+				listKurse.add(kurs);
+		}
+		return this.regelGetListeToggleSchuelerfixierungDerKurse(listKurse);
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung einer Menge von Kursen ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 * @param list  Die Liste aller Kurse deren SuS-Fixierung geändert werden soll.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public regelGetListeToggleSchuelerfixierungDerKurse(list : List<GostBlockungKurs>) : List<GostBlockungRegel> {
+		const regeln : List<GostBlockungRegel> = new ArrayList();
+		for (const kursG of list) {
+			const kursE : GostBlockungsergebnisKurs = this.getKursE(kursG.id);
+			for (const idSchueler of kursE.schueler)
+				regeln.add(this._parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
 		}
 		return regeln;
 	}

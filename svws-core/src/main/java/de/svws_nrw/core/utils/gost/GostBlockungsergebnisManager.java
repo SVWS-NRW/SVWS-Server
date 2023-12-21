@@ -2464,13 +2464,81 @@ public class GostBlockungsergebnisManager {
 
 			// Gehe die Schienen des Kurses durch...
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
-				final GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
 					// Der Kurs befindet sich im Auswahl-Rechteck.
 					regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
 				}
 			}
 
+		}
+
+		return regeln;
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 * <br>Hinweis: Wenn ein Multi-Kurs zum Teil im Auswahl-Rechteck liegt, wird der Kurs ebenso beachtet.
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
+		final @NotNull List<@NotNull GostBlockungKurs> listKurse = new ArrayList<>();
+
+		boolean aktiv = false;
+		final int min = Math.min(schieneA.nummer, schieneB.nummer);
+		final int max = Math.max(schieneA.nummer, schieneB.nummer);
+		for (final @NotNull GostBlockungKurs kurs : list) {
+			// Aktive Auswahl erkennen.
+			if ((kurs == kursA) || (kurs == kursB))
+				aktiv = !aktiv;
+
+			// Aktuelle Zeile ignorieren?
+			if (!aktiv)
+				continue;
+
+			// Gehe die Schienen des Kurses durch...
+			boolean istKursMarkiert = false;
+			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
+					istKursMarkiert = true;
+			}
+
+			// Der Kurs ist ausgewählt.
+			if (istKursMarkiert)
+				listKurse.add(kurs);
+		}
+
+		return regelGetListeToggleSchuelerfixierungDerKurse(listKurse);
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung einer Menge von Kursen ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 * @param list  Die Liste aller Kurse deren SuS-Fixierung geändert werden soll.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierungDerKurse(final @NotNull List<@NotNull GostBlockungKurs> list) {
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
+
+		for (final @NotNull GostBlockungKurs kursG : list) {
+			final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
+			for (final long idSchueler : kursE.schueler)
+				regeln.add(_parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
 		}
 
 		return regeln;

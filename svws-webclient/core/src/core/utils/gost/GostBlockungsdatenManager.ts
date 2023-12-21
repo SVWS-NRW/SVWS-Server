@@ -1216,6 +1216,27 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Regel, welche den Schüler in einem Kurs fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche den Schüler in einem Kurs fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 */
+	public regelGetRegelOrDummySchuelerInKursFixierung(idSchueler : number, idKurs : number) : GostBlockungRegel {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
+		if (regel !== null)
+			return regel;
+		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
+		regelDummy.id = -1;
+		regelDummy.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		regelDummy.parameter.add(idSchueler);
+		regelDummy.parameter.add(idKurs);
+		return regelDummy;
+	}
+
+	/**
 	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
 	 *
 	 * @param idRegel  Die Datenbank-ID der Regel.
