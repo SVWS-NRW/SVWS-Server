@@ -1302,8 +1302,8 @@ public final class DBMigrationManager {
 			case "KMFÖ" -> "KMFOE";
 			case "SPFÖ" -> "SPF";
 			case "AGK" -> (schulform == Schulform.WB) ? "AGKWB" : "AGK";
-			case "WPI" -> (schulform == Schulform.GY) ? "WPI_GY" : "WPI";
-			case "FU" -> (schulform == Schulform.S) ? "FU_AUS" : "FU";
+			case "WPI" -> (schulform == Schulform.GY) ? "WPIGY" : "WPI";
+			case "FU" -> (schulform == Schulform.S) ? "FUAUS" : "FU";
 			case "E" -> (schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V) ? "E_H" : "E";
 			case "G" -> (schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V) ? "G_H" : "G";
 			default -> kursart;
