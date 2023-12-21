@@ -1132,26 +1132,30 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * Liefert die aktuelle Menge aller Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 *
 	 * @param typ Der {@link GostKursblockungRegelTyp}.
 	 *
-	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * @return die aktuelle Menge aller  Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
 	public regelGetListeOfTyp(typ : GostKursblockungRegelTyp) : List<GostBlockungRegel> {
 		return MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ);
 	}
 
 	/**
-	 * Liefert eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 * @deprecated      Die Methode ist in den Ergebnismanager gewandert.
 	 *
 	 * @param list      Die aktuelle sortierte Liste der GUI.
 	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
 	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
 	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
 	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 */
 	public regelGetListeToggleSperrung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
 		const regeln : List<GostBlockungRegel> = new ArrayList();
@@ -1170,12 +1174,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 * Liefert die Regel, welche den Kurs in einer Schiene sperrt, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 *
 	 * @param idKurs     Die Datenbank-ID des Kurses.
 	 * @param nrSchiene  Die Nummer der Schiene.
 	 *
-	 * @return die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID = -1), falls die Regel nicht existiert.
+	 * @return die Regel, welche den Kurs in einer Schiene sperrt, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 */
 	public regelGetRegelOrDummyKursGesperrtInSchiene(idKurs : number, nrSchiene : number) : GostBlockungRegel {
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
@@ -1185,6 +1189,27 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
 		regelDummy.id = -1;
 		regelDummy.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		regelDummy.parameter.add(idKurs);
+		regelDummy.parameter.add(nrSchiene as number);
+		return regelDummy;
+	}
+
+	/**
+	 * Liefert die Regel, welche den Kurs in einer Schiene fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param nrSchiene  Die Nummer der Schiene.
+	 *
+	 * @return die Regel, welche den Kurs in einer Schiene fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 */
+	public regelGetRegelOrDummyKursFixierungInSchiene(idKurs : number, nrSchiene : number) : GostBlockungRegel {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
+		if (regel !== null)
+			return regel;
+		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
+		regelDummy.id = -1;
+		regelDummy.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 		regelDummy.parameter.add(idKurs);
 		regelDummy.parameter.add(nrSchiene as number);
 		return regelDummy;

@@ -1146,31 +1146,34 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * Liefert die aktuelle Menge aller Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 *
 	 * @param typ Der {@link GostKursblockungRegelTyp}.
 	 *
-	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * @return die aktuelle Menge aller  Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeOfTyp(final @NotNull GostKursblockungRegelTyp typ) {
 		return MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ);
 	}
 
-
 	/**
-	 * Liefert eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 * @deprecated      Die Methode ist in den Ergebnismanager gewandert.
 	 *
 	 * @param list      Die aktuelle sortierte Liste der GUI.
 	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
 	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
 	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
 	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 */
+	@Deprecated(forRemoval = true)
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
 		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
 		boolean aktiv = false;
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
@@ -1192,12 +1195,12 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 * Liefert die Regel, welche den Kurs in einer Schiene sperrt, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 *
 	 * @param idKurs     Die Datenbank-ID des Kurses.
 	 * @param nrSchiene  Die Nummer der Schiene.
 	 *
-	 * @return die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID = -1), falls die Regel nicht existiert.
+	 * @return die Regel, welche den Kurs in einer Schiene sperrt, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 */
 	public @NotNull GostBlockungRegel regelGetRegelOrDummyKursGesperrtInSchiene(final long idKurs, final int nrSchiene) {
 		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene});
@@ -1209,6 +1212,30 @@ public class GostBlockungsdatenManager {
 		final @NotNull GostBlockungRegel regelDummy = new GostBlockungRegel();
 		regelDummy.id = -1;
 		regelDummy.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		regelDummy.parameter.add(idKurs);
+		regelDummy.parameter.add((long) nrSchiene);
+
+		return regelDummy;
+	}
+
+	/**
+	 * Liefert die Regel, welche den Kurs in einer Schiene fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param nrSchiene  Die Nummer der Schiene.
+	 *
+	 * @return die Regel, welche den Kurs in einer Schiene fixiert, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
+	 */
+	public @NotNull GostBlockungRegel regelGetRegelOrDummyKursFixierungInSchiene(final long idKurs, final int nrSchiene) {
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene});
+
+		final GostBlockungRegel regel = _map_multikey_regeln.get(key);
+		if (regel != null)
+			return regel;
+
+		final @NotNull GostBlockungRegel regelDummy = new GostBlockungRegel();
+		regelDummy.id = -1;
+		regelDummy.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 		regelDummy.parameter.add(idKurs);
 		regelDummy.parameter.add((long) nrSchiene);
 
