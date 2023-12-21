@@ -129,6 +129,41 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 
 	/**
+	 * Prüft, ob der Schüler bei dem angegebehen GOSt-Halbjahr des angegeben Halbjahres an der Schule gewesen ist.
+	 *
+	 * @param dto           der Schüler
+	 * @param halbjahr      das GOSt-Halbjahr
+	 * @param abijahrgang   der Abiturjahrgang
+	 *
+	 * @return true, wenn der Schüler an der Schule ist, und ansonsten false
+	 */
+	private boolean checkIstAnSchule(final DTOSchueler dto, final GostHalbjahr halbjahr, final int abijahrgang) {
+		// Ist ein aktueller Schuljahresabschnitt zugewiesen? Das ist notwendig, wenn der Schüler an der Schule ist oder war
+		if (dto.Schuljahresabschnitts_ID == null)
+			return false;
+		// Dieser Schuljahresabschnitt muss auch gültig sein
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			return false;
+		// In dem Fall, dass der Schüler bereits abgegangen ist, wird das Entlassdatum und der Schuljahresabschnitt mit dem Schuljahresabschnitt des GOSt-Halbjahres abgegleichen
+		if ((dto.Status == SchuelerStatus.ABGANG) || (dto.Status == SchuelerStatus.ABSCHLUSS)) {
+			final int blockungSchuljahr = halbjahr.getSchuljahrFromAbiturjahr(abijahrgang);
+			final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
+			if (entlassung == null) {
+				// Prüfe, ob der aktuelle Schuljahresabschnitt des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
+				if ((schuljahresabschnitt.Jahr < blockungSchuljahr) || ((schuljahresabschnitt.Jahr == blockungSchuljahr) && (schuljahresabschnitt.Abschnitt < halbjahr.halbjahr)))
+					return false;
+			} else {
+				// Prüfe, ob der Schuljahresabschnitt der Entlassung des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
+				if ((entlassung[0] < blockungSchuljahr) || ((entlassung[0] == blockungSchuljahr) && (entlassung[1] < halbjahr.halbjahr)))
+					return false;
+			}
+		}
+		return true;
+	}
+
+
+	/**
 	 * Bestimmt für die angegebene ID alle Daten für die Initialisierung eines
 	 * Blockungsdaten-Managers zur Bestimmung der Blockungsdaten.
 	 * Folgende Information werden nicht geladen: die Liste
@@ -223,25 +258,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
-			// Überspringe Schüler, welche keinen aktuellen bzw. letzten Schuljahresabschnitt zugewiesen haben
-			if (dto.Schuljahresabschnitts_ID == null)
+			if (!checkIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang))
 				continue;
-			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
-			if (schuljahresabschnitt == null)
-				continue;
-			if ((dto.Status == SchuelerStatus.ABGANG) || (dto.Status == SchuelerStatus.ABSCHLUSS)) {
-				final int blockungSchuljahr = blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang);
-				final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
-				if (entlassung == null) {
-					// Prüfe, ob der aktuelle Schuljahresabschnitt des Schülers < dem Schuljahresabschnitt der Blockung ist -> dann muss der Schüler ignoriert werden
-					if ((schuljahresabschnitt.Jahr < blockungSchuljahr) || ((schuljahresabschnitt.Jahr == blockungSchuljahr) && (schuljahresabschnitt.Abschnitt < blockung.Halbjahr.halbjahr)))
-						continue;
-				} else {
-					// Prüfe, ob der Schuljahresabschnitt der Entlassung des Schülers < dem Schuljahresabschnitt der Blockung ist -> dann muss der Schüler ignoriert werden
-					if ((entlassung[0] < blockungSchuljahr) || ((entlassung[0] == blockungSchuljahr) && (entlassung[1] < blockung.Halbjahr.halbjahr)))
-						continue;
-				}
-			}
 			final Schueler daten = new Schueler();
 			daten.id = dto.ID;
 			daten.nachname = dto.Nachname;
@@ -881,7 +899,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				throw OperationError.NOT_FOUND.exception();
 			final List<Long> jahrgangIDs = listJahrgaenge.stream().map(j -> j.ID).toList();
 
-			// Lese die Kurse für den Schuljahresabschnitt und dem zugehörigen Jahrgang ein
+			// Lese die Kurse für den Schuljahresabschnitt und den zugehörigen Jahrgang ein
 			final List<DTOKurs> listKurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
 							DTOKurs.class, schuljahresabschnitt.ID, jahrgangIDs);
 			if (listKurse.isEmpty())
@@ -920,6 +938,20 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					? new HashMap<>()
 					: conn.queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", listLernabschnittIDs, DTOSchuelerLernabschnittsdaten.class)
 						.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
+
+			// Prüfe, ob jeweils der Schüler des Lernabschnittes ein Entlassdatum eingetragen hat, welches vor dem Lernabschnitt liegt - inkonsistente Daten?!
+			final List<Long> listSchuelerIDs = listLernabschnittIDs.stream().map(laid -> mapLernabschnitte.get(laid)).filter(la -> la != null).map(la -> la.Schueler_ID).toList();
+			final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, listSchuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+			for (final long laid : listLernabschnittIDs) {
+				final DTOSchuelerLernabschnittsdaten la = mapLernabschnitte.get(laid);
+				if (la == null) {
+					mapLernabschnitte.remove(laid);
+				} else {
+					final DTOSchueler dtoSchueler = mapSchueler.get(la.Schueler_ID);
+					if ((dtoSchueler == null) || (!checkIstAnSchule(dtoSchueler, halbjahr, abiturjahr)))
+						mapLernabschnitte.remove(laid);
+				}
+			}
 
 			// Bestimme die ID für die hochgeschriebene Blockung
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
@@ -1028,7 +1060,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 			// Erstelle die Kurs-Schüler-Zuordnungen
 			for (final DTOSchuelerLeistungsdaten ld : listLeistungsdaten) {
-				final long idSchueler = mapLernabschnitte.get(ld.Abschnitt_ID).Schueler_ID;
+				final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(ld.Abschnitt_ID);
+				if (lernabschnitt == null)
+					continue; // Liegt kein Lernabschnitt in der Map vor, so wurde dieser zuvor entfernt - z.B. weil das Entlassdatum zeigt, dass der Schüler nicht mehr an der Schule war
+				final long idSchueler = lernabschnitt.Schueler_ID;
 				final GostKursart kursart = GostKursart.fromKuerzel(ld.KursartAllg);
 				if (managerFachwahlen.hatFachwahl(idSchueler, ld.Fach_ID, kursart)) {
 					final long kursID = mapKursIDs.get(ld.Kurs_ID);

@@ -1115,6 +1115,23 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Stellt eine Datenbank-Anfrage für die Datensätze vom angegebenen DTO-Typ,
+	 * welcher einen Primärschlüssel aus einem Attribut hat, mit den übergebenen Werten
+	 * für den Primärschlüssels und gibt die Datensätze zurück.
+	 * Sollte kein Datensatz vorhanden sein, so wird eine leere Liste zurückgegeben.
+	 *
+	 * @param <T>   die DTO-Klasse
+	 * @param cl    das Klassen-Objekt für die DTO-Klasse
+	 * @param ids   die Werte des Primärschlüssels für die gesuchten Datensätze
+	 *
+	 * @return doe Liste mit den Datensätzen
+	 */
+	public <T> List<T> queryByKeyList(final Class<T> cl, final List<?> ids) {
+		return queryNamed(cl.getSimpleName() + ".primaryKeyQuery.multiple", ids, cl);
+	}
+
+
+	/**
 	 * Bestimmt für die übergebene DTOKlasse die nächste verfügbare Datenbank-ID
 	 *
 	 * @param <T>   der Typ der DtoKlasse
