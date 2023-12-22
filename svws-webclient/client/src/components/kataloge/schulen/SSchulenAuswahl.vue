@@ -11,7 +11,10 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="liste">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns="cols" selectable v-model="liste">
+				<template #cell(kurzbezeichnung)="{ rowData }">
+					<div class="text-ellipsis overflow-hidden whitespace-nowrap" :title="`${rowData.plz || ''} ${rowData.ort || ''}${rowData.ort ? ',': ''} ${rowData.name}`">{{ rowData.kurzbezeichnung }}</div>
+				</template>
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="liste.length === 0" />
 					<svws-ui-button @click="add" type="icon" title="Eine neue Schule hinzufügen"><i-ri-add-line /></svws-ui-button>
@@ -23,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { ref, computed } from 'vue';
 	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
 	import { SchulEintrag } from '@core';
 
@@ -45,5 +48,18 @@
 		const data = new SchulEintrag();
 		await props.addEintrag(data);
 	}
+
+	const schulen = computed(()=>{
+		const kuerzel = [];
+		const keinkeurzel = [];
+		for (const schule of props.mapKatalogeintraege().values())
+			if (schule.kuerzel)
+				kuerzel.push(schule);
+			else
+				keinkeurzel.push(schule);
+		kuerzel.sort((a, b) => a.schulnummer > b.schulnummer ? 1 : -1);
+		keinkeurzel.sort((a, b) => a.schulnummer > b.schulnummer ? 1 : -1);
+		return kuerzel.concat(keinkeurzel);
+	})
 
 </script>
