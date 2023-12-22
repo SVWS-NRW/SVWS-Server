@@ -164,6 +164,8 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
+		addRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
+		removeRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 		patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 		addSchiene: () => Promise<GostBlockungSchiene | undefined>;
@@ -372,7 +374,7 @@
 		return range;
 	})
 
-	async function selectedDo(action: 'fixieren'|'sperren') {
+	async function selectedDo(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') {
 		if (dragDataKursSchiene.value === undefined || dropDataKursSchiene.value === undefined)
 			throw new DeveloperNotificationException("Es wurden keine gültigen Daten für diese Aktion gefunden");
 		const list = props.kurssortierung.value === 'fach'
@@ -382,18 +384,32 @@
 		const k2 = toRaw(dropDataKursSchiene.value.kurs);
 		const s1 = props.getErgebnismanager().getSchieneG(dragDataKursSchiene.value.schiene.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dropDataKursSchiene.value.schiene.id);
-		let regeln: List<GostBlockungRegel> = new ArrayList();
+		const regeln: List<GostBlockungRegel> = new ArrayList();
 		switch (action) {
-			case 'fixieren':
-				regeln = props.getDatenmanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2);
+			case 'schüler fixieren':
+			case 'schüler lösen':
+			case 'toggle schüler':
+				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSchuelerfixierung(list, k1, k2, s1, s2));
 				break;
-			case 'sperren':
-				regeln = props.getDatenmanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2);
+			case 'kurse fixieren':
+			case 'kurse lösen':
+			case 'toggle kurse':
+				regeln.addAll(props.getErgebnismanager().regelGetListeToggleKursfixierung(list, k1, k2, s1, s2));
 				break;
-			default:
+			case 'schienen sperren':
+			case 'schienen entsperren':
+			case 'toggle schienen':
+				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2));
 				break;
 		}
-		console.log(regeln)
+		const add: List<GostBlockungRegel> = new ArrayList();
+		const remove: List<GostBlockungRegel> = new ArrayList();
+		for (const regel of regeln)
+			regel.id > 0 ? remove.add(regel) : add.add(regel);
+		if (['schüler fixieren', 'kurse fixieren', 'schienen sperren', 'toggle schüler', 'toggle kurse', 'toggle schienen'].includes(action))
+			await props.addRegeln(add);
+		if ([ 'kurse lösen', 'schüler lösen', 'schienen entsperren', 'toggle schüler', 'toggle kurse', 'toggle schienen'].includes(action))
+			await props.removeRegeln(remove);
 		dragDataKursSchiene.value = undefined;
 		dropDataKursSchiene.value = undefined;
 		return regeln;

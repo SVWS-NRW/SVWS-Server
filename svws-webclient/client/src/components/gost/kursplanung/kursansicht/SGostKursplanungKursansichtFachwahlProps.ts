@@ -31,7 +31,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
 	isSelectedKurse: GostBlockungKurs[];
-	selectedDo: (action: 'fixieren'|'sperren') => Promise<List<GostBlockungRegel>>;
+	selectedDo: (action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') => Promise<List<GostBlockungRegel>>;
 	dragDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	dropDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	onDragKursSchiene: (data: SGostKursplanungKursansichtDragData) => void;
