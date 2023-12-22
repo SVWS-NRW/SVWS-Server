@@ -5,14 +5,14 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel})" type="text" required />
-			<svws-ui-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
+			<svws-ui-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 			<svws-ui-text-input placeholder="Nachname" :model-value="data.nachname" @change="nachname => patch({nachname})" type="text" required />
 			<svws-ui-text-input placeholder="Rufname" :model-value="data.vorname" @change="vorname => patch({vorname})" type="text" required />
 			<svws-ui-spacing />
 			<svws-ui-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
-			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data.geburtsdatum" @change="geburtsdatum => patch({geburtsdatum})" type="date" required />
+			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data.geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required />
 			<svws-ui-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-				:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+				:item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 				:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Akad.Grad" :model-value="data.titel" @change="titel => patch({titel})" type="text" />
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 	import type { WritableComputedRef } from "vue";
-	import type { LehrerListeManager, LehrerStammdaten} from "@core";
+	import type { LehrerListeManager, LehrerStammdaten } from "@core";
 	import { computed } from "vue";
 	import { DeveloperNotificationException, Geschlecht, Nationalitaeten, PersonalTyp } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
