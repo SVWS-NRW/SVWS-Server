@@ -189,8 +189,10 @@ export class RouteDataSchema {
 			this.mapSchema.delete(schema.name.toLocaleLowerCase());
 		}
 		api.status.stop();
-		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
+		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl)) {
+			this._state.value.auswahl = undefined;
 			await this.gotoSchema(undefined);
+		}
 		this.setAuswahlGruppe([]);
 	}
 
