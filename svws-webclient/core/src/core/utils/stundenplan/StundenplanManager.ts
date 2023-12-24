@@ -2110,6 +2110,25 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 *
+	 * @param klassenunterricht  Der {@link StundenplanKlassenunterricht}, welcher gesetzt oder verschoben werden soll.
+	 * @param wochentag          Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde             Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp          Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 */
+	public klassenunterrichtDarfInZelle(klassenunterricht : StundenplanKlassenunterricht, wochentag : number, stunde : number, wochentyp : number) : boolean {
+		for (const partner of DeveloperNotificationException.ifMap2DGetIsNull(this._unterrichtmenge_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach)) {
+			const z : StundenplanZeitraster = DeveloperNotificationException.ifMap2DGetIsNull(this._zeitraster_by_wochentag_and_stunde, wochentag, stunde);
+			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (wochentyp === 0) || (wochentyp === partner.wochentyp)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -2332,6 +2351,25 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", this._schueler_by_id, idSchuelerDesKurses);
 		for (const idLehrerDesKurses of kurs.lehrer)
 			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", this._lehrer_by_id, idLehrerDesKurses);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 *
+	 * @param kurs       Der {@link StundenplanKurs}, welcher gesetzt oder verschoben werden soll.
+	 * @param wochentag  Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde     Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 */
+	public kursDarfInZelle(kurs : StundenplanKurs, wochentag : number, stunde : number, wochentyp : number) : boolean {
+		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idKurs, kurs.id)) {
+			const z : StundenplanZeitraster = DeveloperNotificationException.ifMap2DGetIsNull(this._zeitraster_by_wochentag_and_stunde, wochentag, stunde);
+			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (wochentyp === 0) || (wochentyp === partner.wochentyp)))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -3794,6 +3832,7 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", this._unterricht_by_id.containsKey(u.id));
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " doppelt in der Liste!", !setOfIDs.add(u.id));
 		}
+		this.unterrichtCheckDuplicateInCell(list);
 		for (const u of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
 	}
@@ -3813,6 +3852,10 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifMapNotContains("_raum_by_id", this._raum_by_id, idRaumDesUnterrichts);
 		for (const idSchieneDesUnterrichts of u.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", this._schiene_by_id, idSchieneDesUnterrichts);
+	}
+
+	private unterrichtCheckDuplicateInCell(list : List<StundenplanUnterricht>) : void {
+		const _menge_by_idKurs : HashSet<string> = new HashSet();
 	}
 
 	private unterrichtCreateComparator() : Comparator<StundenplanUnterricht> {
@@ -4401,7 +4444,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtIstVerschiebenErlaubt(u : StundenplanUnterricht, z : StundenplanZeitraster) : boolean {
 		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, u.id))
-			if ((partner.idZeitraster === z.id) && ((u.wochentyp === 0) || (u.wochentyp === partner.wochentyp)))
+			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (u.wochentyp === 0) || (u.wochentyp === partner.wochentyp)))
 				return false;
 		return true;
 	}
@@ -4436,6 +4479,7 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtPatchAttributesAll(list : List<StundenplanUnterricht>) : void {
 		for (const u of list)
 			this.unterrichtCheckAttributes(u);
+		this.unterrichtCheckDuplicateInCell(list);
 		for (const u of list) {
 			DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, u.id);
 			DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);

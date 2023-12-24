@@ -2220,6 +2220,25 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 *
+	 * @param klassenunterricht  Der {@link StundenplanKlassenunterricht}, welcher gesetzt oder verschoben werden soll.
+	 * @param wochentag          Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde             Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp          Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return TRUE, falls der Klassenunterricht in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 */
+	public boolean klassenunterrichtDarfInZelle(final @NotNull StundenplanKlassenunterricht klassenunterricht, final int wochentag, final int stunde, final int wochentyp) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach)) {
+			final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMap2DGetIsNull(_zeitraster_by_wochentag_and_stunde, wochentag, stunde);
+			if ((partner.idZeitraster == z.id) && ((partner.wochentyp == 0) || (wochentyp == 0) || (wochentyp == partner.wochentyp)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -2455,6 +2474,25 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchuelerDesKurses);
 		for (final @NotNull Long idLehrerDesKurses : kurs.lehrer)
 			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", _lehrer_by_id, idLehrerDesKurses);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 *
+	 * @param kurs       Der {@link StundenplanKurs}, welcher gesetzt oder verschoben werden soll.
+	 * @param wochentag  Der Typ des {@link Wochentag}-Objekts.
+	 * @param stunde     Die Unterrichtsstunde an dem Wochentag.
+	 * @param wochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 *
+	 * @return TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
+	 */
+	public boolean kursDarfInZelle(final @NotNull StundenplanKurs kurs, final int wochentag, final int stunde, final int wochentyp) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idKurs, kurs.id)) {
+			final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMap2DGetIsNull(_zeitraster_by_wochentag_and_stunde, wochentag, stunde);
+			if ((partner.idZeitraster == z.id) && ((partner.wochentyp == 0) || (wochentyp == 0) || (wochentyp == partner.wochentyp)))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -4053,7 +4091,8 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " doppelt in der Liste!", !setOfIDs.add(u.id));
 		}
 
-		// TODO unterrichtAddAllOhneUpdate: check for invalid duplicates in one cell
+		// check duplicates (tag, stunde)
+		unterrichtCheckDuplicateInCell(list);
 
 		// add all
 		for (final @NotNull StundenplanUnterricht u : list)
@@ -4076,6 +4115,12 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_raum_by_id", _raum_by_id, idRaumDesUnterrichts);
 		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
+	}
+
+	// TODO
+	private void unterrichtCheckDuplicateInCell(final @NotNull List<@NotNull StundenplanUnterricht> list) {
+		// Simuliere die neue Lage für Kursunterricht (idKurs, tag, stunde) -->
+		final @NotNull HashSet<@NotNull String> _menge_by_idKurs = new HashSet<>();
 	}
 
 	private @NotNull Comparator<@NotNull StundenplanUnterricht> unterrichtCreateComparator() {
@@ -4715,9 +4760,8 @@ public class StundenplanManager {
 	 */
 	public boolean unterrichtIstVerschiebenErlaubt(final @NotNull StundenplanUnterricht u, final @NotNull StundenplanZeitraster z) {
 		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, u.id))
-			if ((partner.idZeitraster == z.id) && ((u.wochentyp == 0) || (u.wochentyp == partner.wochentyp)))
+			if ((partner.idZeitraster == z.id) && ((partner.wochentyp == 0) || (u.wochentyp == 0) || (u.wochentyp == partner.wochentyp)))
 				return false;
-
 		return true;
 	}
 
@@ -4753,13 +4797,14 @@ public class StundenplanManager {
 		for (final StundenplanUnterricht u : list)
 			unterrichtCheckAttributes(u);
 
+		// check duplicates (tag, stunde)
+		unterrichtCheckDuplicateInCell(list);
+
 		// replace
 		for (final StundenplanUnterricht u : list) {
 			DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, u.id);
 			DeveloperNotificationException.ifMapPutOverwrites(_unterricht_by_id, u.id, u);
 		}
-
-		// TODO unterrichtPatchAttributesAll: check for invalid duplicates in one cell
 
 		// update
 		update_all();
