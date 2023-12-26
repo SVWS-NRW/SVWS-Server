@@ -1,4 +1,28 @@
+<template>
+	<a class="sidebar--menu-item" :class="{
+		'sidebar--menu-item--active': active,
+		'sidebar--menu-item--collapsed': collapsed,
+		'sidebar--menu-item--disabled': disabled,
+		'sidebar--menu-item--statistik': hatlabel === 'Statistik' || statistik,
+	}" href="#" @click.prevent="onClick"
+		:title="disabled ? 'Nicht verfügbar' : hatlabel">
+		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
+			<span class="icon">
+				<slot name="icon" />
+			</span>
+		</span>
+		<span class="sidebar--menu-item--label">
+			<slot name="label" />
+			<span v-if="subline" class="sidebar--menu-item--subline">
+				{{ subline }}
+			</span>
+		</span>
+	</a>
+</template>
+
 <script setup lang='ts'>
+	import { computed, useSlots } from 'vue';
+
 	const props = withDefaults(defineProps<{
 		active?: boolean;
 		collapsed?: boolean;
@@ -20,29 +44,15 @@
 	function onClick(event: MouseEvent) {
 		emit("click", event);
 	}
-</script>
 
-<template>
-	<a class="sidebar--menu-item" :class="{
-		'sidebar--menu-item--active': active,
-		'sidebar--menu-item--collapsed': collapsed,
-		'sidebar--menu-item--disabled': disabled,
-		'sidebar--menu-item--statistik': $slots.label?.()[0].children === 'Statistik' || statistik,
-	}" href="#" @click.prevent="onClick"
-		:title="disabled ? 'Nicht verfügbar' : ($slots.label?.()[0].children as unknown as string)">
-		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
-			<span class="icon">
-				<slot name="icon" />
-			</span>
-		</span>
-		<span class="sidebar--menu-item--label">
-			<slot name="label" />
-			<span v-if="subline" class="sidebar--menu-item--subline">
-				{{ subline }}
-			</span>
-		</span>
-	</a>
-</template>
+	const slots = useSlots();
+	const hatlabel = computed(()=> {
+		const label = slots.label?.()
+		if (label && label.length > 0 && label[0].children)
+			return label[0].children.toString();
+		return "";
+	})
+</script>
 
 <style lang="postcss">
 .sidebar--menu-item {

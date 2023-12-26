@@ -12,7 +12,7 @@
 	"include": [
 		"env.d.ts",
 		"vite.config.ts",
-		"src/**/*",
+		"src/**/*.ts",
 		"src/**/*.vue",
 		"components.d.ts"
 	]

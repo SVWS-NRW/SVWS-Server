@@ -15,7 +15,7 @@
 		}
 	},
 	"include": [
-		"src/**/*",
+		"src/**/*.ts",
 		"src/**/*.vue",
 		"components.d.ts",
 		"auto-imports.d.ts"
