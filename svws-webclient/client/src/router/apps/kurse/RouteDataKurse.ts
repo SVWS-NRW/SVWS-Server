@@ -1,9 +1,8 @@
-import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import type { FaecherListeEintrag, JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import { type RouteNode } from "~/router/RouteNode";
 
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKurse } from "~/router/apps/kurse/RouteKurse";
@@ -17,6 +16,7 @@ interface RouteStateKurse extends RouteStateInterface {
 	mapKatalogeintraege: Map<number, KursListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	mapFaecher: Map<number, FaecherListeEintrag>;
 }
 
 const defaultState = <RouteStateKurse> {
@@ -25,6 +25,7 @@ const defaultState = <RouteStateKurse> {
 	mapKatalogeintraege: new Map(),
 	mapLehrer: new Map(),
 	mapJahrgaenge: new Map(),
+	mapFaecher: new Map(),
 	view: routeKursDaten,
 };
 
@@ -50,6 +51,10 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		return this._state.value.mapJahrgaenge;
 	}
 
+	get mapFaecher(): Map<number, FaecherListeEintrag> {
+		return this._state.value.mapFaecher;
+	}
+
 	get daten(): KursDaten {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
@@ -72,7 +77,12 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const mapLehrer = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge })
+		// Laden des Fächer-Katalogs
+		const listFaecher = await api.server.getFaecher(api.schema);
+		const mapFaecher = new Map<number, FaecherListeEintrag>();
+		for (const l of listFaecher)
+			mapFaecher.set(l.id, l);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge, mapFaecher })
 	}
 
 	setEintrag = async (auswahl: KursListeEintrag) => {

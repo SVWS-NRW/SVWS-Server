@@ -62,6 +62,14 @@ public final class DataKursdaten extends DataManager<Long> {
 				}
 			}
 		}
+		daten.wochenstunden = kurs.WochenStd == null ? 0 : kurs.WochenStd;
+		daten.wochenstundenLehrer = kurs.WochenstdKL == null ? daten.wochenstunden : kurs.WochenstdKL;
+		daten.idKursFortschreibungsart = kurs.Fortschreibungsart.id;
+		daten.schulnummer = kurs.SchulNr;
+		daten.istEpochalunterricht = kurs.EpochU;
+		daten.bezeichnungZeugnis = kurs.ZeugnisBez;
+		if ((daten.bezeichnungZeugnis != null) && daten.bezeichnungZeugnis.isBlank())
+			daten.bezeichnungZeugnis = null;
 		return daten;
 	};
 

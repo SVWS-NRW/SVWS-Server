@@ -61,5 +61,28 @@ public class KursDaten {
 	public @NotNull List<@NotNull Integer> schienen = new ArrayList<>();
 
 
-	// TODO Weitere Daten
+	/** Die Wochenstunden des Kurses. */
+	@Schema(description = "die Wochenstunden des Kurses", example = "3")
+	public int wochenstunden = -1;
+
+	/** Die Wochenstunden des Kurslehrers in dem Kurs. */
+	@Schema(description = "die Wochenstunden des Kurslehrers in dem Kurs", example = "3")
+	public double wochenstundenLehrer = -1;
+
+	/** Die Fortschreibungsart des Kurses (Keine, nur Definition mit Jahrgang behalten oder hochschreiben oder komplett) */
+	@Schema(description = "die Fortschreibungsart des Kurses (Keine, nur Definition mit Jahrgang behalten oder hochschreiben oder komplett)", example = "0")
+	public int idKursFortschreibungsart = 0;
+
+	/** Die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation). */
+	@Schema(description = "die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation)", example = "100001")
+	public Integer schulnummer = null;
+
+	/** Gibt an, ob der Kurs epochal unterrichtet wird. */
+	@Schema(description = "gibt an, ob der Kurs epochal unterrichtet wird", example = "false")
+	public boolean istEpochalunterricht = false;
+
+	/** Ggf. die Zeugnisbezeichnung des Kurses */
+	@Schema(description = "ggf. die die Zeugnisbezeichnung des Kurses", example = "false")
+	public String bezeichnungZeugnis = null;
+
 }

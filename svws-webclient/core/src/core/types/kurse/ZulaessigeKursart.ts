@@ -525,8 +525,8 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 *
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
-	public static get(schulform : Schulform | null) : List<ZulaessigeKursart | null> {
-		const kursarten : ArrayList<ZulaessigeKursart | null> = new ArrayList();
+	public static get(schulform : Schulform | null) : List<ZulaessigeKursart> {
+		const kursarten : ArrayList<ZulaessigeKursart> = new ArrayList();
 		if (schulform === null)
 			return kursarten;
 		for (const kursart of ZulaessigeKursart.values())

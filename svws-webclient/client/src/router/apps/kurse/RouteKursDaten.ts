@@ -2,6 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKurse, type RouteKurse } from "~/router/apps/kurse/RouteKurse";
 
@@ -29,9 +30,11 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KursDatenProps {
 		return {
+			schulform: api.schulform,
 			patch: routeKurse.data.patch,
 			mapJahrgaenge: routeKurse.data.mapJahrgaenge,
 			mapLehrer: routeKurse.data.mapLehrer,
+			mapFaecher: routeKurse.data.mapFaecher,
 			data: routeKurse.data.daten,
 			gotoSchueler: routeKurse.data.gotoSchueler,
 		};

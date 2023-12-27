@@ -1078,8 +1078,8 @@ public enum ZulaessigeKursart {
 	 *
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
-	public static @NotNull List<ZulaessigeKursart> get(final Schulform schulform) {
-		final @NotNull ArrayList<ZulaessigeKursart> kursarten = new ArrayList<>();
+	public static @NotNull List<@NotNull ZulaessigeKursart> get(final Schulform schulform) {
+		final @NotNull ArrayList<@NotNull ZulaessigeKursart> kursarten = new ArrayList<>();
 		if (schulform == null)
 			return kursarten;
 		for (final ZulaessigeKursart kursart : ZulaessigeKursart.values())

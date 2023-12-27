@@ -60,6 +60,36 @@ export class KursDaten extends JavaObject {
 	 */
 	public schienen : List<number> = new ArrayList();
 
+	/**
+	 * Die Wochenstunden des Kurses.
+	 */
+	public wochenstunden : number = -1;
+
+	/**
+	 * Die Wochenstunden des Kurslehrers in dem Kurs.
+	 */
+	public wochenstundenLehrer : number = -1;
+
+	/**
+	 * Die Fortschreibungsart des Kurses (Keine, nur Definition mit Jahrgang behalten oder hochschreiben oder komplett)
+	 */
+	public idKursFortschreibungsart : number = 0;
+
+	/**
+	 * Die Schulnummer des Kurses, falls der Kurs an einer anderes Schule stattfindet (z.B. im Rahmen einer Kooperation).
+	 */
+	public schulnummer : number | null = null;
+
+	/**
+	 * Gibt an, ob der Kurs epochal unterrichtet wird.
+	 */
+	public istEpochalunterricht : boolean = false;
+
+	/**
+	 * Ggf. die Zeugnisbezeichnung des Kurses
+	 */
+	public bezeichnungZeugnis : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -113,6 +143,20 @@ export class KursDaten extends JavaObject {
 				result.schienen?.add(elem);
 			}
 		}
+		if (typeof obj.wochenstunden === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstunden');
+		result.wochenstunden = obj.wochenstunden;
+		if (typeof obj.wochenstundenLehrer === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstundenLehrer');
+		result.wochenstundenLehrer = obj.wochenstundenLehrer;
+		if (typeof obj.idKursFortschreibungsart === "undefined")
+			 throw new Error('invalid json format, missing attribute idKursFortschreibungsart');
+		result.idKursFortschreibungsart = obj.idKursFortschreibungsart;
+		result.schulnummer = typeof obj.schulnummer === "undefined" ? null : obj.schulnummer === null ? null : obj.schulnummer;
+		if (typeof obj.istEpochalunterricht === "undefined")
+			 throw new Error('invalid json format, missing attribute istEpochalunterricht');
+		result.istEpochalunterricht = obj.istEpochalunterricht;
+		result.bezeichnungZeugnis = typeof obj.bezeichnungZeugnis === "undefined" ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
 		return result;
 	}
 
@@ -162,6 +206,12 @@ export class KursDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+		result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer + ',';
+		result += '"idKursFortschreibungsart" : ' + obj.idKursFortschreibungsart + ',';
+		result += '"schulnummer" : ' + ((!obj.schulnummer) ? 'null' : obj.schulnummer) + ',';
+		result += '"istEpochalunterricht" : ' + obj.istEpochalunterricht + ',';
+		result += '"bezeichnungZeugnis" : ' + ((!obj.bezeichnungZeugnis) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -234,6 +284,24 @@ export class KursDaten extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.wochenstunden !== "undefined") {
+			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+		}
+		if (typeof obj.wochenstundenLehrer !== "undefined") {
+			result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer + ',';
+		}
+		if (typeof obj.idKursFortschreibungsart !== "undefined") {
+			result += '"idKursFortschreibungsart" : ' + obj.idKursFortschreibungsart + ',';
+		}
+		if (typeof obj.schulnummer !== "undefined") {
+			result += '"schulnummer" : ' + ((!obj.schulnummer) ? 'null' : obj.schulnummer) + ',';
+		}
+		if (typeof obj.istEpochalunterricht !== "undefined") {
+			result += '"istEpochalunterricht" : ' + obj.istEpochalunterricht + ',';
+		}
+		if (typeof obj.bezeichnungZeugnis !== "undefined") {
+			result += '"bezeichnungZeugnis" : ' + ((!obj.bezeichnungZeugnis) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
