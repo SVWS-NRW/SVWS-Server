@@ -31,7 +31,7 @@ export { default as SvwsUiModal } from "./components/App/SvwsUiModal.vue";
 // App.Sidebar
 export { default as SvwsUiMenu } from "./components/App/Sidebar/SvwsUiMenu.vue";
 export { default as SvwsUiMenuHeader } from "./components/App/Sidebar/SvwsUiMenuHeader.vue";
-export { default as SvwsUiMenuItem } from "./components/App/Sidebar/SvwsUiMenuItm.vue";
+export { default as SvwsUiMenuItem } from "./components/App/Sidebar/SvwsUiMenuItem.vue";
 export { default as SvwsUiSecondaryMenu } from "./components/App/Sidebar/SvwsUiSecondaryMenu.vue";
 // App.Router
 export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabBar.vue";
