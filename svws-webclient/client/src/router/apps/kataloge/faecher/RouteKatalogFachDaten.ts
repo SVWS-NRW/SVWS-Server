@@ -2,6 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 
@@ -24,11 +25,13 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
+		api.schulform
 		return { name: this.name, params: { id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): FachDatenProps {
 		return {
+			schulform: api.schulform,
 			patch: routeKatalogFaecher.data.patch,
 			data: routeKatalogFaecher.data.daten,
 			mapKatalogeintraege: routeKatalogFaecher.data.mapKatalogeintraege

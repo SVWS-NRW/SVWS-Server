@@ -103,7 +103,7 @@ public final class DataFachdaten extends DataManager<Long> {
 		Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.BezeichnungZeugnis = JSONMapper.convertToString(value, false, true, 255)),
 		Map.entry("bezeichnungUeberweisungszeugnis", (conn, dto, value, map) -> dto.BezeichnungUeberweisungsZeugnis = JSONMapper.convertToString(value, false, true, 255)),
-		Map.entry("maxZeichenInFachbemerkungen", (conn, dto, value, map) -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
+		Map.entry("maxZeichenInFachbemerkungen", (conn, dto, value, map) -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 1, Integer.MAX_VALUE)),
 		Map.entry("istSchriftlichZK", (conn, dto, value, map) -> dto.IstSchriftlichZK = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("istSchriftlichBA", (conn, dto, value, map) -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("holeAusAltenLernabschnitten", (conn, dto, value, map) -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(value, false)),
