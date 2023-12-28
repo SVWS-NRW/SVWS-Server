@@ -13,6 +13,8 @@ COPY init-scripts /opt/app/svws/init-scripts
 
 RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client*.zip
 RUN rm -rf /opt/app/svws/SVWS-Client*.zip
+RUN unzip -d /opt/app/svws/adminclient /opt/app/svws/SVWS-Admin-Client*.zip
+RUN rm -rf /opt/app/svws/SVWS-Admin-Client*.zip
 
 WORKDIR /opt/app/svws
 ENV INIT_SCRIPTS_DIR=/opt/app/svws/init-scripts SVWS_TLS_KEYSTORE_PASSWORD=test123 SVWS_TLS_KEY_ALIAS=alias1 SVWS_TLS_KEYSTORE_PATH=/etc/app/svws/conf/keystore
