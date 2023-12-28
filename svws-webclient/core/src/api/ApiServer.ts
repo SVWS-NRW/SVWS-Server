@@ -6246,6 +6246,56 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
+	 *
+	 * Passt die Daten des Kurses mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Kursdatenbesitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KursDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchKurs(data : Partial<KursDaten>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/kurse/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = KursDaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/{id : \d+}
+	 *
+	 * Entfernt einen Kurs.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Kurses hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Kurs wurde erfolgreich entfernt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs zu entfernen.
+	 *   Code 404: Der Kurs ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async deleteKurs(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/kurse/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKurseFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Kurse eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
@@ -6298,6 +6348,34 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<KursartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/create
+	 *
+	 * Erstellt einen neuen Kurs und gibt die zugehörigen Daten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Kurses besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Kurs wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KursDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs anzulegen.
+	 *   Code 404: Der Schuljahresabschnitt, das Fach oder der Lehrer wurde nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KursDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Kurs wurde erfolgreich erstellt.
+	 */
+	public async addKurs(data : Partial<KursDaten>, schema : string) : Promise<KursDaten> {
+		const path = "/db/{schema}/kurse/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = KursDaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KursDaten.transpilerFromJSON(text);
 	}
 
 

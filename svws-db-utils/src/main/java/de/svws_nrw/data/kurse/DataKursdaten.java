@@ -2,16 +2,25 @@ package de.svws_nrw.data.kurse;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
+import de.svws_nrw.core.types.KursFortschreibungsart;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -35,7 +44,7 @@ public final class DataKursdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
 	 */
-	private final Function<DTOKurs, KursDaten> dtoMapper = (final DTOKurs kurs) -> {
+	private static final Function<DTOKurs, KursDaten> dtoMapper = (final DTOKurs kurs) -> {
 		final KursDaten daten = new KursDaten();
 		daten.id = kurs.ID;
 		daten.idSchuljahresabschnitt = kurs.Schuljahresabschnitts_ID;
@@ -83,13 +92,20 @@ public final class DataKursdaten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response get(final Long id) {
+	/**
+	 * Ermittelt die Daten zu dem Kurs mit der angegebenen ID.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param id     die ID des Kurses
+	 *
+	 * @return die Daten des Kurses
+	 */
+	public static KursDaten getKursdaten(final DBEntityManager conn, final Long id) {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
     	final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
     	if (kurs == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
 		final KursDaten daten = dtoMapper.apply(kurs);
 		// Bestimme die Schüler des Kurses
 		final List<DTOKursSchueler> listKursSchueler = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
@@ -98,12 +114,112 @@ public final class DataKursdaten extends DataManager<Long> {
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		for (final DTOSchueler dto : listSchueler)
 			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
+		return daten;
+	}
+
+
+	@Override
+	public Response get(final Long id) {
+		final KursDaten daten = getKursdaten(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	private static final Map<String, DataBasicMapper<DTOKurs>> patchMappings = Map.ofEntries(
+		Map.entry("id", (conn, dto, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				throw OperationError.BAD_REQUEST.exception("Die ID im Patch stimmt nicht mit der ID des Datenbank-Objektes überein");
+		}),
+		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
+			final Long idAbschnitt = JSONMapper.convertToLong(value, true);
+			if (idAbschnitt == null)
+				throw OperationError.BAD_REQUEST.exception("Die ID des Shuljahresabschnittes darf nicht null sein.");
+			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idAbschnitt);
+			if (abschnitt == null)
+				throw OperationError.NOT_FOUND.exception("Es konnte kein Schuljahresabschnitt mit der angegebenen ID gefunden werden.");
+			dto.Schuljahresabschnitts_ID = idAbschnitt;
+		}),
+		Map.entry("idFach", (conn, dto, value, map) -> {
+			final Long idFach = JSONMapper.convertToLong(value, true);
+			if (idFach == null)
+				throw OperationError.BAD_REQUEST.exception("Die ID des Faches darf nicht null sein.");
+			final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+			if (fach == null)
+				throw OperationError.NOT_FOUND.exception("Es konnte kein Fach mit der angegebenen ID gefunden werden.");
+			dto.Fach_ID = idFach;
+		}),
+		Map.entry("lehrer", (conn, dto, value, map) -> {
+			dto.Lehrer_ID = JSONMapper.convertToLong(value, true);
+			if (dto.Lehrer_ID != null) {
+				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, dto.Lehrer_ID);
+				if (lehrer == null)
+					throw OperationError.NOT_FOUND.exception("Es konnte kein Lehrer mit der angegebenen ID gefunden werden.");
+			}
+		}),
+		Map.entry("kuerzel", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, false, false, 21)),
+		Map.entry("kursartAllg", (conn, dto, value, map) -> {
+			dto.KursartAllg = JSONMapper.convertToString(value, false, true, 11);
+			// TODO Prüfe Kursart
+		}),
+		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
+		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("wochenstunden", (conn, dto, value, map) -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40)),
+		Map.entry("wochenstundenLehrer", (conn, dto, value, map) -> {
+			dto.WochenstdKL = JSONMapper.convertToDouble(value, true);
+			if (dto.WochenstdKL == null)
+				dto.WochenstdKL = 0.0;
+		}),
+		Map.entry("idKursFortschreibungsart", (conn, dto, value, map) -> dto.Fortschreibungsart = KursFortschreibungsart.fromID(JSONMapper.convertToIntegerInRange(value, false, 0, 4))),
+		Map.entry("schulnummer", (conn, dto, value, map) -> {
+			dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 999999);
+			// TODO Prüfe die Schulnummer anhand des Katalogs
+		}),
+		Map.entry("istEpochalunterricht", (conn, dto, value, map) -> dto.EpochU = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131))
+	);
+
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+		return super.patchBasic(id, is, DTOKurs.class, patchMappings);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("id", "idSchuljahresabschnitt", "kuerzel", "idFach", "kursartAllg");
+
+	private final ObjLongConsumer<DTOKurs> initDTO = (dto, id) -> {
+		dto.ID = id;
+		dto.Sichtbar = true;
+		dto.Sortierung = 32000;
+		dto.WochenStd = 3;
+		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
+		dto.EpochU = false;
+	};
+
+
+	/**
+	 * Fügt einen Kurs mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		return super.addBasic(is, DTOKurs.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Löscht einen Kurs
+	 *
+	 * @param id   die ID des Kurses
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOKurs.class, dtoMapper);
 	}
 
 }
