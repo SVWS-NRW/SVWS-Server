@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkKkKv;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
@@ -874,6 +875,38 @@ public class APIGostKlausuren {
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Klausurdaten zu einem Schüler.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param sId 		die Id des Schülers
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die SkKkKv-Collection
+	 */
+	@GET
+	@Path("/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}")
+	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurenCollectionSkKkKv.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getGostKlausurenCollectionBySchuelerid(@PathParam("schema") final String schema,
+			@PathParam("sid") final long sId,
+			@PathParam("abiturjahr") final int abiturjahr,
+			@PathParam("halbjahr") final int halbjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenSchuelerklausur.getGostKlausurenCollectionBySchuelerid(conn, sId, abiturjahr, halbjahr)).build(),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
 	}
 
 }

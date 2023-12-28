@@ -177,6 +177,7 @@ export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl'
 export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
+export { GostKlausurenCollectionSkKkKv } from './core/data/gost/klausurplanung/GostKlausurenCollectionSkKkKv';
 export { GostKlausurenCollectionSkrsKrs } from './core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 export { GostKlausurenKalenderinformation } from './core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
 export { GostKlausurraum } from './core/data/gost/klausurplanung/GostKlausurraum';

@@ -50,6 +50,7 @@ import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachk
 import { GostJahrgangFachwahlen } from '../core/data/gost/GostJahrgangFachwahlen';
 import { GostJahrgangFachwahlenHalbjahr } from '../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
+import { GostKlausurenCollectionSkKkKv } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkKkKv';
 import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { GostKlausurenKalenderinformation } from '../core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
@@ -4732,6 +4733,38 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenCollectionBySchuelerid für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schueler/{sid : -?\d+}/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkKkKv
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
+	 *   Code 404: Der Termin-ID wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} sid - der Pfad-Parameter sid
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 */
+	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkKkKv> {
+		const path = "/db/{schema}/gost/klausuren/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{sid\s*(:[^}]+)?}/g, sid.toString())
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostKlausurenCollectionSkKkKv.transpilerFromJSON(text);
 	}
 
 
