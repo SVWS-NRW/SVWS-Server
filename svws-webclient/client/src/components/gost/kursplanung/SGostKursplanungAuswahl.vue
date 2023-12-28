@@ -20,7 +20,7 @@
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
 			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)">
 			<template #blockungAuswahlActions>
-				<svws-ui-button type="icon" @click.stop="addBlockung">
+				<svws-ui-button type="icon" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
 					<i-ri-add-line class="-mx-0.5" />
 				</svws-ui-button>
 			</template>

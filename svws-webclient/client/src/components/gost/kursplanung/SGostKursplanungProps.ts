@@ -7,6 +7,8 @@ export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getKursauswahl: () => Set<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
+	addBlockung: () => Promise<void>;
+	restoreBlockung: () => Promise<void>;
 	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;

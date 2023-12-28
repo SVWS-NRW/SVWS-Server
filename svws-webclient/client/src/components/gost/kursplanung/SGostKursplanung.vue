@@ -82,9 +82,15 @@
 		<div v-else class="col-span-full">
 			<div class="p-3 border-2 border-dashed border-black/10 dark:border-white/10 rounded-lg max-w-xl">
 				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
-				<div class="opacity-50 leading-tight flex flex-col gap-2">
-					<div>Klicke in der Übersicht auf <i-ri-add-line class="inline -mt-1" />, um eine neue Kursplanung zu erstellen.</div>
-					<div>Falls eine persistierte Blockung vorliegt, kann mit "Wiederherstellen" aus bestehenden Leistungsdaten eine Blockung geladen werden.</div>
+				<div class="opacity-75 leading-tight flex flex-col gap-2">
+					<div>
+						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung"> <i-ri-add-line /> </svws-ui-button>
+						<span class="align-middle">Neue Blockung erstellen</span>
+					</div>
+					<div v-if="persistiert">
+						<svws-ui-button type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung"> <i-ri-arrow-turn-back-line class="-mb-0.5" /> </svws-ui-button>
+						<span class="align-middle">Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten</span>
+					</div>
 				</div>
 			</div>
 		</div>
