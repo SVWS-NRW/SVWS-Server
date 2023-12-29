@@ -40,12 +40,19 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		}
 	}
 
-	setGostKurs42ImportZip = async (formData: FormData) => {
+	setGostKurs42ImportZip = async (formData: FormData) : Promise<SimpleOperationResponse> => {
 		try {
-			const res = await api.server.importKurs42Blockung(formData, api.schema);
-			return res.success;
+			return await api.server.importKurs42Blockung(formData, api.schema);
 		} catch(e) {
-			return false;
+			if ((e instanceof OpenApiError) && (e.response != null) && ((e.response.status === 400) || (e.response.status === 404) || (e.response.status === 409) || (e.response.status === 500))) {
+				const json : string = await e.response.text();
+				return SimpleOperationResponse.transpilerFromJSON(json);
+			}
+			const result = new SimpleOperationResponse();
+			result.log.add("Fehler bei der Server-Anfrage. ");
+			if (e instanceof Error)
+				result.log.add("  " + e.message);
+			return result;
 		}
 	}
 

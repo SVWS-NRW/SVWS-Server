@@ -5242,8 +5242,17 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Log vom Import der Kurs 42-Blockung
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Kurs 42-Blockung zu importieren.
+	 *   Code 404: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *

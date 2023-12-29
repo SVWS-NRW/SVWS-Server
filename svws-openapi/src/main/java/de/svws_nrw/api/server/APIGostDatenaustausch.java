@@ -119,12 +119,18 @@ public class APIGostDatenaustausch {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/kurs42/import/zip")
     @Operation(summary = "Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.",
-               description = "Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.")
+				description = "Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Import der Kurs 42-Blockung",
     			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
-    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Kurs 42-Blockung zu importieren.")
+    @ApiResponse(responseCode = "404", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public Response importKurs42Blockung(@PathParam("schema") final String schemaname,
     		@RequestBody(description = "Die Zip-Datei mit den Textdateien der Kurs 42-Blockung", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,

@@ -1,6 +1,5 @@
 package de.svws_nrw.db.utils.app;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -69,7 +68,7 @@ public class ImportKurs42Blockung {
 			}
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			logger.logLn("FEHLER: Import fehlgeschlagen, Exception: ");
 			e.printStackTrace();
 		}

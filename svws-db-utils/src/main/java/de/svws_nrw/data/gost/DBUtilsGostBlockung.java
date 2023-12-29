@@ -39,6 +39,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
+import de.svws_nrw.db.utils.OperationError;
 
 /**
  * Diese Klasse stellt Hilfs-Methoden rund um Blockungen der gymnasialen Oberstufe zur Verfügung.
@@ -75,12 +76,12 @@ public final class DBUtilsGostBlockung {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
 			logger.logLn("[Fehler] - Konnte die Informationen zur Schule nicht aus der Datenbank lesen");
-			return false;
+			throw OperationError.NOT_FOUND.exception("Konnte die Informationen zur Schule nicht aus der Datenbank lesen.");
 		}
 		final Schulform schulform = schule.Schulform;
 		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb)) {
 			logger.logLn("[Fehler] - Die Schulform hat keine gymnasiale Oberstufe oder konnte nicht bestimmt werden");
-			return false;
+			throw OperationError.CONFLICT.exception("Die Schulform hat keine gymnasiale Oberstufe oder konnte nicht bestimmt werden.");
 		}
 		logger.logLn("[OK]");
 		logger.modifyIndent(-2);
@@ -90,7 +91,7 @@ public final class DBUtilsGostBlockung {
 		final List<DTOSchueler> listeSchueler = conn.queryAll(DTOSchueler.class);
 		if ((listeSchueler == null) || (listeSchueler.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Schüler nicht einlesen");
-			return false;
+			throw OperationError.NOT_FOUND.exception("Konnte die Liste der Schüler nicht einlesen.");
 		}
 		final Set<Long> setSchueler = listeSchueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 		logger.logLn("[OK]");
@@ -101,7 +102,7 @@ public final class DBUtilsGostBlockung {
 		final List<DTOLehrer> listeLehrer = conn.queryAll(DTOLehrer.class);
 		if ((listeLehrer == null) || (listeLehrer.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Lehrer nicht einlesen");
-			return false;
+			throw OperationError.NOT_FOUND.exception("Konnte die Liste der Lehrer nicht einlesen.");
 		}
 		final Map<String, Long> mapLehrer = listeLehrer.stream().collect(Collectors.toMap(l -> l.Kuerzel, l -> l.ID));
 		logger.logLn("[OK]");
@@ -112,7 +113,7 @@ public final class DBUtilsGostBlockung {
 		final List<DTOFach> listeFaecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
 		if ((listeFaecher == null) || (listeFaecher.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Fächer der Oberstufe nicht einlesen");
-			return false;
+			throw OperationError.NOT_FOUND.exception("Konnte die Liste der Fächer der Oberstufe nicht einlesen.");
 		}
 		final Map<Long, String> mapFaecher = listeFaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f.Kuerzel));
 		logger.logLn("[OK]");
@@ -128,7 +129,7 @@ public final class DBUtilsGostBlockung {
 			final StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			logger.logLn(sw.toString());
-			return false;
+			throw OperationError.BAD_REQUEST.exception("Fehler beim Einlesen des Kurs42-Text-Exports.");
 		}
 		// Prüfe, ob der Abiturjahrgang zuvor angelegt wurde
 		logger.logLn("-> Prüfe, ob der Abiturjahrgang %d angelegt ist...".formatted(k42.abiturjahrgang));
@@ -136,7 +137,7 @@ public final class DBUtilsGostBlockung {
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, k42.abiturjahrgang);
 		if (jahrgangsdaten == null) {
 			logger.logLn("[Fehler] - Der Abiturjahrgang %d ist nicht angelegt.".formatted(k42.abiturjahrgang));
-			return false;
+			throw OperationError.NOT_FOUND.exception("Der Abiturjahrgang %d ist nicht angelegt.".formatted(k42.abiturjahrgang));
 		}
 		logger.logLn("[OK]");
 		logger.modifyIndent(-2);
@@ -166,7 +167,7 @@ public final class DBUtilsGostBlockung {
 				if (mapFaecher.get(kurs.fach_id) == null) {
 					conn.transactionRollback();
 					logger.logLn("[Fehler] - Fach-ID " + kurs.fach_id + " ist in der Datenbank nicht bekannt");
-					return false;
+					throw OperationError.NOT_FOUND.exception("Fach-ID " + kurs.fach_id + " ist in der Datenbank nicht bekannt");
 				}
 				conn.transactionPersist(new DTOGostBlockungKurs(kursID + kurs.id, blockungID, kurs.fach_id,
 						GostKursart.fromID(kurs.kursart), kurs.nummer, kurs.istKoopKurs, kurs.anzahlSchienen, kurs.wochenstunden));
@@ -200,9 +201,9 @@ public final class DBUtilsGostBlockung {
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID,
 						kursID + zuordnung.a, zuordnung.b));
 			if (!conn.transactionCommit()) {
-				logger.logLn("[Fehler]");
+				logger.logLn("[Fehler] Unerwarteter Fehler beim Schreiben in die Datenbank.");
 				logger.modifyIndent(-2);
-				return false;
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			}
 			logger.logLn("[OK]");
 			logger.modifyIndent(-2);
