@@ -510,18 +510,32 @@
 		}
 	}
 
-	function identicalArrayIgnoreFirstAndSecond<T>(a1: Array<T>, a2: Array<T>) {
-		let i = a1.length-2;
+	function istWaehlbar(fach: GostFach, i : number) : boolean {
+		if ((i < GostHalbjahr.EF1.id) || (i > GostHalbjahr.Q22.id))
+			return false;
+		switch (GostHalbjahr.fromID(i)) {
+			case GostHalbjahr.EF1: return fach.istMoeglichEF1;
+			case GostHalbjahr.EF2: return fach.istMoeglichEF2;
+			case GostHalbjahr.Q11: return fach.istMoeglichQ11;
+			case GostHalbjahr.Q12: return fach.istMoeglichQ12;
+			case GostHalbjahr.Q21: return fach.istMoeglichQ21;
+			case GostHalbjahr.Q22: return fach.istMoeglichQ22;
+		}
+		return false;
+	}
+
+	function hochschreibenIstWahlIgnoreFirstAndSecond<T>(fach: GostFach, a1: Array<T>, a2: Array<T>) {
+		let i = a1.length - 2;
 		while (i--)
-			if (a1[i+2] !== a2[i])
+			if ((a1[i+2] !== a2[i]) && (istWaehlbar(fach, i + 2)))
 				return false;
 		return true;
 	}
 
-	function identicalArray<T>(a1: Array<T>, a2: Array<T>) {
+	function hochschreibenIstWahl<T>(fach: GostFach, a1: Array<T>, a2: Array<T>) {
 		let i = a1.length;
 		while (i--)
-			if (a1[i] !== a2[i])
+			if ((a1[i] !== a2[i]) && (istWaehlbar(fach, i)))
 				return false;
 		return true;
 	}
@@ -532,13 +546,20 @@
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre auch leer sind, dann setze auch diese
-				} else if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
+				} else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
 					if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
 						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
 					else if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 						wahl.halbjahre = ['S', 'S', 'LK', 'LK', 'LK', 'LK'];
 					else
-						wahl.halbjahre = ['S', 'S', 'S', 'S', 'S', 'M'];
+						wahl.halbjahre = [
+							props.fach.istMoeglichEF1 ? 'S' : null,
+							props.fach.istMoeglichEF2 ? 'S' : null,
+							props.fach.istMoeglichQ11 ? 'S' : null,
+							props.fach.istMoeglichQ12 ? 'S' : null,
+							props.fach.istMoeglichQ21 ? 'S' : null,
+							props.fach.istMoeglichQ22 ? 'M' : null
+						];
 				} else {
 					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
 						wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
@@ -551,12 +572,19 @@
 				if (wahl.abiturFach !== null)
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'M';
 				// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
-				else if (identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M']) && !(ist_VTF.value || ist_PJK.value))
+				else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M']) && !(ist_VTF.value || ist_PJK.value))
 					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
 						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
 					else
-						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-				else if (identicalArray(wahl.halbjahre, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = [
+							props.fach.istMoeglichEF1 ? 'M' : null,
+							props.fach.istMoeglichEF2 ? 'M' : null,
+							props.fach.istMoeglichQ11 ? 'M' : null,
+							props.fach.istMoeglichQ12 ? 'M' : null,
+							props.fach.istMoeglichQ21 ? 'M' : null,
+							props.fach.istMoeglichQ22 ? 'M' : null
+						];
+				else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
@@ -566,7 +594,7 @@
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
-				} else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+				} else if ((hochschreibenIstWahl(props.fach, wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || hochschreibenIstWahl(props.fach, wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
 					if (GostFachbereich.SPORT.hat(props.fach))
 						wahl.halbjahre = ["AT", "AT", "AT", "AT", "AT", "AT"];
 					else
@@ -582,7 +610,7 @@
 			case "AT": {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
-				} else if (identicalArray(wahl.halbjahre, ["AT", "AT", "AT", "AT", "AT", "AT"])) {
+				} else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, ["AT", "AT", "AT", "AT", "AT", "AT"])) {
 					wahl.halbjahre = [null, null, null, null, null, null];
 				} else {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
@@ -598,13 +626,20 @@
 			case null: {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				} else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
+				} else if (hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value)) {
 					if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
 					else if ((GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 						wahl.halbjahre = [wahl.halbjahre[0], 'S', 'LK', 'LK', 'LK', 'LK'];
 					else
-						wahl.halbjahre = [wahl.halbjahre[0], 'S', 'S', 'S', 'S', 'M'];
+						wahl.halbjahre = [
+							wahl.halbjahre[0],
+							props.fach.istMoeglichEF2 ? 'S' : null,
+							props.fach.istMoeglichQ11 ? 'S' : null,
+							props.fach.istMoeglichQ12 ? 'S' : null,
+							props.fach.istMoeglichQ21 ? 'S' : null,
+							props.fach.istMoeglichQ22 ? 'M' : null
+						];
 				} else {
 					if (ist_VTF.value || ist_PJK.value || (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK))
 						wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
@@ -616,13 +651,20 @@
 			case "S": {
 				if (wahl.abiturFach !== null)
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'M';
-				else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
-					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
+				else if ((hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, [null, null, null, null])
+					|| hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, ['S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
 					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', null, null];
 					else
-						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
-				else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
+						wahl.halbjahre = [
+							wahl.halbjahre[0],
+							props.fach.istMoeglichEF2 ? 'M' : null,
+							props.fach.istMoeglichQ11 ? 'M' : null,
+							props.fach.istMoeglichQ12 ? 'M' : null,
+							props.fach.istMoeglichQ21 ? 'M' : null,
+							props.fach.istMoeglichQ22 ? 'M' : null
+						];
+				else if (hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && props.fach.istMoeglichAbiLK))
 					wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
@@ -631,9 +673,9 @@
 			case "M": {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				} else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
-					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', 'M', 'M'])
-					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+				} else if ((hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, [null, null, null, null])
+					|| hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, ['M', 'M', 'M', 'M'])
+					|| hochschreibenIstWahlIgnoreFirstAndSecond(props.fach, wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
 					if (GostFachbereich.SPORT.hat(props.fach))
 						wahl.halbjahre = [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"];
 					else
@@ -649,7 +691,7 @@
 			case "AT": {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				} else if (identicalArray(wahl.halbjahre, [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"])) {
+				} else if (hochschreibenIstWahl(props.fach, wahl.halbjahre, [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"])) {
 					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
 				} else {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
