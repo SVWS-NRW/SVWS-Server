@@ -1,5 +1,5 @@
 import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen} from "@core";
-import { ArrayList, SchuelerLernabschnittManager } from "@core";
+import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -21,6 +21,7 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
 	manager: SchuelerLernabschnittManager | undefined;
+	klausurManager: GostKursklausurManager | undefined;
 }
 
 const defaultState = <RouteStateDataSchuelerLernabschnitte> {
@@ -33,6 +34,7 @@ const defaultState = <RouteStateDataSchuelerLernabschnitte> {
 	auswahl: undefined,
 	daten: undefined,
 	manager: undefined,
+	klausurManager: undefined,
 	view: routeSchuelerLernabschnittLeistungen,
 };
 
@@ -55,6 +57,16 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		if (this._state.value.manager === undefined)
 			throw new Error("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
 		return this._state.value.manager;
+	}
+
+	get hatKlausurManager() : boolean {
+		return (this._state.value.klausurManager !== undefined);
+	}
+
+	get klausurManager(): GostKursklausurManager {
+		if (this._state.value.klausurManager === undefined)
+			throw new Error("Unerwarteter Fehler: Schüler-Klausurmanager nicht initialisiert");
+		return this._state.value.klausurManager;
 	}
 
 	protected getLernabschnitt(curState : RouteStateDataSchuelerLernabschnitte, idSchuljahresabschnitt : number, wechselNr : number) : SchuelerLernabschnittListeEintrag | undefined {
@@ -95,7 +107,17 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt);
 		const schueler = routeSchueler.data.schuelerListeManager.auswahl();
 		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
-		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager });
+		let klausurManager = undefined;
+		const abiturjahrgang = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
+		if (abiturjahrgang !== null) {
+			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
+			if (halbjahr !== null) {
+				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
+				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben, null);
+				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren);
+			}
+		}
+		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager, klausurManager });
 		return curState;
 	}
 

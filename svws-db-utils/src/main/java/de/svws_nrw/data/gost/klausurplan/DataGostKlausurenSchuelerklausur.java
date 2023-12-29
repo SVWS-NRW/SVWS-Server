@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -115,12 +116,18 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 				DTOGostKlausurenSchuelerklausuren.class).setParameter("sId", idSchueler).setParameter("abiturjahr", abiturjahr).setParameter("halbjahr", GostHalbjahr.fromIDorException(halbjahr))
 				.getResultList().stream().map(dtoMapper::apply).toList();
 
+		List<Long> terminIds = new ArrayList<>();
+		terminIds.addAll(result.schuelerklausuren.stream().filter(sk -> sk.idTermin != null).map(sk -> sk.idTermin).toList());
+
 		if (!result.schuelerklausuren.isEmpty()) {
 			result.kursklausuren = conn
 					.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", result.schuelerklausuren.stream().map(sk -> sk.idKursklausur).toList(), DTOGostKlausurenKursklausuren.class).stream()
 					.map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
+			terminIds.addAll(result.kursklausuren.stream().filter(kk -> kk.idTermin != null).map(kk -> kk.idTermin).toList());
 			result.vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", result.kursklausuren.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class).stream()
 					.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
+			result.termine = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", terminIds, DTOGostKlausurenTermine.class).stream()
+					.map(DataGostKlausurenTermin.dtoMapper::apply).toList();
 		}
 
 		return result;

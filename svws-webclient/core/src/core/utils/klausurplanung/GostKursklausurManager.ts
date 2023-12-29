@@ -17,6 +17,7 @@ import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
+import { GostSchuelerklausur } from '../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
@@ -93,6 +94,10 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerIds_by_idTermin : JavaMap<number, List<number>> = new HashMap();
 
+	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap();
+
+	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList();
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -100,25 +105,28 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @param vorgabenManager der Klausurvorgaben-Manager
 	 * @param listKlausuren   die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                        und Gost-Halbjahres
 	 * @param listTermine     die Liste der GostKlausurtermine eines Abiturjahrgangs
-	 *                        und Gost-Halbjahres
+	 * @param listSchuelerklausuren   die Liste der GostSchuelerklausuren eines Abiturjahrgangs
 	 */
-	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null) {
+	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null) {
 		super();
 		this._vorgabenManager = vorgabenManager;
-		this.initAll(listKlausuren, listTermine);
+		this.initAll(listKlausuren, listTermine, listSchuelerklausuren);
 	}
 
-	private initAll(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null) : void {
+	private initAll(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null) : void {
 		this.kursklausurAddAll(listKlausuren);
-		this.terminAddAll(listTermine !== null ? listTermine : new ArrayList());
+		if (listTermine !== null)
+			this.terminAddAll(listTermine);
+		if (listSchuelerklausuren !== null)
+			this.schuelerklausurAddAll(listSchuelerklausuren);
 		this.update_all();
 	}
 
 	private update_all() : void {
 		this.update_kursklausurmenge();
 		this.update_terminmenge();
+		this.update_schuelerklausurmenge();
 		this.update_kursklausurmenge_by_halbjahr_and_quartal();
 		this.update_kursklausurmenge_by_idTermin();
 		this.update_kursklausurmenge_by_idVorgabe();
@@ -418,6 +426,109 @@ export class GostKursklausurManager extends JavaObject {
 	public terminRemoveAll(listTermine : List<GostKlausurtermin>) : void {
 		for (const termin of listTermine)
 			this.terminRemoveOhneUpdateById(termin.id);
+		this.update_all();
+	}
+
+	private update_schuelerklausurmenge() : void {
+		this._schuelerklausurmenge.clear();
+		this._schuelerklausurmenge.addAll(this._schuelerklausur_by_id.values());
+	}
+
+	/**
+	 * Fügt ein {@link GostSchuelerklausur}-Objekt hinzu.
+	 *
+	 * @param kursklausur Das {@link GostSchuelerklausur}-Objekt, welches hinzugefügt
+	 *                    werden soll.
+	 */
+	public schuelerklausurAdd(kursklausur : GostSchuelerklausur) : void {
+		this.schuelerklausurAddAll(ListUtils.create1(kursklausur));
+		this.update_all();
+	}
+
+	private schuelerklausurAddAllOhneUpdate(list : List<GostSchuelerklausur>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const klausur of list) {
+			GostKursklausurManager.schuelerklausurCheck(klausur);
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.idSchuelerklausur + " existiert bereits!", this._schuelerklausur_by_id.containsKey(klausur.idSchuelerklausur));
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.idSchuelerklausur + " doppelt in der Liste!", !setOfIDs.add(klausur.idSchuelerklausur));
+		}
+		for (const klausur of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, klausur.idSchuelerklausur, klausur);
+	}
+
+	/**
+	 * Fügt alle {@link GostKursklausur}-Objekte hinzu.
+	 *
+	 * @param listKursklausuren Die Menge der {@link GostKursklausur}-Objekte,
+	 *                          welche hinzugefügt werden soll.
+	 */
+	public schuelerklausurAddAll(listKursklausuren : List<GostSchuelerklausur>) : void {
+		this.schuelerklausurAddAllOhneUpdate(listKursklausuren);
+		this.update_all();
+	}
+
+	private static schuelerklausurCheck(kursklausur : GostSchuelerklausur) : void {
+		DeveloperNotificationException.ifInvalidID("schuelerklausur.idSchuelerklausur", kursklausur.idSchuelerklausur);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link GostKursklausur}-Objekt. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @param idKursklausur Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link GostKursklausur}-Objekt.
+	 */
+	public schuelerklausurGetByIdOrException(idKursklausur : number) : GostSchuelerklausur {
+		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausur_by_id, idKursklausur);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link GostKursklausur}-Objekte. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
+	 */
+	public schuelerklausurGetMengeAsList() : List<GostSchuelerklausur> {
+		return this._schuelerklausurmenge;
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKursklausur}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param kursklausur Das neue {@link GostKursklausur}-Objekt.
+	 */
+	public schuelerklausurPatchAttributes(kursklausur : GostSchuelerklausur) : void {
+		GostKursklausurManager.schuelerklausurCheck(kursklausur);
+		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, kursklausur.idSchuelerklausur);
+		DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, kursklausur.idSchuelerklausur, kursklausur);
+		this.update_all();
+	}
+
+	private schuelerklausurRemoveOhneUpdateById(idKursklausur : number) : void {
+		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idKursklausur);
+	}
+
+	/**
+	 * Entfernt ein existierendes {@link GostKursklausur}-Objekt.
+	 *
+	 * @param idKursklausur Die ID des {@link GostKursklausur}-Objekts.
+	 */
+	public schuelerklausurRemoveById(idKursklausur : number) : void {
+		this.schuelerklausurRemoveOhneUpdateById(idKursklausur);
+		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link GostKursklausur}-Objekte.
+	 *
+	 * @param listKursklausuren Die Liste der zu entfernenden
+	 *                          {@link GostKursklausur}-Objekte.
+	 */
+	public schuelerklausurRemoveAll(listKursklausuren : List<GostSchuelerklausur>) : void {
+		for (const kursklausur of listKursklausuren)
+			this.schuelerklausurRemoveOhneUpdateById(kursklausur.idSchuelerklausur);
 		this.update_all();
 	}
 
@@ -925,6 +1036,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 *
+	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public terminKursklausurBySchuelerklausur(klausur : GostSchuelerklausur) : GostKlausurtermin | null {
+		return this.terminByKursklausur(this.kursklausurBySchuelerklausur(klausur));
+	}
+
+	/**
 	 * Liefert die Klausurvorgabe zu einer Kursklausur.
 	 *
 	 * @param klausur die Kursklausur, zu der die Vorgabe gesucht wird.
@@ -933,6 +1055,29 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public vorgabeByKursklausur(klausur : GostKursklausur) : GostKlausurvorgabe {
 		return this._vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+	}
+
+	/**
+	 * Liefert die Klausurvorgabe zu einer Schuelerklausur.
+	 *
+	 * @param klausur die Schuelerklausur, zu der die Vorgabe gesucht wird.
+	 *
+	 * @return die Klausurvorgabe
+	 */
+	public vorgabeBySchuelerklausur(klausur : GostSchuelerklausur) : GostKlausurvorgabe {
+		let kk : GostKursklausur = this.kursklausurGetByIdOrException(klausur.idKursklausur);
+		return this._vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
+	}
+
+	/**
+	 * Liefert die GostKursklausur zu einer Schuelerklausur.
+	 *
+	 * @param klausur die Schuelerklausur, zu der die GostKursklausur gesucht wird.
+	 *
+	 * @return die GostKursklausur
+	 */
+	public kursklausurBySchuelerklausur(klausur : GostSchuelerklausur) : GostKursklausur {
+		return this.kursklausurGetByIdOrException(klausur.idKursklausur);
 	}
 
 	/**

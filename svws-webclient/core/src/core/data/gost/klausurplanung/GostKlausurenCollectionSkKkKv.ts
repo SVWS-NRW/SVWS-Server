@@ -4,6 +4,7 @@ import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/Go
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
+import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 
 export class GostKlausurenCollectionSkKkKv extends JavaObject {
 
@@ -21,6 +22,11 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 	 * Die Liste der Schülerklausuren.
 	 */
 	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList();
+
+	/**
+	 * Die Liste der Schülerklausuren.
+	 */
+	public termine : List<GostKlausurtermin> = new ArrayList();
 
 
 	public constructor() {
@@ -51,6 +57,11 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 		if ((obj.schuelerklausuren !== undefined) && (obj.schuelerklausuren !== null)) {
 			for (const elem of obj.schuelerklausuren) {
 				result.schuelerklausuren?.add(GostSchuelerklausur.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.termine !== undefined) && (obj.termine !== null)) {
+			for (const elem of obj.termine) {
+				result.termine?.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -90,6 +101,18 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 				const elem = obj.schuelerklausuren.get(i);
 				result += GostSchuelerklausur.transpilerToJSON(elem);
 				if (i < obj.schuelerklausuren.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.termine) {
+			result += '"termine" : []';
+		} else {
+			result += '"termine" : [ ';
+			for (let i = 0; i < obj.termine.size(); i++) {
+				const elem = obj.termine.get(i);
+				result += GostKlausurtermin.transpilerToJSON(elem);
+				if (i < obj.termine.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -138,6 +161,20 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 					const elem = obj.schuelerklausuren.get(i);
 					result += GostSchuelerklausur.transpilerToJSON(elem);
 					if (i < obj.schuelerklausuren.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.termine !== "undefined") {
+			if (!obj.termine) {
+				result += '"termine" : []';
+			} else {
+				result += '"termine" : [ ';
+				for (let i = 0; i < obj.termine.size(); i++) {
+					const elem = obj.termine.get(i);
+					result += GostKlausurtermin.transpilerToJSON(elem);
+					if (i < obj.termine.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -15,6 +15,7 @@ import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/l
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
 
 import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
+import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
 
@@ -33,6 +34,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			routeSchuelerLernabschnittKonferenz,
 			routeSchuelerLernabschnittZeugnisdruck,
 			routeSchuelerLernabschnittNachpruefung,
+			routeSchuelerLernabschnittGostKlausuren,
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}

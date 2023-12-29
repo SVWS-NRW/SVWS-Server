@@ -29,4 +29,8 @@ public class GostKlausurenCollectionSkKkKv {
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
 
+	/** Die Liste der Schülerklausuren. */
+	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	public @NotNull List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+
 }
