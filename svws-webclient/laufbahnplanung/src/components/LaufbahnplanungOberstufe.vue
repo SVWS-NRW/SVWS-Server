@@ -16,8 +16,8 @@
 		</div>
 	</div>
 	<svws-ui-sub-nav>
-		<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-download-2-line />Exportieren</svws-ui-button>
-		<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-upload-2-line /> Importieren…</svws-ui-button>
+		<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-file-upload-line />Exportieren</svws-ui-button>
+		<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-file-download-line /> Importieren…</svws-ui-button>
 		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
 		<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 		<svws-ui-button type="danger" title="Planung wiederherstellen" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
