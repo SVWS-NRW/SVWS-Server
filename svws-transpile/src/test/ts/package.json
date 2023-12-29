@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Tests für den erzeugten Transpiler-Code",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.8.6",
+	"version": "0.8.7-SNAPSHOT",
 	"files": [ "dist" ],
 	"main": "./dist/index.js",
 	"type": "module",
