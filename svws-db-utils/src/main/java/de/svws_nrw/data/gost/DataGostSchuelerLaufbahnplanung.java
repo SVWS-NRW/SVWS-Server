@@ -667,7 +667,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					final String kursart = (dateiKursart == null) ? null
 							: "AT".equals(dateiKursart) ? "AT"
 							: GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-							: GostKursart.ZK.kuerzel.equals(dateiKursart) ? "M"
+							: GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
 							: GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
 							: GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
 							: datei.schriftlich[halbjahr.id] ? "S" : "M";
@@ -693,7 +693,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					final String kursart = (dateiKursart == null) ? null
 							: "AT".equals(dateiKursart) ? "AT"
 							: GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
-							: GostKursart.ZK.kuerzel.equals(dateiKursart) ? "M"
+							: GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
 							: GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
 							: GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
 							: datei.schriftlich[halbjahr.id] ? "S" : "M";
