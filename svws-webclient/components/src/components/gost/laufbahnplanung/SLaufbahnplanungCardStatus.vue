@@ -6,8 +6,8 @@
 		<div class="print:hidden">
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
-			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
+			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" />
 		</div>
 	</svws-ui-content-card>
 </template>

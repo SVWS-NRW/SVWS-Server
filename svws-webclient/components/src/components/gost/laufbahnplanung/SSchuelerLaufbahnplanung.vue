@@ -26,9 +26,9 @@
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
+				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten="gostLaufbahnBeratungsdaten" :patch-beratungsdaten="patchBeratungsdaten" :map-lehrer="mapLehrer" :id="id" />
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager"
 					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
-				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten="gostLaufbahnBeratungsdaten" :patch-beratungsdaten="patchBeratungsdaten" :map-lehrer="mapLehrer" :id="id" />
 			</div>
 		</div>
 	</div>
