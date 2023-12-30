@@ -12,7 +12,7 @@
 					class="flex-grow"
 					@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager())"
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-					:items="raummanager().stundenplanraumVerfuegbarGetMenge(stundenplanmanager.raumGetMengeAsList())" />
+					:items="raeumeVerfuegbar" />
 				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 					<i-ri-alert-fill />
 				</span>
@@ -79,6 +79,13 @@
 
 	const anzahlRaumstunden = computed(() => {
 		return props.raummanager().klausurraumstundeGetMengeByRaumid(props.raum.id).size();
+	});
+
+	const raeumeVerfuegbar = computed(() => {
+		const raeume = props.raummanager().stundenplanraumVerfuegbarGetMenge(props.stundenplanmanager.raumGetMengeAsList());
+		if (props.raum.idStundenplanRaum !== null)
+			raeume.add(0, props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
+		return raeume;
 	});
 
 	const stundenplanRaumSelected = computed({
