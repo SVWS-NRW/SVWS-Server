@@ -286,7 +286,8 @@ apt update
 apt-get -y install gettext zip wget curl software-properties-common dirmngr gnupg2 apt-transport-https sed grep
 mkdir -p /etc/apt/keyrings
 wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
-if [ `cat /etc/os-release | grep ^NAME= | sed -e "s/NAME=//g"` = "Debian GNU/Linux" ]; then
+osrelease=$(awk -F= '/^NAME/{print$2}' /etc/os-release)
+if [[ "$osrelease" == "\"Debian GNU/Linux\"" ]] || [[ "$osrelease" == "Debian GNU/Linux" ]]; then
 	echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 else
 	echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^UBUNTU_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
