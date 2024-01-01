@@ -66,7 +66,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		for (const eintrag of katalog.lehrplaene) {
 			this._values.addAll(eintrag.historie);
 			for (const bildungsplan of eintrag.historie) {
-				if (bildungsplan.fachklasse.index as unknown !== eintrag.index as unknown || bildungsplan.fachklasse.schluessel as unknown !== eintrag.schluessel as unknown)
+				if (!JavaObject.equalsTranspiler(bildungsplan.fachklasse.index, (eintrag.index)) || !JavaObject.equalsTranspiler(bildungsplan.fachklasse.schluessel, (eintrag.schluessel)))
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans")
 				const alt : BKBildungsplan | null = this._mapByID.put(bildungsplan.id, bildungsplan);
 				if (alt !== null)

@@ -200,10 +200,8 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent, npFaecher, true);
 			wp_defizit.note++;
 			wp_defizit.ausgleich = false;
-			if (abschlussergebnis.erworben) {
-				nachpruefung_genutzt = true;
+			if (abschlussergebnis.erworben)
 				npFaecher.add(wp_defizit);
-			}
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 		let log_fg2_indent : string = logIndent;

@@ -163,7 +163,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		for (let i : number = 0; i < this._order.size(); i++) {
 			const eintrag : Pair<string, boolean> = this._order.get(i);
 			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-				if (eintrag.b === order)
+				if (JavaObject.equalsTranspiler(eintrag.b, (order)))
 					return;
 				this._order.remove(eintrag);
 				eintrag.b = order;

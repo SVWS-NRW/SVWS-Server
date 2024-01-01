@@ -169,7 +169,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		for (int i = 0; i < this._order.size(); i++) {
 			final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
 			if (eintrag.a.equals(field)) {
-				if (eintrag.b == order)
+				if (eintrag.b.equals(order))
 					return;
 				this._order.remove(eintrag);
 				eintrag.b = order;

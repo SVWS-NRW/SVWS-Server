@@ -58,7 +58,7 @@ public class BerufskollegBildungsplanManager {
 		for (final @NotNull BKBildungsplanKatalogEintrag eintrag : katalog.lehrplaene) {
 			this._values.addAll(eintrag.historie);
 			for (final @NotNull BKBildungsplan bildungsplan : eintrag.historie) {
-				if (bildungsplan.fachklasse.index != eintrag.index || bildungsplan.fachklasse.schluessel != eintrag.schluessel)
+				if (!bildungsplan.fachklasse.index.equals(eintrag.index) || !bildungsplan.fachklasse.schluessel.equals(eintrag.schluessel))
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans");
 				final BKBildungsplan alt = this._mapByID.put(bildungsplan.id, bildungsplan);
 				if (alt != null)

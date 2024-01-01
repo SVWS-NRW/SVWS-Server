@@ -244,10 +244,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 			final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent, npFaecher, true);
 			wp_defizit.note++; // verschlechtere wieder
 			wp_defizit.ausgleich = false;
-			if (abschlussergebnis.erworben) {
-				nachpruefung_genutzt = true;
+			if (abschlussergebnis.erworben)
 				npFaecher.add(wp_defizit);
-			}
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 

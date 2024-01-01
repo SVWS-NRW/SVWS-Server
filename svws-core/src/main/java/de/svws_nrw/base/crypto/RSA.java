@@ -63,7 +63,7 @@ public class RSA {
 			// Erstelle einen zufälligen AES-Schlüssel ...
 			final SecretKey aeskey = AES.getRandomKey256();
 			// ... dann verschlüssele den AES-Schlüssel mit dem RSA-Verfahren.
-			final Cipher cipher = Cipher.getInstance("RSA");
+			final Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
 			final byte[] aeskeyEncoded = cipher.doFinal(aeskey.getEncoded());
 			// ... anschließend verschlüssele die Daten mit dem AES-Verfahren
@@ -97,7 +97,7 @@ public class RSA {
 			final int aeskeyEncodedLength = DEFAULT_KEY_LENGTH / 8;
 			if (input.length < aeskeyEncodedLength)
 				throw new RSAException("Die Daten enthalten keinen mit RSA verschlüsselten AES-Schlüssel.");
-			final Cipher cipher = Cipher.getInstance("RSA");
+			final Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
 			final byte[] aeskeyDecoded = cipher.doFinal(input, 0, aeskeyEncodedLength);
 			// ... und dekodiere den Rest
