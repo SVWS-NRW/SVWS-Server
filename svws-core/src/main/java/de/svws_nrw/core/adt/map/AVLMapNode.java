@@ -75,7 +75,9 @@ public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull 
 	}
 
 	@Override
-	public boolean equals(final @NotNull Object o) {
+	public boolean equals(final Object o) {
+		if (o == null)
+			return false;
 		if (!(o instanceof Entry<?, ?>))
 			return false;
 		final Entry<?, ?> e = (Entry<?, ?>) o;

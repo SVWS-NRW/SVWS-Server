@@ -38,7 +38,9 @@ final class ArrayMapEntry<@NotNull K, @NotNull V> implements Entry<@NotNull K, @
 	}
 
 	@Override
-	public boolean equals(final @NotNull Object o) {
+	public boolean equals(final Object o) {
+		if (o == null)
+			return false;
 		if (!(o instanceof Entry<?, ?>))
 			return false;
 		final Entry<?, ?> e = (Entry<?, ?>) o;

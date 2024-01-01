@@ -127,7 +127,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		this._allowKeyAlone = b;
 	}
 
-	public equals(o : unknown) : boolean {
+	public equals(o : unknown | null) : boolean {
 		return JavaObject.equalsTranspiler(this._sub, (o));
 	}
 

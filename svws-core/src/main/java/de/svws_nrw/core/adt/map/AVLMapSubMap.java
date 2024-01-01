@@ -78,24 +78,21 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 	}
 
 	@Override
-	public boolean equals(final @NotNull Object o) {
+	public boolean equals(final Object o) {
+		if (o == null)
+			return false;
 		if (o == this)
 			return true;
-
 		if (!(o instanceof Map<?, ?>))
 			return false;
-
 		final Map<?, ?> mapO = (Map<?, ?>) o;
-
 		if (mapO.size() != size())
 			return false;
-
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
 		for (final @NotNull Entry<@NotNull K, @NotNull V> e : entrySet())
 			if (!e.getValue().equals(mapO.get(e.getKey())))
 				return false;
-
 		return true;
 	}
 

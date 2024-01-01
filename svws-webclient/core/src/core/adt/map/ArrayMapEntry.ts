@@ -32,7 +32,9 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 		return "(" + this._key + ", " + this._val + ")";
 	}
 
-	public equals(o : unknown) : boolean {
+	public equals(o : unknown | null) : boolean {
+		if (o === null)
+			return false;
 		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		const e : JavaMapEntry<any, any> | null = cast_java_util_Map_Entry(o);

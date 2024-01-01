@@ -123,7 +123,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	@Override
-	public boolean equals(final @NotNull Object o) {
+	public boolean equals(final Object o) {
 		return _sub.equals(o);
 	}
 

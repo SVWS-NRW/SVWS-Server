@@ -75,7 +75,9 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		return sb.toString();
 	}
 
-	public equals(o : unknown) : boolean {
+	public equals(o : unknown | null) : boolean {
+		if (o === null)
+			return false;
 		if (o as unknown === this as unknown)
 			return true;
 		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map')))))
