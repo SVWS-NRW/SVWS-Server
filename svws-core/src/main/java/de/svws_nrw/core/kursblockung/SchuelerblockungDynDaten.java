@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -359,13 +360,13 @@ public class SchuelerblockungDynDaten {
 	}
 
 	@SuppressWarnings("unused")
-	private void debug(final @NotNull String pHeader, final boolean pPrintMatrix) {
-		System.out.println();
-		System.out.println("#################### " + pHeader + " ####################");
-		System.out.println("Bewertung      = " + _aktuellNichtwahlen + " / " + _aktuellBewertung);
-		System.out.println("Fachwahlen     = " + Arrays.toString(_aktuellFachwahlZuKurs));
-		System.out.println("BewertungBest  = " + _aktuellNichtwahlenBest + " / " + _aktuellBewertungBest);
-		System.out.println("FachwahlenBest = " + Arrays.toString(_aktuellFachwahlZuKursBest));
+	private void debug(final @NotNull Logger logger, final @NotNull String pHeader, final boolean pPrintMatrix) {
+		logger.logLn("");
+		logger.logLn("#################### " + pHeader + " ####################");
+		logger.logLn("Bewertung      = " + _aktuellNichtwahlen + " / " + _aktuellBewertung);
+		logger.logLn("Fachwahlen     = " + Arrays.toString(_aktuellFachwahlZuKurs));
+		logger.logLn("BewertungBest  = " + _aktuellNichtwahlenBest + " / " + _aktuellBewertungBest);
+		logger.logLn("FachwahlenBest = " + Arrays.toString(_aktuellFachwahlZuKursBest));
 
 		if (!pPrintMatrix)
 			return;
@@ -373,18 +374,18 @@ public class SchuelerblockungDynDaten {
 		final @NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
 		for (int schiene = 0; schiene < nSchienen; schiene++) {
 			final String sData = _aktuellGesperrteSchiene[schiene] ? "1" : "0";
-			System.out.print(String.format("%5s", sData));
+			logger.log(String.format("%5s", sData));
 		}
-		System.out.println();
+		logger.logLn("");
 
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			for (int schiene = 0; schiene < nSchienen; schiene++) {
 				@NotNull String sData = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] == UNENDLICH)
 					sData = "INF";
-				System.out.print(String.format("%5s", sData));
+				logger.log(String.format("%5s", sData));
 			}
-			System.out.println();
+			logger.logLn("");
 		}
 
 	}

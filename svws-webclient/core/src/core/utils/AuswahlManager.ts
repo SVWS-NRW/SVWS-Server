@@ -53,9 +53,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	/**
 	 * Ein Handler für das Ereignis, dass die Mehrfachauswahl angepasst wurde
 	 */
-	private readonly _eventHandlerMehrfachauswahlChanged : Runnable = { run : () => {
-		this.onMehrfachauswahlChanged();
-	} };
+	private readonly _eventHandlerMehrfachauswahlChanged : Runnable = { run : () => this.onMehrfachauswahlChanged() };
 
 	/**
 	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.

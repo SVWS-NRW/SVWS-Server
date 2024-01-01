@@ -48,9 +48,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	};
 
 	/** Ein Handler für das Ereignis, dass die Mehrfachauswahl angepasst wurde */
-	private final @NotNull Runnable _eventHandlerMehrfachauswahlChanged = () -> {
-		this.onMehrfachauswahlChanged();
-	};
+	private final @NotNull Runnable _eventHandlerMehrfachauswahlChanged = () -> this.onMehrfachauswahlChanged();
 
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
 	protected @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order;

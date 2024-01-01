@@ -963,8 +963,7 @@ public enum ZulaessigeKursart {
 	private static final @NotNull HashMap<@NotNull String, ZulaessigeKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist */
-	private @NotNull
-	final ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
 
 	/** Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten */
 	private static final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> _mapByAllgemein = new HashMap<>();

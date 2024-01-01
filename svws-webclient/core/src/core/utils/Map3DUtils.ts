@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
 import { HashMap3D } from '../../core/adt/map/HashMap3D';
@@ -35,21 +36,21 @@ export class Map3DUtils extends JavaObject {
 	}
 
 	/**
-	 * Liefert das "HashSet of V" des Schlüssels. Erstellt ein leeres "HashSet of V", falls eine solche Zuordnung nicht existierte.
+	 * Liefert das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
 	 *
 	 * @param <K1>  Der Typ des 1. Schlüssels.
 	 * @param <K2>  Der Typ des 2. Schlüssels.
 	 * @param <K3>  Der Typ des 3. Schlüssels.
 	 * @param <V>   Der Typ der Objekte in dem HashSet.
-	 * @param map3D   Die Map, welche (K1, K2, K3) auf "HashSet of V" abbildet.
+	 * @param map3D   Die Map, welche (K1, K2, K3) auf "Set of V" abbildet.
 	 * @param key1  Der 1. Schlüssel.
 	 * @param key2  Der 2. Schlüssel.
 	 * @param key3  Der 3. Schlüssel.
 	 *
-	 * @return die "HashSet of V" des Schlüssels. Erstellt ein leeres "HashSet of V", falls eine solche Zuordnung nicht existierte.
+	 * @return die "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
 	 */
-	public static getOrCreateHashSet<K1, K2, K3, V>(map3D : HashMap3D<K1, K2, K3, HashSet<V>>, key1 : K1, key2 : K2, key3 : K3) : HashSet<V> {
-		const set : HashSet<V> | null = map3D.getOrNull(key1, key2, key3);
+	public static getOrCreateSet<K1, K2, K3, V>(map3D : HashMap3D<K1, K2, K3, JavaSet<V>>, key1 : K1, key2 : K2, key3 : K3) : JavaSet<V> {
+		const set : JavaSet<V> | null = map3D.getOrNull(key1, key2, key3);
 		if (set !== null)
 			return set;
 		const setNeu : HashSet<V> = new HashSet();

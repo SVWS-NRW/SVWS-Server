@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { BKLernfeld } from '../../../core/data/bk/BKLernfeld';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -14,7 +15,6 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
-import { HashSet } from '../../../java/util/HashSet';
 
 export class BerufskollegBildungsplanManager extends JavaObject {
 
@@ -51,7 +51,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Fachklassen-Schlüssels.
 	 */
-	private readonly _mapFachByFachklasse : HashMap3D<number, string, string, HashSet<BKFBFach>> = new HashMap3D();
+	private readonly _mapFachByFachklasse : HashMap3D<number, string, string, JavaSet<BKFBFach>> = new HashMap3D();
 
 
 	/**
@@ -74,7 +74,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 				Map3DUtils.getOrCreateArrayList(this._mapBildungsplanByFachklasse, eintrag.index, eintrag.schluessel, bildungsplan.id).add(bildungsplan);
 				for (const fach of bildungsplan.fbFaecher) {
 					this._mapFachByKuerzel.put(fach.kuerzel, fach);
-					Map3DUtils.getOrCreateHashSet(this._mapFachByFachklasse, eintrag.index, eintrag.schluessel, fach.kuerzel).add(fach);
+					Map3DUtils.getOrCreateSet(this._mapFachByFachklasse, eintrag.index, eintrag.schluessel, fach.kuerzel).add(fach);
 				}
 			}
 		}
@@ -221,8 +221,8 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const mapById : JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 		if (mapById === null)
 			return null;
-		for (let lehrplaene of mapById.values())
-			for (let bildungsplan of lehrplaene)
+		for (const lehrplaene of mapById.values())
+			for (const bildungsplan of lehrplaene)
 				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan;
 		return null;
@@ -318,8 +318,8 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const mapById : JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 		if (mapById === null)
 			return null;
-		for (let lehrplaene of mapById.values())
-			for (let bildungsplan of lehrplaene)
+		for (const lehrplaene of mapById.values())
+			for (const bildungsplan of lehrplaene)
 				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan.fbFaecher.toArray(Array(0).fill(null));
 		return null;
@@ -384,8 +384,8 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const mapById : JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 		if (mapById === null)
 			return null;
-		for (let lehrplaene of mapById.values())
-			for (let bildungsplan of lehrplaene)
+		for (const lehrplaene of mapById.values())
+			for (const bildungsplan of lehrplaene)
 				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan.lernfelder.toArray(Array(0).fill(null));
 		return null;

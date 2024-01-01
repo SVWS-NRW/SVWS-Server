@@ -2,9 +2,9 @@ package de.svws_nrw.core.utils.schule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.bk.BKFBFach;
@@ -44,7 +44,7 @@ public class BerufskollegBildungsplanManager {
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull BKBildungsplan>> _mapBildungsplanByFachklasse = new HashMap3D<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Fachklassen-Schlüssels. */
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull String, @NotNull HashSet<@NotNull BKFBFach>> _mapFachByFachklasse = new HashMap3D<>();
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull String, @NotNull Set<@NotNull BKFBFach>> _mapFachByFachklasse = new HashMap3D<>();
 
 
 	/**
@@ -66,7 +66,7 @@ public class BerufskollegBildungsplanManager {
 				Map3DUtils.getOrCreateArrayList(_mapBildungsplanByFachklasse, eintrag.index, eintrag.schluessel, bildungsplan.id).add(bildungsplan);
 				for (final @NotNull BKFBFach fach : bildungsplan.fbFaecher) {
 					this._mapFachByKuerzel.put(fach.kuerzel, fach);
-					Map3DUtils.getOrCreateHashSet(_mapFachByFachklasse, eintrag.index, eintrag.schluessel, fach.kuerzel).add(fach);
+					Map3DUtils.getOrCreateSet(_mapFachByFachklasse, eintrag.index, eintrag.schluessel, fach.kuerzel).add(fach);
 				}
 			}
 		}
@@ -223,8 +223,8 @@ public class BerufskollegBildungsplanManager {
 		if (mapById == null)
 			return null;
 
-		for (@NotNull List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
-			for (@NotNull BKBildungsplan bildungsplan : lehrplaene)
+		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
+			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
 				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan;
@@ -318,8 +318,8 @@ public class BerufskollegBildungsplanManager {
 		if (mapById == null)
 			return null;
 
-		for (@NotNull List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
-			for (@NotNull BKBildungsplan bildungsplan : lehrplaene)
+		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
+			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
 				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan.fbFaecher.toArray(new BKFBFach[0]);
@@ -391,8 +391,8 @@ public class BerufskollegBildungsplanManager {
 		if (mapById == null)
 			return null;
 
-		for (@NotNull List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
-			for (@NotNull BKBildungsplan bildungsplan : lehrplaene)
+		for (@NotNull final List<@NotNull BKBildungsplan> lehrplaene : mapById.values())
+			for (@NotNull final BKBildungsplan bildungsplan : lehrplaene)
 				if (((bildungsplan.gueltigVon == null) || (bildungsplan.gueltigVon <= schuljahr))
 				 && ((bildungsplan.gueltigBis == null) || (bildungsplan.gueltigBis >= schuljahr)))
 					return bildungsplan.lernfelder.toArray(new BKLernfeld[0]);
