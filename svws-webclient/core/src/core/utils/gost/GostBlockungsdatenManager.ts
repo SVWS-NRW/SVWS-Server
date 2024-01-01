@@ -19,6 +19,7 @@ import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
@@ -27,6 +28,7 @@ import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten 
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 
@@ -133,7 +135,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
-	private readonly _map_regeltyp_regeln : HashMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new HashMap();
+	private readonly _map_regeltyp_regeln : JavaMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new ArrayMap(GostKursblockungRegelTyp.values());
 
 	/**
 	 * Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.

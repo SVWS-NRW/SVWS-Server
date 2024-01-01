@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import de.svws_nrw.core.adt.LongArrayKey;
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -101,7 +104,7 @@ public class GostBlockungsdatenManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungRegel> _map_idRegel_regel = new HashMap<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
-	private final @NotNull HashMap<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _map_regeltyp_regeln = new HashMap<>();
+	private final @NotNull Map<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _map_regeltyp_regeln = new ArrayMap<>(GostKursblockungRegelTyp.values());
 
 	/** Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
 	private final @NotNull HashMap<@NotNull LongArrayKey, @NotNull GostBlockungRegel> _map_multikey_regeln = new HashMap<>();
