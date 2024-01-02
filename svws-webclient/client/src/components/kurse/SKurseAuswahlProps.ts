@@ -1,8 +1,8 @@
 import type { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Schuljahresabschnitt } from "@core";
 
 export interface KurseAuswahlProps {
-	auswahl: KursListeEintrag | undefined;
-	mapKatalogeintraege: Map<number, KursListeEintrag>;
+	auswahl: () => KursListeEintrag | undefined;
+	mapKatalogeintraege: () => Map<number, KursListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	gotoEintrag: (eintrag: JahrgangsListeEintrag) => Promise<void>;

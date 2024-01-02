@@ -102,5 +102,20 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchKurs(data, api.schema, this.auswahl.id);
+		Object.assign(this.daten, data);
+		if (data.kuerzel !== undefined)
+			this.auswahl.kuerzel = data.kuerzel;
+		if (data.lehrer !== undefined)
+			this.auswahl.lehrer = data.lehrer;
+		if (data.idJahrgaenge !== undefined) {
+			this.auswahl.idJahrgaenge.clear();
+			this.auswahl.idJahrgaenge.addAll(data.idJahrgaenge);
+		}
+		if (data.schueler !== undefined) {
+			this.auswahl.schueler.clear();
+			this.auswahl.schueler.addAll(data.schueler);
+		}
+		this.commit();
 	}
+
 }

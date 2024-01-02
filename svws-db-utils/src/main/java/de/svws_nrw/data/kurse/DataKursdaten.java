@@ -21,6 +21,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
@@ -60,6 +61,18 @@ public final class DataKursdaten extends DataManager<Long> {
 	}
 
 
+	private static List<Long> convertJahrgaenge(final DTOKurs kurs) {
+		final List<Long> result = new ArrayList<>();
+		if (kurs.Jahrgang_ID != null)
+			result.add(kurs.Jahrgang_ID);
+		if (kurs.Jahrgaenge != null)
+			for (final String jahrgang : kurs.Jahrgaenge.split(","))
+				if (jahrgang.matches("^\\d+$"))
+					result.add(Long.parseLong(jahrgang));
+		return result;
+	}
+
+
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
 	 */
@@ -68,12 +81,7 @@ public final class DataKursdaten extends DataManager<Long> {
 		daten.id = kurs.ID;
 		daten.idSchuljahresabschnitt = kurs.Schuljahresabschnitts_ID;
 		daten.kuerzel = kurs.KurzBez;
-		if (kurs.Jahrgang_ID != null)
-			daten.idJahrgaenge.add(kurs.Jahrgang_ID);
-		if (kurs.Jahrgaenge != null)
-			for (final String jahrgang : kurs.Jahrgaenge.split(","))
-				if (jahrgang.matches("^\\d+$"))
-					daten.idJahrgaenge.add(Long.parseLong(jahrgang));
+		daten.idJahrgaenge.addAll(convertJahrgaenge(kurs));
 		daten.idFach = kurs.Fach_ID;
 		daten.lehrer = kurs.Lehrer_ID;
 		daten.kursartAllg = kurs.KursartAllg == null ? "" : kurs.KursartAllg;
@@ -198,6 +206,35 @@ public final class DataKursdaten extends DataManager<Long> {
 			}
 			if (changed) {
 				dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+			}
+		}),
+		Map.entry("idJahrgaenge", (conn, dto, value, map) -> {
+			final List<Long> neu = JSONMapper.convertToListOfLong(value, false);
+			final List<Long> vorher = convertJahrgaenge(dto);
+			boolean changed = (neu.size() != vorher.size());
+			for (final long n : neu) {
+				if (!vorher.contains(n))
+					changed = true;
+			}
+			if (!changed)
+				return;
+			if (neu.isEmpty()) {
+				dto.ASDJahrgang = null;
+				dto.Jahrgang_ID = null;
+				dto.Jahrgaenge = null;
+			} else {
+				final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
+				if (dtoJahrgaenge.size() != neu.size())
+					throw OperationError.BAD_REQUEST.exception("Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
+				if (neu.size() > 1) {
+					dto.ASDJahrgang = null;
+					dto.Jahrgang_ID = null;
+					dto.Jahrgaenge = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+				} else {
+					dto.Jahrgang_ID = neu.get(0);
+					dto.ASDJahrgang = dtoJahrgaenge.get(0).ASDJahrgang;
+					dto.Jahrgaenge = null;
+				}
 			}
 		})
 	);

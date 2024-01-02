@@ -5,25 +5,25 @@
 				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>patch({ kuerzel })" type="text" />
+				<svws-ui-text-input placeholder="Kürzel" :model-value="data().kuerzel" @change="kuerzel=>patch({ kuerzel })" type="text" />
 				<svws-ui-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="l => l.kuerzel" />
-				<svws-ui-select title="Fach" :model-value="mapFaecher.get(data.idFach)"
+				<svws-ui-select title="Fach" :model-value="mapFaecher.get(data().idFach)"
 					@update:model-value="value => patch({ idFach: value?.id ?? -1 })"
 					:items="mapFaecher" :item-text="(f: FaecherListeEintrag) => f.kuerzel + ' (' + f.bezeichnung + ')'" />
 				<svws-ui-select title="Kursart" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
-					:model-value="data.kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" />
-				<svws-ui-input-number placeholder="Wochenstunden" :model-value="data.wochenstunden" @change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
+					:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" />
+				<svws-ui-input-number placeholder="Wochenstunden" :model-value="data().wochenstunden" @change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
 				<svws-ui-multi-select title="Jahrgänge" v-model="jahrgaenge" :items="mapJahrgaenge" :item-text="jg => jg?.kuerzel ?? ''" />
-				<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
-				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data.bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
-				<svws-ui-select title="Fortschreibungsart" :model-value="KursFortschreibungsart.fromID(data.idKursFortschreibungsart)"
+				<svws-ui-input-number placeholder="Sortierung" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
+				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
+				<svws-ui-select title="Fortschreibungsart" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
 					@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"
 					:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
 				<svws-ui-multi-select title="Schienen" v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Kursliste">
-			<svws-ui-table :columns="colsSchueler" :items="data.schueler">
+			<svws-ui-table :columns="colsSchueler" :items="data().schueler">
 				<template #cell(status)="{ value }: { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 				</template>
@@ -53,7 +53,7 @@
 	const jahrgaenge = computed<JahrgangsListeEintrag[]>({
 		get: () => {
 			const arr = [];
-			for (const id of props.data.idJahrgaenge) {
+			for (const id of props.data().idJahrgaenge) {
 				const e = props.mapJahrgaenge.get(id);
 				if (e !== undefined)
 					arr.push(e);
@@ -69,26 +69,29 @@
 
 	const schienen = computed<number[]>({
 		get: () => {
-			return props.data.schienen.toArray(new Array<number>);
+			return props.data().schienen.toArray(new Array<number>);
 		},
 		set: (value) => {
 			const result = new ArrayList<number>();
 			let changed = false;
 			for (const s of value) {
-				if (!props.data.schienen.contains(s))
+				if (!props.data().schienen.contains(s))
 					changed = true;
 				result.add(s);
 			}
 			if (!changed)
-				changed = (props.data.schienen.size() != result.size());
+				changed = (props.data().schienen.size() != result.size());
 			if (changed)
 				void props.patch({ schienen : result });
 		}
 	});
 
 	const lehrer = computed<LehrerListeEintrag | undefined>({
-		get: () => ((props.data === undefined) || (props.data.lehrer === null)) ? undefined : props.mapLehrer.get(props.data.lehrer),
-		set: (value) => void props.patch({lehrer: value === undefined ? null : value.id })
+		get: () => {
+			const idLehrer = props.data().lehrer;
+			return (idLehrer === null) ? undefined : props.mapLehrer.get(idLehrer);
+		},
+		set: (value) => void props.patch({ lehrer: value === undefined ? null : value.id })
 	});
 
 	const kursarten = computed<Map<string, string>>(() => {
@@ -103,7 +106,7 @@
 	});
 
 	const istSichtbar = computed<boolean>({
-		get: () => props.data === undefined ? false : props.data.istSichtbar,
+		get: () => props.data === undefined ? false : props.data().istSichtbar,
 		set: (value) => void props.patch({ istSichtbar: value })
 	});
 

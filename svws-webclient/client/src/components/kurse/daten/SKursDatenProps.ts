@@ -3,7 +3,7 @@ import type { KursDaten, JahrgangsListeEintrag, LehrerListeEintrag, Schueler, Fa
 export interface KursDatenProps {
 	schulform: Schulform;
 	patch: (data : Partial<KursDaten>) => Promise<void>;
-	data: KursDaten;
+	data: () => KursDaten;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapFaecher: Map<number, FaecherListeEintrag>;

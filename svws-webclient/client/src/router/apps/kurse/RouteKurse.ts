@@ -67,8 +67,8 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): KurseAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			auswahl: () => this.data.auswahl,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapLehrer: this.data.mapLehrer,
 			abschnitte: api.mapAbschnitte.value,
@@ -81,7 +81,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): KurseAppProps {
 		return {
-			auswahl: this.data.auswahl,
+			auswahl: () => this.data.auswahl,
 			mapLehrer: this.data.mapLehrer,
 			// Props für die Navigation
 			setTab: this.setTab,
