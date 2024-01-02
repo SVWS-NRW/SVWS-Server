@@ -494,6 +494,41 @@ public final class JSONMapper {
 
 
 	/**
+	 * Konvertiert das übergeben Objekt in eine Liste von Integer-Werten, sofern es sich beim Inhalt um ein
+	 * Number-Objekt handelt, welches keinen long, float oder double-Wert repräsentiert.
+	 *
+	 * @param listObj    das zu konvertierende ListenObjekt
+	 * @param nullable   falls null für das Listen-Objekt gültig ist
+	 *
+	 * @return das konvertierte Listen-Objekt
+	 */
+	public static List<Integer> convertToListOfInteger(final Object listObj, final boolean nullable) {
+		if (listObj == null) {
+			if (nullable)
+				return null;
+			throw new WebApplicationException("Der Wert null ist nicht erlaubt.", Response.Status.BAD_REQUEST);
+		}
+		final List<Integer> result = new ArrayList<>();
+		if (listObj instanceof final List<?> liste) {
+			for (final Object obj : liste) {
+				if (obj == null)
+					throw new WebApplicationException("Der Wert null ist innerhalb der Liste nicht erlaubt.", Response.Status.BAD_REQUEST);
+				if (obj instanceof final Byte b)
+					result.add(b.intValue());
+				else if (obj instanceof final Short s)
+					result.add(s.intValue());
+				else if (obj instanceof final Integer i)
+					result.add(i.intValue());
+				else
+					throw new WebApplicationException("Fehler beim Konvertieren zu Integer", Response.Status.BAD_REQUEST);
+			}
+		} else
+			throw new WebApplicationException("Es wird eine Array von Integer-Werten erwartet.", Response.Status.BAD_REQUEST);
+		return result;
+	}
+
+
+	/**
 	 * Konvertiert den Java-String in eine {@link Response} mit dem JSON-String.
 	 *
 	 * @param data   der zu konvertierende String

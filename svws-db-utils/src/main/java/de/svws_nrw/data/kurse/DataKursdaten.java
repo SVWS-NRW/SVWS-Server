@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.types.KursFortschreibungsart;
@@ -41,6 +42,24 @@ public final class DataKursdaten extends DataManager<Long> {
 		super(conn);
 	}
 
+
+	private static List<Integer> convertSchienenStrToList(final String strSchienen) {
+		final List<Integer> result = new ArrayList<>();
+		if ((strSchienen != null) && (!strSchienen.isBlank())) {
+			for (final String strSchiene : strSchienen.split(",")) {
+				if ("".equals(strSchiene.trim()))
+					continue;
+				try {
+					result.add(Integer.parseInt(strSchiene.trim()));
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// ignore exception
+				}
+			}
+		}
+		return result;
+	}
+
+
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
 	 */
@@ -60,17 +79,7 @@ public final class DataKursdaten extends DataManager<Long> {
 		daten.kursartAllg = kurs.KursartAllg == null ? "" : kurs.KursartAllg;
 		daten.sortierung = kurs.Sortierung == null ? 32000 : kurs.Sortierung;
 		daten.istSichtbar = kurs.Sichtbar;
-		if ((kurs.Schienen != null) && (!kurs.Schienen.isBlank())) {
-			for (final String strSchiene : kurs.Schienen.split(",")) {
-				if ("".equals(strSchiene.trim()))
-					continue;
-				try {
-					daten.schienen.add(Integer.parseInt(strSchiene.trim()));
-				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-					// ignore exception
-				}
-			}
-		}
+		daten.schienen.addAll(convertSchienenStrToList(kurs.Schienen));
 		daten.wochenstunden = kurs.WochenStd == null ? 0 : kurs.WochenStd;
 		daten.wochenstundenLehrer = kurs.WochenstdKL == null ? daten.wochenstunden : kurs.WochenstdKL;
 		daten.idKursFortschreibungsart = kurs.Fortschreibungsart.id;
@@ -176,7 +185,21 @@ public final class DataKursdaten extends DataManager<Long> {
 			// TODO Prüfe die Schulnummer anhand des Katalogs
 		}),
 		Map.entry("istEpochalunterricht", (conn, dto, value, map) -> dto.EpochU = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131))
+		Map.entry("bezeichnungZeugnis", (conn, dto, value, map) -> dto.ZeugnisBez = JSONMapper.convertToString(value, true, true, 131)),
+		Map.entry("schienen", (conn, dto, value, map) -> {
+			final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false);
+			final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
+			boolean changed = (neu.size() != vorher.size());
+			for (final int n : neu) {
+				if (n < 0)
+					throw OperationError.BAD_REQUEST.exception("Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
+				if (!vorher.contains(n))
+					changed = true;
+			}
+			if (changed) {
+				dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
+			}
+		})
 	);
 
 
@@ -188,7 +211,7 @@ public final class DataKursdaten extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("id", "idSchuljahresabschnitt", "kuerzel", "idFach", "kursartAllg");
 
-	private final ObjLongConsumer<DTOKurs> initDTO = (dto, id) -> {
+	private static final ObjLongConsumer<DTOKurs> initDTO = (dto, id) -> {
 		dto.ID = id;
 		dto.Sichtbar = true;
 		dto.Sortierung = 32000;
