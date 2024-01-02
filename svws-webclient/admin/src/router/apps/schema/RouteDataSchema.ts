@@ -48,6 +48,50 @@ export class RouteDataSchema {
 		this._state.value = { ... this._state.value };
 	}
 
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
+
+	get auswahl(): SchemaListeEintrag | undefined {
+		return this._state.value.auswahl;
+	}
+
+	get admins(): List<BenutzerListeEintrag> {
+		return new ArrayList<BenutzerListeEintrag>(this._state.value.admins);
+	}
+
+	get auswahlGruppe(): SchemaListeEintrag[] {
+		return this._state.value.auswahlGruppe;
+	}
+
+	get hatAuswahlSVWSSchema(): boolean {
+		if (this.auswahl === undefined)
+			return false;
+		return (this.auswahl.revision >= 0);
+	}
+
+	get auswahlSVWSSchema(): SchemaListeEintrag | null {
+		if ((this.auswahl === undefined) || (this.auswahl.revision < 0))
+			return null;
+		return this.auswahl;
+	}
+
+	get mapSchema(): Map<string, SchemaListeEintrag> {
+		return this._state.value.mapSchema;
+	}
+
+	get revision(): number | null {
+		return this._state.value.revision;
+	}
+
+	get schuleInfo(): SchuleInfo | undefined {
+		return this._state.value.schuleInfo;
+	}
+
+	get schulen(): List<SchulenKatalogEintrag> {
+		return this._state.value.schulen;
+	}
+
 	private getEmpty(name: string) : SchemaListeEintrag {
 		const entry = new SchemaListeEintrag();
 		entry.name = name;
@@ -118,57 +162,14 @@ export class RouteDataSchema {
 			throw new Error("Diese für das Schema gewählte Ansicht wird nicht unterstützt.");
 	}
 
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-
-	get auswahl(): SchemaListeEintrag | undefined {
-		return this._state.value.auswahl;
-	}
-
-	get admins(): List<BenutzerListeEintrag> {
-		return new ArrayList<BenutzerListeEintrag>(this._state.value.admins);
-	}
-
-	get auswahlGruppe(): SchemaListeEintrag[] {
-		return this._state.value.auswahlGruppe;
-	}
-
-	get hatAuswahlSVWSSchema(): boolean {
-		if (this.auswahl === undefined)
-			return false;
-		return (this.auswahl.revision >= 0);
-	}
-
-	get auswahlSVWSSchema(): SchemaListeEintrag | null {
-		if ((this.auswahl === undefined) || (this.auswahl.revision < 0))
-			return null;
-		return this.auswahl;
-	}
-
-	get mapSchema(): Map<string, SchemaListeEintrag> {
-		return this._state.value.mapSchema;
-	}
-
-	get revision(): number | null {
-		return this._state.value.revision;
-	}
-
-	get schuleInfo(): SchuleInfo | undefined {
-		return this._state.value.schuleInfo;
-	}
-
-	get schulen(): List<SchulenKatalogEintrag> {
-		return this._state.value.schulen;
-	}
-
-	gotoSchema = async (value: SchemaListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
+	gotoSchema = async (auswahl: SchemaListeEintrag | undefined) => {
+		if (auswahl === undefined || auswahl === null) {
 			await RouteManager.doRoute({ name: routeSchema.name });
 			return;
 		}
 		const redirect_name: string = (routeSchema.selectedChild === undefined) ? routeSchemaUebersicht.name : routeSchema.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { schema: value.name } });
+		await RouteManager.doRoute({ name: redirect_name, params: { schema: auswahl.name } });
+		this.setPatchedState({auswahl});
 	}
 
 	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	this.setPatchedState({ auswahlGruppe });
