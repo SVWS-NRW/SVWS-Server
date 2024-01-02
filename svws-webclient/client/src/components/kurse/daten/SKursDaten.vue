@@ -19,6 +19,7 @@
 				<svws-ui-select title="Fortschreibungsart" :model-value="KursFortschreibungsart.fromID(data.idKursFortschreibungsart)"
 					@update:model-value="value => patch({ idKursFortschreibungsart: value?.id ?? 0 })"
 					:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
+				<svws-ui-multi-select title="Schienen" v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Kursliste">
@@ -63,6 +64,25 @@
 			const result = new ArrayList<number>();
 			value.forEach(j => result.add(j.id));
 			void props.patch({ idJahrgaenge: result });
+		}
+	});
+
+	const schienen = computed<number[]>({
+		get: () => {
+			return props.data.schienen.toArray(new Array<number>);
+		},
+		set: (value) => {
+			const result = new ArrayList<number>();
+			let changed = false;
+			for (const s of value) {
+				if (!props.data.schienen.contains(s))
+					changed = true;
+				result.add(s);
+			}
+			if (!changed)
+				changed = (props.data.schienen.size() != result.size());
+			if (changed)
+				void props.patch({ schienen : result });
 		}
 	});
 

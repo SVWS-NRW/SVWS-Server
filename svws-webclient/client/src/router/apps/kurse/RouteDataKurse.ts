@@ -101,7 +101,6 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 	patch = async (data : Partial<KursDaten>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patchKursDaten", data);
-		//await api.server.patchKursDaten(data, api.schema, this.item.id);
+		await api.server.patchKurs(data, api.schema, this.auswahl.id);
 	}
 }
