@@ -71,14 +71,26 @@
 				<HstCheckbox v-model="state.count" title="count" />
 			</template>
 		</Variant>
+		<Variant title="Inputs">
+			<div class="px-3">
+				<svws-ui-content-card>
+					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols2" clickable>
+						<template #cell(email)="{ rowIndex }">
+							<svws-ui-text-input :model-value="1" @keyup.down="next(rowIndex)" @keyup.up="previous(rowIndex)" @keyup.enter="next(rowIndex)" :ref="(el) => itemRefs.set(rowIndex, el)" />
+						</template>
+					</svws-ui-table>
+				</svws-ui-content-card>
+			</div>
+		</Variant>
 	</Story>
 </template>
 
 <script setup lang="ts">
-	import {ref, reactive, type Ref, computed} from "vue";
-	import type {DataTableColumn} from "../types";
-	import SvwsUiContentCard
-		from "./App/SvwsUiContentCard.vue";
+	import type { Ref} from "vue";
+	import { ref, reactive } from "vue";
+	import type { DataTableColumn } from "../types";
+
+	const itemRefs = ref(new Map());
 
 	const state = reactive({
 		disableHeader: false,
@@ -102,40 +114,42 @@
 		typeGrid: false,
 	});
 
-	const cols = ref([
+	const cols = ref<DataTableColumn[]>([
 		{key: "name", label: "Name", sortable: true, span: 1,},
 		{key: "fach", label: "Fach", span: 0.5},
 		{key: "email", label: "E-Mail", toggle: true},
 		{key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25},
 		{key: "test", label: "Column", sortable: true},
 		{key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true},
-	]) as Ref<DataTableColumn[]>;
+	]);
 
-	type DataTableSortingOrder = 'asc' | 'desc' | null;
-	const sortingOrder = ref<DataTableSortingOrder>("desc");
-	const sortBy = ref(undefined);
+	const cols2 = ref([
+		{key: "name", label: "Name", sortable: true, span: 1,},
+		{key: "fach", label: "Fach", span: 0.5},
+		{key: "email", label: "Note"},
+	]);
 
 	const data = ref([
-		{name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
-		{name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
-		{name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
-		{name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
-		{name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
-		{name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
-		{name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
-		{name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "", itemID: '1', fach: ''},
-		{name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
-		{name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "", itemID: '99', fach: 'Englisch'},
-		{name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
-		{name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
-		{name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
-		{name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
-		{name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "", itemID: '42', fach: ''},
-		{name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
+		{id: 0,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
+		{id: 1,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
+		{id: 2,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
+		{id: 3,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
+		{id: 4,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
+		{id: 5,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
+		{id: 6,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
+		{id: 7,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
+		{id: 8,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
+		{id: 9,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "", itemID: '1', fach: ''},
+		{id: 10,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
+		{id: 11,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "", itemID: '99', fach: 'Englisch'},
+		{id: 12,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
+		{id: 13,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
+		{id: 14,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
+		{id: 15,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
+		{id: 16,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
+		{id: 17,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "", itemID: '42', fach: ''},
+		{id: 18,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
+		{id: 19,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
 	]);
 
 	const selectedRows = ref([]);
@@ -149,19 +163,18 @@
 		docsMultiselectFilterB.value = undefined;
 	}
 
-	const rowExpanded = ref([] as string[]);
+	function next(id: number) {
+		const el = itemRefs.value.get(id + 1);
+		if (el)
+			el.input.focus();
+	}
 
-	const toggleRowExpanded = (id: string) => {
-		if (rowExpanded.value.includes(id)) {
-			rowExpanded.value = rowExpanded.value.filter((rowId) => rowId !== id);
-		} else {
-			rowExpanded.value.push(id);
-		}
-	};
+	function previous(id: number) {
+		const el = itemRefs.value.get(id - 1);
+		if (el)
+			el.input.focus();
+	}
 
-	const isRowExpanded = (id: string) => {
-		return rowExpanded.value.includes(id);
-	};
 </script>
 
 <docs lang="md">
