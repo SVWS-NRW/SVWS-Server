@@ -92,10 +92,10 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	/**
 	 * Gibt alle Katalog-Einträge zurück.
 	 *
-	 * @return ein Array mit allen Katalog-Einträgen
+	 * @return eine Liste mit allen Katalog-Einträgen
 	 */
-	public values() : Array<BKBildungsplan | null> | null {
-		return this._values.toArray(Array(0).fill(null));
+	public getAll() : List<BKBildungsplan> | null {
+		return this._values;
 	}
 
 	/**
@@ -103,15 +103,15 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
-	 * @return Die Lehrpläne für das angegebene Schuljahr
+	 * @return Eine Liste der Lehrpläne für das angegebene Schuljahr
 	 */
-	public getLehrplaeneBySchuljahr(schuljahr : number) : Array<BKBildungsplan | null> | null {
+	public getLehrplaeneBySchuljahr(schuljahr : number) : List<BKBildungsplan> | null {
 		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
 		for (const bildungsplan of this._values) {
 			if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
 				lehrplaene.add(bildungsplan);
 		}
-		return lehrplaene.toArray(Array(0).fill(null));
+		return lehrplaene;
 	}
 
 	/**
@@ -120,9 +120,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @param index  	  der Schulgliederungs-Index des Teilkatalogs
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
-	 * @return Die Lehrpläne eines Index für das angegebene Schuljahr
+	 * @return Eine Liste der Lehrpläne eines Index für das angegebene Schuljahr
 	 */
-	public getLehrplaeneByIndexSchuljahr(index : number, schuljahr : number) : Array<BKBildungsplan | null> | null {
+	public getLehrplaeneByIndexSchuljahr(index : number, schuljahr : number) : List<BKBildungsplan> | null {
 		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
@@ -131,7 +131,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 					lehrplaene.add(bildungsplan);
 			}
 		}
-		return lehrplaene.toArray(Array(0).fill(null));
+		return lehrplaene;
 	}
 
 	/**
@@ -140,9 +140,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @param gliederung   die Schulgliederung
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
-	 * @return Die Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
+	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
-	public getLehrplaeneBySchulgliederungSchuljahr(gliederung : Schulgliederung, schuljahr : number) : Array<BKBildungsplan | null> | null {
+	public getLehrplaeneBySchulgliederungSchuljahr(gliederung : Schulgliederung, schuljahr : number) : List<BKBildungsplan> | null {
 		if (gliederung.daten.bkIndex === null)
 			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.")
 		return this.getLehrplaeneByIndexSchuljahr(gliederung.daten.bkIndex, schuljahr);
@@ -155,9 +155,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @param index  	  der Schulgliederungs-Index des Teilkatalogs
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
-	 * @return Die Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
+	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
-	public getLehrplaeneByIndexSchuljahrAll(index : number, schuljahr : number) : Array<BKBildungsplan | null> | null {
+	public getLehrplaeneByIndexSchuljahrAll(index : number, schuljahr : number) : List<BKBildungsplan> | null {
 		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
@@ -166,7 +166,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 					lehrplaene.add(bildungsplan);
 			}
 		}
-		return lehrplaene.toArray(Array(0).fill(null));
+		return lehrplaene;
 	}
 
 	/**
@@ -175,9 +175,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @param gliederung  die Schulgliederung
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
 	 *
-	 * @return Die Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
+	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
-	public getLehrplaeneBySchulgliederungSchuljahrAll(gliederung : Schulgliederung, schuljahr : number) : Array<BKBildungsplan | null> | null {
+	public getLehrplaeneBySchulgliederungSchuljahrAll(gliederung : Schulgliederung, schuljahr : number) : List<BKBildungsplan> | null {
 		if (gliederung.daten.bkIndex === null)
 			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.")
 		return this.getLehrplaeneByIndexSchuljahrAll(gliederung.daten.bkIndex, schuljahr);
@@ -267,7 +267,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste aller bekannten Bündelfächer
 	 */
-	public getFaecherByFachklassenschuesselSchuljahr() : Array<BKFBFach | null> | null;
+	public getFaecherByFachklassenschuesselSchuljahr() : List<BKFBFach> | null;
 
 	/**
 	 * Gibt die Bündelfächer zu einem Fachklassenschlüssel in einem (Einschulungs-)Schuljahr zurück.
@@ -278,14 +278,16 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Bündelfächer für die Fachklasse und Schuljahr oder null falls keine Bildungsplan für Fachklasse vorhanden ist.
 	 */
-	public getFaecherByFachklassenschuesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : Array<BKFBFach | null> | null;
+	public getFaecherByFachklassenschuesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : List<BKFBFach> | null;
 
 	/**
 	 * Implementation for method overloads of 'getFaecherByFachklassenschuesselSchuljahr'
 	 */
-	public getFaecherByFachklassenschuesselSchuljahr(__param0? : BKFachklassenSchluessel, __param1? : number) : Array<BKFBFach | null> | null {
+	public getFaecherByFachklassenschuesselSchuljahr(__param0? : BKFachklassenSchluessel, __param1? : number) : List<BKFBFach> | null {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			return this._mapFachByKuerzel.values().toArray(Array(0).fill(null));
+			const faecher : ArrayList<BKFBFach> = new ArrayList();
+			faecher.addAll(this._mapFachByKuerzel.values());
+			return faecher;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			const schluessel : BKFachklassenSchluessel = cast_de_svws_nrw_core_data_bk_BKFachklassenSchluessel(__param0);
 			const schuljahr : number = __param1 as number;
@@ -314,14 +316,14 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Bündelfächer für die Fachklasse und Schuljahr oder null falls keine Leh
 	 */
-	public getFaecherByIndexFachklasseSchuljahr(index : number, schluessel : string, schuljahr : number) : Array<BKFBFach | null> | null {
+	public getFaecherByIndexFachklasseSchuljahr(index : number, schluessel : string, schuljahr : number) : List<BKFBFach> | null {
 		const mapById : JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 		if (mapById === null)
 			return null;
 		for (const lehrplaene of mapById.values())
 			for (const bildungsplan of lehrplaene)
 				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
-					return bildungsplan.fbFaecher.toArray(Array(0).fill(null));
+					return new ArrayList(bildungsplan.fbFaecher);
 		return null;
 	}
 
@@ -335,7 +337,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Bündelfächer für Fachklasse, Schuljahr und Jahrgang oder null bei einer fehlerhaften ID
 	 */
-	public getFaecherByFachklassenschluesselSchuljahrJahrgang(schluessel : BKFachklassenSchluessel, schuljahr : number, jahrgang : number) : Array<BKFBFach | null> | null {
+	public getFaecherByFachklassenschluesselSchuljahrJahrgang(schluessel : BKFachklassenSchluessel, schuljahr : number, jahrgang : number) : List<BKFBFach> | null {
 		return this.getFaecherByIndexFachklasseSchuljahrJahrgang(schluessel.index, schluessel.schluessel, schuljahr, jahrgang);
 	}
 
@@ -350,11 +352,11 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Bündelfächer für Fachklasse, Schuljahr und Jahrgang oder null bei einer fehlerhaften ID
 	 */
-	public getFaecherByIndexFachklasseSchuljahrJahrgang(index : number, schluessel : string, schuljahr : number, jahrgang : number) : Array<BKFBFach | null> | null {
+	public getFaecherByIndexFachklasseSchuljahrJahrgang(index : number, schluessel : string, schuljahr : number, jahrgang : number) : List<BKFBFach> | null {
 		const bildungsplan : BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 		if (bildungsplan === null)
 			return null;
-		return bildungsplan.fbFaecher.toArray(Array(0).fill(null));
+		return new ArrayList(bildungsplan.fbFaecher);
 	}
 
 	/**
@@ -366,7 +368,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr oder null, wenn nicht vorhanden
 	 */
-	public getLernfelderByFachklassenschluesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : Array<BKLernfeld | null> | null {
+	public getLernfelderByFachklassenschluesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : List<BKLernfeld> | null {
 		return this.getLernfelderByIndexFachklasseSchuljahr(schluessel.index, schluessel.schluessel, schuljahr);
 	}
 
@@ -380,14 +382,14 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr oder null, wenn nicht vorhanden
 	 */
-	public getLernfelderByIndexFachklasseSchuljahr(index : number, schluessel : string, schuljahr : number) : Array<BKLernfeld | null> | null {
+	public getLernfelderByIndexFachklasseSchuljahr(index : number, schluessel : string, schuljahr : number) : List<BKLernfeld> | null {
 		const mapById : JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
 		if (mapById === null)
 			return null;
 		for (const lehrplaene of mapById.values())
 			for (const bildungsplan of lehrplaene)
 				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
-					return bildungsplan.lernfelder.toArray(Array(0).fill(null));
+					return new ArrayList(bildungsplan.lernfelder);
 		return null;
 	}
 
@@ -401,7 +403,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr im angegebenen Jahrgang oder null, wenn nicht vorhanden
 	 */
-	public getLernfelderByFachklassenschluesselSchuljahrJahrgang(schluessel : BKFachklassenSchluessel, schuljahr : number, jahrgang : number) : Array<BKLernfeld | null> | null {
+	public getLernfelderByFachklassenschluesselSchuljahrJahrgang(schluessel : BKFachklassenSchluessel, schuljahr : number, jahrgang : number) : List<BKLernfeld> | null {
 		return this.getLernfelderByIndexFachklasseSchuljahrJahrgang(schluessel.index, schluessel.schluessel, schuljahr, jahrgang);
 	}
 
@@ -416,11 +418,11 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste der Lernfelder für eine Fachklasse und Schuljahr im angegebenen Jahrgang oder null, wenn nicht vorhanden
 	 */
-	public getLernfelderByIndexFachklasseSchuljahrJahrgang(index : number, schluessel : string, schuljahr : number, jahrgang : number) : Array<BKLernfeld | null> | null {
+	public getLernfelderByIndexFachklasseSchuljahrJahrgang(index : number, schluessel : string, schuljahr : number, jahrgang : number) : List<BKLernfeld> | null {
 		const bildungsplan : BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 		if (bildungsplan === null)
 			return null;
-		return bildungsplan.lernfelder.toArray(Array(0).fill(null));
+		return new ArrayList(bildungsplan.lernfelder);
 	}
 
 	/**
