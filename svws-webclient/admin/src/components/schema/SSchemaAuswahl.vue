@@ -25,7 +25,7 @@
 						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line />  </svws-ui-button>
 					</s-schema-migrate-modal>
 					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">
-						<svws-ui-button @click="openModal" type="icon" title="SQLite-Schema importieren"> <i-ri-upload-2-line /> </svws-ui-button>
+						<svws-ui-button @click="openModal" type="icon" title="SQLite-Schema importieren"> <i-ri-download-2-line /> </svws-ui-button>
 					</s-schema-auswahl-import-modal>
 					<s-schema-duplicate-modal v-slot="{ openModal }" :duplicate-schema="duplicateSchema">
 						<svws-ui-button @click="openModal" type="icon" title="Schema duplizieren"> <i-ri-file-copy-line /> </svws-ui-button>

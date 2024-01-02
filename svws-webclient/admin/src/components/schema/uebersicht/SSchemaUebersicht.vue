@@ -14,9 +14,9 @@
 				<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :target-schema="eintrag.name">
 					<svws-ui-button type="secondary" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line /> Schild2-Schema hierher migrieren </svws-ui-button>
 				</s-schema-migrate-modal>
-				<svws-ui-button type="secondary" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen"> <i-ri-download-2-line /> Backup erstellen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen"> <i-ri-upload-2-line /> Backup erstellen </svws-ui-button>
 				<s-schema-import-modal v-slot="{ openModal }" :restore-schema="restoreSchema">
-					<svws-ui-button type="secondary" @click="openModal" title="Schema aus Backup wiederherstellen"> <i-ri-upload-2-line /> Schema aus Backup hier wiederherstellen </svws-ui-button>
+					<svws-ui-button type="secondary" @click="openModal" title="Schema aus Backup wiederherstellen"> <i-ri-download-2-line /> Schema aus Backup hier wiederherstellen </svws-ui-button>
 				</s-schema-import-modal>
 				<svws-ui-button type="secondary" v-if="revisionUpToDate" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <i-ri-speed-line /> Revision auf {{ revision }} setzen </svws-ui-button>
 				<div v-if="eintrag.isTainted">Achtung, auch nach dem Hochsetzen auf die aktuelle Revision bleibt das Schema „Tainted“.</div>
