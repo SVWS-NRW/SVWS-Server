@@ -108,15 +108,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 			throw OperationError.BAD_REQUEST.exception("Klausurtermin nicht gefunden, ID: " + terminId);
 		final List<Long> kursKlausurIds = conn.queryNamed("DTOGostKlausurenKursklausuren.termin_id", terminId, DTOGostKlausurenKursklausuren.class).stream().map(k -> k.ID).distinct().toList();
 
-
-//		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausurIds,
-//				DTOGostKlausurenSchuelerklausuren.class);
-//		// Schuelerklausuren entfernen, die an anderem Termin stattfinden sollen.
-//		listSchuelerklausuren.removeAll(listSchuelerklausuren.stream().filter(sk -> sk.Termin_ID != null && sk.Termin_ID != terminId).toList());
-//		// Schuelerklausuren ohne zugehörige Kursklausur hinzufügen (z.B. Nachschreiber)
-//		listSchuelerklausuren.addAll(conn.queryNamed("DTOGostKlausurenSchuelerklausuren.termin_id", terminId, DTOGostKlausurenSchuelerklausuren.class));
-//		return listSchuelerklausuren.stream().map(dtoMapper::apply).toList();
-
 		final Map<Long, DTOGostKlausurenSchuelerklausuren> mapSchuelerklausuren = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausurIds,
 				DTOGostKlausurenSchuelerklausuren.class).stream().collect(Collectors.toMap(sk -> sk.ID, sk -> sk));
 
@@ -143,7 +134,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		final GostSchuelerklausur daten = new GostSchuelerklausur();
 		daten.idKursklausur = sk.Kursklausur_ID;
 		daten.idSchueler = sk.Schueler_ID;
-		daten.idSchuelerklausur = sk.ID;
+		daten.id = sk.ID;
 		daten.schuelerklausurTermine = skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 		return daten;
 	};
@@ -169,12 +160,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 			Map.entry("idSchuelerklausur", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("idKursklausur", (conn, dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("idSchueler", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)));
-//			Map.entry("idTermin", (conn, dto, value, map) -> {
-//				dto.Termin_ID = JSONMapper.convertToLong(value, true);
-//				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
-//					throw OperationError.NOT_FOUND.exception("Klausurtermin nicht gefunden, ID: " + dto.Termin_ID);
-//			}),
-//			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {

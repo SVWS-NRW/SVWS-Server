@@ -449,11 +449,11 @@ export class GostKursklausurManager extends JavaObject {
 		const setOfIDs : HashSet<number> = new HashSet();
 		for (const klausur of list) {
 			GostKursklausurManager.schuelerklausurCheck(klausur);
-			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.idSchuelerklausur + " existiert bereits!", this._schuelerklausur_by_id.containsKey(klausur.idSchuelerklausur));
-			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.idSchuelerklausur + " doppelt in der Liste!", !setOfIDs.add(klausur.idSchuelerklausur));
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._schuelerklausur_by_id.containsKey(klausur.id));
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!", !setOfIDs.add(klausur.id));
 		}
 		for (const klausur of list)
-			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, klausur.idSchuelerklausur, klausur);
+			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, klausur.id, klausur);
 	}
 
 	/**
@@ -468,7 +468,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private static schuelerklausurCheck(kursklausur : GostSchuelerklausur) : void {
-		DeveloperNotificationException.ifInvalidID("schuelerklausur.idSchuelerklausur", kursklausur.idSchuelerklausur);
+		DeveloperNotificationException.ifInvalidID("schuelerklausur.idSchuelerklausur", kursklausur.id);
 	}
 
 	/**
@@ -501,8 +501,8 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public schuelerklausurPatchAttributes(kursklausur : GostSchuelerklausur) : void {
 		GostKursklausurManager.schuelerklausurCheck(kursklausur);
-		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, kursklausur.idSchuelerklausur);
-		DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, kursklausur.idSchuelerklausur, kursklausur);
+		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, kursklausur.id);
+		DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, kursklausur.id, kursklausur);
 		this.update_all();
 	}
 
@@ -528,7 +528,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public schuelerklausurRemoveAll(listKursklausuren : List<GostSchuelerklausur>) : void {
 		for (const kursklausur of listKursklausuren)
-			this.schuelerklausurRemoveOhneUpdateById(kursklausur.idSchuelerklausur);
+			this.schuelerklausurRemoveOhneUpdateById(kursklausur.id);
 		this.update_all();
 	}
 

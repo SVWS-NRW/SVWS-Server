@@ -8,7 +8,7 @@ export class GostSchuelerklausur extends JavaObject {
 	/**
 	 * Die ID des Stundenplans.
 	 */
-	public idSchuelerklausur : number = -1;
+	public id : number = -1;
 
 	/**
 	 * Die textuelle Beschreibung des Stundenplans.
@@ -41,9 +41,9 @@ export class GostSchuelerklausur extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerklausur {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerklausur();
-		if (typeof obj.idSchuelerklausur === "undefined")
-			 throw new Error('invalid json format, missing attribute idSchuelerklausur');
-		result.idSchuelerklausur = obj.idSchuelerklausur;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (typeof obj.idKursklausur === "undefined")
 			 throw new Error('invalid json format, missing attribute idKursklausur');
 		result.idKursklausur = obj.idKursklausur;
@@ -60,7 +60,7 @@ export class GostSchuelerklausur extends JavaObject {
 
 	public static transpilerToJSON(obj : GostSchuelerklausur) : string {
 		let result = '{';
-		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
+		result += '"id" : ' + obj.id + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
 		if (!obj.schuelerklausurTermine) {
@@ -82,8 +82,8 @@ export class GostSchuelerklausur extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausur>) : string {
 		let result = '{';
-		if (typeof obj.idSchuelerklausur !== "undefined") {
-			result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.idKursklausur !== "undefined") {
 			result += '"idKursklausur" : ' + obj.idKursklausur + ',';

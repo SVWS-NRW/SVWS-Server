@@ -19,7 +19,7 @@ public class GostSchuelerklausur {
 
 	/** Die ID des Stundenplans. */
 	@Schema(description = "die ID des Stundenplans", example = "815")
-	public long idSchuelerklausur = -1;
+	public long id = -1;
 
 	/** Die textuelle Beschreibung des Stundenplans. */
 	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
