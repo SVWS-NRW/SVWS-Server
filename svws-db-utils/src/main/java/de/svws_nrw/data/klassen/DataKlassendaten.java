@@ -92,6 +92,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		daten.idFolgeklasse = (folgeklasse == null) ? null : folgeklasse.ID;
 		daten.kuerzelFolgeklasse = (folgeklasse == null) ? klasse.FKlasse : folgeklasse.Klasse;
 		daten.idFachklasse = klasse.Fachklasse_ID;
+		daten.beginnSommersemester = klasse.SommerSem != null && klasse.SommerSem;
 		return daten;
 	}
 

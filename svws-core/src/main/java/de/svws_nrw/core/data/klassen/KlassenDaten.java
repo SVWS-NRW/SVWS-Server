@@ -115,4 +115,8 @@ public class KlassenDaten {
 	@Schema(description = "die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null", example = "4711")
 	public Long idFachklasse = null;
 
+	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */
+	@Schema(description = "gibt am WBK an, ob die Klassen im Sommersemester angefangen hat", example = "false")
+	public boolean beginnSommersemester = false;
+
 }

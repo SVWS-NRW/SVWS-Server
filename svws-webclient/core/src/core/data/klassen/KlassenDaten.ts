@@ -125,6 +125,11 @@ export class KlassenDaten extends JavaObject {
 	 */
 	public idFachklasse : number | null = null;
 
+	/**
+	 * Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
+	 */
+	public beginnSommersemester : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -193,6 +198,9 @@ export class KlassenDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute verwendungAnkreuzkompetenzen');
 		result.verwendungAnkreuzkompetenzen = obj.verwendungAnkreuzkompetenzen;
 		result.idFachklasse = typeof obj.idFachklasse === "undefined" ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
+		if (typeof obj.beginnSommersemester === "undefined")
+			 throw new Error('invalid json format, missing attribute beginnSommersemester');
+		result.beginnSommersemester = obj.beginnSommersemester;
 		return result;
 	}
 
@@ -244,6 +252,7 @@ export class KlassenDaten extends JavaObject {
 		result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt + ',';
 		result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen + ',';
 		result += '"idFachklasse" : ' + ((!obj.idFachklasse) ? 'null' : obj.idFachklasse) + ',';
+		result += '"beginnSommersemester" : ' + obj.beginnSommersemester + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -344,6 +353,9 @@ export class KlassenDaten extends JavaObject {
 		}
 		if (typeof obj.idFachklasse !== "undefined") {
 			result += '"idFachklasse" : ' + ((!obj.idFachklasse) ? 'null' : obj.idFachklasse) + ',';
+		}
+		if (typeof obj.beginnSommersemester !== "undefined") {
+			result += '"beginnSommersemester" : ' + obj.beginnSommersemester + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
