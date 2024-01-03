@@ -135,6 +135,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		daten.idKursklausur = sk.Kursklausur_ID;
 		daten.idSchueler = sk.Schueler_ID;
 		daten.id = sk.ID;
+		daten.bemerkung = sk.Bemerkungen;
 		daten.schuelerklausurTermine = skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 		return daten;
 	};
@@ -151,6 +152,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		daten.idSchuelerklausur = sk.ID;
 		daten.idTermin = skt.Termin_ID;
 		daten.startzeit = skt.Startzeit;
+		daten.bemerkungSchuelerklausur = sk.Bemerkungen;
+		daten.bemerkungSchuelerklausurtermin = skt.Bemerkungen;
 		return daten;
 	};
 

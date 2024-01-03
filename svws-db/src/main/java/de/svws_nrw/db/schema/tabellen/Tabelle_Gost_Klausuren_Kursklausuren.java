@@ -41,6 +41,9 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene");
 
+	/** Die Definition der Tabellenspalte Bemerkungen */
+	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bemerkungen zur Kursklausur");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Vorgabe_ID_FK */

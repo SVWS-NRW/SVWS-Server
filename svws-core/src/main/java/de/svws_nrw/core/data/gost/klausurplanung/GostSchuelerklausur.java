@@ -33,4 +33,8 @@ public class GostSchuelerklausur {
 	@Schema(description = "die Liste der IDs der zugehörigen Termine", example = "[ 5590, 5591, 5592, ... ]")
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurTermine = new ArrayList<>();
 
+	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
+	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Zentrale Vergleichsklausur")
+	public String bemerkung = null;
+
 }

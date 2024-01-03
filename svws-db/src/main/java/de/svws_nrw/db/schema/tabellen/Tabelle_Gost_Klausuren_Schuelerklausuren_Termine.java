@@ -36,6 +36,10 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren_Termine extends SchemaTabe
 		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Startzeit der Klausur, wenn abweichend von Startzeit des Klausurtermins");
 
+	/** Die Definition der Tabellenspalte Bemerkungen */
+	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bemerkungen des Schuelerklausurtermins");
+
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Schuelerklausuren_Termine_Schuelerklausur_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Schuelerklausuren_Termine_Schuelerklausur_ID_FK = addForeignKey(

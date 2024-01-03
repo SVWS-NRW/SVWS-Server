@@ -45,4 +45,12 @@ public class GostKlausurtermin {
 	@Schema(description = "die textuelle Bemerkung zum Termin, sofern vorhanden", example = "Im Anschluss kein regulärer Unterricht.")
 	public String bemerkung = null;
 
+	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
+	@Schema(description = "die Information, ob es sich um einen Haupttermin handelt oder nicht", example = "true")
+	public boolean istHaupttermin = false;
+
+	/** Die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht. */
+	@Schema(description = "die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht", example = "false")
+	public boolean nachschreiberZugelassen = false;
+
 }

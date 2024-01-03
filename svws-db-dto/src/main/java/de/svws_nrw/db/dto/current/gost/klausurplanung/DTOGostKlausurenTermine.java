@@ -1,6 +1,7 @@
 package de.svws_nrw.db.dto.current.gost.klausurplanung;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.DatumConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
 import de.svws_nrw.db.converter.current.gost.GOStHalbjahrConverter;
@@ -20,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 import de.svws_nrw.csv.converter.current.DatumConverterSerializer;
 import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 import de.svws_nrw.csv.converter.current.UhrzeitConverterSerializer;
@@ -52,10 +55,14 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenTermine.bezeichnung.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bezeichnung IN :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.bemerkungen", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen = :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOGostKlausurenTermine.isthaupttermin", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.IstHaupttermin = :value")
+@NamedQuery(name = "DTOGostKlausurenTermine.isthaupttermin.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.IstHaupttermin IN :value")
+@NamedQuery(name = "DTOGostKlausurenTermine.nachschreiberzugelassen", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.NachschreiberZugelassen = :value")
+@NamedQuery(name = "DTOGostKlausurenTermine.nachschreiberzugelassen.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.NachschreiberZugelassen IN :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostKlausurenTermine.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.all.migration", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Datum", "Startzeit", "Bezeichnung", "Bemerkungen"})
+@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Datum", "Startzeit", "Bezeichnung", "Bemerkungen", "IstHaupttermin", "NachschreiberZugelassen"})
 public final class DTOGostKlausurenTermine {
 
 	/** ID des Klausurtermins (generiert) */
@@ -108,6 +115,22 @@ public final class DTOGostKlausurenTermine {
 	@JsonProperty
 	public String Bemerkungen;
 
+	/** Gibt an, ob es sich bei dem Termin um den Haupttermin (1) handelt oder einen Nachschreibtermin (0). */
+	@Column(name = "IstHaupttermin")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean IstHaupttermin;
+
+	/** Gibt an, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind (1) oder nicht (0). */
+	@Column(name = "NachschreiberZugelassen")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean NachschreiberZugelassen;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenTermine ohne eine Initialisierung der Attribute.
 	 */
@@ -121,12 +144,16 @@ public final class DTOGostKlausurenTermine {
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param Quartal   der Wert für das Attribut Quartal
+	 * @param IstHaupttermin   der Wert für das Attribut IstHaupttermin
+	 * @param NachschreiberZugelassen   der Wert für das Attribut NachschreiberZugelassen
 	 */
-	public DTOGostKlausurenTermine(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal) {
+	public DTOGostKlausurenTermine(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final Boolean IstHaupttermin, final Boolean NachschreiberZugelassen) {
 		this.ID = ID;
 		this.Abi_Jahrgang = Abi_Jahrgang;
 		this.Halbjahr = Halbjahr;
 		this.Quartal = Quartal;
+		this.IstHaupttermin = IstHaupttermin;
+		this.NachschreiberZugelassen = NachschreiberZugelassen;
 	}
 
 
@@ -158,7 +185,7 @@ public final class DTOGostKlausurenTermine {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bezeichnung=" + this.Bezeichnung + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bezeichnung=" + this.Bezeichnung + ", Bemerkungen=" + this.Bemerkungen + ", IstHaupttermin=" + this.IstHaupttermin + ", NachschreiberZugelassen=" + this.NachschreiberZugelassen + ")";
 	}
 
 }

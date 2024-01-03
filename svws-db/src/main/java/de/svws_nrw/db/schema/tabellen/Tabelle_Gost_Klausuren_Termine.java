@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.DatumConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
 import de.svws_nrw.db.converter.current.gost.GOStHalbjahrConverter;
@@ -56,6 +57,20 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 		.setJavaComment("Text für Bemerkungen des Klausurtermins");
+
+	/** Die Definition der Tabellenspalte IstHaupttermin */
+	public SchemaTabelleSpalte col_IstHaupttermin = add("IstHaupttermin", SchemaDatentypen.INT, false)
+		.setDefault("1")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob es sich bei dem Termin um den Haupttermin (1) handelt oder einen Nachschreibtermin (0).");
+
+	/** Die Definition der Tabellenspalte NachschreiberZugelassen */
+	public SchemaTabelleSpalte col_NachschreiberZugelassen = add("NachschreiberZugelassen", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind (1) oder nicht (0).");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Abi_Jahrgang_FK */

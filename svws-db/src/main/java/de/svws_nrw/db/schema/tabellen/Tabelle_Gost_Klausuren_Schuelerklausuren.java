@@ -31,6 +31,10 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("ID des Schülers");
 
+	/** Die Definition der Tabellenspalte Bemerkungen */
+	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bemerkungen zur Schuelerklausur");
+
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Schuelerklausuren_Kursklausur_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Schuelerklausuren_Kursklausur_ID_FK = addForeignKey(

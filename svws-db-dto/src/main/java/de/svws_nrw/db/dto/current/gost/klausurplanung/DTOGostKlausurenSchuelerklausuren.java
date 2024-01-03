@@ -26,10 +26,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Kursklausur_ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.schueler_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID = :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.schueler_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.bemerkungen", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Kursklausur_ID", "Schueler_ID"})
+@JsonPropertyOrder({"ID", "Kursklausur_ID", "Schueler_ID", "Bemerkungen"})
 public final class DTOGostKlausurenSchuelerklausuren {
 
 	/** ID der Klausurvorgaben (generiert) */
@@ -47,6 +49,11 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	@Column(name = "Schueler_ID")
 	@JsonProperty
 	public long Schueler_ID;
+
+	/** Text für Bemerkungen zur Schuelerklausur */
+	@Column(name = "Bemerkungen")
+	@JsonProperty
+	public String Bemerkungen;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausuren ohne eine Initialisierung der Attribute.
@@ -96,7 +103,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenSchuelerklausuren(ID=" + this.ID + ", Kursklausur_ID=" + this.Kursklausur_ID + ", Schueler_ID=" + this.Schueler_ID + ")";
+		return "DTOGostKlausurenSchuelerklausuren(ID=" + this.ID + ", Kursklausur_ID=" + this.Kursklausur_ID + ", Schueler_ID=" + this.Schueler_ID + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

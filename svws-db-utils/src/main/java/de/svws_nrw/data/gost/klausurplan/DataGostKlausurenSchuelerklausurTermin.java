@@ -42,6 +42,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 		daten.idSchuelerklausur = t.Schuelerklausur_ID;
 		daten.idTermin = t.Termin_ID;
 		daten.startzeit = t.Startzeit;
+		daten.bemerkungSchuelerklausurtermin = t.Bemerkungen;
 		return daten;
 	};
 

@@ -25,6 +25,11 @@ export class GostSchuelerklausur extends JavaObject {
 	 */
 	public schuelerklausurTermine : List<GostSchuelerklausurTermin> = new ArrayList();
 
+	/**
+	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
+	 */
+	public bemerkung : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -55,6 +60,7 @@ export class GostSchuelerklausur extends JavaObject {
 				result.schuelerklausurTermine?.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
 
@@ -75,6 +81,7 @@ export class GostSchuelerklausur extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -104,6 +111,9 @@ export class GostSchuelerklausur extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.bemerkung !== "undefined") {
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

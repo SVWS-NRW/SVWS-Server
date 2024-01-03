@@ -32,6 +32,16 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	 */
 	public idSchueler : number = -1;
 
+	/**
+	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
+	 */
+	public bemerkungSchuelerklausur : string | null = null;
+
+	/**
+	 * Die textuelle Bemerkung zum Schülerklausurtermin, sofern vorhanden.
+	 */
+	public bemerkungSchuelerklausurtermin : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -62,6 +72,8 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
+		result.bemerkungSchuelerklausur = typeof obj.bemerkungSchuelerklausur === "undefined" ? null : obj.bemerkungSchuelerklausur === null ? null : obj.bemerkungSchuelerklausur;
+		result.bemerkungSchuelerklausurtermin = typeof obj.bemerkungSchuelerklausurtermin === "undefined" ? null : obj.bemerkungSchuelerklausurtermin === null ? null : obj.bemerkungSchuelerklausurtermin;
 		return result;
 	}
 
@@ -73,6 +85,8 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
+		result += '"bemerkungSchuelerklausur" : ' + ((!obj.bemerkungSchuelerklausur) ? 'null' : JSON.stringify(obj.bemerkungSchuelerklausur)) + ',';
+		result += '"bemerkungSchuelerklausurtermin" : ' + ((!obj.bemerkungSchuelerklausurtermin) ? 'null' : JSON.stringify(obj.bemerkungSchuelerklausurtermin)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,6 +111,12 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		}
 		if (typeof obj.idSchueler !== "undefined") {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
+		}
+		if (typeof obj.bemerkungSchuelerklausur !== "undefined") {
+			result += '"bemerkungSchuelerklausur" : ' + ((!obj.bemerkungSchuelerklausur) ? 'null' : JSON.stringify(obj.bemerkungSchuelerklausur)) + ',';
+		}
+		if (typeof obj.bemerkungSchuelerklausurtermin !== "undefined") {
+			result += '"bemerkungSchuelerklausurtermin" : ' + ((!obj.bemerkungSchuelerklausurtermin) ? 'null' : JSON.stringify(obj.bemerkungSchuelerklausurtermin)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

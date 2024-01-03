@@ -145,7 +145,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			if (vorgabe == null)
 				throw OperationError.NOT_FOUND.exception("Klausurvorgabe mit ID " + klausur.Vorgabe_ID + " nicht gefunden.");
 			if (termin == null) {
-				termin = new DTOGostKlausurenTermine(terminId, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal);
+				termin = new DTOGostKlausurenTermine(terminId, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal, true, false);
 				conn.transactionPersist(termin);
 				conn.transactionFlush();
 			}

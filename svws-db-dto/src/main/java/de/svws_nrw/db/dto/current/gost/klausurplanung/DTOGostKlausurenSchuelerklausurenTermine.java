@@ -36,10 +36,12 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Termin_ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.startzeit", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Startzeit = :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Startzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.bemerkungen", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Schuelerklausur_ID", "Termin_ID", "Startzeit"})
+@JsonPropertyOrder({"ID", "Schuelerklausur_ID", "Termin_ID", "Startzeit", "Bemerkungen"})
 public final class DTOGostKlausurenSchuelerklausurenTermine {
 
 	/** ID des Schülerklausur-Termins (generiert) */
@@ -65,6 +67,11 @@ public final class DTOGostKlausurenSchuelerklausurenTermine {
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public Integer Startzeit;
+
+	/** Text für Bemerkungen des Schuelerklausurtermins */
+	@Column(name = "Bemerkungen")
+	@JsonProperty
+	public String Bemerkungen;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausurenTermine ohne eine Initialisierung der Attribute.
@@ -112,7 +119,7 @@ public final class DTOGostKlausurenSchuelerklausurenTermine {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenSchuelerklausurenTermine(ID=" + this.ID + ", Schuelerklausur_ID=" + this.Schuelerklausur_ID + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ")";
+		return "DTOGostKlausurenSchuelerklausurenTermine(ID=" + this.ID + ", Schuelerklausur_ID=" + this.Schuelerklausur_ID + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

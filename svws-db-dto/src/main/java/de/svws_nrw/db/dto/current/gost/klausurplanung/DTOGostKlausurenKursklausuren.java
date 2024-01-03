@@ -38,10 +38,12 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Termin_ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit = :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenKursklausuren.bemerkungen", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenKursklausuren.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.all.migration", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Vorgabe_ID", "Kurs_ID", "Termin_ID", "Startzeit"})
+@JsonPropertyOrder({"ID", "Vorgabe_ID", "Kurs_ID", "Termin_ID", "Startzeit", "Bemerkungen"})
 public final class DTOGostKlausurenKursklausuren {
 
 	/** ID der Kursklausur (generiert) */
@@ -72,6 +74,11 @@ public final class DTOGostKlausurenKursklausuren {
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public Integer Startzeit;
+
+	/** Text für Bemerkungen zur Kursklausur */
+	@Column(name = "Bemerkungen")
+	@JsonProperty
+	public String Bemerkungen;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenKursklausuren ohne eine Initialisierung der Attribute.
@@ -121,7 +128,7 @@ public final class DTOGostKlausurenKursklausuren {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenKursklausuren(ID=" + this.ID + ", Vorgabe_ID=" + this.Vorgabe_ID + ", Kurs_ID=" + this.Kurs_ID + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ")";
+		return "DTOGostKlausurenKursklausuren(ID=" + this.ID + ", Vorgabe_ID=" + this.Vorgabe_ID + ", Kurs_ID=" + this.Kurs_ID + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

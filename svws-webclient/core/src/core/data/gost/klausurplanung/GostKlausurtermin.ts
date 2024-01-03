@@ -42,6 +42,16 @@ export class GostKlausurtermin extends JavaObject {
 	 */
 	public bemerkung : string | null = null;
 
+	/**
+	 * Die Information, ob es sich um einen Haupttermin handelt oder nicht.
+	 */
+	public istHaupttermin : boolean = false;
+
+	/**
+	 * Die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht.
+	 */
+	public nachschreiberZugelassen : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -74,6 +84,12 @@ export class GostKlausurtermin extends JavaObject {
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		if (typeof obj.istHaupttermin === "undefined")
+			 throw new Error('invalid json format, missing attribute istHaupttermin');
+		result.istHaupttermin = obj.istHaupttermin;
+		if (typeof obj.nachschreiberZugelassen === "undefined")
+			 throw new Error('invalid json format, missing attribute nachschreiberZugelassen');
+		result.nachschreiberZugelassen = obj.nachschreiberZugelassen;
 		return result;
 	}
 
@@ -87,6 +103,8 @@ export class GostKlausurtermin extends JavaObject {
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"istHaupttermin" : ' + obj.istHaupttermin + ',';
+		result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -117,6 +135,12 @@ export class GostKlausurtermin extends JavaObject {
 		}
 		if (typeof obj.bemerkung !== "undefined") {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		}
+		if (typeof obj.istHaupttermin !== "undefined") {
+			result += '"istHaupttermin" : ' + obj.istHaupttermin + ',';
+		}
+		if (typeof obj.nachschreiberZugelassen !== "undefined") {
+			result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

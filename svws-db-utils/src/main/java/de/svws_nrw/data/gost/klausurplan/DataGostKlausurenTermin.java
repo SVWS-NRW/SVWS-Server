@@ -80,6 +80,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		daten.startzeit = z.Startzeit;
 		daten.bezeichnung = z.Bezeichnung;
 		daten.bemerkung = z.Bemerkungen;
+		daten.nachschreiberZugelassen = z.NachschreiberZugelassen;
+		daten.istHaupttermin = z.IstHaupttermin;
 		return daten;
 	};
 

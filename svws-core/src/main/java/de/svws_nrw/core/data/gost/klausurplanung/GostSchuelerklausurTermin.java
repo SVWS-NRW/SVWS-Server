@@ -37,4 +37,12 @@ public class GostSchuelerklausurTermin {
 	@Schema(description = "das Zeitraster des Stundenplans")
 	public long idSchueler = -1;
 
+	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
+	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Zentrale Vergleichsklausur")
+	public String bemerkungSchuelerklausur = null;
+
+	/** Die textuelle Bemerkung zum Schülerklausurtermin, sofern vorhanden. */
+	@Schema(description = "die textuelle Bemerkung zum Schülerklausurtermin, sofern vorhanden", example = "Krankheit (Attest)")
+	public String bemerkungSchuelerklausurtermin = null;
+
 }

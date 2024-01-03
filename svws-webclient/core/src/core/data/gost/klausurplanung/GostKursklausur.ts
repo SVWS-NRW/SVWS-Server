@@ -74,6 +74,11 @@ export class GostKursklausur extends JavaObject {
 	 */
 	public schuelerIds : List<number> = new ArrayList();
 
+	/**
+	 * Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.
+	 */
+	public bemerkung : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -128,6 +133,7 @@ export class GostKursklausur extends JavaObject {
 				result.schuelerIds?.add(elem);
 			}
 		}
+		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
 
@@ -169,6 +175,7 @@ export class GostKursklausur extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -240,6 +247,9 @@ export class GostKursklausur extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.bemerkung !== "undefined") {
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
