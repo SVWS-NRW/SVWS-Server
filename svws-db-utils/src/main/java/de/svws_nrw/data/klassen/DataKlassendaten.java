@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -121,12 +122,17 @@ public final class DataKlassendaten extends DataManager<Long> {
 
 
 	private KlassenDaten getFromIDInternal(final Long id, final List<DTOSchueler> dtoSchueler) throws WebApplicationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw OperationError.NOT_FOUND.exception("Konnte die Informationen zur Schule nicht einlesen");
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
 		if (klasse == null)
 			throw OperationError.NOT_FOUND.exception("Keine Klasse zur ID " + id + " gefunden.");
+		return getFromDTOInternal(klasse, dtoSchueler);
+	}
+
+
+	private KlassenDaten getFromDTOInternal(final DTOKlassen klasse, final List<DTOSchueler> dtoSchueler) throws WebApplicationException {
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw OperationError.NOT_FOUND.exception("Konnte die Informationen zur Schule nicht einlesen");
 		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
 		// Bestimme den Schuljahresabschnitt der Klasse
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
@@ -335,6 +341,60 @@ public final class DataKlassendaten extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		return super.patchBasic(id, is, DTOKlassen.class, patchMappings);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("id", "idSchuljahresabschnitt", "kuerzel", "idJahrgang");
+
+
+	/**
+	 * Fügt eine Klasse mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw OperationError.NOT_FOUND.exception("Konnte die Informationen zur Schule nicht einlesen");
+		final DTOTeilstandorte teilstandort = conn.querySingle(DTOTeilstandorte.class);
+		if (teilstandort == null)
+			throw OperationError.NOT_FOUND.exception("Es ist kein Teilstandort definiert, es muss aber mindestens einer festgelegt sein.");
+		final long newID = conn.transactionGetNextID(DTOKlassen.class);
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
+		for (final String attr : requiredCreateAttributes)
+			if (!map.containsKey(attr))
+				throw OperationError.BAD_REQUEST.exception("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+		// Erstelle ein neues DTO für die DB, setze Default-Werte und wende Initialisierung und das Mapping der Attribute an
+		final DTOKlassen dto = new DTOKlassen(newID, schule.Schuljahresabschnitts_ID, "");
+		dto.Sichtbar = true;
+		dto.Sortierung = 32000;
+		dto.AdrMerkmal = teilstandort.AdrMerkmal;
+		dto.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten.kuerzel;
+		dto.ASDSchulformNr = Schulgliederung.getDefault(schule.Schulform).daten.kuerzel;
+		dto.Klassenart = Klassenart.getDefault(schule.Schulform).daten.kuerzel;
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		final KlassenDaten daten = getFromDTOInternal(dto, Collections.emptyList());
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Löscht eine Klasse
+	 *
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		throw new UnsupportedOperationException("Das Löschen von Klassen ist zur Zeit noch nicht implementiert.");
 	}
 
 }

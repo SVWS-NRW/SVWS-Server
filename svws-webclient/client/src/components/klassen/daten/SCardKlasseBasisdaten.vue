@@ -5,9 +5,10 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
+			<svws-ui-text-input placeholder="Beschreibung" :model-value="data.beschreibung" @change="beschreibung => patch({ beschreibung })" type="text" />
+			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="item => item.kuerzel ?? ''" />
 			<svws-ui-text-input placeholder="Parallelität" :model-value="data.parallelitaet" @change="parallelitaet => patch({ parallelitaet })" type="text" />
 			<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung => (sortierung !== null) && patch({ sortierung })" />
-			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="item => item.kuerzel ?? ''" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

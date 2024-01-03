@@ -1,5 +1,7 @@
 package de.svws_nrw.api.server;
 
+import java.io.InputStream;
+
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
@@ -13,11 +15,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -86,6 +92,91 @@ public class APIKlassen {
     		                                    @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen einer Klasse.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Klasse
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/{id : \\d+}")
+    @Operation(summary = "Passt die Daten der Klasse mit der angebenen ID an.",
+    description = "Passt die Daten der Klasse mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendaten"
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Daten der Klasse", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Erstellen einer neuen Klasse mit den angegebenen Klassendaten.
+     *
+     * @param schema                   das Datenbankschema
+     * @param is                       der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request                  die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den Daten der Klasse
+     */
+    @POST
+    @Path("/create")
+    @Operation(summary = "Erstellt eine neue Klasse und gibt die zugehörigen Daten zurück.",
+    description = "Erstellt eine neue Klasse und gibt die zugehörigen Daten zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Klasse besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Klasse wurde erfolgreich erstellt.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlassenDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Klasse anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Daten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addKlasse(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der Klasse", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen einer Klasse.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID der Klasse
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status
+     */
+    @DELETE
+    @Path("/{id : \\d+}")
+    @Operation(summary = "Entfernt eine Klasse.",
+    description = "Entfernt eine Klasse."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.")
+    @ApiResponse(responseCode = "204", description = "Die Klasse wurde erfolgreich entfernt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Klasse zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Die Klasse ist nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
     }
 
 

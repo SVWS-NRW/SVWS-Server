@@ -95,8 +95,8 @@ public class KlassenDaten {
 	@Schema(description = "die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird", example = "APO-SI 05: Jahrgänge 5-10")
 	public String pruefungsordnung = null;
 
-	/** Die ID für die Organisationsform der Klasse */
-	@Schema(description = "die ID für die Organisationsform der Klasse", example = "4711")
+	/** Die ID für die Schulgliederung der Klasse */
+	@Schema(description = "die ID für die Schulgliederung der Klasse", example = "4711")
 	public long idSchulgliederung = -1;
 
 	/** Die ID für Klassenart */

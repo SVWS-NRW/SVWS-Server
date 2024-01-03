@@ -69,9 +69,13 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const daten = this.klassenListeManager.daten();
 		if (daten === null)
 			return;
-		console.log("TODO: Implementierung patchKlassenDaten", data);
-		// await api.server.patchKlassenDaten(data, api.schema, idKlasse);
+		await api.server.patchKlasse(data, api.schema, idKlasse);
 		Object.assign(daten, data);
+		const auswahl = this.klassenListeManager.liste.get(idKlasse);
+		if (auswahl != null) {
+			if (data.kuerzel !== undefined)
+				auswahl.kuerzel = data.kuerzel;
+		}
 		this.klassenListeManager.setDaten(daten);
 		this.commit();
 	}

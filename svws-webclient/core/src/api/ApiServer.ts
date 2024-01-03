@@ -6178,6 +6178,56 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
+	 *
+	 * Passt die Daten der Klasse mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendatenbesitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KlassenDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchKlasse(data : Partial<KlassenDaten>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/klassen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = KlassenDaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
+	 *
+	 * Entfernt eine Klasse.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Klasse hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Klasse wurde erfolgreich entfernt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klasse zu entfernen.
+	 *   Code 404: Die Klasse ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async deleteKlasse(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/klassen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKlassenFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/abschnitt/{abschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
@@ -6230,6 +6280,34 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<KlassenartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/create
+	 *
+	 * Erstellt eine neue Klasse und gibt die zugehörigen Daten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Klasse besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Klasse wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KlassenDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klasse anzulegen.
+	 *   Code 404: Benötigte Daten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<KlassenDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Klasse wurde erfolgreich erstellt.
+	 */
+	public async addKlasse(data : Partial<KlassenDaten>, schema : string) : Promise<KlassenDaten> {
+		const path = "/db/{schema}/klassen/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = KlassenDaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KlassenDaten.transpilerFromJSON(text);
 	}
 
 

@@ -239,6 +239,23 @@ public enum Klassenart {
 
 
 	/**
+	 * Gibt eine Klassenart zurück, welche für die übergebene Schulform als Voreinstellung
+	 * für neue Klassen genutzt wird,
+	 *
+	 * @param schulform   die Schulform
+	 *
+	 * @return die Default-Klassenart
+	 */
+	public static @NotNull Klassenart getDefault(final @NotNull Schulform schulform) {
+		return switch (schulform) {
+			case FW, HI, WF, G, GE, GM, GY, H, PS, R, S, KS, SG, SK, SR, V -> Klassenart.RK;
+			case WB, BK, SB -> Klassenart.UNDEFINIERT;
+			default -> Klassenart.RK;
+		};
+	}
+
+
+	/**
 	 * Liefert alle Kombinationen aus Schulformen und Schulgliederungen zurück,
 	 * bei denen die Klassenart zulässig ist.
 	 *

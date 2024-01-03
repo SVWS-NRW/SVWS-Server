@@ -180,6 +180,61 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	}
 
 	/**
+	 * Gibt eine Klassenart zurück, welche für die übergebene Schulform als Voreinstellung
+	 * für neue Klassen genutzt wird,
+	 *
+	 * @param schulform   die Schulform
+	 *
+	 * @return die Default-Klassenart
+	 */
+	public static getDefault(schulform : Schulform) : Klassenart {
+		let _sevar_2034606939 : any;
+		const _seexpr_2034606939 = (schulform);
+		if (_seexpr_2034606939 === Schulform.FW) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.HI) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.WF) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.G) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.GE) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.GM) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.GY) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.H) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.PS) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.R) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.S) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.KS) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.SG) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.SK) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.SR) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.V) {
+			_sevar_2034606939 = Klassenart.RK;
+		} else if (_seexpr_2034606939 === Schulform.WB) {
+			_sevar_2034606939 = Klassenart.UNDEFINIERT;
+		} else if (_seexpr_2034606939 === Schulform.BK) {
+			_sevar_2034606939 = Klassenart.UNDEFINIERT;
+		} else if (_seexpr_2034606939 === Schulform.SB) {
+			_sevar_2034606939 = Klassenart.UNDEFINIERT;
+		} else {
+			_sevar_2034606939 = Klassenart.RK;
+		}
+		return _sevar_2034606939;
+	}
+
+	/**
 	 * Liefert alle Kombinationen aus Schulformen und Schulgliederungen zurück,
 	 * bei denen die Klassenart zulässig ist.
 	 *
