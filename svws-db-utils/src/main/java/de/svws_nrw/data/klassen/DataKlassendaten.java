@@ -214,10 +214,15 @@ public final class DataKlassendaten extends DataManager<Long> {
 			dto.ASDKlasse = jg.ASDJahrgang + (((dto.ASDKlasse != null) && (dto.ASDKlasse.length() > 2)) ? dto.ASDKlasse.charAt(2) : "");
 		}),
 		Map.entry("parallelitaet", (conn, dto, value, map) -> {
-			final char p = JSONMapper.convertToString(value, false, false, 1).charAt(0);
-			if ((p < 'A') || (p > 'Z'))
-				throw OperationError.BAD_REQUEST.exception("Die Parallelität muss durch einen Buchstaben A-Z in Großschreibung angegeben werden.");
-			dto.ASDKlasse = dto.ASDKlasse.substring(0, 2) + p;
+			final String parallelitaet = JSONMapper.convertToString(value, true, false, 1);
+			if (parallelitaet == null) {
+				dto.ASDKlasse = dto.ASDKlasse.substring(0, 2);
+			} else {
+				final char p = parallelitaet.charAt(0);
+				if ((p < 'A') || (p > 'Z'))
+					throw OperationError.BAD_REQUEST.exception("Die Parallelität muss durch einen Buchstaben A-Z in Großschreibung angegeben werden.");
+				dto.ASDKlasse = dto.ASDKlasse.substring(0, 2) + p;
+			}
 		}),
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
 		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
