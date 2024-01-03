@@ -158,11 +158,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	private List<DTOSchuelerLernabschnittsdaten> getLernabschnittsdatenZuKurs(final int hj, final DTOKurs kurs) {
+		final SchuelerStatus[] validStatus = {SchuelerStatus.AKTIV, SchuelerStatus.EXTERN};
 		return conn.query(
-				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht",
+				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status IN :sstatus AND s.Geloescht = :sgeloescht",
 				DTOSchuelerLernabschnittsdaten.class).setParameter("kursid", kurs.ID)
 				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
-				.setParameter("sstatus", SchuelerStatus.AKTIV).setParameter("sgeloescht", false).getResultList();
+				.setParameter("sstatus", Arrays.asList(validStatus))
+				.setParameter("sgeloescht", false)
+				.getResultList();
 	}
 
 	/**
