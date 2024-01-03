@@ -28,6 +28,8 @@ export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
 			schulgliederungen: api.schulgliederungen,
 			patch: routeKlassen.data.patch,
 			klassenListeManager: () => routeKlassen.data.klassenListeManager,
+			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
+			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			gotoSchueler: routeKlassen.data.gotoSchueler,
 		};
 	}

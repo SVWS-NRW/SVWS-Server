@@ -64,7 +64,9 @@ export abstract class JavaEnum<K extends JavaEnum<K>> extends JavaObject impleme
 	 *
 	 * @returns true if they are equal and false otherwise
 	 */
-	public equals(other : JavaObject) : boolean {
+	public equals(other : JavaObject | null) : boolean {
+		if (other === null)
+			return false;
 		if (!(other instanceof JavaEnum))
 			return false;
 		return this === other;

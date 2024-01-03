@@ -39,6 +39,8 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 		daten.id = abschnitt.ID;
 		daten.schuljahr = abschnitt.Jahr;
 		daten.abschnitt = abschnitt.Abschnitt;
+		daten.idVorigerAbschnitt = abschnitt.VorigerAbschnitt_ID;
+		daten.idFolgeAbschnitt = abschnitt.FolgeAbschnitt_ID;
 		return daten;
 	};
 

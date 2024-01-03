@@ -17,6 +17,16 @@ export class Schuljahresabschnitt extends JavaObject {
 	 */
 	public abschnitt : number = 0;
 
+	/**
+	 * Die ID des vorigen Schuljahresabschnittes
+	 */
+	public idVorigerAbschnitt : number | null = null;
+
+	/**
+	 * Die ID des folgenden Schuljahresabschnittes
+	 */
+	public idFolgeAbschnitt : number | null = null;
+
 
 	public constructor() {
 		super();
@@ -42,6 +52,8 @@ export class Schuljahresabschnitt extends JavaObject {
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
+		result.idVorigerAbschnitt = typeof obj.idVorigerAbschnitt === "undefined" ? null : obj.idVorigerAbschnitt === null ? null : obj.idVorigerAbschnitt;
+		result.idFolgeAbschnitt = typeof obj.idFolgeAbschnitt === "undefined" ? null : obj.idFolgeAbschnitt === null ? null : obj.idFolgeAbschnitt;
 		return result;
 	}
 
@@ -50,6 +62,8 @@ export class Schuljahresabschnitt extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
+		result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt) + ',';
+		result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,6 +79,12 @@ export class Schuljahresabschnitt extends JavaObject {
 		}
 		if (typeof obj.abschnitt !== "undefined") {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
+		}
+		if (typeof obj.idVorigerAbschnitt !== "undefined") {
+			result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt) + ',';
+		}
+		if (typeof obj.idFolgeAbschnitt !== "undefined") {
+			result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

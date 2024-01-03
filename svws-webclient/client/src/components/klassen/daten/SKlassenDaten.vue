@@ -16,9 +16,14 @@
 					<svws-ui-text-input placeholder="Teilstandort" :model-value="data.teilstandort" type="text" disabled /> <!-- TODO Select mit der Liste der Teilstandorte für diese Schule -->
 					<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung => (sortierung !== null) && patch({ sortierung })" />
 					<svws-ui-spacing />
-					<!-- TODO Falls IDs vorhanden hier Selects mit den entsprechenden Klassen-Katalogen einbauen -->
-					<svws-ui-text-input placeholder="Vorgängerklasse" :model-value="data.kuerzelVorgaengerklasse === null ? '&nbsp;' : data.kuerzelVorgaengerklasse" type="text" disabled />
-					<svws-ui-text-input placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
+					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"
+						@update:model-value="value => patch({ idVorgaengerklasse: value?.id ?? null })"
+						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable />
+					<svws-ui-text-input v-else placeholder="Vorgängerklasse" :model-value="data.kuerzelVorgaengerklasse === null ? '&nbsp;' : data.kuerzelVorgaengerklasse" type="text" disabled />
+					<svws-ui-select v-if="!listeFolgeklassen.isEmpty()" title="Folgeklasse" :model-value="data.idFolgeklasse === null ? null : mapKlassenFolgenderAbschnitt().get(data.idFolgeklasse)"
+						@update:model-value="value => patch({ idFolgeklasse: value?.id ?? null })"
+						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
+					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
 					<svws-ui-spacing />
 					<svws-ui-select title="Schulgliederung" :model-value="Schulgliederung.getByID(data.idSchulgliederung)"
 						@update:model-value="value => patch({ idSchulgliederung: value?.daten.id ?? -1 })"
@@ -71,7 +76,7 @@
 	import { computed } from "vue";
 	import { type DataTableColumn } from "@ui";
 	import { PersonalTyp, SchuelerStatus, type JahrgangsListeEintrag, type KlassenDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		WeiterbildungskollegOrganisationsformen } from "@core";
+		WeiterbildungskollegOrganisationsformen, type KlassenListeEintrag, type List, ArrayList, Jahrgaenge} from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
@@ -90,6 +95,50 @@
 		vorname?: string;
 		typ?: string;
 	}
+
+	const listeFolgeklassen = computed<List<KlassenListeEintrag>>(() => {
+		const result = new ArrayList<KlassenListeEintrag>();
+		if (data.value.idJahrgang === null) {
+			for (const kl of props.mapKlassenFolgenderAbschnitt().values())
+				result.add(kl);
+			return result;
+		}
+		const jg = props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		if (jg === null)
+			return result;
+		for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
+			if (kl.idJahrgang === null) {
+				result.add(kl);
+			} else {
+				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				if (jg.idFolgejahrgang === jgKl?.id)
+					result.add(kl);
+			}
+		}
+		return result;
+	});
+
+	const listeVorgaengerklassen = computed<List<KlassenListeEintrag>>(() => {
+		const result = new ArrayList<KlassenListeEintrag>();
+		if (data.value.idJahrgang === null) {
+			for (const kl of props.mapKlassenVorigerAbschnitt().values())
+				result.add(kl);
+			return result;
+		}
+		const jg = props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang);
+		if (jg === null)
+			return result;
+		for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
+			if (kl.idJahrgang === null) {
+				result.add(kl);
+			} else {
+				const jgKl = props.klassenListeManager().jahrgaenge.get(kl.idJahrgang);
+				if (jg.id === jgKl?.idFolgejahrgang)
+					result.add(kl);
+			}
+		}
+		return result;
+	});
 
 	const listeKlassenleitungen = computed<Lehrer[]>(() => {
 		const a = [];

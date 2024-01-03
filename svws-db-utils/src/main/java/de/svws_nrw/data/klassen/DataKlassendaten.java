@@ -235,31 +235,39 @@ public final class DataKlassendaten extends DataManager<Long> {
 		}),
 		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, 151)),
 		Map.entry("idVorgaengerklasse", (conn, dto, value, map) -> {
-			final long idVorgaengerklasse = JSONMapper.convertToLong(value, false);
-			final DTOKlassen vk = conn.queryByKey(DTOKlassen.class, idVorgaengerklasse);
-			if (vk == null)
-				throw OperationError.NOT_FOUND.exception("Die Vorgängerklasse mit der ID %d wurde nicht gefunden.".formatted(idVorgaengerklasse));
-			final DTOSchuljahresabschnitte a = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
-			if (a == null)
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Die ID des Schuljahresabschnitts %d der Klasse mit der ID %d ist ungültig.".formatted(dto.Schuljahresabschnitts_ID, dto.ID));
-			if (vk.Schuljahresabschnitts_ID != a.VorigerAbschnitt_ID)
-				throw OperationError.BAD_REQUEST.exception("Die ID für die Vorgängerklasse gehört nicht zu einer Klasse aus dem vorigen Schuljahresabschnitt.");
-			dto.VKlasse = vk.Klasse;
+			final Long idVorgaengerklasse = JSONMapper.convertToLong(value, true);
+			if (idVorgaengerklasse == null) {
+				dto.VKlasse = null;
+			} else {
+				final DTOKlassen vk = conn.queryByKey(DTOKlassen.class, idVorgaengerklasse);
+				if (vk == null)
+					throw OperationError.NOT_FOUND.exception("Die Vorgängerklasse mit der ID %d wurde nicht gefunden.".formatted(idVorgaengerklasse));
+				final DTOSchuljahresabschnitte a = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
+				if (a == null)
+					throw OperationError.INTERNAL_SERVER_ERROR.exception("Die ID des Schuljahresabschnitts %d der Klasse mit der ID %d ist ungültig.".formatted(dto.Schuljahresabschnitts_ID, dto.ID));
+				if (vk.Schuljahresabschnitts_ID != a.VorigerAbschnitt_ID)
+					throw OperationError.BAD_REQUEST.exception("Die ID für die Vorgängerklasse gehört nicht zu einer Klasse aus dem vorigen Schuljahresabschnitt.");
+				dto.VKlasse = vk.Klasse;
+			}
 		}),
 		Map.entry("kuerzelVorgaengerklasse", (conn, dto, value, map) -> {
 			throw OperationError.BAD_REQUEST.exception("Das Kürzel für die Vorgängerklasse kann nur indirekt über die ID für die Vorgängerklasse angepasst werden.");
 		}),
 		Map.entry("idFolgeklasse", (conn, dto, value, map) -> {
-			final long idFolgeklasse = JSONMapper.convertToLong(value, false);
-			final DTOKlassen fk = conn.queryByKey(DTOKlassen.class, idFolgeklasse);
-			if (fk == null)
-				throw OperationError.NOT_FOUND.exception("Die Folgeklasse mit der ID %d wurde nicht gefunden.".formatted(idFolgeklasse));
-			final DTOSchuljahresabschnitte a = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
-			if (a == null)
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Die ID des Schuljahresabschnitts %d der Klasse mit der ID %d ist ungültig.".formatted(dto.Schuljahresabschnitts_ID, dto.ID));
-			if (fk.Schuljahresabschnitts_ID != a.FolgeAbschnitt_ID)
-				throw OperationError.BAD_REQUEST.exception("Die ID für die Folgeklasse gehört nicht zu einer Klasse aus dem nachfolgenden Schuljahresabschnitt.");
-			dto.FKlasse = fk.Klasse;
+			final Long idFolgeklasse = JSONMapper.convertToLong(value, true);
+			if (idFolgeklasse == null) {
+				dto.FKlasse = null;
+			} else {
+				final DTOKlassen fk = conn.queryByKey(DTOKlassen.class, idFolgeklasse);
+				if (fk == null)
+					throw OperationError.NOT_FOUND.exception("Die Folgeklasse mit der ID %d wurde nicht gefunden.".formatted(idFolgeklasse));
+				final DTOSchuljahresabschnitte a = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
+				if (a == null)
+					throw OperationError.INTERNAL_SERVER_ERROR.exception("Die ID des Schuljahresabschnitts %d der Klasse mit der ID %d ist ungültig.".formatted(dto.Schuljahresabschnitts_ID, dto.ID));
+				if (fk.Schuljahresabschnitts_ID != a.FolgeAbschnitt_ID)
+					throw OperationError.BAD_REQUEST.exception("Die ID für die Folgeklasse gehört nicht zu einer Klasse aus dem nachfolgenden Schuljahresabschnitt.");
+				dto.FKlasse = fk.Klasse;
+			}
 		}),
 		Map.entry("kuerzelFolgeklasse", (conn, dto, value, map) -> {
 			throw OperationError.BAD_REQUEST.exception("Das Kürzel für die Folgeklasse kann nur indirekt über die ID für die Folgeklasse angepasst werden.");
