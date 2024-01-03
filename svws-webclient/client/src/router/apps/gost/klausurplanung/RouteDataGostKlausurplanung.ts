@@ -410,7 +410,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		const skids = new ArrayList<number>();
 		for (const sk of sks)
-			skids.add(sk.idSchuelerklausur);
+			skids.add(sk.id);
 		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt.id);
 		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
