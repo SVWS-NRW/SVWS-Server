@@ -113,6 +113,11 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	public readonly historie : Array<OrganisationsformKatalogEintrag>;
 
 	/**
+	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs
+	 */
+	private static readonly _mapByID : HashMap<number, BerufskollegOrganisationsformen> = new HashMap();
+
+	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, BerufskollegOrganisationsformen> = new HashMap();
@@ -132,6 +137,21 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	}
 
 	/**
+	 * Gibt eine Map von den IDs der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
+	 */
+	private static getMapByID() : HashMap<number, BerufskollegOrganisationsformen> {
+		if (BerufskollegOrganisationsformen._mapByID.size() === 0)
+			for (const s of BerufskollegOrganisationsformen.values())
+				for (const k of s.historie)
+					BerufskollegOrganisationsformen._mapByID.put(k.id, s);
+		return BerufskollegOrganisationsformen._mapByID;
+	}
+
+	/**
 	 * Gibt eine Map von den Kürzeln der Organisationsformen auf die
 	 * zugehörigen Organisationsformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
@@ -146,6 +166,19 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 			}
 		}
 		return BerufskollegOrganisationsformen._mapKuerzel;
+	}
+
+	/**
+	 * Gibt die Organisationsform für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Organisationsform
+	 *
+	 * @return die Organisationsform oder null, falls die ID ungültig ist
+	 */
+	public static getByID(id : number | null) : BerufskollegOrganisationsformen | null {
+		if (id === null)
+			return null;
+		return BerufskollegOrganisationsformen.getMapByID().get(id);
 	}
 
 	/**

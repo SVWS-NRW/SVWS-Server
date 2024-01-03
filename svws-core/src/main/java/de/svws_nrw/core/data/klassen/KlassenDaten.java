@@ -81,7 +81,7 @@ public class KlassenDaten {
 
 	/** Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich */
 	@Schema(description = "die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich", example = "4711")
-	public Long idAllgemeinbildenOrganisationsform = null;
+	public Long idAllgemeinbildendOrganisationsform = null;
 
 	/** Die ID für die Organisationsform der Klasse im berufsbildenden Bereich */
 	@Schema(description = "die ID für die Organisationsform der Klasse im berufsbildenden Bereich", example = "4711")

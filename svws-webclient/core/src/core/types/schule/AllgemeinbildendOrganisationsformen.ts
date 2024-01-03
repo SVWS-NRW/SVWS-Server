@@ -53,6 +53,11 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	public readonly historie : Array<OrganisationsformKatalogEintrag>;
 
 	/**
+	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs
+	 */
+	private static readonly _mapByID : HashMap<number, AllgemeinbildendOrganisationsformen> = new HashMap();
+
+	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, AllgemeinbildendOrganisationsformen> = new HashMap();
@@ -72,6 +77,21 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	}
 
 	/**
+	 * Gibt eine Map von den IDs der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
+	 */
+	private static getMapByID() : HashMap<number, AllgemeinbildendOrganisationsformen> {
+		if (AllgemeinbildendOrganisationsformen._mapByID.size() === 0)
+			for (const s of AllgemeinbildendOrganisationsformen.values())
+				for (const k of s.historie)
+					AllgemeinbildendOrganisationsformen._mapByID.put(k.id, s);
+		return AllgemeinbildendOrganisationsformen._mapByID;
+	}
+
+	/**
 	 * Gibt eine Map von den Kürzeln der Organisationsformen auf die
 	 * zugehörigen Organisationsformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
@@ -86,6 +106,19 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 			}
 		}
 		return AllgemeinbildendOrganisationsformen._mapKuerzel;
+	}
+
+	/**
+	 * Gibt die Organisationsform für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Organisationsform
+	 *
+	 * @return die Organisationsform oder null, falls die ID ungültig ist
+	 */
+	public static getByID(id : number | null) : AllgemeinbildendOrganisationsformen | null {
+		if (id === null)
+			return null;
+		return AllgemeinbildendOrganisationsformen.getMapByID().get(id);
 	}
 
 	/**

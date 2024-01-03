@@ -83,7 +83,7 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich
 	 */
-	public idAllgemeinbildenOrganisationsform : number | null = null;
+	public idAllgemeinbildendOrganisationsform : number | null = null;
 
 	/**
 	 * Die ID für die Organisationsform der Klasse im berufsbildenden Bereich
@@ -181,7 +181,7 @@ export class KlassenDaten extends JavaObject {
 		result.kuerzelVorgaengerklasse = typeof obj.kuerzelVorgaengerklasse === "undefined" ? null : obj.kuerzelVorgaengerklasse === null ? null : obj.kuerzelVorgaengerklasse;
 		result.idFolgeklasse = typeof obj.idFolgeklasse === "undefined" ? null : obj.idFolgeklasse === null ? null : obj.idFolgeklasse;
 		result.kuerzelFolgeklasse = typeof obj.kuerzelFolgeklasse === "undefined" ? null : obj.kuerzelFolgeklasse === null ? null : obj.kuerzelFolgeklasse;
-		result.idAllgemeinbildenOrganisationsform = typeof obj.idAllgemeinbildenOrganisationsform === "undefined" ? null : obj.idAllgemeinbildenOrganisationsform === null ? null : obj.idAllgemeinbildenOrganisationsform;
+		result.idAllgemeinbildendOrganisationsform = typeof obj.idAllgemeinbildendOrganisationsform === "undefined" ? null : obj.idAllgemeinbildendOrganisationsform === null ? null : obj.idAllgemeinbildendOrganisationsform;
 		result.idBerufsbildendOrganisationsform = typeof obj.idBerufsbildendOrganisationsform === "undefined" ? null : obj.idBerufsbildendOrganisationsform === null ? null : obj.idBerufsbildendOrganisationsform;
 		result.idWeiterbildungOrganisationsform = typeof obj.idWeiterbildungOrganisationsform === "undefined" ? null : obj.idWeiterbildungOrganisationsform === null ? null : obj.idWeiterbildungOrganisationsform;
 		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
@@ -243,7 +243,7 @@ export class KlassenDaten extends JavaObject {
 		result += '"kuerzelVorgaengerklasse" : ' + ((!obj.kuerzelVorgaengerklasse) ? 'null' : JSON.stringify(obj.kuerzelVorgaengerklasse)) + ',';
 		result += '"idFolgeklasse" : ' + ((!obj.idFolgeklasse) ? 'null' : obj.idFolgeklasse) + ',';
 		result += '"kuerzelFolgeklasse" : ' + ((!obj.kuerzelFolgeklasse) ? 'null' : JSON.stringify(obj.kuerzelFolgeklasse)) + ',';
-		result += '"idAllgemeinbildenOrganisationsform" : ' + ((!obj.idAllgemeinbildenOrganisationsform) ? 'null' : obj.idAllgemeinbildenOrganisationsform) + ',';
+		result += '"idAllgemeinbildendOrganisationsform" : ' + ((!obj.idAllgemeinbildendOrganisationsform) ? 'null' : obj.idAllgemeinbildendOrganisationsform) + ',';
 		result += '"idBerufsbildendOrganisationsform" : ' + ((!obj.idBerufsbildendOrganisationsform) ? 'null' : obj.idBerufsbildendOrganisationsform) + ',';
 		result += '"idWeiterbildungOrganisationsform" : ' + ((!obj.idWeiterbildungOrganisationsform) ? 'null' : obj.idWeiterbildungOrganisationsform) + ',';
 		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
@@ -327,8 +327,8 @@ export class KlassenDaten extends JavaObject {
 		if (typeof obj.kuerzelFolgeklasse !== "undefined") {
 			result += '"kuerzelFolgeklasse" : ' + ((!obj.kuerzelFolgeklasse) ? 'null' : JSON.stringify(obj.kuerzelFolgeklasse)) + ',';
 		}
-		if (typeof obj.idAllgemeinbildenOrganisationsform !== "undefined") {
-			result += '"idAllgemeinbildenOrganisationsform" : ' + ((!obj.idAllgemeinbildenOrganisationsform) ? 'null' : obj.idAllgemeinbildenOrganisationsform) + ',';
+		if (typeof obj.idAllgemeinbildendOrganisationsform !== "undefined") {
+			result += '"idAllgemeinbildendOrganisationsform" : ' + ((!obj.idAllgemeinbildendOrganisationsform) ? 'null' : obj.idAllgemeinbildendOrganisationsform) + ',';
 		}
 		if (typeof obj.idBerufsbildendOrganisationsform !== "undefined") {
 			result += '"idBerufsbildendOrganisationsform" : ' + ((!obj.idBerufsbildendOrganisationsform) ? 'null' : obj.idBerufsbildendOrganisationsform) + ',';

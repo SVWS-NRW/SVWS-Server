@@ -190,6 +190,19 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	}
 
 	/**
+	 * Bestimmt anhand der ID, die zulässige Klassenart.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return die Klassenart oder null, wenn keine Zuordnung für die übergebene ID vorhanden ist
+	 */
+	public static getByID(id : number | null) : Klassenart | null {
+		if (id === null)
+			return Klassenart.UNDEFINIERT;
+		return Klassenart.getMapByID().get(id);
+	}
+
+	/**
 	 * Bestimmt anhand des Kürzels, die zulässige Klassenart.
 	 *
 	 * @param kuerzel   das Kürzel

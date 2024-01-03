@@ -250,6 +250,20 @@ public enum Klassenart {
 
 
 	/**
+	 * Bestimmt anhand der ID, die zulässige Klassenart.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return die Klassenart oder null, wenn keine Zuordnung für die übergebene ID vorhanden ist
+	 */
+	public static Klassenart getByID(final Long id) {
+		if (id == null)
+			return Klassenart.UNDEFINIERT;
+		return getMapByID().get(id);
+	}
+
+
+	/**
 	 * Bestimmt anhand des Kürzels, die zulässige Klassenart.
 	 *
 	 * @param kuerzel   das Kürzel

@@ -75,7 +75,7 @@ public final class JsonDaten {
 	 *
 	 * @return der Katalog der berufsbezogenen Lehrpläne
 	 */
-    /* Einlesen der BK-Jasons in folgendem Ablauf
+    /* Einlesen der BK-JSONs in folgendem Ablauf
      * - Die Daten sind nach Gliederungsindizes in Unterverzeichnissen gruppiert
      * - in jedem dieser Unterverzeichnisse ist eine fachklassen_<id>.json Datei enthalten, die die Fachklassen des Gliederungsindex enthält
      * - es sind eine Reihe von Lehrplänen enthalten, die die Namensgebung Bildungsplan_<index>_<fachklasse>.json haben, die

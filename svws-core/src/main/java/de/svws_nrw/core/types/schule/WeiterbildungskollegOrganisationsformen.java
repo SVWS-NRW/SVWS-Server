@@ -32,6 +32,9 @@ public enum WeiterbildungskollegOrganisationsformen {
 	/** Die Historie mit den Einträgen der Organisationsform */
 	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
 
+	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
+	private static final @NotNull HashMap<@NotNull Long, @NotNull WeiterbildungskollegOrganisationsformen> _mapByID = new HashMap<>();
+
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
 
@@ -45,6 +48,22 @@ public enum WeiterbildungskollegOrganisationsformen {
 	WeiterbildungskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
+	 */
+	private static @NotNull HashMap<@NotNull Long, @NotNull WeiterbildungskollegOrganisationsformen> getMapByID() {
+		if (_mapByID.size() == 0)
+			for (final WeiterbildungskollegOrganisationsformen s : WeiterbildungskollegOrganisationsformen.values())
+				for (final OrganisationsformKatalogEintrag k : s.historie)
+					_mapByID.put(k.id, s);
+		return _mapByID;
 	}
 
 
@@ -63,6 +82,20 @@ public enum WeiterbildungskollegOrganisationsformen {
 			}
 		}
 		return _mapKuerzel;
+	}
+
+
+	/**
+	 * Gibt die Organisationsform für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Organisationsform
+	 *
+	 * @return die Organisationsform oder null, falls die ID ungültig ist
+	 */
+	public static WeiterbildungskollegOrganisationsformen getByID(final Long id) {
+		if (id == null)
+			return null;
+		return getMapByID().get(id);
 	}
 
 

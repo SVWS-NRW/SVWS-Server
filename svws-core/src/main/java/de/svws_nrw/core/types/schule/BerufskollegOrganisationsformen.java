@@ -143,6 +143,9 @@ public enum BerufskollegOrganisationsformen {
 	/** Die Historie mit den Einträgen der Organisationsform */
 	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
 
+	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
+	private static final @NotNull HashMap<@NotNull Long, @NotNull BerufskollegOrganisationsformen> _mapByID = new HashMap<>();
+
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegOrganisationsformen> _mapKuerzel = new HashMap<>();
 
@@ -156,6 +159,22 @@ public enum BerufskollegOrganisationsformen {
 	BerufskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
+	 */
+	private static @NotNull HashMap<@NotNull Long, @NotNull BerufskollegOrganisationsformen> getMapByID() {
+		if (_mapByID.size() == 0)
+			for (final BerufskollegOrganisationsformen s : BerufskollegOrganisationsformen.values())
+				for (final OrganisationsformKatalogEintrag k : s.historie)
+					_mapByID.put(k.id, s);
+		return _mapByID;
 	}
 
 
@@ -174,6 +193,20 @@ public enum BerufskollegOrganisationsformen {
 			}
 		}
 		return _mapKuerzel;
+	}
+
+
+	/**
+	 * Gibt die Organisationsform für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Organisationsform
+	 *
+	 * @return die Organisationsform oder null, falls die ID ungültig ist
+	 */
+	public static BerufskollegOrganisationsformen getByID(final Long id) {
+		if (id == null)
+			return null;
+		return getMapByID().get(id);
 	}
 
 

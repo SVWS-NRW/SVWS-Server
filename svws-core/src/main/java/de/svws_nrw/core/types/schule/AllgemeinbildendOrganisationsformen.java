@@ -88,6 +88,9 @@ public enum AllgemeinbildendOrganisationsformen {
 	/** Die Historie mit den Einträgen der Organisationsform */
 	public final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie;
 
+	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs */
+	private static final @NotNull HashMap<@NotNull Long, @NotNull AllgemeinbildendOrganisationsformen> _mapByID = new HashMap<>();
+
 	/** Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull AllgemeinbildendOrganisationsformen> _mapKuerzel = new HashMap<>();
 
@@ -105,6 +108,23 @@ public enum AllgemeinbildendOrganisationsformen {
 
 
 	/**
+	 * Gibt eine Map von den IDs der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs auf die zugehörigen Organisationsformen
+	 */
+	private static @NotNull HashMap<@NotNull Long, @NotNull AllgemeinbildendOrganisationsformen> getMapByID() {
+		if (_mapByID.size() == 0)
+			for (final AllgemeinbildendOrganisationsformen s : AllgemeinbildendOrganisationsformen.values())
+				for (final OrganisationsformKatalogEintrag k : s.historie)
+					_mapByID.put(k.id, s);
+		return _mapByID;
+	}
+
+
+
+	/**
 	 * Gibt eine Map von den Kürzeln der Organisationsformen auf die
 	 * zugehörigen Organisationsformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
@@ -119,6 +139,20 @@ public enum AllgemeinbildendOrganisationsformen {
 			}
 		}
 		return _mapKuerzel;
+	}
+
+
+	/**
+	 * Gibt die Organisationsform für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Organisationsform
+	 *
+	 * @return die Organisationsform oder null, falls die ID ungültig ist
+	 */
+	public static AllgemeinbildendOrganisationsformen getByID(final Long id) {
+		if (id == null)
+			return null;
+		return getMapByID().get(id);
 	}
 
 
