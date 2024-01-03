@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -24,6 +25,33 @@ public class Tabelle_Gost_Klausuren_Termine_Jahrgaenge extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Abi_Jahrgang = add("Abi_Jahrgang", SchemaDatentypen.INT, true)
 		.setNotNull()
 		.setJavaComment("Der Abiturjahrgang, der zum Klausurtermin zugelassen werden soll.");
+
+	/** Die Definition der Tabellenspalte Quartal */
+	public SchemaTabelleSpalte col_Quartal = add("Quartal", SchemaDatentypen.INT, false)
+		.setNotNull()
+		.setJavaComment("Das Quartal, in dem die Klausur geschrieben wird.");
+
+	/** Die Definition der Tabellenspalte Bezeichnung */
+	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bezeichnung des Klausurtermins");
+
+	/** Die Definition der Tabellenspalte Bemerkungen */
+	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bemerkungen des Klausurtermins");
+
+	/** Die Definition der Tabellenspalte IstHaupttermin */
+	public SchemaTabelleSpalte col_IstHaupttermin = add("IstHaupttermin", SchemaDatentypen.INT, false)
+		.setDefault("1")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob es sich bei dem Termin um den Haupttermin (1) handelt oder einen Nachschreibtermin (0).");
+
+	/** Die Definition der Tabellenspalte NachschreiberZugelassen */
+	public SchemaTabelleSpalte col_NachschreiberZugelassen = add("NachschreiberZugelassen", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind (1) oder nicht (0).");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Jahrgaenge_Termin_ID_FK */

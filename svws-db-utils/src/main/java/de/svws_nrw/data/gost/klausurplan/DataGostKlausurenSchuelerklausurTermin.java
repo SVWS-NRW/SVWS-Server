@@ -33,8 +33,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
-	 * {@link DTOGostKlausurenRaumstunden} in einen Core-DTO
-	 * {@link GostKlausurraumstunde}.
+	 * {@link DTOGostKlausurenSchuelerklausurenTermine} in einen Core-DTO
+	 * {@link GostSchuelerklausurTermin}.
 	 */
 	public static final Function<DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> dtoMapper = (final DTOGostKlausurenSchuelerklausurenTermine t) -> {
 		final GostSchuelerklausurTermin daten = new GostSchuelerklausurTermin();
