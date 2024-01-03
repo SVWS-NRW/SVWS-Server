@@ -27,7 +27,6 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausu
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
@@ -127,10 +126,11 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public static boolean blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) {
 		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
-		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Termine");
-		Long terminId = lastID == null ? 1 : lastID.MaxID + 1;
+
+		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
+
 		for (final GostKlausurterminblockungErgebnisTermin ergebnisTermin : ergebnis.termine) {
-			bearbeiteTermin(conn, ergebnisTermin, terminId++);
+			bearbeiteTermin(conn, ergebnisTermin, idNextTermin++);
 		}
 		return true;
 	}

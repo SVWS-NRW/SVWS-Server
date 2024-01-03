@@ -396,7 +396,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausuren(api.schema, termin.id);
+		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausurenTermine(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
 		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren, this.kursklausurmanager, termin);

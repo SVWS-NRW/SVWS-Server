@@ -28,6 +28,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
@@ -67,8 +68,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	/**
-	 * Erzeugt die Gost-Kursklausuren aus den Klausurvorlagen einer Jahrgangsstufe
-	 * im übergebenen Gost-Halbjahr für die existierenden Kurse zurück.
+	 * Erzeugt die Gost-Kursklausuren und Gost-Schülerklausuren aus den Klausurvorlagen einer Jahrgangsstufe
+	 * im übergebenen Gost-Halbjahr für die existierenden Kurse.
 	 *
 	 * @param hj      das Gost-Halbjahr
 	 * @param quartal das Quartal
@@ -112,7 +113,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 				//TODO Fehlermeldung an Client, dass es zu diesem Kurs/Fach keine Vorgaben gibt
 				throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für diesen Kurs definiert: " + kurs.KurzBez);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
-				if (/*(vorgabe != null) && */!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
+				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.idVorgabe, kurs.ID);
 					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausurenZuKursklausur(kursklausur, laDaten);
 					if (!listSk.isEmpty()) {
@@ -128,7 +129,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		long idNextSchuelerklausur = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausuren.class);
 		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
 			sk.ID = idNextSchuelerklausur++;
-		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren))
+
+		// SchülerklausurTermine erstellen und ID in SchülerklausurTermine einfügen
+		List<DTOGostKlausurenSchuelerklausurenTermine> sktermine = createSchuelerklausurenTermineZuSchuelerklausuren(schuelerklausuren);
+		long idNextSchuelerklausurTermin = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class);
+		for (final DTOGostKlausurenSchuelerklausurenTermine skt : sktermine)
+			skt.ID = idNextSchuelerklausurTermin++;
+
+		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
 	}
@@ -139,6 +147,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1L, kursklausur.ID, lad.Schueler_ID));
 		}
 		return listSchuelerklausuren;
+	}
+
+	private static List<DTOGostKlausurenSchuelerklausurenTermine> createSchuelerklausurenTermineZuSchuelerklausuren(final List<DTOGostKlausurenSchuelerklausuren> sks) {
+		final List<DTOGostKlausurenSchuelerklausurenTermine> listSchuelerklausurenTermine = new ArrayList<>();
+		for (final DTOGostKlausurenSchuelerklausuren sk : sks) {
+			listSchuelerklausurenTermine.add(new DTOGostKlausurenSchuelerklausurenTermine(-1L, sk.ID));
+		}
+		return listSchuelerklausurenTermine;
 	}
 
 	private List<DTOSchuelerLernabschnittsdaten> getLernabschnittsdatenZuKurs(final int hj, final DTOKurs kurs) {

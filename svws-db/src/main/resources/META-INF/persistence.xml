@@ -207,11 +207,13 @@
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenNtaZeiten</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume</class>
-        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeumeStunden</class>
-        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeumeStundenAufsichten</class>
+        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden</class>
+        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstundenAufsichten</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren</class>
-        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenRaeumeStunden</class>
+        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine</class>
+        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine</class>
+        <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermineJahrgaenge</class>
         <class>de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs</class>

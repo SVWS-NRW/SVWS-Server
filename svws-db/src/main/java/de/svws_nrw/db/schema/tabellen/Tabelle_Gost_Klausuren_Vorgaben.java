@@ -112,8 +112,7 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Vorgaben_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Klausuren_Vorgaben_IDX_Abi_Jahrgang = addIndex("Gost_Klausuren_Vorgaben_IDX_Abi_Jahrgang",
 		col_Abi_Jahrgang
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

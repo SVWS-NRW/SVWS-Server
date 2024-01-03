@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
+import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
-import { GostSchuelerklausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 
 export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
@@ -20,7 +20,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public skRaumstunden : List<GostSchuelerklausurraumstunde> = new ArrayList();
+	public skRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
 
 	/**
 	 * Die ID der Klausurraumstunde.
@@ -65,7 +65,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 		}
 		if ((obj.skRaumstunden !== undefined) && (obj.skRaumstunden !== null)) {
 			for (const elem of obj.skRaumstunden) {
-				result.skRaumstunden?.add(GostSchuelerklausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
+				result.skRaumstunden?.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (typeof obj.idKlausurraum === "undefined")
@@ -112,7 +112,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			result += '"skRaumstunden" : [ ';
 			for (let i = 0; i < obj.skRaumstunden.size(); i++) {
 				const elem = obj.skRaumstunden.get(i);
-				result += GostSchuelerklausurraumstunde.transpilerToJSON(elem);
+				result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
 				if (i < obj.skRaumstunden.size() - 1)
 					result += ',';
 			}
@@ -174,7 +174,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += '"skRaumstunden" : [ ';
 				for (let i = 0; i < obj.skRaumstunden.size(); i++) {
 					const elem = obj.skRaumstunden.get(i);
-					result += GostSchuelerklausurraumstunde.transpilerToJSON(elem);
+					result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
 					if (i < obj.skRaumstunden.size() - 1)
 						result += ',';
 				}

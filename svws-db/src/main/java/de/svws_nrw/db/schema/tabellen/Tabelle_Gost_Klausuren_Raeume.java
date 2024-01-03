@@ -7,6 +7,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -47,11 +48,16 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
-	);
+		);
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Raume_UC1 */
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raume_UC1 = addUniqueIndex("Gost_Klausuren_Raume_UC1",
 			col_Termin_ID, col_Stundenplan_Raum_ID
+		);
+
+	/** Die Definition des Non-Unique-Index Gost_Klausuren_Raume_IDX_Termin_ID */
+	public SchemaTabelleIndex index_Gost_Klausuren_Raume_IDX_Termin_ID = addIndex("Gost_Klausuren_Raume_IDX_Termin_ID",
+			col_Termin_ID
 		);
 
 	/**

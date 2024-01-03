@@ -5,12 +5,13 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostKlausurraumstunde } from '../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
-import { GostSchuelerklausur } from '../../../core/data/gost/klausurplanung/GostSchuelerklausur';
+import { GostSchuelerklausurTermin } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
+import { GostSchuelerklausurterminraumstunde } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostKursklausurManager, cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager } from '../../../core/utils/klausurplanung/GostKursklausurManager';
 import { JavaLong } from '../../../java/lang/JavaLong';
@@ -20,7 +21,6 @@ import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKla
 import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostKlausurtermin, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
-import { GostSchuelerklausurraumstunde } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 import { HashSet } from '../../../java/util/HashSet';
 
 export class GostKlausurraumManager extends JavaObject {
@@ -40,7 +40,7 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _klausurraum_by_idStundenplanraum : JavaMap<number, GostKlausurraum> = new HashMap();
 
-	private readonly _klausurraum_by_idSchuelerklausur : JavaMap<number, GostKlausurraum> = new HashMap();
+	private readonly _klausurraum_by_idSchuelerklausurtermin : JavaMap<number, GostKlausurraum> = new HashMap();
 
 	private readonly _raumstunde_by_id : JavaMap<number, GostKlausurraumstunde> = new HashMap();
 
@@ -50,25 +50,25 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _raumstunde_by_idRaum_and_idZeitraster : HashMap2D<number, number, GostKlausurraumstunde> = new HashMap2D();
 
-	private readonly _raumstundenmenge_by_idSchuelerklausur : JavaMap<number, List<GostKlausurraumstunde>> = new HashMap();
+	private readonly _raumstundenmenge_by_idSchuelerklausurtermin : JavaMap<number, List<GostKlausurraumstunde>> = new HashMap();
 
-	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap();
+	private readonly _schuelerklausurtermin_by_id : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
 
-	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList();
+	private readonly _schuelerklausurterminmenge : List<GostSchuelerklausurTermin> = new ArrayList();
 
-	private readonly _schuelerklausurmenge_by_idRaum : JavaMap<number, List<GostSchuelerklausur>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idRaum : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
 
-	private readonly _schuelerklausurmenge_by_idRaum_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausur>> = new HashMap2D();
+	private readonly _schuelerklausurterminmenge_by_idRaum_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D();
 
-	private readonly _schuelerklausurmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausur>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
 
-	private readonly _schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde : HashMap2D<number, number, GostSchuelerklausurraumstunde> = new HashMap2D();
+	private readonly _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde : HashMap2D<number, number, GostSchuelerklausurterminraumstunde> = new HashMap2D();
 
-	private readonly _schuelerklausurraumstundenmenge : List<GostSchuelerklausurraumstunde> = new ArrayList();
+	private readonly _schuelerklausurraumstundenmenge : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
 
-	private readonly _schuelerklausurraumstundenmenge_by_idRaumstunde : JavaMap<number, List<GostSchuelerklausurraumstunde>> = new HashMap();
+	private readonly _schuelerklausurraumstundenmenge_by_idRaumstunde : JavaMap<number, List<GostSchuelerklausurterminraumstunde>> = new HashMap();
 
-	private readonly _schuelerklausurraumstundenmenge_by_idSchuelerklausur : JavaMap<number, List<GostSchuelerklausurraumstunde>> = new HashMap();
+	private readonly _schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin : JavaMap<number, List<GostSchuelerklausurterminraumstunde>> = new HashMap();
 
 
 	/**
@@ -83,7 +83,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
+	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausurTermin>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -99,17 +99,17 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
+	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurterminraumstunde>, schuelerklausuren : List<GostSchuelerklausurTermin>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausur>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
+	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausurTermin> | List<GostSchuelerklausurterminraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausurTermin>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
-			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param2);
+			const schuelerklausuren : List<GostSchuelerklausurTermin> = cast_java_util_List(__param2);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param3);
 			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param4);
 			this._kursklausurManager = kursklausurmanager;
@@ -120,8 +120,8 @@ export class GostKlausurraumManager extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin'))))) {
 			const raeume : List<GostKlausurraum> = cast_java_util_List(__param0);
 			const listRs : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
-			const listSkrs : List<GostSchuelerklausurraumstunde> = cast_java_util_List(__param2);
-			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param3);
+			const listSkrs : List<GostSchuelerklausurterminraumstunde> = cast_java_util_List(__param2);
+			const schuelerklausuren : List<GostSchuelerklausurTermin> = cast_java_util_List(__param3);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param4);
 			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param5);
 			this._kursklausurManager = kursklausurmanager;
@@ -130,7 +130,7 @@ export class GostKlausurraumManager extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
-	private initAll(listRaum : List<GostKlausurraum>, listRaumstunde : List<GostKlausurraumstunde>, listSchuelerklausurraumstunde : List<GostSchuelerklausurraumstunde>, listSchuelerklausur : List<GostSchuelerklausur>) : void {
+	private initAll(listRaum : List<GostKlausurraum>, listRaumstunde : List<GostKlausurraumstunde>, listSchuelerklausurraumstunde : List<GostSchuelerklausurterminraumstunde>, listSchuelerklausur : List<GostSchuelerklausurTermin>) : void {
 		this.raumAddAll(listRaum);
 		this.raumstundeAddAll(listRaumstunde);
 		this.schuelerklausurAddAll(listSchuelerklausur);
@@ -175,31 +175,31 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	private update_raumstundenmenge_by_idSchuelerklausur() : void {
-		this._raumstundenmenge_by_idSchuelerklausur.clear();
+		this._raumstundenmenge_by_idSchuelerklausurtermin.clear();
 		for (const skrs of this._schuelerklausurraumstundenmenge)
-			MapUtils.getOrCreateArrayList(this._raumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur).add(DeveloperNotificationException.ifMapGetIsNull(this._raumstunde_by_id, skrs.idRaumstunde));
+			MapUtils.getOrCreateArrayList(this._raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(DeveloperNotificationException.ifMapGetIsNull(this._raumstunde_by_id, skrs.idRaumstunde));
 	}
 
 	private update_schuelerklausurmenge_by_idRaum() : void {
-		this._schuelerklausurmenge_by_idRaum.clear();
-		for (const k of this._schuelerklausurmenge) {
-			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausur.get(k.idSchuelerklausur);
-			MapUtils.getOrCreateArrayList(this._schuelerklausurmenge_by_idRaum, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
+		this._schuelerklausurterminmenge_by_idRaum.clear();
+		for (const k of this._schuelerklausurterminmenge) {
+			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
 		}
 	}
 
 	private update_schuelerklausurmenge_by_idRaum_and_idKursklausur() : void {
-		this._schuelerklausurmenge_by_idRaum_and_idKursklausur.clear();
-		for (const k of this._schuelerklausurmenge) {
-			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausur.get(k.idSchuelerklausur);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, k.idKursklausur).add(k);
+		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
+		for (const k of this._schuelerklausurterminmenge) {
+			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, k.idKursklausur).add(k);
 		}
 	}
 
 	private update_schuelerklausurmenge_by_idKursklausur() : void {
-		this._schuelerklausurmenge_by_idKursklausur.clear();
-		for (const k of this._schuelerklausurmenge)
-			MapUtils.getOrCreateArrayList(this._schuelerklausurmenge_by_idKursklausur, k.idKursklausur).add(k);
+		this._schuelerklausurterminmenge_by_idKursklausur.clear();
+		for (const k of this._schuelerklausurterminmenge)
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, k.idKursklausur).add(k);
 	}
 
 	private update_schuelerklausurraumstundenmenge_by_idRaumstunde() : void {
@@ -209,20 +209,20 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	private update_schuelerklausurraumstundenmenge_by_idSchuelerklausur() : void {
-		this._schuelerklausurraumstundenmenge_by_idSchuelerklausur.clear();
+		this._schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin.clear();
 		for (const skrs of this._schuelerklausurraumstundenmenge)
-			MapUtils.getOrCreateArrayList(this._schuelerklausurraumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur).add(skrs);
+			MapUtils.getOrCreateArrayList(this._schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(skrs);
 	}
 
 	private update_klausurraum_by_idSchuelerklausur() : void {
-		this._klausurraum_by_idSchuelerklausur.clear();
+		this._klausurraum_by_idSchuelerklausurtermin.clear();
 		for (const skrs of this._schuelerklausurraumstundenmenge) {
-			const krsList : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._raumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur);
+			const krsList : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin);
 			for (const krs of krsList) {
 				const kr : GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
-				const krAlt : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausur.put(skrs.idSchuelerklausur, kr);
+				const krAlt : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausurtermin.put(skrs.idSchuelerklausurtermin, kr);
 				if (krAlt !== null && krAlt as unknown !== kr as unknown)
-					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausur + " ist zwei Klausurräumen zugeordnet.")
+					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausurtermin + " ist zwei Klausurräumen zugeordnet.")
 			}
 		}
 	}
@@ -412,10 +412,10 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private raumstundeRemoveOhneUpdateById(idRaumstunde : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._raumstunde_by_id, idRaumstunde);
-		const skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
+		const skrsList : List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
 		if (skrsList !== null)
 			for (const skrs of skrsList)
-				this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausur, skrs.idRaumstunde);
+				this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
 	/**
@@ -441,90 +441,90 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	private update_schuelerklausurmenge() : void {
-		this._schuelerklausurmenge.clear();
-		this._schuelerklausurmenge.addAll(this._schuelerklausur_by_id.values());
+		this._schuelerklausurterminmenge.clear();
+		this._schuelerklausurterminmenge.addAll(this._schuelerklausurtermin_by_id.values());
 	}
 
 	/**
-	 * Fügt ein {@link GostSchuelerklausur}-Objekt hinzu.
+	 * Fügt ein {@link GostSchuelerklausurTermin}-Objekt hinzu.
 	 *
-	 * @param schuelerklausur Das {@link GostSchuelerklausur}-Objekt, welches
+	 * @param schuelerklausur Das {@link GostSchuelerklausurTermin}-Objekt, welches
 	 *                        hinzugefügt werden soll.
 	 */
-	public schuelerklausurAdd(schuelerklausur : GostSchuelerklausur) : void {
+	public schuelerklausurAdd(schuelerklausur : GostSchuelerklausurTermin) : void {
 		this.schuelerklausurAddAll(ListUtils.create1(schuelerklausur));
 	}
 
-	private schuelerklausurAddAllOhneUpdate(list : List<GostSchuelerklausur>) : void {
+	private schuelerklausurAddAllOhneUpdate(list : List<GostSchuelerklausurTermin>) : void {
 		const setOfIDs : HashSet<number> = new HashSet();
 		for (const schuelerklausur of list) {
 			GostKlausurraumManager.schuelerklausurCheck(schuelerklausur);
-			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + schuelerklausur.idSchuelerklausur + " existiert bereits!", this._schuelerklausur_by_id.containsKey(schuelerklausur.idSchuelerklausur));
+			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + schuelerklausur.idSchuelerklausur + " existiert bereits!", this._schuelerklausurtermin_by_id.containsKey(schuelerklausur.idSchuelerklausur));
 			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + schuelerklausur.idSchuelerklausur + " doppelt in der Liste!", !setOfIDs.add(schuelerklausur.idSchuelerklausur));
 		}
 		for (const schuelerklausur of list)
-			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
+			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausurtermin_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
 	}
 
 	/**
-	 * Fügt alle {@link GostSchuelerklausur}-Objekte hinzu.
+	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.
 	 *
-	 * @param listSchuelerklausur Die Menge der {@link GostSchuelerklausur}-Objekte,
+	 * @param listSchuelerklausur Die Menge der {@link GostSchuelerklausurTermin}-Objekte,
 	 *                            welche hinzugefügt werden soll.
 	 */
-	public schuelerklausurAddAll(listSchuelerklausur : List<GostSchuelerklausur>) : void {
+	public schuelerklausurAddAll(listSchuelerklausur : List<GostSchuelerklausurTermin>) : void {
 		this.schuelerklausurAddAllOhneUpdate(listSchuelerklausur);
 		this.update_all();
 	}
 
-	private static schuelerklausurCheck(schuelerklausur : GostSchuelerklausur) : void {
+	private static schuelerklausurCheck(schuelerklausur : GostSchuelerklausurTermin) : void {
 		DeveloperNotificationException.ifInvalidID("schuelerklausur.idSchuelerklausur", schuelerklausur.idSchuelerklausur);
 	}
 
 	/**
-	 * Liefert das zur ID zugehörige {@link GostSchuelerklausur}-Objekt. <br>
+	 * Liefert das zur ID zugehörige {@link GostSchuelerklausurTermin}-Objekt. <br>
 	 * Laufzeit: O(1)
 	 *
 	 * @param idSchuelerklausur Die ID des angefragten-Objektes.
 	 *
-	 * @return das zur ID zugehörige {@link GostSchuelerklausur}-Objekt.
+	 * @return das zur ID zugehörige {@link GostSchuelerklausurTermin}-Objekt.
 	 */
-	public schuelerklausurGetByIdOrException(idSchuelerklausur : number) : GostSchuelerklausur {
-		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausur_by_id, idSchuelerklausur);
+	public schuelerklausurGetByIdOrException(idSchuelerklausur : number) : GostSchuelerklausurTermin {
+		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurtermin_by_id, idSchuelerklausur);
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link GostSchuelerklausur}-Objekte. <br>
+	 * Liefert eine Liste aller {@link GostSchuelerklausurTermin}-Objekte. <br>
 	 * Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link GostSchuelerklausur}-Objekte.
+	 * @return eine Liste aller {@link GostSchuelerklausurTermin}-Objekte.
 	 */
-	public schuelerklausurGetMengeAsList() : List<GostSchuelerklausur> {
-		return this._schuelerklausurmenge;
+	public schuelerklausurGetMengeAsList() : List<GostSchuelerklausurTermin> {
+		return this._schuelerklausurterminmenge;
 	}
 
 	/**
-	 * Aktualisiert das vorhandene {@link GostSchuelerklausur}-Objekt durch das neue
+	 * Aktualisiert das vorhandene {@link GostSchuelerklausurTermin}-Objekt durch das neue
 	 * Objekt.
 	 *
-	 * @param schuelerklausur Das neue {@link GostSchuelerklausur}-Objekt.
+	 * @param schuelerklausur Das neue {@link GostSchuelerklausurTermin}-Objekt.
 	 */
-	public schuelerklausurPatchAttributes(schuelerklausur : GostSchuelerklausur) : void {
+	public schuelerklausurPatchAttributes(schuelerklausur : GostSchuelerklausurTermin) : void {
 		GostKlausurraumManager.schuelerklausurCheck(schuelerklausur);
-		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, schuelerklausur.idSchuelerklausur);
-		DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
+		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausurtermin_by_id, schuelerklausur.idSchuelerklausur);
+		DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausurtermin_by_id, schuelerklausur.idSchuelerklausur, schuelerklausur);
 		this.update_all();
 	}
 
 	private schuelerklausurRemoveOhneUpdateById(idSchuelerklausur : number) : void {
-		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausur_by_id, idSchuelerklausur);
+		DeveloperNotificationException.ifMapRemoveFailes(this._schuelerklausurtermin_by_id, idSchuelerklausur);
 		this.schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
 	}
 
 	/**
-	 * Entfernt ein existierendes {@link GostSchuelerklausur}-Objekt.
+	 * Entfernt ein existierendes {@link GostSchuelerklausurTermin}-Objekt.
 	 *
-	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurRemoveById(idSchuelerklausur : number) : void {
 		this.schuelerklausurRemoveOhneUpdateById(idSchuelerklausur);
@@ -532,12 +532,12 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt alle {@link GostSchuelerklausur}-Objekte.
+	 * Entfernt alle {@link GostSchuelerklausurTermin}-Objekte.
 	 *
 	 * @param listSchuelerklausur Die Liste der zu entfernenden
-	 *                            {@link GostSchuelerklausur}-Objekte.
+	 *                            {@link GostSchuelerklausurTermin}-Objekte.
 	 */
-	public schuelerklausurRemoveAll(listSchuelerklausur : List<GostSchuelerklausur>) : void {
+	public schuelerklausurRemoveAll(listSchuelerklausur : List<GostSchuelerklausurTermin>) : void {
 		for (const schuelerklausur of listSchuelerklausur)
 			this.schuelerklausurRemoveOhneUpdateById(schuelerklausur.idSchuelerklausur);
 		this.update_all();
@@ -545,106 +545,106 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private update_schuelerklausurraumstundenmenge() : void {
 		this._schuelerklausurraumstundenmenge.clear();
-		this._schuelerklausurraumstundenmenge.addAll(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde.getNonNullValuesAsList());
+		this._schuelerklausurraumstundenmenge.addAll(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.getNonNullValuesAsList());
 	}
 
 	/**
-	 * Fügt ein {@link GostSchuelerklausurraumstunde}-Objekt hinzu.
+	 * Fügt ein {@link GostSchuelerklausurterminraumstunde}-Objekt hinzu.
 	 *
 	 * @param schuelerklausurraumstunde Das
-	 *                                  {@link GostSchuelerklausurraumstunde}-Objekt,
+	 *                                  {@link GostSchuelerklausurterminraumstunde}-Objekt,
 	 *                                  welches hinzugefügt werden soll.
 	 */
-	public schuelerklausurraumstundeAdd(schuelerklausurraumstunde : GostSchuelerklausurraumstunde) : void {
+	public schuelerklausurraumstundeAdd(schuelerklausurraumstunde : GostSchuelerklausurterminraumstunde) : void {
 		this.schuelerklausurraumstundeAddAll(ListUtils.create1(schuelerklausurraumstunde));
 	}
 
-	private schuelerklausurraumstundeAddAllOhneUpdate(list : List<GostSchuelerklausurraumstunde>) : void {
-		const setOfIDs : HashMap2D<number, number, GostSchuelerklausurraumstunde> = new HashMap2D();
+	private schuelerklausurraumstundeAddAllOhneUpdate(list : List<GostSchuelerklausurterminraumstunde>) : void {
+		const setOfIDs : HashMap2D<number, number, GostSchuelerklausurterminraumstunde> = new HashMap2D();
 		for (const schuelerklausurraumstunde of list) {
 			GostKlausurraumManager.schuelerklausurraumstundeCheck(schuelerklausurraumstunde);
-			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=(" + schuelerklausurraumstunde.idSchuelerklausur + "," + schuelerklausurraumstunde.idRaumstunde + ") existiert bereits!", this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde.contains(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde));
-			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=" + schuelerklausurraumstunde.idSchuelerklausur + "," + schuelerklausurraumstunde.idRaumstunde + ") doppelt in der Liste!", setOfIDs.contains(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde));
-			setOfIDs.put(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
+			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=(" + schuelerklausurraumstunde.idSchuelerklausurtermin + "," + schuelerklausurraumstunde.idRaumstunde + ") existiert bereits!", this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.contains(schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde));
+			DeveloperNotificationException.ifTrue("schuelerklausurraumstundeAddAllOhneUpdate: ID=" + schuelerklausurraumstunde.idSchuelerklausurtermin + "," + schuelerklausurraumstunde.idRaumstunde + ") doppelt in der Liste!", setOfIDs.contains(schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde));
+			setOfIDs.put(schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
 		}
 		for (const schuelerklausurraumstunde of list)
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
 	}
 
 	/**
-	 * Fügt alle {@link GostSchuelerklausurraumstunde}-Objekte hinzu.
+	 * Fügt alle {@link GostSchuelerklausurterminraumstunde}-Objekte hinzu.
 	 *
 	 * @param listSchuelerklausurraumstunde Die Menge der
-	 *                                      {@link GostSchuelerklausurraumstunde}-Objekte,
+	 *                                      {@link GostSchuelerklausurterminraumstunde}-Objekte,
 	 *                                      welche hinzugefügt werden soll.
 	 */
-	public schuelerklausurraumstundeAddAll(listSchuelerklausurraumstunde : List<GostSchuelerklausurraumstunde>) : void {
+	public schuelerklausurraumstundeAddAll(listSchuelerklausurraumstunde : List<GostSchuelerklausurterminraumstunde>) : void {
 		this.schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 		this.update_all();
 	}
 
-	private static schuelerklausurraumstundeCheck(schuelerklausurraumstunde : GostSchuelerklausurraumstunde) : void {
-		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.idSchuelerklausur", schuelerklausurraumstunde.idSchuelerklausur);
+	private static schuelerklausurraumstundeCheck(schuelerklausurraumstunde : GostSchuelerklausurterminraumstunde) : void {
+		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.idSchuelerklausur", schuelerklausurraumstunde.idSchuelerklausurtermin);
 		DeveloperNotificationException.ifInvalidID("schuelerklausurraumstunde.idRaumstunde", schuelerklausurraumstunde.idRaumstunde);
 	}
 
 	/**
-	 * Liefert das zur ID zugehörige {@link GostSchuelerklausurraumstunde}-Objekt.
+	 * Liefert das zur ID zugehörige {@link GostSchuelerklausurterminraumstunde}-Objekt.
 	 * <br>
 	 * Laufzeit: O(1)
 	 *
-	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 * @param idRaumstunde      Die ID des {@link GostKlausurraumstunde}-Objekts.
 	 *
-	 * @return das zur ID zugehörige {@link GostSchuelerklausurraumstunde}-Objekt.
+	 * @return das zur ID zugehörige {@link GostSchuelerklausurterminraumstunde}-Objekt.
 	 */
-	public schuelerklausurraumstundeGetByIdSchuelerklausurAndIdRaumstundeOrException(idSchuelerklausur : number, idRaumstunde : number) : GostSchuelerklausurraumstunde {
-		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
+	public schuelerklausurraumstundeGetByIdSchuelerklausurAndIdRaumstundeOrException(idSchuelerklausur : number, idRaumstunde : number) : GostSchuelerklausurterminraumstunde {
+		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link GostSchuelerklausurraumstunde}-Objekte. <br>
+	 * Liefert eine Liste aller {@link GostSchuelerklausurterminraumstunde}-Objekte. <br>
 	 * Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link GostSchuelerklausurraumstunde}-Objekte.
+	 * @return eine Liste aller {@link GostSchuelerklausurterminraumstunde}-Objekte.
 	 */
-	public schuelerklausurraumstundeGetMengeAsList() : List<GostSchuelerklausurraumstunde> {
+	public schuelerklausurraumstundeGetMengeAsList() : List<GostSchuelerklausurterminraumstunde> {
 		return this._schuelerklausurraumstundenmenge;
 	}
 
 	/**
-	 * Aktualisiert das vorhandene {@link GostSchuelerklausurraumstunde}-Objekt
+	 * Aktualisiert das vorhandene {@link GostSchuelerklausurterminraumstunde}-Objekt
 	 * durch das neue Objekt.
 	 *
 	 * @param schuelerklausurraumstunde Das neue
-	 *                                  {@link GostSchuelerklausurraumstunde}-Objekt.
+	 *                                  {@link GostSchuelerklausurterminraumstunde}-Objekt.
 	 */
-	public schuelerklausurraumstundePatchAttributes(schuelerklausurraumstunde : GostSchuelerklausurraumstunde) : void {
+	public schuelerklausurraumstundePatchAttributes(schuelerklausurraumstunde : GostSchuelerklausurterminraumstunde) : void {
 		GostKlausurraumManager.schuelerklausurraumstundeCheck(schuelerklausurraumstunde);
-		DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde);
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde, schuelerklausurraumstunde);
 		this.update_all();
 	}
 
 	private schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(idSchuelerklausur : number, idRaumstunde : number) : void {
-		DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
 	}
 
 	private schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur : number) : void {
-		this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde.removeSubMap(idSchuelerklausur);
+		this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSubMap(idSchuelerklausur);
 	}
 
 	private schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur : number) : void {
-		const skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idSchuelerklausur.get(idSchuelerklausur);
+		const skrsList : List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin.get(idSchuelerklausur);
 		if (skrsList !== null)
 			for (const skrs of skrsList)
-				DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, skrs.idSchuelerklausur, skrs.idRaumstunde);
+				DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
 	/**
-	 * Entfernt ein existierendes {@link GostSchuelerklausurraumstunde}-Objekt.
+	 * Entfernt ein existierendes {@link GostSchuelerklausurterminraumstunde}-Objekt.
 	 *
-	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 * @param idRaumstunde      Die ID des {@link GostKlausurraumstunde}-Objekts.
 	 */
 	public schuelerklausurraumstundeRemoveByIdSchuelerklausurAndIdRaumstunde(idSchuelerklausur : number, idRaumstunde : number) : void {
@@ -653,9 +653,9 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt ein existierendes {@link GostSchuelerklausurraumstunde}-Objekt.
+	 * Entfernt ein existierendes {@link GostSchuelerklausurterminraumstunde}-Objekt.
 	 *
-	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurraumstundeRemoveByIdSchuelerklausur(idSchuelerklausur : number) : void {
 		this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
@@ -663,7 +663,7 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt alle {@link GostSchuelerklausurraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
+	 * Entfernt alle {@link GostSchuelerklausurterminraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
 	 *
 	 * @param idsSchuelerklausuren die Liste der Schülerklausur-IDs.
 	 */
@@ -674,14 +674,14 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt alle {@link GostSchuelerklausurraumstunde}-Objekte.
+	 * Entfernt alle {@link GostSchuelerklausurterminraumstunde}-Objekte.
 	 *
 	 * @param listSchuelerklausurRaumstunde Die Liste der zu entfernenden
-	 *                                      {@link GostSchuelerklausurraumstunde}-Objekte.
+	 *                                      {@link GostSchuelerklausurterminraumstunde}-Objekte.
 	 */
-	public schuelerklausurraumstundeRemoveAll(listSchuelerklausurRaumstunde : List<GostSchuelerklausurraumstunde>) : void {
+	public schuelerklausurraumstundeRemoveAll(listSchuelerklausurRaumstunde : List<GostSchuelerklausurterminraumstunde>) : void {
 		for (const schuelerklausurraumstunde of listSchuelerklausurRaumstunde)
-			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(schuelerklausurraumstunde.idSchuelerklausur, schuelerklausurraumstunde.idRaumstunde);
+			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(schuelerklausurraumstunde.idSchuelerklausurtermin, schuelerklausurraumstunde.idRaumstunde);
 		this.update_all();
 	}
 
@@ -729,7 +729,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public kursklausurGetMenge() : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
-		for (const kkId of this._schuelerklausurmenge_by_idKursklausur.keySet()) {
+		for (const kkId of this._schuelerklausurterminmenge_by_idKursklausur.keySet()) {
 			kursklausuren.add(this._kursklausurManager.kursklausurGetByIdOrException(kkId));
 		}
 		return kursklausuren;
@@ -742,8 +742,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurGetMengeByKursklausurid(idKursklausur : number) : List<GostSchuelerklausur> {
-		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurmenge_by_idKursklausur, idKursklausur);
+	public schuelerklausurGetMengeByKursklausurid(idKursklausur : number) : List<GostSchuelerklausurTermin> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idKursklausur, idKursklausur);
 	}
 
 	/**
@@ -755,10 +755,10 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public kursklausurGetMengeByRaumid(idRaum : number) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
-		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
+		if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
-		for (const idKK of this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
-			if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
+		for (const idKK of this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
+			if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
 				kursklausuren.add(this._kursklausurManager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
@@ -772,8 +772,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurGetMengeByRaumidAndKursklausurid(idRaum : number, idKursklausur : number) : List<GostSchuelerklausur> {
-		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurmenge_by_idRaum_and_idKursklausur, idRaum, idKursklausur);
+	public schuelerklausurGetMengeByRaumidAndKursklausurid(idRaum : number, idKursklausur : number) : List<GostSchuelerklausurTermin> {
+		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, idRaum, idKursklausur);
 	}
 
 	/**
@@ -783,12 +783,12 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurGetMengeByRaumid(idRaum : number) : List<GostSchuelerklausur> {
-		const schuelerklausuren : List<GostSchuelerklausur> | null = new ArrayList();
-		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
+	public schuelerklausurGetMengeByRaumid(idRaum : number) : List<GostSchuelerklausurTermin> {
+		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = new ArrayList();
+		if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
-		for (const idKK of this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
-			schuelerklausuren.addAll(this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
+		for (const idKK of this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
+			schuelerklausuren.addAll(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
 		return schuelerklausuren;
 	}
 
@@ -797,7 +797,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurOhneRaumGetMenge() : List<GostSchuelerklausur> {
+	public schuelerklausurOhneRaumGetMenge() : List<GostSchuelerklausurTermin> {
 		return this.schuelerklausurGetMengeByRaumid(-1);
 	}
 
@@ -826,8 +826,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
 	 */
 	public isAlleSchuelerklausurenVerplant(kk : GostKursklausur) : boolean {
-		for (const sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurmenge_by_idKursklausur, kk.id)) {
-			if (!this._raumstundenmenge_by_idSchuelerklausur.containsKey(sk.idSchuelerklausur))
+		for (const sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
+			if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.idSchuelerklausur))
 				return false;
 		}
 		return true;
@@ -842,7 +842,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return true, wenn enthalten, sonst false
 	 */
 	public containsKlausurraumKursklausur(idRaum : number, idKursklausur : number) : boolean {
-		return this._schuelerklausurmenge_by_idRaum_and_idKursklausur.contains(idRaum, idKursklausur);
+		return this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.contains(idRaum, idKursklausur);
 	}
 
 	/**

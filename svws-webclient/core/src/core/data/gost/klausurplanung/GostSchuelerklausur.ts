@@ -1,4 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { ArrayList } from '../../../../java/util/ArrayList';
+import type { List } from '../../../../java/util/List';
+import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 
 export class GostSchuelerklausur extends JavaObject {
 
@@ -15,17 +18,12 @@ export class GostSchuelerklausur extends JavaObject {
 	/**
 	 * Das Zeitraster des Stundenplans.
 	 */
-	public idTermin : number | null = null;
-
-	/**
-	 * Das Zeitraster des Stundenplans.
-	 */
 	public idSchueler : number = -1;
 
 	/**
-	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins.
+	 * Die Liste der IDs der zugehörigen Termine.
 	 */
-	public startzeit : number | null = null;
+	public schuelerklausurTermine : List<GostSchuelerklausurTermin> = new ArrayList();
 
 
 	public constructor() {
@@ -49,11 +47,14 @@ export class GostSchuelerklausur extends JavaObject {
 		if (typeof obj.idKursklausur === "undefined")
 			 throw new Error('invalid json format, missing attribute idKursklausur');
 		result.idKursklausur = obj.idKursklausur;
-		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
+		if ((obj.schuelerklausurTermine !== undefined) && (obj.schuelerklausurTermine !== null)) {
+			for (const elem of obj.schuelerklausurTermine) {
+				result.schuelerklausurTermine?.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -61,9 +62,19 @@ export class GostSchuelerklausur extends JavaObject {
 		let result = '{';
 		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
-		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+		if (!obj.schuelerklausurTermine) {
+			result += '"schuelerklausurTermine" : []';
+		} else {
+			result += '"schuelerklausurTermine" : [ ';
+			for (let i = 0; i < obj.schuelerklausurTermine.size(); i++) {
+				const elem = obj.schuelerklausurTermine.get(i);
+				result += GostSchuelerklausurTermin.transpilerToJSON(elem);
+				if (i < obj.schuelerklausurTermine.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -77,14 +88,22 @@ export class GostSchuelerklausur extends JavaObject {
 		if (typeof obj.idKursklausur !== "undefined") {
 			result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		}
-		if (typeof obj.idTermin !== "undefined") {
-			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
-		}
 		if (typeof obj.idSchueler !== "undefined") {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
-		if (typeof obj.startzeit !== "undefined") {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+		if (typeof obj.schuelerklausurTermine !== "undefined") {
+			if (!obj.schuelerklausurTermine) {
+				result += '"schuelerklausurTermine" : []';
+			} else {
+				result += '"schuelerklausurTermine" : [ ';
+				for (let i = 0; i < obj.schuelerklausurTermine.size(); i++) {
+					const elem = obj.schuelerklausurTermine.get(i);
+					result += GostSchuelerklausurTermin.transpilerToJSON(elem);
+					if (i < obj.schuelerklausurTermine.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

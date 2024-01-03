@@ -70,11 +70,13 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Kalenderinformation
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Kursklausuren;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_NtaZeiten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume;
-import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume_Stunden;
-import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raumstunden;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raumstunden_Aufsichten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Schuelerklausuren;
-import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Schuelerklausuren_Termine;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Termine;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Termine_Jahrgaenge;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Vorgaben;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler_Fachwahlen;
@@ -898,11 +900,17 @@ public final class Schema {
     /** Tabelle Gost_Klausuren_Termine */
     public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
 
+    /** Tabelle Gost_Klausuren_Termine_Jahrgaenge */
+    public static final Tabelle_Gost_Klausuren_Termine_Jahrgaenge tab_Gost_Klausuren_Termine_Jahrgaenge = add(new Tabelle_Gost_Klausuren_Termine_Jahrgaenge());
+
     /** Tabelle Gost_Klausuren_Kursklausuren */
     public static final Tabelle_Gost_Klausuren_Kursklausuren tab_Gost_Klausuren_Kursklausuren = add(new Tabelle_Gost_Klausuren_Kursklausuren());
 
     /** Tabelle Gost_Klausuren_Schuelerklausuren */
     public static final Tabelle_Gost_Klausuren_Schuelerklausuren tab_Gost_Klausuren_Schuelerklausuren = add(new Tabelle_Gost_Klausuren_Schuelerklausuren());
+
+    /** Tabelle Gost_Klausuren_Schuelerklausuren_Termine */
+    public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Termine tab_Gost_Klausuren_Schuelerklausuren_Termine = add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Termine());
 
     /** Tabelle Gost_Klausuren_NtaZeiten */
     public static final Tabelle_Gost_Klausuren_NtaZeiten tab_Tabelle_Gost_Klausuren_NtaZeiten = add(new Tabelle_Gost_Klausuren_NtaZeiten());
@@ -911,13 +919,13 @@ public final class Schema {
     public static final Tabelle_Gost_Klausuren_Raeume tab_Gost_Klausuren_Raeume = add(new Tabelle_Gost_Klausuren_Raeume());
 
     /** Tabelle Gost_Klausuren_Raeume_Stunden */
-    public static final Tabelle_Gost_Klausuren_Raeume_Stunden tab_Gost_Klausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Raeume_Stunden());
+    public static final Tabelle_Gost_Klausuren_Raumstunden tab_Gost_Klausuren_Raumstunden = add(new Tabelle_Gost_Klausuren_Raumstunden());
 
     /** Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden */
-    public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden tab_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden());
+    public static final Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden tab_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden = add(new Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden());
 
     /** Tabelle Gost_Klausuren_Aufsichten */
-    public static final Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten tab_Gost_Klausuren_Raeume_Stunden_Aufsichten = add(new Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten());
+    public static final Tabelle_Gost_Klausuren_Raumstunden_Aufsichten tab_Gost_Klausuren_Raumstunden_Aufsichten = add(new Tabelle_Gost_Klausuren_Raumstunden_Aufsichten());
 
 //    /** Tabelle Gost_Klausuren_Entfall */
 //    public static final Tabelle_Gost_Klausuren_Entfall tab_Gost_Klausuren_Entfall = add(new Tabelle_Gost_Klausuren_Entfall());

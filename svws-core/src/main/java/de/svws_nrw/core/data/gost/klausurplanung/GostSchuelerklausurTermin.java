@@ -1,11 +1,7 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,11 +11,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "der Stundenplan eines Schülers.")
 @TranspilerDTO
-public class GostSchuelerklausur {
+public class GostSchuelerklausurTermin {
 
 	/** Die ID des Stundenplans. */
 	@Schema(description = "die ID des Stundenplans", example = "815")
+	public long id = -1;
+
+	/** Die textuelle Beschreibung des Stundenplans. */
+	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
 	public long idSchuelerklausur = -1;
+
+	/** Das Zeitraster des Stundenplans. */
+	@Schema(description = "das Zeitraster des Stundenplans")
+	public Long idTermin = null;
+
+	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins. */
+	@Schema(description = "die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins", example = "540")
+	public Integer startzeit = null;
 
 	/** Die textuelle Beschreibung des Stundenplans. */
 	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
@@ -28,9 +36,5 @@ public class GostSchuelerklausur {
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
 	public long idSchueler = -1;
-
-	/** Die Liste der IDs der zugehörigen Termine. */
-	@Schema(description = "die Liste der IDs der zugehörigen Termine", example = "[ 5590, 5591, 5592, ... ]")
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurTermine = new ArrayList<>();
 
 }

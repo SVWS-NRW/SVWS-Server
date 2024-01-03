@@ -9,7 +9,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeumeStunden;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -37,10 +37,10 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
-	 * {@link DTOGostKlausurenRaeumeStunden} in einen Core-DTO
+	 * {@link DTOGostKlausurenRaumstunden} in einen Core-DTO
 	 * {@link GostKlausurraumstunde}.
 	 */
-	public static final Function<DTOGostKlausurenRaeumeStunden, GostKlausurraumstunde> dtoMapper = (final DTOGostKlausurenRaeumeStunden z) -> {
+	public static final Function<DTOGostKlausurenRaumstunden, GostKlausurraumstunde> dtoMapper = (final DTOGostKlausurenRaumstunden z) -> {
 		final GostKlausurraumstunde daten = new GostKlausurraumstunde();
 		daten.id = z.ID;
 		daten.idRaum = z.Klausurraum_ID;
@@ -64,10 +64,10 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 			return new ArrayList<>();
 		}
 
-		final List<DTOGostKlausurenRaeumeStunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(), DTOGostKlausurenRaeumeStunden.class);
+		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(), DTOGostKlausurenRaumstunden.class);
 
 		final List<GostKlausurraumstunde> daten = new ArrayList<>();
-		for (final DTOGostKlausurenRaeumeStunden s : stunden)
+		for (final DTOGostKlausurenRaumstunden s : stunden)
 			daten.add(dtoMapper.apply(s));
 		return daten;
 	}

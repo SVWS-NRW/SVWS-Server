@@ -8,6 +8,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -72,6 +73,15 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 			col_Vorgabe_ID, col_Kurs_ID
 		);
 
+	/** Die Definition des Non-Unique-Index Gost_Klausuren_Kursklausuren_IDX_Vorgabe_ID */
+	public SchemaTabelleIndex index_Gost_Klausuren_Kursklausuren_IDX_Vorgabe_ID = addIndex("Gost_Klausuren_Kursklausuren_IDX_Vorgabe_ID",
+		col_Vorgabe_ID
+	);
+
+	/** Die Definition des Non-Unique-Index Gost_Klausuren_Kursklausuren_IDX_Termin_ID */
+	public SchemaTabelleIndex index_Gost_Klausuren_Kursklausuren_IDX_Termin_ID = addIndex("Gost_Klausuren_Kursklausuren_IDX_Termin_ID",
+		col_Termin_ID
+	);
 
 
 	/**

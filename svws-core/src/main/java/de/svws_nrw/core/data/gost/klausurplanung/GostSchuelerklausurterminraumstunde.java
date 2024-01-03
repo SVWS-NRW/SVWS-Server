@@ -11,11 +11,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Informationen zu einer Gost-Schuelerklausurraumstunde.")
 @TranspilerDTO
-public class GostSchuelerklausurraumstunde {
+public class GostSchuelerklausurterminraumstunde {
 
 	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID der Schülerklausur", example = "815")
-	public long idSchuelerklausur = -1;
+	@Schema(description = "die ID des Schülerklausurtermin", example = "815")
+	public long idSchuelerklausurtermin = -1;
 
 	/** Die ID der Klausurraumstunde. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "2242")

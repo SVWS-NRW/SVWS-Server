@@ -190,7 +190,8 @@ export { GostKlausurterminblockungKonfiguration } from './core/data/gost/klausur
 export { GostKlausurvorgabe } from './core/data/gost/klausurplanung/GostKlausurvorgabe';
 export { GostKursklausur } from './core/data/gost/klausurplanung/GostKursklausur';
 export { GostSchuelerklausur } from './core/data/gost/klausurplanung/GostSchuelerklausur';
-export { GostSchuelerklausurraumstunde } from './core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
+export { GostSchuelerklausurTermin } from './core/data/gost/klausurplanung/GostSchuelerklausurTermin';
+export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
 export { JahrgangsKatalogEintragBezeichnung } from './core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
