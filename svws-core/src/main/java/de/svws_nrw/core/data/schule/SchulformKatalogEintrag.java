@@ -35,6 +35,18 @@ public class SchulformKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Bezeichnung der Schulform", example = "Gesamtschule")
 	public @NotNull String bezeichnung = "";
 
+	/** Gibt an, ob es sich um eine Schulform für allgemeinbildende Schulen handelt oder nicht. */
+	@Schema(description = "gibt an, ob es sich um eine Schulform für allgemeinbildende Schulen handelt oder nicht", example = "true")
+	public boolean istAllgemeinbildend;
+
+	/** Gibt an, ob es sich um eine Schulform für berufsbildende Schulen handelt oder nicht */
+	@Schema(description = "gibt an, ob es sich um eine Schulform für berufsbildende Schulen handelt oder nicht", example = "true")
+	public boolean istBerufsbildend;
+
+	/** Gibt an, ob es sich um eine Schulform für Weiterbildung handelt oder nicht */
+	@Schema(description = "gibt an, ob es sich um eine Schulform für Weiterbildung handelt oder nicht", example = "true")
+	public boolean istWeiterbildung;
+
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. */
 	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example = "true")
 	public boolean hatGymOb;
@@ -54,15 +66,23 @@ public class SchulformKatalogEintrag extends CoreTypeData {
 	 * @param kuerzel      das Kürzel
 	 * @param nummer       die Nummer
 	 * @param bezeichnung  die Bezeichnung
+	 * @param istAllgemeinbildend   gibt an, ob es sich um eine Schulform für allgemeinbildende Schulen handelt oder nicht
+	 * @param istBerufsbildend      gibt an, ob es sich um eine Schulform für berufsbildende Schulen handelt oder nicht
+	 * @param istWeiterbildung      gibt an, ob es sich um eine Schulform für Weiterbildung handelt oder nicht
 	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer, final @NotNull String bezeichnung, final boolean hatGymOb, final Integer gueltigVon, final Integer gueltigBis) {
+	public SchulformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer, final @NotNull String bezeichnung,
+			final boolean istAllgemeinbildend, final boolean istBerufsbildend, final boolean istWeiterbildung, final boolean hatGymOb,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.nummer = nummer;
 		this.bezeichnung = bezeichnung;
+		this.istAllgemeinbildend = istAllgemeinbildend;
+		this.istBerufsbildend = istBerufsbildend;
+		this.istWeiterbildung = istWeiterbildung;
 		this.hatGymOb = hatGymOb;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

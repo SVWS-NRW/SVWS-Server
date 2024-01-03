@@ -11,6 +11,11 @@ export class KlassenListeEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
+	 * Die ID des Schuljahresabschnittes des Kurses.
+	 */
+	public idSchuljahresabschnitt : number = 0;
+
+	/**
 	 * Das Kürzel der Klasse.
 	 */
 	public kuerzel : string | null = null;
@@ -64,6 +69,9 @@ export class KlassenListeEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (typeof obj.idSchuljahresabschnitt === "undefined")
+			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
@@ -89,6 +97,7 @@ export class KlassenListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KlassenListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
@@ -127,6 +136,9 @@ export class KlassenListeEintrag extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';

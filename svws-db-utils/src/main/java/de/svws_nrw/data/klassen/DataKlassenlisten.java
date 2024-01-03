@@ -76,6 +76,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
     	return klassen.stream().map(k -> {
     		final KlassenListeEintrag eintrag = new KlassenListeEintrag();
     		eintrag.id = k.ID;
+    		eintrag.idSchuljahresabschnitt = k.Schuljahresabschnitts_ID;
     		eintrag.kuerzel = k.Klasse;
     		eintrag.idJahrgang = k.Jahrgang_ID;
     		eintrag.parallelitaet = ((k.ASDKlasse == null) || (k.ASDKlasse.length() < 3)) ? null : k.ASDKlasse.substring(2, 3);

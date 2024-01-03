@@ -151,7 +151,7 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	 *
 	 * @return true, falls die Klassenart in der Schulform zulässig ist, ansonsten false.
 	 */
-	private hasSchulform(schulform : Schulform | null) : boolean {
+	public hasSchulform(schulform : Schulform | null) : boolean {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		for (const sfsgl of this.zulaessig[0]) {

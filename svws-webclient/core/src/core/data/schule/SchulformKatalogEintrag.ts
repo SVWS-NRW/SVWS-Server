@@ -24,6 +24,21 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	public bezeichnung : string = "";
 
 	/**
+	 * Gibt an, ob es sich um eine Schulform für allgemeinbildende Schulen handelt oder nicht.
+	 */
+	public istAllgemeinbildend : boolean = false;
+
+	/**
+	 * Gibt an, ob es sich um eine Schulform für berufsbildende Schulen handelt oder nicht
+	 */
+	public istBerufsbildend : boolean = false;
+
+	/**
+	 * Gibt an, ob es sich um eine Schulform für Weiterbildung handelt oder nicht
+	 */
+	public istWeiterbildung : boolean = false;
+
+	/**
 	 * Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht.
 	 */
 	public hatGymOb : boolean = false;
@@ -41,31 +56,40 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	 * @param kuerzel      das Kürzel
 	 * @param nummer       die Nummer
 	 * @param bezeichnung  die Bezeichnung
+	 * @param istAllgemeinbildend   gibt an, ob es sich um eine Schulform für allgemeinbildende Schulen handelt oder nicht
+	 * @param istBerufsbildend      gibt an, ob es sich um eine Schulform für berufsbildende Schulen handelt oder nicht
+	 * @param istWeiterbildung      gibt an, ob es sich um eine Schulform für Weiterbildung handelt oder nicht
 	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, kuerzel : string, nummer : string, bezeichnung : string, hatGymOb : boolean, gueltigVon : number | null, gueltigBis : number | null);
+	public constructor(id : number, kuerzel : string, nummer : string, bezeichnung : string, istAllgemeinbildend : boolean, istBerufsbildend : boolean, istWeiterbildung : boolean, hatGymOb : boolean, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : boolean, __param5? : null | number, __param6? : null | number) {
+	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : boolean, __param5? : boolean, __param6? : boolean, __param7? : boolean, __param8? : null | number, __param9? : null | number) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
+		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && typeof __param6 === "boolean") && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const nummer : string = __param2;
 			const bezeichnung : string = __param3;
-			const hatGymOb : boolean = __param4 as boolean;
-			const gueltigVon : number | null = __param5;
-			const gueltigBis : number | null = __param6;
+			const istAllgemeinbildend : boolean = __param4 as boolean;
+			const istBerufsbildend : boolean = __param5 as boolean;
+			const istWeiterbildung : boolean = __param6 as boolean;
+			const hatGymOb : boolean = __param7 as boolean;
+			const gueltigVon : number | null = __param8;
+			const gueltigBis : number | null = __param9;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.nummer = nummer;
 			this.bezeichnung = bezeichnung;
+			this.istAllgemeinbildend = istAllgemeinbildend;
+			this.istBerufsbildend = istBerufsbildend;
+			this.istWeiterbildung = istWeiterbildung;
 			this.hatGymOb = hatGymOb;
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
@@ -97,6 +121,15 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (typeof obj.istAllgemeinbildend === "undefined")
+			 throw new Error('invalid json format, missing attribute istAllgemeinbildend');
+		result.istAllgemeinbildend = obj.istAllgemeinbildend;
+		if (typeof obj.istBerufsbildend === "undefined")
+			 throw new Error('invalid json format, missing attribute istBerufsbildend');
+		result.istBerufsbildend = obj.istBerufsbildend;
+		if (typeof obj.istWeiterbildung === "undefined")
+			 throw new Error('invalid json format, missing attribute istWeiterbildung');
+		result.istWeiterbildung = obj.istWeiterbildung;
 		if (typeof obj.hatGymOb === "undefined")
 			 throw new Error('invalid json format, missing attribute hatGymOb');
 		result.hatGymOb = obj.hatGymOb;
@@ -111,6 +144,9 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend + ',';
+		result += '"istBerufsbildend" : ' + obj.istBerufsbildend + ',';
+		result += '"istWeiterbildung" : ' + obj.istWeiterbildung + ',';
 		result += '"hatGymOb" : ' + obj.hatGymOb + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -136,6 +172,15 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		}
+		if (typeof obj.istAllgemeinbildend !== "undefined") {
+			result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend + ',';
+		}
+		if (typeof obj.istBerufsbildend !== "undefined") {
+			result += '"istBerufsbildend" : ' + obj.istBerufsbildend + ',';
+		}
+		if (typeof obj.istWeiterbildung !== "undefined") {
+			result += '"istWeiterbildung" : ' + obj.istWeiterbildung + ',';
 		}
 		if (typeof obj.hatGymOb !== "undefined") {
 			result += '"hatGymOb" : ' + obj.hatGymOb + ',';

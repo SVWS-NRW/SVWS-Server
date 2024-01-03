@@ -17,97 +17,97 @@ public enum Schulform {
 
 	/** Schulform Berufskolleg */
 	BK(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(1000, "BK", "30", "Berufskolleg", false, null, null)
+		new SchulformKatalogEintrag(1000, "BK", "30", "Berufskolleg", false, true, false, false, null, null)
 	}),
 
 	/** Schulform Freie Waldorfschule */
 	FW(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(2000, "FW", "17", "Freie Waldorfschule", true, null, null)
+		new SchulformKatalogEintrag(2000, "FW", "17", "Freie Waldorfschule", true, true, false, true, null, null)
 	}),
 
 	/** Schulform Grundschule */
 	G(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(3000, "G", "02", "Grundschule", false, null, null)
+		new SchulformKatalogEintrag(3000, "G", "02", "Grundschule", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Gesamtschule */
 	GE(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(4000, "GE", "15", "Gesamtschule", true, null, null)
+		new SchulformKatalogEintrag(4000, "GE", "15", "Gesamtschule", true, false, false, true, null, null)
 	}),
 
 	/** Schulform Gemeinschaftsschule */
 	GM(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, 2022)
+		new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", true, false, false, false, null, 2022)
 	}),
 
 	/** Schulform Gymnasium */
 	GY(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(6000, "GY", "20", "Gymnasium", true, null, null)
+		new SchulformKatalogEintrag(6000, "GY", "20", "Gymnasium", true, false, false, true, null, null)
 	}),
 
 	/** Schulform Hauptschule */
 	H(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(7000, "H", "04", "Hauptschule", false, null, null)
+		new SchulformKatalogEintrag(7000, "H", "04", "Hauptschule", true, false, false, false, null, null)
 	}),
 
 	/** Hibernia */
 	HI(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(8000, "HI", "18", "Hibernia", false, null, null)
+		new SchulformKatalogEintrag(8000, "HI", "18", "Hibernia", true, true, false, false, null, null)
 	}),
 
 	/** Schulform Schulversuch PRIMUS */
 	PS(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(9000, "PS", "13", "Schulversuch PRIMUS", false, null, null)
+		new SchulformKatalogEintrag(9000, "PS", "13", "Schulversuch PRIMUS", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Realschule */
 	R(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(10000, "R", "10", "Realschule", false, null, null)
+		new SchulformKatalogEintrag(10000, "R", "10", "Realschule", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Förderschule im Bereich G/H */
 	S(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(11000, "S", "08", "Förderschule im Bereich G/H", false, null, null)
+		new SchulformKatalogEintrag(11000, "S", "08", "Förderschule im Bereich G/H", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Klinikschule */
 	KS(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(12000, "KS", "83", "Klinikschule", false, null, null)
+		new SchulformKatalogEintrag(12000, "KS", "83", "Klinikschule", true, true, false, false, null, null)
 	}),
 
 	/** Schulform Förderschule im Bereich Berufskolleg */
 	SB(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(13000, "SB", "88", "Förderschule im Bereich Berufskolleg", false, null, null)
+		new SchulformKatalogEintrag(13000, "SB", "88", "Förderschule im Bereich Berufskolleg", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Förderschule im Bereich Gymnasium */
 	SG(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(14000, "SG", "87", "Förderschule im Bereich Gymnasium", true, null, null)
+		new SchulformKatalogEintrag(14000, "SG", "87", "Förderschule im Bereich Gymnasium", true, false, false, true, null, null)
 	}),
 
 	/** Schulform Sekundarschule */
 	SK(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(15000, "SK", "14", "Sekundarschule", false, null, null)
+		new SchulformKatalogEintrag(15000, "SK", "14", "Sekundarschule", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Förderschule im Bereich Realschule */
 	SR(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(16000, "SR", "85", "Förderschule im Bereich Realschule", false, null, null)
+		new SchulformKatalogEintrag(16000, "SR", "85", "Förderschule im Bereich Realschule", true, false, false, false, null, null)
 	}),
 
 	/** Schulform nicht umorganisierte Volksschule */
 	V(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(17000, "V", "06", "nicht umorganisierte Volksschule", false, null, null)
+		new SchulformKatalogEintrag(17000, "V", "06", "nicht umorganisierte Volksschule", true, false, false, false, null, null)
 	}),
 
 	/** Schulform Weiterbildungskolleg */
 	WB(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(18000, "WB", "25", "Weiterbildungskolleg", false, null, null)
+		new SchulformKatalogEintrag(18000, "WB", "25", "Weiterbildungskolleg", false, false, true, false, null, null)
 	}),
 
 	/** Schulform Freie Waldorfschule (Förderschule) */
 	WF(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(19000, "WF", "19", "Freie Waldorfschule (Förderschule)", true, null, null)
+		new SchulformKatalogEintrag(19000, "WF", "19", "Freie Waldorfschule (Förderschule)", true, true, false, true, null, null)
 	});
 
 

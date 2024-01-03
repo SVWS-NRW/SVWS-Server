@@ -23,6 +23,10 @@ public class KlassenListeEintrag {
 	@Schema(description = "die ID der Klasse", example = "4711")
 	public long id;
 
+	/** Die ID des Schuljahresabschnittes des Kurses. */
+	@Schema(description = "die ID des Schuljahresabschnittes des Kurses", example = "14")
+	public long idSchuljahresabschnitt;
+
 	/** Das Kürzel der Klasse. */
 	@Schema(description = "das Kürzel der Klasse", example = "06b")
 	public String kuerzel;

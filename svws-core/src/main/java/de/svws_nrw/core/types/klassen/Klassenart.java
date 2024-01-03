@@ -208,7 +208,7 @@ public enum Klassenart {
 	 *
 	 * @return true, falls die Klassenart in der Schulform zulässig ist, ansonsten false.
 	 */
-	private boolean hasSchulform(final Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		for (final @NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {

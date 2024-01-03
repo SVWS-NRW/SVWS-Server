@@ -11,6 +11,11 @@ export class KlassenDaten extends JavaObject {
 	public id : number = 0;
 
 	/**
+	 * Die ID des Schuljahresabschnittes des Kurses.
+	 */
+	public idSchuljahresabschnitt : number = 0;
+
+	/**
 	 * Das Kürzel der Klasse.
 	 */
 	public kuerzel : string | null = null;
@@ -45,6 +50,81 @@ export class KlassenDaten extends JavaObject {
 	 */
 	public schueler : List<Schueler> = new ArrayList();
 
+	/**
+	 * Adressmerkmal des Teilstandorts für die Klasse
+	 */
+	public teilstandort : string = "";
+
+	/**
+	 * Eine zusätzliche Beschreibung zu der Klasse
+	 */
+	public beschreibung : string = "";
+
+	/**
+	 * Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
+	 */
+	public idVorgaengerklasse : number | null = null;
+
+	/**
+	 * Das Kürzel der Vorgängerklasse.
+	 */
+	public kuerzelVorgaengerklasse : string | null = null;
+
+	/**
+	 * Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null
+	 */
+	public idFolgeklasse : number | null = null;
+
+	/**
+	 * Das Kürzel der Folgeklasse.
+	 */
+	public kuerzelFolgeklasse : string | null = null;
+
+	/**
+	 * Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich
+	 */
+	public idAllgemeinbildenOrganisationsform : number | null = null;
+
+	/**
+	 * Die ID für die Organisationsform der Klasse im berufsbildenden Bereich
+	 */
+	public idBerufsbildendOrganisationsform : number | null = null;
+
+	/**
+	 * Die ID für die Organisationsform der Klasse im Weiterbildungsbereich
+	 */
+	public idWeiterbildungOrganisationsform : number | null = null;
+
+	/**
+	 * Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird.
+	 */
+	public pruefungsordnung : string | null = null;
+
+	/**
+	 * Die ID für die Organisationsform der Klasse
+	 */
+	public idSchulgliederung : number = -1;
+
+	/**
+	 * Die ID für Klassenart
+	 */
+	public idKlassenart : number = -1;
+
+	/**
+	 * Gibt an, ob die Noteneingabe gesperrt ist
+	 */
+	public noteneingabeGesperrt : boolean = false;
+
+	/**
+	 * Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
+	 */
+	public verwendungAnkreuzkompetenzen : boolean = false;
+
+	/**
+	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null
+	 */
+	public idFachklasse : number | null = null;
+
 
 	public constructor() {
 		super();
@@ -64,6 +144,9 @@ export class KlassenDaten extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (typeof obj.idSchuljahresabschnitt === "undefined")
+			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
@@ -83,12 +166,40 @@ export class KlassenDaten extends JavaObject {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (typeof obj.teilstandort === "undefined")
+			 throw new Error('invalid json format, missing attribute teilstandort');
+		result.teilstandort = obj.teilstandort;
+		if (typeof obj.beschreibung === "undefined")
+			 throw new Error('invalid json format, missing attribute beschreibung');
+		result.beschreibung = obj.beschreibung;
+		result.idVorgaengerklasse = typeof obj.idVorgaengerklasse === "undefined" ? null : obj.idVorgaengerklasse === null ? null : obj.idVorgaengerklasse;
+		result.kuerzelVorgaengerklasse = typeof obj.kuerzelVorgaengerklasse === "undefined" ? null : obj.kuerzelVorgaengerklasse === null ? null : obj.kuerzelVorgaengerklasse;
+		result.idFolgeklasse = typeof obj.idFolgeklasse === "undefined" ? null : obj.idFolgeklasse === null ? null : obj.idFolgeklasse;
+		result.kuerzelFolgeklasse = typeof obj.kuerzelFolgeklasse === "undefined" ? null : obj.kuerzelFolgeklasse === null ? null : obj.kuerzelFolgeklasse;
+		result.idAllgemeinbildenOrganisationsform = typeof obj.idAllgemeinbildenOrganisationsform === "undefined" ? null : obj.idAllgemeinbildenOrganisationsform === null ? null : obj.idAllgemeinbildenOrganisationsform;
+		result.idBerufsbildendOrganisationsform = typeof obj.idBerufsbildendOrganisationsform === "undefined" ? null : obj.idBerufsbildendOrganisationsform === null ? null : obj.idBerufsbildendOrganisationsform;
+		result.idWeiterbildungOrganisationsform = typeof obj.idWeiterbildungOrganisationsform === "undefined" ? null : obj.idWeiterbildungOrganisationsform === null ? null : obj.idWeiterbildungOrganisationsform;
+		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
+		if (typeof obj.idSchulgliederung === "undefined")
+			 throw new Error('invalid json format, missing attribute idSchulgliederung');
+		result.idSchulgliederung = obj.idSchulgliederung;
+		if (typeof obj.idKlassenart === "undefined")
+			 throw new Error('invalid json format, missing attribute idKlassenart');
+		result.idKlassenart = obj.idKlassenart;
+		if (typeof obj.noteneingabeGesperrt === "undefined")
+			 throw new Error('invalid json format, missing attribute noteneingabeGesperrt');
+		result.noteneingabeGesperrt = obj.noteneingabeGesperrt;
+		if (typeof obj.verwendungAnkreuzkompetenzen === "undefined")
+			 throw new Error('invalid json format, missing attribute verwendungAnkreuzkompetenzen');
+		result.verwendungAnkreuzkompetenzen = obj.verwendungAnkreuzkompetenzen;
+		result.idFachklasse = typeof obj.idFachklasse === "undefined" ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KlassenDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
@@ -118,6 +229,21 @@ export class KlassenDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"teilstandort" : ' + JSON.stringify(obj.teilstandort!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"idVorgaengerklasse" : ' + ((!obj.idVorgaengerklasse) ? 'null' : obj.idVorgaengerklasse) + ',';
+		result += '"kuerzelVorgaengerklasse" : ' + ((!obj.kuerzelVorgaengerklasse) ? 'null' : JSON.stringify(obj.kuerzelVorgaengerklasse)) + ',';
+		result += '"idFolgeklasse" : ' + ((!obj.idFolgeklasse) ? 'null' : obj.idFolgeklasse) + ',';
+		result += '"kuerzelFolgeklasse" : ' + ((!obj.kuerzelFolgeklasse) ? 'null' : JSON.stringify(obj.kuerzelFolgeklasse)) + ',';
+		result += '"idAllgemeinbildenOrganisationsform" : ' + ((!obj.idAllgemeinbildenOrganisationsform) ? 'null' : obj.idAllgemeinbildenOrganisationsform) + ',';
+		result += '"idBerufsbildendOrganisationsform" : ' + ((!obj.idBerufsbildendOrganisationsform) ? 'null' : obj.idBerufsbildendOrganisationsform) + ',';
+		result += '"idWeiterbildungOrganisationsform" : ' + ((!obj.idWeiterbildungOrganisationsform) ? 'null' : obj.idWeiterbildungOrganisationsform) + ',';
+		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
+		result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
+		result += '"idKlassenart" : ' + obj.idKlassenart + ',';
+		result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt + ',';
+		result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen + ',';
+		result += '"idFachklasse" : ' + ((!obj.idFachklasse) ? 'null' : obj.idFachklasse) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -127,6 +253,9 @@ export class KlassenDaten extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
@@ -170,6 +299,51 @@ export class KlassenDaten extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.teilstandort !== "undefined") {
+			result += '"teilstandort" : ' + JSON.stringify(obj.teilstandort!) + ',';
+		}
+		if (typeof obj.beschreibung !== "undefined") {
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		}
+		if (typeof obj.idVorgaengerklasse !== "undefined") {
+			result += '"idVorgaengerklasse" : ' + ((!obj.idVorgaengerklasse) ? 'null' : obj.idVorgaengerklasse) + ',';
+		}
+		if (typeof obj.kuerzelVorgaengerklasse !== "undefined") {
+			result += '"kuerzelVorgaengerklasse" : ' + ((!obj.kuerzelVorgaengerklasse) ? 'null' : JSON.stringify(obj.kuerzelVorgaengerklasse)) + ',';
+		}
+		if (typeof obj.idFolgeklasse !== "undefined") {
+			result += '"idFolgeklasse" : ' + ((!obj.idFolgeklasse) ? 'null' : obj.idFolgeklasse) + ',';
+		}
+		if (typeof obj.kuerzelFolgeklasse !== "undefined") {
+			result += '"kuerzelFolgeklasse" : ' + ((!obj.kuerzelFolgeklasse) ? 'null' : JSON.stringify(obj.kuerzelFolgeklasse)) + ',';
+		}
+		if (typeof obj.idAllgemeinbildenOrganisationsform !== "undefined") {
+			result += '"idAllgemeinbildenOrganisationsform" : ' + ((!obj.idAllgemeinbildenOrganisationsform) ? 'null' : obj.idAllgemeinbildenOrganisationsform) + ',';
+		}
+		if (typeof obj.idBerufsbildendOrganisationsform !== "undefined") {
+			result += '"idBerufsbildendOrganisationsform" : ' + ((!obj.idBerufsbildendOrganisationsform) ? 'null' : obj.idBerufsbildendOrganisationsform) + ',';
+		}
+		if (typeof obj.idWeiterbildungOrganisationsform !== "undefined") {
+			result += '"idWeiterbildungOrganisationsform" : ' + ((!obj.idWeiterbildungOrganisationsform) ? 'null' : obj.idWeiterbildungOrganisationsform) + ',';
+		}
+		if (typeof obj.pruefungsordnung !== "undefined") {
+			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
+		}
+		if (typeof obj.idSchulgliederung !== "undefined") {
+			result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
+		}
+		if (typeof obj.idKlassenart !== "undefined") {
+			result += '"idKlassenart" : ' + obj.idKlassenart + ',';
+		}
+		if (typeof obj.noteneingabeGesperrt !== "undefined") {
+			result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt + ',';
+		}
+		if (typeof obj.verwendungAnkreuzkompetenzen !== "undefined") {
+			result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen + ',';
+		}
+		if (typeof obj.idFachklasse !== "undefined") {
+			result += '"idFachklasse" : ' + ((!obj.idFachklasse) ? 'null' : obj.idFachklasse) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
