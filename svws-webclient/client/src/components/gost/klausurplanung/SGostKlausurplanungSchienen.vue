@@ -225,7 +225,7 @@
 	}
 
 	const anzahlProKwKonflikte = (threshold: number) => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined) {
+		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
 			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
 				return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
 		} else if (terminSelected.value !== undefined)

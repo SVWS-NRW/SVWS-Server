@@ -10,6 +10,7 @@ import type {
 	GostKursklausur,
 	GostKursklausurManager,
 	GostSchuelerklausur,
+	GostSchuelerklausurTermin,
 	KursManager,
 	LehrerListeEintrag,
 	List,
@@ -29,7 +30,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 	erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
-	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
+	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 	patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }
