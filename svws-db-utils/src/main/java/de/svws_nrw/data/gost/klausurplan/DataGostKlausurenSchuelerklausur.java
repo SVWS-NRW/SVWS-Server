@@ -147,6 +147,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 */
 	public static final Function3<DTOGostKlausurenSchuelerklausuren, DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> dtoMapperToSchuelerklausurTermin = (final DTOGostKlausurenSchuelerklausuren sk, final DTOGostKlausurenSchuelerklausurenTermine skt) -> {
 		final GostSchuelerklausurTermin daten = new GostSchuelerklausurTermin();
+		daten.id = skt.ID;
 		daten.idKursklausur = sk.Kursklausur_ID;
 		daten.idSchueler = sk.Schueler_ID;
 		daten.idSchuelerklausur = sk.ID;

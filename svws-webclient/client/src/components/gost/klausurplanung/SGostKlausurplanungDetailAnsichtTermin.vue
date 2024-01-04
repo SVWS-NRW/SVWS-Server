@@ -7,7 +7,7 @@
 				<tr>
 					<th class="border-r" style="width:8%">Raum</th>
 					<th colspan="3" class="border-r" style="width:45%">Kursinfos</th>
-					<th class="border-r" style="width:15%">Aufsichten</th>
+					<!--<th class="border-r" style="width:15%">Aufsichten</th>-->
 					<th>Bemerkungen</th>
 				</tr>
 			</thead>
@@ -32,14 +32,14 @@
 						</td>
 						<td class="border-r text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) !== null">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum)!) }} Uhr</td>
 						<td class="border-r text-center" v-if="raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) !== null">{{ raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) }} Min.</td>
-						<td class="border-r p-2s">
+						<!--<td class="border-r p-2s">
 							<table class="mx-auto">
 								<tr v-for="stunde in raummanager.klausurraumstundeGetMengeByRaumid(raum.id)" :key="stunde.id">
 									<td class="text-right pr-1">{{ stundenplanmanager.zeitrasterGetByIdOrException(stunde.idZeitraster).unterrichtstunde }}.</td>
 									<td class="pl-1">N.N.</td>
 								</tr>
 							</table>
-						</td>
+						</td>-->
 					</template>
 					<td v-else colspan="4" class="border-black border-r text-center text-error p-2">
 						Keine Klausuren in diesem Raum

@@ -235,9 +235,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final GostKlausurraumManager raumManager) {
 		// Bestimme die ID der ersten neuen Klausurraumstunde
 		long idNextKrs = conn.transactionGetNextID(DTOGostKlausurenRaumstunden.class);
-//		final DTOSchemaAutoInkremente lastKrsID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
-//		long idKrs = lastKrsID == null ? 1 : lastKrsID.MaxID + 1;
-
 		final List<GostKlausurraumstunde> result = new ArrayList<>();
 		for (final StundenplanZeitraster stunde : zeitrasterRaum) {
 			if (raumManager.klausurraumstundeGetByRaumidAndZeitrasterid(idRaum, stunde.id) == null) {
