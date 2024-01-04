@@ -17,7 +17,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebn
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus;
+import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;

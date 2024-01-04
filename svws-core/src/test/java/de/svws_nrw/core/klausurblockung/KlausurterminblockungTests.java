@@ -19,8 +19,8 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmus;
-import de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus;
+import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus;
+import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */

@@ -19,7 +19,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurvorgabenManager;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;

@@ -17,9 +17,9 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumst
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.utils.klausurplanung.GostKlausurraumManager;
-import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
-import de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurraumManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanListUtils;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.DataManager;
