@@ -65,6 +65,7 @@
 		danger?: boolean;
 		items: Iterable<Item> | Map<number, Item>;
 		itemText: (item: Item) => string;
+		emptyText?: () => string;
 		itemSort?: (a: Item, b: Item) => number;
 		itemFilter?: (items: Item[], searchText: string) => Item[];
 		modelValue: SelectDataType;
@@ -80,6 +81,7 @@
 		disabled: false,
 		statistics: false,
 		danger: false,
+		emptyText: () => '',
 		itemSort: (a: Item, b: Item) => 0,
 		itemFilter: (items: Item[]) => items,
 		useNull: false,
@@ -114,7 +116,7 @@
 
 	function generateInputText() {
 		if ((selectedItem.value === null) || (selectedItem.value === undefined))
-			return "";
+			return props.emptyText();
 		return props.itemText(selectedItem.value);
 	}
 

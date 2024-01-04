@@ -70,7 +70,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		daten.idSchuljahresabschnitt = klasse.Schuljahresabschnitts_ID;
 		daten.kuerzel = klasse.Klasse;
 		daten.idJahrgang = klasse.Jahrgang_ID;
-		daten.parallelitaet = klasse.ASDKlasse.length() < 3 ? null : klasse.ASDKlasse.substring(2, 3);
+		daten.parallelitaet = klasse.ASDKlasse.length() < 3 ? null : klasse.ASDKlasse.substring(2, klasse.ASDKlasse.length());
 		daten.sortierung = klasse.Sortierung;
 		daten.istSichtbar = klasse.Sichtbar;
 		if (klassenLeitungen != null)
@@ -206,12 +206,23 @@ public final class DataKlassendaten extends DataManager<Long> {
 			dto.Klasse = JSONMapper.convertToString(value, false, false, 6);
 		}),
 		Map.entry("idJahrgang", (conn, dto, value, map) -> {
-			final long idJahrgang = JSONMapper.convertToLong(value, false);
-			final DTOJahrgang jg = conn.queryByKey(DTOJahrgang.class, idJahrgang);
-			if (jg == null)
-				throw OperationError.NOT_FOUND.exception("Der Jahrgang mit der ID %d konnte nicht gefunden werden.".formatted(idJahrgang));
-			dto.Jahrgang_ID = jg.ID;
-			dto.ASDKlasse = jg.ASDJahrgang + (((dto.ASDKlasse != null) && (dto.ASDKlasse.length() > 2)) ? dto.ASDKlasse.charAt(2) : "");
+			final Long idJahrgang = JSONMapper.convertToLong(value, true);
+			if (idJahrgang == null) {
+				// Jahrgangs-übergreifende Klasse -> JU
+				dto.Jahrgang_ID = null;
+				dto.ASDKlasse = "JU" + (((dto.ASDKlasse != null) && (dto.ASDKlasse.length() > 2)) ? dto.ASDKlasse.charAt(2) : "");
+			} else {
+				final DTOJahrgang jg = conn.queryByKey(DTOJahrgang.class, idJahrgang);
+				if (jg == null)
+					throw OperationError.NOT_FOUND.exception("Der Jahrgang mit der ID %d konnte nicht gefunden werden.".formatted(idJahrgang));
+				dto.Jahrgang_ID = jg.ID;
+				String asdKlassenjahrgang = jg.ASDJahrgang;
+				if ("E1".equals(jg.ASDJahrgang))
+					asdKlassenjahrgang = "1E";
+				else if ("E2".equals(jg.ASDJahrgang))
+					asdKlassenjahrgang = "2E";
+				dto.ASDKlasse = asdKlassenjahrgang + (((dto.ASDKlasse != null) && (dto.ASDKlasse.length() > 2)) ? dto.ASDKlasse.charAt(2) : "");
+			}
 		}),
 		Map.entry("parallelitaet", (conn, dto, value, map) -> {
 			final String parallelitaet = JSONMapper.convertToString(value, true, false, 1);

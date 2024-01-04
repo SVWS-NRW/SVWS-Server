@@ -9,7 +9,7 @@
 					<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
 					<svws-ui-text-input placeholder="Beschreibung" :model-value="data.beschreibung" @change="beschreibung => patch({ beschreibung })" type="text" />
 					<svws-ui-spacing />
-					<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="item => item.kuerzel ?? ''" />
+					<svws-ui-select title="Klassen-Jahrgang" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang" :empty-text="() => 'JU - Jahrgangsübergreifend'" removable />
 					<svws-ui-select title="Parallelität" :model-value="data.parallelitaet ?? '---'"
 						@update:model-value="value => patch({ parallelitaet: value === '---' ? null : value })"
 						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" :item-text="p => p" />
@@ -83,9 +83,28 @@
 
 	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
 
+	function textJahrgang(jg : JahrgangsListeEintrag) : string {
+		if (jg.kuerzel === null)
+			return 'JU - Jahrgangsübergreifend';
+		if (jg.kuerzel === 'E1')
+			return '1E' + ' - ' + jg.bezeichnung;
+		if (jg.kuerzel === 'E2')
+			return '2E' + ' - ' + jg.bezeichnung;
+		return jg.kuerzel + ' - ' + jg.bezeichnung;
+	}
+
 	const jahrgang = computed<JahrgangsListeEintrag | null>({
 		get: () => ((data.value === undefined) || (data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
 		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
+	});
+
+	const jahrgaenge = computed<List<JahrgangsListeEintrag>>(() => {
+		const result = new ArrayList<JahrgangsListeEintrag>();
+		for (const jg of props.klassenListeManager().jahrgaenge.list()) {
+			if (jg.kuerzel !== "E3")  // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+				result.add(jg);
+		}
+		return result;
 	});
 
 
