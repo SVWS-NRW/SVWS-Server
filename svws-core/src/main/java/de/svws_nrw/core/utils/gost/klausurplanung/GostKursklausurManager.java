@@ -16,6 +16,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
@@ -1086,14 +1087,16 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 * Liefert den Klausurtermin zu einem Schülerklausurtermin oder NULL.
 	 *
-	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 * @param termin der Schülerklausurtermin, zu dem der Termin gesucht wird.
 	 *
 	 * @return den Klausurtermin
 	 */
-	public GostKlausurtermin terminKursklausurBySchuelerklausur(final @NotNull GostSchuelerklausur klausur) {
-		return terminByKursklausur(kursklausurBySchuelerklausur(klausur));
+	public GostKlausurtermin terminBySchuelerklausurTermin(final @NotNull GostSchuelerklausurTermin termin) {
+		if (termin.folgeNr > 0)
+			return termin.idTermin == null ? null : terminGetByIdOrException(termin.idTermin);
+		return terminByKursklausur(kursklausurBySchuelerklausurTermin(termin));
 	}
 
 	/**
@@ -1128,6 +1131,17 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull GostKursklausur kursklausurBySchuelerklausur(final @NotNull GostSchuelerklausur klausur) {
 		return kursklausurGetByIdOrException(klausur.idKursklausur);
+	}
+
+	/**
+	 * Liefert die GostKursklausur zu einem Schuelerklausurtermin.
+	 *
+	 * @param termin der Schuelerklausurtermin, zu der die GostKursklausur gesucht wird.
+	 *
+	 * @return die GostKursklausur
+	 */
+	public @NotNull GostKursklausur kursklausurBySchuelerklausurTermin(final @NotNull GostSchuelerklausurTermin termin) {
+		return kursklausurGetByIdOrException(termin.idKursklausur);
 	}
 
 	/**
@@ -1207,6 +1221,18 @@ public class GostKursklausurManager {
 	public boolean hatAbweichendeStartzeitByKursklausur(final @NotNull GostKursklausur klausur) {
 		GostKlausurtermin termin = terminByKursklausur(klausur);
 		return !(klausur.startzeit == null || termin == null || termin.startzeit == null || termin.startzeit.equals(klausur.startzeit));
+	}
+
+	/**
+	 * Prüft, ob der übergebene Schülerklausurtermin der aktuellste Termin der Schülerklausur ist.
+	 *
+	 * @param skt der Schülerklausurtermin, der geprüft werden soll
+	 *
+	 * @return true, wenn es sich um den aktuellen Termin handelt, sonst false
+	 */
+	public boolean istAktuellerSchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
+		@NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurGetByIdOrException(skt.idSchuelerklausur).schuelerklausurTermine;
+		return skts.get(skts.size() - 1) == skt;
 	}
 
 }

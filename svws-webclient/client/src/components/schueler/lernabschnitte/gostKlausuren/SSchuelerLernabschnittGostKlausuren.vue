@@ -4,8 +4,15 @@
 			<template #cell(quartal)="{ rowData }">
 				{{ klausurManager().vorgabeBySchuelerklausur(rowData).quartal }}
 			</template>
-			<template #cell(datum)="{ rowData }">
-				{{ klausurManager().terminKursklausurBySchuelerklausur(rowData).datum !== null ? DateUtils.gibDatumGermanFormat(klausurManager().terminKursklausurBySchuelerklausur(rowData).datum) : "" }}
+			<template #cell(termin)="{ rowData }">
+				<svws-ui-table :items="rowData.schuelerklausurTermine" :columns="colsTermine" disable-header>
+					<template #cell(datum)="{ rowData: termin }">
+						{{ klausurManager().terminBySchuelerklausurTermin(termin) !== null ? (klausurManager().terminBySchuelerklausurTermin(termin)!.datum !== null ? DateUtils.gibDatumGermanFormat(klausurManager().terminBySchuelerklausurTermin(termin)!.datum!) : "N.N.") : "N.N." }}
+					</template>
+					<template #cell(button)="{ rowData: termin }">
+						<svws-ui-button v-if="klausurManager().istAktuellerSchuelerklausurtermin(termin)" class="mt-4" @click="createSchuelerklausurTermin(rowData)">Nicht teilgenommen</svws-ui-button>
+					</template>
+				</svws-ui-table>
 			</template>
 			<template #cell(kurs)="{ rowData }">
 				{{ manager().kursGetByIdOrException(klausurManager().kursklausurBySchuelerklausur(rowData).idKurs).kuerzel }}
@@ -20,6 +27,8 @@
 	</div>
 </template>
 
+				<!--{{ klausurManager().terminKursklausurBySchuelerklausur(rowData).datum !== null ? DateUtils.gibDatumGermanFormat(klausurManager().terminKursklausurBySchuelerklausur(rowData).datum) : "" }}-->
+
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
@@ -32,7 +41,12 @@
 		{ key: "quartal", label: "Quartal", tooltip: "Ursprüngliches Datum der Klausur" },
 		{ key: "kurs", label: "Kurs", tooltip: "Kurs" },
 		{ key: "lehrer", label: "Lehrer:in", tooltip: "Lehrer:in" },
-		{ key: "datum", label: "Datum", tooltip: "Ursprüngliches Datum der Klausur", sortable: true},
+		{ key: "termin", label: " ", tooltip: "Ursprüngliches Datum der Klausur", minWidth: 6 },
+	];
+
+	const colsTermine: Array<DataTableColumn> = [
+		{ key: "datum", label: "Datum", tooltip: "Ursprüngliches Datum der Klausur" },
+		{ key: "button", label: " ", tooltip: "" },
 	];
 
 </script>

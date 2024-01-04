@@ -13,6 +13,11 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	public idSchuelerklausur : number = -1;
 
 	/**
+	 * Die textuelle Beschreibung des Stundenplans.
+	 */
+	public folgeNr : number = -1;
+
+	/**
 	 * Das Zeitraster des Stundenplans.
 	 */
 	public idTermin : number | null = null;
@@ -64,6 +69,9 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		if (typeof obj.idSchuelerklausur === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuelerklausur');
 		result.idSchuelerklausur = obj.idSchuelerklausur;
+		if (typeof obj.folgeNr === "undefined")
+			 throw new Error('invalid json format, missing attribute folgeNr');
+		result.folgeNr = obj.folgeNr;
 		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
 		if (typeof obj.idKursklausur === "undefined")
@@ -81,6 +89,7 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
+		result += '"folgeNr" : ' + obj.folgeNr + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
@@ -99,6 +108,9 @@ export class GostSchuelerklausurTermin extends JavaObject {
 		}
 		if (typeof obj.idSchuelerklausur !== "undefined") {
 			result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
+		}
+		if (typeof obj.folgeNr !== "undefined") {
+			result += '"folgeNr" : ' + obj.folgeNr + ',';
 		}
 		if (typeof obj.idTermin !== "undefined") {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';

@@ -19,6 +19,7 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenKursklausur;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausur;
+import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurraumstunde;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenVorgabe;
@@ -907,6 +908,33 @@ public class APIGostKlausuren {
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen eines neuen Klausurtermins.
+	 *
+	 * @param schema     das Datenbankschema, in welchem der Klausurtermin erstellt
+	 *                   wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param sk         die Schülerklausur, zu der ein neuer Termin generiert werden soll.
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@POST
+	@Path("/schuelerklausuren/newtermin")
+	@Operation(summary = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.", description = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
+	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class)))
+	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+
+		public Response createGostKlausurenSchuelerklausurtermin(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class))) final GostSchuelerklausur sk, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).createTermin(sk),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
 
 }

@@ -1,4 +1,4 @@
-import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen} from "@core";
+import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausur} from "@core";
 import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -182,6 +182,14 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) : Promise<void> => {
 		await api.server.patchSchuelerLernabschnittsdatenBemerkungen(data, api.schema, this.daten.id);
 		Object.assign(this.daten.bemerkungen, data);
+		this.commit();
+	}
+
+	createSchuelerklausurTermin = async (sk : GostSchuelerklausur) => {
+		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(sk, api.schema);
+		//this.klausurManager.schuelerklausurPatchAttributes(skNeu);
+		console.log(this.klausurManager.schuelerklausurGetByIdOrException(sk.id));
+		sk.schuelerklausurTermine.add(skNeu.schuelerklausurTermine.get(skNeu.schuelerklausurTermine.size()-1));
 		this.commit();
 	}
 

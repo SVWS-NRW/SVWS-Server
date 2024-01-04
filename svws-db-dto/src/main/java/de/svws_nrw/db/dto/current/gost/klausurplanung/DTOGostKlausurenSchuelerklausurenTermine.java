@@ -32,6 +32,8 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Schuelerklausur_ID = :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Schuelerklausur_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.folge_nr", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Folge_Nr = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.folge_nr.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Folge_Nr IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.termin_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Termin_ID = :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Termin_ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.startzeit", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.Startzeit = :value")
@@ -41,7 +43,7 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenSchuelerklausurenTermine.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenTermine e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Schuelerklausur_ID", "Termin_ID", "Startzeit", "Bemerkungen"})
+@JsonPropertyOrder({"ID", "Schuelerklausur_ID", "Folge_Nr", "Termin_ID", "Startzeit", "Bemerkungen"})
 public final class DTOGostKlausurenSchuelerklausurenTermine {
 
 	/** ID des Schülerklausur-Termins (generiert) */
@@ -54,6 +56,11 @@ public final class DTOGostKlausurenSchuelerklausurenTermine {
 	@Column(name = "Schuelerklausur_ID")
 	@JsonProperty
 	public long Schuelerklausur_ID;
+
+	/** Folgenummer des Schülerklausur-Termins */
+	@Column(name = "Folge_Nr")
+	@JsonProperty
+	public int Folge_Nr;
 
 	/** ID des Klausurtermins, null falls Termin der Kursklausur */
 	@Column(name = "Termin_ID")
@@ -84,10 +91,12 @@ public final class DTOGostKlausurenSchuelerklausurenTermine {
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausurenTermine ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Schuelerklausur_ID   der Wert für das Attribut Schuelerklausur_ID
+	 * @param Folge_Nr   der Wert für das Attribut Folge_Nr
 	 */
-	public DTOGostKlausurenSchuelerklausurenTermine(final long ID, final long Schuelerklausur_ID) {
+	public DTOGostKlausurenSchuelerklausurenTermine(final long ID, final long Schuelerklausur_ID, final int Folge_Nr) {
 		this.ID = ID;
 		this.Schuelerklausur_ID = Schuelerklausur_ID;
+		this.Folge_Nr = Folge_Nr;
 	}
 
 
@@ -119,7 +128,7 @@ public final class DTOGostKlausurenSchuelerklausurenTermine {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenSchuelerklausurenTermine(ID=" + this.ID + ", Schuelerklausur_ID=" + this.Schuelerklausur_ID + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenSchuelerklausurenTermine(ID=" + this.ID + ", Schuelerklausur_ID=" + this.Schuelerklausur_ID + ", Folge_Nr=" + this.Folge_Nr + ", Termin_ID=" + this.Termin_ID + ", Startzeit=" + this.Startzeit + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

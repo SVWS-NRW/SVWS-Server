@@ -21,6 +21,10 @@ public class GostSchuelerklausurTermin {
 	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
 	public long idSchuelerklausur = -1;
 
+	/** Die textuelle Beschreibung des Stundenplans. */
+	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
+	public int folgeNr = -1;
+
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
 	public Long idTermin = null;

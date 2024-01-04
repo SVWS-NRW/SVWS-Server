@@ -8,6 +8,7 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { DateUtils } from '../../../../core/utils/DateUtils';
+import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
@@ -1036,14 +1037,16 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 * Liefert den Klausurtermin zu einem Schülerklausurtermin oder NULL.
 	 *
-	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 * @param termin der Schülerklausurtermin, zu dem der Termin gesucht wird.
 	 *
 	 * @return den Klausurtermin
 	 */
-	public terminKursklausurBySchuelerklausur(klausur : GostSchuelerklausur) : GostKlausurtermin | null {
-		return this.terminByKursklausur(this.kursklausurBySchuelerklausur(klausur));
+	public terminBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin | null {
+		if (termin.folgeNr > 0)
+			return termin.idTermin === null ? null : this.terminGetByIdOrException(termin.idTermin);
+		return this.terminByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
 	}
 
 	/**
@@ -1078,6 +1081,17 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public kursklausurBySchuelerklausur(klausur : GostSchuelerklausur) : GostKursklausur {
 		return this.kursklausurGetByIdOrException(klausur.idKursklausur);
+	}
+
+	/**
+	 * Liefert die GostKursklausur zu einem Schuelerklausurtermin.
+	 *
+	 * @param termin der Schuelerklausurtermin, zu der die GostKursklausur gesucht wird.
+	 *
+	 * @return die GostKursklausur
+	 */
+	public kursklausurBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKursklausur {
+		return this.kursklausurGetByIdOrException(termin.idKursklausur);
 	}
 
 	/**
@@ -1154,6 +1168,18 @@ export class GostKursklausurManager extends JavaObject {
 	public hatAbweichendeStartzeitByKursklausur(klausur : GostKursklausur) : boolean {
 		let termin : GostKlausurtermin | null = this.terminByKursklausur(klausur);
 		return !(klausur.startzeit === null || termin === null || termin.startzeit === null || JavaObject.equalsTranspiler(termin.startzeit, (klausur.startzeit)));
+	}
+
+	/**
+	 * Prüft, ob der übergebene Schülerklausurtermin der aktuellste Termin der Schülerklausur ist.
+	 *
+	 * @param skt der Schülerklausurtermin, der geprüft werden soll
+	 *
+	 * @return true, wenn es sich um den aktuellen Termin handelt, sonst false
+	 */
+	public istAktuellerSchuelerklausurtermin(skt : GostSchuelerklausurTermin) : boolean {
+		let skts : List<GostSchuelerklausurTermin | null> = this.schuelerklausurGetByIdOrException(skt.idSchuelerklausur).schuelerklausurTermine;
+		return skts.get(skts.size() - 1) as unknown === skt as unknown;
 	}
 
 	transpilerCanonicalName(): string {

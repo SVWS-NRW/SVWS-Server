@@ -152,7 +152,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	private static List<DTOGostKlausurenSchuelerklausurenTermine> createSchuelerklausurenTermineZuSchuelerklausuren(final List<DTOGostKlausurenSchuelerklausuren> sks) {
 		final List<DTOGostKlausurenSchuelerklausurenTermine> listSchuelerklausurenTermine = new ArrayList<>();
 		for (final DTOGostKlausurenSchuelerklausuren sk : sks) {
-			listSchuelerklausurenTermine.add(new DTOGostKlausurenSchuelerklausurenTermine(-1L, sk.ID));
+			listSchuelerklausurenTermine.add(new DTOGostKlausurenSchuelerklausurenTermine(-1L, sk.ID, 0));
 		}
 		return listSchuelerklausurenTermine;
 	}

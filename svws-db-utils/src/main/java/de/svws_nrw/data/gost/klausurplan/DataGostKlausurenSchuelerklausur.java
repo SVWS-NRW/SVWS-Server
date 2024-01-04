@@ -111,7 +111,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		final Map<Long, DTOGostKlausurenSchuelerklausuren> mapSchuelerklausuren = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausurIds,
 				DTOGostKlausurenSchuelerklausuren.class).stream().collect(Collectors.toMap(sk -> sk.ID, sk -> sk));
 
-		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE (skt.Schuelerklausur_ID IN :skIds AND skt.Termin_ID IS NULL) OR skt.Termin_ID = :tid",
+		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0) OR skt.Termin_ID = :tid",
 				DTOGostKlausurenSchuelerklausurenTermine.class)
 				.setParameter("skIds", mapSchuelerklausuren.keySet())
 				.setParameter("tid", terminId)
@@ -130,13 +130,17 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 * {@link DTOGostKlausurenSchuelerklausuren} in einen Core-DTO
 	 * {@link GostSchuelerklausur}.
 	 */
-	public static final Function3<DTOGostKlausurenSchuelerklausuren, List<DTOGostKlausurenSchuelerklausurenTermine>, GostSchuelerklausur> dtoMapperToSchuelerklausur = (final DTOGostKlausurenSchuelerklausuren sk, final List<DTOGostKlausurenSchuelerklausurenTermine> skts) -> {
-		final GostSchuelerklausur daten = new GostSchuelerklausur();
+	public static final Function3<DTOGostKlausurenSchuelerklausuren, DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> dtoMapperToSchuelerklausurTermin = (final DTOGostKlausurenSchuelerklausuren sk, final DTOGostKlausurenSchuelerklausurenTermine skt) -> {
+		final GostSchuelerklausurTermin daten = new GostSchuelerklausurTermin();
+		daten.id = skt.ID;
 		daten.idKursklausur = sk.Kursklausur_ID;
 		daten.idSchueler = sk.Schueler_ID;
-		daten.id = sk.ID;
-		daten.bemerkung = sk.Bemerkungen;
-		daten.schuelerklausurTermine = skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
+		daten.idSchuelerklausur = sk.ID;
+		daten.folgeNr = skt.Folge_Nr;
+		daten.idTermin = skt.Termin_ID;
+		daten.startzeit = skt.Startzeit;
+		daten.bemerkungSchuelerklausur = sk.Bemerkungen;
+		daten.bemerkungSchuelerklausurtermin = skt.Bemerkungen;
 		return daten;
 	};
 
@@ -145,16 +149,15 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 * {@link DTOGostKlausurenSchuelerklausuren} in einen Core-DTO
 	 * {@link GostSchuelerklausur}.
 	 */
-	public static final Function3<DTOGostKlausurenSchuelerklausuren, DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> dtoMapperToSchuelerklausurTermin = (final DTOGostKlausurenSchuelerklausuren sk, final DTOGostKlausurenSchuelerklausurenTermine skt) -> {
-		final GostSchuelerklausurTermin daten = new GostSchuelerklausurTermin();
-		daten.id = skt.ID;
+	public static final Function3<DTOGostKlausurenSchuelerklausuren, List<DTOGostKlausurenSchuelerklausurenTermine>, GostSchuelerklausur> dtoMapperToSchuelerklausur = (final DTOGostKlausurenSchuelerklausuren sk, final List<DTOGostKlausurenSchuelerklausurenTermine> skts) -> {
+		final GostSchuelerklausur daten = new GostSchuelerklausur();
 		daten.idKursklausur = sk.Kursklausur_ID;
 		daten.idSchueler = sk.Schueler_ID;
-		daten.idSchuelerklausur = sk.ID;
-		daten.idTermin = skt.Termin_ID;
-		daten.startzeit = skt.Startzeit;
-		daten.bemerkungSchuelerklausur = sk.Bemerkungen;
-		daten.bemerkungSchuelerklausurtermin = skt.Bemerkungen;
+		daten.id = sk.ID;
+		daten.bemerkung = sk.Bemerkungen;
+		for (DTOGostKlausurenSchuelerklausurenTermine skt : skts) {
+			daten.schuelerklausurTermine.add(dtoMapperToSchuelerklausurTermin.apply(sk, skt));
+		}
 		return daten;
 	};
 
@@ -200,7 +203,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 
 		List<Long> terminIds = new ArrayList<>();
 		for (GostSchuelerklausur sk : result.schuelerklausuren) {
-			terminIds.addAll(sk.schuelerklausurTermine.stream().filter(skt -> skt.idTermin != -1).map(skt -> skt.idTermin).toList());
+			terminIds.addAll(sk.schuelerklausurTermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 		}
 
 		if (!result.schuelerklausuren.isEmpty()) {

@@ -4688,6 +4688,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/newtermin
+	 *
+	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerklausur
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostSchuelerklausur>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
+	 */
+	public async createGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausur>, schema : string) : Promise<GostSchuelerklausur> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/newtermin"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = GostSchuelerklausur.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostSchuelerklausur.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenTermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\d+}
 	 *
 	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.

@@ -27,6 +27,12 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren_Termine extends SchemaTabe
 		.setNotNull()
 		.setJavaComment("ID der Schülerklausur");
 
+	/** Die Definition der Tabellenspalte Folge_Nr */
+	public SchemaTabelleSpalte col_Folge_Nr = add("Folge_Nr", SchemaDatentypen.SMALLINT, false)
+		.setNotNull()
+		.setDefault("0")
+		.setJavaComment("Folgenummer des Schülerklausur-Termins");
+
 	/** Die Definition der Tabellenspalte Termin_ID */
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Klausurtermins, null falls Termin der Kursklausur");
@@ -60,6 +66,11 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren_Termine extends SchemaTabe
 	/** Die Definition des Unique-Index Gost_Klausuren_Schuelerklausuren_Termine_UC1 */
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Schuelerklausuren_Termine_UC1 = addUniqueIndex("Gost_Klausuren_Schuelerklausuren_Termine_UC1",
 			col_Schuelerklausur_ID, col_Termin_ID
+		);
+
+	/** Die Definition des Unique-Index Gost_Klausuren_Schuelerklausuren_Termine_UC2 */
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Schuelerklausuren_Termine_UC2 = addUniqueIndex("Gost_Klausuren_Schuelerklausuren_Termine_UC2",
+			col_Schuelerklausur_ID, col_Folge_Nr
 		);
 
 	/** Die Definition des Non-Unique-Index Gost_Klausuren_Schuelerklausuren_Termine_IDX_Schuelerklausur_ID */
