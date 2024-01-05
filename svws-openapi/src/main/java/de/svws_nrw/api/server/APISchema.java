@@ -6,7 +6,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.schema.DBUtilsSchema;
 import de.svws_nrw.db.Benutzer;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -106,7 +106,7 @@ public class APISchema {
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
     public Response revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
-	    	final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
+	    	final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.Revision).build();
@@ -137,7 +137,7 @@ public class APISchema {
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
     public Response isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
-	    	final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
+	    	final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.IsTainted).build();

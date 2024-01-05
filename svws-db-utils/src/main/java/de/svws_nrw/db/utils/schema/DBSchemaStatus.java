@@ -11,7 +11,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.dto.DTOInformationSchemaTableColumn;
 import de.svws_nrw.db.schema.dto.DTOInformationSchemaTables;
@@ -136,23 +136,23 @@ public final class DBSchemaStatus {
 	 * @return die Datenbank-Version
 	 */
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
-		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase(Schema.tab_Schema_Revision.name())).findFirst().orElse(null) == null)
+		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase(Schema.tab_Schema_Status.name())).findFirst().orElse(null) == null)
 			return null;
-		DTOSchemaRevision dto;
+		DTOSchemaStatus dto;
 		final DBDriver dbms = conn.getDBDriver();
 		if ((!dbms.hasMultiSchemaSupport()) || (schemaName == null) || schemaName.equals(conn.getDBSchema())) {
-			dto = conn.querySingle(DTOSchemaRevision.class);
+			dto = conn.querySingle(DTOSchemaStatus.class);
 		} else {
 			// Hole die Versions-Informationen aus einem fremden Schema. Hier wird natives SQL benötigt
 			String sql;
 			if ((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) {
-				sql = "SELECT * FROM `" + schemaName + "`." + Schema.tab_Schema_Revision.name();
+				sql = "SELECT * FROM `" + schemaName + "`." + Schema.tab_Schema_Status.name();
 			} else if (dbms == DBDriver.MSSQL) {
-				sql = "SELECT * FROM [" + schemaName + "]." + Schema.tab_Schema_Revision.name();
+				sql = "SELECT * FROM [" + schemaName + "]." + Schema.tab_Schema_Status.name();
 			} else {
 				return null;
 			}
-			dto = conn.queryNative(sql, DTOSchemaRevision.class).stream().findFirst().orElse(null);
+			dto = conn.queryNative(sql, DTOSchemaStatus.class).stream().findFirst().orElse(null);
 		}
 		Long revision = null;
 		if ((dto != null) && (dto.Revision >= 0))

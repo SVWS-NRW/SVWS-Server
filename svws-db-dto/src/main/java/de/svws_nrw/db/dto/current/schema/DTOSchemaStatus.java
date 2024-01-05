@@ -20,23 +20,23 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Revision.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Status.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "Schema_Revision")
-@NamedQuery(name = "DTOSchemaRevision.all", query = "SELECT e FROM DTOSchemaRevision e")
-@NamedQuery(name = "DTOSchemaRevision.revision", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision = :value")
-@NamedQuery(name = "DTOSchemaRevision.revision.multiple", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision IN :value")
-@NamedQuery(name = "DTOSchemaRevision.istainted", query = "SELECT e FROM DTOSchemaRevision e WHERE e.IsTainted = :value")
-@NamedQuery(name = "DTOSchemaRevision.istainted.multiple", query = "SELECT e FROM DTOSchemaRevision e WHERE e.IsTainted IN :value")
-@NamedQuery(name = "DTOSchemaRevision.primaryKeyQuery", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision = ?1")
-@NamedQuery(name = "DTOSchemaRevision.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision IN :value")
-@NamedQuery(name = "DTOSchemaRevision.all.migration", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision IS NOT NULL")
+@Table(name = "Schema_Status")
+@NamedQuery(name = "DTOSchemaStatus.all", query = "SELECT e FROM DTOSchemaStatus e")
+@NamedQuery(name = "DTOSchemaStatus.revision", query = "SELECT e FROM DTOSchemaStatus e WHERE e.Revision = :value")
+@NamedQuery(name = "DTOSchemaStatus.revision.multiple", query = "SELECT e FROM DTOSchemaStatus e WHERE e.Revision IN :value")
+@NamedQuery(name = "DTOSchemaStatus.istainted", query = "SELECT e FROM DTOSchemaStatus e WHERE e.IsTainted = :value")
+@NamedQuery(name = "DTOSchemaStatus.istainted.multiple", query = "SELECT e FROM DTOSchemaStatus e WHERE e.IsTainted IN :value")
+@NamedQuery(name = "DTOSchemaStatus.primaryKeyQuery", query = "SELECT e FROM DTOSchemaStatus e WHERE e.Revision = ?1")
+@NamedQuery(name = "DTOSchemaStatus.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchemaStatus e WHERE e.Revision IN :value")
+@NamedQuery(name = "DTOSchemaStatus.all.migration", query = "SELECT e FROM DTOSchemaStatus e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
-public final class DTOSchemaRevision {
+public final class DTOSchemaStatus {
 
 	/** Die Revision des Datenbankschemas der SVWS-DB */
 	@Id
@@ -53,18 +53,18 @@ public final class DTOSchemaRevision {
 	public Boolean IsTainted;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchemaRevision ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaStatus ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOSchemaRevision() {
+	private DTOSchemaStatus() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchemaRevision ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaStatus ohne eine Initialisierung der Attribute.
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public DTOSchemaRevision(final long Revision, final Boolean IsTainted) {
+	public DTOSchemaStatus(final long Revision, final Boolean IsTainted) {
 		this.Revision = Revision;
 		this.IsTainted = IsTainted;
 	}
@@ -78,7 +78,7 @@ public final class DTOSchemaRevision {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOSchemaRevision other = (DTOSchemaRevision) obj;
+		DTOSchemaStatus other = (DTOSchemaStatus) obj;
 		return Revision == other.Revision;
 	}
 
@@ -98,7 +98,7 @@ public final class DTOSchemaRevision {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchemaRevision(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
+		return "DTOSchemaStatus(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
 	}
 
 }

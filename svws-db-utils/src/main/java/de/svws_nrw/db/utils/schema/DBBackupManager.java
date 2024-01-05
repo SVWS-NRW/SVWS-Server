@@ -13,7 +13,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 
@@ -180,7 +180,7 @@ public class DBBackupManager {
 	private void importDBInternal(final DBEntityManager conn, final DBConfig tgtConfig, final long maxUpdateRevision, final boolean devMode, final Logger logger) throws DBException {
 		logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
 		logger.modifyIndent(2);
-		final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
+		final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 		logger.logLn(" - Revision " + version.Revision);
 		logger.modifyIndent(-2);
 
@@ -290,7 +290,7 @@ public class DBBackupManager {
 
 					logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
 					logger.modifyIndent(2);
-					final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
+					final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 					logger.logLn(" - Revision " + version.Revision);
 					logger.modifyIndent(-2);
 

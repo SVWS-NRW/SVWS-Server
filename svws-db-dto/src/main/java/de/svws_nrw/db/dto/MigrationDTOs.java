@@ -9,7 +9,7 @@ import de.svws_nrw.db.dto.migration.coretypes.MigrationDTONote;
 import de.svws_nrw.db.dto.migration.coretypes.MigrationDTOPersonalTyp;
 import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaCoreTypeVersion;
-import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaRevision;
+import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaStatus;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildVerwaltung;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
@@ -198,7 +198,7 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOPersonalTyp.class.getSimpleName(), MigrationDTOPersonalTyp.class);
              mapDTOName2DTOClass.put(MigrationDTOSchemaAutoInkremente.class.getSimpleName(), MigrationDTOSchemaAutoInkremente.class);
              mapDTOName2DTOClass.put(MigrationDTOSchemaCoreTypeVersion.class.getSimpleName(), MigrationDTOSchemaCoreTypeVersion.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchemaRevision.class.getSimpleName(), MigrationDTOSchemaRevision.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchemaStatus.class.getSimpleName(), MigrationDTOSchemaStatus.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildAuswahlFilter.class.getSimpleName(), MigrationDTOSchildAuswahlFilter.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildVerwaltung.class.getSimpleName(), MigrationDTOSchildVerwaltung.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerIndividuelleGruppe.class.getSimpleName(), MigrationDTOSchuelerIndividuelleGruppe.class);
@@ -390,7 +390,7 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("PersonalTypen", MigrationDTOPersonalTyp.class);
              mapTablename2DTOClass.put("Schema_AutoInkremente", MigrationDTOSchemaAutoInkremente.class);
              mapTablename2DTOClass.put("Schema_Core_Type_Versionen", MigrationDTOSchemaCoreTypeVersion.class);
-             mapTablename2DTOClass.put("Schema_Revision", MigrationDTOSchemaRevision.class);
+             mapTablename2DTOClass.put("Schema_Status", MigrationDTOSchemaStatus.class);
              mapTablename2DTOClass.put("SchildFilter", MigrationDTOSchildAuswahlFilter.class);
              mapTablename2DTOClass.put("Schild_Verwaltung", MigrationDTOSchildVerwaltung.class);
              mapTablename2DTOClass.put("SchuelerListe", MigrationDTOSchuelerIndividuelleGruppe.class);

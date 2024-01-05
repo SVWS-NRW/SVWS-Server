@@ -164,7 +164,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Client_Konfiguration_Benutzer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Client_Konfiguration_Global;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_Core_Type_Versionen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_AutoInkremente;
-import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_Revision;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_Status;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchildFilter;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schild_Verwaltung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schueler;
@@ -577,8 +577,8 @@ public final class Schema {
 	/** Tabelle Schema_AutoInkremente */
 	public static final Tabelle_Schema_AutoInkremente tab_Schema_AutoInkremente = add(new Tabelle_Schema_AutoInkremente());
 
-	/** Tabelle Schema_Revision */
-	public static final Tabelle_Schema_Revision tab_Schema_Revision = add(new Tabelle_Schema_Revision());
+	/** Tabelle Schema_Status */
+	public static final Tabelle_Schema_Status tab_Schema_Status = add(new Tabelle_Schema_Status());
 
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());

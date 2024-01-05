@@ -32,7 +32,7 @@
         <class>de.svws_nrw.db.dto.migration.coretypes.MigrationDTOPersonalTyp</class>
         <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaAutoInkremente</class>
         <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaCoreTypeVersion</class>
-        <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaRevision</class>
+        <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaStatus</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildVerwaltung</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe</class>
@@ -226,7 +226,7 @@
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
-        <class>de.svws_nrw.db.dto.current.schema.DTOSchemaRevision</class>
+        <class>de.svws_nrw.db.dto.current.schema.DTOSchemaStatus</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchildAuswahlFilter</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchildVerwaltung</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe</class>
