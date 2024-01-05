@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.db.schema.revisionen.Revision10Updates;
 import de.svws_nrw.db.schema.revisionen.Revision13Updates;
-import de.svws_nrw.db.schema.revisionen.Revision14Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -29,21 +28,25 @@ public enum SchemaRevisionen {
 
 	/**
 	 * Erste Version der SVWS-Datenbank. Das Schema wurde von der letzten Schild-NRW Version 2.x übernommen
+	 * und um neue Tabellen angereichert.
 	 */
 	REV_0(0, "2022-09-29"),
 
 	/**
 	 * Korrekturen an aus Schild2 importierten Daten, bevor weitere Fremdschlüssel mit Revision 2 ergänzt werden.
-	 * Außerdem: Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die
+	 * Außerdem:
+	 * - Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die
 	 * Schüler-Zuordnung zu Kursen.
+	 * - Hizufügen von Tabellen für die Kommunikation mit Schulbewerbung.de
 	 */
 	REV_1(1, "2022-09-29"),
 
 	/**
-	 * Hinzufügen weitere Fremdschlüssel, um die referentielle Integrität in zukünftigen Revisionen zu verbessern.
+	 * Hinzufügen weiterer Fremdschlüssel, um die referentielle Integrität in zukünftigen Revisionen zu verbessern.
 	 * Erstellen der Trigger zur automatischen Aktualisierung der Tabelle SchildKursSchueler bei Änderung
 	 * der Leistungsdaten eines Schülers.
 	 * Außerdem wird die Tabelle mit den Daten aus den Leistungsdaten eines Schülers initial befüllt.
+	 * Es werden AES- und RSA-Credentials für die eigene Schule erzeugt.
 	 */
 	REV_2(2, "2022-09-29"),
 
@@ -107,13 +110,7 @@ public enum SchemaRevisionen {
 	/**
      * Anpassen von Feldern für die Lehrertabellen
      */
-    REV_13(13, "2023-11-07"),
-
-    /**
-     * Anpassen wegen Quartalsnoten, Erzeugen von AES- und RSA-Credentials für die eigene Schule
-     * und Tabellen für eine Schnittstelle zu schulbewerbung.de
-     */
-    REV_14(14, "2023-11-17");
+    REV_13(13, "2023-11-07");
 
 
 	/**
@@ -121,14 +118,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_14;
+	public static final SchemaRevisionen maxRevision = REV_13;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_14;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_13;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -196,7 +193,6 @@ public enum SchemaRevisionen {
 	            case REV_6 -> new Revision6Updates();
 	            case REV_10 -> new Revision10Updates();
 	            case REV_13 -> new Revision13Updates();
-	            case REV_14 -> new Revision14Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }

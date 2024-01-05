@@ -21,8 +21,8 @@ public class Revision6Updates extends SchemaRevisionUpdateSQL {
 
 	private void updateENMZeitstempel() {
 		add("Aktualisisere die Zeitstempel für die ENM-Leistungsdaten",
-			"INSERT INTO " + Schema.tab_EnmLeistungsdaten.name() + "(ID, tsNotenKrz, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung)"
-			+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
+			"INSERT INTO " + Schema.tab_EnmLeistungsdaten.name() + "(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung)"
+			+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
 			+ Schema.tab_SchuelerLeistungsdaten.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmLeistungsdaten.name() + ");",
 			Schema.tab_EnmLeistungsdaten, Schema.tab_SchuelerLeistungsdaten
 		);

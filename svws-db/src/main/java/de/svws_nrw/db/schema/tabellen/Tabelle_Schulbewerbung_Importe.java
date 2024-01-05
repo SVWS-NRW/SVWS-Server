@@ -44,7 +44,7 @@ public class Tabelle_Schulbewerbung_Importe extends SchemaTabelle {
 	 * Erstellt die Schema-Defintion für die Tabelle Schulbewerbung_Importe.
 	 */
 	public Tabelle_Schulbewerbung_Importe() {
-		super("Schulbewerbung_Importe", SchemaRevisionen.REV_14);
+		super("Schulbewerbung_Importe", SchemaRevisionen.REV_1);
 		setMigrate(false);
 		setImportExport(true);
 		setJavaSubPackage("schulbewerbung");

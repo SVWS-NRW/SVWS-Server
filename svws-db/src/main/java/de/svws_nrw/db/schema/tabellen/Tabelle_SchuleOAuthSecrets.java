@@ -35,7 +35,7 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 	 * Erstellt die Schema-Defintion für die Tabelle SchuleOAuthSecrets.
 	 */
 	public Tabelle_SchuleOAuthSecrets() {
-		super("SchuleOAuthSecrets", SchemaRevisionen.REV_14);
+		super("SchuleOAuthSecrets", SchemaRevisionen.REV_1);
 		setMigrate(false);
 		setImportExport(true);
 		setJavaSubPackage("svws.auth");
