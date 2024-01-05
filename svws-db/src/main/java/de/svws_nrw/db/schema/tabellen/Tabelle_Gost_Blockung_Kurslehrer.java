@@ -57,8 +57,7 @@ public class Tabelle_Gost_Blockung_Kurslehrer extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID */
 	public SchemaTabelleIndex index_Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID = addIndex("Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID",
 		col_Blockung_Kurs_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Blockung_Kurslehrer.

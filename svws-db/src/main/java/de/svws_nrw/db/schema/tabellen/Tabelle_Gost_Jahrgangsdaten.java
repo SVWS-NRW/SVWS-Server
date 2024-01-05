@@ -51,8 +51,7 @@ public class Tabelle_Gost_Jahrgangsdaten extends SchemaTabelle {
 	/** Die Definition des Unique-Index Gost_Jahrgangsdaten_UC_Abi_Jahrgang */
 	public SchemaTabelleUniqueIndex unique_Gost_Jahrgangsdaten_UC_Abi_Jahrgang = addUniqueIndex("Gost_Jahrgangsdaten_UC_Abi_Jahrgang",
 		col_Abi_Jahrgang
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

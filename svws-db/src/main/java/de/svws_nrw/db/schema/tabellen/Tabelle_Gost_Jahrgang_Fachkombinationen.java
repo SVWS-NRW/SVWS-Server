@@ -131,8 +131,7 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Fachkombinationen_IDX_Abi_Jahrgang",
 		col_Abi_Jahrgang
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

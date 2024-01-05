@@ -46,8 +46,7 @@ public class Tabelle_Gost_Jahrgang_Beratungslehrer extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang */
 	public SchemaTabelleIndex index_Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Beratungslehrer_IDX_Abi_Jahrgang",
 		col_Abi_Jahrgang
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

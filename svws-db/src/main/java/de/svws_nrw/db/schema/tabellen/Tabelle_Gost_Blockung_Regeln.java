@@ -44,8 +44,7 @@ public class Tabelle_Gost_Blockung_Regeln extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Regeln_IDX_Blockung_ID */
 	public SchemaTabelleIndex index_Gost_Blockung_Regeln_IDX_Blockung_ID = addIndex("Gost_Blockung_Regeln_IDX_Blockung_ID",
 		col_Blockung_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

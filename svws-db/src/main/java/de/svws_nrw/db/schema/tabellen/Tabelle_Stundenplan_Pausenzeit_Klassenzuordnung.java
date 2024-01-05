@@ -59,7 +59,7 @@ public class Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung extends SchemaTabel
 	 * Erstellt die Schema-Defintion für die Tabelle Stundenplan_Pausenzeit_Klassenzuordnung.
 	 */
 	public Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung() {
-		super("Stundenplan_Pausenzeit_Klassenzuordnung", SchemaRevisionen.REV_10);
+		super("Stundenplan_Pausenzeit_Klassenzuordnung", SchemaRevisionen.REV_5);
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();

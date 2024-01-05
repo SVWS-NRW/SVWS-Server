@@ -493,42 +493,31 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	);
 
 
-	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX_Schueler_ID_tmp */
-	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX_Schueler_ID_tmp = addIndex("SchuelerLernabschnittsdaten_IDX_Schueler_ID_tmp",
-		col_Schueler_ID
-	)
-	.setVeraltet(SchemaRevisionen.REV_10);
-
 	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX_Schueler_ID */
 	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX_Schueler_ID = addIndex("SchuelerLernabschnittsdaten_IDX_Schueler_ID",
 		col_Schueler_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX1_Schuljahresabschnitts_ID */
 	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX1_Schuljahresabschnitts_ID = addIndex("SchuelerLernabschnittsdaten_IDX1_Schuljahresabschnitts_ID",
 		col_Schuljahresabschnitts_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX_Klassen_ID */
 	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX_Klassen_ID = addIndex("SchuelerLernabschnittsdaten_IDX_Klassen_ID",
 		col_Klassen_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX_Jahrgang_ID */
 	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX_Jahrgang_ID = addIndex("SchuelerLernabschnittsdaten_IDX_Jahrgang_ID",
 		col_Jahrgang_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLernabschnittsdaten_IDX2_Schuljahresabschnitts_ID */
 	public SchemaTabelleIndex index_SchuelerLernabschnittsdaten_IDX2_Schuljahresabschnitts_ID = addIndex("SchuelerLernabschnittsdaten_IDX2_Schuljahresabschnitts_ID",
 		col_Schuljahresabschnitts_ID,
 		col_WechselNr
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Unique-Index SchuelerLernabschnittsdaten_UC1 */
 	public SchemaTabelleUniqueIndex unique_SchuelerLernabschnittsdaten_UC1 = addUniqueIndex("SchuelerLernabschnittsdaten_UC1",

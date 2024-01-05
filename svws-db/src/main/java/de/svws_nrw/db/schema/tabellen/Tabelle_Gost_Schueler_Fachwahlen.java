@@ -136,8 +136,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Schueler_Fachwahlen_IDX_Schueler_ID */
 	public SchemaTabelleIndex index_Gost_Schueler_Fachwahlen_IDX_Schueler_ID = addIndex("Gost_Schueler_Fachwahlen_IDX_Schueler_ID",
 		col_Schueler_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

@@ -54,8 +54,7 @@ public class Tabelle_Gost_Blockung_Schienen extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Schienen_IDX_Blockung_ID */
 	public SchemaTabelleIndex index_Gost_Blockung_Schienen_IDX_Blockung_ID = addIndex("Gost_Blockung_Schienen_IDX_Blockung_ID",
 		col_Blockung_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Blockung_Schienen.

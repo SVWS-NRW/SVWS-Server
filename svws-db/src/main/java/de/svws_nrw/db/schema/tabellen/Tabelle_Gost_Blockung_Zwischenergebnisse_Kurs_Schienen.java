@@ -58,22 +58,19 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen extends Sche
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX1 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX1 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX1",
 		col_Zwischenergebnis_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX2 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX2 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX2",
 		col_Zwischenergebnis_ID,
 		col_Blockung_Kurs_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX3 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX3 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_IDX3",
 		col_Zwischenergebnis_ID,
 		col_Schienen_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

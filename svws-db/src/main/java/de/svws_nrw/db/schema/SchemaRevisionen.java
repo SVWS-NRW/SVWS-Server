@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.db.schema.revisionen.Revision10Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -90,22 +89,7 @@ public enum SchemaRevisionen {
 	/**
 	 * Tabellen für Klausurplanung
 	 */
-	REV_9(9, "2022-12-30"),
-
-	/**
-     * Tabellen für Stundenplan ergänzt, Feld Namenszusatz entfernen
-     */
-    REV_10(10, "2023-08-26"),
-
-	/**
-     * Korrekturen bei den Datenbanktriggern
-     */
-    REV_11(11, "2023-09-01"),
-
-	/**
-     * Erstellen von Datenbank-Indizes
-     */
-    REV_12(12, "2023-10-11");
+	REV_9(9, "2022-12-30");
 
 
 	/**
@@ -113,14 +97,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_12;
+	public static final SchemaRevisionen maxRevision = REV_9;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_12;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_9;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -186,7 +170,6 @@ public enum SchemaRevisionen {
 	            case REV_3 -> new Revision3Updates();
 	            case REV_4 -> new Revision4Updates();
 	            case REV_6 -> new Revision6Updates();
-	            case REV_10 -> new Revision10Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }

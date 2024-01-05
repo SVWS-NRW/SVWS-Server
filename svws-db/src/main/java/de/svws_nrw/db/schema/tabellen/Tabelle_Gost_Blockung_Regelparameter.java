@@ -42,15 +42,13 @@ public class Tabelle_Gost_Blockung_Regelparameter extends SchemaTabelle {
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Regelparameter_IDX_Regel_ID */
 	public SchemaTabelleIndex index_Gost_Blockung_Regelparameter_IDX_Regel_ID = addIndex("Gost_Blockung_Regelparameter_IDX_Regel_ID",
 		col_Regel_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer */
 	public SchemaTabelleIndex index_Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer = addIndex("Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer",
 		col_Regel_ID,
 		col_Nummer
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 
 	/**

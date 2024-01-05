@@ -170,35 +170,25 @@ public class Tabelle_Kurse extends SchemaTabelle {
 	.setRevision(SchemaRevisionen.REV_2);
 
 
-	/** Die Definition des Non-Unique-Index Kurse_IDX_Schuljahresabschnitts_ID_tmp */
-	public SchemaTabelleIndex index_Kurse_IDX_Schuljahresabschnitts_ID_tmp = addIndex("Kurse_IDX_Schuljahresabschnitts_ID_tmp",
-		col_Schuljahresabschnitts_ID
-	)
-	.setVeraltet(SchemaRevisionen.REV_10);
-
 	/** Die Definition des Non-Unique-Index Kurse_IDX_Schuljahresabschnitts_ID */
 	public SchemaTabelleIndex index_Kurse_IDX_Schuljahresabschnitts_ID = addIndex("Kurse_IDX_Schuljahresabschnitts_ID",
 		col_Schuljahresabschnitts_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Kurse_IDX_Fach_ID */
 	public SchemaTabelleIndex index_Kurse_IDX_Fach_ID = addIndex("Kurse_IDX_Fach_ID",
 		col_Fach_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Kurse_IDX_Jahrgang_ID */
 	public SchemaTabelleIndex index_Kurse_IDX_Jahrgang_ID = addIndex("Kurse_IDX_Jahrgang_ID",
 		col_Jahrgang_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Kurse_IDX_Lehrer_ID */
 	public SchemaTabelleIndex index_Kurse_IDX_Lehrer_ID = addIndex("Kurse_IDX_Lehrer_ID",
 		col_Lehrer_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Unique-Index Kurse_UC1 */
 	public SchemaTabelleUniqueIndex unique_Kurse_UC1 = addUniqueIndex("Kurse_UC1",

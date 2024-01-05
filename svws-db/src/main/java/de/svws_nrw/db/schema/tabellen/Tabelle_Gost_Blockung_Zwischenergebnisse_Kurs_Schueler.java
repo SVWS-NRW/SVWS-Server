@@ -59,22 +59,19 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX1",
 		col_Zwischenergebnis_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX2",
 		col_Zwischenergebnis_ID,
 		col_Blockung_Kurs_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3 */
 	public SchemaTabelleIndex index_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3 = addIndex("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_IDX3",
 		col_Zwischenergebnis_ID,
 		col_Schueler_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Blockung_Zwischenergebnisse_Kurs_Schueler.

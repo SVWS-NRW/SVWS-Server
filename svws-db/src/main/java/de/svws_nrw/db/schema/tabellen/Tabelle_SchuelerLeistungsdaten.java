@@ -246,35 +246,25 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 	);
 
 
-	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX_Abschnitt_ID_tmp */
-	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX_Abschnitt_ID_tmp = addIndex("SchuelerLeistungsdaten_IDX_Abschnitt_ID_tmp",
-		col_Abschnitt_ID
-	)
-	.setVeraltet(SchemaRevisionen.REV_10);
-
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX_Abschnitt_ID */
 	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX_Abschnitt_ID = addIndex("SchuelerLeistungsdaten_IDX_Abschnitt_ID",
 		col_Abschnitt_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX_Fach_ID */
 	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX_Fach_ID = addIndex("SchuelerLeistungsdaten_IDX_Fach_ID",
 		col_Fach_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX_Kurs_ID */
 	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX_Kurs_ID = addIndex("SchuelerLeistungsdaten_IDX_Kurs_ID",
 		col_Kurs_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX_Fachlehrer_ID */
 	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX_Fachlehrer_ID = addIndex("SchuelerLeistungsdaten_IDX_Fachlehrer_ID",
 		col_Fachlehrer_ID
-	)
-	.setRevision(SchemaRevisionen.REV_12);
+	);
 
 	/** Die Definition des Unique-Index SchuelerLeistungsdaten_UC1 */
 	public SchemaTabelleUniqueIndex unique_SchuelerLeistungsdaten_UC1 = addUniqueIndex("SchuelerLeistungsdaten_UC1",
