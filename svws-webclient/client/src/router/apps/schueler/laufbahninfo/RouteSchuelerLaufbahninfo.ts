@@ -13,7 +13,7 @@ const SSchuelerLaufbahninfo = () => import("~/components/schueler/laufbahninfo/S
 export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufbahninfo, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.laufbahninfo", "laufbahninfo", SSchuelerLaufbahninfo, new RouteDataSchuelerLaufbahninfo());
+		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.laufbahninfo", "laufbahninfo", SSchuelerLaufbahninfo, new RouteDataSchuelerLaufbahninfo());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahn";
