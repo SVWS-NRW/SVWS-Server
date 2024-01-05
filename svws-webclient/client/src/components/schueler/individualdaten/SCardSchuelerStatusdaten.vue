@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="Statusdaten">
 		<template #actions>
-			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
+			<svws-ui-checkbox :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" statistics />
+			<svws-ui-select title="Status" :model-value="SchuelerStatus.fromID(data.status)" @update:model-value="status => patch({ status: status?.id })" :items="SchuelerStatus.values()" :item-text="i => i.bezeichnung" statistics />
 			<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.id"
 				title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" />
 			<div v-else />
@@ -14,12 +14,12 @@
 			<svws-ui-text-input placeholder="Aufnahmedatum" :model-value="data.aufnahmedatum" @change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-				<svws-ui-checkbox v-model="inputIstVolljaehrig"> Volljährig </svws-ui-checkbox>
-				<svws-ui-checkbox v-model="inputKeineAuskunftAnDritte"> Keine Auskunft an Dritte </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.istVolljaehrig === true" @update:model-value="istVolljaehrig => patch({istVolljaehrig})"> Volljährig </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.keineAuskunftAnDritte" @update:model-value="keineAuskunftAnDritte=>patch({keineAuskunftAnDritte})"> Keine Auskunft an Dritte </svws-ui-checkbox>
 				<svws-ui-checkbox :model-value="data.istSchulpflichtErfuellt === true" readonly> Schulpflicht erfüllt </svws-ui-checkbox>
-				<svws-ui-checkbox v-model="inputIstBerufsschulpflichtErfuellt"> Schulpflicht SII erfüllt </svws-ui-checkbox>
-				<svws-ui-checkbox v-model="inputHatMasernimpfnachweis"> Masern Impfnachweis </svws-ui-checkbox>
-				<svws-ui-checkbox v-model="inputErhaeltSchuelerBAFOEG">BAFöG</svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.istBerufsschulpflichtErfuellt === true" @update:model-value="istBerufsschulpflichtErfuellt => patch({istBerufsschulpflichtErfuellt})"> Schulpflicht SII erfüllt </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.hatMasernimpfnachweis" @update:model-value="hatMasernimpfnachweis=>patch({hatMasernimpfnachweis})"> Masern Impfnachweis </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.erhaeltSchuelerBAFOEG" @update:model-value="erhaeltSchuelerBAFOEG=>patch({erhaeltSchuelerBAFOEG})">BAFöG</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -42,11 +42,6 @@
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
 
-	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-		get: () => (SchuelerStatus.fromID(data.value.status) || undefined),
-		set: (value) => void props.patch({ status: value?.id })
-	});
-
 	const inputStammschule: WritableComputedRef<SchulEintrag | undefined> = computed({
 		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) || undefined),
 		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummer })
@@ -66,41 +61,6 @@
 			return id === null ? undefined : props.mapHaltestellen.get(id)
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id })
-	});
-
-	const inputIstDuplikat: WritableComputedRef<boolean> = computed({
-		get: () => data.value.istDuplikat,
-		set: (value) => void props.patch({ istDuplikat: value })
-	});
-
-	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => data.value.istSchulpflichtErfuellt || false,
-		set: (value) => void props.patch({ istSchulpflichtErfuellt: value })
-	});
-
-	const inputHatMasernimpfnachweis: WritableComputedRef<boolean> = computed({
-		get: () => data.value.hatMasernimpfnachweis,
-		set: (value) => void props.patch({ hatMasernimpfnachweis: value })
-	});
-
-	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean> = computed({
-		get: () => data.value.keineAuskunftAnDritte,
-		set: (value) => void props.patch({ keineAuskunftAnDritte: value })
-	});
-
-	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean> = computed({
-		get: () => data.value.erhaeltSchuelerBAFOEG,
-		set: (value) => void props.patch({ erhaeltSchuelerBAFOEG: value })
-	});
-
-	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => data.value.istBerufsschulpflichtErfuellt || false,
-		set: (value) => void props.patch({ istBerufsschulpflichtErfuellt: value })
-	});
-
-	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
-		get: () => data.value.istVolljaehrig || false,
-		set: (value) => void props.patch({ istVolljaehrig: value })
 	});
 
 </script>

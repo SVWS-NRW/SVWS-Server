@@ -99,8 +99,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const idSchueler = this.schuelerListeManager.auswahl().id;
 		const stammdaten = this.schuelerListeManager.daten();
-		if (stammdaten === null)
-			return;
 		await api.server.patchSchuelerStammdaten(data, api.schema, idSchueler);
 		Object.assign(stammdaten, data);
 		this.schuelerListeManager.setDaten(stammdaten);
