@@ -162,7 +162,7 @@
 		if (dragData.value === undefined)
 			return;
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster))
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && props.stundenplanManager().unterrichtIstVerschiebenErlaubt(dragData.value, zone))
 			return await props.patchUnterricht([dragData.value], zone);
 		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
 		// Fall List<StundenplanKurs> -> StundenplanZeitraster
@@ -172,9 +172,9 @@
 			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
 			const casted: List<unknown> = cast_java_util_List(dragData.value);
 			for (const item of casted)
-				if (item instanceof StundenplanUnterricht)
+				if (item instanceof StundenplanUnterricht && zone instanceof StundenplanZeitraster && props.stundenplanManager().unterrichtIstVerschiebenErlaubt(item, zone))
 					listStundenplanUnterricht.add(item);
-				else if (item instanceof StundenplanKurs)
+				else if (item instanceof StundenplanKurs && zone instanceof StundenplanZeitraster && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp.value))
 					listStundenplanKurs.add(item);
 			if (listStundenplanKurs.size() > 0)
 				return await props.addUnterrichtKlasse(listStundenplanKurs);
@@ -185,7 +185,7 @@
 					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
+		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster) && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp.value)) {
 			const klassen = new ArrayList<number>();
 			klassen.add(dragData.value.idKlasse);
 			const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
@@ -203,7 +203,7 @@
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
 			return await props.removeUnterrichtKlasse([dragData.value]);
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster)) {
+		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp.value)) {
 			const klassen = new  HashSet<number>();
 			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
 			for (const schueler of listSchueler)
