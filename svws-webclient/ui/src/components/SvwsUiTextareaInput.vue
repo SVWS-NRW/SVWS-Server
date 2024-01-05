@@ -6,7 +6,9 @@
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
+			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
+			'textarea-input--resize-both': resizeable === 'both',
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
@@ -41,7 +43,7 @@
 	import type { ComputedRef } from 'vue';
 	import { ref, computed, watch, nextTick } from 'vue';
 
-	type ResizableOption = "vertical" | "none";
+	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 	type InputDataType = string | null;
 
 	const props = withDefaults(defineProps<{
@@ -205,6 +207,14 @@
 
 	.textarea-input--resize-vertical .textarea-input--control {
 		@apply resize-y;
+	}
+
+	.textarea-input--resize-horizontal .textarea-input--control {
+		@apply resize-x;
+	}
+
+	.textarea-input--resize-both .textarea-input--control {
+		@apply resize;
 	}
 
 	.textarea-input--placeholder {
