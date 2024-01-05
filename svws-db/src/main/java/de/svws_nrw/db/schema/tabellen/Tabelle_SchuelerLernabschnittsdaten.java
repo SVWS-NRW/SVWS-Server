@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
@@ -332,6 +333,13 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 		.setDefault("-")
 		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Schüler zieldifferent unterrichtet wird");
+
+	/** Die Definition der Tabellenspalte meldungBAN  */
+	public SchemaTabelleSpalte col_meldungBAN = add("meldungBAN", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob der Schüler im aktuellen Abschnitt an das BAN-Portal gemeldet werden soll (1) oder nicht (0)");
 
 	/** Die Definition der Tabellenspalte Jahr */
 	public SchemaTabelleSpalte col_Jahr = add("Jahr", SchemaDatentypen.INT, false)

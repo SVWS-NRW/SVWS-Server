@@ -1,6 +1,7 @@
 package de.svws_nrw.db.dto.migration.schild.schueler;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.converter.migration.MigrationBoolean01Converter;
 import de.svws_nrw.db.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.migration.MigrationDatumConverter;
@@ -18,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterSerializer;
+import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializer;
 import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterDeserializer;
 import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverterSerializer;
@@ -170,6 +173,8 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.autist.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Autist IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen = :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.meldungban", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.meldungBAN = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.meldungban.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.meldungBAN IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahr", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr = :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschnitt", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschnitt = :value")
@@ -183,7 +188,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID = ?1")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Schulbesuchsjahre", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Klassenlehrer", "Schulgliederung", "ASDJahrgang", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "StvKlassenlehrer_ID", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen", "Jahr", "Abschnitt", "SchulnrEigner", "Klasse", "Folgeklasse"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Schulbesuchsjahre", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Klassenlehrer", "Schulgliederung", "ASDJahrgang", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "StvKlassenlehrer_ID", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen", "meldungBAN", "Jahr", "Abschnitt", "SchulnrEigner", "Klasse", "Folgeklasse"})
 public final class MigrationDTOSchuelerLernabschnittsdaten {
 
 	/** Eine eindeutige ID für den Lernabschnitt des Schülers */
@@ -578,6 +583,14 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean ZieldifferentesLernen;
 
+	/** Gibt an, ob der Schüler im aktuellen Abschnitt an das BAN-Portal gemeldet werden soll (1) oder nicht (0) */
+	@Column(name = "meldungBAN")
+	@JsonProperty
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
+	public Boolean meldungBAN;
+
 	/** DEPRECATED: Schuljahr des Lernabschnitts */
 	@Column(name = "Jahr")
 	@JsonProperty
@@ -616,10 +629,11 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param FachPraktAnteilAusr   der Wert für das Attribut FachPraktAnteilAusr
+	 * @param meldungBAN   der Wert für das Attribut meldungBAN
 	 * @param Jahr   der Wert für das Attribut Jahr
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
-	public MigrationDTOSchuelerLernabschnittsdaten(final Long ID, final Long Schueler_ID, final Long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr, final Integer Jahr, final Integer Abschnitt) {
+	public MigrationDTOSchuelerLernabschnittsdaten(final Long ID, final Long Schueler_ID, final Long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr, final Boolean meldungBAN, final Integer Jahr, final Integer Abschnitt) {
 		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
@@ -636,6 +650,10 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 			throw new NullPointerException("FachPraktAnteilAusr must not be null");
 		}
 		this.FachPraktAnteilAusr = FachPraktAnteilAusr;
+		if (meldungBAN == null) {
+			throw new NullPointerException("meldungBAN must not be null");
+		}
+		this.meldungBAN = meldungBAN;
 		if (Jahr == null) {
 			throw new NullPointerException("Jahr must not be null");
 		}
@@ -680,7 +698,7 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOSchuelerLernabschnittsdaten(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", WechselNr=" + this.WechselNr + ", Schulbesuchsjahre=" + this.Schulbesuchsjahre + ", Hochrechnung=" + this.Hochrechnung + ", SemesterWertung=" + this.SemesterWertung + ", PruefOrdnung=" + this.PruefOrdnung + ", Klassen_ID=" + this.Klassen_ID + ", Tutor_ID=" + this.Tutor_ID + ", Verspaetet=" + this.Verspaetet + ", NPV_Fach_ID=" + this.NPV_Fach_ID + ", NPV_NoteKrz=" + this.NPV_NoteKrz + ", NPV_Datum=" + this.NPV_Datum + ", NPAA_Fach_ID=" + this.NPAA_Fach_ID + ", NPAA_NoteKrz=" + this.NPAA_NoteKrz + ", NPAA_Datum=" + this.NPAA_Datum + ", NPBQ_Fach_ID=" + this.NPBQ_Fach_ID + ", NPBQ_NoteKrz=" + this.NPBQ_NoteKrz + ", NPBQ_Datum=" + this.NPBQ_Datum + ", VersetzungKrz=" + this.VersetzungKrz + ", AbschlussArt=" + this.AbschlussArt + ", AbschlIstPrognose=" + this.AbschlIstPrognose + ", Konferenzdatum=" + this.Konferenzdatum + ", ZeugnisDatum=" + this.ZeugnisDatum + ", Klassenlehrer=" + this.Klassenlehrer + ", Schulgliederung=" + this.Schulgliederung + ", ASDJahrgang=" + this.ASDJahrgang + ", Jahrgang_ID=" + this.Jahrgang_ID + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Schwerpunkt_ID=" + this.Schwerpunkt_ID + ", ZeugnisBem=" + this.ZeugnisBem + ", Schwerbehinderung=" + this.Schwerbehinderung + ", Foerderschwerpunkt_ID=" + this.Foerderschwerpunkt_ID + ", OrgFormKrz=" + this.OrgFormKrz + ", RefPaed=" + this.RefPaed + ", Klassenart=" + this.Klassenart + ", SumFehlStd=" + this.SumFehlStd + ", SumFehlStdU=" + this.SumFehlStdU + ", Wiederholung=" + this.Wiederholung + ", Gesamtnote_GS=" + this.Gesamtnote_GS + ", Gesamtnote_NW=" + this.Gesamtnote_NW + ", Folgeklasse_ID=" + this.Folgeklasse_ID + ", Foerderschwerpunkt2_ID=" + this.Foerderschwerpunkt2_ID + ", Abschluss=" + this.Abschluss + ", Abschluss_B=" + this.Abschluss_B + ", DSNote=" + this.DSNote + ", AV_Leist=" + this.AV_Leist + ", AV_Zuv=" + this.AV_Zuv + ", AV_Selbst=" + this.AV_Selbst + ", SV_Verant=" + this.SV_Verant + ", SV_Konfl=" + this.SV_Konfl + ", SV_Koop=" + this.SV_Koop + ", StvKlassenlehrer_ID=" + this.StvKlassenlehrer_ID + ", MoeglNPFaecher=" + this.MoeglNPFaecher + ", Zertifikate=" + this.Zertifikate + ", DatumFHR=" + this.DatumFHR + ", PruefAlgoErgebnis=" + this.PruefAlgoErgebnis + ", Zeugnisart=" + this.Zeugnisart + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ", FehlstundenGrenzwert=" + this.FehlstundenGrenzwert + ", Sonderpaedagoge_ID=" + this.Sonderpaedagoge_ID + ", FachPraktAnteilAusr=" + this.FachPraktAnteilAusr + ", BilingualerZweig=" + this.BilingualerZweig + ", AOSF=" + this.AOSF + ", Autist=" + this.Autist + ", ZieldifferentesLernen=" + this.ZieldifferentesLernen + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ", Klasse=" + this.Klasse + ", Folgeklasse=" + this.Folgeklasse + ")";
+		return "MigrationDTOSchuelerLernabschnittsdaten(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", WechselNr=" + this.WechselNr + ", Schulbesuchsjahre=" + this.Schulbesuchsjahre + ", Hochrechnung=" + this.Hochrechnung + ", SemesterWertung=" + this.SemesterWertung + ", PruefOrdnung=" + this.PruefOrdnung + ", Klassen_ID=" + this.Klassen_ID + ", Tutor_ID=" + this.Tutor_ID + ", Verspaetet=" + this.Verspaetet + ", NPV_Fach_ID=" + this.NPV_Fach_ID + ", NPV_NoteKrz=" + this.NPV_NoteKrz + ", NPV_Datum=" + this.NPV_Datum + ", NPAA_Fach_ID=" + this.NPAA_Fach_ID + ", NPAA_NoteKrz=" + this.NPAA_NoteKrz + ", NPAA_Datum=" + this.NPAA_Datum + ", NPBQ_Fach_ID=" + this.NPBQ_Fach_ID + ", NPBQ_NoteKrz=" + this.NPBQ_NoteKrz + ", NPBQ_Datum=" + this.NPBQ_Datum + ", VersetzungKrz=" + this.VersetzungKrz + ", AbschlussArt=" + this.AbschlussArt + ", AbschlIstPrognose=" + this.AbschlIstPrognose + ", Konferenzdatum=" + this.Konferenzdatum + ", ZeugnisDatum=" + this.ZeugnisDatum + ", Klassenlehrer=" + this.Klassenlehrer + ", Schulgliederung=" + this.Schulgliederung + ", ASDJahrgang=" + this.ASDJahrgang + ", Jahrgang_ID=" + this.Jahrgang_ID + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Schwerpunkt_ID=" + this.Schwerpunkt_ID + ", ZeugnisBem=" + this.ZeugnisBem + ", Schwerbehinderung=" + this.Schwerbehinderung + ", Foerderschwerpunkt_ID=" + this.Foerderschwerpunkt_ID + ", OrgFormKrz=" + this.OrgFormKrz + ", RefPaed=" + this.RefPaed + ", Klassenart=" + this.Klassenart + ", SumFehlStd=" + this.SumFehlStd + ", SumFehlStdU=" + this.SumFehlStdU + ", Wiederholung=" + this.Wiederholung + ", Gesamtnote_GS=" + this.Gesamtnote_GS + ", Gesamtnote_NW=" + this.Gesamtnote_NW + ", Folgeklasse_ID=" + this.Folgeklasse_ID + ", Foerderschwerpunkt2_ID=" + this.Foerderschwerpunkt2_ID + ", Abschluss=" + this.Abschluss + ", Abschluss_B=" + this.Abschluss_B + ", DSNote=" + this.DSNote + ", AV_Leist=" + this.AV_Leist + ", AV_Zuv=" + this.AV_Zuv + ", AV_Selbst=" + this.AV_Selbst + ", SV_Verant=" + this.SV_Verant + ", SV_Konfl=" + this.SV_Konfl + ", SV_Koop=" + this.SV_Koop + ", StvKlassenlehrer_ID=" + this.StvKlassenlehrer_ID + ", MoeglNPFaecher=" + this.MoeglNPFaecher + ", Zertifikate=" + this.Zertifikate + ", DatumFHR=" + this.DatumFHR + ", PruefAlgoErgebnis=" + this.PruefAlgoErgebnis + ", Zeugnisart=" + this.Zeugnisart + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ", FehlstundenGrenzwert=" + this.FehlstundenGrenzwert + ", Sonderpaedagoge_ID=" + this.Sonderpaedagoge_ID + ", FachPraktAnteilAusr=" + this.FachPraktAnteilAusr + ", BilingualerZweig=" + this.BilingualerZweig + ", AOSF=" + this.AOSF + ", Autist=" + this.Autist + ", ZieldifferentesLernen=" + this.ZieldifferentesLernen + ", meldungBAN=" + this.meldungBAN + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ", Klasse=" + this.Klasse + ", Folgeklasse=" + this.Folgeklasse + ")";
 	}
 
 }

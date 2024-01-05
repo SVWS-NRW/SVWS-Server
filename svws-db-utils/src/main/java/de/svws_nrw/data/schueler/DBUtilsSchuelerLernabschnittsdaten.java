@@ -36,7 +36,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 */
 	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final DTOSchuljahresabschnitte schuljahresabschnitt,
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false, false);
 		lernabschnitt.WechselNr = 0;
 		lernabschnitt.Schulbesuchsjahre = null;
 		lernabschnitt.Hochrechnung = null;
