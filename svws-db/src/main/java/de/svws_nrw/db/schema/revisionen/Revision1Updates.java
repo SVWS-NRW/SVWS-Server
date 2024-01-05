@@ -40,6 +40,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		pruefeWeitereDaten2();
 		passeBenutzerTabellenAn();
 		korrigiereFachkombinationen();
+		uebertrageLehrerStammschule();
 	}
 
 
@@ -2757,4 +2758,18 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
 		);
 	}
+
+	private void uebertrageLehrerStammschule() {
+	    final String sql = "UPDATE %s la JOIN %s l ON la.%s = l.%s SET la.%s = l.%s";
+		add("Übertrage die Information zur Stammschule in die Abschnittsdaten des Lehrers",
+		    sql.formatted(Schema.tab_LehrerAbschnittsdaten.name(),
+		    		Schema.tab_K_Lehrer.name(),
+			        Schema.tab_LehrerAbschnittsdaten.col_Lehrer_ID.name(),
+			        Schema.tab_K_Lehrer.col_ID.name(),
+			        Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.name(),
+			        Schema.tab_K_Lehrer.col_StammschulNr.name()),
+			Schema.tab_K_Lehrer, Schema.tab_LehrerAbschnittsdaten
+		);
+	}
+
 }

@@ -32,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.einsatzstatus", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.einsatzstatus.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.stammschulnr", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.StammschulNr = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.stammschulnr.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.StammschulNr IN :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.unterrichtsstd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
@@ -53,7 +55,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.all.migration", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd", "SchulnrEigner", "Jahr", "Abschnitt"})
+@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "StammschulNr", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd", "SchulnrEigner", "Jahr", "Abschnitt"})
 public final class MigrationDTOLehrerAbschnittsdaten {
 
 	/** ID des Eintrags für die LehrerAbschnittsdaten */
@@ -86,6 +88,11 @@ public final class MigrationDTOLehrerAbschnittsdaten {
 	@Column(name = "Einsatzstatus")
 	@JsonProperty
 	public String Einsatzstatus;
+
+	/** Die Schulnummer der Stammschule, sofern diese abweicht */
+	@Column(name = "StammschulNr")
+	@JsonProperty
+	public String StammschulNr;
 
 	/** Pflichtstundensoll für die LehrerAbschnittsdaten */
 	@Column(name = "PflichtstdSoll")
@@ -204,7 +211,7 @@ public final class MigrationDTOLehrerAbschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerAbschnittsdaten(ID=" + this.ID + ", Lehrer_ID=" + this.Lehrer_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", PflichtstdSoll=" + this.PflichtstdSoll + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ", SchulnrEigner=" + this.SchulnrEigner + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ")";
+		return "MigrationDTOLehrerAbschnittsdaten(ID=" + this.ID + ", Lehrer_ID=" + this.Lehrer_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", StammschulNr=" + this.StammschulNr + ", PflichtstdSoll=" + this.PflichtstdSoll + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ", SchulnrEigner=" + this.SchulnrEigner + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ")";
 	}
 
 }

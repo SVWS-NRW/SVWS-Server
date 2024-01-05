@@ -44,7 +44,7 @@ public class Tabelle_LehrerAbschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte StammschulNr */
 	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
-		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht").setRevision(SchemaRevisionen.REV_13);
+		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht");
 
 	/** Die Definition der Tabellenspalte PflichtstdSoll */
 	public SchemaTabelleSpalte col_PflichtstdSoll = add("PflichtstdSoll", SchemaDatentypen.FLOAT, false)

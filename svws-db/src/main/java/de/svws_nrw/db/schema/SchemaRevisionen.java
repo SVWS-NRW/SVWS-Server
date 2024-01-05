@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.db.schema.revisionen.Revision10Updates;
-import de.svws_nrw.db.schema.revisionen.Revision13Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -38,6 +37,7 @@ public enum SchemaRevisionen {
 	 * - Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die
 	 * Schüler-Zuordnung zu Kursen.
 	 * - Hizufügen von Tabellen für die Kommunikation mit Schulbewerbung.de
+	 * - Anpassungen an den Lehrer-Tabellen
 	 */
 	REV_1(1, "2022-09-29"),
 
@@ -105,12 +105,7 @@ public enum SchemaRevisionen {
 	/**
      * Erstellen von Datenbank-Indizes
      */
-    REV_12(12, "2023-10-11"),
-
-	/**
-     * Anpassen von Feldern für die Lehrertabellen
-     */
-    REV_13(13, "2023-11-07");
+    REV_12(12, "2023-10-11");
 
 
 	/**
@@ -118,14 +113,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_13;
+	public static final SchemaRevisionen maxRevision = REV_12;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_13;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_12;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -192,7 +187,6 @@ public enum SchemaRevisionen {
 	            case REV_4 -> new Revision4Updates();
 	            case REV_6 -> new Revision6Updates();
 	            case REV_10 -> new Revision10Updates();
-	            case REV_13 -> new Revision13Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }
