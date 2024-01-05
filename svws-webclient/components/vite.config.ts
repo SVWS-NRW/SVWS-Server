@@ -33,7 +33,8 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
-			"@core": resolve(__dirname, '../core/src/index.ts')
+			"@core": resolve(__dirname, '../core/src/index.ts'),
+			"@ui": resolve(__dirname, '../ui/src/index.ts')
 		}
 	},
 	build: {
