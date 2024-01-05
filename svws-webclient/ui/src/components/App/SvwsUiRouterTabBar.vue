@@ -8,8 +8,9 @@
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
-					<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
-						:hidden="isHidden(index)" @select="select(route)" :key="index" />
+					<template v-for="(route, index) in props.routes" :key="index">
+						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="selected" @select="select(route)" />
+					</template>
 				</div>
 				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
 					<svws-ui-button type="icon">
@@ -112,82 +113,79 @@
 
 
 <style lang="postcss">
-    .svws-ui-page {
-        @apply flex flex-col items-start overflow-hidden h-full;
 
-      &.svws-single-route {
-        .svws-ui-tabs--list {
-			@apply invisible
-        }
-      }
-    }
+	.svws-ui-page {
+		@apply flex flex-col items-start overflow-hidden h-full;
+		&.svws-single-route {
+			.svws-ui-tabs--list {
+				@apply invisible
+			}
+		}
+	}
 
-    .svws-ui-tab-content {
-        @apply w-full relative flex-grow overflow-auto;
+	.svws-ui-tab-content {
+		@apply w-full relative flex-grow overflow-auto;
+		.svws-api--pending & {
+			@apply opacity-50 filter grayscale;
+		}
+	}
 
-        .svws-api--pending & {
-          @apply opacity-50 filter grayscale;
-        }
-    }
-
-    .svws-ui-tabs,
-    .svws-sub-nav-target {
-        @apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
-        @apply print:hidden;
-    }
+	.svws-ui-tabs,
+	.svws-sub-nav-target {
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
+		@apply print:hidden;
+	}
 
 	.svws-sub-nav-target {
 		@apply w-full relative z-30;
 	}
 
-    .svws-ui-tabs--wrapper {
-        @apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
-        @apply bg-white dark:bg-black;
-
+	.svws-ui-tabs--wrapper {
+		@apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
+		@apply bg-white dark:bg-black;
 		&:before {
 			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-0;
 			content: '';
-
 			.svws-has-sub-nav & {
 				@apply rounded-md h-[10px] bottom-[-8px];
 			}
 		}
-    }
+	}
 
-    .svws-ui-tabs--list {
-        @apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2 -mb-px;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+	.svws-ui-tabs--list {
+		@apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2 -mb-px;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 
-        &::-webkit-scrollbar {
-          display: none;
-        }
+		&::-webkit-scrollbar {
+			display: none;
+		}
 
-        &:focus-visible {
-          @apply outline-none;
-        }
-    }
+		&:focus-visible {
+			@apply outline-none;
+		}
+	}
 
-    .svws-ui-tabs--scroll-button {
-      @apply absolute z-20 -top-0.5 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
-      @apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
+	.svws-ui-tabs--scroll-button {
+		@apply absolute z-20 -top-0.5 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
+		@apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 
-      .button {
-        @apply w-5 h-full p-0 rounded bg-light dark:bg-white/5 border border-black/5 dark:border-white/5;
+		.button {
+			@apply w-5 h-full p-0 rounded bg-light dark:bg-white/5 border border-black/5 dark:border-white/5;
 
-		  &:hover,
-		  &:focus-visible {
-			  @apply brightness-95;
-		  }
-      }
-    }
+			&:hover,
+			&:focus-visible {
+				@apply brightness-95;
+			}
+		}
+	}
 
-    .svws-sub-nav-target {
-      @apply overflow-x-auto flex-shrink-0;
-    }
+	.svws-sub-nav-target {
+		@apply overflow-x-auto flex-shrink-0;
+	}
 
-    .svws-ui-secondary-tabs {
-      @apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
-    }
+	.svws-ui-secondary-tabs {
+		@apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
+	}
 
 </style>
