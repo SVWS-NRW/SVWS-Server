@@ -67,14 +67,12 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKlassen.notengesperrt.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.NotenGesperrt IN :value")
 @NamedQuery(name = "DTOKlassen.adrmerkmal", query = "SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal = :value")
 @NamedQuery(name = "DTOKlassen.adrmerkmal.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name = "DTOKlassen.koopklasse", query = "SELECT e FROM DTOKlassen e WHERE e.KoopKlasse = :value")
-@NamedQuery(name = "DTOKlassen.koopklasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.KoopKlasse IN :value")
 @NamedQuery(name = "DTOKlassen.ankreuzzeugnisse", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
 @NamedQuery(name = "DTOKlassen.ankreuzzeugnisse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
 @NamedQuery(name = "DTOKlassen.primaryKeyQuery", query = "SELECT e FROM DTOKlassen e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOKlassen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKlassen.all.migration", query = "SELECT e FROM DTOKlassen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "KoopKlasse", "Ankreuzzeugnisse"})
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "Ankreuzzeugnisse"})
 public final class DTOKlassen {
 
 	/** ID der Klasse in der Klassen- Versetzuungstabelle */
@@ -177,14 +175,6 @@ public final class DTOKlassen {
 	@JsonProperty
 	public String AdrMerkmal;
 
-	/** Gibt an ob die Klasse eine KOOP-Klasse ist */
-	@Column(name = "KoopKlasse")
-	@JsonProperty
-	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
-	public Boolean KoopKlasse;
-
 	/** Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden */
 	@Column(name = "Ankreuzzeugnisse")
 	@JsonProperty
@@ -244,7 +234,7 @@ public final class DTOKlassen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sichtbar=" + this.Sichtbar + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", KoopKlasse=" + this.KoopKlasse + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ")";
+		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sichtbar=" + this.Sichtbar + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ")";
 	}
 
 }

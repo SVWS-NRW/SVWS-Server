@@ -104,7 +104,8 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	public SchemaTabelleSpalte col_KoopKlasse = add("KoopKlasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-		.setJavaComment("Gibt an ob die Klasse eine KOOP-Klasse ist");
+		.setJavaComment("Gibt an ob die Klasse eine KOOP-Klasse ist")
+		.setVeraltet(SchemaRevisionen.REV_1);
 
 	/** Die Definition der Tabellenspalte Ankreuzzeugnisse */
 	public SchemaTabelleSpalte col_Ankreuzzeugnisse = add("Ankreuzzeugnisse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
