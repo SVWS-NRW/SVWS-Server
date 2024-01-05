@@ -290,6 +290,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Einstellungen */
 	public SchemaTabelleSpalte col_Einstellungen = add("Einstellungen", SchemaDatentypen.TEXT, false)
+		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaComment("DEPRECATED: Schild2 - Einstellungen zur Schule im INI-Format (kann in einem Texteditor gelesen werden). Wird in Schild 3 ausgelagert.");
 
 	/** Die Definition der Tabellenspalte WebAdresse */
