@@ -114,7 +114,7 @@
 						'svws-clicked': isRowClicked(row),
 					}">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-						<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)">
+						<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
 					</div>
 					<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
 						:class="[
@@ -128,7 +128,7 @@
 						]">
 						<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
 						<slot v-else name="cell" v-bind="cell">
-							<svws-ui-text-input v-if="row.isEditing" v-model="cell.value" :headless="true" :type="(cell.column.type)" @update:value="(value: string) => cell.value = value" @click.stop="setClickedRow(row) " />
+							<svws-ui-text-input v-if="row.isEditing" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
 							<template v-else-if="cell.value">
 								{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 							</template>
