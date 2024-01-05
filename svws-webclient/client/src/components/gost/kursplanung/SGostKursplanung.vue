@@ -19,6 +19,11 @@
 							Tabelle einblenden
 						</template>
 					</svws-ui-button>
+					<s-card-gost-kursansicht-irrlaeufer-modal v-if="zuordnungen.length > 0" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
+						<svws-ui-button type="transparent" :disabled="zuordnungen.length === 0" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
+							<i-ri-error-warning-line /> Ungültige Kurszuordnungen
+						</svws-ui-button>
+					</s-card-gost-kursansicht-irrlaeufer-modal>
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
@@ -117,6 +122,13 @@
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
 	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
+	const zuordnungen = computed(()=>{
+		const arr = [];
+		for (const i of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().values().toArray())
+			arr.push(i);
+		return arr;
+	})
+
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);

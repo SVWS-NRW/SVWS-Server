@@ -45,4 +45,5 @@ export interface GostKursplanungProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
+	removeKursSchuelerZuordnung: (id: number, kurs: number) => Promise<boolean>;
 }
