@@ -6,9 +6,7 @@
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
-			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
-			'textarea-input--resize-both': resizeable === 'both',
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
@@ -40,9 +38,10 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, nextTick, type WritableComputedRef, type ComputedRef } from 'vue';
+	import type { ComputedRef } from 'vue';
+	import { ref, computed, watch, nextTick } from 'vue';
 
-	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
+	type ResizableOption = "vertical" | "none";
 	type InputDataType = string | null;
 
 	const props = withDefaults(defineProps<{
@@ -65,7 +64,7 @@
 		statistics: false,
 		required: false,
 		disabled: false,
-		resizeable: "both",
+		resizeable: "vertical",
 		autoresize: false,
 		cols: 80,
 		rows: 3,
@@ -82,7 +81,7 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<InputDataType>(props.modelValue);
 
-	const dataOrEmpty: WritableComputedRef<string> = computed({
+	const dataOrEmpty = computed<string>({
 		get: () => data.value === null ? '' : data.value,
 		set: (value) => data.value = (value === '') ? null : value
 	});
@@ -127,13 +126,13 @@
 			updateData(value);
 	}
 
-	function onBlur(event: Event) {
+	function onBlur() {
 		if (props.modelValue !== data.value)
 			emit("change", data.value);
 		emit("blur", data.value);
 	}
 
-	function onKeyEnter(event: Event) {
+	function onKeyEnter() {
 		if (props.modelValue !== data.value)
 			emit("change", data.value);
 	}
@@ -206,14 +205,6 @@
 
 	.textarea-input--resize-vertical .textarea-input--control {
 		@apply resize-y;
-	}
-
-	.textarea-input--resize-horizontal .textarea-input--control {
-		@apply resize-x;
-	}
-
-	.textarea-input--resize-both .textarea-input--control {
-		@apply resize;
 	}
 
 	.textarea-input--placeholder {
