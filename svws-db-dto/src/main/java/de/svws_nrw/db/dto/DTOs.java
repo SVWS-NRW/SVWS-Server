@@ -167,6 +167,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen3;
 import de.svws_nrw.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchuleLogo;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEinschulungsartenKatalogKeys;
 import de.svws_nrw.db.dto.current.schild.schule.DTOHerkunft;
 import de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftSchulformen;
@@ -414,6 +415,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOBerufskollegFachklassenKeys.class.getSimpleName(), DTOBerufskollegFachklassenKeys.class);
              mapDTOName2DTOClass.put(DTOEigeneSchule.class.getSimpleName(), DTOEigeneSchule.class);
              mapDTOName2DTOClass.put(DTOEigeneSchuleKAoADaten.class.getSimpleName(), DTOEigeneSchuleKAoADaten.class);
+             mapDTOName2DTOClass.put(DTOEigeneSchuleLogo.class.getSimpleName(), DTOEigeneSchuleLogo.class);
              mapDTOName2DTOClass.put(DTOEinschulungsartenKatalogKeys.class.getSimpleName(), DTOEinschulungsartenKatalogKeys.class);
              mapDTOName2DTOClass.put(DTOHerkunft.class.getSimpleName(), DTOHerkunft.class);
              mapDTOName2DTOClass.put(DTOHerkunftSchulformen.class.getSimpleName(), DTOHerkunftSchulformen.class);
@@ -664,6 +666,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Berufskolleg_Fachklassen_Keys", DTOBerufskollegFachklassenKeys.class);
              mapTablename2DTOClass.put("EigeneSchule", DTOEigeneSchule.class);
              mapTablename2DTOClass.put("EigeneSchule_KAoADaten", DTOEigeneSchuleKAoADaten.class);
+             mapTablename2DTOClass.put("EigeneSchule_Logo", DTOEigeneSchuleLogo.class);
              mapTablename2DTOClass.put("EinschulungsartKatalog_Keys", DTOEinschulungsartenKatalogKeys.class);
              mapTablename2DTOClass.put("Herkunft", DTOHerkunft.class);
              mapTablename2DTOClass.put("Herkunft_Schulformen", DTOHerkunftSchulformen.class);

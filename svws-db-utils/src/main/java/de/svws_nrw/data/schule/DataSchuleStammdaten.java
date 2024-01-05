@@ -41,6 +41,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSportbefreiung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchuleLogo;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchulformen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -260,10 +261,10 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @return Die HTTP-Response der Get-Operation
 	 */
 	public Response getSchullogo() {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
+		if (logo == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final String daten = "\"" + schule.SchulLogoBase64 + "\"";
+    	final String daten = "\"" + logo.LogoBase64 + "\"";
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -276,11 +277,11 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @return Die HTTP-Response der Patch-Operation
 	 */
 	public Response putSchullogo(final InputStream is) {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-    	if (schule == null)
+		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
+		if (logo == null)
     		throw OperationError.NOT_FOUND.exception();
-    	schule.SchulLogoBase64 = JSONMapper.toString(is);
-    	conn.transactionPersist(schule);
+    	logo.LogoBase64 = JSONMapper.toString(is);
+    	conn.transactionPersist(logo);
 		return Response.ok().build();
 	}
 

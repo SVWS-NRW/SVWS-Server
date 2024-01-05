@@ -35,6 +35,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Jahrgaenge;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_KAoADaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Kursart;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Logo;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Merkmale;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Schulformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Teilstandorte;
@@ -620,6 +621,9 @@ public final class Schema {
 
 	/** Tabelle EigeneSchule */
 	public static final Tabelle_EigeneSchule tab_EigeneSchule = add(new Tabelle_EigeneSchule());
+
+	/** Tabelle EigeneSchule_Logo */
+	public static final Tabelle_EigeneSchule_Logo tab_EigeneSchule_Logo = add(new Tabelle_EigeneSchule_Logo());
 
 	/** Tabelle EigeneSchule_Abteilungen */
 	public static final Tabelle_EigeneSchule_Abteilungen tab_EigeneSchule_Abteilungen = add(new Tabelle_EigeneSchule_Abteilungen());

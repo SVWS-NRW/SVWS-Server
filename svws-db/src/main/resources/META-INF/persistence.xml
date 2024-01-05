@@ -356,6 +356,7 @@
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten</class>
+        <class>de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchuleLogo</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOEinschulungsartenKatalogKeys</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOHerkunft</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftSchulformen</class>

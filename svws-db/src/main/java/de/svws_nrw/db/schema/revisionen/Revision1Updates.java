@@ -42,6 +42,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		korrigiereFachkombinationen();
 		updateSchuelerNachnameZusatz();
 		uebertrageLehrerStammschule();
+		verschiebeSchulLogo();
 	}
 
 
@@ -2799,6 +2800,18 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			        Schema.tab_K_Lehrer.col_StammschulNr.name()),
 			Schema.tab_K_Lehrer, Schema.tab_LehrerAbschnittsdaten
 		);
+	}
+
+	private void verschiebeSchulLogo() {
+		add("Übertrage das Schullogo in eine eigene Tabelle",
+		    "INSERT INTO %s (%s, %s) SELECT %s, %s FROM %s"
+				.formatted(Schema.tab_EigeneSchule_Logo.name(),
+			        Schema.tab_EigeneSchule_Logo.col_EigeneSchule_ID.name(),
+			        Schema.tab_EigeneSchule_Logo.col_LogoBase64.name(),
+			        Schema.tab_EigeneSchule.col_ID.name(),
+			        Schema.tab_EigeneSchule.col_SchulLogoBase64.name(),
+			        Schema.tab_EigeneSchule.name()),
+			Schema.tab_EigeneSchule, Schema.tab_EigeneSchule_Logo);
 	}
 
 }

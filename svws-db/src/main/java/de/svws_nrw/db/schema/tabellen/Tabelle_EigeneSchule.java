@@ -240,6 +240,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchulLogoBase64 */
 	public SchemaTabelleSpalte col_SchulLogoBase64 = add("SchulLogoBase64", SchemaDatentypen.TEXT, false)
+		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaComment("Schullogo als Bild im Base64-Format");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
