@@ -41,9 +41,9 @@
 	const refKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
 	const show: Ref<boolean> = ref<boolean>(false);
 
-	const beratungsdatum = computed(()=> props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
+	const beratungsdatum = computed<string>(()=> props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
 
-	const dirty = computed(()=>{
+	const dirty = computed<boolean>(()=>{
 		const lehrerIDNeu = refLehrer.value?.content?.id || null;
 		const kommentarNeu = refKommentar.value?.content || null;
 		const lehrerIDalt = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
@@ -53,7 +53,7 @@
 		return lehrerIDNeu !== lehrerIDalt || kommentarNeu !== kommentarAlt || datumAlt !== datumNeu;
 	})
 
-	const getBeratungslehrer = computed(()=> {
+	const getBeratungslehrer = computed<LehrerListeEintrag | undefined>(()=> {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
 		if (id === null)
 			id = (props.id === undefined) ? -1 : props.id;
