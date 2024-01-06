@@ -4688,34 +4688,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/newtermin
-	 *
-	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostSchuelerklausur
-	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<GostSchuelerklausur>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
-	 */
-	public async createGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausur>, schema : string) : Promise<GostSchuelerklausur> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/newtermin"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = GostSchuelerklausur.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostSchuelerklausur.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenTermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\d+}
 	 *
 	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
@@ -4742,6 +4714,87 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<GostSchuelerklausurTermin>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostSchuelerklausurTermin.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \d+}
+	 *
+	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in den Klausurtermin integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.
+	 *   Code 404: Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostSchuelerklausurTermin>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLastGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/deleteLast
+	 *
+	 * Löscht Gost-Klausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerklausur
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostSchuelerklausur} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
+	 */
+	public async deleteLastGostKlausurenSchuelerklausurtermin(data : GostSchuelerklausur, schema : string) : Promise<GostSchuelerklausur> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/deleteLast"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = GostSchuelerklausur.transpilerToJSON(data);
+		const result : string = await super.deleteJSON(path, body);
+		const text = result;
+		return GostSchuelerklausur.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode createGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \d+}
+	 *
+	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerklausur
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
+	 */
+	public async createGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<GostSchuelerklausur> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostSchuelerklausur.transpilerFromJSON(text);
 	}
 
 

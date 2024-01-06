@@ -898,7 +898,8 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response getGostKlausurenCollectionBySchuelerid(@PathParam("schema") final String schema,
+	public Response getGostKlausurenCollectionBySchuelerid(
+			@PathParam("schema") final String schema,
 			@PathParam("sid") final long sId,
 			@PathParam("abiturjahr") final int abiturjahr,
 			@PathParam("halbjahr") final int halbjahr,
@@ -916,11 +917,11 @@ public class APIGostKlausuren {
 	 * @param schema     das Datenbankschema, in welchem der Klausurtermin erstellt
 	 *                   wird
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param sk         die Schülerklausur, zu der ein neuer Termin generiert werden soll.
+	 * @param id       die ID der Schülerklausur, zu der ein neuer Termin generiert werden soll.
 	 * @return die HTTP-Antwort mit der neuen Blockung
 	 */
-	@POST
-	@Path("/schuelerklausuren/newtermin")
+	@GET
+	@Path("/schuelerklausuren/termine/new/{id : \\d+}")
 	@Operation(summary = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.", description = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
 	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class)))
@@ -930,8 +931,63 @@ public class APIGostKlausuren {
 
 		public Response createGostKlausurenSchuelerklausurtermin(
 			@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class))) final GostSchuelerklausur sk, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).createTermin(sk),
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).createTermin(id),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Löschen eines Klausurtermins.
+	 *
+	 * @param schema     das Datenbankschema, in welchem der Klausurtermin gelöscht wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param sk         die Schülerklausur, zu der ein neuer Termin generiert werden soll.
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@DELETE
+	@Path("/schuelerklausuren/termine/deleteLast")
+	@Operation(summary = "Löscht Gost-Klausurtermine.", description = "Löscht Gost-Klausurtermine."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
+	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLastGostKlausurenSchuelerklausurtermin(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "die IDs der Klausurtermine", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class))) final GostSchuelerklausur sk, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).deleteLastTermin(sk),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Daten eines Gost-Klausurtermins.
+	 *
+	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param id		 die ID des Klausurtermins
+	 * @param is         JSON-Objekt mit den Daten
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/schuelerklausuren/termine/{id : \\d+}")
+	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in den Klausurtermin integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostKlausurenSchuelerklausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausurTermin.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).patch(id, is),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);

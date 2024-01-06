@@ -67,6 +67,29 @@ export class GostKursklausurManager extends JavaObject {
 		return a.id > b.id ? +1 : -1;
 	} };
 
+	private readonly _compSchuelerklausur : Comparator<GostSchuelerklausur> = { compare : (a: GostSchuelerklausur, b: GostSchuelerklausur) => {
+		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
+		let aV : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(a);
+		let bV : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(b);
+		if (aV.quartal !== bV.quartal)
+			return aV.quartal - bV.quartal;
+		if (JavaString.compareTo(aV.kursart, bV.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(aV.kursart, bV.kursart) > 0)
+			return -1;
+		if (faecherManager !== null) {
+			const aFach : GostFach | null = faecherManager.get(aV.idFach);
+			const bFach : GostFach | null = faecherManager.get(bV.idFach);
+			if (aFach !== null && bFach !== null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
+		return a.id > b.id ? +1 : -1;
+	} };
+
 	private readonly _kursklausur_by_id : JavaMap<number, GostKursklausur> = new HashMap();
 
 	private readonly _kursklausurmenge : List<GostKursklausur> = new ArrayList();
@@ -433,6 +456,7 @@ export class GostKursklausurManager extends JavaObject {
 	private update_schuelerklausurmenge() : void {
 		this._schuelerklausurmenge.clear();
 		this._schuelerklausurmenge.addAll(this._schuelerklausur_by_id.values());
+		this._schuelerklausurmenge.sort(this._compSchuelerklausur);
 	}
 
 	/**
@@ -491,7 +515,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
 	 */
 	public schuelerklausurGetMengeAsList() : List<GostSchuelerklausur> {
-		return this._schuelerklausurmenge;
+		return new ArrayList(this._schuelerklausurmenge);
 	}
 
 	/**
@@ -1047,6 +1071,17 @@ export class GostKursklausurManager extends JavaObject {
 		if (termin.folgeNr > 0)
 			return termin.idTermin === null ? null : this.terminGetByIdOrException(termin.idTermin);
 		return this.terminByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Schülerklausur oder NULL.
+	 *
+	 * @param sk die Schülerklausur
+	 *
+	 * @return den Klausurtermin
+	 */
+	public terminKursklausurBySchuelerklausur(sk : GostSchuelerklausur) : GostKlausurtermin | null {
+		return this.terminByKursklausur(this.kursklausurBySchuelerklausur(sk));
 	}
 
 	/**

@@ -74,6 +74,29 @@ public class GostKursklausurManager {
 		return a.id > b.id ? +1 : -1;
 	};
 
+	private final @NotNull Comparator<@NotNull GostSchuelerklausur> _compSchuelerklausur = (final @NotNull GostSchuelerklausur a, final @NotNull GostSchuelerklausur b) -> {
+		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		GostKlausurvorgabe aV = vorgabeBySchuelerklausur(a);
+		GostKlausurvorgabe bV = vorgabeBySchuelerklausur(b);
+		if (aV.quartal != bV.quartal)
+			return aV.quartal - bV.quartal;
+		if (aV.kursart.compareTo(bV.kursart) < 0)
+			return +1;
+		if (aV.kursart.compareTo(bV.kursart) > 0)
+			return -1;
+		if (faecherManager != null) {
+			final GostFach aFach = faecherManager.get(aV.idFach);
+			final GostFach bFach = faecherManager.get(bV.idFach);
+			if (aFach != null && bFach != null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
+		return a.id > b.id ? +1 : -1;
+	};
+
 	// GostKursklausur
 	private final @NotNull Map<@NotNull Long, @NotNull GostKursklausur> _kursklausur_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostKursklausur> _kursklausurmenge = new ArrayList<>();
@@ -465,6 +488,7 @@ public class GostKursklausurManager {
 	private void update_schuelerklausurmenge() {
 		_schuelerklausurmenge.clear();
 		_schuelerklausurmenge.addAll(_schuelerklausur_by_id.values());
+		_schuelerklausurmenge.sort(_compSchuelerklausur);
 	}
 
 	/**
@@ -526,7 +550,7 @@ public class GostKursklausurManager {
 	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
 	 */
 	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeAsList() {
-		return _schuelerklausurmenge;
+		return new ArrayList<>(_schuelerklausurmenge);
 	}
 
 	/**
@@ -1097,6 +1121,17 @@ public class GostKursklausurManager {
 		if (termin.folgeNr > 0)
 			return termin.idTermin == null ? null : terminGetByIdOrException(termin.idTermin);
 		return terminByKursklausur(kursklausurBySchuelerklausurTermin(termin));
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Schülerklausur oder NULL.
+	 *
+	 * @param sk die Schülerklausur
+	 *
+	 * @return den Klausurtermin
+	 */
+	public GostKlausurtermin terminKursklausurBySchuelerklausur(final @NotNull GostSchuelerklausur sk) {
+		return terminByKursklausur(kursklausurBySchuelerklausur(sk));
 	}
 
 	/**

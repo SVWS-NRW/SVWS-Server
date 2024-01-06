@@ -1,11 +1,13 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -70,20 +72,37 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	}
 
 	/**
-	 * Erstellt einen neuen Gost-Schuelerklausurtermin *
+	 * Erstellt einen neuen Gost-Schuelerklausurtermin
 	 *
-	 * @param sk   die Schülerklausur, zu der ein neuer Termin generiert werden soll.
+	 * @param id   die ID der Schülerklausur
 	 *
 	 * @return Eine Response mit dem neuen Gost-Klausurtermin
 	 */
-	public Response createTermin(final GostSchuelerklausur sk) {
+	public Response createTermin(final long id) {
+		DTOGostKlausurenSchuelerklausurenTermine lastTermin = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Schuelerklausur_ID = :skid ORDER BY skt.Folge_Nr DESC", DTOGostKlausurenSchuelerklausurenTermine.class)
+				.setParameter("skid", id)
+				.setMaxResults(1)
+				.getSingleResult();
+		conn.transactionPersist(new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1));
+		conn.transactionFlush();
+		List<GostSchuelerklausur> klausurListe = DataGostKlausurenSchuelerklausur.preprocessSchuelerklausuren(conn, ListUtils.create1(conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id)));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(klausurListe.getFirst()).build();
+	}
+
+	/**
+	 * Löscht den letzten Termin einer Gost-Schuelerklausur
+	 *
+	 * @param sk   die Schülerklausur, zu der der letzte Termin gelöscht werden soll.
+	 *
+	 * @return die Response
+	 */
+	public Response deleteLastTermin(final GostSchuelerklausur sk) {
 		DTOGostKlausurenSchuelerklausurenTermine lastTermin = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Schuelerklausur_ID = :skid ORDER BY skt.Folge_Nr DESC", DTOGostKlausurenSchuelerklausurenTermine.class)
 				.setParameter("skid", sk.id)
 				.setMaxResults(1)
 				.getSingleResult();
-		DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), sk.id, lastTermin.Folge_Nr + 1);
-		conn.transactionPersist(newTermin);
-		sk.schuelerklausurTermine.add(DataGostKlausurenSchuelerklausur.dtoMapperToSchuelerklausurTermin.apply(conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, sk.id), newTermin));
+		conn.transactionRemove(lastTermin);
+		sk.schuelerklausurTermine.removeIf(skt -> skt.id == lastTermin.ID);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(sk).build();
 	}
 
