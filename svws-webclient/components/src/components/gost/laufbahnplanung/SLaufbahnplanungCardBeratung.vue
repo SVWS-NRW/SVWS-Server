@@ -27,7 +27,9 @@
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 	import { ref, computed } from "vue";
 	import { GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@core";
-	import { SvwsUiTextInput, SvwsUiTextareaInput, SvwsUiSelect } from "@ui";
+	import SvwsUiSelect from "../../../../../ui/src/components/SvwsUiSelect.vue";
+	import SvwsUiTextInput from "../../../../../ui/src/components/SvwsUiTextInput.vue";
+	import SvwsUiTextareaInput from "../../../../../ui/src/components/SvwsUiTextareaInput.vue";
 
 	const props = defineProps<{
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;

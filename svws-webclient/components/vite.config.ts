@@ -34,7 +34,8 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@core": resolve(__dirname, '../core/src/index.ts'),
-			"@ui": resolve(__dirname, '../ui/src/index.ts')
+			// darf wegen konkurrierendem CSS so nicht verwendet werden, absolute Pfade verwenden!
+			// "@ui": resolve(__dirname, '../ui/src/index.ts')
 		}
 	},
 	build: {
