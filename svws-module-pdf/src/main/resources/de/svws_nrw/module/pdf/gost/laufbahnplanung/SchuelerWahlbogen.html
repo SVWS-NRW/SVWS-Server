@@ -7,25 +7,25 @@
 	</head>
 
 	<body>
-		<div class="start-new-page" th:each="Schueler,iterStatSchueler : ${LaufbahnplanungSchueler}">
+		<div class="start-new-page" th:each="schueler,iterStatSchueler : ${Schueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Abitur ' + ${Schueler.abiturjahr} + ' - ' + ${Schueler.aktuellesGOStHalbjahr} + '<br/> Wahl ab ' +  ${Schueler.beratungsGOStHalbjahr} + '<br/>' + ${Schueler.pruefungsordnung}">Abitur 2023<br/>Q1.2 Wahl ab Q2.1<br/>APO-GOSt</div>
+			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().aktuellesGOStHalbjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Q1.2 Wahl ab Q2.1<br/>APO-GOSt</div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Wahlbogen ' + ${iterStatSchueler.count} + '/' + ${#lists.size(LaufbahnplanungSchueler)}">Gesamtdruck Wahlbogen 13/57</span></div>
+			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Wahlbogen ' + ${iterStatSchueler.count} + '/' + ${#lists.size(Schueler)}">Gesamtdruck Wahlbogen 13/57</span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table  class="fixed-layout-100 no-space-pad">
 				<tr>
 					<td style="width: 50%; text-align: left; font-size: 7pt; vertical-align: top;"></td>
-					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${Schueler.aktuelleKlasse}">Klasse: Q1</td>
+					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${schueler.gostLaufbahnplanung().aktuelleKlasse()}">Klasse: Q1</td>
 				</tr>
 				<tr>
 					<td style="width: 25%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${DruckparameterNurBelegteFaecher}" class="very-tiny">(nur belegte Fächer)</span></h3></td>
-					<td style="width: 75%; border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${Schueler.nachname + ', ' + Schueler.vorname}">Musterfrau, Anna</h3></td>
+					<td style="width: 75%; border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${schueler.nachname() + ', ' + schueler.vorname()}">Musterfrau, Anna</h3></td>
 				</tr>
 			</table>
-			<p th:if="${!#strings.isEmpty(Schueler.beratungsbogenText)}" th:text="${Schueler.beratungsbogenText}">Text der Schule für den Beratungsbogen.</p>
+			<p th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().beratungsbogenText())}" th:text="${schueler.gostLaufbahnplanung().beratungsbogenText()}">Text der Schule für den Beratungsbogen.</p>
 			<table class="fixed-layout-100" style="margin-top: 20px; margin-bottom: 20px; border-collapse: collapse;">
 				<colgroup>
 					<col style="width: 8%;" />
@@ -53,83 +53,83 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${Schueler.Fachwahlen}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt}"  th:style="'background-color: rgb(' + ${Fachwahl.farbeClientRGB} + ');'">
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.kuerzel}"><b>D</b></td>
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.bezeichnung}"><b>Deutsch</b></td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn}">
+					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt()}"  th:style="'background-color: ' + ${Fachwahl.farbeClientRGB()} + ';'">
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.kuerzel()}"><b>D</b></td>
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.bezeichnung()}"><b>Deutsch</b></td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn()}">
 							<span th:case="'HSU'">HSU-Prüfung</span>
 							<span th:case="'SFP'">Festst.prüf.</span>
-							<span th:case="*" th:if="${!#strings.isEmpty(Fachwahl.jahrgangFremdsprachenbeginn)}" th:text="${Fachwahl.positionFremdsprachenfolge} + ' (ab Jg. ' + ${Fachwahl.jahrgangFremdsprachenbeginn} + ')'">2 (ab Jg. 7)</span>
+							<span th:case="*" th:if="${!#strings.isEmpty(Fachwahl.jahrgangFremdsprachenbeginn())}" th:text="${Fachwahl.positionFremdsprachenfolge()} + ' (ab Jg. ' + ${Fachwahl.jahrgangFremdsprachenbeginn()} + ')'">2 (ab Jg. 7)</span>
 						</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungEF1}">S</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungEF2}">S</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungQ11}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ12}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ21}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ22}">LK</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${Fachwahl.abiturfach}">1</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungEF1()}">S</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungEF2()}">S</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungQ11()}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ12()}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ21()}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ22()}">LK</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${Fachwahl.abiturfach()}">1</td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
 						<td colspan="3" class="kompakt bot-black" style="padding-right: 6px; text-align: right;"><b>Anzahl anrechenbare Kurse:</b></td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey" style="border-left: 1px grey solid;" th:text="${Schueler.kursanzahlEF1}">12</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey" th:text="${Schueler.kursanzahlEF2}">11</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" style="border-left: 1px grey solid;" th:text="${Schueler.kursanzahlQ11}">11</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${Schueler.kursanzahlQ12}">10</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${Schueler.kursanzahlQ21}">10</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${Schueler.kursanzahlQ22}">10</td>
-						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${Schueler.kursanzahlQPh}"><b>41</b></td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF1()}">12</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF2()}">11</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ11()}">11</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ12()}">10</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ21()}">10</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ22()}">10</td>
+						<td class="kompakt ta-c bot-black bol-grey bob-grey bg-lightyellow" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().kursanzahlQPh()}"><b>41</b></td>
 					</tr>
 					<tr>
 						<td colspan="3" class="kompakt" style="padding-right: 6px; text-align: right;"><b>Wochenstundensumme:</b></td>
-						<td class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${Schueler.wochenstundenEF1}">36</td>
-						<td class="kompakt ta-c bo-grey" th:text="${Schueler.wochenstundenEF2}">33</td>
-						<td class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${Schueler.wochenstundenQ11}">37</td>
-						<td class="kompakt ta-c bo-grey" th:text="${Schueler.wochenstundenQ12}">34</td>
-						<td class="kompakt ta-c bo-grey" th:text="${Schueler.wochenstundenQ21}">34</td>
-						<td class="kompakt ta-c bo-grey" th:text="${Schueler.wochenstundenQ22}">34</td>
-						<td rowspan="2" class="kompakt ta-c  bo-grey" style="border-left: 1px grey solid; border-right: 1px grey solid; vertical-align: middle;" th:text="${#numbers.formatDecimal(Schueler.wochenstundenGesamt, 1, 1)}"><b>104,0</b></td>
+						<td class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF1()}">36</td>
+						<td class="kompakt ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenEF2()}">33</td>
+						<td class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ11()}">37</td>
+						<td class="kompakt ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ12()}">34</td>
+						<td class="kompakt ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ21()}">34</td>
+						<td class="kompakt ta-c bo-grey" th:text="${schueler.gostLaufbahnplanung().wochenstundenQ22()}">34</td>
+						<td rowspan="2" class="kompakt ta-c  bo-grey" style="border-left: 1px grey solid; border-right: 1px grey solid; vertical-align: middle;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenGesamt(), 1, 1)}"><b>104,0</b></td>
 					</tr>
 					<tr>
 						<td colspan="3" class="kompakt small ta-c" style="padding-right: 6px; text-align: right;">(pro Schuljahr)</td>
-						<td colspan="2" class="kompakt small ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(Schueler.wochenstundenDurchschnittEF, 1, 1)}">34,5</td>
-						<td colspan="2" class="kompakt small ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(Schueler.wochenstundenDurchschnittQ1, 1, 1)}">35,5</td>
-						<td colspan="2" class="kompakt small ta-c bo-grey" th:text="${#numbers.formatDecimal(Schueler.wochenstundenDurchschnittQ2, 1, 1)}">34,0</td>
+						<td colspan="2" class="kompakt small ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittEF(), 1, 1)}">34,5</td>
+						<td colspan="2" class="kompakt small ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQ1(), 1, 1)}">35,5</td>
+						<td colspan="2" class="kompakt small ta-c bo-grey" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQ2(), 1, 1)}">34,0</td>
 					</tr>
 					<tr>
 						<td colspan="3" class="kompakt" style="padding-right: 6px; text-align: right;"><b>Wochenstundendurchschnitt:</b></td>
-						<td colspan="2" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(Schueler.wochenstundenDurchschnittEF, 1, 1)}"><b>34,5</b></td>
-						<td colspan="4" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(Schueler.wochenstundenDurchschnittQPh, 1, 2)}"><b>34,75</b></td>
+						<td colspan="2" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittEF(), 1, 1)}"><b>34,5</b></td>
+						<td colspan="4" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQPh(), 1, 2)}"><b>34,75</b></td>
 						<td class="kompakt" style="border-left: 1px grey solid;"></td>
 					</tr>
 					<tr th:if="${DruckparameterNurBelegteFaecher}">
 						<td colspan="10" class="tiny" style="font-style: italic">
-							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${Schueler.Fachwahlen}" th:text="${Fachwahl.bezeichnung} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.bezeichnung()} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>
 					</tr>
 				</tfoot>
 			</table>
 			<div style="page-break-inside: avoid;">
 				<p><u>Bemerkungen der Schule zur Gesamtlaufbahn:</u></p>
-				<p th:if="${#strings.isEmpty(Schueler.kommentar) && #lists.isEmpty(Schueler.Fehler)}"><i>- keine -</i></p>
-				<ul th:if="${!(#strings.isEmpty(Schueler.kommentar) && #lists.isEmpty(Schueler.Fehler))}">
-					<li th:if="${!#lists.isEmpty(Schueler.Fehler)}" th:each="FehlerBelegung : ${Schueler.Fehler}" th:text="${FehlerBelegung.meldung}">Fehlertext</li>
-					<li th:if="${!#strings.isEmpty(Schueler.kommentar)}" th:text="${Schueler.kommentar}">Kommentar</li>
+				<p th:if="${#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler())}"><i>- keine -</i></p>
+				<ul th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
+					<li th:if="${!#lists.isEmpty(schueler.gostLaufbahnplanung().fehler())}" th:each="FehlerBelegung : ${schueler.gostLaufbahnplanung().fehler()}" th:text="${FehlerBelegung.meldung()}">Fehlertext</li>
+					<li th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar())}" th:text="${schueler.gostLaufbahnplanung().kommentar()}">Kommentar</li>
 				</ul>
 			</div>
 			<div style="page-break-inside: avoid;">
 				<p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
-				<p th:if="${#lists.isEmpty(Schueler.Hinweise)}"><i>- keine -</i></p>
-				<ul th:if="${!#lists.isEmpty(Schueler.Hinweise)}">
-					<li th:each="HinweisBelegung : ${Schueler.Hinweise}" th:text="${HinweisBelegung.meldung}">Hinweistext</li>
+				<p th:if="${#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}"><i>- keine -</i></p>
+				<ul th:if="${!#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
+					<li th:each="HinweisBelegung : ${schueler.gostLaufbahnplanung().hinweise()}" th:text="${HinweisBelegung.meldung()}">Hinweistext</li>
 				</ul>
 			</div>
 			<div style="page-break-inside: avoid;">
 				<p>Die oben aufgeführten Fachwahlen gelten für die weitere Schullaufbahn als verbindlich gewählt, solange keine Korrekturwünsche den Beratungslehrkräften mitgeteilt werden.
 				Korrekturwünsche können vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrkräften durchgeführt werden.
 				Schulorganisatorische Gründe können zu einer Änderung der Fachwahlen und der Laufbahn führen.</p>
-				<p th:text="${Schueler.letzteBeratungText}">Die letzte Beratung wurde durchgeführt am 16.05.2022 von M. Mustermann.</p>
+				<p th:text="${schueler.gostLaufbahnplanung().letzteBeratungText()}">Die letzte Beratung wurde durchgeführt am 16.05.2022 von M. Mustermann.</p>
 				<table class="fixed-layout-100 no-space-pad" style="page-break-inside: avoid;">
 					<tr style="height: 3em;">
 						<td style="width: 30%;"> </td>
@@ -139,11 +139,11 @@
 						<td style="width: 30%;"> </td>
 					</tr>
 					<tr>
-						<td class="small" style="text-align: center; border: 0.5px black; border-style: solid none none none" th:text="${Schueler.beratungslehrkraefte}">M. Mustermann</td>
+						<td class="small" style="text-align: center; vertical-align: top; border: 0.5px black; border-style: solid none none none" th:utext="${schueler.gostLaufbahnplanung().unterschriftfeldBeratungslehrkraefteMehrzeiligHtml()}">M. Mustermann</td>
 						<td> </td>
-						<td class="small" style="text-align: center; border: 0.5px black; border-style: solid none none none" th:text="${Schueler.vorname} + ' ' + ${Schueler.nachname}">Anna Musterfrau</td>
+						<td class="small" style="text-align: center; vertical-align: top; border: 0.5px black; border-style: solid none none none" th:text="${schueler.vorname()} + ' ' + ${schueler.nachname()}">Anna Musterfrau</td>
 						<td> </td>
-						<td class="small" style="text-align: center; border: 0.5px black; border-style: solid none none none">Erziehungsberechtigte</td>
+						<td class="small" style="text-align: center; vertical-align: top; border: 0.5px black; border-style: solid none none none">Erziehungsberechtigte</td>
 					</tr>
 				</table>
 			</div>

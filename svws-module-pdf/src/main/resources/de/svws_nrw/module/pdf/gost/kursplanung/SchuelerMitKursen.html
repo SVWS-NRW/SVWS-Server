@@ -7,25 +7,25 @@
 	</head>
 
 	<body>
-		<div style="page-break-inside: avoid;" th:each="Schueler,iterStatSchueler : ${KursplanungSchueler}">
+		<div style="page-break-inside: avoid;" th:each="schueler,iterStatSchueler : ${Blockungsergebnis.schuelerGefiltert()}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Kursbelegungen<br/>' + 'Abitur ' + ${Abiturjahr} + ' - ' + ${GostHalbjahr}">Kursbelegungen der Schülerinnen und Schüler<br/>Abitur 2023 - Q1.2<br/></div>
+			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Kursbelegungen<br/>' + 'Abitur ' + ${Blockungsergebnis.abiturjahr()} + ' - ' + ${Blockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler<br/>Abitur 2023 - Q1.2<br/></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomCenter" th:text="${Blockungsbezeichnung + ' (Erg-ID ' + BlockungsergebnisId + ')'}">A23 - Q1.2 (Erg-ID 4)</div>
+			<div class="pageBottomCenter" th:text="${Blockungsergebnis.bezeichnung() + ' (Erg-ID ' + Blockungsergebnis.id() + ')'}">A23 - Q1.2 (Erg-ID 4)</div>
 			<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table th:if="${iterStatSchueler.count == iterStatSchueler.first}" class="fixed-layout-100 no-space-pad">
 				<tr>
-					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + Abiturjahr + ' - ' + GostHalbjahr}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></td>
+					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + Blockungsergebnis.abiturjahr() + ' - ' + Blockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></td>
 				</tr>
 			</table>
 			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
 				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
 			<table class="fixed-layout-100 no-space-pad"
 				th:with="
-					kursanzahl = ${#lists.size(Schueler.Kurse)},
+					kursanzahl = ${#lists.size(schueler.gostKursplanungKursbelegungen())},
 					spaltenzahl = ${kursanzahl <= 12 ? 12 : (kursanzahl <= 14 ? 14 : kursanzahl)},
 					restspalten = ${spaltenzahl <= 14 ? 1 : 0},
 					spaltenbreite = ${spaltenzahl == 12 ? 8 : (spaltenzahl == 14 ? 7 : (100 / kursanzahl))},
@@ -40,15 +40,15 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td colspan="12"> <p th:utext="${#numbers.formatInteger(iterStatSchueler.count, 3) + '. <b>' + Schueler.nachname + ', ' + Schueler.vorname + '</b>'}">083. Mustermann, Max</p></td>
+					<td colspan="12"> <p th:utext="${#numbers.formatInteger(iterStatSchueler.count, 3) + '. <b>' + schueler.nachname() + ', ' + schueler.vorname() + '</b>'}">083. Mustermann, Max</p></td>
 				</tr>
 				<tr style="height: 1px;">
 					<td></td>
 				</tr>
 				<tr>
-					<td class="bo-grey" th:each="Kurs : ${Schueler.Kurse}" th:style="${((Kurs.farbeClientRGB == null || Kurs.farbeClientRGB.isEmpty()) ? '' : ' background-color: rgb(' + Kurs.farbeClientRGB + ');')}">
-						<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
-						<p class="no-mt" style="font-size: 6pt;" th:utext="${Kurs.kursart + '-' + (Kurs.istSchriftlich ? 's' : 'm') + ((Kurs.abiturfach == null || Kurs.abiturfach.isEmpty()) ? '' : ' Abifach ' + Kurs.abiturfach) + '<br/>' + Kurs.lehrkraefte}">GK-s Abifach 3<br/>ABC</p>
+					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:style="${((Kursbelegung.kurs().farbeClientRGB() == null || (Kursbelegung.kurs().farbeClientRGB().isEmpty())) ? '' : ' background-color: ' + Kursbelegung.kurs().farbeClientRGB() + ';')}">
+						<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kursbelegung.kurs().bezeichnung()}">M-GK2</p>
+						<p class="no-mt" style="font-size: 6pt;" th:utext="${Kursbelegung.kurs().kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty()) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + Kursbelegung.kurs().lehrkraefteAuflistung()}">GK-s Abifach 3<br/>ABC</p>
 					</td>
 				</tr>
 				<tr style="height: 3px;">

@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -75,6 +76,17 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception("Kein Jahrgang zur ID " + id + " gefunden.");
 
 		return dtoMapperJahrgang.apply(jahrgang);
+	}
+
+	/**
+	 * Gibt die Jahrgangsdaten der Schule zurück.
+	 *
+	 * @return		Die Jahrgangsdaten der Schule.
+	 */
+	public List<JahrgangsDaten> getJahrgaenge() {
+		final List<DTOJahrgang> jahrgang = conn.queryAll(DTOJahrgang.class);
+
+		return jahrgang.stream().map(dtoMapperJahrgang).toList();
 	}
 
 	@Override

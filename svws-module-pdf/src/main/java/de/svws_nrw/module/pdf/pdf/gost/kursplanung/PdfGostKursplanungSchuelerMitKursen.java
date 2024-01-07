@@ -5,8 +5,9 @@ import de.svws_nrw.module.pdf.html.base.HtmlBuilder;
 import de.svws_nrw.module.pdf.html.base.HtmlContext;
 import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchule;
 import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungBlockungsergebnis;
-import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungSchueler;
 import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
+import de.svws_nrw.module.pdf.proxytypes.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.pdf.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -49,31 +50,31 @@ public final class PdfGostKursplanungSchuelerMitKursen {
 	 * Erzeugt auf Basis der hinterlegten html-Vorlage und der übergebenen Daten den PdfBuilder zur Erzeugung der PDF-Datei.
 	 *
 	 * @param conn          		Datenbank-Verbindung
-	 * @param blockungsergebnisID	ID des Blockungsergebnisses, aus dem die Liste der Schüler mit ihren Kursen erstellt werden soll.
-	 * @param schuelerIDs           Liste der IDs der Schüler, deren Kurse aufgelistet werden sollen. Ist die Liste leer, werden alle
+	 * @param idBlockungsergebnis	ID des Blockungsergebnisses, aus dem die Liste der Schüler mit ihren Kursen erstellt werden soll.
+	 * @param idsSchueler           Liste der IDs der Schüler, deren Kurse aufgelistet werden sollen. Ist die Liste leer, werden alle
 	 *                              Schüler der Blockung herangezogen.
 	 *
 	 * @return						Ein PDF-Builder zur Erzeugung der PDF-Datei
 	 */
-	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
+	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final Long idBlockungsergebnis, final List<Long> idsSchueler) {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
-		final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, blockungsergebnisID);
-		final HtmlContextGostKursplanungSchueler htmlContextSchueler = new HtmlContextGostKursplanungSchueler(conn, blockungsergebnisID, schuelerIDs);
-		final HtmlContext htmlContextSchule = new HtmlContextSchule(conn);
+		final ReportingRepository reportingRepository = new ReportingRepository(conn);
+		final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, idBlockungsergebnis, !(idsSchueler == null || idsSchueler.isEmpty()), idsSchueler, false, new ArrayList<>());
+		final HtmlContext htmlContextSchule = new HtmlContextSchule(reportingRepository);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();
 		htmlContexts.add(htmlContextBlockung);
-		htmlContexts.add(htmlContextSchueler);
 		htmlContexts.add(htmlContextSchule);
+
+		final ProxyReportingGostKursplanungBlockungsergebnis blockungsergebnis = (ProxyReportingGostKursplanungBlockungsergebnis) htmlContextBlockung.getContext().getVariable("Blockungsergebnis");
 
 		// Dateiname der PDF-Datei aus den Daten erzeugen.
 		final String pdfDateiname =
-				"Schueler-Kurse-Liste_%d-%s_(Erg-ID%d).pdf"
-						.formatted(
-								(int) htmlContextBlockung.getContext().getVariable("Abiturjahr"),
-								((String) htmlContextBlockung.getContext().getVariable("GostHalbjahr")).replace(".", "-"),
-								(Long) htmlContextBlockung.getContext().getVariable("BlockungsergebnisId"));
+				"Schueler-Kurse-Liste_%d-%s_(Erg-ID%d).pdf".formatted(
+						blockungsergebnis.abiturjahr(),
+						blockungsergebnis.gostHalbjahr().replace(".", "-"),
+						blockungsergebnis.id());
 
 		// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
 		final HtmlBuilder htmlBuilder = new HtmlBuilder(htmlVorlageDateipfad, htmlContexts, null);

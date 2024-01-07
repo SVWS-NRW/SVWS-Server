@@ -4,9 +4,10 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.html.base.HtmlBuilder;
 import de.svws_nrw.module.pdf.html.base.HtmlContext;
 import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchule;
-import de.svws_nrw.module.pdf.html.contexts.gost.laufbahnplanung.HtmlContextGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
-import de.svws_nrw.module.pdf.reptypes.gost.laufbahnplanung.RepGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.proxytypes.schueler.ProxyReportingSchueler;
+import de.svws_nrw.module.pdf.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -58,11 +59,12 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final List<Long> schuelerIDs, final int detaillevel) {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
-		final HtmlContextGostLaufbahnplanungSchueler htmlContextLaufbahnplanung = new HtmlContextGostLaufbahnplanungSchueler(conn, schuelerIDs);
-		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(conn);
+		final ReportingRepository reportingRepository = new ReportingRepository(conn);
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, true);
+		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();
-		htmlContexts.add(htmlContextLaufbahnplanung);
+		htmlContexts.add(htmlContextSchueler);
 		htmlContexts.add(htmlContextSchule);
 
 		// Einzelne Variablen für den finalen html-Daten-Context sammeln
@@ -71,11 +73,11 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 
 		// Dateiname der PDF-Datei aus den Daten erzeugen.
 		String pdfDateiname = "Laufbahnplanung_Prüfungsergebnisse.pdf";
-		if (!htmlContextLaufbahnplanung.getGostLaufbahnplanungenSchueler().isEmpty()) {
-			final RepGostLaufbahnplanungSchueler ersteLaufbahnplanung = htmlContextLaufbahnplanung.getGostLaufbahnplanungenSchueler().get(0);
+		if (!htmlContextSchueler.getSchueler().isEmpty()) {
+			final ProxyReportingSchueler ersteLaufbahnplanung = htmlContextSchueler.getSchueler().getFirst();
 			pdfDateiname = "Laufbahnplanung_Prüfungsergebnisse_Abitur-%d_%s.pdf".formatted(
-				ersteLaufbahnplanung.abiturjahr,
-				ersteLaufbahnplanung.beratungsGOStHalbjahr.replace('.', '_'));
+				ersteLaufbahnplanung.gostLaufbahnplanung().abiturjahr(),
+				ersteLaufbahnplanung.gostLaufbahnplanung().folgeGOStHalbjahr().replace('.', '_'));
 		}
 
 		// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen

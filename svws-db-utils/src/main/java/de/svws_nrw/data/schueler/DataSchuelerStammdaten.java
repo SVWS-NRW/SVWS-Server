@@ -153,7 +153,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	 *
 	 * @return die Liste der Schülerstammdaten
 	 */
-	public static SchuelerStammdaten getStammdaten(final DBEntityManager conn, final long id) {
+	public SchuelerStammdaten getStammdaten(final DBEntityManager conn, final long id) {
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
 			throw OperationError.NOT_FOUND.exception();

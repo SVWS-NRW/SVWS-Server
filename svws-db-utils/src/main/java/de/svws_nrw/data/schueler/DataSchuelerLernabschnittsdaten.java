@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -69,8 +69,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 
 	/**
-	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem
-	 * angegebenen Schuljahresabschnitt
+	 * Bestimmt die Lernabschnittsdaten zur Wechsel-Nr. 0 (aktiver Abschnitt im Schuljahresabschnitt)
+	 * anhand der übergebenen Schüler-ID und dem angegebenen Schuljahresabschnitt
 	 *
 	 * @param schueler_id            die Schüler-ID
 	 * @param schuljahresabschnitt   der Schuljahresabschnitt
@@ -98,27 +98,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 
 	/**
-	 * Hilfsmethode um anhand der Schüler-ID und Schuljahresabschnitts-ID die zugehörigen Lernabschnittsdaten abzufragen.
-	 *
-	 * @param schueler_id				Schüler-ID
-	 * @param schuljahresabschnitt_id	Schuljahresabschnitts-ID
-	 *
-	 * @return	Lernabschnittsdaten zu den gegebenen IDs.
-	 */
-	private SchuelerLernabschnittsdaten getFromSchuelerIDUndSchuljahresabschnittIDInternal(final Long schueler_id, final long schuljahresabschnitt_id) {
-		final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt_id);
-		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
-		if (lernabschnittsdaten.size() > 1)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
-		return getFromID(lernabschnittsdaten.get(0).ID);
-	}
-
-
-	/**
-	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem
-	 * angegebenen Schuljahresabschnitt.
+	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem angegebenen Schuljahresabschnitt.
 	 *
 	 * @param schueler_id           	die Schüler-ID
 	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
@@ -134,20 +114,27 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception("Keine Schüler mit der ID " + schueler_id + " gefunden.");
 
 		// Bestimme den aktuellen Lernabschnitt
-		return getFromSchuelerIDUndSchuljahresabschnittIDInternal(schueler_id, schuljahresabschnitt_id);
+		final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt_id);
+		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+		if (lernabschnittsdaten.size() > 1)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+
+		return getFromID(lernabschnittsdaten.getFirst().ID);
 	}
 
 
 	/**
-	 * Bestimmt eine Map von den Schüler-IDs auf die Lernabschnittsdaten anhand der übergebenen Schüler-IDs und dem
-	 * angegebenen Schuljahresabschnitt.
+	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs.
 	 *
 	 * @param schueler_ids           	die Liste mit Schüler-IDs
-	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
+	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
+	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
 	 *
 	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
 	 */
-	public Map<Long, SchuelerLernabschnittsdaten> getMapFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id) throws WebApplicationException {
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitWechseln) throws WebApplicationException {
 		// Prüfe, ob der Schüler mit der ID existiert
 		if (schueler_ids == null)
 			throw OperationError.NOT_FOUND.exception("Es sind keine Schueler-ID angegeben worden.");
@@ -158,12 +145,33 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			if (mapSchueler.get(schuelerID) == null)
 				throw OperationError.NOT_FOUND.exception("Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
 
-		final Map<Long, SchuelerLernabschnittsdaten> result = new HashMap<>();
+		// Hole alle Lernabschnitte der übergebenen Schüler-IDs und filtere sie auf den Schuljahresabschnitt und die Wechsel-Nr.
+		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", schueler_ids, DTOSchuelerLernabschnittsdaten.class).stream()
+			.filter(a -> (mitWechseln ? a.WechselNr >= 0 : a.WechselNr == 0))
+			.sorted(Comparator
+				.comparing((DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
+				.thenComparing((DTOSchuelerLernabschnittsdaten a) -> a.Schuljahresabschnitts_ID)
+				.thenComparing((DTOSchuelerLernabschnittsdaten a) -> a.WechselNr))
+			.toList();
 
-		// Lese zu den verifizieren Schüler-IDs die Lernabschnitte einzeln ein, um evtl. Fehler dort abzufangen. Füge die Ergebnisse in die Map ein.
-		for (final Long sID : schueler_ids)
-			result.put(sID, getFromSchuelerIDUndSchuljahresabschnittIDInternal(sID, schuljahresabschnitt_id));
-		return result;
+		return dtoLernabschnitte.stream().map(a -> getFromID(a.ID)).toList();
+	}
+
+	/**
+	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs und dem angegebenen Schuljahresabschnitt.
+	 *
+	 * @param schueler_ids           	die Liste mit Schüler-IDs
+	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
+	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
+	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
+	 *
+	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+	 */
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id, final boolean mitWechseln) throws WebApplicationException {
+
+		return getListFromSchuelerIDs(schueler_ids, mitWechseln).stream()
+			.filter(a -> a.schuljahresabschnitt == schuljahresabschnitt_id)
+			.toList();
 	}
 
 
@@ -477,7 +485,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", id, DTOSchuelerPSFachBemerkungen.class);
 		final DTOSchuelerPSFachBemerkungen dtoFachBem = (dtoListFachBem.isEmpty())
 				? new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), id)
-				: dtoListFachBem.get(0);
+				: dtoListFachBem.getFirst();
 		boolean patchedDTOLernabschitt = false;
 		boolean patchedDTOFachBem = false;
 		for (final Entry<String, Object> entry : map.entrySet()) {

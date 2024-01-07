@@ -4,9 +4,10 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.html.base.HtmlBuilder;
 import de.svws_nrw.module.pdf.html.base.HtmlContext;
 import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchule;
-import de.svws_nrw.module.pdf.html.contexts.gost.laufbahnplanung.HtmlContextGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
-import de.svws_nrw.module.pdf.reptypes.gost.laufbahnplanung.RepGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.proxytypes.schueler.ProxyReportingSchueler;
+import de.svws_nrw.module.pdf.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -58,11 +59,12 @@ public final class PdfGostLaufbahnplanungSchuelerWahlbogen {
 	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final List<Long> schuelerIDs, final boolean nurBelegteFaecher) {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
-		final HtmlContextGostLaufbahnplanungSchueler htmlContextLaufbahnplanung = new HtmlContextGostLaufbahnplanungSchueler(conn, schuelerIDs);
-		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(conn);
+		final ReportingRepository reportingRepository = new ReportingRepository(conn);
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, true);
+		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();
-		htmlContexts.add(htmlContextLaufbahnplanung);
+		htmlContexts.add(htmlContextSchueler);
 		htmlContexts.add(htmlContextSchule);
 
 		// Einzelne Variablen für den finalen html-Daten-Context sammeln
@@ -71,17 +73,17 @@ public final class PdfGostLaufbahnplanungSchuelerWahlbogen {
 
 		// Dateiname der PDF-Datei aus den Daten erzeugen.
 		String pdfDateiname = "Laufbahnplanung.pdf";
-		if (!htmlContextLaufbahnplanung.getGostLaufbahnplanungenSchueler().isEmpty()) {
-			final RepGostLaufbahnplanungSchueler ersteLaufbahnplanung = htmlContextLaufbahnplanung.getGostLaufbahnplanungenSchueler().get(0);
-			if (htmlContextLaufbahnplanung.getGostLaufbahnplanungenSchueler().size() == 1) {
+		if (!htmlContextSchueler.getSchueler().isEmpty()) {
+			final ProxyReportingSchueler ersteLaufbahnplanung = htmlContextSchueler.getSchueler().getFirst();
+			if (htmlContextSchueler.getSchueler().size() == 1) {
 				pdfDateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
-						ersteLaufbahnplanung.abiturjahr,
-						ersteLaufbahnplanung.beratungsGOStHalbjahr.replace(".", ""),
-						ersteLaufbahnplanung.nachname.replace(' ', '_').replace('.', '_'),
-						ersteLaufbahnplanung.vorname.replace(' ', '_').replace('.', '_'),
-						ersteLaufbahnplanung.id);
+						ersteLaufbahnplanung.gostLaufbahnplanung().abiturjahr(),
+						ersteLaufbahnplanung.gostLaufbahnplanung().folgeGOStHalbjahr().replace(".", ""),
+						ersteLaufbahnplanung.nachname().replace(' ', '_').replace('.', '_'),
+						ersteLaufbahnplanung.vorname().replace(' ', '_').replace('.', '_'),
+						ersteLaufbahnplanung.id());
 			} else {
-				pdfDateiname = "Laufbahnplanung_%d_%s.pdf".formatted(ersteLaufbahnplanung.abiturjahr, ersteLaufbahnplanung.beratungsGOStHalbjahr.replace('.', '_'));
+				pdfDateiname = "Laufbahnplanung_%d_%s.pdf".formatted(ersteLaufbahnplanung.gostLaufbahnplanung().abiturjahr(), ersteLaufbahnplanung.gostLaufbahnplanung().folgeGOStHalbjahr().replace('.', '_'));
 			}
 		}
 

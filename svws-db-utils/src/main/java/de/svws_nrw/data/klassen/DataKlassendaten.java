@@ -193,6 +193,23 @@ public final class DataKlassendaten extends DataManager<Long> {
 		return getFromIDInternal(id, Collections.emptyList());
 	}
 
+
+	/**
+	 * Gibt eine Liste von Klassen zu einer SchuljahresabschnittsID zurück.
+	 * @param id			Die ID des Schuljahresabschnitts.
+	 * @return				Die Daten der Klasse zum Schuljahresabschnitt.
+	 */
+	public List<KlassenDaten> getFromSchuljahresabschnittsIDOhneSchueler(final Long id) throws WebApplicationException {
+		if (id == null)
+			throw OperationError.NOT_FOUND.exception("Keine ID für den Schuljahresabschnitt übergeben.");
+		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", id, DTOKlassen.class);
+		if (klassen == null)
+			throw OperationError.NOT_FOUND.exception("Keine Klasse zur SchuljahresabschnittsID " + id + " gefunden.");
+
+		return klassen.stream().map(k -> getFromIDOhneSchueler(k.ID)).toList();
+	}
+
+
 	private static final Map<String, DataBasicMapper<DTOKlassen>> patchMappings = Map.ofEntries(
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);

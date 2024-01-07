@@ -1,9 +1,5 @@
 package de.svws_nrw.data.kataloge;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.function.Function;
-
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
@@ -12,6 +8,10 @@ import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -44,12 +44,20 @@ public final class DataOrte extends DataManager<Long> {
 		return daten;
 	};
 
+	/**
+	 * Liest die Orte aus der Datenbank aus und gibt sie als Katalog zurück
+	 * @return Liste der Orte als Katalog.
+	 */
+	public List<OrtKatalogEintrag> getOrte() {
+		final List<DTOOrt> katalog = conn.queryAll(DTOOrt.class);
+		if (katalog == null)
+			throw OperationError.NOT_FOUND.exception("Keine Orte gefunden.");
+		return katalog.stream().map(dtoMapper).toList();
+	}
+
 	@Override
 	public Response getAll() {
-		final List<DTOOrt> katalog = conn.queryAll(DTOOrt.class);
-    	if (katalog == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final List<OrtKatalogEintrag> daten = katalog.stream().map(dtoMapper).toList();
+    	final List<OrtKatalogEintrag> daten = this.getOrte();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
