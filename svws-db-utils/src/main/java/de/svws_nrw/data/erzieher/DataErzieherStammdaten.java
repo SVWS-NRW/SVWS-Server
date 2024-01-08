@@ -258,7 +258,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	    		ortsteilIDNeu = null;
 	    	}
 		}
-		erzieher.ErzOrt_ID = ortsteilIDNeu;
+		erzieher.ErzOrtsteil_ID = ortsteilIDNeu;
     }
 
 
