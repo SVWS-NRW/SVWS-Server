@@ -6,11 +6,11 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-select title="Status" :model-value="SchuelerStatus.fromID(data.status)" @update:model-value="status => patch({ status: status?.id })" :items="SchuelerStatus.values()" :item-text="i => i.bezeichnung" statistics />
 			<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.id"
-				title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" />
+				title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" removable />
 			<div v-else />
-			<svws-ui-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" />
-			<svws-ui-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i => i.text ?? ''" />
-			<svws-ui-text-input placeholder="Anmeldedatum" :model-value="data.anmeldedatum" @change="anmeldedatum => patch({anmeldedatum})" type="date" />
+			<svws-ui-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" removable />
+			<svws-ui-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i => i.text ?? ''" removable />
+			<svws-ui-text-input placeholder="Anmeldedatum" :model-value="data.anmeldedatum" @change="d => patch({ anmeldedatum : d ?? null })" type="date" removable />
 			<svws-ui-text-input placeholder="Aufnahmedatum" :model-value="data.aufnahmedatum" @change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">

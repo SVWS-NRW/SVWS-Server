@@ -329,7 +329,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 					schueler.Haltestelle_ID = hid;
 				}
 			}),
-			Map.entry("anmeldedatum", (conn, schueler, value, map) -> schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false, null)),
+			Map.entry("anmeldedatum", (conn, schueler, value, map) -> schueler.AnmeldeDatum = JSONMapper.convertToString(value, true, false, null)),
 			Map.entry("aufnahmedatum", (conn, schueler, value, map) -> {
 				final String aufnahmedatum = JSONMapper.convertToString(value, true, true, null);
 				schueler.Aufnahmedatum = "".equals(aufnahmedatum) ? null : aufnahmedatum;

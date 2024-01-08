@@ -7,7 +7,7 @@
 			<svws-ui-select v-model="staatsangehoerigkeit" title="1. Staatsangehörigkeit" autocomplete
 				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics />
-			<svws-ui-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit" autocomplete
+			<svws-ui-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit" autocomplete removable
 				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<svws-ui-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required class="col-span-full" statistics />
@@ -38,9 +38,9 @@
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
-	const staatsangehoerigkeit2: WritableComputedRef<Nationalitaeten> = computed({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID) || Nationalitaeten.DEU,
-		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value.daten.iso3 })
+	const staatsangehoerigkeit2 = computed<Nationalitaeten | null>({
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID),
+		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.daten.iso3 ?? null })
 	});
 
 	const religion: WritableComputedRef<ReligionEintrag | undefined> = computed({

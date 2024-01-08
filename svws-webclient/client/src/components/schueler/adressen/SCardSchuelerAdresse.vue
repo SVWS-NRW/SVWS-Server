@@ -19,11 +19,11 @@
 			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email}, props.betriebsStammdaten.id)" type="email" verify-email />
 			<svws-ui-spacing />
-			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" removable />
 			<div class="flex gap-1 h-min items-center">
 				<div class="flex-grow">
 					<svws-ui-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
-						:items="getAnsprechpartnervonBetrieb()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
+						:items="getAnsprechpartnervonBetrieb()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" removable />
 					<span v-else class="opacity-50">Kein Ansprechpartner</span>
 				</div>
 				<s-schueler-adresse-modal-ansprechpartner v-if="ansprechpartner !== undefined" :ansprechpartner="ansprechpartner" :patch-ansprechpartner="patchAnsprechpartner" />

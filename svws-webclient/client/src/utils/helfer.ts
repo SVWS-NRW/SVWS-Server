@@ -52,13 +52,8 @@ export const orte_filter = (items: OrtKatalogEintrag[], search: string): OrtKata
 export const staatsangehoerigkeitKatalogEintragFilter = (items: Iterable<Nationalitaeten>, search: string) => {
 	const list = [];
 	for (const i of items)
-		if (
-			i.daten.staatsangehoerigkeit
-				.toLocaleLowerCase()
-				.includes(search.toLocaleLowerCase()) ||
-			i.daten.iso3
-				.toLocaleLowerCase()
-				.includes(search.toLocaleLowerCase()))
+		if (i.daten.staatsangehoerigkeit.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 			list.push(i);
 	return list;
 };
