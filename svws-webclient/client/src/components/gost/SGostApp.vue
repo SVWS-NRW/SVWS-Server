@@ -38,13 +38,15 @@
 </script>
 
 <style lang="postcss">
-.page--wrapper {
-	@apply flex flex-col;
-}
 
-.router--tab--gost\.kursplanung {
-	.svws-ui-tab-content {
-		@apply h-full overflow-hidden;
+	.page--wrapper {
+		@apply flex flex-col;
 	}
-}
+
+	.router--tab--gost\.kursplanung {
+		.svws-ui-tab-content {
+			@apply h-full overflow-hidden;
+		}
+	}
+
 </style>

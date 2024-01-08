@@ -81,7 +81,9 @@
 		</div>
 	</aside>
 </template>
+
 <script setup lang="ts">
+
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
 	import type { StundenplanPausenzeit, StundenplanZeitraster} from "@core";
 	import { Wochentag } from "@core";

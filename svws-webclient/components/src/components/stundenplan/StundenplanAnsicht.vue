@@ -408,7 +408,7 @@
 <style lang="postcss">
 
 	.svws-ui-stundenplan {
-		@apply flex flex-col h-full min-w-max flex-grow;
+		@apply flex flex-col h-full min-w-max flex-grow overflow-y-scroll overflow-x-hidden pr-4;
 		--zeitrasterRows: 0;
 	}
 

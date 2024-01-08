@@ -1,5 +1,5 @@
 <template>
-	<div v-if="auswahl !== undefined" class="page--flex">
+	<template v-if="auswahl !== undefined">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -18,7 +18,7 @@
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
-	</div>
+	</template>
 	<div v-else class="app--content--placeholder">
 		<i-ri-calendar-event-line />
 	</div>
@@ -50,3 +50,15 @@
 	}
 
 </script>
+
+<style lang="postcss">
+
+	.page--wrapper {
+		@apply flex flex-col h-full;
+	}
+
+	.svws-ui-tab-content {
+		@apply h-full overflow-hidden;
+	}
+
+</style>

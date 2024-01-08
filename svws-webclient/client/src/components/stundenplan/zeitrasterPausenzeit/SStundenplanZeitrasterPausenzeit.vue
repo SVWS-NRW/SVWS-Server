@@ -24,8 +24,12 @@
 </script>
 
 <style lang="postcss" scoped>
-.page--content {
-  @apply grid;
-  grid-template-columns: 2fr minmax(20rem, 0.5fr);
-}
+
+	.page--content {
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
+		grid-auto-rows: 100%;
+		grid-template-columns: 2fr minmax(20rem, 0.5fr);
+		grid-auto-columns: max-content;
+	}
+
 </style>
