@@ -70,14 +70,13 @@
 								</ul>
 							</template>
 						</svws-ui-tooltip>
-						<span v-if="schuelerFilter().filtered.value.length > 0">{{ schuelerFilter().filtered.value.length }} {{ weitere }}</span>
+						<span v-if="schuelerFilter().filtered.value.length > 0" class="pl-8">{{ schuelerFilter().filtered.value.length }} {{ weitere }}</span>
 						<span>Schüler</span>
 					</div>
 				</div>
 			</template>
 			<template #body>
-				<div role="row" class="svws-ui-tr" :class="{'svws-clicked': selected === s}"
-					v-for="(s, index) in schuelerFilter().filtered.value" @click="selected = s" :key="index">
+				<div v-for="(s, index) in schuelerFilter().filtered.value" role="row" class="svws-ui-tr" :class="{'svws-clicked': selected === s}" @click="selected = s" :key="index">
 					<div role="cell" class="svws-ui-td svws-align-center pr-0">
 						<div class="leading-none w-5 -mb-1" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
 							<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
@@ -107,11 +106,15 @@
 							</svws-ui-tooltip>
 						</div>
 					</div>
+					<div v-if="fach === undefined && schuelerFilter().kurs === undefined" role="cell" class="svws-ui-td svws-align-center">
+						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id)" class="w-5 -my-0.5" />
+					</div>
+					<div v-else role="cell" class="svws-ui-td svws-align-center">
+						<i-ri-pushpin-fill v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value || fixierRegelFach(fach?.id, s.id).value" class="w-5 -my-0.5" />
+					</div>
 					<div role="cell" class="svws-ui-td">
 						<div class="flex flex-col">
-							<span>
-								{{ `${s.nachname}, ${s.vorname}` }}
-							</span>
+							{{ `${s.nachname}, ${s.vorname}` }}
 							<template v-if="s.status !== 2">
 								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }})</span>
 							</template>
@@ -123,7 +126,7 @@
 					<div v-if="istSchriftlich(s.id)" role="cell" class="svws-ui-td svws-align-center">
 						<span>
 							<i-ri-draft-line v-if="istSchriftlich(s.id) === 's'" class="w-5 -my-0.5" />
-							<i-ri-chat1-line v-if="istSchriftlich(s.id) === 'm'" class="w-5 -my-0.5 opacity-75" />
+							<i-ri-chat1-line v-else class="w-5 -my-0.5 opacity-75" />
 						</span>
 					</div>
 				</div>
@@ -163,7 +166,7 @@
 	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
-	import { GostKursart, SchuelerStatus } from "@core";
+	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -216,25 +219,49 @@
 			if (fachId !== undefined)
 				return props.getErgebnismanager().getParent()?.schuelerGetOfFachFachwahl(id, fachId).istSchriftlich ? 's':'m';
 		}
-		return '';
+		return undefined;
 	}
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
 			{key: 'status', label: '  ', fixedWidth: 1.75},
+			{key: 'fixiert', label: 'F', tooltip: "Kursfixierung", fixedWidth: 2, align: "center"},
 			{key: 'schuelerAuswahl', label: 'Schüler', span: 1},
 		];
-
-		if (showGeschlecht.value) {
+		if (showGeschlecht.value)
 			cols.push({key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center"});
-		}
-
-		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined) {
+		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined)
 			cols.push({key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center"});
-		}
-
 		return cols;
 	}
+
+	const fixierRegeln = computed(()=>{
+		const regeln = props.getDatenmanager().regelGetListe();
+		const map = new Map<number, Set<number>>();
+		for (const r of regeln)
+			if (r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				const entry = map.get(r.parameter.get(0))
+				if (entry !== undefined)
+					entry.add(r.parameter.get(1));
+				else
+					map.set(r.parameter.get(0), new Set([r.parameter.get(1)]));
+			}
+		return map;
+	})
+
+	const fixierRegelKurs = (idKurs: number | undefined, idSchueler: number) => computed<boolean>(() => {
+		return (idKurs && props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
+	});
+
+	const fixierRegelFach = (idFach: number | undefined, idSchueler: number) => computed<boolean>(() => {
+		if (idFach === undefined)
+			return false
+		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach);
+		let idKurs = kurs?.id;
+		if (idKurs === undefined)
+			return false;
+		return (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
+	});
 
 	const cols = computed(() => calculateColumns());
 
