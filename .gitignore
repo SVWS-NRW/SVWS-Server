@@ -444,3 +444,5 @@ svws-db-utils/create_db.sh
 
 # Nach Änderungen an der Verzeichnisstruktur:
 svws-webclient/src
+svws-module-pdf
+
