@@ -81,13 +81,29 @@
 					<div role="cell" class="svws-ui-td svws-align-center pr-0">
 						<div class="leading-none w-5 -mb-1" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
 							<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
-								<i-ri-alert-line /> <template #content> Kollision </template>
+								<i-ri-alert-line />
+								<template #content>
+									Kollisionen:
+									<ul>
+										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+									</ul>
+								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
 								<i-ri-spam-3-line class="opacity-75" /> <template #content> Nichtverteilt </template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
-								<i-ri-error-warning-fill /> <template #content> Kollision und Nichtverteilt </template>
+								<i-ri-error-warning-fill /> <template #content>
+									<b>Kollision und Nichtverteilt:</b>
+									<br>Kollisionen:
+									<ul>
+										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+									</ul>
+									Nichtverteilt:
+									<ul>
+										<li> -- TODO -- </li>
+									</ul>
+								</template>
 							</svws-ui-tooltip>
 						</div>
 					</div>
@@ -144,7 +160,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { GostKursart, SchuelerStatus } from "@core";
