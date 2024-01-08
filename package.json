@@ -51,7 +51,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@floating-ui/vue": "^1.0.0",
+		"@floating-ui/vue": "1.0.2",
 		"@headlessui/vue": "^1.7.7",
 		"@vueuse/core": "^10.0.2",
 		"vue-router": "^4.2.4"
