@@ -178,15 +178,15 @@ public class SchuelerStammdaten {
 
 	/** Gibt an, ob der Schüler volljährig ist oder nicht. */
 	@Schema(description = "gibt an, ob der Schüler volljährig ist oder nicht", example = "true")
-	public Boolean istVolljaehrig;
+	public boolean istVolljaehrig;
 
 	/** Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht. */
 	@Schema(description = "gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht", example = "true")
-	public Boolean istSchulpflichtErfuellt;
+	public boolean istSchulpflichtErfuellt;
 
 	/** Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht. */
 	@Schema(description = "gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht", example = "true")
-	public Boolean istBerufsschulpflichtErfuellt;
+	public boolean istBerufsschulpflichtErfuellt;
 
 	/** Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat. */
 	@Schema(description = "gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat", example = "true")

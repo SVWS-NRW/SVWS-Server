@@ -14,12 +14,12 @@
 			<svws-ui-text-input placeholder="Aufnahmedatum" :model-value="data.aufnahmedatum" @change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-				<svws-ui-checkbox :model-value="data.istVolljaehrig === true" @update:model-value="istVolljaehrig => patch({istVolljaehrig})"> Volljährig </svws-ui-checkbox>
-				<svws-ui-checkbox :model-value="data.keineAuskunftAnDritte" @update:model-value="keineAuskunftAnDritte=>patch({keineAuskunftAnDritte})"> Keine Auskunft an Dritte </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.istVolljaehrig === true" @update:model-value="istVolljaehrig => patch({ istVolljaehrig })"> Volljährig </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.keineAuskunftAnDritte" @update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })"> Keine Auskunft an Dritte </svws-ui-checkbox>
 				<svws-ui-checkbox :model-value="data.istSchulpflichtErfuellt === true" readonly> Schulpflicht erfüllt </svws-ui-checkbox>
-				<svws-ui-checkbox :model-value="data.istBerufsschulpflichtErfuellt === true" @update:model-value="istBerufsschulpflichtErfuellt => patch({istBerufsschulpflichtErfuellt})"> Schulpflicht SII erfüllt </svws-ui-checkbox>
-				<svws-ui-checkbox :model-value="data.hatMasernimpfnachweis" @update:model-value="hatMasernimpfnachweis=>patch({hatMasernimpfnachweis})"> Masern Impfnachweis </svws-ui-checkbox>
-				<svws-ui-checkbox :model-value="data.erhaeltSchuelerBAFOEG" @update:model-value="erhaeltSchuelerBAFOEG=>patch({erhaeltSchuelerBAFOEG})">BAFöG</svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.istBerufsschulpflichtErfuellt === true" @update:model-value="istBerufsschulpflichtErfuellt => patch({ istBerufsschulpflichtErfuellt })"> Schulpflicht SII erfüllt </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.hatMasernimpfnachweis" @update:model-value="hatMasernimpfnachweis => patch({ hatMasernimpfnachweis })"> Masern Impfnachweis </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.erhaeltSchuelerBAFOEG" @update:model-value="erhaeltSchuelerBAFOEG => patch({ erhaeltSchuelerBAFOEG })">BAFöG</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>

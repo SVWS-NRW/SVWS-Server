@@ -95,10 +95,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.haltestelleID = schueler.Haltestelle_ID;
 		daten.anmeldedatum = schueler.AnmeldeDatum;
 		daten.aufnahmedatum = schueler.Aufnahmedatum;
-		daten.istVolljaehrig = schueler.Volljaehrig; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istVolljaehrig = schueler.Volljaehrig != null && schueler.Volljaehrig; // TODO ermittle die Information aus den anderen Schülerdaten
 		daten.keineAuskunftAnDritte = schueler.KeineAuskunft;
-		daten.istSchulpflichtErfuellt = schueler.SchulpflichtErf; // TODO ermittle die Information aus den anderen Schülerdaten
-		daten.istBerufsschulpflichtErfuellt = schueler.BerufsschulpflErf; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istSchulpflichtErfuellt = schueler.SchulpflichtErf != null && schueler.SchulpflichtErf; // TODO ermittle die Information aus den anderen Schülerdaten
+		daten.istBerufsschulpflichtErfuellt = schueler.BerufsschulpflErf != null && schueler.BerufsschulpflErf; // TODO ermittle die Information aus den anderen Schülerdaten
 		daten.hatMasernimpfnachweis = schueler.MasernImpfnachweis;
 		daten.erhaeltSchuelerBAFOEG = schueler.Bafoeg;
 		daten.erhaeltMeisterBAFOEG = schueler.MeisterBafoeg;

@@ -190,17 +190,17 @@ export class SchuelerStammdaten extends JavaObject {
 	/**
 	 * Gibt an, ob der Schüler volljährig ist oder nicht.
 	 */
-	public istVolljaehrig : boolean | null = null;
+	public istVolljaehrig : boolean = false;
 
 	/**
 	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
 	 */
-	public istSchulpflichtErfuellt : boolean | null = null;
+	public istSchulpflichtErfuellt : boolean = false;
 
 	/**
 	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht.
 	 */
-	public istBerufsschulpflichtErfuellt : boolean | null = null;
+	public istBerufsschulpflichtErfuellt : boolean = false;
 
 	/**
 	 * Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat.
@@ -298,9 +298,15 @@ export class SchuelerStammdaten extends JavaObject {
 		result.haltestelleID = typeof obj.haltestelleID === "undefined" ? null : obj.haltestelleID === null ? null : obj.haltestelleID;
 		result.anmeldedatum = typeof obj.anmeldedatum === "undefined" ? null : obj.anmeldedatum === null ? null : obj.anmeldedatum;
 		result.aufnahmedatum = typeof obj.aufnahmedatum === "undefined" ? null : obj.aufnahmedatum === null ? null : obj.aufnahmedatum;
-		result.istVolljaehrig = typeof obj.istVolljaehrig === "undefined" ? null : obj.istVolljaehrig === null ? null : obj.istVolljaehrig;
-		result.istSchulpflichtErfuellt = typeof obj.istSchulpflichtErfuellt === "undefined" ? null : obj.istSchulpflichtErfuellt === null ? null : obj.istSchulpflichtErfuellt;
-		result.istBerufsschulpflichtErfuellt = typeof obj.istBerufsschulpflichtErfuellt === "undefined" ? null : obj.istBerufsschulpflichtErfuellt === null ? null : obj.istBerufsschulpflichtErfuellt;
+		if (typeof obj.istVolljaehrig === "undefined")
+			 throw new Error('invalid json format, missing attribute istVolljaehrig');
+		result.istVolljaehrig = obj.istVolljaehrig;
+		if (typeof obj.istSchulpflichtErfuellt === "undefined")
+			 throw new Error('invalid json format, missing attribute istSchulpflichtErfuellt');
+		result.istSchulpflichtErfuellt = obj.istSchulpflichtErfuellt;
+		if (typeof obj.istBerufsschulpflichtErfuellt === "undefined")
+			 throw new Error('invalid json format, missing attribute istBerufsschulpflichtErfuellt');
+		result.istBerufsschulpflichtErfuellt = obj.istBerufsschulpflichtErfuellt;
 		if (typeof obj.hatMasernimpfnachweis === "undefined")
 			 throw new Error('invalid json format, missing attribute hatMasernimpfnachweis');
 		result.hatMasernimpfnachweis = obj.hatMasernimpfnachweis;
@@ -356,9 +362,9 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"haltestelleID" : ' + ((!obj.haltestelleID) ? 'null' : obj.haltestelleID) + ',';
 		result += '"anmeldedatum" : ' + ((!obj.anmeldedatum) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
 		result += '"aufnahmedatum" : ' + ((!obj.aufnahmedatum) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
-		result += '"istVolljaehrig" : ' + ((!obj.istVolljaehrig) ? 'null' : obj.istVolljaehrig) + ',';
-		result += '"istSchulpflichtErfuellt" : ' + ((!obj.istSchulpflichtErfuellt) ? 'null' : obj.istSchulpflichtErfuellt) + ',';
-		result += '"istBerufsschulpflichtErfuellt" : ' + ((!obj.istBerufsschulpflichtErfuellt) ? 'null' : obj.istBerufsschulpflichtErfuellt) + ',';
+		result += '"istVolljaehrig" : ' + obj.istVolljaehrig + ',';
+		result += '"istSchulpflichtErfuellt" : ' + obj.istSchulpflichtErfuellt + ',';
+		result += '"istBerufsschulpflichtErfuellt" : ' + obj.istBerufsschulpflichtErfuellt + ',';
 		result += '"hatMasernimpfnachweis" : ' + obj.hatMasernimpfnachweis + ',';
 		result += '"keineAuskunftAnDritte" : ' + obj.keineAuskunftAnDritte + ',';
 		result += '"erhaeltSchuelerBAFOEG" : ' + obj.erhaeltSchuelerBAFOEG + ',';
@@ -483,13 +489,13 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"aufnahmedatum" : ' + ((!obj.aufnahmedatum) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
 		}
 		if (typeof obj.istVolljaehrig !== "undefined") {
-			result += '"istVolljaehrig" : ' + ((!obj.istVolljaehrig) ? 'null' : obj.istVolljaehrig) + ',';
+			result += '"istVolljaehrig" : ' + obj.istVolljaehrig + ',';
 		}
 		if (typeof obj.istSchulpflichtErfuellt !== "undefined") {
-			result += '"istSchulpflichtErfuellt" : ' + ((!obj.istSchulpflichtErfuellt) ? 'null' : obj.istSchulpflichtErfuellt) + ',';
+			result += '"istSchulpflichtErfuellt" : ' + obj.istSchulpflichtErfuellt + ',';
 		}
 		if (typeof obj.istBerufsschulpflichtErfuellt !== "undefined") {
-			result += '"istBerufsschulpflichtErfuellt" : ' + ((!obj.istBerufsschulpflichtErfuellt) ? 'null' : obj.istBerufsschulpflichtErfuellt) + ',';
+			result += '"istBerufsschulpflichtErfuellt" : ' + obj.istBerufsschulpflichtErfuellt + ',';
 		}
 		if (typeof obj.hatMasernimpfnachweis !== "undefined") {
 			result += '"hatMasernimpfnachweis" : ' + obj.hatMasernimpfnachweis + ',';
