@@ -10,10 +10,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Daten eines Benutzer eines Schülers mit der angegebenen ID.
+ * Sie beschreibt die Daten einer Benutzergruppe mit der angegebenen ID.
  */
 @XmlRootElement
-@Schema(description = "Die Stammdaten eines Schüler-Eintrags.")
+@Schema(description = "Die Daten einer Benutzergruppe.")
 @TranspilerDTO
 public class BenutzergruppeDaten {
 

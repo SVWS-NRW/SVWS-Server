@@ -13,7 +13,7 @@
 		<div>
 			<s-card-benutzer-kompetenzen :get-benutzer-manager="getBenutzerManager"
 				:set-ist-admin="setIstAdmin" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
-				:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
+				:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
 				:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
 		</div>
 	</div>

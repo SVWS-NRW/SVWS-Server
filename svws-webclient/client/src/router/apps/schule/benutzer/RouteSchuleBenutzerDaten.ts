@@ -37,7 +37,6 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 			removeKompetenz : routeSchuleBenutzer.data.removeKompetenz,
 			addBenutzerKompetenzGruppe : routeSchuleBenutzer.data.addBenutzerKompetenzGruppe,
 			removeBenutzerKompetenzGruppe : routeSchuleBenutzer.data.removeBenutzerKompetenzGruppe,
-			getGruppen4Kompetenz : routeSchuleBenutzer.data.getGruppen4Kompetenz,
 			gotoBenutzergruppe: routeSchuleBenutzer.data.gotoBenutzergruppe,
 			benutzerKompetenzen: routeSchule.benutzerKompetenzen
 		};

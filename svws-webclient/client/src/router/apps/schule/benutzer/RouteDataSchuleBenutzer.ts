@@ -450,25 +450,4 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 			this.commit();
 	}
 
-	/**
-	 * Liefert zur einer Kompetenz die Gruppenzugehörigkeiten
-	 *
-	 * @kompetenz die Kompetenz
-	 */
-	getGruppen4Kompetenz = (kompetenz : BenutzerKompetenz) : string => {
-		if (this.benutzerManager === undefined)
-			return "";
-		let text = "";
-		let i = 0;
-		if (this.benutzerManager.getGruppen(kompetenz)) {
-			for (const bg of this.benutzerManager.getGruppen(kompetenz)) {
-				if (i !== 0)
-					text += ", ";
-				text += bg.bezeichnung;
-				i = -2;
-			}
-		}
-		return text;
-	}
-
 }

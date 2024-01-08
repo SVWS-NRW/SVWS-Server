@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -28,12 +30,11 @@ public class BenutzerManager {
     /** Die Ids der Benutzergruppen des Benutzers */
     private final @NotNull HashSet<@NotNull Long> _setGruppenIDs = new HashSet<>();
 
-    /**
-     * Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle
-     * Benutzer-Gruppen beinhaltet, von denen
-     * der Benutzer die Kompetenz erhalten hat.
-     */
+    /** Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle Benutzer-Gruppen beinhaltet, von denen der Benutzer die Kompetenz erhalten hat. */
     private final @NotNull Map<@NotNull BenutzerKompetenz, @NotNull ArrayList<@NotNull BenutzergruppeDaten>> _mapKompetenzenVonGruppe = new ArrayMap<>(BenutzerKompetenz.values());
+
+    /** Eine Map, welche zu einer Kompetenzgruppe eine Menge zuordnet, welche alle IDs von Benutzer-Gruppen beinhaltet, von denen der Benutzer Komptenzen in der Kompetenzgruppe erhalten hat. */
+    private final @NotNull Map<@NotNull BenutzerKompetenzGruppe, @NotNull Set<@NotNull Long>> _mapKompetenzgruppenVonGruppe = new ArrayMap<>(BenutzerKompetenzGruppe.values());
 
     /** Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist. */
     private final @NotNull HashSet<@NotNull BenutzerKompetenz> _setKompetenzen = new HashSet<>();
@@ -104,33 +105,45 @@ public class BenutzerManager {
             if (gruppen == null)
                 throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.");
             gruppen.add(bgd);
+            // Speichere über welche Benutzergruppe eine Kompetenz der Kompetenzgruppe zugeordnet wurde.
+            final Set<@NotNull Long> benutzergruppen = _mapKompetenzgruppenVonGruppe.get(BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id));
+            if (benutzergruppen == null)
+            	throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.");
+            benutzergruppen.add(bgd.id);
          }
     }
 
 
-    /**
-     * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
-     *
-     * @param bgd die Benutzergruppendaten
-     */
-    private void removeGruppe(final BenutzergruppeDaten bgd) {
-    	if (bgd == null)
-    		return;
-    	_mapGruppen.remove(bgd.id);
-    	_setGruppenIDs.remove(bgd.id);
-    	 for (final @NotNull Long kid : bgd.kompetenzen) {
-            final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
-    		if (komp != null) {
-    		    final ArrayList<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
-    		    if (gruppen == null)
-                    throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.");
-		        for (int i = gruppen.size() - 1; i >= 0; i--)
-		            if (gruppen.get(i).id == bgd.id)
-		                gruppen.remove(gruppen.get(i));
-		        if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
-		            this._setKompetenzenAlle.remove(komp);
-    		}
-    	 }
+	/**
+	 * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
+	 *
+	 * @param bgd die Benutzergruppendaten
+	 */
+	private void removeGruppe(final BenutzergruppeDaten bgd) {
+		if (bgd == null)
+			return;
+		_mapGruppen.remove(bgd.id);
+		_setGruppenIDs.remove(bgd.id);
+		for (final @NotNull Long kid : bgd.kompetenzen) {
+			final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
+			if (komp != null) {
+				final ArrayList<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
+				if (gruppen == null)
+					throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.");
+				for (int i = gruppen.size() - 1; i >= 0; i--)
+					if (gruppen.get(i).id == bgd.id)
+						gruppen.remove(gruppen.get(i));
+				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
+					this._setKompetenzenAlle.remove(komp);
+				final BenutzerKompetenzGruppe komptenenzgruppe = BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id);
+				if (komptenenzgruppe != null) {
+					final Set<@NotNull Long> benutzergruppen = _mapKompetenzgruppenVonGruppe.get(komptenenzgruppe);
+					if (benutzergruppen == null)
+						throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.");
+					benutzergruppen.remove(bgd.id);
+				}
+			}
+		}
 	}
 
     /**
@@ -150,9 +163,11 @@ public class BenutzerManager {
      * Initialisiert die lokalen Datenstrukturen.
      */
     private void init() {
-    	// Erzeuge leere Vektoren für einzelnen Komptenzen
+    	// Erzeuge leere Vektoren für einzelnen Komptenzen bzw. Kompetenzgruppen
     	for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
     		_mapKompetenzenVonGruppe.put(p, new ArrayList<>());
+    	for (final @NotNull BenutzerKompetenzGruppe p : BenutzerKompetenzGruppe.values())
+    		_mapKompetenzgruppenVonGruppe.put(p, new HashSet<@NotNull Long>());
     }
 
     /**
@@ -160,7 +175,7 @@ public class BenutzerManager {
      * Benutzergruppen-Daten
      * zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
      *
-     * @param kompetenz die Benutzerkompetenz
+     * @param kompetenz   die Benutzerkompetenz
      *
      * @return die Liste der Benutzergruppen-Daten
      */
@@ -170,6 +185,69 @@ public class BenutzerManager {
             throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.");
         return gruppen;
     }
+
+
+    /**
+     * Gibt für die übergebene Benutzerkompetenz einen String mit einer komma-separierten Liste der
+     * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
+     *
+     * @param kompetenz   die Benutzerkompetenz
+     *
+     * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
+     */
+    public @NotNull String getBenutzerGruppenString(final @NotNull BenutzerKompetenz kompetenz) {
+    	final @NotNull List<@NotNull BenutzergruppeDaten> gruppen = this.getGruppen(kompetenz);
+		final @NotNull StringBuilder sb = new StringBuilder("");
+    	for (final @NotNull BenutzergruppeDaten gruppe : gruppen) {
+    		if (!sb.isEmpty())
+    			sb.append(", ");
+    		sb.append(gruppe.bezeichnung);
+    	}
+    	return sb.toString();
+    }
+
+
+    /**
+     * Gibt für die übergebene Benutzerkompetenzgruppe eine Liste der
+     * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenzgruppe zu geordnet haben.
+     *
+     * @param kompetenzgruppe   die Benutzerkompetenzgruppe
+     *
+     * @return die Liste der Benutzergruppen-Daten
+     */
+    public @NotNull List<@NotNull BenutzergruppeDaten> getBenutzergruppen(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
+        final Set<@NotNull Long> benutzergruppen = _mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
+        if (benutzergruppen == null)
+            throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.");
+        final @NotNull List<@NotNull BenutzergruppeDaten> result = new ArrayList<>();
+        for (final long idGruppe : benutzergruppen) {
+        	final BenutzergruppeDaten daten = this._mapGruppen.get(idGruppe);
+        	if (daten != null)
+        		result.add(daten);
+        }
+        return result;
+    }
+
+
+    /**
+     * Gibt für die übergebene Benutzerkompetenzgruppe einen String mit einer komma-separierten Liste der
+     * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenzgruppe zu geordnet haben.
+     *
+     * @param kompetenzgruppe   die Benutzerkompetenzgruppe
+     *
+     * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
+     */
+    public @NotNull String getBenutzerGruppenStringForKompetenzgruppe(final @NotNull BenutzerKompetenzGruppe kompetenzgruppe) {
+    	final @NotNull List<@NotNull BenutzergruppeDaten> gruppen = this.getBenutzergruppen(kompetenzgruppe);
+		final @NotNull StringBuilder sb = new StringBuilder("");
+    	for (final @NotNull BenutzergruppeDaten gruppe : gruppen) {
+    		if (!sb.isEmpty())
+    			sb.append(", ");
+    		sb.append(gruppe.bezeichnung);
+    	}
+    	return sb.toString();
+    }
+
 
     /**
      * Gibt die Benutzer-Daten zurück.

@@ -1,4 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
@@ -7,6 +9,7 @@ import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompeten
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import type { List } from '../../../java/util/List';
+import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
@@ -29,11 +32,14 @@ export class BenutzerManager extends JavaObject {
 	private readonly _setGruppenIDs : HashSet<number> = new HashSet();
 
 	/**
-	 *  Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle
-	 *  Benutzer-Gruppen beinhaltet, von denen
-	 *  der Benutzer die Kompetenz erhalten hat.
+	 * Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle Benutzer-Gruppen beinhaltet, von denen der Benutzer die Kompetenz erhalten hat.
 	 */
 	private readonly _mapKompetenzenVonGruppe : JavaMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new ArrayMap(BenutzerKompetenz.values());
+
+	/**
+	 * Eine Map, welche zu einer Kompetenzgruppe eine Menge zuordnet, welche alle IDs von Benutzer-Gruppen beinhaltet, von denen der Benutzer Komptenzen in der Kompetenzgruppe erhalten hat.
+	 */
+	private readonly _mapKompetenzgruppenVonGruppe : JavaMap<BenutzerKompetenzGruppe, JavaSet<number>> = new ArrayMap(BenutzerKompetenzGruppe.values());
 
 	/**
 	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist.
@@ -111,6 +117,10 @@ export class BenutzerManager extends JavaObject {
 			if (gruppen === null)
 				throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
 			gruppen.add(bgd);
+			const benutzergruppen : JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id));
+			if (benutzergruppen === null)
+				throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+			benutzergruppen.add(bgd.id);
 		}
 	}
 
@@ -135,6 +145,13 @@ export class BenutzerManager extends JavaObject {
 						gruppen.remove(gruppen.get(i));
 				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
 					this._setKompetenzenAlle.remove(komp);
+				const komptenenzgruppe : BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id);
+				if (komptenenzgruppe !== null) {
+					const benutzergruppen : JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(komptenenzgruppe);
+					if (benutzergruppen === null)
+						throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+					benutzergruppen.remove(bgd.id);
+				}
 			}
 		}
 	}
@@ -157,6 +174,8 @@ export class BenutzerManager extends JavaObject {
 	private init() : void {
 		for (const p of BenutzerKompetenz.values())
 			this._mapKompetenzenVonGruppe.put(p, new ArrayList());
+		for (const p of BenutzerKompetenzGruppe.values())
+			this._mapKompetenzgruppenVonGruppe.put(p, new HashSet<number>());
 	}
 
 	/**
@@ -164,7 +183,7 @@ export class BenutzerManager extends JavaObject {
 	 * Benutzergruppen-Daten
 	 * zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
 	 *
-	 * @param kompetenz die Benutzerkompetenz
+	 * @param kompetenz   die Benutzerkompetenz
 	 *
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
@@ -173,6 +192,65 @@ export class BenutzerManager extends JavaObject {
 		if (gruppen === null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.")
 		return gruppen;
+	}
+
+	/**
+	 * Gibt für die übergebene Benutzerkompetenz einen String mit einer komma-separierten Liste der
+	 * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
+	 *
+	 * @param kompetenz   die Benutzerkompetenz
+	 *
+	 * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
+	 */
+	public getBenutzerGruppenString(kompetenz : BenutzerKompetenz) : string {
+		const gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
+		const sb : StringBuilder = new StringBuilder("");
+		for (const gruppe of gruppen) {
+			if (!sb.isEmpty())
+				sb.append(", ");
+			sb.append(gruppe.bezeichnung);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Gibt für die übergebene Benutzerkompetenzgruppe eine Liste der
+	 * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenzgruppe zu geordnet haben.
+	 *
+	 * @param kompetenzgruppe   die Benutzerkompetenzgruppe
+	 *
+	 * @return die Liste der Benutzergruppen-Daten
+	 */
+	public getBenutzergruppen(kompetenzgruppe : BenutzerKompetenzGruppe) : List<BenutzergruppeDaten> {
+		const benutzergruppen : JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
+		if (benutzergruppen === null)
+			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.")
+		const result : List<BenutzergruppeDaten> = new ArrayList();
+		for (const idGruppe of benutzergruppen) {
+			const daten : BenutzergruppeDaten | null = this._mapGruppen.get(idGruppe);
+			if (daten !== null)
+				result.add(daten);
+		}
+		return result;
+	}
+
+	/**
+	 * Gibt für die übergebene Benutzerkompetenzgruppe einen String mit einer komma-separierten Liste der
+	 * Benutzergruppen-Daten zurück, welche dem Benutzer die Kompetenzgruppe zu geordnet haben.
+	 *
+	 * @param kompetenzgruppe   die Benutzerkompetenzgruppe
+	 *
+	 * @return der String mit der komma-separierten Liste der Benutzergruppen-Daten
+	 */
+	public getBenutzerGruppenStringForKompetenzgruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : string {
+		const gruppen : List<BenutzergruppeDaten> = this.getBenutzergruppen(kompetenzgruppe);
+		const sb : StringBuilder = new StringBuilder("");
+		for (const gruppe of gruppen) {
+			if (!sb.isEmpty())
+				sb.append(", ");
+			sb.append(gruppe.bezeichnung);
+		}
+		return sb.toString();
 	}
 
 	/**

@@ -4,15 +4,16 @@
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
 	</div>
-	<div class="svws-ui-td" :title="getGruppen4Kompetenz(kompetenz)" role="cell">
+	<div class="svws-ui-td" :title="getBenutzerManager().getBenutzerGruppenString(kompetenz)" role="cell">
 		<!-- TODO Die Methode in Manager auslagern. -->
 		<template v-if="!getBenutzerManager().istAdmin()">
-			<span class="line-clamp-1 break-all text-black/50 dark:text-white/50">{{ getGruppen4Kompetenz(kompetenz) }}</span>
+			<span class="line-clamp-1 break-all text-black/50 dark:text-white/50">{{ getBenutzerManager().getBenutzerGruppenString(kompetenz) }}</span>
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
+
 	import type { BenutzerKompetenz, BenutzerManager } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
@@ -22,7 +23,6 @@
 		kompetenz: BenutzerKompetenz;
 		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
-		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 	}>();
 
 	// True wenn Benutzer Admin ist oder die Kompetenz von einer Gruppe geerbt wird.
@@ -39,4 +39,5 @@
 				void props.removeKompetenz(props.kompetenz);
 		}
 	});
+
 </script>

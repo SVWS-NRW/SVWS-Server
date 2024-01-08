@@ -18,7 +18,7 @@
 		</div>
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
-				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
+				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
 			</div>
 		</template>
 	</div>
@@ -37,7 +37,6 @@
 		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
-		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 		benutzerKompetenzen : ( kompetenz : BenutzerKompetenzGruppe ) => List<BenutzerKompetenz>;
 	}>();
 
@@ -45,7 +44,12 @@
 
 	const hatSubKompetenzen = computed<number>(() => props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
-	const selectedHatAlle = computed<boolean>(() => props.getBenutzerManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
+	const selectedHatAlle = computed<boolean>(() => {
+		const kompetenzen = BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe);
+		if (kompetenzen.isEmpty())
+			return false;
+		return props.getBenutzerManager().hatKompetenzen(kompetenzen)
+	});
 	const selectedMindestensEine = computed<boolean>(() => props.getBenutzerManager().hatKompetenzenMindestensEine(props.benutzerKompetenzen(props.kompetenzgruppe)));
 	const indeterminate = computed<boolean>(() => !selectedHatAlle.value && selectedMindestensEine.value);
 
@@ -59,14 +63,15 @@
 		}
 	});
 
-	const getTopLevelGruppen4Kompetenz = computed(() => {
-		if (hatSubKompetenzen.value === 0) {
-			return props.getGruppen4Kompetenz(props.kompetenzgruppe);
-		}
-
-		const subKompetenzen = [...props.benutzerKompetenzen(props.kompetenzgruppe).toArray()];
-
-		return [...new Set(subKompetenzen.map(k => props.getGruppen4Kompetenz(k)).filter(g => g !== ''))]?.join(', ');
+	const getTopLevelGruppen4Kompetenz = computed<string>(() => {
+		if (hatSubKompetenzen.value === 0)
+			return props.getBenutzerManager().getBenutzerGruppenStringForKompetenzgruppe(props.kompetenzgruppe);
+		const subKompetenzen = props.benutzerKompetenzen(props.kompetenzgruppe).toArray() as BenutzerKompetenz[];
+		const tmp = new Set<string>();
+		for (const k of subKompetenzen)
+			for (const benutzergruppe of props.getBenutzerManager().getGruppen(k))
+				tmp.add(benutzergruppe.bezeichnung);
+		return [...tmp]?.join(', ');
 	});
 
 </script>

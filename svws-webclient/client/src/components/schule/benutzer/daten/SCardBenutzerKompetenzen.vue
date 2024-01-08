@@ -23,7 +23,7 @@
 			<template #body>
 				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
 					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
-						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
+						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
 						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
 						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
 				</template>
@@ -46,7 +46,6 @@
 		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
-		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 		benutzerKompetenzen : ( kompetenz : BenutzerKompetenzGruppe ) => List<BenutzerKompetenz>;
 	}>();
 

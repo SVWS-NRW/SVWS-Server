@@ -464,7 +464,6 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 return OperationError.NOT_FOUND.getResponse("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
         }
         try {
-            conn.transactionBegin();
             for (final Long kid : kids) {
                 // Bestimme den Datensatz aus DTOBenutzerKompetenz
                 final DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
@@ -473,13 +472,10 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 // Entferne die Kompetenz
                 conn.transactionRemove(bk);
             }
-            conn.transactionCommit();
         } catch (final Exception e) {
             if (e instanceof final WebApplicationException webApplicationException)
                 return webApplicationException.getResponse();
             return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
         }
         return Response.status(Status.OK).build();
     }
