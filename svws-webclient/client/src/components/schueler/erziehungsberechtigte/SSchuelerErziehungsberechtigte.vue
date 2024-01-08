@@ -34,7 +34,7 @@
 			</svws-ui-table>
 			<svws-ui-button class="mt-4">Person hinzufügen</svws-ui-button>
 			<template v-for="(e, i) in data" :key="i">
-				<s-card-schueler-erziehungsberechtigte :erzieher="e" @patch="patch" :map-erzieherarten="mapErzieherarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" v-if="clickedErzieher === e.id" />
+				<s-card-schueler-erziehungsberechtigte :erzieher="e" :patch="patch" :map-erzieherarten="mapErzieherarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" v-if="clickedErzieher === e.id" />
 			</template>
 		</svws-ui-content-card>
 	</div>
