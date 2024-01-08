@@ -4,8 +4,8 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
-import type { ApiFile, GostSchuelerFachwahl} from "@core";
-import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung} from "@core";
+import type { ApiFile, GostBeratungslehrer, GostSchuelerFachwahl, List} from "@core";
+import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung, ArrayList} from "@core";
 import { RouteManager } from "../RouteManager";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 
@@ -14,6 +14,7 @@ interface RouteState {
 	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
 	schuelerIDEncrypted: string;
+	beratungslehrer : List<GostBeratungslehrer>;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
 	faecherManager: GostFaecherManager | undefined;
@@ -32,6 +33,7 @@ export class RouteData {
 		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
 		schuelerIDEncrypted: '',
+		beratungslehrer: new ArrayList(),
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
 		faecherManager: undefined,
@@ -161,6 +163,7 @@ export class RouteData {
 			schuleStammdaten,
 			auswahl: schueler,
 			schuelerIDEncrypted: planungsdaten.idEnc,
+			beratungslehrer: daten.beratungslehrer,
 			gostJahrgang,
 			gostJahrgangsdaten,
 			faecherManager,
@@ -185,6 +188,7 @@ export class RouteData {
 		daten.beginnZusatzkursGE = this._state.value.gostJahrgangsdaten.beginnZusatzkursGE;
 		daten.hatZusatzkursSW = this._state.value.gostJahrgangsdaten.hatZusatzkursSW;
 		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
+		daten.beratungslehrer.addAll(this._state.value.beratungslehrer);
 		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
 		for (const fk of this._state.value.faecherManager.getFachkombinationen())
 			daten.fachkombinationen.add(fk);
