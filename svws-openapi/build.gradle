@@ -4,7 +4,7 @@ configurations {
 
 compileJava.dependsOn(":svws-db:assemble")
 compileJava.dependsOn(":svws-db-utils:assemble")
-compileJava.dependsOn(":svws-module-pdf:assemble")
+compileJava.dependsOn(":svws-module-reporting:assemble")
 compileJava.dependsOn(":svws-module-dav-api:assemble")
 
 /* TODO Support JPMS-Modules
@@ -40,7 +40,7 @@ dependencies {
 	implementation project(':svws-db')
 	implementation project(':svws-db-dto')
 	implementation project(':svws-db-utils')
-	implementation project(':svws-module-pdf')
+	implementation project(':svws-module-reporting')
     implementation project(':svws-module-dav-api')
 }
 // TODO xml-apis belegt namespaces org.w3c.dom und javax.xml.namespace
