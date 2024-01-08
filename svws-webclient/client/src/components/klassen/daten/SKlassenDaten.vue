@@ -75,8 +75,8 @@
 
 	import { computed } from "vue";
 	import { type DataTableColumn } from "@ui";
-	import { PersonalTyp, SchuelerStatus, type JahrgangsListeEintrag, type KlassenDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		WeiterbildungskollegOrganisationsformen, type KlassenListeEintrag, type List, ArrayList, Jahrgaenge} from "@core";
+	import { SchuelerStatus, type JahrgangsListeEintrag, type KlassenDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
+		WeiterbildungskollegOrganisationsformen, type KlassenListeEintrag, type List, ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
@@ -112,7 +112,6 @@
 		kuerzel?: string;
 		nachname?: string;
 		vorname?: string;
-		typ?: string;
 	}
 
 	const listeFolgeklassen = computed<List<KlassenListeEintrag>>(() => {
@@ -168,7 +167,6 @@
 					kuerzel: lehrer.kuerzel,
 					nachname: lehrer.nachname,
 					vorname: lehrer.vorname,
-					typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung ?? undefined
 				});
 		}
 		return a;
@@ -178,7 +176,6 @@
 		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
 		{ key: "nachname", label: "Nachname", span: 2, sortable: false },
 		{ key: "vorname", label: "Vorname", span: 2, sortable: false },
-		{ key: "personTyp", label: "Typ", span: 1, sortable: false },
 	];
 
 
