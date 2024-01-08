@@ -21,7 +21,7 @@
 			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="erzieher.strassenname" @change="strassenname=>patch({ strassenname }, erzieher.id)" type="text" />
 			<svws-ui-text-input placeholder="Adresszusatz" :model-value="erzieher.hausnummerZusatz" @change="hausnummerZusatz=>patch({ hausnummerZusatz }, props.erzieher.id)" type="text" />
 			<svws-ui-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+			<svws-ui-select title="Ortsteil" v-model="ortsteil" :items="ortsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 			<svws-ui-spacing />
 			<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher.bemerkungen" span="full" autoresize
 				@change="bemerkungen => patch({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)" />
@@ -47,6 +47,14 @@
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => props.erzieher.wohnortID === null ? undefined : props.mapOrte.get(props.erzieher.wohnortID),
 		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }, props.erzieher.id)
+	});
+
+	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
+		const result : Array<OrtsteilKatalogEintrag> = [];
+		for (const ortsteil of props.mapOrtsteile.values())
+			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === props.erzieher.wohnortID))
+				result.push(ortsteil);
+		return result;
 	});
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | undefined>({
