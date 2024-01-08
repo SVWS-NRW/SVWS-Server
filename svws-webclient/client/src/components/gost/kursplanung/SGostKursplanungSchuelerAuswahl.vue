@@ -65,7 +65,7 @@
 										<span class="text-sm font-bold mb-0.5">Status</span>
 										<span class="inline-flex gap-0.5 items-center"><i-ri-alert-line /> Kollision</span>
 										<span class="inline-flex gap-0.5 items-center"><i-ri-spam3-line /> Nichtverteilung</span>
-										<span class="inline-flex gap-0.5 items-center"><i-ri-error-warning-fill /> K/NV</span>
+										<span class="inline-flex gap-0.5 items-center"><i-ri-error-warning-fill /> Kollision und Nichtverteilung</span>
 									</li>
 								</ul>
 							</template>
