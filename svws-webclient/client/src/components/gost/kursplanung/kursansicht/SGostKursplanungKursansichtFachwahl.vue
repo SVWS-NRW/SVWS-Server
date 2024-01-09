@@ -4,18 +4,12 @@
 			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td text-black/50">{{ fachwahlen.kuerzel }}-{{ kursart.kuerzel }}</div>
-			<div role="cell" class="svws-ui-td">
-				<span />
-			</div>
-			<div role="cell" class="svws-ui-td svws-align-center">
-				<span />
-			</div>
+			<div role="cell" class="svws-ui-td" />
+			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td svws-align-center text-black/50" @click="toggleSchuelerFilterFachwahl(fachwahlen.id, kursart)">
 				{{ fachwahlenAnzahl }}
 			</div>
-			<div role="cell" class="svws-ui-td svws-align-center">
-				<span />
-			</div>
+			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
 				<svws-ui-button type="transparent" @click="add_kurs(kursart)" title="Kurs anlegen">
 					<span class="inline-flex items-center text-button -mr-0.5">
@@ -90,13 +84,13 @@
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 					<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 						:class="{
-							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value && !isSelected(schiene, kurs),
-							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value && !isSelected(schiene, kurs),
+							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value && !isSelected(schiene, kurs).value,
+							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value && !isSelected(schiene, kurs).value,
 							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
 							'cursor-grabbing': dragDataKursSchiene() !== undefined && dropDataKursSchiene()=== undefined,
 							'cursor-pointer': dragDataKursSchiene() === undefined || dropDataKursSchiene() !== undefined,
-							'bg-green-400/50': isSelected(schiene, kurs),
+							'bg-green-400/50': isSelected(schiene, kurs).value,
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
 						@drop="drop({kurs, schiene, fachId: fachwahlen.id}, index)">
@@ -108,7 +102,7 @@
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
 							}" ref="cellRefs"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
-							{{ getSchuelerAnzahl(kurs.id) }}
+							{{ getSchuelerAnzahl(kurs.id).value }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
@@ -193,7 +187,7 @@
 		}
 	}
 
-	function isSelected(schiene: GostBlockungsergebnisSchiene, k3: GostBlockungKurs) {
+	const isSelected = (schiene: GostBlockungsergebnisSchiene, k3: GostBlockungKurs) => computed(() => {
 		const s1 = props.dragDataKursSchiene()?.schiene;
 		const s2 = props.dropDataKursSchiene()?.schiene;
 		const s3 = props.getErgebnismanager().getSchieneG(schiene.id);
@@ -207,7 +201,7 @@
 			return props.isSelectedKurse.includes(k3);
 		}
 		return false;
-	}
+	})
 
 	async function add_kurs(art: GostKursart) {
 		await props.addKurs(props.fachwahlen.id, art.id);
@@ -410,11 +404,11 @@
 		}
 	}
 
-	function getSchuelerAnzahl(idKurs: number) : string {
+	const getSchuelerAnzahl = (idKurs: number) => computed(() => {
 		const aktive = props.getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(idKurs);
 		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
 		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
-	}
+	})
 
 </script>
 
