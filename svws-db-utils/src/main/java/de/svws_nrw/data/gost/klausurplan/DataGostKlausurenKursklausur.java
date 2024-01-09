@@ -40,7 +40,6 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
-	private final int _abiturjahr;
 	private long _idSchuljahresAbschnitt = -1;
 
 	/**
@@ -57,7 +56,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final long idSchuljahresAbschnitt) {
 		super(conn);
-		_abiturjahr = abiturjahr;
 		if (abiturjahr != -1 && conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)
 			throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + abiturjahr);
 		_idSchuljahresAbschnitt = idSchuljahresAbschnitt;
@@ -74,14 +72,16 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param ganzesSchuljahr true, um Klausuren für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
 	 *
 	 * @return die Liste der Kursklausuren
 	 */
-	public List<GostKursklausur> getKursKlausuren(final int halbjahr, final boolean ganzesSchuljahr) {
+	public static List<GostKursklausur> getKursKlausuren(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) {
 
-		final Map<Long, GostKlausurvorgabe> mapVorgaben = (new DataGostKlausurenVorgabe(conn, _abiturjahr)).getKlausurvorgaben(halbjahr, ganzesSchuljahr).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
+		final Map<Long, GostKlausurvorgabe> mapVorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
 		if (mapVorgaben.isEmpty()) {
 			return new ArrayList<>();
 		}

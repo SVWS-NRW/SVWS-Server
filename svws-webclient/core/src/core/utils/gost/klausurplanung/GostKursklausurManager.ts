@@ -7,8 +7,8 @@ import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
-import { DateUtils } from '../../../../core/utils/DateUtils';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
+import { DateUtils } from '../../../../core/utils/DateUtils';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
@@ -122,6 +122,8 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList();
 
+	private readonly _schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal : HashMap3D<number, number, number, List<GostSchuelerklausurTermin>> = new HashMap3D();
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -161,6 +163,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_kursklausurmenge_by_terminId_and_schuelerId();
 		this.update_schuelerIds_by_idTermin();
 		this.update_kursklausurmenge_by_kw_and_schuelerId();
+		this.update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal();
 	}
 
 	private update_kursklausurmenge_by_halbjahr_and_quartal() : void {
@@ -239,6 +242,16 @@ export class GostKursklausurManager extends JavaObject {
 		for (const kk of this._kursklausurmenge) {
 			for (const sId of kk.schuelerIds)
 				Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sId).add(kk);
+		}
+	}
+
+	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
+		this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.clear();
+		for (const sk of this._schuelerklausurmenge) {
+			let v : GostKlausurvorgabe = this.vorgabeBySchuelerklausur(sk);
+			let sktLast : GostSchuelerklausurTermin = sk.schuelerklausurTermine.get(sk.schuelerklausurTermine.size() - 1);
+			if (sktLast.folgeNr > 0)
+				Map3DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, sktLast.idTermin !== null ? sktLast.idTermin : -1, v.quartal).add(sktLast);
 		}
 	}
 
@@ -698,6 +711,42 @@ export class GostKursklausurManager extends JavaObject {
 			for (let qTermine of this._terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
 				termine.addAll(qTermine);
 			}
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die für Nachschreiber zugelassen sind zum übergebenen Quartal
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
+	 *
+	 * @return die Liste von NT-GostKlausurtermin-Objekten
+	 */
+	public terminGetNTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		for (let t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+			if (!t.istHaupttermin || t.nachschreiberZugelassen)
+				termine.add(t);
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die als Haupttermin angelegt wurden zum übergebenen Quartal
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
+	 *
+	 * @return die Liste von HT-GostKlausurtermin-Objekten
+	 */
+	public terminGetHTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		for (let t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+			if (t.istHaupttermin)
+				termine.add(t);
 		return termine;
 	}
 
@@ -1215,6 +1264,27 @@ export class GostKursklausurManager extends JavaObject {
 	public istAktuellerSchuelerklausurtermin(skt : GostSchuelerklausurTermin) : boolean {
 		let skts : List<GostSchuelerklausurTermin | null> = this.schuelerklausurGetByIdOrException(skt.idSchuelerklausur).schuelerklausurTermine;
 		return skts.get(skts.size() - 1) as unknown === skt as unknown;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * die noch kein Termin gesetzt wurde
+	 *
+	 * @param halbjahr das Gosthalbjahr
+	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+		if (quartal > 0) {
+			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getOrNull(halbjahr.id, -1, quartal);
+			return skts !== null ? skts : new ArrayList();
+		}
+		const skts : List<GostSchuelerklausurTermin> | null = new ArrayList();
+		for (const sktList of this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap3AsList(halbjahr.id, -1)) {
+			skts.addAll(sktList);
+		}
+		return skts;
 	}
 
 	transpilerCanonicalName(): string {

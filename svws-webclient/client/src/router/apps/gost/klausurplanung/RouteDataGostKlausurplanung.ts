@@ -207,7 +207,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine, null);
+		const listSchuelerNachklausuren = await api.server.getGostKlausurenSchuelerklausurenNachschreiber(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine, listSchuelerNachklausuren);
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -253,12 +254,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
 	}
 
-	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
+	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {
 		api.status.start();
 		const terminNeu : Partial<GostKlausurtermin> = new GostKlausurtermin();
 		terminNeu.abijahr = this.abiturjahr;
 		terminNeu.halbjahr = this.halbjahr.id;
 		terminNeu.quartal = quartal;
+		terminNeu.istHaupttermin = ht;
 		delete terminNeu.id;
 		const termin = await api.server.createGostKlausurenKlausurtermin(terminNeu, api.schema);
 		this.kursklausurmanager.terminAdd(termin);

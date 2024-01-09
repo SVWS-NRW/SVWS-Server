@@ -120,6 +120,9 @@ public class GostKursklausurManager {
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausur> _schuelerklausur_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostSchuelerklausur> _schuelerklausurmenge = new ArrayList<>();
 
+	// GostSchuelerklausurTermin
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal = new HashMap3D<>(); // ggf. neuer Manager
+
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
@@ -164,6 +167,8 @@ public class GostKursklausurManager {
 
 		update_schuelerIds_by_idTermin(); // benötigt _kursklausurmenge_by_idTermin
 		update_kursklausurmenge_by_kw_and_schuelerId(); // benötigt _kursklausurmenge_by_idTermin
+
+		update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal();
 	}
 
 	private void update_kursklausurmenge_by_halbjahr_and_quartal() {
@@ -244,6 +249,16 @@ public class GostKursklausurManager {
 				Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sId).add(kk);
 		}
 
+	}
+
+	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() { // ggf. neuer Manager
+		_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.clear();
+		for (final @NotNull GostSchuelerklausur sk : _schuelerklausurmenge) {
+			@NotNull GostKlausurvorgabe v = vorgabeBySchuelerklausur(sk);
+			@NotNull GostSchuelerklausurTermin sktLast = sk.schuelerklausurTermine.get(sk.schuelerklausurTermine.size() - 1);
+			if (sktLast.folgeNr > 0)
+				Map3DUtils.getOrCreateArrayList(_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, sktLast.idTermin != null ? sktLast.idTermin : -1, v.quartal).add(sktLast);
+		}
 	}
 
 	// #####################################################################
@@ -742,6 +757,42 @@ public class GostKursklausurManager {
 			for (@NotNull List<@NotNull GostKlausurtermin> qTermine : _terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
 				termine.addAll(qTermine);
 			}
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die für Nachschreiber zugelassen sind zum übergebenen Quartal
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
+	 *
+	 * @return die Liste von NT-GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetNTMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal, final boolean includeMultiquartal) {
+		final List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+		for (@NotNull GostKlausurtermin t : terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+			if (!t.istHaupttermin || t.nachschreiberZugelassen)
+				termine.add(t);
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten, die als Haupttermin angelegt wurden zum übergebenen Quartal
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
+	 *
+	 * @return die Liste von HT-GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetHTMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal, final boolean includeMultiquartal) {
+		final List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+		for (@NotNull GostKlausurtermin t : terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+			if (t.istHaupttermin)
+				termine.add(t);
 		return termine;
 	}
 
@@ -1268,6 +1319,27 @@ public class GostKursklausurManager {
 	public boolean istAktuellerSchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
 		@NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurGetByIdOrException(skt.idSchuelerklausur).schuelerklausurTermine;
 		return skts.get(skts.size() - 1) == skt;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * die noch kein Termin gesetzt wurde
+	 *
+	 * @param halbjahr das Gosthalbjahr
+	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
+		if (quartal > 0) {
+			final List<@NotNull GostSchuelerklausurTermin> skts = _schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getOrNull(halbjahr.id, -1L, quartal);
+			return skts != null ? skts : new ArrayList<>();
+		}
+		final List<@NotNull GostSchuelerklausurTermin> skts = new ArrayList<>();
+		for (final @NotNull List<@NotNull GostSchuelerklausurTermin> sktList : _schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap3AsList(halbjahr.id, -1L)) {
+			skts.addAll(sktList);
+		}
+		return skts;
 	}
 
 }

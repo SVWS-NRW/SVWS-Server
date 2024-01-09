@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkKkKv;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -123,6 +124,24 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		}
 
 		return daten;
+	}
+
+	/**
+	 * Gibt die Liste der Schülerklausuren einer Jahrgangsstufe im übergebenen
+	 * Gost-Halbjahr zurück, die eine Nachschreibklausur beinhalten.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr das Gost-Halbjahr
+	 *
+	 * @return die Liste der Schülerklausuren
+	 */
+	public static List<GostSchuelerklausur> getSchuelerNachschreibKlausuren(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) {
+		List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
+		List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query("SELECT DISTINCT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenSchuelerklausurenTermine skt ON sk.ID = skt.Schuelerklausur_ID AND sk.Kursklausur_ID IN :kkids WHERE skt.Folge_Nr > 0", DTOGostKlausurenSchuelerklausuren.class)
+				.setParameter("kkids", kursKlausuren.stream().map(kk -> kk.id).toList())
+				.getResultList();
+		return DataGostKlausurenSchuelerklausur.preprocessSchuelerklausuren(conn, schuelerKlausurDTOs);
 	}
 
 	/**

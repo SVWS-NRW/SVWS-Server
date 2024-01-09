@@ -228,20 +228,22 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param ganzesSchuljahr true, um Vorgaben für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
 	 *
 	 * @return die Liste der Kursklausuren
 	 */
-	public List<GostKlausurvorgabe> getKlausurvorgaben(final int halbjahr, final boolean ganzesSchuljahr) {
+	public static List<GostKlausurvorgabe> getKlausurvorgaben(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) {
 		List<DTOGostKlausurenVorgaben> vorgaben = null;
 		if (halbjahr <= 0)
 			vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr)
+				.setParameter("jgid", abiturjahr)
 				.getResultList();
 		else {
 			vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr IN :hj", DTOGostKlausurenVorgaben.class)
-			.setParameter("jgid", _abiturjahr)
+			.setParameter("jgid", abiturjahr)
 			.setParameter("hj", Arrays.asList(ganzesSchuljahr ? GostHalbjahr.fromIDorException(halbjahr).getSchuljahr() : new GostHalbjahr[]{GostHalbjahr.fromIDorException(halbjahr)}))
 			.getResultList();
 		}

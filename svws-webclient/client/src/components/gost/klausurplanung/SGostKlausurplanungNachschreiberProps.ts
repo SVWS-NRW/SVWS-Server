@@ -12,7 +12,7 @@ import type {
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
-export interface GostKlausurplanungSchienenProps {
+export interface GostKlausurplanungNachschreiberProps {
 	halbjahr: GostHalbjahr;
 	kursklausurmanager: () => GostKursklausurManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;

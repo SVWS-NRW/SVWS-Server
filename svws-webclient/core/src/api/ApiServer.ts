@@ -4709,6 +4709,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenNachschreiber für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Schuelerklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostSchuelerklausur>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Schuelerklausuren.
+	 */
+	public async getGostKlausurenSchuelerklausurenNachschreiber(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostSchuelerklausur>> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostSchuelerklausur>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostSchuelerklausur.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausurenTermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\d+}
 	 *
 	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.

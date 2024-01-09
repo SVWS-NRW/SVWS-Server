@@ -43,7 +43,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	}
 
 	private static final Set<String> requiredCreateAttributes = Set.of("abijahr", "halbjahr", "quartal");
-	private static final Set<String> patchForbiddenAttributes = Set.of("abijahr", "halbjahr");
+	private static final Set<String> patchForbiddenAttributes = Set.of("abijahr", "halbjahr", "istHaupttermin");
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenTermine>> patchMappings =
 		Map.ofEntries(
@@ -58,7 +58,9 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
 			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
 			Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
-			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+			Map.entry("istHaupttermin", (conn, dto, value, map) -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> dto.NachschreiberZugelassen = JSONMapper.convertToBoolean(value, false))
 		);
 
 	@Override

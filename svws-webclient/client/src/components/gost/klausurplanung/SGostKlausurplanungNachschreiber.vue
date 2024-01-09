@@ -5,72 +5,31 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
-		<template #modalTitle>
-			Automatisch blocken
-		</template>
-		<template #modalContent>
-			<svws-ui-radio-group :row="true">
-				<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
-			</svws-ui-radio-group>
-			<svws-ui-spacing />
-			<svws-ui-radio-group :row="true">
-				<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
-			</svws-ui-radio-group>
-			<svws-ui-spacing :size="2" />
-			<svws-ui-checkbox type="toggle" v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal" class="text-left">
-				Gleicher Termin falls gleiche Lehrkraft, Fach und Kursart
-			</svws-ui-checkbox>
-		</template>
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
-		</template>
-	</svws-ui-modal>
 
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+				<svws-ui-table :items="props.kursklausurmanager().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
 							<span>Aktuell keine Klausuren zu planen.</span>
 							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
 						</div>
 					</template>
-					<template #header(schriftlich)>
-						<svws-ui-tooltip>
-							<i-ri-group-line />
-							<template #content>Schriftlich/Insgesamt im Kurs</template>
-						</svws-ui-tooltip>
+					<template #cell(nachname)="{ rowData }">
+						{{ mapSchueler.get(rowData.idSchueler)?.nachname }}
 					</template>
-					<template #header(dauer)>
-						<svws-ui-tooltip>
-							<i-ri-time-line />
-							<template #content>Dauer in Minuten</template>
-						</svws-ui-tooltip>
+					<template #cell(vorname)="{ rowData }">
+						{{ mapSchueler.get(rowData.idSchueler)?.vorname }}
 					</template>
-					<template #body>
-						<div v-for="klausur in props.kursklausurmanager().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
-							:key="klausur.id"
-							:data="klausur"
-							:draggable="true"
-							@dragstart="onDrag(klausur)"
-							@dragend="onDrag(undefined)"
-							:class="klausurCssClasses(klausur, undefined)">
-							<div class="svws-ui-td">
-								<i-ri-draggable class="-m-0.5 -ml-4 -mr-1" />
-								<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
-							</div>
-							<div class="svws-ui-td">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
-							<div class="svws-ui-td svws-align-right">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
-							<div class="svws-ui-td svws-align-right">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
-							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
-							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
-						</div>
+					<template #cell(kurs)="{ rowData }">
+						{{ kursklausurmanager().kursklausurBySchuelerklausurTermin(rowData).kursKurzbezeichnung }}
 					</template>
-					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><i-ri-upload-2-line />Aus Vorgaben erstellen</svws-ui-button>
+					<template #cell(kuerzel)="{ rowData }">
+						{{ getLehrerKuerzel(kursklausurmanager().kursklausurBySchuelerklausurTermin(rowData).idKurs) }}
+					</template>
+					<template #cell(dauer)="{ rowData }">
+						{{ kursklausurmanager().vorgabeBySchuelerklausur(rowData).dauer }}
 					</template>
 				</svws-ui-table>
 			</div>
@@ -78,9 +37,7 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kursklausurmanager().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -159,27 +116,19 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal :show="returnModal()" :text="modalError" :jump-to="gotoVorgaben" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { JavaMapEntry, JavaSet} from "@core";
-	import { OpenApiError } from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
-	import type { Ref } from 'vue';
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, DateUtils } from "@core";
 	import { computed, ref, onMounted } from 'vue';
-	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
+	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
 
-	const _showModalAutomatischBlocken = ref<boolean>(false);
-	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
-
-	const props = defineProps<GostKlausurplanungSchienenProps>();
-
-	const loading = ref<boolean>(false);
+	const props = defineProps<GostKlausurplanungNachschreiberProps>();
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
@@ -188,25 +137,6 @@
 		terminSelected.value = undefined;
 		dragData.value = data;
 	};
-
-	const modal = ref<boolean>(false);
-
-	function returnModal(): () => Ref<boolean> {
-		return () => modal;
-	}
-
-	const modalError = ref<string | undefined>(undefined);
-
-	async function erzeugeKursklausurenAusVorgabenOrModal() {
-		try {
-			await props.erzeugeKursklausurenAusVorgaben(props.quartalsauswahl.value);
-		} catch(err) {
-			if (err instanceof OpenApiError) {
-				modalError.value = await err.response?.text();
-				modal.value = true;
-			}
-		}
-	}
 
 	function getLehrerKuerzel(kursid: number) {
 		const kurs = props.kursmanager.get(kursid);
@@ -253,24 +183,7 @@
 		"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (dragData.value.quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
-	const termine = computed(() => props.kursklausurmanager().terminGetHTMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true));
-
-	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
-	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
-	const blockeGleicheLehrkraft = ref(false);
-
-	const blocken = async () => {
-		loading.value = true;
-		showModalAutomatischBlocken().value = false;
-		const daten = new GostKlausurterminblockungDaten();
-		daten.klausuren = props.kursklausurmanager().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value);
-		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
-		daten.konfiguration.algorithmus = algMode.value.id;
-		daten.konfiguration.modusKursarten = lkgkMode.value.id;
-		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
-		await props.blockenKursklausuren(daten);
-		loading.value = false;
-	};
+	const termine = computed(() => props.kursklausurmanager().terminGetNTMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true));
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;
@@ -295,16 +208,12 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
+			{ key: "nachname", label: "Nachame", minWidth: 8.25 },
+			{ key: "vorname", label: "Vorname", minWidth: 8 },
 			{ key: "kurs", label: "Kurs", span: 1.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];
-
-		if (props.quartalsauswahl.value === 0) {
-			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "right", minWidth: 2.75 })
-		}
 
 		return cols;
 	}
