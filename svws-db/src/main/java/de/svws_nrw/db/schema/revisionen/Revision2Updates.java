@@ -75,7 +75,7 @@ public final class Revision2Updates extends SchemaRevisionUpdateSQL {
 			logger.logLn("DBMS wird für dieses Datenbank Revisions-Update nicht unterstützt.");
 			return false;
 		}
-		logger.logLn("Erzeuge eine AES-Schlüssel und ein RSA-Schlüsselpaar für die Schule.");
+		logger.logLn("Erzeuge einen AES-Schlüssel und ein RSA-Schlüsselpaar für die Schule.");
 		// Bestimme die Schulnummer
 		final List<String> rows = conn.queryNative("SELECT SchulNr FROM EigeneSchule");
 		if ((rows == null) || (rows.size() != 1)) {

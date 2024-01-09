@@ -43,6 +43,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		updateSchuelerNachnameZusatz();
 		uebertrageLehrerStammschule();
 		verschiebeDatenVonEigeneSchule();
+		korrigiereCaseUbergangsempfehlungenUndSchulformen();
 	}
 
 
@@ -2823,6 +2824,21 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			        Schema.tab_EigeneSchule.col_Einstellungen.name(),
 			        Schema.tab_EigeneSchule.name()),
 			Schema.tab_EigeneSchule, Schema.tab_EigeneSchule_Logo);
+	}
+
+	private void korrigiereCaseUbergangsempfehlungenUndSchulformen() {
+		add("Korrigiere den Case bei den Übergangsempfehlungen",
+		    "UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(), Schema.tab_Schueler.col_Uebergangsempfehlung_JG5.name()),
+			Schema.tab_Schueler);
+		add("Korrigiere den Case bei der ersten Schulform in der Sek I",
+			"UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(), Schema.tab_Schueler.col_ErsteSchulform_SI.name()),
+			Schema.tab_Schueler);
+		add("Korrigiere den Case bei der Spalte LSSchulform in der Tabelle Schueler",
+			"UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(), Schema.tab_Schueler.col_LSSchulform.name()),
+			Schema.tab_Schueler);
+		add("Korrigiere den Case bei der Spalte LSSchulformSIM in der Tabelle Schueler",
+			"UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(), Schema.tab_Schueler.col_LSSchulformSIM.name()),
+			Schema.tab_Schueler);
 	}
 
 }
