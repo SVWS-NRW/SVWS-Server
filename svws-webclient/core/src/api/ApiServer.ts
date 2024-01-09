@@ -208,16 +208,37 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Das Base-64-kodierte Zertifikat des Servers
-	 *     - Mime-Type: text/plain
-	 *     - Rückgabe-Typ: String
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 500: Das Zertifikat wurde nicht gefunden
 	 *
 	 * @returns Das Base-64-kodierte Zertifikat des Servers
 	 */
-	public async getConfigCertificateBase64() : Promise<string | null> {
+	public async getConfigCertificateBase64() : Promise<ApiFile> {
 		const path = "/config/certificate_base64";
-		const text : string = await super.getText(path);
-		return text;
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getConfigCertificateFile für den Zugriff auf die URL https://{hostname}/config/certificate_file
+	 *
+	 * Gibt die Zertifikatsdatei des Server zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Zertifikatsdatei des Servers
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 404: Das Zertifikat wurde nicht gefunden
+	 *   Code 500: Es konnte nicht auf das Zertifikat zugegriffen werden
+	 *
+	 * @returns Die Zertifikatsdatei des Servers
+	 */
+	public async getConfigCertificateFile() : Promise<ApiFile> {
+		const path = "/config/certificate_file";
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
 	}
 
 

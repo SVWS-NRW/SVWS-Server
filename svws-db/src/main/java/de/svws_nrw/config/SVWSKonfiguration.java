@@ -945,11 +945,12 @@ public final class SVWSKonfiguration {
 	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore keystore = getKeystore();
 			final Certificate cert = keystore.getCertificate(config.getTLSKeyAlias());
-			return Base64.getMimeEncoder().encodeToString(cert.getEncoded());
+			return "-----BEGIN CERTIFICATE-----\n" + Base64.getMimeEncoder().encodeToString(cert.getEncoded()) + "\n-----END CERTIFICATE-----\n";
 		} catch (KeyStoreException | CertificateEncodingException e) {
 			throw new KeyStoreException("", e);
 		}
 	}
+
 
 
 	/**

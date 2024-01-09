@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.util.List;
 
 import de.svws_nrw.api.SVWSVersion;
@@ -150,19 +151,19 @@ public class APIConfig {
      * @return das Zertifikat des Servers in Base64-Kodierung
      */
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Path("/config/certificate_base64")
     @Operation(summary = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.",
-               description = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.")
-	@ApiResponse(responseCode = "200", description = "Das Base-64-kodierte Zertifikat des Servers",
-			     content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
+			description = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.")
+    @ApiResponse(responseCode = "200", description = "Das Base-64-kodierte Zertifikat des Servers",
+    		content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+    		schema = @Schema(type = "string", format = "binary", description = "Die Zertifkatsdatei")))
 	@ApiResponse(responseCode = "500", description = "Das Zertifikat wurde nicht gefunden")
     public Response getConfigCertificateBase64() {
         try {
-			return Response.ok(SVWSKonfiguration.getCertificateBase64()).build();
+			return Response.ok(SVWSKonfiguration.getCertificateBase64()).header("Content-Disposition", "attachment; filename=\"SVWS.cer\"").build();
 		} catch (final KeyStoreException e) {
-			e.printStackTrace();
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 		}
     }
 
@@ -187,6 +188,33 @@ public class APIConfig {
 		} catch (final KeyStoreException e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+    }
+
+
+
+    /**
+     * Diese Methode liefert das Zertifikat des Servers als .cer-Datei
+     *
+     * @return die HTTP-Response mit der Zertifikats-Datei
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/config/certificate_file")
+    @Operation(summary = "Gibt die Zertifikatsdatei des Server zurück.",
+    		description = "Gibt die Zertifikatsdatei des Server zurück.")
+    @ApiResponse(responseCode = "200", description = "Die Zertifikatsdatei des Servers",
+    		content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+            schema = @Schema(type = "string", format = "binary", description = "Die Zertifkatsdatei")))
+    @ApiResponse(responseCode = "404", description = "Das Zertifikat wurde nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Es konnte nicht auf das Zertifikat zugegriffen werden")
+    public Response getConfigCertificateFile() {
+    	try {
+			return Response.ok(SVWSKonfiguration.getCertificate().getEncoded()).header("Content-Disposition", "attachment; filename=\"SVWS.cer\"").build();
+		} catch (final CertificateEncodingException e) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		} catch (final KeyStoreException e) {
+			throw OperationError.NOT_FOUND.exception(e);
 		}
     }
 

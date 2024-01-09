@@ -59,7 +59,7 @@ public class APIDatabase {
                		       + "administrative Rechte.")
     @ApiResponse(responseCode = "200", description = "Der Export der SQLite-Datenbank",
     			 content = @Content(mediaType = "application/vnd.sqlite3",
-    			 schema = @Schema(type = "string", format = "binary", description = "LuDie SQLite-Datei")))
+    			 schema = @Schema(type = "string", format = "binary", description = "Die SQLite-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_EXPORT)) {
