@@ -87,7 +87,7 @@
 						</template>
 						<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
 						<div v-if="zeitrasterHatUnterrichtMitWochentyp(wochentag.id, stunde)" class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
-							<template v-for="wt in manager().getWochenTypModell()" :key="wt">
+							<template v-for="wt in getWochentyp" :key="wt">
 								<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
 									<template v-if="mode !== 'klasse'">
 										<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
@@ -196,6 +196,8 @@
 		onDrop: (zone: StundenplanAnsichtDropZone) => {},
 	});
 
+	const getWochentyp = computed(()=> props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
+
 	const beginn = computed(() => {
 		if (props.ignoreEmpty)
 			return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
@@ -279,6 +281,7 @@
 	}
 
 	function getUnterricht(wochentag: Wochentag, stunde: number, wochentyp: number, schiene: number) : List<StundenplanUnterricht> {
+		// console.log(props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true).size())
 		if (props.mode === 'schueler')
 			// return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
 			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
@@ -302,6 +305,7 @@
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
 		// TODO Pausenaufsicht zusätzlich pro "wochentyp" UND "inklWoche0=true"
+		// console.log(props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true).size())
 		if (props.mode === 'schueler')
 			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 		if (props.mode === 'lehrer')
