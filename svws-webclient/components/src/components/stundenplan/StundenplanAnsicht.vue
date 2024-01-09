@@ -91,12 +91,12 @@
 								<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
 									<template v-if="mode !== 'klasse'">
 										<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
-										<template v-if="getUnterricht(wochentag, stunde, wt, 0).size() > 0">
-											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+										<template v-if="getUnterricht(wochentag, stunde, wt as unknown as number, 0).size() > 0">
+											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
-										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, 0)" :key="unterricht.id"
+										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt as unknown as number, 0)" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht svws-compact"
-											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, 0).size() === 1}"
+											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, 0).size() === 1}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -104,18 +104,18 @@
 											<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 										</div>
 									</template>
-									<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, wt)]" :key="schiene.id">
-										<template v-if="getUnterricht(wochentag, stunde, wt, schiene.id).size() > 0">
-											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+									<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, wt as unknown as number)]" :key="schiene.id">
+										<template v-if="getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() > 0">
+											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
-										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt, schiene.id).hashCode().toString()}`: ''">
+										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).hashCode().toString()}`: ''">
 											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0 cursor-grab"
-												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id), $event)" @dragend="onDrag(undefined)">
+												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id), $event)" @dragend="onDrag(undefined)">
 												{{ schiene.bezeichnung }}
 											</div>
-											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.id)" :key="unterricht.id"
+											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id)" :key="unterricht.id"
 												class="svws-ui-stundenplan--unterricht svws-compact cursor-grab"
-												:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, schiene.id).size() === 1}"
+												:class="{'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() === 1}"
 												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 												:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 												<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
