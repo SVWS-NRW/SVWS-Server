@@ -317,10 +317,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (aktiv) {
-			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d AND %s = %d".formatted(
+			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d AND %s = %d AND %s <> %d".formatted(
 				Schema.tab_Gost_Blockung.name(), Schema.tab_Gost_Blockung.col_IstAktiv.name(),
 				Schema.tab_Gost_Blockung.col_Abi_Jahrgang.name(), blockung.Abi_Jahrgang,
-				Schema.tab_Gost_Blockung.col_Halbjahr.name(), blockung.Halbjahr.id));
+				Schema.tab_Gost_Blockung.col_Halbjahr.name(), blockung.Halbjahr.id,
+				Schema.tab_Gost_Blockung.col_ID.name(), idBlockung));
 			conn.transactionFlush();
 			blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		}

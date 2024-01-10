@@ -358,9 +358,39 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
 		if (data.name)
 			this.datenmanager.setName(data.name)
+		if (data.istAktiv !== undefined) {
+			if (data.istAktiv === true) {
+				for (const blockung of this.mapBlockungen.values())
+					blockung.istAktiv = (blockung.id === idBlockung);
+			} else if (data.istAktiv === false) {
+				const blockung = this.mapBlockungen.get(idBlockung);
+				if (blockung !== undefined)
+					blockung.istAktiv = false;
+			}
+			this.datenmanager.daten().istAktiv = (this.datenmanager.daten().id === idBlockung);
+		}
 		api.status.stop();
+		this.commit();
 		return true;
 	}
+
+
+	patchErgebnis = async (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number): Promise<boolean> => {
+		if (this._state.value.datenmanager === undefined)
+			throw new Error("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
+		api.status.start();
+		await api.server.patchGostBlockungsergebnis(data, api.schema, idErgebnis);
+		if (data.istAktiv === true) {
+			for (const ergebnis of this.datenmanager.ergebnisGetListeSortiertNachBewertung())
+				ergebnis.istAktiv = (ergebnis.id === idErgebnis);
+		} else if (data.istAktiv === false) {
+			this.datenmanager.ergebnisGet(idErgebnis).istAktiv = false;
+		}
+		api.status.stop();
+		this.commit();
+		return true;
+	}
+
 
 	addRegel = api.call(async (regel: GostBlockungRegel) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
@@ -642,8 +672,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = true;
 		this.auswahlBlockung.istAktiv = true;
 		this.datenmanager.daten().istAktiv = true;
-		this.ergebnismanager.getErgebnis().istVorlage = true;
-		this.auswahlErgebnis.istVorlage = true;
+		this.ergebnismanager.getErgebnis().istAktiv = true;
+		this.auswahlErgebnis.istAktiv = true;
 		this.commit();
 		return true;
 	});

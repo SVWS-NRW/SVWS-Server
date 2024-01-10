@@ -41,8 +41,12 @@
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
 						<svws-ui-tooltip v-if="row.istAktiv">
-							<i-ri-checkbox-circle-fill class="text-svws text-headline-md ml-2" />
+							<span @click="patchBlockung({ istAktiv: false }, row.id)"><i-ri-checkbox-circle-fill class="text-svws text-headline-md ml-2 hover:opacity-75" /></span>
 							<template #content> Aktivierte Blockung </template>
+						</svws-ui-tooltip>
+						<svws-ui-tooltip v-else>
+							<span @click="patchBlockung({ istAktiv: true }, row.id)"><i-ri-checkbox-circle-line class="text-svws text-headline-md ml-2 opacity-25 hover:opacity-75" /></span>
+							<template #content> Blockung als aktiv markieren </template>
 						</svws-ui-tooltip>
 					</div>
 				</div>
@@ -56,7 +60,7 @@
 		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status="apiStatus" />
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
-		:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse"
+		:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
 		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 </template>
 
@@ -78,6 +82,7 @@
 		apiStatus: ApiStatus;
 		// ... zusätzlich für die Ergebnisauswahl
 		getDatenmanager: () => GostBlockungsdatenManager;
+		patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
 		rechneGostBlockung: () => Promise<List<number>>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;

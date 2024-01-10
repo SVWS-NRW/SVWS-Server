@@ -15,6 +15,7 @@ export interface GostKursplanungAuswahlProps {
 	apiStatus: ApiStatus;
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;
+	patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
 	rechneGostBlockung: () => Promise<List<number>>;
 	removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 	setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;

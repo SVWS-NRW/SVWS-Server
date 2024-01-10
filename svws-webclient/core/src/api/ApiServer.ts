@@ -44,6 +44,7 @@ import { GostBlockungRegel } from '../core/data/gost/GostBlockungRegel';
 import { GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
+import { GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
@@ -3217,7 +3218,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}
 	 *
-	 * Passt die Blockungsdaten der Gymnasiale Oberstufe mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachwahlen besitzt.
+	 * Passt die Blockungsdaten der Gymnasiale Oberstufe mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Blockungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich in die Blockungsdaten integriert.
@@ -3998,6 +3999,32 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsergebnis.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostBlockungsergebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}
+	 *
+	 * Passt die Daten eines Blockungsergebnisses der Gymnasiale Oberstufe mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Blockungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Blockungsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.
+	 *   Code 404: Kein Blockungsdaten-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostBlockungsergebnisListeneintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 */
+	public async patchGostBlockungsergebnis(data : Partial<GostBlockungsergebnisListeneintrag>, schema : string, ergebnisid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const body : string = GostBlockungsergebnisListeneintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

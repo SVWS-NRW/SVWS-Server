@@ -193,6 +193,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			apiStatus: api.status,
 			// ... und zusätzlich für die Ergebnisauswahl
 			getDatenmanager: () => this.data.datenmanager,
+			patchErgebnis: this.data.patchErgebnis,
 			rechneGostBlockung: this.data.rechneGostBlockung,
 			removeErgebnisse: this.data.removeErgebnisse,
 			setAuswahlErgebnis: this.data.setAuswahlErgebnis,

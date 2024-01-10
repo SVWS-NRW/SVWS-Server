@@ -30,17 +30,19 @@
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`Maximale Kursdifferenz: ${getDatenmanager().ergebnisGetBewertung3Wert(row.id)}`" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 					</span>
-					<div v-if="auswahlErgebnis === row || row.istAktiv" class="ml-auto inline-flex">
+					<div class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
 							<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
 								<i-ri-delete-bin-line class="-mx-0.5" />
 							</svws-ui-button>
 						</template>
 						<svws-ui-tooltip v-if="row.istAktiv">
-							<i-ri-checkbox-circle-fill class="text-svws text-headline-md relative -my-0.5 ml-2" />
-							<template #content>
-								Aktiviertes Ergebnis
-							</template>
+							<span @click="patchErgebnis({ istAktiv: false }, row.id)"><i-ri-checkbox-circle-fill class="text-svws text-headline-md relative -my-0.5 ml-2 hover:opacity-75" /></span>
+							<template #content>Aktiviertes Ergebnis</template>
+						</svws-ui-tooltip>
+						<svws-ui-tooltip v-else>
+							<span @click="patchErgebnis({ istAktiv: true }, row.id)"><i-ri-checkbox-circle-line class="text-svws text-headline-md relative -my-0.5 ml-2 opacity-25 hover:opacity-75" /></span>
+							<template #content> Ergebnis als aktiv markieren </template>
 						</svws-ui-tooltip>
 					</div>
 				</div>
@@ -63,6 +65,7 @@
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;

@@ -282,9 +282,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		conn.transactionFlush();
 		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (aktiv) {
-			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d".formatted(
+			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d AND %s <> %d".formatted(
 				Schema.tab_Gost_Blockung_Zwischenergebnisse.name(), Schema.tab_Gost_Blockung_Zwischenergebnisse.col_IstAktiv.name(),
-				Schema.tab_Gost_Blockung_Zwischenergebnisse.col_Blockung_ID.name(), ergebnis.Blockung_ID));
+				Schema.tab_Gost_Blockung_Zwischenergebnisse.col_Blockung_ID.name(), ergebnis.Blockung_ID,
+				Schema.tab_Gost_Blockung_Zwischenergebnisse.col_ID.name(), idErgebnis));
 			conn.transactionFlush();
 			ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		}

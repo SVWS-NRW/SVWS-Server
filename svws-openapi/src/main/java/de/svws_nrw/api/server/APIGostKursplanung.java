@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -226,7 +227,7 @@ public class APIGostKursplanung {
     @Path("/blockungen/{blockungsid : \\d+}")
     @Operation(summary = "Passt die Blockungsdaten der Gymnasiale Oberstufe mit der angegebenen ID an.",
     description = "Passt die Blockungsdaten der Gymnasiale Oberstufe mit der angegebenen ID an."
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachwahlen "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Blockungsdaten "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Blockungsdaten integriert.")
     @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
@@ -972,6 +973,41 @@ public class APIGostKursplanung {
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Anpassen der Daten eines Blockungsergebnisses der gymnasialen Oberstufe.
+     *
+     * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id         die ID des Blockungsergebnisses
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @PATCH
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}")
+    @Operation(summary = "Passt die Daten eines Blockungsergebnisses der Gymnasiale Oberstufe mit der angegebenen ID an.",
+    description = "Passt die Daten eines Blockungsergebnisses der Gymnasiale Oberstufe mit der angegebenen ID an."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Blockungsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Blockungsdaten integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Blockungsdaten-Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchGostBlockungsergebnis(
+    		@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id,
+    		@RequestBody(description = "Der Patch für das Blockungsergebnis", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsergebnisListeneintrag.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
+    		return (new DataGostBlockungsergebnisse(conn)).patch(id, is);
     	}
     }
 
