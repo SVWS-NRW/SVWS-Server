@@ -28,7 +28,7 @@ githubRelease {
 	body  "v${project.version}"
 	draft true
 	prerelease true
-	releaseAssets  "/builds/svws/SVWS-Server/artifacts_linux/distributions/install-${project.version}.sh", "/builds/svws/SVWS-Server/artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "/builds/svws/SVWS-Server/artifacts_windows/win64-installer-${project.version}.exe"
+	releaseAssets  "/builds/svws/SVWS-Server/artifacts_linux/distributions/install-${project.version}.sh", "/builds/svws/SVWS-Server/artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "/builds/svws/SVWS-Server/artifacts_windows/win64-installer-${project.version}.exe", "/builds/svws/SVWS-Server/svws-webclient/laufbahnplanung/build/SVWS-Laufbahnplanung-${project.version}.zip"
 	allowUploadToExisting.set true
 	overwrite true
 	dryRun false

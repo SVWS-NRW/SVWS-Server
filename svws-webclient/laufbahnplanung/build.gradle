@@ -2,16 +2,18 @@ plugins {
 	id 'svws.gradle.node.plugin'
 }
 
+def svwsArtifactVersion = project.ext.latestRelease
+
 task assembleLaufbahnplanung(type: NpmRun) {
-	dependsOn rootProject.npmPrepare 
-	dependsOn project(':svws-webclient:core').tasks.assemble 
+	dependsOn rootProject.npmPrepare
+	dependsOn project(':svws-webclient:core').tasks.assemble
 	dependsOn ':svws-webclient:ui:assemble'
 	dependsOn ':svws-webclient:components:assemble'
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" }, 
-		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" }, 
-		fileTree("$rootDir/svws-webclient/components").matching { exclude "build", "dist", ".histoire" }, 
+	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
+		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
+		fileTree("$rootDir/svws-webclient/components").matching { exclude "build", "dist", ".histoire" },
 		fileTree("$projectDir").matching { exclude "build" }
 	outputs.dir file("$buildDir/output")
 }
@@ -20,7 +22,7 @@ assemble.dependsOn assembleLaufbahnplanung
 
 task doZip(type: Zip) {
 	dependsOn assembleLaufbahnplanung
-    archiveFileName = "SVWS-Laufbahnplanung.zip"
+    archiveFileName = "SVWS-Laufbahnplanung-"+svwsArtifactVersion+".zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"
 }
