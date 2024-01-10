@@ -26,23 +26,12 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("ID der Blockung");
 
-	/** Die Definition der Tabellenspalte IstMarkiert */
-	public SchemaTabelleSpalte col_IstMarkiert = add("IstMarkiert", SchemaDatentypen.INT, false)
+	/** Die Definition der Tabellenspalte IstAktiv */
+	public SchemaTabelleSpalte col_IstAktiv = add("IstAktiv", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false ");
-
-	/** Die Definition der Tabellenspalte IstVorlage */
-	public SchemaTabelleSpalte col_IstVorlage = add("IstVorlage", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde "
-				+ "und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. "
-				+ "Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden."
-				+ "In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden.");
-
+		.setJavaComment("Gibt an, ob das Zwischenergebnis als aktives Zwischenergebnis einer Blockung markiert wurde oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Blockung_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Blockung_FK = addForeignKey(

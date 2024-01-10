@@ -24,18 +24,9 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 	public gostHalbjahr : number = 0;
 
 	/**
-	 * Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete
-	 *  Blockungsergebnisse hervorzuheben.
+	 * Gibt an, ob dieses Ergebnis als aktiv markiert wurde.
 	 */
-	public istMarkiert : boolean = false;
-
-	/**
-	 * Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
-	 *  mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst,
-	 *  obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat
-	 *  genau eine Vorlage zugeordnet.
-	 */
-	public istVorlage : boolean = false;
+	public istAktiv : boolean = false;
 
 	/**
 	 * Die Informationen zur aktuellen Bewertung des Blockungsergebnisses
@@ -70,12 +61,9 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.istMarkiert === "undefined")
-			 throw new Error('invalid json format, missing attribute istMarkiert');
-		result.istMarkiert = obj.istMarkiert;
-		if (typeof obj.istVorlage === "undefined")
-			 throw new Error('invalid json format, missing attribute istVorlage');
-		result.istVorlage = obj.istVorlage;
+		if (typeof obj.istAktiv === "undefined")
+			 throw new Error('invalid json format, missing attribute istAktiv');
+		result.istAktiv = obj.istAktiv;
 		if (typeof obj.bewertung === "undefined")
 			 throw new Error('invalid json format, missing attribute bewertung');
 		result.bewertung = GostBlockungsergebnisBewertung.transpilerFromJSON(JSON.stringify(obj.bewertung));
@@ -88,8 +76,7 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		result += '"blockungID" : ' + obj.blockungID + ',';
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
-		result += '"istVorlage" : ' + obj.istVorlage + ',';
+		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -110,11 +97,8 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		}
-		if (typeof obj.istMarkiert !== "undefined") {
-			result += '"istMarkiert" : ' + obj.istMarkiert + ',';
-		}
-		if (typeof obj.istVorlage !== "undefined") {
-			result += '"istVorlage" : ' + obj.istVorlage + ',';
+		if (typeof obj.istAktiv !== "undefined") {
+			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
 		if (typeof obj.bewertung !== "undefined") {
 			result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';

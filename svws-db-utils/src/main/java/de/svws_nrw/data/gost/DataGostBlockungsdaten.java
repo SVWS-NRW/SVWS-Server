@@ -302,6 +302,36 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	/**
+	 * Markiert die Blockung als aktiv und alle anderen Blockung mit gleichem Abiturjahrgang und Halbjahr
+	 * als inaktiv, wenn der Wert auf true gesetzt ist und ansonsten nur die angegebene Blockung auf inaktiv
+	 *
+	 * @param conn         die Datenbankverbindung
+	 * @param idBlockung   die ID der Blockung
+	 * @param aktiv        gibt an,
+	 *
+	 * @return das DTO zur Blockung, falls damit weitergearbeitet werden soll
+	 */
+	public static DTOGostBlockung markiereBlockungAktiv(final DBEntityManager conn, final long idBlockung, final boolean aktiv) {
+		conn.transactionFlush();
+		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+		if (aktiv) {
+			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d AND %s = %d".formatted(
+				Schema.tab_Gost_Blockung.name(), Schema.tab_Gost_Blockung.col_IstAktiv.name(),
+				Schema.tab_Gost_Blockung.col_Abi_Jahrgang.name(), blockung.Abi_Jahrgang,
+				Schema.tab_Gost_Blockung.col_Halbjahr.name(), blockung.Halbjahr.id));
+			conn.transactionFlush();
+			blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+		}
+		blockung.IstAktiv = aktiv;
+    	if (!conn.transactionPersist(blockung))
+        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		return blockung;
+	}
+
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
@@ -311,7 +341,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			conn.transactionBegin();
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung
-			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
+			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 			if (blockung == null)
 				return OperationError.NOT_FOUND.getResponse();
 			for (final Entry<String, Object> entry : map.entrySet()) {
@@ -325,7 +355,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					}
 					case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
 					case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
-					case "istAktiv" -> blockung.IstAktiv = JSONMapper.convertToBoolean(value, false);
+					case "istAktiv" -> {
+						final boolean result = JSONMapper.convertToBoolean(value, false);
+						if (result)
+							blockung = markiereBlockungAktiv(conn, blockung.ID, true);
+						else
+							blockung.IstAktiv = false;
+					}
 					// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
 					default -> throw OperationError.BAD_REQUEST.exception();
 				}
@@ -389,7 +425,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// Lege ein "leeres" Ergebnis für manuelles Blocken an
 			final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			final long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
-			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false, false);
+			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false);
 			// Blockung anlegen
 			final DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false);
 			conn.transactionPersist(blockung);
@@ -496,7 +532,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
 			for (final GostBlockungsergebnisManager output : outputs) {
 				// Schreibe das Ergebnis in die Datenbank.
-				final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false, false);
+				final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false);
 				conn.transactionPersist(erg);
 
 				// Kurse <--> Schüler
@@ -678,7 +714,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 			// Dupliziere das Zwischenergebnis und markiere es als Duplikat
 			final DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(
-					idErgebnisDuplikat, idBlockungDuplikat, ergebnisOriginal.IstMarkiert, false);
+					idErgebnisDuplikat, idBlockungDuplikat, false);
 			conn.transactionPersist(ergebnisDuplikat);
 			// Dupliziere Kurs-Schienen-Zuordnung
 			final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
@@ -822,9 +858,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					conn.transactionPersist(paramDuplikat);
 				}
 			}
-			// Dupliziere das Zwischenergebnis und markiere es als Duplikat
+			// Dupliziere das Zwischenergebnis
 			final DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(
-					idErgebnisDuplikat, idBlockungDuplikat, ergebnisOriginal.IstMarkiert, false);
+					idErgebnisDuplikat, idBlockungDuplikat, false);
 			conn.transactionPersist(ergebnisDuplikat);
 			// Dupliziere Kurs-Schienen-Zuordnung
 			final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
@@ -941,7 +977,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
 
 			// Prüfe, ob jeweils der Schüler des Lernabschnittes ein Entlassdatum eingetragen hat, welches vor dem Lernabschnitt liegt - inkonsistente Daten?!
-			final List<Long> listSchuelerIDs = listLernabschnittIDs.stream().map(laid -> mapLernabschnitte.get(laid)).filter(la -> la != null).map(la -> la.Schueler_ID).toList();
+			final List<Long> listSchuelerIDs = listLernabschnittIDs.stream().map(mapLernabschnitte::get).filter(la -> la != null).map(la -> la.Schueler_ID).toList();
 			final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, listSchuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 			for (final long laid : listLernabschnittIDs) {
 				final DTOSchuelerLernabschnittsdaten la = mapLernabschnitte.get(laid);
@@ -962,11 +998,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final long idErgebnis = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
 
 			// Erstelle die Blockung
-			final DTOGostBlockung blockung = new DTOGostBlockung(idBlockung, "Restaurierte Blockung", abiturjahr, halbjahr, true);
+			final DTOGostBlockung blockung = new DTOGostBlockung(idBlockung, "Restaurierte Blockung", abiturjahr, halbjahr, false);
 			conn.transactionPersist(blockung);
 
 			// Erstelle das Zwischenergebnis
-			final DTOGostBlockungZwischenergebnis ergebnis = new DTOGostBlockungZwischenergebnis(idErgebnis, idBlockung, false, true);
+			final DTOGostBlockungZwischenergebnis ergebnis = new DTOGostBlockungZwischenergebnis(idErgebnis, idBlockung, false);
 			conn.transactionPersist(ergebnis);
 
 			// Fehlervermeidung: Prüfe, ob alle Fächer auch in der Liste der Fächer der Oberstufe für diesen Jahrgang vorhanden sind

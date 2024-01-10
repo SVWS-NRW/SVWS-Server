@@ -26,7 +26,7 @@ public class GostBlockungListeneintrag {
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	public int gostHalbjahr = 0;
 
-	/** Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. */
+	/** Gibt an, ob diese Blockung als aktiv markiert wurde. */
 	public boolean istAktiv = false;
 
 }

@@ -126,8 +126,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             	}
             }
             final GostBlockungsergebnis ergebnis = manager.getErgebnis();
-            ergebnis.istMarkiert = erg.IstMarkiert != null && erg.IstMarkiert;
-            ergebnis.istVorlage = erg.IstVorlage != null && erg.IstVorlage;
+            ergebnis.istAktiv = erg.IstAktiv != null && erg.IstAktiv;
 
             // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
             final var eintrag = new GostBlockungsergebnisListeneintrag();
@@ -135,8 +134,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             eintrag.blockungID = ergebnis.blockungID;
             eintrag.name = ergebnis.name;
             eintrag.gostHalbjahr = ergebnis.gostHalbjahr;
-            eintrag.istMarkiert = ergebnis.istMarkiert;
-            eintrag.istVorlage = ergebnis.istVorlage;
+            eintrag.istAktiv = ergebnis.istAktiv;
             eintrag.bewertung = ergebnis.bewertung;
             datenManager.daten().ergebnisse.add(eintrag);
         }
@@ -173,8 +171,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         	}
         }
         final GostBlockungsergebnis daten = manager.getErgebnis();
-        daten.istMarkiert = ergebnis.IstMarkiert != null && ergebnis.IstMarkiert;
-        daten.istVorlage = ergebnis.IstVorlage != null && ergebnis.IstVorlage;
+        daten.istAktiv = ergebnis.IstAktiv != null && ergebnis.IstAktiv;
         return daten;
 	}
 
@@ -216,7 +213,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			conn.transactionBegin();
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung
-			final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
+			DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 			if (ergebnis == null)
 				return OperationError.NOT_FOUND.getResponse();
 			for (final Entry<String, Object> entry : map.entrySet()) {
@@ -228,8 +225,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "istMarkiert" -> ergebnis.IstMarkiert = JSONMapper.convertToBoolean(value, false);
-					case "istVorlage" -> ergebnis.IstVorlage = JSONMapper.convertToBoolean(value, false);
+					case "istAktiv" -> {
+						final boolean result = JSONMapper.convertToBoolean(value, false);
+						if (result)
+							ergebnis = markiereErgebnisAktiv(conn, ergebnis.ID, true);
+						else
+							ergebnis.IstAktiv = false;
+					}
 					default -> throw OperationError.BAD_REQUEST.exception();
 				}
 			}
@@ -265,6 +267,33 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
+
+	/**
+	 * Markiert das Blockungsergebnis als aktiv und alle anderen Ergebnisse der Blockung als inaktiv, wenn der
+	 * Wert auf true gesetzt ist und ansonsten nur das angegebene Blockungsergebnis auf inaktiv
+	 *
+	 * @param conn         die Datenbankverbindung
+	 * @param idErgebnis   die ID des Blockungsergebnisses
+	 * @param aktiv        gibt an,
+	 *
+	 * @return das DTO zur Blockung, falls damit weitergearbeitet werden soll
+	 */
+	public static DTOGostBlockungZwischenergebnis markiereErgebnisAktiv(final DBEntityManager conn, final long idErgebnis, final boolean aktiv) {
+		conn.transactionFlush();
+		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
+		if (aktiv) {
+			conn.transactionNativeUpdate("UPDATE %s SET %s = 0 WHERE %s = %d".formatted(
+				Schema.tab_Gost_Blockung_Zwischenergebnisse.name(), Schema.tab_Gost_Blockung_Zwischenergebnisse.col_IstAktiv.name(),
+				Schema.tab_Gost_Blockung_Zwischenergebnisse.col_Blockung_ID.name(), ergebnis.Blockung_ID));
+			conn.transactionFlush();
+			ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
+		}
+		ergebnis.IstAktiv = aktiv;
+    	if (!conn.transactionPersist(ergebnis))
+        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		return ergebnis;
+	}
 
 
 	private void _createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
@@ -773,16 +802,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     		return OperationError.CONFLICT.getResponse();
     	aktiviere(ergebnisManager, abschnitt, halbjahr);
         // Markiere die Blockung und das Ergebnis als aktiviert
-    	final DTOGostBlockung bl = conn.queryByKey(DTOGostBlockung.class, dtoErgebnis.Blockung_ID);
-    	bl.IstAktiv = true;
-    	if (!conn.transactionPersist(bl))
-        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-    	conn.transactionFlush();
-		final DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, dtoErgebnis.ID);
-    	erg.IstVorlage = true;
-    	if (!conn.transactionPersist(erg))
-        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-    	conn.transactionFlush();
+    	DataGostBlockungsdaten.markiereBlockungAktiv(conn, dtoErgebnis.Blockung_ID, true);
+		markiereErgebnisAktiv(conn, dtoErgebnis.ID, true);
         return Response.status(Status.NO_CONTENT).build();
     }
 

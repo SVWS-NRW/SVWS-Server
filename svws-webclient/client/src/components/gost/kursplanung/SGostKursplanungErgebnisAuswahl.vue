@@ -30,13 +30,13 @@
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`Maximale Kursdifferenz: ${getDatenmanager().ergebnisGetBewertung3Wert(row.id)}`" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 					</span>
-					<div v-if="auswahlErgebnis === row || row.istVorlage" class="ml-auto inline-flex">
+					<div v-if="auswahlErgebnis === row || row.istAktiv" class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
 							<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
 								<i-ri-delete-bin-line class="-mx-0.5" />
 							</svws-ui-button>
 						</template>
-						<svws-ui-tooltip v-if="row.istVorlage">
+						<svws-ui-tooltip v-if="row.istAktiv">
 							<i-ri-checkbox-circle-fill class="text-svws text-headline-md relative -my-0.5 ml-2" />
 							<template #content>
 								Aktiviertes Ergebnis

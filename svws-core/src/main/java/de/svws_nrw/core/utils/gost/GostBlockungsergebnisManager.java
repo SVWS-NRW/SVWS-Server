@@ -253,8 +253,7 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.blockungID = _parent.getID();
 		_ergebnis.name = pOld.name;
 		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
-		_ergebnis.istMarkiert = pOld.istMarkiert;
-		_ergebnis.istVorlage = pOld.istVorlage;
+		_ergebnis.istAktiv = pOld.istAktiv;
 
 		// Bewertungskriterium 3a und 3b (Kursdifferenzen)
 		_ergebnis.bewertung.kursdifferenzMax = 0;

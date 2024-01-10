@@ -27,14 +27,9 @@ export class GostBlockungsergebnis extends JavaObject {
 	public gostHalbjahr : number = 0;
 
 	/**
-	 * Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben.
+	 * Gibt an, ob dieses Ergebnis als aktiv markiert wurde.
 	 */
-	public istMarkiert : boolean = false;
-
-	/**
-	 * Gibt an, ob dieses Ergebnis bei einer aktivieren einen Blockung verwendet wurde.
-	 */
-	public istVorlage : boolean = false;
+	public istAktiv : boolean = false;
 
 	/**
 	 * Eine Liste der Schienen, welche zugeordnete Kurse beinhalten.
@@ -74,12 +69,9 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.istMarkiert === "undefined")
-			 throw new Error('invalid json format, missing attribute istMarkiert');
-		result.istMarkiert = obj.istMarkiert;
-		if (typeof obj.istVorlage === "undefined")
-			 throw new Error('invalid json format, missing attribute istVorlage');
-		result.istVorlage = obj.istVorlage;
+		if (typeof obj.istAktiv === "undefined")
+			 throw new Error('invalid json format, missing attribute istAktiv');
+		result.istAktiv = obj.istAktiv;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
 			for (const elem of obj.schienen) {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
@@ -97,8 +89,7 @@ export class GostBlockungsergebnis extends JavaObject {
 		result += '"blockungID" : ' + obj.blockungID + ',';
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
-		result += '"istVorlage" : ' + obj.istVorlage + ',';
+		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		if (!obj.schienen) {
 			result += '"schienen" : []';
 		} else {
@@ -131,11 +122,8 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		}
-		if (typeof obj.istMarkiert !== "undefined") {
-			result += '"istMarkiert" : ' + obj.istMarkiert + ',';
-		}
-		if (typeof obj.istVorlage !== "undefined") {
-			result += '"istVorlage" : ' + obj.istVorlage + ',';
+		if (typeof obj.istAktiv !== "undefined") {
+			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
 			if (!obj.schienen) {

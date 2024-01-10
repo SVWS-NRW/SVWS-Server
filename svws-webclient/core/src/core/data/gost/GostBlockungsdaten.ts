@@ -32,7 +32,7 @@ export class GostBlockungsdaten extends JavaObject {
 	public gostHalbjahr : number = GostHalbjahr.EF1.id;
 
 	/**
-	 * Gibt an, ob diese Blockung aktiviert wurde, d.h. in die Leistungsdaten übertragen wurde. Dort können ggf. in der Zwischenzeit Anpassungen erfolgt sein.
+	 * Gibt an, ob diese Blockung als aktiv markiert wurde.
 	 */
 	public istAktiv : boolean = false;
 

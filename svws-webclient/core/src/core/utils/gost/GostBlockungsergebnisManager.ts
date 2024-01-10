@@ -311,8 +311,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.blockungID = this._parent.getID();
 		this._ergebnis.name = pOld.name;
 		this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
-		this._ergebnis.istMarkiert = pOld.istMarkiert;
-		this._ergebnis.istVorlage = pOld.istVorlage;
+		this._ergebnis.istAktiv = pOld.istAktiv;
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = this._parent.daten().fachwahlen.size();

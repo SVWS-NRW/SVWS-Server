@@ -31,11 +31,8 @@ public class GostBlockungsergebnis {
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	public int gostHalbjahr = 0;
 
-	/** Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben. */
-	public boolean istMarkiert = false;
-
-	/** Gibt an, ob dieses Ergebnis bei einer aktivieren einen Blockung verwendet wurde. */
-	public boolean istVorlage = false;
+	/** Gibt an, ob dieses Ergebnis als aktiv markiert wurde. */
+	public boolean istAktiv = false;
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
 	public final @NotNull List<@NotNull GostBlockungsergebnisSchiene> schienen = new ArrayList<>();

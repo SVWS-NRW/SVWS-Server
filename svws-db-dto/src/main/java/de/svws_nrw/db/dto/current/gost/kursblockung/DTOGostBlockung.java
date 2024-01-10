@@ -73,7 +73,7 @@ public final class DTOGostBlockung {
 	@JsonDeserialize(using = GOStHalbjahrConverterDeserializer.class)
 	public GostHalbjahr Halbjahr;
 
-	/** Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false.Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits in die Leistungsdaten übertragen. */
+	/** Gibt an, ob die Blockung als aktive Blockung markiert wurde oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstAktiv")
 	@JsonProperty
 	@Convert(converter = Boolean01Converter.class)

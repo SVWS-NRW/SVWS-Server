@@ -32,14 +32,12 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istmarkiert", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
-@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istaktiv", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istaktiv.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstAktiv IN :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.all.migration", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Blockung_ID", "IstMarkiert", "IstVorlage"})
+@JsonPropertyOrder({"ID", "Blockung_ID", "IstAktiv"})
 public final class DTOGostBlockungZwischenergebnis {
 
 	/** ID der Zwischenergebnisses einer Blockung (generiert) */
@@ -53,21 +51,13 @@ public final class DTOGostBlockungZwischenergebnis {
 	@JsonProperty
 	public long Blockung_ID;
 
-	/** Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
-	@Column(name = "IstMarkiert")
+	/** Gibt an, ob das Zwischenergebnis als aktives Zwischenergebnis einer Blockung markiert wurde oder nicht: 1 - true, 0 - false  */
+	@Column(name = "IstAktiv")
 	@JsonProperty
 	@Convert(converter = Boolean01Converter.class)
 	@JsonSerialize(using = Boolean01ConverterSerializer.class)
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
-	public Boolean IstMarkiert;
-
-	/** Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden.In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden. */
-	@Column(name = "IstVorlage")
-	@JsonProperty
-	@Convert(converter = Boolean01Converter.class)
-	@JsonSerialize(using = Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
-	public Boolean IstVorlage;
+	public Boolean IstAktiv;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungZwischenergebnis ohne eine Initialisierung der Attribute.
@@ -80,14 +70,12 @@ public final class DTOGostBlockungZwischenergebnis {
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungZwischenergebnis ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Blockung_ID   der Wert für das Attribut Blockung_ID
-	 * @param IstMarkiert   der Wert für das Attribut IstMarkiert
-	 * @param IstVorlage   der Wert für das Attribut IstVorlage
+	 * @param IstAktiv   der Wert für das Attribut IstAktiv
 	 */
-	public DTOGostBlockungZwischenergebnis(final long ID, final long Blockung_ID, final Boolean IstMarkiert, final Boolean IstVorlage) {
+	public DTOGostBlockungZwischenergebnis(final long ID, final long Blockung_ID, final Boolean IstAktiv) {
 		this.ID = ID;
 		this.Blockung_ID = Blockung_ID;
-		this.IstMarkiert = IstMarkiert;
-		this.IstVorlage = IstVorlage;
+		this.IstAktiv = IstAktiv;
 	}
 
 
@@ -119,7 +107,7 @@ public final class DTOGostBlockungZwischenergebnis {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", IstMarkiert=" + this.IstMarkiert + ", IstVorlage=" + this.IstVorlage + ")";
+		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", IstAktiv=" + this.IstAktiv + ")";
 	}
 
 }

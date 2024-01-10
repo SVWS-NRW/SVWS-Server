@@ -43,9 +43,7 @@ public class Tabelle_Gost_Blockung extends SchemaTabelle {
 		.setDefault("0")
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false."
-				+ "Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits "
-				+ "in die Leistungsdaten übertragen.");
+		.setJavaComment("Gibt an, ob die Blockung als aktive Blockung markiert wurde oder nicht: 1 - true, 0 - false.");
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Abi_Jahrgang_FK = addForeignKey(

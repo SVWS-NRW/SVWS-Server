@@ -18,7 +18,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public gostHalbjahr : number = 0;
 
 	/**
-	 * Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde.
+	 * Gibt an, ob diese Blockung als aktiv markiert wurde.
 	 */
 	public istAktiv : boolean = false;
 

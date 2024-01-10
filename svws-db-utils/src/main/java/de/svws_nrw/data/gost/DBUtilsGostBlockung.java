@@ -153,7 +153,7 @@ public final class DBUtilsGostBlockung {
 			final Long ergebnisID = getNextID.apply(conn, Schema.tab_Gost_Blockung_Zwischenergebnisse);
 			// Lege die Blockung und ein zugehöriges Ergebnis an
 			final DTOGostBlockung blockung = new DTOGostBlockung(blockungID, k42.name + " (import)", k42.abiturjahrgang, k42.halbjahr, false);
-			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false, false);
+			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false);
 			conn.transactionPersist(blockung);
 			conn.transactionPersist(erg);
 			// Lege die Schienen an
