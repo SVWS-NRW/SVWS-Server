@@ -20,6 +20,7 @@
 								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
+							<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
 							<template v-if="(manager().kursGetByLeistungIdOrNull(row.source.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(manager().kursGetByLeistungIdOrNull(row.source.id)!.kursartAllg).size() === 1">
 								<span>{{ row.source.kursart }}</span>
 							</template>

@@ -1119,6 +1119,16 @@ public enum ZulaessigeKursart {
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
 	public static @NotNull List<@NotNull ZulaessigeKursart> getByAllgemeinerKursart(@NotNull final String allgKursart) {
+		if (ZulaessigeKursart.E.daten.kuerzel.equals(allgKursart)) {
+			final @NotNull List<@NotNull ZulaessigeKursart> result = new ArrayList<>();
+			result.add(ZulaessigeKursart.E);
+			return result;
+		}
+		if (ZulaessigeKursart.G.daten.kuerzel.equals(allgKursart)) {
+			final @NotNull List<@NotNull ZulaessigeKursart> result = new ArrayList<>();
+			result.add(ZulaessigeKursart.G);
+			return result;
+		}
 		final List<@NotNull ZulaessigeKursart> result = getMapByAllgemeinemKuerzel().get(allgKursart);
 		if (result == null)
 			throw new DeveloperNotificationException("Die allgemeine Kursart " + allgKursart + " existiert nicht.");

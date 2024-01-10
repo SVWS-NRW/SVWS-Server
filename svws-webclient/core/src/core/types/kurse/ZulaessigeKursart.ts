@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -564,6 +565,16 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
 	public static getByAllgemeinerKursart(allgKursart : string) : List<ZulaessigeKursart> {
+		if (JavaObject.equalsTranspiler(ZulaessigeKursart.E.daten.kuerzel, (allgKursart))) {
+			const result : List<ZulaessigeKursart> = new ArrayList();
+			result.add(ZulaessigeKursart.E);
+			return result;
+		}
+		if (JavaObject.equalsTranspiler(ZulaessigeKursart.G.daten.kuerzel, (allgKursart))) {
+			const result : List<ZulaessigeKursart> = new ArrayList();
+			result.add(ZulaessigeKursart.G);
+			return result;
+		}
 		const result : List<ZulaessigeKursart> | null = ZulaessigeKursart.getMapByAllgemeinemKuerzel().get(allgKursart);
 		if (result === null)
 			throw new DeveloperNotificationException("Die allgemeine Kursart " + allgKursart! + " existiert nicht.")
