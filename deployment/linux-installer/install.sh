@@ -357,6 +357,7 @@ if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
 	#mkdir -p $SVWS_TLS_KEYSTORE_PATH
     echo "Erstelle Keystore in $SVWS_TLS_KEYSTORE_PATH/keystore ..."
     keytool -genkey -noprompt -alias alias1 -dname "CN=test, OU=test, O=test, L=test, S=test, C=test" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
+    keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias alias1 -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
 else
 	mv  $SVWS_TLS_KEYSTORE_PATH $APP_PATH
 fi
