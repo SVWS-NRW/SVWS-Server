@@ -28,6 +28,7 @@ def getEnvironmentProperty = { propName, defaultValue ->
 			return localProperties.getProperty(propName)
 		else
 			logger.warn("local.properties in ${project.name} benötigt das Property ${propName}")
+			return defaultValue
 	} else {
 		if (project.hasProperty(propName))
 			return project.getProperty(propName)
@@ -35,8 +36,13 @@ def getEnvironmentProperty = { propName, defaultValue ->
 			return defaultValue
 	}
 }
+def JOB_ID = (getEnvironmentProperty 'JOB_ID', UUID.randomUUID().toString())
+if (JOB_ID.length() > 17) {
+	JOB_ID = JOB_ID.substring(0,17)
+}
+
 project.ext.TESTING_SVWS_PORT = getEnvironmentProperty 'svws.testing.api.port','8443'
-project.ext.TESTING_SVWS_HOST = getEnvironmentProperty 'svws.testing.api.host', 'https://' + project.name + '-svws'
+project.ext.TESTING_SVWS_HOST = (getEnvironmentProperty 'svws.testing.api.host', 'https://' + project.name + '-svws-' + JOB_ID)
 project.ext.TESTING_SVWS_DB_PORT = getEnvironmentProperty 'svws.testing.db.port', '3306'
 
 def MariaDB_ROOT_PASSWORD = getEnvironmentProperty 'MariaDB_ROOT_PASSWORD', null
@@ -63,9 +69,9 @@ task createEnv(){
 			entry(key:"MariaDB_USER", value: MariaDB_USER)
 			entry(key:"MariaDB_PASSWORD", value: MariaDB_PASSWORD)
 
-			entry(key:"MariaDB_HOST", value: project.name + '-db')
-			entry(key:"SVWS_CONTAINER_NAME", value: project.name + '-svws')
-			entry(key:"DB_CONTAINER_NAME", value: project.name + '-db')
+			entry(key:"MariaDB_HOST", value: project.name + '-db-' + JOB_ID)
+			entry(key:"SVWS_CONTAINER_NAME", value: project.name + '-svws-' + JOB_ID)
+			entry(key:"DB_CONTAINER_NAME", value: project.name + '-db-' + JOB_ID)
 
 			entry(key:"TESTDB_PASSWORD", value: MDB_PASSWORD)
 		}
