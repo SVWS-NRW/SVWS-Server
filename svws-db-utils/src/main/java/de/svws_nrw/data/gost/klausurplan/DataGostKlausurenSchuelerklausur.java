@@ -138,6 +138,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 */
 	public static List<GostSchuelerklausur> getSchuelerNachschreibKlausuren(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) {
 		List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
+		if (kursKlausuren.isEmpty())
+			return new ArrayList<>();
 		List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query("SELECT DISTINCT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenSchuelerklausurenTermine skt ON sk.ID = skt.Schuelerklausur_ID AND sk.Kursklausur_ID IN :kkids WHERE skt.Folge_Nr > 0", DTOGostKlausurenSchuelerklausuren.class)
 				.setParameter("kkids", kursKlausuren.stream().map(kk -> kk.id).toList())
 				.getResultList();
