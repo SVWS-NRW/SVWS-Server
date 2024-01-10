@@ -234,7 +234,18 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
 		});
-		await this.setAuswahlErgebnis(ergebnisse.size() <= 0 ? undefined : ergebnisse.get(0));
+		let ergebnis : GostBlockungsergebnisListeneintrag | undefined = undefined;
+		if (ergebnisse.size() > 0) {
+			for (const e of ergebnisse) {
+				if (e.istAktiv) {
+					ergebnis = e;
+					break;
+				}
+			}
+			if (ergebnis === undefined)
+				ergebnis = ergebnisse.get(0);
+		}
+		await this.setAuswahlErgebnis(ergebnis);
 	}
 
 	public get datenmanager(): GostBlockungsdatenManager {

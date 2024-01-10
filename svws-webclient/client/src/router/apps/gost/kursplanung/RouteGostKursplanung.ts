@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -92,9 +92,17 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		// Prüfe die Blockung und setzte diese ggf.
 		if (idBlockung === undefined) {
-			// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
+			// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. die aktive Blockung oder das erste Element aus
 			if ((idBlockung === undefined) && (this.data.mapBlockungen.size > 0)) {
-				const blockungsEintrag = this.data.mapBlockungen.values().next().value;
+				let blockungsEintrag : GostBlockungListeneintrag | undefined = undefined;
+				for (const e of this.data.mapBlockungen.values()) {
+					if (e.istAktiv === true) {
+						blockungsEintrag = e;
+						break;
+					}
+				}
+				if (blockungsEintrag === undefined)
+					blockungsEintrag = this.data.mapBlockungen.values().next().value as GostBlockungListeneintrag;
 				return this.getRouteBlockung(abiturjahr, halbjahr.id, blockungsEintrag.id);
 			}
 			if (this.data.hatBlockung)
@@ -121,9 +129,17 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		}
 		// Prüfe das Blockungsergebnis und setzte dieses ggf.
 		if (idErgebnis === undefined) {
-			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das erste Element aus
+			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
-				const ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
+				let ergebnis : GostBlockungsergebnisListeneintrag | undefined = undefined;
+				for (const e of this.data.datenmanager.ergebnisGetListeSortiertNachBewertung()) {
+					if (e.istAktiv === true) {
+						ergebnis = e;
+						break;
+					}
+				}
+				if (ergebnis === undefined)
+					ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 				return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))
