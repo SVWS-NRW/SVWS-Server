@@ -767,13 +767,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public kurssortierung = computed<'fach' | 'kursart'>({
 		get: () => {
-			const value = api.config.getValue('gost.kursansicht.sortierung');
+			const value = api.config.getValue('gost.kursplanung.kursansicht.sortierung');
 			if ((value === undefined) || ((value !== 'kursart') && (value !== 'fach')))
 				return 'kursart';
 			return value;
 		},
 		set: (value) => {
-			void api.config.setValue('gost.kursansicht.sortierung', value);
+			void api.config.setValue('gost.kursplanung.kursansicht.sortierung', value);
 			if (this._state.value.ergebnismanager !== undefined) {
 				if (value === 'kursart')
 					this.ergebnismanager.kursSetSortierungKursartFachNummer();

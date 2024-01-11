@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
+	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
 				<template #icon> <i-ri-printer-line /> </template>
@@ -10,13 +10,13 @@
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-						<template v-if="blockungstabelleVisible">
-							<i-ri-menu-fold-line />
-							Tabelle ausblenden
-						</template>
-						<template v-else>
+						<template v-if="blockungstabelleHidden">
 							<i-ri-menu-unfold-line />
 							Tabelle einblenden
+						</template>
+						<template v-else>
+							<i-ri-menu-fold-line />
+							Tabelle ausblenden
 						</template>
 					</svws-ui-button>
 					<s-card-gost-kursansicht-irrlaeufer-modal v-if="zuordnungen.length > 0" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
@@ -67,7 +67,7 @@
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
 				:ergebnis-hochschreiben="ergebnisHochschreiben"
 				:toggle-blockungstabelle="toggleBlockungstabelle"
-				:blockungstabelle-visible="blockungstabelleVisible"
+				:blockungstabelle-visible="!blockungstabelleHidden"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs" />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
@@ -133,10 +133,14 @@
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	const blockungstabelleVisible = ref(true);
-
 	const onToggle = () => collapsed.value = !collapsed.value;
-	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
+	const toggleBlockungstabelle = () => blockungstabelleHidden.value = !blockungstabelleHidden.value;
+
+	const blockungstabelleHidden = computed<boolean>({
+		get: () => props.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true',
+		set: (value) => void props.config.setValue("gost.kursplanung.kursansicht.ausgeblendet", value === true ? 'true' : 'false')
+	});
+
 
 	const dropdownList = [
 		{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true },

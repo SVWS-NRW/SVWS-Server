@@ -172,11 +172,11 @@
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
 	const showGeschlecht = computed<boolean>({
-		get: () => props.config.getValue('gost.schuelerauswahl.geschlecht') === 'true',
+		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true',
 		set: (value) => {
 			if (value === undefined)
 				value = true
-			void props.config.setValue('gost.schuelerauswahl.geschlecht', value ? 'true':'false');
+			void props.config.setValue("gost.kursplanung.schueler.auswahl.geschlecht", value ? 'true':'false');
 		}
 	});
 	const fach = computed<GostFach|undefined>({

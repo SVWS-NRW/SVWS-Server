@@ -35,7 +35,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.kursansicht.sortierung", "user", "kursart")
+			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
+			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart")
 		]);
 	}
 
