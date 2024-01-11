@@ -1,9 +1,10 @@
-import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
+import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
 
 
 interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
@@ -241,5 +242,37 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		await this.setGostBelegpruefungErgebnis();
 	});
 
-}
 
+	gotoKursblockung = api.call(async (halbjahr: GostHalbjahr): Promise<void> => {
+		// Bestimme die Liste der Blockungen
+		const blockungsliste = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, this.gostJahrgangsdaten.abiturjahr, halbjahr.id);
+		if (blockungsliste.isEmpty())
+			return;
+		// Bestimme die aktive Blockung, falls gesetzt, sonst nehme das erste in der Liste
+		let blockungseintrag: GostBlockungListeneintrag | undefined = undefined;
+		for (const e of blockungsliste) {
+			if (e.istAktiv) {
+				blockungseintrag = e;
+				break;
+			}
+		}
+		if (blockungseintrag === undefined)
+			blockungseintrag = blockungsliste.get(0);
+		// Bestimme die Daten der Blockung mit der Ergebnisliste
+		const blockungsdaten = await api.server.getGostBlockung(api.schema, blockungseintrag.id);
+		if (blockungsdaten.ergebnisse.isEmpty())
+			return;
+		// Bestimme das aktive Ergebnis, falls gesetzt, sonst nehme das erste in der Liste
+		let ergebnis: GostBlockungsergebnisListeneintrag | undefined = undefined;
+		for (const e of blockungsdaten.ergebnisse) {
+			if (e.istAktiv) {
+				ergebnis = e;
+				break;
+			}
+		}
+		if (ergebnis === undefined)
+			ergebnis = blockungsdaten.ergebnisse.get(0);
+		await RouteManager.doRoute({ name: "gost.kursplanung.schueler", params: { abiturjahr: this.gostJahrgangsdaten.abiturjahr, halbjahr: halbjahr.id, idblockung: blockungsdaten.id, idergebnis: ergebnis.id, idschueler : this.auswahl.id }});
+	});
+
+}

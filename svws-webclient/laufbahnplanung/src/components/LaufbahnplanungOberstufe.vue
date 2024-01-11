@@ -30,7 +30,7 @@
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" />
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="async (halbjahr: GostHalbjahr) => {}" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
 			<div class="flex flex-col gap-16">
@@ -45,6 +45,7 @@
 
 	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
 	import { computed, onMounted, ref } from "vue";
+	import { type GostHalbjahr } from "@core";
 	import { version } from '../../version';
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();

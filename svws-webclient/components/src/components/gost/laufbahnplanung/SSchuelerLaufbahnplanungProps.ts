@@ -1,5 +1,5 @@
 import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
-	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile, SimpleOperationResponse } from "@core";
+	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile, SimpleOperationResponse, GostHalbjahr } from "@core";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
@@ -22,4 +22,5 @@ export interface SchuelerLaufbahnplanungProps {
 	resetFachwahlen: () => Promise<void>;
 	modus: 'manuell'|'normal'|'hochschreiben';
 	setModus: (modus: 'manuell'|'normal'|'hochschreiben') => Promise<void>;
+	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 }

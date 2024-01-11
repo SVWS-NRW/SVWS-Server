@@ -96,7 +96,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 	 */
 	public static long[] getAnzahlBlockungen(final DBEntityManager conn, final int abiturjahr) {
 		final long[] result = new long[6];
-		final List<Object[]> tmpAnzahlBlockungen = conn.queryNative("SELECT Halbjahr, count(*) AS Anzahl FROM Gost_Blockung WHERE Abi_Jahrgang=2021 GROUP BY Halbjahr");
+		final List<Object[]> tmpAnzahlBlockungen = conn.queryNative("SELECT Halbjahr, count(*) AS Anzahl FROM Gost_Blockung WHERE Abi_Jahrgang=%d GROUP BY Halbjahr".formatted(abiturjahr));
 		for (final Object[] anzahlBlockungen : tmpAnzahlBlockungen) {
 			final int halbjahr = GostHalbjahr.fromID((Integer) anzahlBlockungen[0]).id;
 			result[halbjahr] = (Long) anzahlBlockungen[1];

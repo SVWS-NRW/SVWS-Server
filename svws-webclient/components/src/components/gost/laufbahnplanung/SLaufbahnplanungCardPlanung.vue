@@ -45,24 +45,17 @@
 							</template>
 						</svws-ui-tooltip>
 					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						EF.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						EF.2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q1.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q1.2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q2.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q2.2
-					</div>
+					<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
+						<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+							{{ halbjahr.kuerzel }}
+							<svws-ui-tooltip v-if="gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
+								<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><i-ri-link /></span>
+								<template #content>
+									Zur {{ halbjahr.kuerzel }}-Kursblockung
+								</template>
+							</svws-ui-tooltip>
+						</div>
+					</template>
 					<div class="svws-ui-td svws-align-center svws-no-padding">
 						Fach
 					</div>
@@ -207,13 +200,14 @@
 	import type { ComputedRef } from "vue";
 	import {computed } from "vue";
 
-	import type { AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
+	import { GostHalbjahr, type AbiturdatenManager, type GostSchuelerFachwahl, type GostJahrgangsdaten } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
+		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 		title?: string | undefined;

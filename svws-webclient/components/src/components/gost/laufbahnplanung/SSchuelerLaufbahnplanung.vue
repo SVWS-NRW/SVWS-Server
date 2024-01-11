@@ -22,7 +22,7 @@
 		</Teleport>
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" />
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
