@@ -9,6 +9,14 @@
   "beginnZusatzkursGE": "Q1.1",
   "hatZusatzkursSW": true,
   "beginnZusatzkursSW": "Q1.1",
+  "anzahlKursblockungen": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
   "istBlockungFestgelegt": [
     false,
     false,
