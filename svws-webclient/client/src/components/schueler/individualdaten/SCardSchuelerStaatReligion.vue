@@ -1,8 +1,5 @@
 <template>
 	<svws-ui-content-card title="Staatsangehörigkeit und Konfession">
-		<template #actions>
-			<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
-		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-select v-model="staatsangehoerigkeit" title="1. Staatsangehörigkeit" autocomplete
 				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
@@ -10,7 +7,10 @@
 			<svws-ui-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit" autocomplete removable
 				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-			<svws-ui-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required class="col-span-full" statistics />
+			<svws-ui-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required statistics />
+			<div class="flex items-center pl-2">
+				<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
+			</div>
 			<svws-ui-text-input :model-value="data.religionabmeldung" @change="religionabmeldung => patch({religionabmeldung})" type="date" placeholder="Abmeldung vom Religionsunterricht" />
 			<svws-ui-text-input :model-value="data.religionanmeldung" @change="religionanmeldung => patch({religionanmeldung})" type="date" placeholder="Wiederanmeldung" />
 		</svws-ui-input-wrapper>
