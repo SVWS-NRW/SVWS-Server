@@ -1,8 +1,9 @@
 import type { ComputedRef} from "vue";
 import { computed } from "vue";
 
-import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, SimpleOperationResponse } from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
+	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
+import { SimpleOperationResponse } from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";

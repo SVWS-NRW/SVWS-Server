@@ -470,6 +470,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const eintrag = await api.server.addStundenplan(api.schema, api.abschnitt.id);
 		this.mapKatalogeintraege.set(eintrag.id, eintrag)
 		await this.setEintrag(eintrag);
+		this.commit();
 		api.status.stop();
 	}
 

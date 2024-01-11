@@ -2,7 +2,8 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
-import { BenutzerKompetenz, GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag, GostHalbjahr, Schulform, ServerMode } from "@core";
+import type { GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag} from "@core";
+import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
