@@ -137,6 +137,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    		daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 	    	}
     	}
+    	daten.anzahlKursblockungen = DataGostBlockungsliste.getAnzahlBlockungen(conn, daten.abiturjahr);
     	// Ergänze die Beratungslehrer
     	final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", daten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
     	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));

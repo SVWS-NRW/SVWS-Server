@@ -84,4 +84,24 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		throw new UnsupportedOperationException();
 	}
 
+
+	/**
+	 * Ermittelt für das angegeben Abiturjahr die Anzahl der angelegten Blockungen in der Kursplanung
+	 * für die einzelnen Halbjahre der Gymnasialen Oberstufe.
+	 *
+	 * @param conn         die Datenbankverbindung
+	 * @param abiturjahr   das Abiturjahr
+	 *
+	 * @return die Anzahl der Blockungen für die einzelnen Halbjahre (Index 0 = EF.1, 1=EF.2, ...)
+	 */
+	public static long[] getAnzahlBlockungen(final DBEntityManager conn, final int abiturjahr) {
+		final long[] result = new long[6];
+		final List<Object[]> tmpAnzahlBlockungen = conn.queryNative("SELECT Halbjahr, count(*) AS Anzahl FROM Gost_Blockung WHERE Abi_Jahrgang=2021 GROUP BY Halbjahr");
+		for (final Object[] anzahlBlockungen : tmpAnzahlBlockungen) {
+			final int halbjahr = GostHalbjahr.fromID((Integer) anzahlBlockungen[0]).id;
+			result[halbjahr] = (Long) anzahlBlockungen[1];
+		}
+		return result;
+	}
+
 }

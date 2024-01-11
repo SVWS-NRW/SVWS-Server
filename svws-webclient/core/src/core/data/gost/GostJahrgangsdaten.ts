@@ -57,6 +57,11 @@ export class GostJahrgangsdaten extends JavaObject {
 	public beginnZusatzkursSW : string | null = null;
 
 	/**
+	 * Gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0 = EF.1, 1=EF.2, ...)
+	 */
+	public anzahlKursblockungen : Array<number> = Array(6).fill(0);
+
+	/**
 	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...)
 	 */
 	public istBlockungFestgelegt : Array<boolean> = Array(6).fill(false);
@@ -100,6 +105,9 @@ export class GostJahrgangsdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
 		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
+		for (let i = 0; i < obj.anzahlKursblockungen.length; i++) {
+			result.anzahlKursblockungen[i] = obj.anzahlKursblockungen[i];
+		}
 		for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
 			result.istBlockungFestgelegt[i] = obj.istBlockungFestgelegt[i];
 		}
@@ -123,6 +131,18 @@ export class GostJahrgangsdaten extends JavaObject {
 		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+		if (!obj.anzahlKursblockungen) {
+			result += '"anzahlKursblockungen" : []';
+		} else {
+			result += '"anzahlKursblockungen" : [ ';
+			for (let i = 0; i < obj.anzahlKursblockungen.length; i++) {
+				const elem = obj.anzahlKursblockungen[i];
+				result += JSON.stringify(elem);
+				if (i < obj.anzahlKursblockungen.length - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (!obj.istBlockungFestgelegt) {
 			result += '"istBlockungFestgelegt" : []';
 		} else {
@@ -183,6 +203,21 @@ export class GostJahrgangsdaten extends JavaObject {
 		}
 		if (typeof obj.beginnZusatzkursSW !== "undefined") {
 			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+		}
+		if (typeof obj.anzahlKursblockungen !== "undefined") {
+			const a = obj.anzahlKursblockungen;
+			if (!a) {
+				result += '"anzahlKursblockungen" : []';
+			} else {
+				result += '"anzahlKursblockungen" : [ ';
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
+					result += JSON.stringify(elem);
+					if (i < a.length - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		if (typeof obj.istBlockungFestgelegt !== "undefined") {
 			const a = obj.istBlockungFestgelegt;
