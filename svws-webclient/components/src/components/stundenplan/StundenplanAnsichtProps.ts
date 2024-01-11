@@ -1,6 +1,6 @@
-import type { StundenplanKalenderwochenzuordnung, StundenplanManager, StundenplanPausenaufsicht, StundenplanKurs, StundenplanKlassenunterricht, StundenplanUnterricht, StundenplanZeitraster, StundenplanPausenzeit, List } from "@core";
+import type { StundenplanKalenderwochenzuordnung, StundenplanManager, StundenplanPausenaufsicht, StundenplanKurs, StundenplanKlassenunterricht, StundenplanUnterricht, StundenplanZeitraster, StundenplanPausenzeit, List, StundenplanSchiene } from "@core";
 
-export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | StundenplanKurs | StundenplanUnterricht | List<StundenplanUnterricht> | StundenplanPausenaufsicht | undefined;
+export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | StundenplanKurs | StundenplanUnterricht | List<StundenplanUnterricht> | StundenplanPausenaufsicht | undefined | StundenplanSchiene;
 
 export type StundenplanAnsichtDropZone = StundenplanZeitraster | StundenplanPausenzeit | undefined;
 

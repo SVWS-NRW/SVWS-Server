@@ -177,9 +177,9 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanSchiene, Wochentag, StundenplanPausenzeit, List} from "@core";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
-	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht } from "@core";
+	import type { Wochentag, StundenplanPausenzeit, List } from "@core";
+	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht, StundenplanSchiene } from "@core";
 	import { computed } from "vue";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
@@ -375,7 +375,7 @@
 		const data = props.dragData();
 		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
 			return false;
-		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
+		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht) || (data instanceof StundenplanSchiene))
 			return true;
 		let z = new StundenplanZeitraster();
 		if (data instanceof StundenplanUnterricht)
