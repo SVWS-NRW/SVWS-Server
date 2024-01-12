@@ -448,6 +448,15 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
+	private async ladeEintrag(auswahl: StundenplanListeEintrag) : Promise<{ daten: Stundenplan, stundenplanManager: StundenplanManager }> {
+		const daten = await api.server.getStundenplan(api.schema, auswahl.id);
+		const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
+		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
+		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
+		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
+		return { daten, stundenplanManager };
+	}
+
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
 		api.status.start();
 		if (auswahl === undefined && this.mapKatalogeintraege.size > 0)
@@ -455,12 +464,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (auswahl === undefined)
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
 		else {
-			const daten = await api.server.getStundenplan(api.schema, auswahl.id);
-			const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
-			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
-			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
-			const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
-			this.setPatchedState({ auswahl, daten, stundenplanManager });
+			const result = await this.ladeEintrag(auswahl);
+			this.setPatchedState({ auswahl, daten: result.daten, stundenplanManager: result.stundenplanManager });
 		}
 		api.status.stop();
 	}
@@ -469,8 +474,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.start();
 		const eintrag = await api.server.addStundenplan(api.schema, api.abschnitt.id);
 		this.mapKatalogeintraege.set(eintrag.id, eintrag)
-		await this.setEintrag(eintrag);
-		this.commit();
+		const result = await this.ladeEintrag(eintrag);
+		this.setPatchedState({ auswahl: eintrag, daten: result.daten, stundenplanManager: result.stundenplanManager, mapKatalogeintraege: this.mapKatalogeintraege });
 		api.status.stop();
 	}
 
