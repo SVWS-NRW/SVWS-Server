@@ -97,9 +97,13 @@
 	const kursarten = computed<Map<string, string>>(() => {
 		const arten = new Map<string, string>();
 		for (const art of ZulaessigeKursart.get(props.schulform)) {
+			if (art.daten.kuerzel === "PUK")
+				continue;
 			if ((art.daten.kuerzelAllg != null) && (art.daten.bezeichnungAllg != null))
 				arten.set(art.daten.kuerzelAllg, art.daten.bezeichnungAllg);
 			else
+				arten.set(art.daten.kuerzel, art.daten.bezeichnung);
+			if (art.daten.kuerzelAllg === "DK")
 				arten.set(art.daten.kuerzel, art.daten.bezeichnung);
 		}
 		return new Map([...arten.entries()].sort());
