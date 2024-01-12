@@ -337,13 +337,15 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const listID = new ArrayList<number>()
 		for (const zeitraster of multi)
 			listID.add(zeitraster.id);
-		const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, id);
-		this.stundenplanManager.zeitrasterRemoveAll(list);
-		if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
-			|| (typeof this.selected === 'number')
-			|| (this.selected instanceof Wochentag))
-			this._state.value.selected = undefined;
-		this.commit();
+		if (!listID.isEmpty()) {
+			const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, id);
+			this.stundenplanManager.zeitrasterRemoveAll(list);
+			if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
+				|| (typeof this.selected === 'number')
+				|| (this.selected instanceof Wochentag))
+				this._state.value.selected = undefined;
+			this.commit();
+		}
 		api.status.stop();
 	}
 
