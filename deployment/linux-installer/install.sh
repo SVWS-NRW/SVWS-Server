@@ -167,7 +167,7 @@ else
     		read -p "MariaDB_USER: " MariaDB_USER
     		export MariaDB_USER=${MariaDB_USER}
     		read -p "MariaDB_PASSWORD: " MariaDB_PASSWORD
-    		export MariaDB_PASSWORD=${MYSMariaDB_PASSWORD}
+    		export MariaDB_PASSWORD=${MariaDB_PASSWORD}
     	fi
 
     	echo "Installationspfade:"
@@ -206,6 +206,7 @@ else
     	if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
     		echo "Testdaten:"
     		read -sp "TESTDB_PASSWORD: " TESTDB_PASSWORD
+    		echo
     		export TESTDB_PASSWORD=${TESTDB_PASSWORD}
     		read -p "MDBFILE (default: 'Abitur-Test-Daten.mdb'): " MDBFILE_USER
     		export TMP_DIR=/tmp/svws
