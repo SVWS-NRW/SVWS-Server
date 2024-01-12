@@ -30,7 +30,8 @@ export class RouteKatalogSchuleDaten extends RouteNode<unknown, RouteKatalogSchu
 	public getProps(to: RouteLocationNormalized): SchuleDatenProps {
 		return {
 			patch: routeKatalogSchulen.data.patch,
-			mapKatalogeintraege: routeKatalogSchulen.data.mapKatalogeintraege
+			mapKatalogeintraege: routeKatalogSchulen.data.mapKatalogeintraege,
+			auswahl: routeKatalogSchulen.data.auswahl,
 		};
 	}
 
