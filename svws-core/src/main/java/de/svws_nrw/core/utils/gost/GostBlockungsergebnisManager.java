@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -15,6 +16,7 @@ import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -791,12 +793,69 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis.
+	 * Liefert das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
+	 * <br>Hinweis: Siehe auch {@link #getErgebnisInklusiveUngueltigerWahlen()}.
 	 *
-	 * @return das Blockungsergebnis.
+	 * @return das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
 	 */
 	public @NotNull GostBlockungsergebnis getErgebnis() {
 		return _ergebnis;
+	}
+
+	/**
+	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * <br>Hinweis: Siehe auch {@link #getErgebnis()}.
+	 *
+	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 */
+	public @NotNull GostBlockungsergebnis getErgebnisInklusiveUngueltigerWahlen() {
+		// Normale Kopie
+		final @NotNull GostBlockungsergebnis copy = new GostBlockungsergebnis();
+		copy.blockungID = _ergebnis.blockungID;
+		copy.gostHalbjahr = _ergebnis.gostHalbjahr;
+		copy.id = _ergebnis.id;
+		copy.istAktiv = _ergebnis.istAktiv;
+		copy.name = _ergebnis.name;
+
+		// Tiefe Kopie
+		copy.bewertung = copyBewertung(_ergebnis.bewertung);
+		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen)
+			copy.schienen.add(copySchiene(schiene));
+
+		// Ungültige Zuordnungen hinzufügen
+		for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> e : _map_schuelerID_ungueltige_kurse.entrySet())
+			for (final @NotNull @NotNull GostBlockungsergebnisKurs kurs1 : e.getValue())
+				for (final @NotNull GostBlockungsergebnisSchiene schiene : copy.schienen)
+					for (final @NotNull GostBlockungsergebnisKurs kurs2 : schiene.kurse)
+						if (kurs1.id == kurs2.id)
+							kurs2.schueler.add(e.getKey());
+
+		return copy;
+	}
+
+	private static @NotNull GostBlockungsergebnisBewertung copyBewertung(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		final @NotNull GostBlockungsergebnisBewertung c = new GostBlockungsergebnisBewertung();
+		c.anzahlKurseMitGleicherFachartProSchiene = bewertung.anzahlKurseMitGleicherFachartProSchiene;
+		c.anzahlKurseNichtZugeordnet = bewertung.anzahlKurseNichtZugeordnet;
+		c.anzahlSchuelerKollisionen = bewertung.anzahlSchuelerKollisionen;
+		c.anzahlSchuelerNichtZugeordnet = bewertung.anzahlSchuelerNichtZugeordnet;
+		c.kursdifferenzHistogramm = copyArray(bewertung.kursdifferenzHistogramm);
+		c.kursdifferenzMax = bewertung.kursdifferenzMax;
+		c.regelVerletzungen = new ArrayList<>(bewertung.regelVerletzungen);
+		return c;
+	}
+
+	private static @NotNull int[] copyArray(final @NotNull int[] a) {
+		final int[] c = new int[a.length];
+		System.arraycopy(a, 0, c, 0, a.length);
+		return c;
+	}
+
+	private @NotNull GostBlockungsergebnisSchiene copySchiene(final @NotNull GostBlockungsergebnisSchiene schiene) {
+		final @NotNull GostBlockungsergebnisSchiene c = new GostBlockungsergebnisSchiene();
+
+
+		return c;
 	}
 
 	/**
@@ -2415,17 +2474,18 @@ public class GostBlockungsergebnisManager {
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktive Auswahl erkennen.
-			if ((kurs == kursA) || (kurs == kursB))
-				aktiv = !aktiv;
-
-			// Aktuelle Zeile ignorieren?
-			if (!aktiv)
-				continue;
+			// Aktivieren
+			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = true;
 
 			// Aktive Auswahl: Scanne die Spalten
-			for (int nr = min; nr <= max; nr++)
-				regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
+			if (aktiv)
+				for (int nr = min; nr <= max; nr++)
+					regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
+
+			// Deaktivieren
+			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = false;
 		}
 
 		return regeln;
@@ -2453,23 +2513,23 @@ public class GostBlockungsergebnisManager {
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktive Auswahl erkennen.
-			if ((kurs == kursA) || (kurs == kursB))
-				aktiv = !aktiv;
-
-			// Aktuelle Zeile ignorieren?
-			if (!aktiv)
-				continue;
+			// Aktivieren
+			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = true;
 
 			// Gehe die Schienen des Kurses durch...
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
-					// Der Kurs befindet sich im Auswahl-Rechteck.
-					regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
+			if (aktiv)
+				for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
+					final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+					if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
+						// Der Kurs befindet sich im Auswahl-Rechteck.
+						regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
+					}
 				}
-			}
 
+			// Deaktivieren
+			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = false;
 		}
 
 		return regeln;
@@ -2497,25 +2557,26 @@ public class GostBlockungsergebnisManager {
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktive Auswahl erkennen.
-			if ((kurs == kursA) || (kurs == kursB))
-				aktiv = !aktiv;
+			// Aktivieren
+			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = true;
 
-			// Aktuelle Zeile ignorieren?
-			if (!aktiv)
-				continue;
-
-			// Gehe die Schienen des Kurses durch...
-			boolean istKursMarkiert = false;
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
-					istKursMarkiert = true;
+			if (aktiv) {
+				// Gehe die Schienen des Kurses und überprüfe, ob dieser im Schienenbereich liegt.
+				boolean istKursMarkiert = false;
+				for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
+					final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+					if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
+						istKursMarkiert = true;
+				}
+				// Der Kurs ist ausgewählt.
+				if (istKursMarkiert)
+					listKurse.add(kurs);
 			}
 
-			// Der Kurs ist ausgewählt.
-			if (istKursMarkiert)
-				listKurse.add(kurs);
+			// Deaktivieren
+			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
+				aktiv = false;
 		}
 
 		return regelGetListeToggleSchuelerfixierungDerKurse(listKurse);

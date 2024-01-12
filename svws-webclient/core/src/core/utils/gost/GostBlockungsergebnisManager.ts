@@ -6,11 +6,13 @@ import { HashMap } from '../../../java/util/HashMap';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
+import { System } from '../../../java/lang/System';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
@@ -726,12 +728,61 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis.
+	 * Liefert das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
+	 * <br>Hinweis: Siehe auch {@link #getErgebnisInklusiveUngueltigerWahlen()}.
 	 *
-	 * @return das Blockungsergebnis.
+	 * @return das Blockungsergebnis ohne ungültige Schüler-Kurs-Zuordnungen.
 	 */
 	public getErgebnis() : GostBlockungsergebnis {
 		return this._ergebnis;
+	}
+
+	/**
+	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 * <br>Hinweis: Siehe auch {@link #getErgebnis()}.
+	 *
+	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
+	 */
+	public getErgebnisInklusiveUngueltigerWahlen() : GostBlockungsergebnis {
+		const copy : GostBlockungsergebnis = new GostBlockungsergebnis();
+		copy.blockungID = this._ergebnis.blockungID;
+		copy.gostHalbjahr = this._ergebnis.gostHalbjahr;
+		copy.id = this._ergebnis.id;
+		copy.istAktiv = this._ergebnis.istAktiv;
+		copy.name = this._ergebnis.name;
+		copy.bewertung = GostBlockungsergebnisManager.copyBewertung(this._ergebnis.bewertung);
+		for (const schiene of this._ergebnis.schienen)
+			copy.schienen.add(this.copySchiene(schiene));
+		for (const e of this._map_schuelerID_ungueltige_kurse.entrySet())
+			for (const kurs1 of e.getValue())
+				for (const schiene of copy.schienen)
+					for (const kurs2 of schiene.kurse)
+						if (kurs1.id === kurs2.id)
+							kurs2.schueler.add(e.getKey());
+		return copy;
+	}
+
+	private static copyBewertung(bewertung : GostBlockungsergebnisBewertung) : GostBlockungsergebnisBewertung {
+		const c : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
+		c.anzahlKurseMitGleicherFachartProSchiene = bewertung.anzahlKurseMitGleicherFachartProSchiene;
+		c.anzahlKurseNichtZugeordnet = bewertung.anzahlKurseNichtZugeordnet;
+		c.anzahlSchuelerKollisionen = bewertung.anzahlSchuelerKollisionen;
+		c.anzahlSchuelerNichtZugeordnet = bewertung.anzahlSchuelerNichtZugeordnet;
+		c.kursdifferenzHistogramm = GostBlockungsergebnisManager.copyArray(bewertung.kursdifferenzHistogramm);
+		c.kursdifferenzMax = bewertung.kursdifferenzMax;
+		c.regelVerletzungen = new ArrayList(bewertung.regelVerletzungen);
+		return c;
+	}
+
+	private static copyArray(a : Array<number>) : Array<number> {
+		const c : Array<number> | null = Array(a.length).fill(0);
+		System.arraycopy(a, 0, c, 0, a.length);
+		return c;
+	}
+
+	private copySchiene(schiene : GostBlockungsergebnisSchiene) : GostBlockungsergebnisSchiene {
+		const c : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
+		return c;
 	}
 
 	/**
@@ -2262,12 +2313,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
 		for (const kurs of list) {
-			if ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown))
-				aktiv = !aktiv;
-			if (!aktiv)
-				continue;
-			for (let nr : number = min; nr <= max; nr++)
-				regeln.add(this._parent.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
+			if ((!aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = true;
+			if (aktiv)
+				for (let nr : number = min; nr <= max; nr++)
+					regeln.add(this._parent.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
+			if ((aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = false;
 		}
 		return regeln;
 	}
@@ -2293,16 +2345,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
 		for (const kurs of list) {
-			if ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown))
-				aktiv = !aktiv;
-			if (!aktiv)
-				continue;
-			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
-				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
-					regeln.add(this._parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
+			if ((!aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = true;
+			if (aktiv)
+				for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
+					const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
+					if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
+						regeln.add(this._parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
+					}
 				}
-			}
+			if ((aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = false;
 		}
 		return regeln;
 	}
@@ -2328,18 +2381,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
 		for (const kurs of list) {
-			if ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown))
-				aktiv = !aktiv;
-			if (!aktiv)
-				continue;
-			let istKursMarkiert : boolean = false;
-			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
-				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
-					istKursMarkiert = true;
+			if ((!aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = true;
+			if (aktiv) {
+				let istKursMarkiert : boolean = false;
+				for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, kurs.id)) {
+					const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
+					if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
+						istKursMarkiert = true;
+				}
+				if (istKursMarkiert)
+					listKurse.add(kurs);
 			}
-			if (istKursMarkiert)
-				listKurse.add(kurs);
+			if ((aktiv) && ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown)))
+				aktiv = false;
 		}
 		return this.regelGetListeToggleSchuelerfixierungDerKurse(listKurse);
 	}
