@@ -2466,6 +2466,28 @@ public class GostBlockungsergebnisManager {
 		return list;
 	}
 
+	private static @NotNull List<@NotNull GostBlockungKurs> regelGetListeToggleFilteredBetween(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB) {
+		final @NotNull List<@NotNull GostBlockungKurs> result = new ArrayList<>();
+		boolean foundA = false;
+		boolean foundB = false;
+
+		// Alle Elemente zwischen den beiden markierten Kursen kopieren.
+		for (final @NotNull GostBlockungKurs kursG : list) {
+			if (kursG == kursA)
+				foundA = true;
+			if (kursG == kursB)
+				foundB = true;
+
+			if (foundA || foundB)
+				result.add(kursG);
+
+			if (foundA && foundB)
+				break;
+		}
+
+		return result;
+	}
+
 	/**
 	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
@@ -2482,25 +2504,13 @@ public class GostBlockungsergebnisManager {
 	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
-		boolean aktiv = false;
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktivieren
-			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = true;
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
 
-			// Aktive Auswahl: Scanne die Spalten
-			if (aktiv)
-				for (int nr = min; nr <= max; nr++)
-					regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
-
-			// Deaktivieren
-			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = false;
-		}
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (int nr = min; nr <= max; nr++)
+				regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
 
 		return regeln;
 	}
@@ -2521,30 +2531,16 @@ public class GostBlockungsergebnisManager {
 	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleKursfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
-		boolean aktiv = false;
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktivieren
-			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = true;
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
 
-			// Gehe die Schienen des Kurses durch...
-			if (aktiv)
-				for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
-					final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-					if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
-						// Der Kurs befindet sich im Auswahl-Rechteck.
-						regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kurs.id, schieneG.nummer));
-					}
-				}
-
-			// Deaktivieren
-			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = false;
-		}
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) // Kurs im Auswahl-Rechteck?
+					regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kursG.id, schieneG.nummer));
+			}
 
 		return regeln;
 	}
@@ -2565,55 +2561,22 @@ public class GostBlockungsergebnisManager {
 	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final @NotNull List<@NotNull GostBlockungKurs> listKurse = new ArrayList<>();
-
-		boolean aktiv = false;
 		final int min = Math.min(schieneA.nummer, schieneB.nummer);
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		for (final @NotNull GostBlockungKurs kurs : list) {
-			// Aktivieren
-			if ((!aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = true;
-
-			if (aktiv) {
-				// Gehe die Schienen des Kurses und überprüfe, ob dieser im Schienenbereich liegt.
-				boolean istKursMarkiert = false;
-				for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kurs.id)) {
-					final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-					if ((schieneG.nummer >= min) && (schieneG.nummer <= max))
-						istKursMarkiert = true;
-				}
-				// Der Kurs ist ausgewählt.
-				if (istKursMarkiert)
-					listKurse.add(kurs);
-			}
-
-			// Deaktivieren
-			if ((aktiv) && ((kurs == kursA) || (kurs == kursB)))
-				aktiv = false;
-		}
-
-		return regelGetListeToggleSchuelerfixierungDerKurse(listKurse);
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung einer Menge von Kursen ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 *
-	 * @param list  Die Liste aller Kurse deren SuS-Fixierung geändert werden soll.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 */
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierungDerKurse(final @NotNull List<@NotNull GostBlockungKurs> list) {
 		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
 
-		for (final @NotNull GostBlockungKurs kursG : list) {
-			final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
-			for (final long idSchueler : kursE.schueler)
-				regeln.add(_parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
-		}
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
+					// Kurs gefunden, füge nun seine SuS hinzu.
+					final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
+					for (final long idSchueler : kursE.schueler)
+						regeln.add(_parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
+					// Bei Multikursen dürfen SuS nur einmalig fixiert werden.
+					break;
+				}
+			}
 
 		return regeln;
 	}
