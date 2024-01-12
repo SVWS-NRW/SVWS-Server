@@ -90,10 +90,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			return;
 		await api.server.patchKlasse(data, api.schema, idKlasse);
 		Object.assign(daten, data);
-		const auswahl = this.klassenListeManager.liste.get(idKlasse);
-		if (auswahl != null) {
+		const eintrag = this.klassenListeManager.liste.get(idKlasse);
+		if (eintrag != null) {
 			if (data.kuerzel !== undefined)
-				auswahl.kuerzel = data.kuerzel;
+				eintrag.kuerzel = data.kuerzel;
+			if (data.sortierung !== undefined)
+				eintrag.sortierung = data.sortierung;
 		}
 		this.klassenListeManager.setDaten(daten);
 		this.commit();
