@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.Map.Entry;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -1299,6 +1300,19 @@ public class GostBlockungsergebnisManager {
 		}
 
 		return set;
+	}
+
+	/**
+	 * Liefert die Menge aller Fachwahlen eines Schülers, die keinem Kurs zugeordnet sind.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
+	 * @return die Menge aller Fachwahlen eines Schülers, die keinem Kurs zugeordnet sind.
+	 */
+	public @NotNull List<@NotNull GostFachwahl> getOfSchuelerFachwahlmengeOhneKurszuordnung(final long idSchueler) {
+		final @NotNull List<@NotNull GostFachwahl> list = _parent.schuelerGetListeOfFachwahlen(idSchueler);
+		final @NotNull Predicate<@NotNull GostFachwahl> filter = (final @NotNull GostFachwahl t) -> _parent.schuelerGetHatFachart(idSchueler, t.fachID, t.kursartID);
+		return ListUtils.getCopyFiltered(list, filter);
 	}
 
 	/**

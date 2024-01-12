@@ -15,6 +15,7 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { System } from '../../../java/lang/System';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
+import type { Predicate } from '../../../java/util/function/Predicate';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
@@ -1209,6 +1210,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				set.addAll(kurseDerSchiene);
 		}
 		return set;
+	}
+
+	/**
+	 * Liefert die Menge aller Fachwahlen eines Schülers, die keinem Kurs zugeordnet sind.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
+	 * @return die Menge aller Fachwahlen eines Schülers, die keinem Kurs zugeordnet sind.
+	 */
+	public getOfSchuelerFachwahlmengeOhneKurszuordnung(idSchueler : number) : List<GostFachwahl> {
+		const list : List<GostFachwahl> = this._parent.schuelerGetListeOfFachwahlen(idSchueler);
+		const filter : Predicate<GostFachwahl> = { test : (t: GostFachwahl) => this._parent.schuelerGetHatFachart(idSchueler, t.fachID, t.kursartID) };
+		return ListUtils.getCopyFiltered(list, filter);
 	}
 
 	/**
