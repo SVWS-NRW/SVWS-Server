@@ -122,9 +122,11 @@
 
 	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {
 		const arr = [];
+		const searchValueIsNumber = /^[0-9]+$/.test(search.value.trim());
+		const searchValueLowerCase = search.value.toLocaleLowerCase();
 		for (const e of props.schuelerListeManager().filtered())
-			if (e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-				e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			if ((searchValueIsNumber && e.id.toString().includes(search.value))
+				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase)))
 				arr.push(e);
 		return arr;
 	});
