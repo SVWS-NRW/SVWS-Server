@@ -1221,7 +1221,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerFachwahlmengeOhneKurszuordnung(idSchueler : number) : List<GostFachwahl> {
 		const list : List<GostFachwahl> = this._parent.schuelerGetListeOfFachwahlen(idSchueler);
-		const filter : Predicate<GostFachwahl> = { test : (t: GostFachwahl) => this._parent.schuelerGetHatFachart(idSchueler, t.fachID, t.kursartID) };
+		const filter : Predicate<GostFachwahl> = { test : (t: GostFachwahl) => (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, t.fachID) === null) };
 		return ListUtils.getCopyFiltered(list, filter);
 	}
 
@@ -1399,12 +1399,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den zu (idSchueler, idFach) passenden Kurs.
+	 * Liefert den zu (idSchueler, idFach) passenden Kurs oder NULL.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.
 	 * @param  idFach     Die Datenbank-ID des Faches.
 	 *
-	 * @return den zu (idSchueler, idFach) passenden Kurs.
+	 * @return den zu (idSchueler, idFach) passenden Kurs oder NULL.
 	 */
 	public getOfSchuelerOfFachZugeordneterKurs(idSchueler : number, idFach : number) : GostBlockungsergebnisKurs | null {
 		return this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach);

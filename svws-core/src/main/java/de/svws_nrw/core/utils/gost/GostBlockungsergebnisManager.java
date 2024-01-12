@@ -1311,7 +1311,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getOfSchuelerFachwahlmengeOhneKurszuordnung(final long idSchueler) {
 		final @NotNull List<@NotNull GostFachwahl> list = _parent.schuelerGetListeOfFachwahlen(idSchueler);
-		final @NotNull Predicate<@NotNull GostFachwahl> filter = (final @NotNull GostFachwahl t) -> _parent.schuelerGetHatFachart(idSchueler, t.fachID, t.kursartID);
+		final @NotNull Predicate<@NotNull GostFachwahl> filter = (final @NotNull GostFachwahl t) -> (getOfSchuelerOfFachZugeordneterKurs(idSchueler, t.fachID) == null);
 		return ListUtils.getCopyFiltered(list, filter);
 	}
 
@@ -1492,12 +1492,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert den zu (idSchueler, idFach) passenden Kurs.
+	 * Liefert den zu (idSchueler, idFach) passenden Kurs oder NULL.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.
 	 * @param  idFach     Die Datenbank-ID des Faches.
 	 *
-	 * @return den zu (idSchueler, idFach) passenden Kurs.
+	 * @return den zu (idSchueler, idFach) passenden Kurs oder NULL.
 	 */
 	public GostBlockungsergebnisKurs getOfSchuelerOfFachZugeordneterKurs(final long idSchueler, final long idFach) {
 		return _map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach);
