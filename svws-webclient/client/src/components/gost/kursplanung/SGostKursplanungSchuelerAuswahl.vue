@@ -89,7 +89,12 @@
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
-								<i-ri-spam-3-line class="opacity-75" /> <template #content> Nichtverteilt </template>
+								<i-ri-spam-3-line class="opacity-75" /> <template #content>
+									Nichtverteilt
+									<ul>
+										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
+									</ul>
+								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
 								<i-ri-error-warning-fill /> <template #content>
@@ -100,7 +105,7 @@
 									</ul>
 									Nichtverteilt:
 									<ul>
-										<li> -- TODO -- </li>
+										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
 									</ul>
 								</template>
 							</svws-ui-tooltip>
@@ -163,7 +168,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, SchuelerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus } from "@core";
