@@ -7,8 +7,7 @@
 		<template #content>
 			<svws-ui-table clickable :clicked="klassenListeManager().hasDaten() ? klassenListeManager().auswahl() : null" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
+				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
@@ -96,49 +95,6 @@
 		}
 	});
 
-	const sortByMulti = computed<Map<string, boolean>>(() => {
-		const map = new Map<string, boolean>();
-		for (const pair of props.klassenListeManager().orderGet()) {
-			if (pair.b !== null) {
-				let colname = pair.a;
-				if (colname === "klassen")
-					colname = "kuerzel";
-				if (colname === "schueleranzahl")
-					colname = "schueler";
-				map.set(colname, pair.b);
-			}
-		}
-		return map;
-	})
-
-	const sortByAndOrder = computed<SortByAndOrder | undefined>({
-		get: () => {
-			const list = props.klassenListeManager().orderGet();
-			if (list.isEmpty())
-				return undefined;
-			else {
-				const { a: tmpkey, b: order} = list.get(0);
-				let colname = tmpkey;
-				if (colname === "klassen")
-					colname = "kuerzel";
-				if (colname === "schueleranzahl")
-					colname = "schueler";
-				return {key: colname, order};
-			}
-		},
-		set: (value) => {
-			if ((value === undefined) || (value.key === null))
-				return;
-			let key = value.key;
-			if (key === "kuerzel")
-				key = "klassen";
-			if (key === "schueler")
-				key = "schueleranzahl";
-			props.klassenListeManager().orderUpdate(key, value.order);
-			void props.setFilter();
-		}
-	})
-
 	const search = ref<string>("");
 
 	const rowsFiltered = computed<KlassenListeEintrag[]>(() => {
@@ -146,6 +102,7 @@
 		for (const e of props.klassenListeManager().filtered())
 			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
+		arr.sort((a, b) => a.sortierung - b.sortierung);
 		return arr;
 	});
 
