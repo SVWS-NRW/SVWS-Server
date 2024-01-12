@@ -2,7 +2,7 @@ import type { FaecherListeEintrag, Schuljahresabschnitt } from "@core";
 
 export interface FaecherAuswahlProps {
 	auswahl: FaecherListeEintrag | undefined;
-	mapKatalogeintraege: Map<number, FaecherListeEintrag>;
+	mapKatalogeintraege: () => Map<number, FaecherListeEintrag>;
 	gotoEintrag: (eintrag: FaecherListeEintrag) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;

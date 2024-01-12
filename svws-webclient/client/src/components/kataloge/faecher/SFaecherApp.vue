@@ -1,14 +1,14 @@
 <template>
-	<template v-if="auswahl">
+	<template v-if="fach !== undefined">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3">{{ auswahl.bezeichnung }}</span>
+				<span class="inline-block mr-3">{{ fach.bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ auswahl.id }}
+					ID: {{ fach.id }}
 				</svws-ui-badge>
 			</div>
 			<div>
-				<span class="opacity-40">{{ auswahl.kuerzel }}</span>
+				<span class="opacity-40">{{ fach.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
@@ -22,10 +22,12 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { FaecherAppProps } from "./SFaecherAppProps";
+	import { type FaecherListeEintrag } from "@core";
 
 	const props = defineProps<FaecherAppProps>();
+
+	const fach = computed<FaecherListeEintrag | undefined>(() => props.auswahl());
 
 </script>

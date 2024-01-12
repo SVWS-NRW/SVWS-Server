@@ -11,7 +11,7 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="faecher" :columns="cols">
 				<!--<template #cell(bezeichnung)="{rowData}">
 					<span class="svws-ui-badge" :style="`&#45;&#45;background-color: ${getBgColor(rowData.kuerzelStatistik || '')}`">{{ rowData.bezeichnung }}</span>
 				</template>-->
@@ -22,8 +22,9 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import {ZulaessigesFach} from "@core";
+	import { type FaecherListeEintrag, ZulaessigesFach } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
@@ -33,4 +34,14 @@
 	];
 
 	const getBgColor = (auswahl: string) => ZulaessigesFach.getByKuerzelASD(auswahl).getHMTLFarbeRGBA(1.0);
+
+	const faecher = computed<FaecherListeEintrag[]>(() => {
+		const result : FaecherListeEintrag[] = [];
+		for (const fach of props.mapKatalogeintraege().values()) {
+			result.push(fach);
+		}
+		result.sort((a, b) => a.sortierung - b.sortierung);
+		return result;
+	});
+
 </script>

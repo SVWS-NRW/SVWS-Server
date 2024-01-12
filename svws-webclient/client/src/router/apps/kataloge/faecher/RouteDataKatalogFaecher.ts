@@ -64,6 +64,16 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchFach(data, api.schema, this.daten.id);
 		Object.assign(this.daten, data);
+		const eintrag = this.mapKatalogeintraege.get(this.daten.id);
+		if (eintrag !== undefined) {
+			if (data.sortierung !== undefined)
+				eintrag.sortierung = data.sortierung;
+			if (data.kuerzel !== undefined)
+				eintrag.kuerzel = data.kuerzel;
+			if (data.bezeichnung !== undefined)
+				eintrag.bezeichnung = data.bezeichnung;
+		}
+		this.commit();
 	}
 
 }

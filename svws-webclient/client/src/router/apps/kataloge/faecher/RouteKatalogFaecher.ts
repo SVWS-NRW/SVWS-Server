@@ -63,7 +63,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -75,7 +75,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 
 	public getProps(to: RouteLocationNormalized): FaecherAppProps {
 		return {
-			auswahl: this.data.auswahl,
+			auswahl: () => this.data.auswahl,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),

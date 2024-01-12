@@ -33,8 +33,8 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 		return {
 			schulform: api.schulform,
 			patch: routeKatalogFaecher.data.patch,
-			data: routeKatalogFaecher.data.daten,
-			mapKatalogeintraege: routeKatalogFaecher.data.mapKatalogeintraege
+			data: () => routeKatalogFaecher.data.daten,
+			mapKatalogeintraege: () => routeKatalogFaecher.data.mapKatalogeintraege
 		};
 	}
 
