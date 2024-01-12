@@ -281,13 +281,10 @@
 			}
 			return await props.addUnterrichtKlasse(arr);
 		}
-		// TODO Fall StundenplanZeitraster -> undefined
-		// TODO Fall StundenplanPausenaufsicht -> StundenplanPausenzeit
-		// TODO Fall StundenplanPausenaufsicht -> undefined
-		// TODO Fall Lehrer -> StundenplanPausenzeit
 		// Fall StundenplanSchiene -> StundenplanZeitraster
 		if (dragData.value instanceof StundenplanSchiene) {
 			const listStundenplanKursRaw = props.stundenplanManager().kursGetMengeByKlasseIdAndSchieneId(klasse.value.id, dragData.value.id);
+			const arr = [];
 			for (const kurs of listStundenplanKursRaw) {
 				if ((zone instanceof StundenplanZeitraster) && props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, zone.unterrichtstunde, wochentyp.value)) {
 					const klassen = new  HashSet<number>();
@@ -295,18 +292,21 @@
 					for (const schueler of listSchueler)
 						klassen.add(schueler.idKlasse);
 					const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer };
-					const arr = [];
 					arr.push(stunde);
 					if ((doppelstundenModus.value === true) && (props.stundenplanManager().kursGetWochenstundenREST(kurs.id) >= 2)) {
 						const next = props.stundenplanManager().getZeitrasterNext(zone);
 						if (next && (props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, next.unterrichtstunde, wochentyp.value)))
 							arr.push({ idZeitraster: next.id, wochentyp: wochentyp.value, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer });
 					}
-					await props.addUnterrichtKlasse(arr);
 				}
 			}
+			await props.addUnterrichtKlasse(arr);
 			return;
 		}
+		// TODO Fall StundenplanZeitraster -> undefined
+		// TODO Fall StundenplanPausenaufsicht -> StundenplanPausenzeit
+		// TODO Fall StundenplanPausenaufsicht -> undefined
+		// TODO Fall Lehrer -> StundenplanPausenzeit
 	}
 
 	function isDraggable() : boolean {
