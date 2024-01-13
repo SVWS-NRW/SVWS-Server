@@ -2814,7 +2814,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			        Schema.tab_EigeneSchule.name()),
 			Schema.tab_EigeneSchule, Schema.tab_EigeneSchule_Logo);
 		add("Verschiebe die Schild2-Einstellung in die Client-Konfigurations-Tabelle für globale Einstellungen",
-		    "INSERT INTO %s (%s, %s, %s) SELECT '%s', '%s', %s FROM %s"
+		    "INSERT INTO %s (%s, %s, %s) SELECT '%s', '%s', %s FROM %s WHERE %s IS NOT NULL"
 				.formatted(Schema.tab_Client_Konfiguration_Global.name(),
 			        Schema.tab_Client_Konfiguration_Global.col_AppName.name(),
 			        Schema.tab_Client_Konfiguration_Global.col_Schluessel.name(),
@@ -2822,7 +2822,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			        "Schild2",
 			        "Einstellungen",
 			        Schema.tab_EigeneSchule.col_Einstellungen.name(),
-			        Schema.tab_EigeneSchule.name()),
+			        Schema.tab_EigeneSchule.name(),
+			        Schema.tab_EigeneSchule.col_Einstellungen.name()),
 			Schema.tab_EigeneSchule, Schema.tab_EigeneSchule_Logo);
 	}
 
