@@ -28,7 +28,7 @@
 				@keydown.backspace="onBackspace"
 				@keydown.esc.prevent="toggleListBox"
 				@keydown.space.prevent="onSpace"
-				@keydown.tab.prevent="onTab">
+				@keydown.tab="onTab">
 				<template #tags v-if="!headless">
 					<div class="svws-tags">
 						<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">

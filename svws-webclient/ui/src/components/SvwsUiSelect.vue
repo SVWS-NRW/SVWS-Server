@@ -27,7 +27,7 @@
 			@keydown.backspace="onBackspace"
 			@keydown.esc.prevent="toggleListBox"
 			@keydown.space.prevent="onSpace"
-			@keydown.tab.prevent="onTab" />
+			@keydown.tab="onTab" />
 		<button v-if="removable && hasSelected" role="button" @click.stop="removeItem" class="svws-remove">
 			<i-ri-close-line />
 		</button>
