@@ -172,6 +172,8 @@ public final class DBSchemaStatus {
 	private SchuleInfo leseSchuleInfo(final DBEntityManager conn) {
 		if ((conn.getDBDriver() != DBDriver.MARIA_DB) && (conn.getDBDriver() != DBDriver.MYSQL))
 			return null;
+		if (!hasTable("EigeneSchule"))
+			return null;
 		try {
 			final List<Object[]> results = conn.query("SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM `%s`.`EigeneSchule`".formatted(schemaName));
 			if (results.isEmpty())
