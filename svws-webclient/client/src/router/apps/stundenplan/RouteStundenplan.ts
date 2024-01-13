@@ -61,6 +61,10 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		}
 		if (to.name === this.name && this.data.auswahl !== undefined)
 			return this.getRoute(this.data.auswahl.id);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					this.data.setView(child, this.children);
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
