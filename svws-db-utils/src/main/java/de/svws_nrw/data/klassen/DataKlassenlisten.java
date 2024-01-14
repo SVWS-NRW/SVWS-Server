@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
@@ -16,6 +17,8 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -47,8 +50,8 @@ public final class DataKlassenlisten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	private @NotNull List<@NotNull KlassenListeEintrag> getKlassenListe() {
-    	final var klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", abschnitt, DTOKlassen.class);
+	private static @NotNull List<@NotNull KlassenListeEintrag> getKlassenListe(final DBEntityManager conn, final long schuljahresabschnitt) {
+    	final var klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt, DTOKlassen.class);
     	if ((klassen == null) || (klassen.isEmpty()))
     		return new ArrayList<>();
     	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
@@ -95,7 +98,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-    	final var daten = getKlassenListe();
+    	final var daten = getKlassenListe(conn, abschnitt);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -107,6 +110,51 @@ public final class DataKlassenlisten extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+
+	/**
+	 * Setzt für die Klassen der Klassenliste des angegeben Schuljahresabschnittes Default-Werte in das
+	 * Feld Sortierung.
+	 *
+	 * @param conn                   die Datenbankverbindung
+	 * @param schuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response setDefaultSortierung(final DBEntityManager conn, final long schuljahresabschnitt) {
+		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
+    	if ((jahrgaenge == null) || (jahrgaenge.isEmpty()))
+    		throw OperationError.NOT_FOUND.exception("Es wurden keine Jahrgänge gefunden.");
+    	final Map<Long, DTOJahrgang> mapJahrgaenge = jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+    	final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt, DTOKlassen.class);
+    	if ((klassen == null) || (klassen.isEmpty()))
+    		throw OperationError.NOT_FOUND.exception("Es wurden für den Abschnitt %d keine Klassen gefunden.".formatted(schuljahresabschnitt));
+    	conn.transactionFlush();
+    	klassen.sort((final DTOKlassen a, final DTOKlassen b) -> {
+    		final DTOJahrgang jgA = mapJahrgaenge.get(a.Jahrgang_ID);
+    		final DTOJahrgang jgB = mapJahrgaenge.get(b.Jahrgang_ID);
+    		if (((jgA == null) || (jgA.Sortierung == null)) && ((jgB == null) || (jgB.Sortierung == null)))
+    			return 0;
+    		if ((jgA == null) || (jgA.Sortierung == null))
+    			return 1;
+    		if ((jgB == null) || (jgB.Sortierung == null))
+    			return -1;
+    		if (!Objects.equals(jgA.Sortierung, jgB.Sortierung))
+    			return jgA.Sortierung - jgB.Sortierung;
+    		final String parA = ((a.ASDKlasse == null) || (a.ASDKlasse.length() < 3)) ? "" : a.ASDKlasse.substring(2, a.ASDKlasse.length());
+    		final String parB = ((b.ASDKlasse == null) || (b.ASDKlasse.length() < 3)) ? "" : b.ASDKlasse.substring(2, b.ASDKlasse.length());
+    		if (parA.length() != parB.length())
+    			return parA.length() - parB.length();
+    		return parA.compareToIgnoreCase(parB);
+    	});
+    	int i = 1;
+    	for (final DTOKlassen klasse : klassen) {
+    		klasse.Sortierung = i++;
+    		conn.transactionPersist(klasse);
+    	}
+    	conn.transactionFlush();
+    	return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}
 
 }

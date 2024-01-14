@@ -6311,6 +6311,28 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setKlassenSortierungFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/abschnitt/{abschnitt : \d+}/sortierung/setdefault
+	 *
+	 * Setzte eine Default-Sortierung für die Klassen anhand der Sortierung der Jahrgänge und der Parallelität der Klassen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Klassendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Default-Sortierung wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klassendaten anzupassen.
+	 *   Code 404: Keine Jahrgangs- oder Klassen-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 */
+	public async setKlassenSortierungFuerAbschnitt(schema : string, abschnitt : number) : Promise<void> {
+		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}/sortierung/setdefault"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogKlassenarten für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/allgemein/klassenarten
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden gültigen Klassenarten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

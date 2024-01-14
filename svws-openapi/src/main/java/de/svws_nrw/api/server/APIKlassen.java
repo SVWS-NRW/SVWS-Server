@@ -202,4 +202,28 @@ public class APIKlassen {
         return (new DataKatalogKlassenarten()).getAll();
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Setzen einer Default-Sortierung bei der Liste der Klassen im angegebenen Schema.
+     *
+     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abschnitt   die ID des Schuljahresabschnitts
+     * @param request     die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Response
+     */
+    @POST
+    @Path("/abschnitt/{abschnitt : \\d+}/sortierung/setdefault")
+    @Operation(summary = "Setzte eine Default-Sortierung für die Klassen.",
+               description = "Setzte eine Default-Sortierung für die Klassen anhand der Sortierung der Jahrgänge und der Parallelität der Klassen."
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Klassendaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Default-Sortierung wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klassendaten anzupassen.")
+    @ApiResponse(responseCode = "404", description = "Keine Jahrgangs- oder Klassen-Einträge gefunden")
+    public Response setKlassenSortierungFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataKlassenlisten.setDefaultSortierung(conn, abschnitt),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    }
+
 }
