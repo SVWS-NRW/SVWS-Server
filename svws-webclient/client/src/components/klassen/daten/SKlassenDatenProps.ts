@@ -8,4 +8,5 @@ export interface KlassenDatenProps {
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenListeEintrag>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenListeEintrag>;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>;
+	setzeDefaultSortierung: () => Promise<void>;
 }
