@@ -174,12 +174,11 @@ public final class DBUtilsFaecherGost {
 
 		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class)
 			.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
-		final List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
+		List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 			.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
 		if (nurWaehlbareFaecher)
-			return new GostFaecherManager(tmpFaecher.stream().filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22)).toList());
-		else
-			return new GostFaecherManager(tmpFaecher);
+			tmpFaecher = tmpFaecher.stream().filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22)).toList();
+		return new GostFaecherManager(tmpFaecher);
 	}
 
 
