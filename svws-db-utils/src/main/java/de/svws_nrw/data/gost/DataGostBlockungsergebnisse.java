@@ -125,7 +125,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
             	}
             }
-            final GostBlockungsergebnis ergebnis = manager.getErgebnis();
+            final GostBlockungsergebnis ergebnis = manager.getErgebnisInklusiveUngueltigerWahlen();
             ergebnis.istAktiv = erg.IstAktiv != null && erg.IstAktiv;
 
             // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
@@ -170,7 +170,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
         	}
         }
-        final GostBlockungsergebnis daten = manager.getErgebnis();
+        final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();
         daten.istAktiv = ergebnis.IstAktiv != null && ergebnis.IstAktiv;
         return daten;
 	}

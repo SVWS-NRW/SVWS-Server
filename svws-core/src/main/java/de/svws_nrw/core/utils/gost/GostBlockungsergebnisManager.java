@@ -560,13 +560,13 @@ public class GostBlockungsergebnisManager {
 		stateRegelvalidierung();
 	}
 
-	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs idKurs) {
-		MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, idSchueler).add(idKurs);
+	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs kurs) {
+		MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, idSchueler).add(kurs);
 	}
 
-	private void stateSchuelerKursUngueltigeWahlEntfernen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs idKurs) {
+	private void stateSchuelerKursUngueltigeWahlEntfernen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs kurs) {
 	    final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_ungueltige_kurse, idSchueler);
-		set.remove(idKurs);
+		set.remove(kurs);
 		if (set.isEmpty())
 			_map_schuelerID_ungueltige_kurse.remove(idSchueler);
 	}
@@ -803,6 +803,7 @@ public class GostBlockungsergebnisManager {
 		return _ergebnis;
 	}
 
+
 	/**
 	 * Liefert das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 * <br>Hinweis: Siehe auch {@link #getErgebnis()}.
@@ -810,53 +811,75 @@ public class GostBlockungsergebnisManager {
 	 * @return  das Blockungsergebnis inklusive ungültiger Schüler-Kurs-Zuordnungen.
 	 */
 	public @NotNull GostBlockungsergebnis getErgebnisInklusiveUngueltigerWahlen() {
-		// Normale Kopie
-		final @NotNull GostBlockungsergebnis copy = new GostBlockungsergebnis();
-		copy.blockungID = _ergebnis.blockungID;
-		copy.gostHalbjahr = _ergebnis.gostHalbjahr;
-		copy.id = _ergebnis.id;
-		copy.istAktiv = _ergebnis.istAktiv;
-		copy.name = _ergebnis.name;
-
-		// Tiefe Kopie
-		copy.bewertung = copyBewertung(_ergebnis.bewertung);
-		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen)
-			copy.schienen.add(copySchiene(schiene));
+		final @NotNull GostBlockungsergebnis copy = deepCopyErgebnis(_ergebnis);
 
 		// Ungültige Zuordnungen hinzufügen
-		for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> e : _map_schuelerID_ungueltige_kurse.entrySet())
-			for (final @NotNull @NotNull GostBlockungsergebnisKurs kurs1 : e.getValue())
+		for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> entry : _map_schuelerID_ungueltige_kurse.entrySet())
+			for (final @NotNull @NotNull GostBlockungsergebnisKurs kurs1 : entry.getValue())
 				for (final @NotNull GostBlockungsergebnisSchiene schiene : copy.schienen)
 					for (final @NotNull GostBlockungsergebnisKurs kurs2 : schiene.kurse)
 						if (kurs1.id == kurs2.id)
-							kurs2.schueler.add(e.getKey());
+							kurs2.schueler.add(entry.getKey());
 
 		return copy;
 	}
 
-	private static @NotNull GostBlockungsergebnisBewertung copyBewertung(final @NotNull GostBlockungsergebnisBewertung bewertung) {
-		final @NotNull GostBlockungsergebnisBewertung c = new GostBlockungsergebnisBewertung();
-		c.anzahlKurseMitGleicherFachartProSchiene = bewertung.anzahlKurseMitGleicherFachartProSchiene;
-		c.anzahlKurseNichtZugeordnet = bewertung.anzahlKurseNichtZugeordnet;
-		c.anzahlSchuelerKollisionen = bewertung.anzahlSchuelerKollisionen;
-		c.anzahlSchuelerNichtZugeordnet = bewertung.anzahlSchuelerNichtZugeordnet;
-		c.kursdifferenzHistogramm = copyArray(bewertung.kursdifferenzHistogramm);
-		c.kursdifferenzMax = bewertung.kursdifferenzMax;
-		c.regelVerletzungen = new ArrayList<>(bewertung.regelVerletzungen);
-		return c;
+	/**
+	 * Liefert eine tiefe Kopie des Blockungsergebnisses.
+	 *
+	 * @param e  Das zu kopierende GostBlockungsergebnis.
+	 *
+	 * @return eine tiefe Kopie des Blockungsergebnisses.
+	 */
+	public static @NotNull GostBlockungsergebnis deepCopyErgebnis(final @NotNull GostBlockungsergebnis e) {
+		// Normale Kopie
+		final @NotNull GostBlockungsergebnis copy = new GostBlockungsergebnis();
+		copy.id = e.id;
+		copy.blockungID = e.blockungID;
+		copy.name = e.name;
+		copy.gostHalbjahr = e.gostHalbjahr;
+		copy.istAktiv = e.istAktiv;
+		for (final @NotNull GostBlockungsergebnisSchiene schiene : e.schienen)
+			copy.schienen.add(deepCopyBewertung(schiene)); // deep copy
+		copy.bewertung = deepCopyBewertung(e.bewertung);  // deep copy
+		return copy;
 	}
 
-	private static @NotNull int[] copyArray(final @NotNull int[] a) {
-		final int[] c = new int[a.length];
-		System.arraycopy(a, 0, c, 0, a.length);
-		return c;
+	private static @NotNull GostBlockungsergebnisBewertung deepCopyBewertung(final @NotNull GostBlockungsergebnisBewertung b) {
+		final @NotNull GostBlockungsergebnisBewertung copy = new GostBlockungsergebnisBewertung();
+		copy.regelVerletzungen.addAll(b.regelVerletzungen); // copy Long-Values
+		copy.anzahlKurseNichtZugeordnet = b.anzahlKurseNichtZugeordnet;
+		copy.anzahlSchuelerNichtZugeordnet = b.anzahlSchuelerNichtZugeordnet;
+		copy.anzahlSchuelerKollisionen = b.anzahlSchuelerKollisionen;
+		copy.kursdifferenzMax = b.kursdifferenzMax;
+		copy.kursdifferenzHistogramm = deepCopyArray(b.kursdifferenzHistogramm); // deep copy
+		copy.anzahlKurseMitGleicherFachartProSchiene = b.anzahlKurseMitGleicherFachartProSchiene;
+		return copy;
 	}
 
-	private @NotNull GostBlockungsergebnisSchiene copySchiene(final @NotNull GostBlockungsergebnisSchiene schiene) {
-		final @NotNull GostBlockungsergebnisSchiene c = new GostBlockungsergebnisSchiene();
+	private static @NotNull int[] deepCopyArray(final @NotNull int[] a) {
+		final int[] copy = new int[a.length];
+		System.arraycopy(a, 0, copy, 0, a.length);
+		return copy;
+	}
 
+	private static @NotNull GostBlockungsergebnisSchiene deepCopyBewertung(final @NotNull GostBlockungsergebnisSchiene s) {
+		final @NotNull GostBlockungsergebnisSchiene copy = new GostBlockungsergebnisSchiene();
+		copy.id = s.id;
+		for (final @NotNull GostBlockungsergebnisKurs kurs : s.kurse)
+			copy.kurse.add(deepCopyKurs(kurs)); // deep copy
+		return copy;
+	}
 
-		return c;
+	private static @NotNull GostBlockungsergebnisKurs deepCopyKurs(final @NotNull GostBlockungsergebnisKurs k) {
+		final @NotNull GostBlockungsergebnisKurs copy = new GostBlockungsergebnisKurs();
+		copy.id = k.id;
+		copy.fachID = k.fachID;
+		copy.kursart = k.kursart;
+		copy.anzahlSchienen = k.anzahlSchienen;
+		copy.schueler.addAll(k.schueler); // copy Long-Values
+		copy.schienen.addAll(k.schienen); // copy Long-Values
+		return copy;
 	}
 
 	/**
@@ -1767,7 +1790,6 @@ public class GostBlockungsergebnisManager {
 	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerMapIDzuUngueltigeKurse() {
 		return _map_schuelerID_ungueltige_kurse;
 	}
-
 
 	/**
 	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kollision hat.<br>
