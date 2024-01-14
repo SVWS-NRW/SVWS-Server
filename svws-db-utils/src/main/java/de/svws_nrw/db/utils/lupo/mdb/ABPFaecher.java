@@ -289,7 +289,7 @@ public final class ABPFaecher {
 			lupofach.FachKrz = fach.Kuerzel;
 			lupofach.Bezeichnung = fach.Bezeichnung;
 			lupofach.StatistikKrz = fach.StatistikFach.daten.kuerzelASD;
-			lupofach.Sortierung = fach.SortierungSekII;
+			lupofach.Sortierung = fach.SortierungAllg;
 			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD)) && (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
 			lupofach.Unterichtssprache = fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;

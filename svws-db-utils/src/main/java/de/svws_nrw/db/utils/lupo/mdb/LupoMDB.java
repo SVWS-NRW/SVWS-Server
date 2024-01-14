@@ -222,9 +222,9 @@ public class LupoMDB {
 			logger.logLn("Lese Daten für den Jahrgang " + jahrgang + " aus der SVWS-Datenbank...");
 			logger.modifyIndent(2);
 			final List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream().sorted((f1, f2) -> {
-				if (f1.SortierungSekII == null)
+				if (f1.SortierungAllg == null)
 					return -1;
-				return f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII;
+				return f2.SortierungAllg == null ? 1 : f2.SortierungAllg - f1.SortierungAllg;
 			}).toList();
 			final Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);

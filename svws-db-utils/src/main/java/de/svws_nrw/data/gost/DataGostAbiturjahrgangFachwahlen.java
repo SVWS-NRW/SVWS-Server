@@ -130,7 +130,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	        }
 	    }
 		return fachwahlen.values().stream()
-				.sorted((a, b) -> Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII))
+				.sorted((a, b) -> Integer.compare(faecher.get(a.id).SortierungAllg, faecher.get(b.id).SortierungAllg))
 				.toList();
 	}
 
