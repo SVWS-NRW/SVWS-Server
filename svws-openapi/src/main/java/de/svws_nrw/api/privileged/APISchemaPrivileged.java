@@ -478,7 +478,7 @@ public class APISchemaPrivileged {
 		    	logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
 		    	logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
-				final int maxUpdateRevision = 3;
+				final long maxUpdateRevision = -1;
 				final DBConfig srcConfig = sqlite.getConfig();
 				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true, 0, 0);
 

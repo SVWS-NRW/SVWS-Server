@@ -234,7 +234,7 @@ public class DBBackupManager {
 			logger.logLn("[OK]");
 
 			if (maxUpdateRevision != 0) {
-				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+				logger.logLn("-> Aktualisiere die Ziel-DB ggf. auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
 				result = tgtManager.updater.update(tgtUser, maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
