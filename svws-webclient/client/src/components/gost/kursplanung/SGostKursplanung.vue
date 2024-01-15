@@ -19,8 +19,8 @@
 							Tabelle ausblenden
 						</template>
 					</svws-ui-button>
-					<s-card-gost-kursansicht-irrlaeufer-modal v-if="zuordnungen.length > 0" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" :disabled="zuordnungen.length === 0" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
+					<s-card-gost-kursansicht-irrlaeufer-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
+						<svws-ui-button type="transparent" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 							<i-ri-error-warning-line /> Ungültige Kurszuordnungen
 						</svws-ui-button>
 					</s-card-gost-kursansicht-irrlaeufer-modal>
@@ -126,6 +126,7 @@
 		const arr = [];
 		for (const i of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().values().toArray())
 			arr.push(i);
+		console.log(arr, props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse())
 		return arr;
 	})
 

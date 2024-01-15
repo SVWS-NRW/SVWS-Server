@@ -587,7 +587,19 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	});
 
 	removeKursSchuelerZuordnung = api.call(async (idSchueler: number, idKurs: number): Promise<boolean> => {
-		const zugeordnet = this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)
+		let zugeordnet : boolean = this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs);
+		if (!zugeordnet) {
+			const map = this.ergebnismanager.getOfSchuelerMapIDzuUngueltigeKurse();
+			const set = map.get(idSchueler);
+			if (set !== null) {
+				for (const kurs of set) {
+					if (kurs.id === idKurs) {
+						zugeordnet = true;
+						break;
+					}
+				}
+			}
+		}
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined) || !zugeordnet)
 			return false;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
