@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<svws-ui-todo title="Abschlüsse und Berechtigungen an aktueller Schule">
+		<svws-ui-todo v-if="serverMode !== ServerMode.STABLE" title="Abschlüsse und Berechtigungen an aktueller Schule">
 			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
 		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
@@ -67,7 +67,7 @@
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn } from "@ui";
 	import type { Sprachbelegung} from '@core';
-	import { Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge } from '@core';
+	import { Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 

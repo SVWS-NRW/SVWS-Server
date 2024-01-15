@@ -7,6 +7,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerLaufbahninfo } from "~/router/apps/schueler/laufbahninfo/RouteDataSchuelerLaufbahninfo";
 import { type SchuelerLaufbahninfoProps } from "~/components/schueler/laufbahninfo/SchuelerLaufbahninfoProps";
+import { api } from "~/router/Api";
 
 const SSchuelerLaufbahninfo = () => import("~/components/schueler/laufbahninfo/SSchuelerLaufbahninfo.vue");
 
@@ -55,6 +56,9 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 			addSprachpruefung: this.data.addSprachpruefung,
 			removeSprachpruefung: this.data.removeSprachpruefung,
 			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
+			schulform: api.schulform,
+			schulgliederungen: api.schulgliederungen,
+			serverMode: api.mode,
 		};
 	}
 

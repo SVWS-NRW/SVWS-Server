@@ -84,7 +84,7 @@
 								<template #content>
 									Kollisionen:
 									<ul>
-										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
 									</ul>
 								</template>
 							</svws-ui-tooltip>
@@ -92,7 +92,7 @@
 								<i-ri-spam-3-line class="opacity-75" /> <template #content>
 									Nichtverteilt
 									<ul>
-										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
+										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
 									</ul>
 								</template>
 							</svws-ui-tooltip>
@@ -101,11 +101,11 @@
 									<b>Kollision und Nichtverteilt:</b>
 									<br>Kollisionen:
 									<ul>
-										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
+										<li v-for="k of getErgebnismanager().getOfSchuelerKursmengeMitKollisionen(s.id).toArray(new Array<GostBlockungsergebnisKurs>())" :key="k.id" class="pl-2">{{ getErgebnismanager().getOfKursName(k.id) }}</li>
 									</ul>
 									Nichtverteilt:
 									<ul>
-										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
+										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
 									</ul>
 								</template>
 							</svws-ui-tooltip>

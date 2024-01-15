@@ -1,4 +1,4 @@
-import type { List, SchuelerListeManager, Sprachbelegung, Sprachpruefung } from "@core";
+import type { List, SchuelerListeManager, Schulform, Schulgliederung, ServerMode, Sprachbelegung, Sprachpruefung } from "@core";
 
 export interface SchuelerLaufbahninfoProps {
 	sprachbelegungen: () => List<Sprachbelegung>;
@@ -10,4 +10,7 @@ export interface SchuelerLaufbahninfoProps {
 	addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 	removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
 	schuelerListeManager: () => SchuelerListeManager;
+	schulform: Schulform;
+	schulgliederungen: List<Schulgliederung>;
+	serverMode: ServerMode;
 }

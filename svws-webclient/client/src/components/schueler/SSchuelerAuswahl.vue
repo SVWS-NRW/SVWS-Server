@@ -28,21 +28,12 @@
 				<template #cell(idKlasse)="{ value }">
 					{{ value === null ? "–" : schuelerListeManager().klassen.get(value)?.kuerzel }}
 				</template>
-				<template #actions>
+				<!-- <template #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="transparent" @click="showModalGruppenaktionen().value = true">
-						<i-ri-edit-2-line />
-						Auswahl bearbeiten
-					</svws-ui-button>
 					<svws-ui-button type="icon" @click="addLine()">
 						<i-ri-add-line />
 					</svws-ui-button>
-					<svws-ui-button type="icon" disabled>
-						<i-ri-file-copy-line />
-					</svws-ui-button>
-					<svws-ui-button type="icon" disabled>
-						<i-ri-more-2-line />
-					</svws-ui-button>
-				</template>
+				</template> -->
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
