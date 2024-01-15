@@ -68,12 +68,12 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 		return null;
 	}
 
-	patchSprachbelegung = async (data: Partial<Sprachbelegung>): Promise<void> => {
-		const belegung : Sprachbelegung | null = this.getSprachbelegung(data);
+	patchSprachbelegung = async (data: Partial<Sprachbelegung>, sprache: string): Promise<void> => {
+		const belegung : Sprachbelegung | null = this.getSprachbelegung({sprache});
 		if (belegung === null)
 			return;
 		api.status.start();
-		await api.server.patchSchuelerSprachbelegung(data, api.schema, this.auswahl.id, belegung.sprache);
+		await api.server.patchSchuelerSprachbelegung(data, api.schema, this.auswahl.id, sprache);
 		Object.assign(belegung, data);
 		this.commit();
 		api.status.stop();

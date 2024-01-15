@@ -6,30 +6,30 @@
 		<svws-ui-content-card title="Sprachenfolge" class="">
 			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
 				<template #cell(sprache)="{ value }">
-					<svws-ui-select title="Sprache" headless :model-value="value" @update:model-value="sprache=>sprache && patchSprachbelegung({sprache})" :items="sprachen(value).value" :item-text="i=>i" />
+					<svws-ui-select title="Sprache" headless :model-value="value" @update:model-value="sprache=> patchSprachbelegung({sprache}, value)" :items="sprachen(value).value" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" />
 				</template>
 				<template #cell(reihenfolge)="{ rowData }">
-					<svws-ui-input-number title="Reihenfolge" headless :model-value="rowData.reihenfolge" @update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge, sprache: rowData.sprache})" :min="1" :max="9" />
+					<svws-ui-input-number title="Reihenfolge" headless :model-value="rowData.reihenfolge" @update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge}, rowData.sprache)" :min="1" :max="9" />
 				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
-					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 1}">2</span>
 					</div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
-					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
-					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 1}">2</span>
 					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungBisJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungBisJahrgang: jahrgang.daten.kuerzel}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
@@ -38,14 +38,14 @@
 						<svws-ui-select headless :items="latein" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
 					</template>
 					<template v-else>
-						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten.kuerzel ?? null, sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
+						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten.kuerzel ?? null}, rowData.sprache)" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
 					</template>
 				</template>
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
 					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
 					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><i-ri-calculator-line /></svws-ui-button>
-					<svws-ui-button @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+					<svws-ui-button v-if="verfuegbareSprachen.length" @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -75,7 +75,7 @@
 	const auswahlPr = ref([]);
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
-		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache" },
+		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", span: 2 },
 		{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
 		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang" },
 		{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
@@ -124,11 +124,11 @@
 	async function patchLatinum(item:any) {
 		console.log(item)
 		if (item === undefined)
-			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: false, sprache: 'L'});
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: false}, 'L');
 		if (item === latein[0])
-			await props.patchSprachbelegung({hatKleinesLatinum: true, hatLatinum: false, sprache: 'L'});
+			await props.patchSprachbelegung({hatKleinesLatinum: true, hatLatinum: false}, 'L');
 		if (item === latein[1])
-			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: true, sprache: 'L'});
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: true}, 'L');
 	}
 
 	const hatKleinesLatinum = computed<boolean>(() => {
@@ -152,7 +152,7 @@
 					return sprache.hatGraecum;
 			return false;
 		},
-		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum, sprache: 'G'})
+		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum}, 'G')
 	});
 
 	const hatHebraicum = computed<boolean>({
@@ -162,7 +162,7 @@
 					return sprache.hatHebraicum;
 			return false;
 		},
-		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum, sprache: 'H'})
+		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum}, 'H')
 	});
 
 	async function remove() {

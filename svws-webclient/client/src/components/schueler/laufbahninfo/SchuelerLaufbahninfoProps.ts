@@ -3,7 +3,7 @@ import type { List, SchuelerListeManager, Schulform, Schulgliederung, ServerMode
 export interface SchuelerLaufbahninfoProps {
 	sprachbelegungen: () => List<Sprachbelegung>;
 	sprachpruefungen: () => List<Sprachpruefung>;
-	patchSprachbelegung: (data: Partial<Sprachbelegung>) => Promise<void>;
+	patchSprachbelegung: (data: Partial<Sprachbelegung>, sprache: string) => Promise<void>;
 	addSprachbelegung: (data: Partial<Sprachbelegung>) => Promise<Sprachbelegung | null>;
 	removeSprachbelegung: (data: Sprachbelegung) => Promise<Sprachbelegung>;
 	patchSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<void>;
