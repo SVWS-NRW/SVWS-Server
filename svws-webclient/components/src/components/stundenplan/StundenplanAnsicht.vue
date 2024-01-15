@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-stundenplan" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'} svws-zeitraster-${zeitrasterSteps}`">
+	<div v-if="manager().getListZeitraster().size()" class="svws-ui-stundenplan" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'} svws-zeitraster-${zeitrasterSteps}`">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
 			<i-ri-time-line class="svws-time-icon print:hidden" v-if="showZeitachse" />
@@ -173,6 +173,7 @@
 			</div>
 		</div>
 	</div>
+	<div v-else class="svws-ui-stundenplan">Es wurden noch keine Zeitraster für diesen Stundenplan angelegt.</div>
 </template>
 
 <script setup lang="ts">

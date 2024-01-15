@@ -166,6 +166,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response deleteMultiple(final List<Long> ids) {
+		if (ids.isEmpty())
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<DTOStundenplanPausenzeit> dtos = conn.queryNamed("DTOStundenplanPausenzeit.primaryKeyQuery.multiple", ids, DTOStundenplanPausenzeit.class);
 		for (final DTOStundenplanPausenzeit dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)

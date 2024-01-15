@@ -210,11 +210,13 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const listID = new ArrayList<number>();
 		for (const pausenzeit of pausenzeiten)
 			listID.add(pausenzeit.id);
-		const list = await api.server.deleteStundenplanPausenzeiten(listID, api.schema, id);
-		this.stundenplanManager.pausenzeitRemoveAll(list);
-		if (this.selected instanceof StundenplanPausenzeit && list.contains(this.selected))
-			this._state.value.selected = undefined;
-		this.commit();
+		if (!listID.isEmpty()) {
+			const list = await api.server.deleteStundenplanPausenzeiten(listID, api.schema, id);
+			this.stundenplanManager.pausenzeitRemoveAll(list);
+			if (this.selected instanceof StundenplanPausenzeit && list.contains(this.selected))
+				this._state.value.selected = undefined;
+			this.commit();
+		}
 		api.status.stop();
 	}
 

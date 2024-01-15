@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'}`">
+	<div v-if="manager().getListZeitraster().size()" class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'}`">
 		<div class="svws-ui-stundenplan--head">
 			<i-ri-time-line class="svws-time-icon print:hidden" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
@@ -59,14 +59,15 @@
 			</div>
 		</div>
 	</div>
+	<div v-else class="svws-ui-stundenplan">Es wurden noch keine Zeitraster für diesen Stundenplan angelegt.</div>
 	<aside>
 		<div class="sticky top-8 flex flex-col gap-5">
 			<div class="flex gap-1 flex-wrap">
 				<svws-ui-button type="secondary" @click="addStunde">
-					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ manager().zeitrasterGetStundeMax() + 1 }}. Stunde
+					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ manager().zeitrasterGetStundeMax() + (manager().getListZeitraster().size() === 0 ? 0:1) }}. Stunde
 				</svws-ui-button>
 				<svws-ui-button type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
-					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + 1) }}
+					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 				</svws-ui-button>
 			</div>
 			<svws-ui-button type="secondary" @click="addBlock" title="Alle Zeitraster Montag - Freitag, 1.- 9. Stunde erstellen">
@@ -180,7 +181,7 @@
 
 	async function addWochentag() {
 		const letzerWochentag = props.manager().zeitrasterGetWochentagMaxEnum();
-		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id +1, 1, 1);
+		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() ?  1 : 0), 1, 1);
 		await props.addZeitraster(list);
 	}
 
@@ -188,7 +189,7 @@
 		const letzteStunde = props.manager().zeitrasterGetStundeMax();
 		const wochentagMin = props.manager().zeitrasterGetWochentagMin();
 		const wochentagMax = props.manager().zeitrasterGetWochentagMax();
-		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + 1);
+		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() ?  1 : 0));
 		await props.addZeitraster(list);
 	}
 
