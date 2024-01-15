@@ -20,7 +20,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public skRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
+	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
 
 	/**
 	 * Die ID der Klausurraumstunde.
@@ -30,7 +30,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public idsSchuelerklausuren : List<number> = new ArrayList();
+	public idsSchuelerklausurtermine : List<number> = new ArrayList();
 
 	/**
 	 * Die ID der Klausurraumstunde.
@@ -63,17 +63,17 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.raumstundenGeloescht?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.skRaumstunden !== undefined) && (obj.skRaumstunden !== null)) {
-			for (const elem of obj.skRaumstunden) {
-				result.skRaumstunden?.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
+		if ((obj.sktRaumstunden !== undefined) && (obj.sktRaumstunden !== null)) {
+			for (const elem of obj.sktRaumstunden) {
+				result.sktRaumstunden?.add(GostSchuelerklausurterminraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (typeof obj.idKlausurraum === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlausurraum');
 		result.idKlausurraum = obj.idKlausurraum;
-		if ((obj.idsSchuelerklausuren !== undefined) && (obj.idsSchuelerklausuren !== null)) {
-			for (const elem of obj.idsSchuelerklausuren) {
-				result.idsSchuelerklausuren?.add(elem);
+		if ((obj.idsSchuelerklausurtermine !== undefined) && (obj.idsSchuelerklausurtermine !== null)) {
+			for (const elem of obj.idsSchuelerklausurtermine) {
+				result.idsSchuelerklausurtermine?.add(elem);
 			}
 		}
 		result.kursKlausurPatched = ((typeof obj.kursKlausurPatched === "undefined") || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
@@ -106,27 +106,27 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.skRaumstunden) {
-			result += '"skRaumstunden" : []';
+		if (!obj.sktRaumstunden) {
+			result += '"sktRaumstunden" : []';
 		} else {
-			result += '"skRaumstunden" : [ ';
-			for (let i = 0; i < obj.skRaumstunden.size(); i++) {
-				const elem = obj.skRaumstunden.get(i);
+			result += '"sktRaumstunden" : [ ';
+			for (let i = 0; i < obj.sktRaumstunden.size(); i++) {
+				const elem = obj.sktRaumstunden.get(i);
 				result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
-				if (i < obj.skRaumstunden.size() - 1)
+				if (i < obj.sktRaumstunden.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
 		result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
-		if (!obj.idsSchuelerklausuren) {
-			result += '"idsSchuelerklausuren" : []';
+		if (!obj.idsSchuelerklausurtermine) {
+			result += '"idsSchuelerklausurtermine" : []';
 		} else {
-			result += '"idsSchuelerklausuren" : [ ';
-			for (let i = 0; i < obj.idsSchuelerklausuren.size(); i++) {
-				const elem = obj.idsSchuelerklausuren.get(i);
+			result += '"idsSchuelerklausurtermine" : [ ';
+			for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
+				const elem = obj.idsSchuelerklausurtermine.get(i);
 				result += elem;
-				if (i < obj.idsSchuelerklausuren.size() - 1)
+				if (i < obj.idsSchuelerklausurtermine.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -167,15 +167,15 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.skRaumstunden !== "undefined") {
-			if (!obj.skRaumstunden) {
-				result += '"skRaumstunden" : []';
+		if (typeof obj.sktRaumstunden !== "undefined") {
+			if (!obj.sktRaumstunden) {
+				result += '"sktRaumstunden" : []';
 			} else {
-				result += '"skRaumstunden" : [ ';
-				for (let i = 0; i < obj.skRaumstunden.size(); i++) {
-					const elem = obj.skRaumstunden.get(i);
+				result += '"sktRaumstunden" : [ ';
+				for (let i = 0; i < obj.sktRaumstunden.size(); i++) {
+					const elem = obj.sktRaumstunden.get(i);
 					result += GostSchuelerklausurterminraumstunde.transpilerToJSON(elem);
-					if (i < obj.skRaumstunden.size() - 1)
+					if (i < obj.sktRaumstunden.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';
@@ -184,15 +184,15 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 		if (typeof obj.idKlausurraum !== "undefined") {
 			result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
 		}
-		if (typeof obj.idsSchuelerklausuren !== "undefined") {
-			if (!obj.idsSchuelerklausuren) {
-				result += '"idsSchuelerklausuren" : []';
+		if (typeof obj.idsSchuelerklausurtermine !== "undefined") {
+			if (!obj.idsSchuelerklausurtermine) {
+				result += '"idsSchuelerklausurtermine" : []';
 			} else {
-				result += '"idsSchuelerklausuren" : [ ';
-				for (let i = 0; i < obj.idsSchuelerklausuren.size(); i++) {
-					const elem = obj.idsSchuelerklausuren.get(i);
+				result += '"idsSchuelerklausurtermine" : [ ';
+				for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
+					const elem = obj.idsSchuelerklausurtermine.get(i);
 					result += elem;
-					if (i < obj.idsSchuelerklausuren.size() - 1)
+					if (i < obj.idsSchuelerklausurtermine.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -17,7 +17,7 @@ export interface GostKlausurplanungSchienenProps {
 	kursklausurmanager: () => GostKursklausurManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;

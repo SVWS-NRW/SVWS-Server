@@ -41,8 +41,8 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
 		return {
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList(), null), new ArrayList(), null, null)},
-			patchKursklausur: routeGostKlausurplanung.data.patchKursklausur,
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList(), null), new ArrayList(), null, null, null)},
+			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,

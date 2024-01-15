@@ -15,7 +15,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Sammlung von Gost-Klausurvorgaben, Kursklausuren und Schülerklausuren")
 @TranspilerDTO
-public class GostKlausurenCollectionSkKkKv {
+public class GostKlausurenDataCollection {
 
 	/** Die Liste der Klausurvorgaben. */
 	@Schema(description = "die ID der Schülerklausur", example = "")
@@ -28,6 +28,10 @@ public class GostKlausurenCollectionSkKkKv {
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
+
+	/** Die Liste der Schülerklausuren. */
+	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")

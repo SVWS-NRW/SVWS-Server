@@ -192,14 +192,14 @@ export class GostKlausurraumManager extends JavaObject {
 		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge) {
 			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
-			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, k.idKursklausur).add(k);
+			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
 	private update_schuelerklausurmenge_by_idKursklausur() : void {
 		this._schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge)
-			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, k.idKursklausur).add(k);
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 	}
 
 	private update_schuelerklausurraumstundenmenge_by_idRaumstunde() : void {
@@ -630,8 +630,8 @@ export class GostKlausurraumManager extends JavaObject {
 		DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
 	}
 
-	private schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur : number) : void {
-		this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSubMap(idSchuelerklausur);
+	private schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin : number) : void {
+		this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSubMap(idSchuelerklausurtermin);
 	}
 
 	private schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur : number) : void {
@@ -658,18 +658,18 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausurTermin}-Objekts.
 	 */
 	public schuelerklausurraumstundeRemoveByIdSchuelerklausur(idSchuelerklausur : number) : void {
-		this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
+		this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausur);
 		this.update_all();
 	}
 
 	/**
 	 * Entfernt alle {@link GostSchuelerklausurterminraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
 	 *
-	 * @param idsSchuelerklausuren die Liste der Schülerklausur-IDs.
+	 * @param idsSchuelerklausurtermine die Liste der Schülerklausur-IDs.
 	 */
-	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(idsSchuelerklausuren : List<number>) : void {
-		for (const idSchuelerklausur of idsSchuelerklausuren)
-			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
+	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(idsSchuelerklausurtermine : List<number>) : void {
+		for (const idSchuelerklausurtermin of idsSchuelerklausurtermine)
+			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin);
 		this.update_all();
 	}
 
@@ -718,8 +718,8 @@ export class GostKlausurraumManager extends JavaObject {
 	public setzeRaumZuSchuelerklausuren(collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
 		this.raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
 		this.raumstundeAddAll(collectionSkrsKrs.raumstunden);
-		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(collectionSkrsKrs.idsSchuelerklausuren);
-		this.schuelerklausurraumstundeAddAll(collectionSkrsKrs.skRaumstunden);
+		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(collectionSkrsKrs.idsSchuelerklausurtermine);
+		this.schuelerklausurraumstundeAddAll(collectionSkrsKrs.sktRaumstunden);
 	}
 
 	/**

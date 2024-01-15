@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -115,6 +116,47 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Kursklausuren zu den übergebenen Klausurvorgaben zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param vorgaben die Liste der Klausurvorgaben, zu denen die Kursklausuren gesucht werden.
+	 *
+	 * @return die Liste der Schülerklausuren
+	 */
+	public static List<GostKursklausur> getKursklausurenZuVorgaben(final DBEntityManager conn, final List<GostKlausurvorgabe> vorgaben) {
+		if (vorgaben.isEmpty())
+			return new ArrayList<>();
+		List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
+		return kursKlausurDTOs.stream().map(dtoMapper2::apply).toList();
+	}
+
+
+	/**
+	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
+	 * Gost-Halbjahr zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param ganzesSchuljahr true, um Klausuren für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
+	 *
+	 * @return die Liste der Kursklausuren
+	 */
+	public static GostKlausurenDataCollection getKlausurDataCollection(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) {
+		final GostKlausurenDataCollection data = new GostKlausurenDataCollection();
+		data.vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr);
+		data.kursklausuren = getKursklausurenZuVorgaben(conn, data.vorgaben);
+		data.schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, data.kursklausuren);
+		data.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, data.schuelerklausuren);
+		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, data.kursklausuren));
+		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuSchuelerklausurterminen(conn, data.schuelerklausurtermine));
+		return data;
+	}
+
+
+
+
+	/**
 	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
 	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
 	 *
@@ -185,7 +227,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * {@link DTOGostKlausurenVorgaben} in einen Core-DTO
 	 * {@link GostKlausurvorgabe}.
 	 */
-	public static Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, List<DTOGostKlausurenSchuelerklausuren>, GostKursklausur> dtoMapper = (final DTOGostKlausurenKursklausuren k,
+	public static final Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, List<DTOGostKlausurenSchuelerklausuren>, GostKursklausur> dtoMapper = (final DTOGostKlausurenKursklausuren k,
 			final GostKlausurvorgabe v, final DTOKurs kurs, final List<DTOGostKlausurenSchuelerklausuren> sKlausuren) -> {
 		final GostKursklausur kk = DataGostKlausurenKursklausur.dtoMapper2.apply(k);
 		kk.abijahr = v.abiJahrgang;
@@ -223,8 +265,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	@Override
 	public Response get(final Long halbjahr) {
 		throw new UnsupportedOperationException();
-		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-//		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(DataGostKlausurenVorgabe.checkHalbjahr(halbjahr.intValue()))).build();
 	}
 
 	/**

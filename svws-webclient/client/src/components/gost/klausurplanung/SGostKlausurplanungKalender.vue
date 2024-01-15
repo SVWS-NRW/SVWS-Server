@@ -33,6 +33,7 @@
 							<s-gost-klausurplanung-termin :termin="termin"
 								:kursklausurmanager="kursklausurmanager"
 								:map-lehrer="mapLehrer"
+								:map-schueler="mapSchueler"
 								:kursmanager="kursmanager"
 								:compact="dragData?.id !== termin.id"
 								:quartalsauswahl="quartalsauswahl"
@@ -47,7 +48,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card>
 			<template v-if="kwAuswahl">
-				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
+				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl" :map-schueler="mapSchueler"
 					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
 					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
 					<template #kwAuswahl>

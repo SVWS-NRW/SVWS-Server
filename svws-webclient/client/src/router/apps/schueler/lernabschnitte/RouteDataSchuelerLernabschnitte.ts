@@ -114,7 +114,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			if (halbjahr !== null) {
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
 				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben, null);
-				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren);
+				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 			}
 		}
 		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager, klausurManager });
@@ -187,19 +187,17 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	createSchuelerklausurTermin = async (id: number) => {
 		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(api.schema, id);
-		console.log(skNeu);
-		this.klausurManager.schuelerklausurPatchAttributes(skNeu);
+		this.klausurManager.schuelerklausurterminAdd(skNeu);
 		this.commit();
 	}
 
-	deleteLastSchuelerklausurTermin = async (sk : GostSchuelerklausur) => {
-		const skNeu = await api.server.deleteLastGostKlausurenSchuelerklausurtermin(sk, api.schema);
-		this.klausurManager.schuelerklausurPatchAttributes(skNeu);
+	deleteSchuelerklausurTermin = async (skt : GostSchuelerklausurTermin) => {
+		await api.server.deleteGostKlausurenSchuelerklausurtermin(api.schema, skt.id);
+		this.klausurManager.schuelerklausurterminRemoveById(skt.id);
 		this.commit();
 	}
 
 	patchSchuelerklausurTermin = async (id: number, skt : Partial<GostSchuelerklausurTermin>) => {
-		console.log(skt);
 		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
 	}
 

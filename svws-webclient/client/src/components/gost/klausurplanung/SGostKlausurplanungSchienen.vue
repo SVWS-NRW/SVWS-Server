@@ -90,10 +90,12 @@
 						:class="dropOverCssClasses(termin)"
 						:kursklausurmanager="kursklausurmanager"
 						:map-lehrer="mapLehrer"
+						:map-schueler="mapSchueler"
 						:drag-data="() => dragData"
 						@dragover="terminSelected=termin"
 						:on-drag="onDrag"
 						:on-drop="onDrop"
+						:draggable="draggable"
 						:termin-selected="terminSelected?.id===termin.id"
 						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
 						:loesche-klausurtermine="loescheKlausurtermine"
@@ -237,11 +239,11 @@
 		if (dragData.value instanceof GostKursklausur) {
 			const klausur = dragData.value;
 			if (zone === undefined && klausur.idTermin != null)
-				await props.patchKursklausur(klausur.id, {idTermin: null});
+				await props.patchKlausur(klausur, {idTermin: null});
 			else if (zone instanceof GostKlausurtermin) {
 				const termin = zone;
 				if (termin.id != klausur.idTermin) {
-					await props.patchKursklausur(klausur.id, {idTermin: termin.id});
+					await props.patchKlausur(klausur, {idTermin: termin.id});
 					terminSelected.value = zone;
 				}
 			}
@@ -258,6 +260,10 @@
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
 	const blockeGleicheLehrkraft = ref(false);
+
+	function draggable(data: GostKlausurplanungDragData) {
+		return data instanceof GostKursklausur;
+	}
 
 	const blocken = async () => {
 		loading.value = true;

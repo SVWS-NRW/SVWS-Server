@@ -36,7 +36,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 			klausurManager: () => routeSchuelerLernabschnitte.data.klausurManager,
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,
 			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
-			deleteLastSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteLastSchuelerklausurTermin,
+			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,
 			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin
 		};
 	}

@@ -29,7 +29,7 @@
 						<div class="svws-ui-td" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
 						<div class="svws-ui-td" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (terminStartzeit + ' Uhr' || 'Startzeit') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur.id)" />
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (terminStartzeit + ' Uhr' || 'Startzeit') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
 						</div>
 					</div>
 				</template>
@@ -66,7 +66,7 @@
 		raummanager: () => GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
@@ -114,12 +114,12 @@
 			event.preventDefault();
 	}
 
-	async function patchKlausurbeginn(event: string | number, id: number) {
+	async function patchKlausurbeginn(event: string | number, klausur: GostKursklausur) {
 		if (typeof event === 'number')
 			return;
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
-			const result = await props.patchKlausur(id, {id, startzeit});
+			const result = await props.patchKlausur(klausur, {startzeit});
 			props.raummanager().setzeRaumZuSchuelerklausuren(result);
 		} catch(e) {
 			// Do nothing

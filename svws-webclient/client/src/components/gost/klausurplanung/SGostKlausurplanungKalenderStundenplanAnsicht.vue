@@ -80,13 +80,14 @@
 							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
 							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
-								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
+								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kursmanager.get(k.idKurs)?.kuerzel).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
 								<template #content>
 									<div class="-mx-3">
 										<s-gost-klausurplanung-termin :termin="termin"
 											:kursklausurmanager="kursklausurmanager"
 											:faecher-manager="faecherManager"
 											:map-lehrer="mapLehrer"
+											:map-schueler="mapSchueler"
 											:kursmanager="kursmanager">
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
@@ -261,7 +262,7 @@
 	}
 
 	function getBgColors(termin: number | null) {
-		const klausuren = [...props.kursklausurmanager().kursklausurGetMengeByTerminid(termin)].map(k => k.kursKurzbezeichnung?.split('-')[0])
+		const klausuren = [...props.kursklausurmanager().kursklausurGetMengeByTerminid(termin)].map(k => props.kursmanager.get(k.idKurs)?.kuerzel?.split('-')[0])
 		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 
 		let gradient = '';

@@ -1,6 +1,7 @@
 
-import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten, GostSchuelerklausurTermin} from "@core";
-import { GostKlausurenCollectionSkrsKrs} from "@core";
+import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten} from "@core";
+import { GostSchuelerklausurTermin} from "@core";
+import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
@@ -159,11 +160,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			return false;
 		try {
 			api.status.start();
-			// const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, this.abiturjahr);
-			// console.log(listKlausurvorgaben.size())
-			// const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 			const result: Partial<RouteStateGostKlausurplanung> = {
-				// klausurvorgabenmanager: klausurvorgabenmanager,
 				abschnitt: undefined,
 				halbjahr: halbjahr,
 				kursklausurmanager: undefined,
@@ -205,10 +202,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
-		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		const listSchuelerNachklausuren = await api.server.getGostKlausurenSchuelerklausurenNachschreiber(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine, listSchuelerNachklausuren);
+		const test = await api.server.getGostKlausurenCollection(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		console.log(test);
+		// const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		// const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		// const listSchuelerNachklausuren = await api.server.getGostKlausurenSchuelerklausurenNachschreiber(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		// console.log(listSchuelerNachklausuren);
+		return new GostKursklausurManager(vorgabenmanager, test.kursklausuren, test.termine, test.schuelerklausuren, test.schuelerklausurtermine);
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -280,22 +280,27 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.stop();
 	}
 
-	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
-		// if ('id' in klausur)
-		return await this.patchKursklausur(id, klausur);
-	}
-
-	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
-		if (this._state.value.abschnitt === undefined)
-			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
-		api.status.start();
-		delete klausur.id;
-		const result = await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt.id);
-		if (result.kursKlausurPatched !== null)
-			this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched);
-		this.commit();
-		api.status.stop();
-		return result;
+	patchKlausur = async (klausur: GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin>): Promise<GostKlausurenCollectionSkrsKrs> => {
+		try {
+			api.status.start();
+			delete patch.id;
+			if (klausur instanceof GostKursklausur) {
+				if (this._state.value.abschnitt === undefined)
+					throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
+				const result = await api.server.patchGostKlausurenKursklausur(patch, api.schema, klausur.id, this._state.value.abschnitt.id);
+				if (result.kursKlausurPatched !== null)
+					this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched);
+				return result;
+			} else if (klausur instanceof GostSchuelerklausurTermin) {
+				const _schuelerklausurtermin = this.kursklausurmanager.schuelerklausurterminGetByIdOrException(klausur.id);
+				await api.server.patchGostKlausurenSchuelerklausurtermin(patch, api.schema, klausur.id);
+			 	this.kursklausurmanager.schuelerklausurterminPatchAttributes(Object.assign(_schuelerklausurtermin, patch));
+			}
+			return new GostKlausurenCollectionSkrsKrs();
+		} finally {
+			this.commit();
+			api.status.stop();
+		}
 	}
 
 	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
@@ -401,7 +406,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausurenTermine(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren, this.kursklausurmanager, termin);
+		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, schuelerklausuren, this.kursklausurmanager, termin);
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {

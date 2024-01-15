@@ -5,7 +5,7 @@
 				Grund für Fehlen angeben
 			</template>
 			<template #modalContent>
-				<svws-ui-textarea-input placeholder="z.B. Krankheit" @change="bemerkungSchuelerklausurtermin => terminSelected.bemerkungSchuelerklausurtermin = bemerkungSchuelerklausurtermin" />
+				<svws-ui-textarea-input placeholder="z.B. Krankheit" @change="bemerkung => terminSelected.bemerkung = bemerkung" />
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="createTermin(false)"> Abbrechen </svws-ui-button>
@@ -18,7 +18,7 @@
 					{{ klausurManager().vorgabeBySchuelerklausur(rowData).quartal }}
 				</template>
 				<template #cell(termin)="{ rowData }">
-					<svws-ui-table v-if="klausurManager().terminKursklausurBySchuelerklausur(rowData) !== null && klausurManager().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" :items="rowData.schuelerklausurTermine" :columns="colsTermine" disable-header>
+					<svws-ui-table v-if="klausurManager().terminKursklausurBySchuelerklausur(rowData) !== null && klausurManager().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" :items="klausurManager().schuelerklausurterminGetMengeBySchuelerklausur(rowData)" :columns="colsTermine" disable-header>
 						<template #cell(datum)="{ rowData: termin }">
 							{{ klausurManager().terminBySchuelerklausurTermin(termin) !== null ? (klausurManager().terminBySchuelerklausurTermin(termin)!.datum !== null ? DateUtils.gibDatumGermanFormat(klausurManager().terminBySchuelerklausurTermin(termin)!.datum!) : "N.N.") : "N.N." }}
 						</template>
@@ -32,7 +32,7 @@
 										<i-ri-user-forbid-line />
 									</svws-ui-tooltip>
 								</svws-ui-button>
-								<svws-ui-button type="danger" v-if="rowData.schuelerklausurTermine.size() > 1" class="mt-4" @click="deleteLastSchuelerklausurTermin(rowData)">
+								<svws-ui-button type="danger" v-if="klausurManager().schuelerklausurterminGetMengeBySchuelerklausur(rowData).size() > 1" class="mt-4" @click="deleteSchuelerklausurTermin(termin)">
 									<svws-ui-tooltip>
 										<template #content>
 											Nachschreibtermin löschen
@@ -42,7 +42,7 @@
 								</svws-ui-button>
 							</div>
 							<div v-else>
-								{{ termin.bemerkungSchuelerklausurtermin }}
+								{{ termin.bemerkung }}
 							</div>
 						</template>
 					</svws-ui-table>
@@ -80,7 +80,7 @@
 
 	const createTermin = async (create: boolean) => {
 		if (create && terminSelected.value !== undefined) {
-			await props.patchSchuelerklausurTermin(terminSelected.value.id, { bemerkungSchuelerklausurtermin: terminSelected.value.bemerkungSchuelerklausurtermin } );
+			await props.patchSchuelerklausurTermin(terminSelected.value.id, { bemerkung: terminSelected.value.bemerkung } );
 			await props.createSchuelerklausurTermin(terminSelected.value.idSchuelerklausur);
 		}
 		showModalTerminGrund().value = false;

@@ -1,7 +1,4 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { ArrayList } from '../../../../java/util/ArrayList';
-import type { List } from '../../../../java/util/List';
-import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 
 export class GostSchuelerklausur extends JavaObject {
 
@@ -19,11 +16,6 @@ export class GostSchuelerklausur extends JavaObject {
 	 * Das Zeitraster des Stundenplans.
 	 */
 	public idSchueler : number = -1;
-
-	/**
-	 * Die Liste der IDs der zugehörigen Termine.
-	 */
-	public schuelerklausurTermine : List<GostSchuelerklausurTermin> = new ArrayList();
 
 	/**
 	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
@@ -55,11 +47,6 @@ export class GostSchuelerklausur extends JavaObject {
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		if ((obj.schuelerklausurTermine !== undefined) && (obj.schuelerklausurTermine !== null)) {
-			for (const elem of obj.schuelerklausurTermine) {
-				result.schuelerklausurTermine?.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
@@ -69,18 +56,6 @@ export class GostSchuelerklausur extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		if (!obj.schuelerklausurTermine) {
-			result += '"schuelerklausurTermine" : []';
-		} else {
-			result += '"schuelerklausurTermine" : [ ';
-			for (let i = 0; i < obj.schuelerklausurTermine.size(); i++) {
-				const elem = obj.schuelerklausurTermine.get(i);
-				result += GostSchuelerklausurTermin.transpilerToJSON(elem);
-				if (i < obj.schuelerklausurTermine.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -97,20 +72,6 @@ export class GostSchuelerklausur extends JavaObject {
 		}
 		if (typeof obj.idSchueler !== "undefined") {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
-		}
-		if (typeof obj.schuelerklausurTermine !== "undefined") {
-			if (!obj.schuelerklausurTermine) {
-				result += '"schuelerklausurTermine" : []';
-			} else {
-				result += '"schuelerklausurTermine" : [ ';
-				for (let i = 0; i < obj.schuelerklausurTermine.size(); i++) {
-					const elem = obj.schuelerklausurTermine.get(i);
-					result += GostSchuelerklausurTermin.transpilerToJSON(elem);
-					if (i < obj.schuelerklausurTermine.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		if (typeof obj.bemerkung !== "undefined") {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';

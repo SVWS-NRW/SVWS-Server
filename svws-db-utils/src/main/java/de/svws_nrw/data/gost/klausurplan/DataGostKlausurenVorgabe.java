@@ -247,16 +247,12 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			.setParameter("hj", Arrays.asList(ganzesSchuljahr ? GostHalbjahr.fromIDorException(halbjahr).getSchuljahr() : new GostHalbjahr[]{GostHalbjahr.fromIDorException(halbjahr)}))
 			.getResultList();
 		}
-		final List<GostKlausurvorgabe> daten = new ArrayList<>();
-		for (final DTOGostKlausurenVorgaben v : vorgaben)
-			daten.add(dtoMapper.apply(v));
-		return daten;
+		return vorgaben.stream().map(dtoMapper::apply).toList();
 	}
 
 	@Override
 	public Response get(final Long halbjahr) {
 		throw new UnsupportedOperationException();
-		// return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
 	}
 
 	@Override

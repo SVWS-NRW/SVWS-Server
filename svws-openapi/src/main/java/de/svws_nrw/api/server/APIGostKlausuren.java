@@ -3,8 +3,9 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkKkKv;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
@@ -70,7 +71,7 @@ public class APIGostKlausuren {
 	@Path("/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
 	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -99,7 +100,7 @@ public class APIGostKlausuren {
 	@Path("/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
 	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -128,7 +129,7 @@ public class APIGostKlausuren {
 	@Path("/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
 	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -258,7 +259,7 @@ public class APIGostKlausuren {
 	@Path("/vorgaben/createDefault/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}")
 	@Operation(summary = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.", description = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe " + "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der neuen Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der neuen Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.")
 	@ApiResponse(responseCode = "400", description = "Falsche Parameter")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -285,7 +286,7 @@ public class APIGostKlausuren {
 	@Path("/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -314,7 +315,7 @@ public class APIGostKlausuren {
 	@Path("/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -377,7 +378,7 @@ public class APIGostKlausuren {
 	@Path("/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}")
 	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Keine Klausurvorgaben definiert oder der Schuljahresabschnitt wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -404,7 +405,7 @@ public class APIGostKlausuren {
 	@Path("/schuelerklausuren/termin/{id : -?\\d+}")
 	@Operation(summary = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus.", description = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostSchuelerklausurTermin.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostSchuelerklausurTermin.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -433,13 +434,13 @@ public class APIGostKlausuren {
 	@Path("/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus.", description = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostSchuelerklausur.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkSkt.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response getGostKlausurenSchuelerklausurenNachschreiber(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenSchuelerklausur.getSchuelerNachschreibKlausuren(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr))).build(),
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenSchuelerklausur.getCollectionSkSktNachschreiber(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr))).build(),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
@@ -478,6 +479,35 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Schuelerklausuren zu einem Klausurtermin.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+
+	 *
+	 * @return die Liste der Gost-SchuelerklausurenTermine
+	 */
+	@GET
+	@Path("/collection/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
+	@Operation(summary = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus.", description = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenDataCollection.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getGostKlausurenCollection(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.getKlausurDataCollection(conn, abiturjahr, halbjahr, false)).build(),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Klausurtermine eines Abiturjahrgangs
 	 * in einem bestimmten Schuljahr der Gymnasialen Oberstufe.
 	 *
@@ -493,7 +523,7 @@ public class APIGostKlausuren {
 	@Path("/termine/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurtermine.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurtermine.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -522,7 +552,7 @@ public class APIGostKlausuren {
 	@Path("/termine/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurtermine.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurtermine.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -572,7 +602,7 @@ public class APIGostKlausuren {
 	@Operation(summary = "Löscht Gost-Klausurtermine.", description = "Löscht Gost-Klausurtermine."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.",
-    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostKlausurenKlausurtermine(
@@ -629,7 +659,7 @@ public class APIGostKlausuren {
 //	@Path("/kalenderinformationen")
 //	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 //			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-//	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurenKalenderinformation.class))))
+//	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurenKalenderinformation.class))))
 //	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
 //	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 //	public Response getGostKlausurenKalenderinformationen(@PathParam("schema") final String schema,
@@ -708,7 +738,7 @@ public class APIGostKlausuren {
 //	@Operation(summary = "Löscht einen Gost-Klausurtermin.", description = "Löscht einen Gost-Klausurtermin."
 //			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
 //    @ApiResponse(responseCode = "200", description = "Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.",
-//    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
+//    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Long.class)))
 //	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
 //	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 //	public Response deleteGostKlausurenKalenderinformation(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
@@ -732,7 +762,7 @@ public class APIGostKlausuren {
 	@Path("/raeume/{termin : -?\\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurräume.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurraum.class))))
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurräume.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurraum.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurräume auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Die Id des Klausurtermins wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -811,7 +841,7 @@ public class APIGostKlausuren {
 	@Operation(summary = "Löscht einen Gost-Klausurraum.", description = "Löscht einen Gost-Klausurraum."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Gost-Klausurraums " + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Klausurraum für die angegebene ID wurden erfolgreich gelöscht.",
-    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurraum zu löschen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostKlausurenRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
@@ -835,7 +865,7 @@ public class APIGostKlausuren {
 	@Path("/raumstunden/{termin : -?\\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -899,7 +929,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response blockenGostKursklausuren(
 			@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.blocken(conn, blockungDaten)).build(),
 			request,
@@ -923,7 +953,7 @@ public class APIGostKlausuren {
 	@Path("/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurenCollectionSkKkKv.class)))
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenDataCollection.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -953,7 +983,7 @@ public class APIGostKlausuren {
 	@Path("/schuelerklausuren/termine/new/{id : \\d+}")
 	@Operation(summary = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.", description = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
-	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class)))
+	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausurTermin.class)))
 	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -962,7 +992,7 @@ public class APIGostKlausuren {
 			@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).createTermin(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).create(id),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -973,24 +1003,24 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema     das Datenbankschema, in welchem der Klausurtermin gelöscht wird
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param sk         die Schülerklausur, zu der ein neuer Termin generiert werden soll.
+	 * @param id         die ID des zu löschenden Schülerklausurtermins.
 	 * @return die HTTP-Antwort mit der neuen Blockung
 	 */
 	@DELETE
-	@Path("/schuelerklausuren/termine/deleteLast")
-	@Operation(summary = "Löscht Gost-Klausurtermine.", description = "Löscht Gost-Klausurtermine."
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
-	@ApiResponse(responseCode = "201", description = "Gost-Klausurtermin wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
+	@Path("/schuelerklausuren/termine/delete/{id : \\d+}")
+	@Operation(summary = "Löscht Gost-Schülerklausurtermine.", description = "Löscht Gost-Schülerklausurtermine."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Schülerklausurtermins " + "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Schülerklausurtermin wurde erfolgreich angelegt.",
+	content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Schülerklausurtermin zu löschen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteLastGostKlausurenSchuelerklausurtermin(
-			@PathParam("schema") final String schema,
-			@RequestBody(description = "die IDs der Klausurtermine", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausur.class))) final GostSchuelerklausur sk, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).deleteLastTermin(sk),
+	public Response deleteGostKlausurenSchuelerklausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausurTermin(conn).delete(id),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
+
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Daten eines Gost-Klausurtermins.

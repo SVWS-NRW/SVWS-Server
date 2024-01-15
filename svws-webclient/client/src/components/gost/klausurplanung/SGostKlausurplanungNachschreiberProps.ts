@@ -5,6 +5,7 @@ import type {
 	GostKlausurterminblockungDaten,
 	GostKursklausur,
 	GostKursklausurManager,
+	GostSchuelerklausurTermin,
 	KursManager,
 	LehrerListeEintrag,
 	List,
@@ -17,13 +18,10 @@ export interface GostKlausurplanungNachschreiberProps {
 	kursklausurmanager: () => GostKursklausurManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;
-	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;
 	kursmanager: KursManager;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
-	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	gotoVorgaben: () => Promise<void>;
 }

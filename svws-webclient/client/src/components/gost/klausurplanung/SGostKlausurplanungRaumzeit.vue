@@ -28,6 +28,7 @@
 					<s-gost-klausurplanung-termin :termin="termin"
 						:kursklausurmanager="kursklausurmanager"
 						:map-lehrer="mapLehrer"
+						:map-schueler="mapSchueler"
 						:kursmanager="kursmanager"
 						:on-drag-klausur="onDrag"
 						:draggable-klausur="isDraggable"

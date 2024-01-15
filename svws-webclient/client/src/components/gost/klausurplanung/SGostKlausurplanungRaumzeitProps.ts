@@ -13,6 +13,7 @@ import type {
 	GostSchuelerklausurTermin,
 	KursManager,
 	LehrerListeEintrag,
+	SchuelerListeEintrag,
 	List,
 	StundenplanManager,
 } from "@core";
@@ -24,6 +25,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	kursklausurmanager: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	mapSchueler: Map<number, SchuelerListeEintrag>;
 	kursmanager: KursManager;
 	stundenplanmanager: StundenplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
@@ -31,6 +33,6 @@ export interface GostKlausurplanungRaumzeitProps {
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 	erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
 	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
-	patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

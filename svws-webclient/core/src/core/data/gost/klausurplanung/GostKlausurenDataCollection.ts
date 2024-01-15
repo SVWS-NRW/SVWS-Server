@@ -4,9 +4,10 @@ import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/Go
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
+import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 
-export class GostKlausurenCollectionSkKkKv extends JavaObject {
+export class GostKlausurenDataCollection extends JavaObject {
 
 	/**
 	 * Die Liste der Klausurvorgaben.
@@ -26,6 +27,11 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
+	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList();
+
+	/**
+	 * Die Liste der Schülerklausuren.
+	 */
 	public termine : List<GostKlausurtermin> = new ArrayList();
 
 
@@ -34,16 +40,16 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkKkKv';
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkKkKv'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkKkKv {
+	public static transpilerFromJSON(json : string): GostKlausurenDataCollection {
 		const obj = JSON.parse(json);
-		const result = new GostKlausurenCollectionSkKkKv();
+		const result = new GostKlausurenDataCollection();
 		if ((obj.vorgaben !== undefined) && (obj.vorgaben !== null)) {
 			for (const elem of obj.vorgaben) {
 				result.vorgaben?.add(GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(elem)));
@@ -59,6 +65,11 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 				result.schuelerklausuren?.add(GostSchuelerklausur.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.schuelerklausurtermine !== undefined) && (obj.schuelerklausurtermine !== null)) {
+			for (const elem of obj.schuelerklausurtermine) {
+				result.schuelerklausurtermine?.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if ((obj.termine !== undefined) && (obj.termine !== null)) {
 			for (const elem of obj.termine) {
 				result.termine?.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
@@ -67,7 +78,7 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : GostKlausurenCollectionSkKkKv) : string {
+	public static transpilerToJSON(obj : GostKlausurenDataCollection) : string {
 		let result = '{';
 		if (!obj.vorgaben) {
 			result += '"vorgaben" : []';
@@ -105,6 +116,18 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		if (!obj.schuelerklausurtermine) {
+			result += '"schuelerklausurtermine" : []';
+		} else {
+			result += '"schuelerklausurtermine" : [ ';
+			for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
+				const elem = obj.schuelerklausurtermine.get(i);
+				result += GostSchuelerklausurTermin.transpilerToJSON(elem);
+				if (i < obj.schuelerklausurtermine.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (!obj.termine) {
 			result += '"termine" : []';
 		} else {
@@ -122,7 +145,7 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkKkKv>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurenDataCollection>) : string {
 		let result = '{';
 		if (typeof obj.vorgaben !== "undefined") {
 			if (!obj.vorgaben) {
@@ -166,6 +189,20 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
+		if (typeof obj.schuelerklausurtermine !== "undefined") {
+			if (!obj.schuelerklausurtermine) {
+				result += '"schuelerklausurtermine" : []';
+			} else {
+				result += '"schuelerklausurtermine" : [ ';
+				for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
+					const elem = obj.schuelerklausurtermine.get(i);
+					result += GostSchuelerklausurTermin.transpilerToJSON(elem);
+					if (i < obj.schuelerklausurtermine.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
 		if (typeof obj.termine !== "undefined") {
 			if (!obj.termine) {
 				result += '"termine" : []';
@@ -187,6 +224,6 @@ export class GostKlausurenCollectionSkKkKv extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionSkKkKv(obj : unknown) : GostKlausurenCollectionSkKkKv {
-	return obj as GostKlausurenCollectionSkKkKv;
+export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenDataCollection(obj : unknown) : GostKlausurenDataCollection {
+	return obj as GostKlausurenDataCollection;
 }

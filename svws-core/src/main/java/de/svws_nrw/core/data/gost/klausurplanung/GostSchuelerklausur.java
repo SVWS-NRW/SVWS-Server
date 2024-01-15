@@ -1,11 +1,7 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,10 +24,6 @@ public class GostSchuelerklausur {
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
 	public long idSchueler = -1;
-
-	/** Die Liste der IDs der zugehörigen Termine. */
-	@Schema(description = "die Liste der IDs der zugehörigen Termine", example = "[ 5590, 5591, 5592, ... ]")
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurTermine = new ArrayList<>();
 
 	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
 	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Zentrale Vergleichsklausur")

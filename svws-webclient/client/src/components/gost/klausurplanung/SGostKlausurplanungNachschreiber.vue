@@ -9,29 +9,20 @@
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<svws-ui-table :items="props.kursklausurmanager().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+				<s-gost-klausurplanung-schuelerklausur-table :kursmanager="kursmanager"
+					:kursklausurmanager="kursklausurmanager"
+					:schuelerklausuren="kursklausurmanager().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)"
+					:map-lehrer="mapLehrer"
+					:map-schueler="mapSchueler"
+					:on-drag="onDrag"
+					:draggable="() => true">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
-							<span>Aktuell keine Klausuren zu planen.</span>
-							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
+							<span>Aktuell keine Nachschreibklausuren zu planen.</span>
+							<span class="opacity-50">Bereits geplante Klausuren können hier zurückgelegt werden.</span>
 						</div>
 					</template>
-					<template #cell(nachname)="{ rowData }">
-						{{ mapSchueler.get(rowData.idSchueler)?.nachname }}
-					</template>
-					<template #cell(vorname)="{ rowData }">
-						{{ mapSchueler.get(rowData.idSchueler)?.vorname }}
-					</template>
-					<template #cell(kurs)="{ rowData }">
-						{{ kursklausurmanager().kursklausurBySchuelerklausurTermin(rowData).kursKurzbezeichnung }}
-					</template>
-					<template #cell(kuerzel)="{ rowData }">
-						{{ getLehrerKuerzel(kursklausurmanager().kursklausurBySchuelerklausurTermin(rowData).idKurs) }}
-					</template>
-					<template #cell(dauer)="{ rowData }">
-						{{ kursklausurmanager().vorgabeBySchuelerklausur(rowData).dauer }}
-					</template>
-				</svws-ui-table>
+				</s-gost-klausurplanung-schuelerklausur-table>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
@@ -42,21 +33,23 @@
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
-					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
 						:class="dropOverCssClasses(termin)"
 						:kursklausurmanager="kursklausurmanager"
 						:map-lehrer="mapLehrer"
+						:map-schueler="mapSchueler"
 						:drag-data="() => dragData"
-						@dragover="terminSelected=termin"
 						:on-drag="onDrag"
 						:on-drop="onDrop"
+						:draggable="draggable"
 						:termin-selected="terminSelected?.id===termin.id"
 						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
 						:loesche-klausurtermine="loescheKlausurtermine"
 						:patch-klausurtermin="patchKlausurtermin"
 						:klausur-css-classes="klausurCssClasses"
-						:kursmanager="kursmanager" />
+						:kursmanager="kursmanager"
+						:show-schuelerklausuren="true" />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />
@@ -66,7 +59,7 @@
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card class="-ml-4">
-			<template #title>
+			<!--<template #title>
 				<span class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="klausurKonflikte().size() > 0">
 						<i-ri-alert-fill class="text-error -my-0.5" />
@@ -114,7 +107,7 @@
 			</div>
 			<div v-else-if="terminSelected === undefined" class="mt-5 opacity-50 flex flex-col gap-2">
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
-			</div>
+			</div>-->
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -122,7 +115,7 @@
 <script setup lang="ts">
 
 	import type { JavaMapEntry, JavaSet} from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, DateUtils } from "@core";
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, DateUtils, GostSchuelerklausurTermin } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
@@ -145,33 +138,35 @@
 			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
 		return ''
 	}
-	const klausurKonflikte = () => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined) {
-			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kursklausurmanager().konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(terminSelected.value.id, dragData.value.id).entrySet();
-		} else if (terminSelected.value !== undefined)
-			return props.kursklausurmanager().konflikteMapKursklausurSchueleridsByTerminid(terminSelected.value.id).entrySet();
-		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
-	}
+	// const klausurKonflikte = () => {
+	// 	if (dragData.value !== undefined && terminSelected.value !== undefined) {
+	// 		if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
+	// 			return props.kursklausurmanager().konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(terminSelected.value.id, dragData.value.id).entrySet();
+	// 	} else if (terminSelected.value !== undefined)
+	// 		return props.kursklausurmanager().konflikteMapKursklausurSchueleridsByTerminid(terminSelected.value.id).entrySet();
+	// 	return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
+	// }
 
-	const anzahlProKwKonflikte = (threshold: number) => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
-		} else if (terminSelected.value !== undefined)
-			return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold);
-		return new HashSet<number>();
+	// const anzahlProKwKonflikte = (threshold: number) => {
+	// 	if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
+	// 		if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
+	// 			return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
+	// 	} else if (terminSelected.value !== undefined)
+	// 		return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold);
+	// 	return new HashSet<number>();
+	// }
+
+	function draggable(data: GostKlausurplanungDragData) {
+		return data instanceof GostSchuelerklausurTermin;
 	}
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKursklausur) {
-			const klausur = dragData.value;
-			if (zone === undefined && klausur.idTermin != null)
-				await props.patchKursklausur(klausur.id, {idTermin: null});
+		if (dragData.value instanceof GostKursklausur || dragData.value instanceof GostSchuelerklausurTermin) {
+			if (zone === undefined && dragData.value.idTermin != null)
+				await props.patchKlausur(dragData.value, {idTermin: null});
 			else if (zone instanceof GostKlausurtermin) {
-				const termin = zone;
-				if (termin.id != klausur.idTermin) {
-					await props.patchKursklausur(klausur.id, {idTermin: termin.id});
+				if (zone.id != dragData.value.idTermin) {
+					await props.patchKlausur(dragData.value, {idTermin: zone.id});
 					terminSelected.value = zone;
 				}
 			}
@@ -187,13 +182,13 @@
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;
-		for (const oTermin of termine.value) {
-			if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal || oTermin.quartal === 0)
-				konfliktfreiZuFremdtermin = props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
-			if (konfliktfreiZuFremdtermin)
-				break;
-		}
-		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kursklausurmanager().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
+		// for (const oTermin of termine.value) {
+		// 	if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal || oTermin.quartal === 0)
+		// 		konfliktfreiZuFremdtermin = props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
+		// 	if (konfliktfreiZuFremdtermin)
+		// 		break;
+		// }
+		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : true;//props.kursklausurmanager().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
 			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			"svws-warning": !konfliktfreiZuFremdtermin,
@@ -205,20 +200,6 @@
 	onMounted(() => {
 		isMounted.value = true;
 	});
-
-	function calculateColumns() {
-		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 8.25 },
-			{ key: "vorname", label: "Vorname", minWidth: 8 },
-			{ key: "kurs", label: "Kurs", span: 1.25 },
-			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-		];
-
-		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
 
 	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
 

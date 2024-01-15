@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())"
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
@@ -88,22 +88,21 @@
 			await props.patchKlausurtermin(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});
 	}
 
-	// function isDropZone() : boolean {
-	// 	if (props.dragData() !== undefined) {
-	// 		if (props.dragData() instanceof GostKursklausur) {
-	// 			if (props.dragData()!.quartal === props.termin().quartal || props.termin().quartal === 0)
-	// 				return true;
-	// 		} else if (props.dragData() instanceof GostSchuelerklausurTermin) {
-	// 			return true;
-	// 		}
-	// 	}
-	// 	return false;
-	// }
+	function isDropZone(termin: GostKlausurtermin) : boolean {
+		if (props.dragData() !== undefined) {
+			if (props.dragData() instanceof GostKursklausur) {
+				return false;
+			} else if (props.dragData() instanceof GostSchuelerklausurTermin) {
+				return props.kursklausurmanager().schuelerklausurterminByTerminidAndSchuelerid(termin.id, props.kursklausurmanager().schuelerklausurGetByIdOrException(props.dragData().idSchuelerklausur).idSchueler) === null;
+			}
+		}
+		return false;
+	}
 
-	// function checkDropZone(event: DragEvent) {
-	// 	if (isDropZone())
-	// 		event.preventDefault();
-	// }
+	function checkDropZone(event: DragEvent, termin: GostKlausurtermin) {
+		if (isDropZone(termin))
+			event.preventDefault();
+	}
 
 	const konflikteTerminDragKlausur = computed(() => {
 		const data = props.dragData();

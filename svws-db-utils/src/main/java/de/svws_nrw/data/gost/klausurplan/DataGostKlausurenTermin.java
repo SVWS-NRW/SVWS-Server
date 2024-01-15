@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -88,6 +91,36 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	};
 
 	/**
+	 * Gibt die Liste der Klausurtermine zu den übergebenen Kursklausuren zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param kursKlausuren die Liste der Kursklausuren, zu denen die Klausurtermine gesucht werden.
+	 *
+	 * @return die Liste der Klausurtermine
+	 */
+	public static List<GostKlausurtermin> getKlausurtermineZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren) {
+		if (kursKlausuren.isEmpty())
+			return new ArrayList<>();
+		List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", kursKlausuren.stream().map(kk -> kk.idTermin).toList(), DTOGostKlausurenTermine.class);
+		return terminDTOs.stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Gibt die Liste der Klausurtermine zu den übergebenen Schülerklausurterminen zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param schuelerklausurTermine die Liste der Schülerklausurterminen, zu denen die Klausurtermine gesucht werden.
+	 *
+	 * @return die Liste der Klausurtermine
+	 */
+	public static List<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> schuelerklausurTermine) {
+		if (schuelerklausurTermine.isEmpty())
+			return new ArrayList<>();
+		List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", schuelerklausurTermine.stream().map(skt -> skt.idTermin).toList(), DTOGostKlausurenTermine.class);
+		return terminDTOs.stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
 	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
@@ -119,8 +152,6 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	@Override
 	public Response get(final Long halbjahr) {
 		throw new UnsupportedOperationException();
-		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-		// return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurtermine(halbjahr.intValue())).build();
 	}
 
 	@Override

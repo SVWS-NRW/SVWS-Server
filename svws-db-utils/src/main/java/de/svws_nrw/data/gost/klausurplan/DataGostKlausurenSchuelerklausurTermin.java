@@ -1,13 +1,15 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
-import de.svws_nrw.core.utils.ListUtils;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -48,8 +50,24 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 				Map.entry("idSchuelerklausur", (conn, dto, value, map) -> dto.Schuelerklausur_ID = JSONMapper.convertToLong(value, false)),
 				Map.entry("idTermin", (conn, dto, value, map) -> dto.Termin_ID = JSONMapper.convertToLong(value, true)),
 				Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-				Map.entry("bemerkungSchuelerklausurtermin", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge()))
+				Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge()))
 			);
+
+	/**
+		 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
+		 * {@link DTOGostKlausurenSchuelerklausuren} in einen Core-DTO
+		 * {@link GostSchuelerklausur}.
+		 */
+		public static final Function<DTOGostKlausurenSchuelerklausurenTermine, GostSchuelerklausurTermin> dtoMapper = (final DTOGostKlausurenSchuelerklausurenTermine skt) -> {
+			final GostSchuelerklausurTermin daten = new GostSchuelerklausurTermin();
+			daten.id = skt.ID;
+			daten.idSchuelerklausur = skt.Schuelerklausur_ID;
+			daten.folgeNr = skt.Folge_Nr;
+			daten.idTermin = skt.Termin_ID;
+			daten.startzeit = skt.Startzeit;
+			daten.bemerkung = skt.Bemerkungen;
+			return daten;
+		};
 
 	@Override
 	public Response getAll() {
@@ -78,32 +96,41 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	 *
 	 * @return Eine Response mit dem neuen Gost-Klausurtermin
 	 */
-	public Response createTermin(final long id) {
+	public Response create(final long id) {
 		DTOGostKlausurenSchuelerklausurenTermine lastTermin = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Schuelerklausur_ID = :skid ORDER BY skt.Folge_Nr DESC", DTOGostKlausurenSchuelerklausurenTermine.class)
 				.setParameter("skid", id)
 				.setMaxResults(1)
 				.getSingleResult();
-		conn.transactionPersist(new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1));
-		conn.transactionFlush();
-		List<GostSchuelerklausur> klausurListe = DataGostKlausurenSchuelerklausur.preprocessSchuelerklausuren(conn, ListUtils.create1(conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id)));
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(klausurListe.getFirst()).build();
+		DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1);
+		conn.transactionPersist(newTermin);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(newTermin)).build();
 	}
 
 	/**
-	 * Löscht den letzten Termin einer Gost-Schuelerklausur
+	 * Liefert die zu einer Liste von GostSchuelerklausuren gehörigen
+	 * GostSchuelerklausurtermin-Objekte zurück.
 	 *
-	 * @param sk   die Schülerklausur, zu der der letzte Termin gelöscht werden soll.
+	 * @param conn    x
+	 * @param klausuren die Liste der GostSchuelerklausuren
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausuren(final DBEntityManager conn, final List<GostSchuelerklausur> klausuren) {
+		if (klausuren.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", klausuren.stream().map(sk -> sk.id).toList(), DTOGostKlausurenSchuelerklausurenTermine.class).stream()
+				.map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Löscht den angegebenen Gost-Schuelerklausurtermin
+	 *
+	 * @param idSkt   die ID des zu löschenden Schülerklausurtermins
 	 *
 	 * @return die Response
 	 */
-	public Response deleteLastTermin(final GostSchuelerklausur sk) {
-		DTOGostKlausurenSchuelerklausurenTermine lastTermin = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Schuelerklausur_ID = :skid ORDER BY skt.Folge_Nr DESC", DTOGostKlausurenSchuelerklausurenTermine.class)
-				.setParameter("skid", sk.id)
-				.setMaxResults(1)
-				.getSingleResult();
-		conn.transactionRemove(lastTermin);
-		sk.schuelerklausurTermine.removeIf(skt -> skt.id == lastTermin.ID);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(sk).build();
+	public Response delete(final long idSkt) {
+		return super.deleteBasic(idSkt, DTOGostKlausurenSchuelerklausurenTermine.class, dtoMapper);
 	}
 
 
