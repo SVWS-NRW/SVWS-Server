@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from 'vue';
+	import type { ComputedRef, Ref } from 'vue';
 	import { ref, computed, watch, nextTick } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
@@ -139,12 +139,10 @@
 			emit("change", data.value);
 	}
 
-	const content = computed<InputDataType>(() => data.value);
-
 	defineExpose<{
-		content: ComputedRef<InputDataType>,
+		content: Ref<InputDataType>,
 	}>({
-		content
+		content: data
 	});
 
 </script>

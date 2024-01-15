@@ -25,7 +25,8 @@
 
 	import type { Ref } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
-	import { ref, computed } from "vue";
+	import { ref, computed, watch } from "vue";
+	import type { SchuelerListeEintrag } from "@core";
 	import { GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@core";
 	import SvwsUiSelect from "../../../../../ui/src/components/SvwsUiSelect.vue";
 	import SvwsUiTextInput from "../../../../../ui/src/components/SvwsUiTextInput.vue";
@@ -35,6 +36,7 @@
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
 		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		schueler: SchuelerListeEintrag;
 		id?: number;
 	}>();
 
@@ -44,6 +46,13 @@
 	const show: Ref<boolean> = ref<boolean>(false);
 
 	const beratungsdatum = computed<string>(()=> props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
+
+	watch(()=> props.schueler, (alt, neu)=> {
+		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value === null)
+			return;
+		refBeratungsdatum.value.input.value = beratungsdatum.value;
+		refKommentar.value.content = props.gostLaufbahnBeratungsdaten().kommentar;
+	})
 
 	const dirty = computed<boolean>(()=>{
 		const lehrerIDNeu = refLehrer.value?.content?.id || null;
