@@ -71,7 +71,7 @@
 				<svws-ui-input-number placeholder="Gesamt" :min="0"
 					:model-value="manager().lernabschnittGet().fehlstundenGesamt"
 					@change="fehlstundenGesamt => patch({ fehlstundenGesamt: fehlstundenGesamt ?? undefined })" />
-				<svws-ui-input-number placeholder="Unendschuldigt" :min="0"
+				<svws-ui-input-number placeholder="Unentschuldigt" :min="0"
 					:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt"
 					@change="fehlstundenUnentschuldigt => patch({ fehlstundenUnentschuldigt: fehlstundenUnentschuldigt ?? undefined })" />
 			</svws-ui-input-wrapper>
