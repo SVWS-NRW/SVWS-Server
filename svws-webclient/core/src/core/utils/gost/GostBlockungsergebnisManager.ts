@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import type { JavaSet } from '../../../java/util/JavaSet';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
@@ -2595,6 +2596,39 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchieneKursmengeSortiert(idSchiene : number) : List<GostBlockungsergebnisKurs> {
 		return this.getSchieneE(idSchiene).kurse;
+	}
+
+	/**
+	 * Liefert einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
+	 *
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
+	 */
+	public getOfSchieneTooltipKurskollisionen(idSchiene : number) : string {
+		const sbZeilen : StringBuilder | null = new StringBuilder();
+		for (const kurs1 of this.getSchieneE(idSchiene).kurse) {
+			let summe : number = 0;
+			const sbZeile : StringBuilder | null = new StringBuilder();
+			for (const kurs2 of this.getSchieneE(idSchiene).kurse) {
+				const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+				if (anzahl > 0) {
+					summe += anzahl;
+					sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + this.getOfKursName(kurs2.id)! + "(" + anzahl + ")");
+				}
+			}
+			if (summe > 0) {
+				sbZeilen.append(this.getOfKursName(kurs1.id)! + "(" + summe + "): " + sbZeile.toString()! + "\n");
+			}
+		}
+		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
+	}
+
+	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {
+		const set : HashSet<number | null> = new HashSet();
+		set.addAll(kurs1.schueler);
+		set.retainAll(kurs2.schueler);
+		return set.size();
 	}
 
 	/**

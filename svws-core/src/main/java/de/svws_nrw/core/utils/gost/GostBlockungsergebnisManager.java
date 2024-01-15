@@ -2762,6 +2762,43 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
+	 *
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
+	 */
+	public @NotNull String getOfSchieneTooltipKurskollisionen(final long idSchiene) {
+		final StringBuilder sbZeilen = new StringBuilder();
+
+		for (final GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
+			int summe = 0;
+			final StringBuilder sbZeile = new StringBuilder();
+
+			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
+				final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+				if (anzahl > 0) {
+					summe += anzahl;
+					sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + getOfKursName(kurs2.id) + "(" + anzahl + ")");
+				}
+			}
+
+			if (summe > 0) {
+				sbZeilen.append(getOfKursName(kurs1.id) + "(" + summe + "): " + sbZeile.toString() + "\n");
+			}
+		}
+
+		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
+	}
+
+	private static int getOfKursOfKursAnzahlGemeinsamerSchueler(final @NotNull GostBlockungsergebnisKurs kurs1, final @NotNull GostBlockungsergebnisKurs kurs2) {
+		final @NotNull HashSet<Long> set = new HashSet<>();
+		set.addAll(kurs1.schueler);
+		set.retainAll(kurs2.schueler);
+		return set.size();
+	}
+
+	/**
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
