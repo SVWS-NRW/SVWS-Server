@@ -147,7 +147,7 @@
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
 						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
 								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
 								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur).datum !== null ? kMan().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
 							</span>
