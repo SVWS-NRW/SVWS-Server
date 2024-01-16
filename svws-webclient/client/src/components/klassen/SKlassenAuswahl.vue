@@ -21,6 +21,11 @@
 				<template #cell(klassenLehrer)="{value}">
 					{{ lehrerkuerzel(value) }}
 				</template>
+				<template #actions>
+					<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung="setzeDefaultSortierung">
+						<svws-ui-button type="secondary" @click="openModal">Standardsortierung anwenden …</svws-ui-button>
+					</s-klassen-auswahl-sortierung-modal>
+				</template>
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -30,7 +35,6 @@
 
 	import type { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import type { SortByAndOrder } from "@ui";
 	import { computed, ref, shallowRef } from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();

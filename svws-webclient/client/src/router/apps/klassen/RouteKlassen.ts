@@ -81,6 +81,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
+			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
 		};
 	}
 

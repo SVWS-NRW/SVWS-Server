@@ -8,4 +8,5 @@ export interface KlassenAuswahlProps {
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	gotoEintrag: (eintrag: KlassenListeEintrag) => Promise<void>;
 	setFilter: () => Promise<void>;
+	setzeDefaultSortierung: () => Promise<void>;
 }

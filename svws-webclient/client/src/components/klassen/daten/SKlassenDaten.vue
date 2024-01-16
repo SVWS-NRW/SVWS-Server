@@ -16,7 +16,6 @@
 					<svws-ui-text-input placeholder="Teilstandort" :model-value="data.teilstandort" type="text" disabled /> <!-- TODO Select mit der Liste der Teilstandorte für diese Schule -->
 					<div class="flex flex-row">
 						<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung => (sortierung !== null) && patch({ sortierung })" />
-						<span class="pl-4"><svws-ui-button @click="setzeDefaultSortierung()">Automatisch</svws-ui-button></span>
 					</div>
 					<svws-ui-spacing />
 					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"

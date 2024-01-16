@@ -31,7 +31,6 @@ export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			gotoSchueler: routeKlassen.data.gotoSchueler,
-			setzeDefaultSortierung: routeKlassen.data.setzeDefaultSortierung,
 		};
 	}
 
