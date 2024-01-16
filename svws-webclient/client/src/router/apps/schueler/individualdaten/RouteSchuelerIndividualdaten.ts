@@ -8,6 +8,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
+import { api } from "~/router/Api";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -40,6 +41,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			mapHaltestellen: this.data.mapHaltestellen,
 			mapReligionen: this.data.mapReligionen,
 			mapSchulen: this.data.mapSchulen,
+			schulform: api.schulform,
 		};
 	}
 

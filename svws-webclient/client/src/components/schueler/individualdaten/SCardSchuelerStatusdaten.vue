@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Statusdaten">
-		<template #actions>
+		<template #actions v-if="schulform === Schulform.BK">
 			<svws-ui-checkbox :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
@@ -30,7 +30,7 @@
 	import type { HashMap, KatalogEintrag, SchuelerListeManager, SchuelerStammdaten, SchulEintrag } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { SchuelerStatus } from "@core";
+	import { SchuelerStatus, Schulform } from "@core";
 
 	const props = defineProps<{
 		schuelerListeManager: () => SchuelerListeManager;
@@ -38,6 +38,7 @@
 		mapFahrschuelerarten: Map<number, KatalogEintrag>;
 		mapHaltestellen: Map<number, KatalogEintrag>;
 		mapSchulen: HashMap<string, SchulEintrag>;
+		schulform: Schulform;
 	}>();
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
