@@ -170,7 +170,11 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 					throw OperationError.BAD_REQUEST.exception("Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
 				dto.Referenzniveau = niveau;
 			}
-		})
+		}),
+		Map.entry("hatKleinesLatinum", (conn, dto, value, map) -> dto.KleinesLatinumErreicht = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatLatinum", (conn, dto, value, map) -> dto.LatinumErreicht = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatGraecum", (conn, dto, value, map) -> dto.GraecumErreicht = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatHebraicum", (conn, dto, value, map) -> dto.HebraicumErreicht = JSONMapper.convertToBoolean(value, false))
 	);
 
 	@Override
