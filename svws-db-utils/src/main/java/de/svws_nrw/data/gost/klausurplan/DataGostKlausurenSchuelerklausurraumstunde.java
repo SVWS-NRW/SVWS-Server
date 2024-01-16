@@ -299,7 +299,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				throw OperationError.NOTHING_TO_DO.exception("Zeitraster konnte nicht ermittelt werden");
 			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.idSchuelerklausur));
 			for (final StundenplanZeitraster stunde : zeitrasterSk) {
-				final DTOGostKlausurenSchuelerklausurenTermineRaumstunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenTermineRaumstunden(sk.idSchuelerklausur,
+				final DTOGostKlausurenSchuelerklausurenTermineRaumstunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenTermineRaumstunden(sk.id,
 						raumManager.klausurraumstundeGetByRaumidAndZeitrasterid(idRaum, stunde.id).id);
 				conn.transactionPersist(skRaumStundeNeu);
 				result.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
