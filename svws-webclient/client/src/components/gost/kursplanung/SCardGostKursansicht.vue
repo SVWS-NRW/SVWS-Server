@@ -15,7 +15,7 @@
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !overflow-visible !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
 						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-full relative">
-							<svws-ui-tooltip v-if="s.id === edit_schienenname" force-open>
+							<svws-ui-tooltip v-if="s.id === edit_schienenname" keep-open>
 								<span class="opacity-50 border-b border-transparent">{{ s.nummer }}</span>
 								<template #content>
 									<div class="py-2">

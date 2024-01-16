@@ -120,7 +120,7 @@
 							<div v-if="(dragDataKursSchiene() === undefined) && (!istKursGesperrtInSchiene(kurs, schiene).value) && allowRegeln" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
 						</div>
 						<template v-if="dropDataKursSchiene()?.kurs.id === kurs.id && dropDataKursSchiene()?.schiene.id === schiene.id">
-							<svws-ui-tooltip :force-open="true" :show-arrow="false">
+							<svws-ui-tooltip :show-arrow="false" init-open :click-outside="selectionAbort">
 								<template #content>
 									<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('schienen sperren')">Alle Kurse sperren</svws-ui-button>
@@ -358,9 +358,9 @@
 			return false;
 		if (!props.allowRegeln && (dragData.kurs?.id !== kurs.id))
 			return false;
-		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id))
+		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id) && kurs.id === dragData.kurs.id)
 			return false;
-		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, dragData.schiene.id))
+		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, dragData.schiene.id) && kurs.id === dragData.kurs.id)
 			return false;
 		return true;
 	});

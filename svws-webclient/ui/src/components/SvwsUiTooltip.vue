@@ -46,6 +46,7 @@
 <script setup lang="ts">
 	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
 	import { Teleport, Transition, ref, computed } from "vue";
+	import { onClickOutside } from '@vueuse/core'
 
 	const props = withDefaults(defineProps<{
 		position?: "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "left" | "left-start" | "left-end" | "right" | "right-start" | "right-end";
@@ -53,16 +54,20 @@
 		showArrow?: boolean;
 		color?: "primary" | "light" | "dark" | "danger";
 		indicator?: "help" | "info" | "danger" | "underline" | false;
-		forceOpen?: boolean;
+		keepOpen?: boolean;
+		initOpen?: boolean;
 		autosize?: boolean;
+		clickOutside?: () => unknown;
 	}>(), {
 		position: "bottom",
 		showArrow: true,
 		color: "light",
 		hover: true,
 		indicator: "underline",
-		forceOpen: false,
+		keepOpen: false,
+		initOpen: false,
 		autosize: false,
+		clickOutside: () => undefined,
 	});
 
 	const flipped = {
@@ -77,7 +82,11 @@
 	const floating = ref(null);
 	const floatingArrow = ref(null);
 
-	if (props.forceOpen) {
+	if (props.clickOutside !== undefined)
+		// eslint-disable-next-line vue/no-setup-props-destructure
+		onClickOutside(floating, props.clickOutside);
+
+	if ((props.keepOpen === true) || (props.initOpen === true)) {
 		isOpen.value = true;
 	}
 
@@ -114,7 +123,7 @@
 	}
 
 	function hoverEnterTooltip() {
-		if (props.hover && !props.forceOpen) {
+		if (props.hover && !props.keepOpen) {
 			showTooltip();
 		}
 	}
@@ -124,13 +133,13 @@
 	}
 
 	function hoverLeaveTooltip() {
-		if (props.hover && !props.forceOpen) {
+		if (props.hover && !props.keepOpen) {
 			hideTooltip();
 		}
 	}
 
 	function toggleTooltip() {
-		if (!props.forceOpen) {
+		if (!props.keepOpen) {
 			isOpen.value = !isOpen.value;
 		}
 	}
