@@ -50,7 +50,7 @@
 						Kollisionen
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
-						<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" force-open autosize>
+						<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" autosize>
 							<span class="inline-flex items-center"><i-ri-alert-line />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
 							<template #content>
 								<span v-html="getErgebnismanager().getOfSchieneTooltipKurskollisionen(s.id).replaceAll('\n', '<br>')" />
