@@ -58,8 +58,8 @@ public class GostKlausurraumManager {
 
 	// GostSchuelerklausurraumstunde
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull GostSchuelerklausurterminraumstunde> _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde = new HashMap2D<>();
-	private final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> _schuelerklausurraumstundenmenge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurterminraumstunde>> _schuelerklausurraumstundenmenge_by_idRaumstunde = new HashMap<>();
+	private final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> _schuelerklausurterminraumstundenmenge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurterminraumstunde>> _schuelerklausurterminraumstundenmenge_by_idRaumstunde = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurterminraumstunde>> _schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin = new HashMap<>();
 
 	/**
@@ -126,13 +126,13 @@ public class GostKlausurraumManager {
 		update_klausurraum_by_idStundenplanraum();
 		update_raumstundenmenge_by_idRaum();
 		update_raumstunde_by_idRaum_and_idZeitraster();
-		update_raumstundenmenge_by_idSchuelerklausur(); // benötigt _raumstunde_by_id
-		update_schuelerklausurmenge_by_idRaum(); // benötigt _raumstundenmenge_by_idSchuelerklausur
-		update_schuelerklausurmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur
-		update_schuelerklausurmenge_by_idKursklausur();
-		update_schuelerklausurraumstundenmenge_by_idRaumstunde();
+		update_raumstundenmenge_by_idSchuelerklausurtermin(); // benötigt _raumstunde_by_id
+		update_schuelerklausurterminmenge_by_idRaum(); // benötigt _raumstundenmenge_by_idSchuelerklausur
+		update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur
+		update_schuelerterminklausurmenge_by_idKursklausur();
+		update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
-		update_klausurraum_by_idSchuelerklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur,
+		update_klausurraum_by_idSchuelerklausurtermin(); // benötigt _raumstundenmenge_by_idSchuelerklausur,
 
 	}
 
@@ -155,49 +155,49 @@ public class GostKlausurraumManager {
 			DeveloperNotificationException.ifMap2DPutOverwrites(_raumstunde_by_idRaum_and_idZeitraster, rs.idRaum, rs.idZeitraster, rs);
 	}
 
-	private void update_raumstundenmenge_by_idSchuelerklausur() {
+	private void update_raumstundenmenge_by_idSchuelerklausurtermin() {
 		_raumstundenmenge_by_idSchuelerklausurtermin.clear();
-		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurraumstundenmenge)
+		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurterminraumstundenmenge)
 			MapUtils.getOrCreateArrayList(_raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(DeveloperNotificationException.ifMapGetIsNull(_raumstunde_by_id, skrs.idRaumstunde));
 	}
 
-	private void update_schuelerklausurmenge_by_idRaum() {
+	private void update_schuelerklausurterminmenge_by_idRaum() {
 		_schuelerklausurterminmenge_by_idRaum.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge) {
-			final List<@NotNull GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			final List<@NotNull GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
 			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idRaum, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum).add(k);
 		}
 	}
 
-	private void update_schuelerklausurmenge_by_idRaum_and_idKursklausur() {
+	private void update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur() {
 		_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge) {
-			final List<@NotNull GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			final List<@NotNull GostKlausurraumstunde> raumstunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
 			Map2DUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum, _kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
-	private void update_schuelerklausurmenge_by_idKursklausur() {
+	private void update_schuelerterminklausurmenge_by_idKursklausur() {
 		_schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge)
 			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idKursklausur, _kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 	}
 
-	private void update_schuelerklausurraumstundenmenge_by_idRaumstunde() {
-		_schuelerklausurraumstundenmenge_by_idRaumstunde.clear();
-		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurraumstundenmenge)
-			MapUtils.getOrCreateArrayList(_schuelerklausurraumstundenmenge_by_idRaumstunde, skrs.idRaumstunde).add(skrs);
+	private void update_schuelerklausurterminraumstundenmenge_by_idRaumstunde() {
+		_schuelerklausurterminraumstundenmenge_by_idRaumstunde.clear();
+		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurterminraumstundenmenge)
+			MapUtils.getOrCreateArrayList(_schuelerklausurterminraumstundenmenge_by_idRaumstunde, skrs.idRaumstunde).add(skrs);
 	}
 
 	private void update_schuelerklausurraumstundenmenge_by_idSchuelerklausur() {
 		_schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin.clear();
-		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurraumstundenmenge)
+		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurterminraumstundenmenge)
 			MapUtils.getOrCreateArrayList(_schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(skrs);
 	}
 
-	private void update_klausurraum_by_idSchuelerklausur() {
+	private void update_klausurraum_by_idSchuelerklausurtermin() {
 		_klausurraum_by_idSchuelerklausurtermin.clear();
-		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurraumstundenmenge) {
+		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurterminraumstundenmenge) {
 			@NotNull
 			final List<@NotNull GostKlausurraumstunde> krsList = DeveloperNotificationException.ifMapGetIsNull(_raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin);
 			for (@NotNull final GostKlausurraumstunde krs : krsList) {
@@ -417,7 +417,7 @@ public class GostKlausurraumManager {
 
 	private void raumstundeRemoveOhneUpdateById(final long idRaumstunde) {
 		DeveloperNotificationException.ifMapRemoveFailes(_raumstunde_by_id, idRaumstunde);
-		final List<@NotNull GostSchuelerklausurterminraumstunde> skrsList = _schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
+		final List<@NotNull GostSchuelerklausurterminraumstunde> skrsList = _schuelerklausurterminraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
 		if (skrsList != null)
 			for (@NotNull final GostSchuelerklausurterminraumstunde skrs : skrsList)
 				schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
@@ -569,8 +569,8 @@ public class GostKlausurraumManager {
 	// #####################################################################
 
 	private void update_schuelerklausurraumstundenmenge() {
-		_schuelerklausurraumstundenmenge.clear();
-		_schuelerklausurraumstundenmenge.addAll(_schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.getNonNullValuesAsList());
+		_schuelerklausurterminraumstundenmenge.clear();
+		_schuelerklausurterminraumstundenmenge.addAll(_schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.getNonNullValuesAsList());
 	}
 
 	/**
@@ -637,7 +637,7 @@ public class GostKlausurraumManager {
 	 * @return eine Liste aller {@link GostSchuelerklausurterminraumstunde}-Objekte.
 	 */
 	public @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> schuelerklausurraumstundeGetMengeAsList() {
-		return _schuelerklausurraumstundenmenge;
+		return _schuelerklausurterminraumstundenmenge;
 	}
 
 	/**

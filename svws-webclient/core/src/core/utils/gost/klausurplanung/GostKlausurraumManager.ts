@@ -64,9 +64,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde : HashMap2D<number, number, GostSchuelerklausurterminraumstunde> = new HashMap2D();
 
-	private readonly _schuelerklausurraumstundenmenge : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
+	private readonly _schuelerklausurterminraumstundenmenge : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
 
-	private readonly _schuelerklausurraumstundenmenge_by_idRaumstunde : JavaMap<number, List<GostSchuelerklausurterminraumstunde>> = new HashMap();
+	private readonly _schuelerklausurterminraumstundenmenge_by_idRaumstunde : JavaMap<number, List<GostSchuelerklausurterminraumstunde>> = new HashMap();
 
 	private readonly _schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin : JavaMap<number, List<GostSchuelerklausurterminraumstunde>> = new HashMap();
 
@@ -146,13 +146,13 @@ export class GostKlausurraumManager extends JavaObject {
 		this.update_klausurraum_by_idStundenplanraum();
 		this.update_raumstundenmenge_by_idRaum();
 		this.update_raumstunde_by_idRaum_and_idZeitraster();
-		this.update_raumstundenmenge_by_idSchuelerklausur();
-		this.update_schuelerklausurmenge_by_idRaum();
-		this.update_schuelerklausurmenge_by_idRaum_and_idKursklausur();
-		this.update_schuelerklausurmenge_by_idKursklausur();
-		this.update_schuelerklausurraumstundenmenge_by_idRaumstunde();
+		this.update_raumstundenmenge_by_idSchuelerklausurtermin();
+		this.update_schuelerklausurterminmenge_by_idRaum();
+		this.update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur();
+		this.update_schuelerterminklausurmenge_by_idKursklausur();
+		this.update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		this.update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
-		this.update_klausurraum_by_idSchuelerklausur();
+		this.update_klausurraum_by_idSchuelerklausurtermin();
 	}
 
 	private update_klausurraum_by_idStundenplanraum() : void {
@@ -174,49 +174,49 @@ export class GostKlausurraumManager extends JavaObject {
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._raumstunde_by_idRaum_and_idZeitraster, rs.idRaum, rs.idZeitraster, rs);
 	}
 
-	private update_raumstundenmenge_by_idSchuelerklausur() : void {
+	private update_raumstundenmenge_by_idSchuelerklausurtermin() : void {
 		this._raumstundenmenge_by_idSchuelerklausurtermin.clear();
-		for (const skrs of this._schuelerklausurraumstundenmenge)
+		for (const skrs of this._schuelerklausurterminraumstundenmenge)
 			MapUtils.getOrCreateArrayList(this._raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(DeveloperNotificationException.ifMapGetIsNull(this._raumstunde_by_id, skrs.idRaumstunde));
 	}
 
-	private update_schuelerklausurmenge_by_idRaum() : void {
+	private update_schuelerklausurterminmenge_by_idRaum() : void {
 		this._schuelerklausurterminmenge_by_idRaum.clear();
 		for (const k of this._schuelerklausurterminmenge) {
-			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
 			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum).add(k);
 		}
 	}
 
-	private update_schuelerklausurmenge_by_idRaum_and_idKursklausur() : void {
+	private update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur() : void {
 		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge) {
-			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.idSchuelerklausur);
+			const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
 			Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 		}
 	}
 
-	private update_schuelerklausurmenge_by_idKursklausur() : void {
+	private update_schuelerterminklausurmenge_by_idKursklausur() : void {
 		this._schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge)
 			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
 	}
 
-	private update_schuelerklausurraumstundenmenge_by_idRaumstunde() : void {
-		this._schuelerklausurraumstundenmenge_by_idRaumstunde.clear();
-		for (const skrs of this._schuelerklausurraumstundenmenge)
-			MapUtils.getOrCreateArrayList(this._schuelerklausurraumstundenmenge_by_idRaumstunde, skrs.idRaumstunde).add(skrs);
+	private update_schuelerklausurterminraumstundenmenge_by_idRaumstunde() : void {
+		this._schuelerklausurterminraumstundenmenge_by_idRaumstunde.clear();
+		for (const skrs of this._schuelerklausurterminraumstundenmenge)
+			MapUtils.getOrCreateArrayList(this._schuelerklausurterminraumstundenmenge_by_idRaumstunde, skrs.idRaumstunde).add(skrs);
 	}
 
 	private update_schuelerklausurraumstundenmenge_by_idSchuelerklausur() : void {
 		this._schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin.clear();
-		for (const skrs of this._schuelerklausurraumstundenmenge)
+		for (const skrs of this._schuelerklausurterminraumstundenmenge)
 			MapUtils.getOrCreateArrayList(this._schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(skrs);
 	}
 
-	private update_klausurraum_by_idSchuelerklausur() : void {
+	private update_klausurraum_by_idSchuelerklausurtermin() : void {
 		this._klausurraum_by_idSchuelerklausurtermin.clear();
-		for (const skrs of this._schuelerklausurraumstundenmenge) {
+		for (const skrs of this._schuelerklausurterminraumstundenmenge) {
 			const krsList : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin);
 			for (const krs of krsList) {
 				const kr : GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
@@ -412,7 +412,7 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private raumstundeRemoveOhneUpdateById(idRaumstunde : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._raumstunde_by_id, idRaumstunde);
-		const skrsList : List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
+		const skrsList : List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurterminraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
 		if (skrsList !== null)
 			for (const skrs of skrsList)
 				this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
@@ -544,8 +544,8 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	private update_schuelerklausurraumstundenmenge() : void {
-		this._schuelerklausurraumstundenmenge.clear();
-		this._schuelerklausurraumstundenmenge.addAll(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.getNonNullValuesAsList());
+		this._schuelerklausurterminraumstundenmenge.clear();
+		this._schuelerklausurterminraumstundenmenge.addAll(this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.getNonNullValuesAsList());
 	}
 
 	/**
@@ -609,7 +609,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return eine Liste aller {@link GostSchuelerklausurterminraumstunde}-Objekte.
 	 */
 	public schuelerklausurraumstundeGetMengeAsList() : List<GostSchuelerklausurterminraumstunde> {
-		return this._schuelerklausurraumstundenmenge;
+		return this._schuelerklausurterminraumstundenmenge;
 	}
 
 	/**

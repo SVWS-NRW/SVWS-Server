@@ -159,7 +159,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			throw OperationError.NOTHING_TO_DO.exception();
 
 		// Schon im Raum existente Schülerklausuren ermitteln
-		final List<GostSchuelerklausurTermin> listSchuelerklausurtermine = ermittleSchuelerklausurtermineSchonImRaum(conn, idRaum);
+		final List<GostSchuelerklausurTermin> listSchuelerklausurtermine = new ArrayList<>(ermittleSchuelerklausurtermineSchonImRaum(conn, idRaum));
 
 
 		if (_idRaum != null) // überarbeiten! null bedeutet: Zeit der Kursklausur wird neu gesetzt, nicht
@@ -297,7 +297,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					v.dauer);
 			if (zeitrasterSk.isEmpty())
 				throw OperationError.NOTHING_TO_DO.exception("Zeitraster konnte nicht ermittelt werden");
-			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.idSchuelerklausur));
+			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.id));
 			for (final StundenplanZeitraster stunde : zeitrasterSk) {
 				final DTOGostKlausurenSchuelerklausurenTermineRaumstunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenTermineRaumstunden(sk.id,
 						raumManager.klausurraumstundeGetByRaumidAndZeitrasterid(idRaum, stunde.id).id);
