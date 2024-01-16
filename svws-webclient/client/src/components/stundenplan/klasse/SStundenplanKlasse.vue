@@ -8,7 +8,7 @@
 						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0"
 						type="transparent" />
 					<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
-					<svws-ui-select headless title="Wochentyp" v-model="wochentyp" :items="wochentypen()"
+					<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()"
 						class="print:hidden" type="transparent"
 						:disabled="wochentypen().size() <= 0"
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
@@ -148,7 +148,7 @@
 				</svws-ui-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentyp" :kalenderwoche="() => undefined"
+			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
 				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" class="h-full overflow-scroll pr-4" />
 		</template>
 	</div>
@@ -171,6 +171,7 @@
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
 	const wochentyp = ref<number>(0);
+	const wochentypAnzeige = ref<number>(0);
 	const doppelstundenModus = ref<boolean>(false);
 	const schienSortierung = ref<boolean>(true);
 
