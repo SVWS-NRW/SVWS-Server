@@ -13,7 +13,7 @@
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs"
+		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung="gotoKursblockung"
 			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus"
 			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">

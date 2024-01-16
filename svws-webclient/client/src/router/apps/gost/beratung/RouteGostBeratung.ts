@@ -40,6 +40,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 		return { name: this.name, params: { abiturjahr }};
 	}
 
+
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
@@ -56,6 +57,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			beratungslehrer: () => this.data.beratungslehrer,
 			addBeratungslehrer: this.data.addBeratungslehrer,
 			removeBeratungslehrer: this.data.removeBeratungslehrer,
+			gotoKursblockung: this.data.gotoKursblockung,
 		};
 	}
 

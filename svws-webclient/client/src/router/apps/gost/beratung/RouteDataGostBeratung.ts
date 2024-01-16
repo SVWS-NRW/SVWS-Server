@@ -5,6 +5,8 @@ import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrga
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { routeGostKursplanung } from "../kursplanung/RouteGostKursplanung";
+import { RouteManager } from "~/router/RouteManager";
 
 
 interface RouteStateDataGostBeratung extends RouteStateInterface {
@@ -188,6 +190,8 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		this.setPatchedState({gostJahrgangsdaten: this._state.value.gostJahrgangsdaten});
 		api.status.stop();
 	}
+
+	gotoKursblockung = (halbjahr: GostHalbjahr) => RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.auswahl, halbjahr.id));
 
 }
 
