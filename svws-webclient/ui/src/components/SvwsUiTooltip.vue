@@ -27,7 +27,7 @@
 			<div v-if="isOpen"
 				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 				class="tooltip transition-opacity"
-				:class="`tooltip--${color}`"
+				:class="[`tooltip--${color}`, {'tooltip--autosize': autosize}]"
 				ref="floating">
 				<span v-if="showArrow"
 					:style="{
@@ -54,6 +54,7 @@
 		color?: "primary" | "light" | "dark" | "danger";
 		indicator?: "help" | "info" | "danger" | "underline" | false;
 		forceOpen?: boolean;
+		autosize?: boolean;
 	}>(), {
 		position: "bottom",
 		showArrow: true,
@@ -61,6 +62,7 @@
 		hover: true,
 		indicator: "underline",
 		forceOpen: false,
+		autosize: false,
 	});
 
 	const flipped = {
@@ -185,6 +187,10 @@
 	@apply px-2 py-0.5 w-max max-w-[24rem];
 	@apply bg-white text-black border border-light dark:bg-black dark:text-white dark:border-white/5;
 	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
+
+	&--autosize {
+		@apply max-w-none;
+	}
 
 	&--primary {
 		@apply bg-svws text-white dark:bg-svws border-none;
