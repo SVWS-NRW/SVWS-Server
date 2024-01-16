@@ -10,7 +10,7 @@
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"

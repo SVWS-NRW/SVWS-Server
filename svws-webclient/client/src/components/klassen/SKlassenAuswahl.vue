@@ -9,7 +9,7 @@
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>

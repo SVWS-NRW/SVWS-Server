@@ -2,7 +2,7 @@
 	<svws-ui-content-card class="-mt-0.5 s-gost-kursplanung-schueler-auswahl" overflow-scroll>
 		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined" :filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'" :columns="cols" :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
-				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" />
+				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" removable />
 			</template>
 			<template #filterAdvanced>
 				<svws-ui-radio-group class="radio--row col-span-full">

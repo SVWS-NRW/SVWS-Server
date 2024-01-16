@@ -10,7 +10,7 @@
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />

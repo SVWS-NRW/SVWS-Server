@@ -12,7 +12,7 @@
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterStatus" title="Status" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />

@@ -7,7 +7,7 @@
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable count scroll>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
 				<template #filter>
 					<svws-ui-checkbox type="toggle" v-model="sichtbar">Sichtbar</svws-ui-checkbox>
