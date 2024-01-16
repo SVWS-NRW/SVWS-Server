@@ -65,6 +65,12 @@
 				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" url @input="onInput" />
 			</div>
 		</Variant>
+
+		<Variant title="Removable" id="Removable">
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="Wegmachen" placeholder="Text Input Placeholder" removable @input="onInput" />
+			</div>
+		</Variant>
 	</Story>
 </template>
 

@@ -68,6 +68,9 @@
 		<span v-if="type === 'tel'" class="svws-icon">
 			<i-ri-phone-line />
 		</span>
+		<span v-if="removable && data" @click.stop="updateData('')" class="svws-icon--remove">
+			<i-ri-close-line />
+		</span>
 		<span v-if="type === 'number' && input" class="svws-input-stepper">
 			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><i-ri-subtract-line /></button>
 			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><i-ri-add-line /></button>
@@ -103,6 +106,7 @@
 		url?: boolean;
 		maxLen?: number;
 		span?: 'full' | '2';
+		removable?: boolean;
 	}>(), {
 		type: "text",
 		modelValue: null,
@@ -118,6 +122,7 @@
 		url: false,
 		maxLen: undefined,
 		span: undefined,
+		removable: false,
 	});
 
 	const emit = defineEmits<{
@@ -260,6 +265,10 @@
 
 	.text-input-component .svws-icon {
 		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
+
+		&--remove {
+			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 bg-white hover:text-error dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
+		}
 
     svg {
       @apply opacity-25 -mr-0.5;
