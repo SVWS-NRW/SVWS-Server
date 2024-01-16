@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Statusdaten">
-		<template #actions v-if="schulform === Schulform.BK">
+		<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
 			<svws-ui-checkbox :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
