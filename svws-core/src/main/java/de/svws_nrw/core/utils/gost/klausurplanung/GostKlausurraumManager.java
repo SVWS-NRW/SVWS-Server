@@ -866,7 +866,7 @@ public class GostKlausurraumManager {
 	 */
 	public boolean isAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
 		for (@NotNull final GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
-			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.idSchuelerklausur))
+			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
 		return true;

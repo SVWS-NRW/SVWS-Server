@@ -827,7 +827,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public isAlleSchuelerklausurenVerplant(kk : GostKursklausur) : boolean {
 		for (const sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
-			if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.idSchuelerklausur))
+			if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
 		return true;

@@ -28,8 +28,8 @@
 					<s-gost-klausurplanung-termin :termin="termin"
 						:k-man="kMan"
 						:map-schueler="mapSchueler"
-						:on-drag-klausur="onDrag"
-						:draggable-klausur="isDraggable"
+						:on-drag="onDrag"
+						:draggable="isDraggable"
 						drag-icon
 						:on-drop-termin="onDrop"
 						:klausur-css-classes="calculatCssClassesKlausur"

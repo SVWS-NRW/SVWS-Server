@@ -19,6 +19,9 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebn
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -233,8 +236,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final DTOGostKlausurenKursklausuren dto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		final List<DTOGostKlausurenSchuelerklausuren> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", dto.ID, DTOGostKlausurenSchuelerklausuren.class);
-		final List<Long> sks_ids = sks.stream().map(sk -> sk.ID).toList();
+		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper2.apply(dto)));
+		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, sks);
+		final List<Long> skts_ids = skts.stream().map(skt -> skt.id).toList();
 		GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
@@ -251,12 +255,12 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 					conn.transactionPersist(dto);
 					if (_idSchuljahresAbschnitt == -1)
 						throw OperationError.FORBIDDEN.exception("idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
-					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks_ids, _idSchuljahresAbschnitt);
+					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, skts_ids, _idSchuljahresAbschnitt);
 				}
 			}
 			if (key.equals("idTermin")) {
 				dto.Startzeit = null; // Bei Zuweisung eines neuen Termins wird individuelle Startzeit gelöscht
-				result = DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausurenTransaction(conn, sks_ids); // Auch alle Raumzuweisungen werden gelöscht
+				result = DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausurenTransaction(conn, skts_ids); // Auch alle Raumzuweisungen werden gelöscht
 			}
 			mapper.map(conn, dto, value, map);
 		}
