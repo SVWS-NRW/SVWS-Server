@@ -1,6 +1,5 @@
 
 import type {
-	GostFaecherManager,
 	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurenCollectionSkrsKrs,
@@ -9,10 +8,7 @@ import type {
 	GostKlausurtermin,
 	GostKursklausur,
 	GostKursklausurManager,
-	GostSchuelerklausur,
 	GostSchuelerklausurTermin,
-	KursManager,
-	LehrerListeEintrag,
 	SchuelerListeEintrag,
 	List,
 	StundenplanManager,
@@ -22,11 +18,8 @@ import type { WritableComputedRef } from "vue";
 export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	kursklausurmanager: () => GostKursklausurManager;
-	faecherManager: GostFaecherManager;
-	mapLehrer: Map<number, LehrerListeEintrag>;
+	kMan: () => GostKursklausurManager;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	kursmanager: KursManager;
 	stundenplanmanager: StundenplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;

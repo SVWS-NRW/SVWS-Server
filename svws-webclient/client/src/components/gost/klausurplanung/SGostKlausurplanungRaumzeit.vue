@@ -26,10 +26,8 @@
 						'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': selectedTermin?.id !== termin.id,
 					}">
 					<s-gost-klausurplanung-termin :termin="termin"
-						:kursklausurmanager="kursklausurmanager"
-						:map-lehrer="mapLehrer"
+						:k-man="kMan"
 						:map-schueler="mapSchueler"
-						:kursmanager="kursmanager"
 						:on-drag-klausur="onDrag"
 						:draggable-klausur="isDraggable"
 						drag-icon
@@ -48,10 +46,7 @@
 		</div>
 		<template v-else>
 			<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
-				:kursklausurmanager="kursklausurmanager"
-				:faecher-manager="faecherManager"
-				:map-lehrer="mapLehrer"
-				:kursmanager="kursmanager"
+				:k-man="kMan"
 				:raummanager="() => (raummanager as GostKlausurraumManager)"
 				:stundenplanmanager="stundenplanmanager"
 				:create-klausurraum="createKlausurraum"
@@ -87,7 +82,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = () => props.kursklausurmanager().terminMitDatumGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, false);
+	const termine = () => props.kMan().terminMitDatumGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, false);
 
 	const calculatCssClassesKlausur = (klausur: GostKursklausur) => {
 		return raummanager.value !== null

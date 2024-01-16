@@ -4,7 +4,7 @@
 			<div class="flex flex-col leading-tight text-headline-md">
 				<span v-if="termin.datum !== null">Klausuren am {{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
 				<span v-if="termin.startzeit !== null" class="opacity-50">Startzeit: {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit) }} Uhr</span>
-				<!--<span>{{ kursklausurmanager().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
+				<!--<span>{{ kMan().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
 			</div>
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
@@ -21,10 +21,7 @@
 					:patch-klausurraum="patchKlausurraum"
 					:loesche-klausurraum="loescheKlausurraum"
 					:patch-klausur="patchKlausur"
-					:faecher-manager="faecherManager"
-					:kursklausurmanager="kursklausurmanager"
-					:kursmanager="kursmanager"
-					:map-lehrer="mapLehrer"
+					:k-man="kMan"
 					:drag-data="dragData"
 					:on-drag="onDrag"
 					:on-drop="onDrop" />
@@ -43,10 +40,7 @@
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
-		kursklausurmanager: () => GostKursklausurManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		kursmanager: KursManager;
+		kMan: () => GostKursklausurManager;
 		stundenplanmanager: StundenplanManager;
 		raummanager: () => GostKlausurraumManager;
 		createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;

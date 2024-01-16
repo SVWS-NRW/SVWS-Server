@@ -2,7 +2,6 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { KlausurblockungSchienenAlgorithmusGreedy3 } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy3';
 import { KlausurblockungSchienenDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenDynDaten';
 import { KlausurblockungSchienenAlgorithmusGreedy2 } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy2';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { KlausurblockungSchienenAlgorithmusGreedy5 } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy5';
 import { KlausurblockungSchienenAlgorithmusGreedy4 } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy4';
 import { KlausurblockungSchienenAlgorithmusGreedy1 } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy1';
@@ -15,6 +14,7 @@ import { KlausurblockungSchienenAlgorithmusAbstract } from '../../../../core/uti
 import { KlausurblockungSchienenAlgorithmusGreedy2b } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy2b';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 
@@ -56,7 +56,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	 * @param pMaxTimeMillis  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
-	public berechne(pInput : List<GostKursklausur>, pMaxTimeMillis : number) : List<List<number>> {
+	public berechne(pInput : List<GostKursklausurRich>, pMaxTimeMillis : number) : List<List<number>> {
 		const zeitEndeGesamt : number = System.currentTimeMillis() + pMaxTimeMillis;
 		const seed : number = KlausurblockungSchienenAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);

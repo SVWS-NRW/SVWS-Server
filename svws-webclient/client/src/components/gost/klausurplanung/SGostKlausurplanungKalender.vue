@@ -31,10 +31,8 @@
 								'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': dragData !== undefined && dragData.id !== termin.id || dragData === undefined,
 							}">
 							<s-gost-klausurplanung-termin :termin="termin"
-								:kursklausurmanager="kursklausurmanager"
-								:map-lehrer="mapLehrer"
+								:k-man="kMan"
 								:map-schueler="mapSchueler"
-								:kursmanager="kursmanager"
 								:compact="dragData?.id !== termin.id"
 								:quartalsauswahl="quartalsauswahl"
 								:show-last-klausurtermin="true"
@@ -49,8 +47,8 @@
 		<svws-ui-content-card>
 			<template v-if="kwAuswahl">
 				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl" :map-schueler="mapSchueler"
-					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
+					:manager="() => stundenplanmanager" :k-man="kMan" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
+					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
 					<template #kwAuswahl>
 						<div class="col-span-2 flex gap-0.5 my-auto">
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
@@ -88,9 +86,9 @@
 						<li v-for="(konflikt, no) in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()" :class="showMoreKonflikte ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
 							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-									<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
-									<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur)!.datum !== null ? kursklausurmanager().terminByKursklausur(klausur)!.datum! : stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
+								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
+									<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+									<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur)!.datum !== null ? kMan().terminByKursklausur(klausur)!.datum! : stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
 								</span>
 							</div>
 						</li>
@@ -119,9 +117,9 @@
 						<li v-for="(konflikt, no) in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()" :class="showMoreWarnungen ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
 							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-									<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
-									<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur)!.datum !== null ? kursklausurmanager().terminByKursklausur(klausur)!.datum! : stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
+								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
+									<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+									<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur)!.datum !== null ? kMan().terminByKursklausur(klausur)!.datum! : stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
 								</span>
 							</div>
 						</li>
@@ -156,8 +154,8 @@
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {
 		let konflikte: JavaSet<JavaMapEntry<number, HashSet<GostKursklausur>>> | null = null;
 		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin && zeitrasterSelected.value !== undefined)
-			konflikte = props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(dragData.value, props.stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
-		konflikte = props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kwAuswahl.value.kw, threshold, thresholdOnly).entrySet();
+			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(dragData.value, props.stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
+		konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kwAuswahl.value.kw, threshold, thresholdOnly).entrySet();
 		return konflikte.toArray() as JavaMapEntry<number, HashSet<GostKursklausur>>[];
 	}
 
@@ -165,9 +163,6 @@
 		let konflikte = anzahlProKwKonflikte2(threshold, thresholdOnly);
 		return showMore ? konflikte : konflikte.slice(0, 3);
 	}
-
-	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
-
 
 	function navKalenderwoche(by: number) {
 		if (by > 0) {
@@ -207,7 +202,7 @@
 	function kurseGefiltert(day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
 		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin)
-			for (const klausur of props.kursklausurmanager().kursklausurGetMengeByTerminid(dragData.value.id))
+			for (const klausur of props.kMan().kursklausurGetMengeByTerminid(dragData.value.id))
 				kursIds.add(klausur.idKurs);
 		return props.stundenplanmanager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, 1, day, stunde);
 	}
@@ -217,7 +212,7 @@
 		let summe = 0;
 		if (dragData.value !== undefined)
 			for (const klausur of kurse)
-				summe += props.kursklausurmanager().kursklausurGetByTerminidAndKursid(dragData.value.id, klausur)!.schuelerIds.size();
+				summe += props.kMan().kursAnzahlSchuelerGesamtByKursklausur(props.kMan().kursklausurGetByTerminidAndKursid(dragData.value.id, klausur)!);
 		return summe;
 	}
 
@@ -243,14 +238,14 @@
 
 	const termineOhne = computed(() => {
 		const a = [];
-		for (const termin of props.kursklausurmanager().terminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true))
+		for (const termin of props.kMan().terminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true))
 			if (termin.datum === null)
 				a.push(termin);
 		return a;
 	});
 
 	// const termineMit = computed(() => {
-	// 	const terms = props.kursklausurmanager().terminGetMengeAsList();
+	// 	const terms = props.kMan().terminGetMengeAsList();
 	// 	return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
 	// 		...obj,
 	// 		startDate: obj.datum !== null ? new Date(obj.datum) : null,

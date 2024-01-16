@@ -16,6 +16,6 @@
 	}>();
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
-	const klausurBezeichnungen = [...klausuren()].map(k => k.kursKurzbezeichnung).join(", ");
+	const klausurBezeichnungen = [...klausuren()].map(k => props.kursmanager.get(k.idKurs)?.kuerzel).join(", ");
 
 </script>

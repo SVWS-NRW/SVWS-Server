@@ -18,7 +18,7 @@ import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
 import jakarta.validation.constraints.NotNull;
@@ -133,15 +133,15 @@ class KlausurterminblockungTests {
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
 			@NotNull
-			final List<@NotNull GostKursklausur> input = new ArrayList<>();
+			final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 
-			final HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
+			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
 			for (final long schuelerID : map.get(stufe).keySet()) {
 
 				for (final long klausurID : map.get(stufe).get(schuelerID)) {
 					if (!mapKlausur.containsKey(klausurID)) {
-						final GostKursklausur gostKlausur = new GostKursklausur();
+						final GostKursklausurRich gostKlausur = new GostKursklausurRich();
 						gostKlausur.id = klausurID;
 						mapKlausur.put(klausurID, gostKlausur);
 						input.add(gostKlausur);
@@ -177,13 +177,13 @@ class KlausurterminblockungTests {
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
 			@NotNull
-			final List<@NotNull GostKursklausur> input = new ArrayList<>();
+			final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
-			final HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
+			final HashMap<Long, GostKursklausurRich> mapKlausur = new HashMap<>();
 			for (final long schuelerID : map.get(stufe).keySet()) {
 				for (final long klausurID : map.get(stufe).get(schuelerID)) {
 					if (!mapKlausur.containsKey(klausurID)) {
-						final GostKursklausur gostKlausur = new GostKursklausur();
+						final GostKursklausurRich gostKlausur = new GostKursklausurRich();
 						gostKlausur.id = klausurID;
 						mapKlausur.put(klausurID, gostKlausur);
 						input.add(gostKlausur);
@@ -217,12 +217,12 @@ class KlausurterminblockungTests {
 
 		// Input-Erzeugen
 		@NotNull
-		final List<@NotNull GostKursklausur> input = new ArrayList<>();
+		final List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 		// Für alle Klausuren ...
 		for (final EsserFormatKlausur klausur : klausuren) {
 			@NotNull
-			final GostKursklausur gostKlausur = new GostKursklausur();
+			final GostKursklausurRich gostKlausur = new GostKursklausurRich();
 			gostKlausur.id = klausur.id;
 
 			// Für alle schriftlichen Schüler ...
@@ -237,13 +237,13 @@ class KlausurterminblockungTests {
 	}
 
 
-	private static void starteKlausurblockungSchiene(@NotNull final List<@NotNull GostKursklausur> pInput) {
+	private static void starteKlausurblockungSchiene(@NotNull final List<@NotNull GostKursklausurRich> pInput) {
 		// Algorithmus-Objekt erzeugen.
 		final @NotNull KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
 
 		final @NotNull GostKlausurterminblockungDaten daten = new GostKlausurterminblockungDaten();
 		daten.konfiguration.maxTimeMillis = BLOCKUNGS_ZEIT;
-		daten.klausuren = pInput;
+		daten.richKlausuren = pInput;
 
 		// Blockung starten
 		final @NotNull GostKlausurterminblockungErgebnis ergebnis = alg.apply(daten);
@@ -259,8 +259,8 @@ class KlausurterminblockungTests {
 	private static void check(@NotNull final GostKlausurterminblockungDaten daten, @NotNull final GostKlausurterminblockungErgebnis ergebnis) {
 
 		// Map: Klausur-ID --> Klausur-Objekt
-		final HashMap<@NotNull Long, @NotNull GostKursklausur> mapKlausur = new HashMap<>();
-		for (@NotNull final GostKursklausur klausur : daten.klausuren) {
+		final HashMap<@NotNull Long, @NotNull GostKursklausurRich> mapKlausur = new HashMap<>();
+		for (@NotNull final GostKursklausurRich klausur : daten.richKlausuren) {
 			mapKlausur.put(klausur.id, klausur);
 		}
 

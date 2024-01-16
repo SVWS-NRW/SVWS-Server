@@ -22,4 +22,7 @@ public class GostKlausurterminblockungDaten {
 	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
 	public @NotNull List<@NotNull GostKursklausur> klausuren = new ArrayList<>();
 
+	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
+	public @NotNull List<@NotNull GostKursklausurRich> richKlausuren = new ArrayList<>();
+
 }

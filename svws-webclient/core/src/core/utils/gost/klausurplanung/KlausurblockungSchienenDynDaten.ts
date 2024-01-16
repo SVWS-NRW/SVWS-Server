@@ -1,5 +1,4 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { HashMap } from '../../../../java/util/HashMap';
 import { LinkedCollection } from '../../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../../java/util/ArrayList';
@@ -8,6 +7,7 @@ import { Logger } from '../../../../core/logger/Logger';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { Arrays } from '../../../../java/util/Arrays';
 import { HashSet } from '../../../../java/util/HashSet';
 
@@ -33,7 +33,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausur> = new HashMap();
+	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap();
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
@@ -93,7 +93,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	constructor(pLogger : Logger, pRandom : Random, pInput : List<GostKursklausur>) {
+	constructor(pLogger : Logger, pRandom : Random, pInput : List<GostKursklausurRich>) {
 		super();
 		this._random = pRandom;
 		this._logger = pLogger;
@@ -113,7 +113,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		this.aktionKlausurenAusSchienenEntfernen();
 	}
 
-	private initialisiereMapSchueler(pInput : List<GostKursklausur>) : void {
+	private initialisiereMapSchueler(pInput : List<GostKursklausurRich>) : void {
 		const setSchueler : HashSet<number> = new HashSet();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
@@ -127,7 +127,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereMapKlausuren(pInput : List<GostKursklausur>) : void {
+	private initialisiereMapKlausuren(pInput : List<GostKursklausurRich>) : void {
 		for (const gostKursklausur of pInput) {
 			if (gostKursklausur.id < 0)
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
@@ -139,7 +139,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereMatrixVerboten(pInput : List<GostKursklausur>) : void {
+	private initialisiereMatrixVerboten(pInput : List<GostKursklausurRich>) : void {
 		const mapSchuelerKlausuren : HashMap<number, LinkedCollection<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
@@ -162,7 +162,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereMatrixBevorzugt(pInput : List<GostKursklausur>) : void {
+	private initialisiereMatrixBevorzugt(pInput : List<GostKursklausurRich>) : void {
 		for (const gostKursklausur1 of pInput)
 			for (const gostKursklausur2 of pInput)
 				if (KlausurblockungSchienenDynDaten.hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
@@ -688,7 +688,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			this._logger.log("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuSchiene[nr] === s) {
-					const gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
+					const gostKlausur : GostKursklausurRich | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
 					this._logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene)!);

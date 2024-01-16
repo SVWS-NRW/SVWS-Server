@@ -2,7 +2,6 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurterminblockungErgebnis } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungErgebnis';
 import { KlausurterminblockungModusKursarten } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungModusKursarten';
 import { GostKlausurterminblockungDaten } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { GostKlausurterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungKonfiguration';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { KlausurterminblockungAlgorithmusGreedy1 } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy1';
@@ -19,12 +18,13 @@ import { KlausurterminblockungModusQuartale } from '../../../../core/types/gost/
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy2b';
 import type { List } from '../../../../java/util/List';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class KlausurterminblockungAlgorithmus extends JavaObject {
 
 	private static readonly _random : Random = new Random();
 
-	private static readonly _compGostKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
+	private static readonly _compGostKursklausurRich : Comparator<GostKursklausurRich> = { compare : (a: GostKursklausurRich, b: GostKursklausurRich) => {
 		if (a.halbjahr < b.halbjahr)
 			return -1;
 		if (a.halbjahr > b.halbjahr)
@@ -76,25 +76,25 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 */
 	public apply(daten : GostKlausurterminblockungDaten) : GostKlausurterminblockungErgebnis {
 		const out : GostKlausurterminblockungErgebnis = new GostKlausurterminblockungErgebnis();
-		this.berechneRekursivQuartalsModus(daten.klausuren, daten.konfiguration, out);
+		this.berechneRekursivQuartalsModus(daten.richKlausuren, daten.konfiguration, out);
 		return out;
 	}
 
-	private berechneRekursivQuartalsModus(input : List<GostKursklausur>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
+	private berechneRekursivQuartalsModus(input : List<GostKursklausurRich>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
 		if (input.isEmpty())
 			return;
 		if (config.modusQuartale === KlausurterminblockungModusQuartale.ZUSAMMEN.id) {
 			this.berechneRekursivLkGkModus(input, config, out);
 			return;
 		}
-		input.sort(KlausurterminblockungAlgorithmus._compGostKursklausur);
-		const temp : List<GostKursklausur> = new ArrayList();
+		input.sort(KlausurterminblockungAlgorithmus._compGostKursklausurRich);
+		const temp : List<GostKursklausurRich> = new ArrayList();
 		for (const klausur of input) {
 			if (temp.isEmpty()) {
 				temp.add(klausur);
 				continue;
 			}
-			if (KlausurterminblockungAlgorithmus._compGostKursklausur.compare(klausur, temp.get(0)) === 0) {
+			if (KlausurterminblockungAlgorithmus._compGostKursklausurRich.compare(klausur, temp.get(0)) === 0) {
 				temp.add(klausur);
 				continue;
 			}
@@ -108,7 +108,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		}
 	}
 
-	private berechneRekursivLkGkModus(input : List<GostKursklausur>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
+	private berechneRekursivLkGkModus(input : List<GostKursklausurRich>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
 		const modus : KlausurterminblockungModusKursarten = KlausurterminblockungModusKursarten.getOrException(config.modusKursarten);
 		switch (modus) {
 			case KlausurterminblockungModusKursarten.BEIDE: {
@@ -142,8 +142,8 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 *
 	 * @return die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 */
-	private static filter(input : List<GostKursklausur>, istLK : boolean) : List<GostKursklausur> {
-		const temp : List<GostKursklausur> = new ArrayList();
+	private static filter(input : List<GostKursklausurRich>, istLK : boolean) : List<GostKursklausurRich> {
+		const temp : List<GostKursklausurRich> = new ArrayList();
 		for (const gostKursklausur of input)
 			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === istLK)
 				temp.add(gostKursklausur);
@@ -157,7 +157,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 * @param config  die Konfiguration der Blockung.
 	 * @param out     die Termin-Klausur-Zuordnung (Ausgabe).
 	 */
-	private berechne_helper(input : List<GostKursklausur>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
+	private berechne_helper(input : List<GostKursklausurRich>, config : GostKlausurterminblockungKonfiguration, out : GostKlausurterminblockungErgebnis) : void {
 		this._logger.log("KlausurterminblockungAlgorithmus");
 		this._logger.modifyIndent(+4);
 		const zeitEndeGesamt : number = System.currentTimeMillis() + config.maxTimeMillis;

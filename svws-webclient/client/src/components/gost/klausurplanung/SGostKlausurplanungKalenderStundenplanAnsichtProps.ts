@@ -8,8 +8,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	id: number;
 	kwAuswahl: StundenplanKalenderwochenzuordnung;
 	manager: () => StundenplanManager;
-	kursmanager: KursManager;
-	kursklausurmanager: () => GostKursklausurManager;
+	kMan: () => GostKursklausurManager;
 	wochentyp: () => number;
 	// kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
@@ -18,8 +17,6 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
-	faecherManager: GostFaecherManager;
-	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster) => void;
 }

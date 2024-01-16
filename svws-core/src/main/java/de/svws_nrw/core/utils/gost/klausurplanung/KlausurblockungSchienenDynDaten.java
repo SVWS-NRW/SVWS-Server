@@ -9,7 +9,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +33,7 @@ public class KlausurblockungSchienenDynDaten {
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _mapKlausurZuNummer = new HashMap<>();
 
 	/** Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull GostKursklausur> _mapNummerZuKlausur = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, @NotNull GostKursklausurRich> _mapNummerZuKlausur = new HashMap<>();
 
 	/** Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _mapSchuelerZuNummer = new HashMap<>();
@@ -71,7 +71,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	KlausurblockungSchienenDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput) {
+	KlausurblockungSchienenDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		_random = pRandom;
 		_logger = pLogger;
 
@@ -94,9 +94,9 @@ public class KlausurblockungSchienenDynDaten {
 		aktionKlausurenAusSchienenEntfernen();
 	}
 
-	private void initialisiereMapSchueler(final @NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMapSchueler(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
 				if (schuelerID < 0)  throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
 				if (setSchueler.add(schuelerID)) {
@@ -107,8 +107,8 @@ public class KlausurblockungSchienenDynDaten {
 		}
 	}
 
-	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausur> pInput) {
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
 			// Mapping: datenbankKlausurID --> laufende Nummer
@@ -118,11 +118,11 @@ public class KlausurblockungSchienenDynDaten {
 		}
 	}
 
-	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 
 		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Long>> mapSchuelerKlausuren = new HashMap<>();
 
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
 				// Liste des Schülers holen
 				LinkedCollection<@NotNull Long> list = mapSchuelerKlausuren.get(schuelerID);
@@ -147,9 +147,9 @@ public class KlausurblockungSchienenDynDaten {
 
 	}
 
-	private void initialisiereMatrixBevorzugt(final @NotNull List<@NotNull GostKursklausur> pInput) {
-		for (final @NotNull GostKursklausur gostKursklausur1 : pInput)
-			for (final @NotNull GostKursklausur gostKursklausur2 : pInput)
+	private void initialisiereMatrixBevorzugt(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur1 : pInput)
+			for (final @NotNull GostKursklausurRich gostKursklausur2 : pInput)
 				if (hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					final Integer klausurNr1 = _mapKlausurZuNummer.get(gostKursklausur1.id);
 					final Integer klausurNr2 = _mapKlausurZuNummer.get(gostKursklausur2.id);
@@ -731,7 +731,7 @@ public class KlausurblockungSchienenDynDaten {
 			_logger.log("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuSchiene[nr] == s) {
-					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr);
+					final GostKursklausurRich gostKlausur = _mapNummerZuKlausur.get(nr);
 					if (gostKlausur == null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
 					_logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));

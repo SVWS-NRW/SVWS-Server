@@ -1,6 +1,6 @@
 
 import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten} from "@core";
-import { GostSchuelerklausurTermin} from "@core";
+import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
@@ -202,13 +202,16 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
-		const test = await api.server.getGostKlausurenCollection(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		console.log(test);
-		// const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		// const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		// const listSchuelerNachklausuren = await api.server.getGostKlausurenSchuelerklausurenNachschreiber(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		// console.log(listSchuelerNachklausuren);
-		return new GostKursklausurManager(vorgabenmanager, test.kursklausuren, test.termine, test.schuelerklausuren, test.schuelerklausurtermine);
+		const klausurCollection = await api.server.getGostKlausurenCollection(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const manager = new GostKursklausurManager(vorgabenmanager, klausurCollection.kursklausuren, klausurCollection.termine, klausurCollection.schuelerklausuren, klausurCollection.schuelerklausurtermine);
+		manager.setKursManager(this._state.value.kursmanager);
+		manager.setFaecherManager(this._state.value.faecherManager);
+		const mapLehrer = new HashMap<number, LehrerListeEintrag>();
+		for (const k of this._state.value.mapLehrer.entries()) {
+			mapLehrer.put(k[0], k[1]);
+		}
+		manager.setLehrerMap(mapLehrer);
+		return manager;
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -345,7 +348,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		try {
 			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-			this.kursklausurmanager.kursklausurAddAll(result);
+			this.kursklausurmanager.kursklausurAddAll(result.kursklausuren);
+			this.kursklausurmanager.schuelerklausurAddAll(result.schuelerklausuren);
+			this.kursklausurmanager.schuelerklausurterminAddAll(result.schuelerklausurtermine);
 			this.commit();
 		} finally {
 			api.status.stop();

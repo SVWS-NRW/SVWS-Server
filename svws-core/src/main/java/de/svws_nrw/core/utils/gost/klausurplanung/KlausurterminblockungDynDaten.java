@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungKonfiguration;
@@ -51,7 +51,7 @@ public class KlausurterminblockungDynDaten {
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _mapKlausurZuNummer = new HashMap<>();
 
 	/** Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull GostKursklausur> _mapNummerZuKlausur = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, @NotNull GostKursklausurRich> _mapNummerZuKlausur = new HashMap<>();
 
 	/** Die Anzahl der Klausuren. */
 	private final int _klausurenAnzahl;
@@ -74,7 +74,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
-	public KlausurterminblockungDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull GostKlausurterminblockungKonfiguration pConfig) {
+	public KlausurterminblockungDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausurRich> pInput, final @NotNull GostKlausurterminblockungKonfiguration pConfig) {
 		_logger = pLogger;
 		_random = pRandom;
 
@@ -103,12 +103,12 @@ public class KlausurterminblockungDynDaten {
 						throw new UserNotificationException("Die aktuelle Konfiguration führt zu einer Klausurgruppe, in der mindestens ein S. doppelt ist!");
 	}
 
-	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausur pGostKursklausur) {
-		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", _mapKlausurZuNummer.get(pGostKursklausur.id));
+	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausurRich pGostKursklausurRich) {
+		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausurRich.id + ")", _mapKlausurZuNummer.get(pGostKursklausurRich.id));
 	}
 
-	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausur> pInput) {
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 			final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();
 			gruppe.add(klausurNr);
@@ -116,10 +116,10 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
 
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 
 			final long fachID = gostKursklausur.idFach;
@@ -141,10 +141,10 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
 
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 
 			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR Wie wählt man bei Multi-Schienen?
@@ -166,7 +166,7 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull GostKlausurterminblockungKonfiguration pConfig) {
+	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausurRich> pInput, final @NotNull GostKlausurterminblockungKonfiguration pConfig) {
 		final @NotNull KlausurterminblockungAlgorithmen algo = KlausurterminblockungAlgorithmen.getOrException(pConfig.algorithmus);
 		switch (algo) {
 			case NORMAL:
@@ -218,8 +218,8 @@ public class KlausurterminblockungDynDaten {
 		return false;
 	}
 
-	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausur> pInput) {
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
 			// Mapping: datenbankKlausurID --> laufende Nummer
@@ -229,11 +229,11 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 
 		// Erzeuge eine Map: SchülerID --> Liste seiner KlausurNummern
 		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
-		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
 				// Liste des Schülers holen
 				LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
@@ -671,7 +671,7 @@ public class KlausurterminblockungDynDaten {
 			_logger.log("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuTermin[nr] == s) {
-					final @NotNull GostKursklausur gostKlausur = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", _mapNummerZuKlausur.get(nr));
+					final @NotNull GostKursklausurRich gostKlausur = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", _mapNummerZuKlausur.get(nr));
 					_logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
 			_logger.logLn("");

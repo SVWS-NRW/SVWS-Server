@@ -23,8 +23,8 @@
 						<td class="border-r p-2" :colspan="kursInfoColspan(raum)">
 							<table class="w-full divide-y-2 divide-black divide-dotted">
 								<tr class="" v-for="klausur in raummanager.kursklausurGetMengeByRaumid(raum.id)" :key="klausur.id">
-									<td class="text-right pr-1">{{ klausur.kursKurzbezeichnung }}</td>
-									<td class="pl-1">{{ mapLehrer.get(klausur.idLehrer)?.kuerzel }}</td>
+									<td class="text-right pr-1">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</td>
+									<td class="pl-1">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</td>
 									<td class="text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getKursklausurManager().startzeitByKursklausur(klausur)!) }} Uhr <i-ri-alert-fill class="ml-2 text-yellow-500" v-if="raummanager.getKursklausurManager().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
 									<td class="text-center" v-if="raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) === null">{{ raummanager.getKursklausurManager().vorgabeByKursklausur(klausur).dauer }} Min.</td>
 								</tr>
@@ -53,14 +53,14 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurtermin, GostKlausurraumManager, LehrerListeEintrag, StundenplanManager, GostKlausurraum} from '@core';
+	import type { GostKlausurtermin, GostKlausurraumManager, StundenplanManager, GostKlausurraum, GostKursklausurManager } from '@core';
 	import { DateUtils } from '@core';
 	import type { Ref} from 'vue';
 	import { onMounted, ref } from 'vue';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
-		mapLehrer: Map<number, LehrerListeEintrag>;
+		kMan: () => GostKursklausurManager;
 		stundenplanmanager: StundenplanManager;
 		erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
 	}>();

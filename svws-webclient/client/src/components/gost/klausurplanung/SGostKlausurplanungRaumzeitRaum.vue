@@ -23,11 +23,11 @@
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
 							<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
-							<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
+							<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 						</div>
-						<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
-						<div class="svws-ui-td" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
-						<div class="svws-ui-td" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
+						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td" role="cell">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (terminStartzeit + ' Uhr' || 'Startzeit') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
 						</div>
@@ -59,10 +59,7 @@
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
 		raum: GostKlausurraum;
-		kursklausurmanager: () => GostKursklausurManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		kursmanager: KursManager;
+		kMan: () => GostKursklausurManager;
 		raummanager: () => GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
@@ -95,14 +92,6 @@
 		}
 	});
 
-	function getLehrerKuerzel(kursid: number) {
-		const kurs = props.kursmanager.get(kursid);
-		const lehrerid = kurs?.lehrer;
-		if (typeof lehrerid === 'number')
-			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
-		return ''
-	}
-
 	function isDropZone() : boolean {
 		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.raummanager().containsKlausurraumKursklausur(props.raum.id, props.dragData()!.id))
 			return false;
@@ -133,8 +122,6 @@
 		{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.25, minWidth: 4 },
 		{ key: "startzeit", label: "Startzeit", span: 1.25, minWidth: 4 },
 	];
-
-	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
 
 </script>
 

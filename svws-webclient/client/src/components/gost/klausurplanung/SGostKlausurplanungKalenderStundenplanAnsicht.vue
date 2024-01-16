@@ -68,7 +68,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="termin in kursklausurmanager().terminGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))" :key="termin.id">
+				<template v-for="termin in kMan().terminGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))" :key="termin.id">
 					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] text-center z-10 border-transparent"
 						:style="posKlausurtermin(termin)"
 						:data="termin"
@@ -80,15 +80,12 @@
 							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
 							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
-								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kursmanager.get(k.idKurs)?.kuerzel).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
+								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
 								<template #content>
 									<div class="-mx-3">
 										<s-gost-klausurplanung-termin :termin="termin"
-											:kursklausurmanager="kursklausurmanager"
-											:faecher-manager="faecherManager"
-											:map-lehrer="mapLehrer"
-											:map-schueler="mapSchueler"
-											:kursmanager="kursmanager">
+											:k-man="kMan"
+											:map-schueler="mapSchueler">
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
 									</div>
@@ -104,8 +101,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurtermin, Wochentag} from "@core";
-	import {type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
+	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht} from "@core";
+	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 
@@ -119,8 +116,8 @@
 	});
 
 	const kursInfos = (idKurs: number) => {
-		const test = props.kursmanager.get(idKurs);
-		return test?.kuerzel || '' /* + " " + props.kursklausurmanager().getKursklausurByTerminKurs(dragTermin.value.id, idKurs)!.schuelerIds.size() + "/??"*/;
+		return props.kMan().getKursManager().get(idKurs)?.kuerzel;
+		//return test?.kuerzel || '' /* + " " + props.kMan().getKursklausurByTerminKurs(dragTermin.value.id, idKurs)!.schuelerIds.size() + "/??"*/;
 	}
 
 	const beginn = computed(() => {
@@ -233,8 +230,8 @@
 	function posKlausurtermin(termin: GostKlausurtermin): string {
 		let rowStart = 0;
 		let rowEnd = 10;
-		const terminBeginn = props.kursklausurmanager().minKursklausurstartzeitByTerminid(termin.id);
-		const terminEnde = props.kursklausurmanager().maxKursklausurendzeitByTerminid(termin.id);
+		const terminBeginn = props.kMan().minKursklausurstartzeitByTerminid(termin.id);
+		const terminEnde = props.kMan().maxKursklausurendzeitByTerminid(termin.id);
 		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
 			rowStart = (terminBeginn - beginn.value) / 5;
 			rowEnd = (terminEnde - beginn.value) / 5;
@@ -247,22 +244,8 @@
 		return props.useDragAndDrop && (props.dragData() === undefined);
 	}
 
-	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {
-		const data = props.dragData();
-		if ((data === undefined) || (!(data instanceof StundenplanPausenaufsicht)))
-			return false;
-		if (pause.id === data.idPausenzeit)
-			return false;
-		return true;
-	}
-
-	function checkDropZonePausenzeit(event: DragEvent, pause : StundenplanPausenzeit) {
-		if (isDropZonePausenzeit(pause))
-			event.preventDefault();
-	}
-
 	function getBgColors(termin: number | null) {
-		const klausuren = [...props.kursklausurmanager().kursklausurGetMengeByTerminid(termin)].map(k => props.kursmanager.get(k.idKurs)?.kuerzel?.split('-')[0])
+		const klausuren = [...props.kMan().kursklausurGetMengeByTerminid(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
 		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 
 		let gradient = '';

@@ -1,7 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurterminblockungErgebnis } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungErgebnis';
 import { GostKlausurterminblockungErgebnisTermin } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungErgebnisTermin';
-import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { GostKlausurterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungKonfiguration';
 import { HashMap } from '../../../../java/util/HashMap';
 import { LinkedCollection } from '../../../../core/adt/collection/LinkedCollection';
@@ -12,6 +11,7 @@ import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungAlgorithmen } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
 import type { List } from '../../../../java/util/List';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { Arrays } from '../../../../java/util/Arrays';
 import { UserNotificationException } from '../../../../core/exceptions/UserNotificationException';
 
@@ -59,7 +59,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausur> = new HashMap();
+	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap();
 
 	/**
 	 * Die Anzahl der Klausuren.
@@ -91,7 +91,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
-	public constructor(pLogger : Logger, pRandom : Random, pInput : List<GostKursklausur>, pConfig : GostKlausurterminblockungKonfiguration) {
+	public constructor(pLogger : Logger, pRandom : Random, pInput : List<GostKursklausurRich>, pConfig : GostKlausurterminblockungKonfiguration) {
 		super();
 		this._logger = pLogger;
 		this._random = pRandom;
@@ -116,11 +116,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 						throw new UserNotificationException("Die aktuelle Konfiguration führt zu einer Klausurgruppe, in der mindestens ein S. doppelt ist!")
 	}
 
-	private gibKlausurNrOrException(pGostKursklausur : GostKursklausur) : number {
-		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", this._mapKlausurZuNummer.get(pGostKursklausur.id));
+	private gibKlausurNrOrException(pGostKursklausurRich : GostKursklausurRich) : number {
+		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausurRich.id + ")", this._mapKlausurZuNummer.get(pGostKursklausurRich.id));
 	}
 
-	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausur>) : void {
+	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausurRich>) : void {
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const gruppe : ArrayList<number> = new ArrayList();
@@ -129,7 +129,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausur>) : void {
+	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausurRich>) : void {
 		const mapFachZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
@@ -150,7 +150,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausur>) : void {
+	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausurRich>) : void {
 		const mapSchieneZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
@@ -171,7 +171,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : GostKlausurterminblockungKonfiguration) : void {
+	private initialisiereKlausurgruppen(pInput : List<GostKursklausurRich>, pConfig : GostKlausurterminblockungKonfiguration) : void {
 		const algo : KlausurterminblockungAlgorithmen = KlausurterminblockungAlgorithmen.getOrException(pConfig.algorithmus);
 		switch (algo) {
 			case KlausurterminblockungAlgorithmen.NORMAL: {
@@ -220,7 +220,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		return false;
 	}
 
-	private initialisiereMapKlausuren(pInput : List<GostKursklausur>) : void {
+	private initialisiereMapKlausuren(pInput : List<GostKursklausurRich>) : void {
 		for (const gostKursklausur of pInput) {
 			if (gostKursklausur.id < 0)
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
@@ -232,7 +232,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereMatrixVerboten(pInput : List<GostKursklausur>) : void {
+	private initialisiereMatrixVerboten(pInput : List<GostKursklausurRich>) : void {
 		const mapSchuelerKlausuren : HashMap<number, LinkedCollection<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
@@ -637,7 +637,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			this._logger.log("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuTermin[nr] === s) {
-					const gostKlausur : GostKursklausur = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
+					const gostKlausur : GostKursklausurRich = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
 					this._logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
 				}
 			this._logger.logLn("");

@@ -15,11 +15,8 @@ import type { WritableComputedRef } from "vue";
 export interface GostKlausurplanungKalenderProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	kursklausurmanager: () => GostKursklausurManager;
-	faecherManager: GostFaecherManager;
-	mapLehrer: Map<number, LehrerListeEintrag>;
+	kMan: () => GostKursklausurManager;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	kursmanager: KursManager;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	stundenplanmanager: StundenplanManager;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;

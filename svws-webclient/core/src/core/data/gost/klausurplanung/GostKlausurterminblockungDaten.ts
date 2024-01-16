@@ -3,6 +3,7 @@ import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostK
 import { GostKlausurterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungKonfiguration';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class GostKlausurterminblockungDaten extends JavaObject {
 
@@ -15,6 +16,11 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	 * Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll.
 	 */
 	public klausuren : List<GostKursklausur> = new ArrayList();
+
+	/**
+	 * Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll.
+	 */
+	public richKlausuren : List<GostKursklausurRich> = new ArrayList();
 
 
 	public constructor() {
@@ -40,6 +46,11 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 				result.klausuren?.add(GostKursklausur.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.richKlausuren !== undefined) && (obj.richKlausuren !== null)) {
+			for (const elem of obj.richKlausuren) {
+				result.richKlausuren?.add(GostKursklausurRich.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -54,6 +65,18 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 				const elem = obj.klausuren.get(i);
 				result += GostKursklausur.transpilerToJSON(elem);
 				if (i < obj.klausuren.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.richKlausuren) {
+			result += '"richKlausuren" : []';
+		} else {
+			result += '"richKlausuren" : [ ';
+			for (let i = 0; i < obj.richKlausuren.size(); i++) {
+				const elem = obj.richKlausuren.get(i);
+				result += GostKursklausurRich.transpilerToJSON(elem);
+				if (i < obj.richKlausuren.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -77,6 +100,20 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 					const elem = obj.klausuren.get(i);
 					result += GostKursklausur.transpilerToJSON(elem);
 					if (i < obj.klausuren.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.richKlausuren !== "undefined") {
+			if (!obj.richKlausuren) {
+				result += '"richKlausuren" : []';
+			} else {
+				result += '"richKlausuren" : [ ';
+				for (let i = 0; i < obj.richKlausuren.size(); i++) {
+					const elem = obj.richKlausuren.get(i);
+					result += GostKursklausurRich.transpilerToJSON(elem);
+					if (i < obj.richKlausuren.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

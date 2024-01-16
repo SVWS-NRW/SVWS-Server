@@ -11,7 +11,11 @@ import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurpla
 import { DateUtils } from '../../../../core/utils/DateUtils';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
+import { KursManager } from '../../../../core/utils/KursManager';
+import { KursListeEintrag } from '../../../../core/data/kurse/KursListeEintrag';
+import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashMap3D } from '../../../../core/adt/map/HashMap3D';
@@ -34,6 +38,12 @@ export class GostKursklausurManager extends JavaObject {
 
 	private _vorgabenManager : GostKlausurvorgabenManager;
 
+	private _kursManager : KursManager | null = null;
+
+	private _faecherManager : GostFaecherManager | null = null;
+
+	private _lehrerMap : JavaMap<number, LehrerListeEintrag> | null = null;
+
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
 		if (a.datum === null && b.datum !== null)
 			return +1;
@@ -48,13 +58,15 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
 		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
-		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+		let va : GostKlausurvorgabe = this.vorgabeByKursklausur(a);
+		let vb : GostKlausurvorgabe = this.vorgabeByKursklausur(b);
+		if (JavaString.compareTo(va.kursart, vb.kursart) < 0)
 			return +1;
-		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+		if (JavaString.compareTo(va.kursart, vb.kursart) > 0)
 			return -1;
 		if (faecherManager !== null) {
-			const aFach : GostFach | null = faecherManager.get(a.idFach);
-			const bFach : GostFach | null = faecherManager.get(b.idFach);
+			const aFach : GostFach | null = faecherManager.get(va.idFach);
+			const bFach : GostFach | null = faecherManager.get(vb.idFach);
 			if (aFach !== null && bFach !== null) {
 				if (aFach.sortierung > bFach.sortierung)
 					return +1;
@@ -62,10 +74,10 @@ export class GostKursklausurManager extends JavaObject {
 					return -1;
 			}
 		}
-		if (a.halbjahr !== b.halbjahr)
-			return a.halbjahr - b.halbjahr;
-		if (a.quartal !== b.quartal)
-			return a.quartal - b.quartal;
+		if (va.halbjahr !== vb.halbjahr)
+			return va.halbjahr - vb.halbjahr;
+		if (va.quartal !== vb.quartal)
+			return va.quartal - vb.quartal;
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -125,11 +137,11 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _terminmenge_by_datum : JavaMap<string, List<GostKlausurtermin>> = new HashMap();
 
-	private readonly _schuelerIds_by_idTermin : JavaMap<number, List<number>> = new HashMap();
-
 	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap();
 
 	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList();
+
+	private readonly _schuelerklausurmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausur>> = new HashMap();
 
 	private readonly _schuelerklausurtermin_by_id : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
 
@@ -169,6 +181,66 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_all();
 	}
 
+	/**
+	 * Setzt den KursManager
+	 *
+	 * @param kursManager der KursManager
+	 */
+	public setKursManager(kursManager : KursManager) : void {
+		this._kursManager = kursManager;
+	}
+
+	/**
+	 * Liefert den KursManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den KursManager
+	 */
+	public getKursManager() : KursManager {
+		if (this._kursManager === null)
+			throw new DeveloperNotificationException("KursManager not set.")
+		return this._kursManager;
+	}
+
+	/**
+	 * Setzt den GostFaecherManager
+	 *
+	 * @param faecherManager der GostFaecherManager
+	 */
+	public setFaecherManager(faecherManager : GostFaecherManager) : void {
+		this._faecherManager = faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public getFaecherManager() : GostFaecherManager {
+		if (this._faecherManager === null)
+			throw new DeveloperNotificationException("GostFaecherManager not set.")
+		return this._faecherManager;
+	}
+
+	/**
+	 * Setzt die LehrerMap
+	 *
+	 * @param lehrerMap die LehrerMap
+	 */
+	public setLehrerMap(lehrerMap : JavaMap<number, LehrerListeEintrag>) : void {
+		this._lehrerMap = lehrerMap;
+	}
+
+	/**
+	 * Liefert die LehrerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return die LehrerMap
+	 */
+	public getLehrerMap() : JavaMap<number, LehrerListeEintrag> {
+		if (this._lehrerMap === null)
+			throw new DeveloperNotificationException("LehrerMap not set.")
+		return this._lehrerMap;
+	}
+
 	private update_all() : void {
 		this.update_kursklausurmenge();
 		this.update_terminmenge();
@@ -177,22 +249,23 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_kursklausurmenge_by_halbjahr_and_quartal();
 		this.update_kursklausurmenge_by_idTermin();
 		this.update_kursklausurmenge_by_idVorgabe();
+		this.update_schuelerklausurmenge_by_idKursklausur();
+		this.update_schuelerklausurterminmenge_by_idSchuelerklausur();
+		this.update_schuelerklausurterminmenge_by_idTermin();
 		this.update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		this.update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
 		this.update_terminmenge_by_halbjahr_and_quartal();
 		this.update_terminmenge_by_datum();
 		this.update_kursklausurmenge_by_terminId_and_schuelerId();
-		this.update_schuelerIds_by_idTermin();
 		this.update_kursklausurmenge_by_kw_and_schuelerId();
-		this.update_schuelerklausurterminmenge_by_idSchuelerklausur();
-		this.update_schuelerklausurterminmenge_by_idTermin();
 		this.update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal();
 	}
 
 	private update_kursklausurmenge_by_halbjahr_and_quartal() : void {
 		this._kursklausurmenge_by_halbjahr_and_quartal.clear();
 		for (const kk of this._kursklausurmenge) {
-			Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_quartal, kk.halbjahr, kk.quartal).add(kk);
+			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
+			Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(kk);
 		}
 	}
 
@@ -211,14 +284,17 @@ export class GostKursklausurManager extends JavaObject {
 	private update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin() : void {
 		this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.clear();
 		for (const kk of this._kursklausurmenge) {
-			Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, kk.halbjahr, kk.idTermin !== null ? kk.idTermin : -1, kk.quartal).add(kk);
+			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
+			Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, kk.idTermin !== null ? kk.idTermin : -1, v.quartal).add(kk);
 		}
 	}
 
 	private update_kursklausur_by_idKurs_and_halbjahr_and_quartal() : void {
 		this._kursklausur_by_idKurs_and_halbjahr_and_quartal.clear();
-		for (const kk of this._kursklausurmenge)
-			this._kursklausur_by_idKurs_and_halbjahr_and_quartal.put(kk.idKurs, kk.halbjahr, kk.quartal, kk);
+		for (const kk of this._kursklausurmenge) {
+			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
+			this._kursklausur_by_idKurs_and_halbjahr_and_quartal.put(kk.idKurs, v.halbjahr, v.quartal, kk);
+		}
 	}
 
 	private update_terminmenge_by_halbjahr_and_quartal() : void {
@@ -233,15 +309,10 @@ export class GostKursklausurManager extends JavaObject {
 			MapUtils.getOrCreateArrayList(this._terminmenge_by_datum, t.datum).add(t);
 	}
 
-	private update_schuelerIds_by_idTermin() : void {
-		this._schuelerIds_by_idTermin.clear();
-		for (const t of this._terminmenge) {
-			const listSchuelerIds : ArrayList<number> | null = new ArrayList();
-			this._schuelerIds_by_idTermin.put(t.id, listSchuelerIds);
-			const klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
-			if (klausurenZuTermin !== null)
-				for (const k of klausurenZuTermin)
-					listSchuelerIds.addAll(k.schuelerIds);
+	private update_schuelerklausurmenge_by_idKursklausur() : void {
+		this._schuelerklausurmenge_by_idKursklausur.clear();
+		for (const sk of this._schuelerklausurmenge) {
+			MapUtils.getOrCreateArrayList(this._schuelerklausurmenge_by_idKursklausur, sk.idKursklausur).add(sk);
 		}
 	}
 
@@ -254,8 +325,8 @@ export class GostKursklausurManager extends JavaObject {
 			let klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
 			if (klausuren !== null)
 				for (const kk of klausuren) {
-					for (const sId of kk.schuelerIds)
-						Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
+					for (const sk of this.schuelerklausurGetMengeByKursklausurid(kk.id))
+						Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sk.idSchueler).add(kk);
 				}
 		}
 	}
@@ -263,8 +334,8 @@ export class GostKursklausurManager extends JavaObject {
 	private update_kursklausurmenge_by_terminId_and_schuelerId() : void {
 		this._kursklausurmenge_by_terminId_and_schuelerId.clear();
 		for (const kk of this._kursklausurmenge) {
-			for (const sId of kk.schuelerIds)
-				Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sId).add(kk);
+			for (const sk of this.schuelerklausurGetMengeByKursklausurid(kk.id))
+				Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sk.idSchueler).add(kk);
 		}
 	}
 
@@ -278,8 +349,12 @@ export class GostKursklausurManager extends JavaObject {
 
 	private update_schuelerklausurterminmenge_by_idTermin() : void {
 		this._schuelerklausurterminmenge_by_idTermin.clear();
-		for (const skt of this._schuelerklausurterminmenge)
-			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
+		for (const skt of this._schuelerklausurterminmenge) {
+			if (skt.folgeNr === 0)
+				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, this.kursklausurBySchuelerklausurTermin(skt).idTermin).add(skt);
+			else
+				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
+		}
 	}
 
 	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
@@ -816,19 +891,6 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Liste von Schüler-IDs zurück, die vom übergebenen Termin betroffen
-	 * sind.
-	 *
-	 * @param idTermin die ID des Klausurtermins
-	 *
-	 * @return die Liste der betroffenen Schüler-IDs
-	 */
-	public schueleridsGetMengeByTerminid(idTermin : number) : List<number> {
-		const schuelerIds : List<number> | null = this._schuelerIds_by_idTermin.get(idTermin);
-		return schuelerIds !== null ? schuelerIds : new ArrayList();
-	}
-
-	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
 	 *
 	 * @param halbjahr das Gost-Halbjahr
@@ -939,9 +1001,10 @@ export class GostKursklausurManager extends JavaObject {
 			return DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin).quartal;
 		let quartal : number = -1;
 		for (const k of klausuren) {
+			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(k);
 			if (quartal === -1)
-				quartal = k.quartal;
-			if (quartal !== k.quartal)
+				quartal = v.quartal;
+			if (quartal !== v.quartal)
 				return -1;
 		}
 		return quartal;
@@ -955,7 +1018,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Anzahl der Schülerklausuren des Termins.
 	 */
 	public schuelerklausurAnzahlGetByTerminid(idTermin : number) : number {
-		return this.schueleridsGetMengeByTerminid(idTermin).size();
+		const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		return skts === null ? 0 : skts.size();
 	}
 
 	/**
@@ -1033,13 +1097,13 @@ export class GostKursklausurManager extends JavaObject {
 		return maxDauer;
 	}
 
-	private static berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
+	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
 		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap();
 		const kursklausuren2Copy : List<GostKursklausur> | null = new ArrayList(klausuren2);
 		for (const kk1 of klausuren1) {
 			kursklausuren2Copy.remove(kk1);
 			for (const kk2 of kursklausuren2Copy) {
-				const konflikte : JavaSet<number> | null = GostKursklausurManager.berechneKlausurKonflikte(kk1, kk2);
+				const konflikte : JavaSet<number> | null = this.berechneKlausurKonflikte(kk1, kk2);
 				if (!konflikte.isEmpty()) {
 					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
 					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
@@ -1049,9 +1113,9 @@ export class GostKursklausurManager extends JavaObject {
 		return result;
 	}
 
-	private static berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
-		const konflikte : HashSet<number> | null = new HashSet(kk1.schuelerIds);
-		konflikte.retainAll(kk2.schuelerIds);
+	private berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
+		const konflikte : HashSet<number> = new HashSet(this.getSchuelerIDsFromKursklausur(kk1));
+		konflikte.retainAll(this.getSchuelerIDsFromKursklausur(kk2));
 		return konflikte;
 	}
 
@@ -1074,7 +1138,7 @@ export class GostKursklausurManager extends JavaObject {
 		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
 		if (klausuren === null)
 			return new HashMap();
-		return GostKursklausurManager.berechneKonflikte(klausuren, klausuren);
+		return this.berechneKonflikte(klausuren, klausuren);
 	}
 
 	/**
@@ -1090,7 +1154,7 @@ export class GostKursklausurManager extends JavaObject {
 		const klausuren1 : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
 		const klausuren2 : List<GostKursklausur> | null = new ArrayList();
 		klausuren2.add(DeveloperNotificationException.ifMapGetIsNull(this._kursklausur_by_id, idKursklausur));
-		return GostKursklausurManager.berechneKonflikte(klausuren1 !== null ? klausuren1 : new ArrayList(), klausuren2);
+		return this.berechneKonflikte(klausuren1 !== null ? klausuren1 : new ArrayList(), klausuren2);
 	}
 
 	/**
@@ -1108,7 +1172,7 @@ export class GostKursklausurManager extends JavaObject {
 		klausuren1.remove(klausur);
 		const klausuren2 : List<GostKursklausur> | null = new ArrayList();
 		klausuren2.add(klausur);
-		return GostKursklausurManager.countKonflikte(GostKursklausurManager.berechneKonflikte(klausuren1, klausuren2));
+		return GostKursklausurManager.countKonflikte(this.berechneKonflikte(klausuren1, klausuren2));
 	}
 
 	/**
@@ -1179,12 +1243,38 @@ export class GostKursklausurManager extends JavaObject {
 		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
 			let temp : List<GostKursklausur> | null = entry.getValue();
 			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
-			if (klausur !== null && klausur.idTermin !== termin.id && klausur.schuelerIds.contains(entry.getKey()))
+			if (klausur !== null && klausur.idTermin !== termin.id && this.getSchuelerIDsFromKursklausur(klausur).contains(entry.getKey()))
 				klausuren.add(klausur);
 			if (klausuren.size() >= threshold)
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert für eine Liste von GostSchuelerklausur-Objekten die zugehörigen Schüler-IDs als Liste.
+	 *
+	 * @param sks        Die Liste von GostSchuelerklausur-Objekten
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public getSchuelerIDsFromSchuelerklausuren(sks : List<GostSchuelerklausur>) : List<number> {
+		const ids : List<number> = new ArrayList();
+		for (let sk of sks) {
+			ids.add(sk.idSchueler);
+		}
+		return ids;
+	}
+
+	/**
+	 * Liefert für ein GostKursklausur-Objekt die zugehörigen Schüler-IDs als Liste.
+	 *
+	 * @param kk        die Kursklausur, zu der die Schüler-IDs gesucht werden.
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public getSchuelerIDsFromKursklausur(kk : GostKursklausur) : List<number> {
+		return this.getSchuelerIDsFromSchuelerklausuren(this.schuelerklausurGetMengeByKursklausurid(kk.id));
 	}
 
 	/**
@@ -1377,7 +1467,11 @@ export class GostKursklausurManager extends JavaObject {
 		if (klausuren === null)
 			return null;
 		for (let k of klausuren) {
-			if (JavaObject.equalsTranspiler(k.kursKurzbezeichnung, (klausur.kursKurzbezeichnung)))
+			const kKurs : KursListeEintrag | null = this.getKursManager().get(k.idKurs);
+			const klausurKurs : KursListeEintrag | null = this.getKursManager().get(klausur.idKurs);
+			if (kKurs === null || klausurKurs === null)
+				throw new DeveloperNotificationException("Keine Kurszuordnung im kursManager zu Kurs-ID")
+			if (JavaObject.equalsTranspiler(kKurs.kuerzel, (klausurKurs.kuerzel)))
 				return k;
 		}
 		return null;
@@ -1482,6 +1576,142 @@ export class GostKursklausurManager extends JavaObject {
 				if (this.schuelerklausurGetByIdOrException(skt.idSchuelerklausur).idSchueler === idSchueler)
 					return skt;
 		return null;
+	}
+
+	/**
+	 * Liefert die GostSchuelerklausur-Objekte zur übergebenen Kursklausur-ID
+	 *
+	 * @param idKursklausur die ID der Kursklausur
+	 *
+	 * @return die GostSchuelerklausur-Objekte
+	 */
+	public schuelerklausurGetMengeByKursklausurid(idKursklausur : number) : List<GostSchuelerklausur> {
+		let listSks : List<GostSchuelerklausur> | null = this._schuelerklausurmenge_by_idKursklausur.get(idKursklausur);
+		return listSks === null ? new ArrayList() : listSks;
+	}
+
+	/**
+	 * Liefert das Lehrerkürzel zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das Lehrerkürzel
+	 */
+	public kursLehrerKuerzelByKursklausur(k : GostKursklausur) : string {
+		let kurs : KursListeEintrag = this.getKursByKursklausur(k);
+		let lehrer : LehrerListeEintrag | null = this.getLehrerMap().get(kurs.lehrer);
+		if (lehrer === null)
+			throw new DeveloperNotificationException("Lehrer mit ID " + kurs.lehrer + " nicht in LehrerMap vorhanden.")
+		return lehrer.kuerzel;
+	}
+
+	/**
+	 * Liefert den KursListeEintrag aus dem KursManager zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return den KursListeEintrag
+	 */
+	public getKursByKursklausur(k : GostKursklausur) : KursListeEintrag {
+		let kurs : KursListeEintrag | null = this.getKursManager().get(k.idKurs);
+		if (kurs === null)
+			throw new DeveloperNotificationException("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.")
+		return kurs;
+	}
+
+	/**
+	 * Liefert das GostFach aus dem GostFaecherManager zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das GostFach
+	 */
+	public getGostFachByKursklausur(k : GostKursklausur) : GostFach {
+		let fach : GostFach | null = this.getFaecherManager().get(this.vorgabeByKursklausur(k).idFach);
+		if (fach === null)
+			throw new DeveloperNotificationException("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.")
+		return fach;
+	}
+
+	/**
+	 * Liefert das Lehrerkürzel zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das Lehrerkürzel
+	 */
+	public kursSchieneByKursklausur(k : GostKursklausur) : List<number> {
+		return this.getKursByKursklausur(k).schienen;
+	}
+
+	/**
+	 * Liefert die Kurzbezeichnung des Kurses zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public kursKurzbezeichnungByKursklausur(k : GostKursklausur) : string {
+		return this.getKursByKursklausur(k).kuerzel;
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler im Kurs zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Schüleranzahl
+	 */
+	public kursAnzahlSchuelerGesamtByKursklausur(k : GostKursklausur) : number {
+		return this.getKursByKursklausur(k).schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl der Klausurscheiber im Kurs zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Schüleranzahl
+	 */
+	public kursAnzahlKlausurschreiberByKursklausur(k : GostKursklausur) : number {
+		let liste : List<GostSchuelerklausur> | null = this._schuelerklausurmenge_by_idKursklausur.get(k.id);
+		return liste === null ? 0 : liste.size();
+	}
+
+	/**
+	 * Liefert das Kürzel zur Anzeige des Faches zu einer übergebenen Kursklausur.
+	 * Falls kein Anzeigekürzel gesetzt ist, wird das interne Kürzel zurückgegeben.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public fachKuerzelAnzeigeByKursklausur(k : GostKursklausur) : string {
+		let fach : GostFach | null = this.getGostFachByKursklausur(k);
+		return fach.kuerzelAnzeige !== null ? fach.kuerzelAnzeige : fach.kuerzel;
+	}
+
+	/**
+	 * Liefert das Kürzel zur Anzeige des Faches zu einer übergebenen Kursklausur.
+	 * Falls kein Anzeigekürzel gesetzt ist, wird das interne Kürzel zurückgegeben.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public fachKuerzelByKursklausur(k : GostKursklausur) : string {
+		return this.getGostFachByKursklausur(k).kuerzel;
+	}
+
+	/**
+	 * Liefert die Hintergrundfarbe zur übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Hintergrundfarbe
+	 */
+	public fachBgColorByKursklausur(k : GostKursklausur) : string {
+		return ZulaessigesFach.getByKuerzelASD(this.fachKuerzelByKursklausur(k)).getHMTLFarbeRGBA(1.0);
 	}
 
 	transpilerCanonicalName(): string {

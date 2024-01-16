@@ -17,11 +17,15 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.core.utils.KursManager;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
@@ -38,6 +42,9 @@ import jakarta.validation.constraints.NotNull;
 public class GostKursklausurManager {
 
 	private @NotNull GostKlausurvorgabenManager _vorgabenManager;
+	private KursManager _kursManager = null;
+	private GostFaecherManager _faecherManager = null;
+	private Map<@NotNull Long, @NotNull LehrerListeEintrag> _lehrerMap = null;
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum == null && b.datum != null)
@@ -53,13 +60,15 @@ public class GostKursklausurManager {
 
 	private final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
 		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
-		if (a.kursart.compareTo(b.kursart) < 0)
+		@NotNull GostKlausurvorgabe va = vorgabeByKursklausur(a);
+		@NotNull GostKlausurvorgabe vb = vorgabeByKursklausur(b);
+		if (va.kursart.compareTo(vb.kursart) < 0)
 			return +1;
-		if (a.kursart.compareTo(b.kursart) > 0)
+		if (va.kursart.compareTo(vb.kursart) > 0)
 			return -1;
 		if (faecherManager != null) {
-			final GostFach aFach = faecherManager.get(a.idFach);
-			final GostFach bFach = faecherManager.get(b.idFach);
+			final GostFach aFach = faecherManager.get(va.idFach);
+			final GostFach bFach = faecherManager.get(vb.idFach);
 			if (aFach != null && bFach != null) {
 				if (aFach.sortierung > bFach.sortierung)
 					return +1;
@@ -67,10 +76,10 @@ public class GostKursklausurManager {
 					return -1;
 			}
 		}
-		if (a.halbjahr != b.halbjahr)
-			return a.halbjahr - b.halbjahr;
-		if (a.quartal != b.quartal)
-			return a.quartal - b.quartal;
+		if (va.halbjahr != vb.halbjahr)
+			return va.halbjahr - vb.halbjahr;
+		if (va.quartal != vb.quartal)
+			return va.quartal - vb.quartal;
 		return Long.compare(a.id, b.id);
 	};
 
@@ -121,11 +130,12 @@ public class GostKursklausurManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurtermin>> _terminmenge_by_halbjahr_and_quartal = new HashMap2D<>();
 	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _terminmenge_by_datum = new HashMap<>();
 
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull Long>> _schuelerIds_by_idTermin = new HashMap<>();
+//	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull Long>> _schuelerIds_by_idTermin = new HashMap<>();
 
 	// GostSchuelerklausur
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausur> _schuelerklausur_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostSchuelerklausur> _schuelerklausurmenge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausur>> _schuelerklausurmenge_by_idKursklausur = new HashMap<>();
 
 	// GostSchuelerklausurTermin
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausurTermin> _schuelerklausurtermin_by_id = new HashMap<>();
@@ -163,6 +173,66 @@ public class GostKursklausurManager {
 
 	}
 
+	/**
+	 * Setzt den KursManager
+	 *
+	 * @param kursManager der KursManager
+	 */
+	public void setKursManager(final @NotNull KursManager kursManager) {
+		_kursManager = kursManager;
+	}
+
+	/**
+	 * Liefert den KursManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den KursManager
+	 */
+	public @NotNull KursManager getKursManager() {
+		if (_kursManager == null)
+			throw new DeveloperNotificationException("KursManager not set.");
+		return _kursManager;
+	}
+
+	/**
+	 * Setzt den GostFaecherManager
+	 *
+	 * @param faecherManager der GostFaecherManager
+	 */
+	public void setFaecherManager(final @NotNull GostFaecherManager faecherManager) {
+		_faecherManager = faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public @NotNull GostFaecherManager getFaecherManager() {
+		if (_faecherManager == null)
+			throw new DeveloperNotificationException("GostFaecherManager not set.");
+		return _faecherManager;
+	}
+
+	/**
+	 * Setzt die LehrerMap
+	 *
+	 * @param lehrerMap die LehrerMap
+	 */
+	public void setLehrerMap(final @NotNull Map<@NotNull Long, @NotNull LehrerListeEintrag> lehrerMap) {
+		_lehrerMap = lehrerMap;
+	}
+
+	/**
+	 * Liefert die LehrerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return die LehrerMap
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull LehrerListeEintrag> getLehrerMap() {
+		if (_lehrerMap == null)
+			throw new DeveloperNotificationException("LehrerMap not set.");
+		return _lehrerMap;
+	}
+
 	private void update_all() {
 
 		update_kursklausurmenge();
@@ -173,24 +243,29 @@ public class GostKursklausurManager {
 		update_kursklausurmenge_by_halbjahr_and_quartal();
 		update_kursklausurmenge_by_idTermin();
 		update_kursklausurmenge_by_idVorgabe();
+
+		update_schuelerklausurmenge_by_idKursklausur();
+		update_schuelerklausurterminmenge_by_idSchuelerklausur();
+		update_schuelerklausurterminmenge_by_idTermin();
+
 		update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
 		update_terminmenge_by_halbjahr_and_quartal();
 		update_terminmenge_by_datum();
 		update_kursklausurmenge_by_terminId_and_schuelerId();
 
-		update_schuelerIds_by_idTermin(); // benötigt _kursklausurmenge_by_idTermin
+
+//		update_schuelerIds_by_idTermin(); // benötigt _kursklausurmenge_by_idTermin
 		update_kursklausurmenge_by_kw_and_schuelerId(); // benötigt _kursklausurmenge_by_idTermin
 
-		update_schuelerklausurterminmenge_by_idSchuelerklausur();
-		update_schuelerklausurterminmenge_by_idTermin();
 		update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal(); // benötigt _schuelerklausurterminmenge_by_idSchuelerklausur
 	}
 
 	private void update_kursklausurmenge_by_halbjahr_and_quartal() {
 		_kursklausurmenge_by_halbjahr_and_quartal.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
-			Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_quartal, kk.halbjahr, kk.quartal).add(kk);
+			@NotNull GostKlausurvorgabe v = vorgabeByKursklausur(kk);
+			Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(kk);
 		}
 	}
 
@@ -209,14 +284,17 @@ public class GostKursklausurManager {
 	private void update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin() {
 		_kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
-			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, kk.halbjahr, kk.idTermin != null ? kk.idTermin : -1, kk.quartal).add(kk);
+			@NotNull GostKlausurvorgabe v = vorgabeByKursklausur(kk);
+			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, kk.idTermin != null ? kk.idTermin : -1, v.quartal).add(kk);
 		}
 	}
 
 	private void update_kursklausur_by_idKurs_and_halbjahr_and_quartal() {
 		_kursklausur_by_idKurs_and_halbjahr_and_quartal.clear();
-		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
-			_kursklausur_by_idKurs_and_halbjahr_and_quartal.put(kk.idKurs, kk.halbjahr, kk.quartal, kk);
+		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
+			@NotNull GostKlausurvorgabe v = vorgabeByKursklausur(kk);
+			_kursklausur_by_idKurs_and_halbjahr_and_quartal.put(kk.idKurs, v.halbjahr, v.quartal, kk);
+		}
 	}
 
 	private void update_terminmenge_by_halbjahr_and_quartal() {
@@ -231,17 +309,24 @@ public class GostKursklausurManager {
 			MapUtils.getOrCreateArrayList(_terminmenge_by_datum, t.datum).add(t);
 	}
 
-	private void update_schuelerIds_by_idTermin() {
-		_schuelerIds_by_idTermin.clear();
-		for (final @NotNull GostKlausurtermin t : _terminmenge) {
-			final ArrayList<@NotNull Long> listSchuelerIds = new ArrayList<>();
-			_schuelerIds_by_idTermin.put(t.id, listSchuelerIds);
-			final List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(t.id);
-			if (klausurenZuTermin != null)
-				for (final @NotNull GostKursklausur k : klausurenZuTermin)
-					listSchuelerIds.addAll(k.schuelerIds);
+	private void update_schuelerklausurmenge_by_idKursklausur() {
+		_schuelerklausurmenge_by_idKursklausur.clear();
+		for (final @NotNull GostSchuelerklausur sk : _schuelerklausurmenge) {
+			MapUtils.getOrCreateArrayList(_schuelerklausurmenge_by_idKursklausur, sk.idKursklausur).add(sk);
 		}
 	}
+
+//	private void update_schuelerIds_by_idTermin() {
+//		_schuelerIds_by_idTermin.clear();
+//		for (final @NotNull GostKlausurtermin t : _terminmenge) {
+//			final ArrayList<@NotNull Long> listSchuelerIds = new ArrayList<>();
+//			_schuelerIds_by_idTermin.put(t.id, listSchuelerIds);
+//			final List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(t.id);
+//			if (klausurenZuTermin != null)
+//				for (final @NotNull GostKursklausur k : klausurenZuTermin)
+//					listSchuelerIds.addAll(k.schuelerIds);
+//		}
+//	}
 
 	private void update_kursklausurmenge_by_kw_and_schuelerId() {
 		_kursklausurmenge_by_kw_and_schuelerId.clear();
@@ -252,8 +337,8 @@ public class GostKursklausurManager {
 			List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(t.id);
 			if (klausuren != null)
 				for (final @NotNull GostKursklausur kk : klausuren) {
-					for (final @NotNull Long sId : kk.schuelerIds)
-						Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
+					for (final @NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausurid(kk.id))
+						Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sk.idSchueler).add(kk);
 				}
 		}
 	}
@@ -261,8 +346,8 @@ public class GostKursklausurManager {
 	private void update_kursklausurmenge_by_terminId_and_schuelerId() {
 		_kursklausurmenge_by_terminId_and_schuelerId.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
-			for (final @NotNull Long sId : kk.schuelerIds)
-				Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sId).add(kk);
+			for (final @NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausurid(kk.id))
+				Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sk.idSchueler).add(kk);
 		}
 	}
 
@@ -276,8 +361,12 @@ public class GostKursklausurManager {
 
 	private void update_schuelerklausurterminmenge_by_idTermin() {
 		_schuelerklausurterminmenge_by_idTermin.clear();
-		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge)
-			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
+		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge) {
+			if (skt.folgeNr == 0)
+				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, kursklausurBySchuelerklausurTermin(skt).idTermin).add(skt);
+			else
+				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
+		}
 	}
 
 	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() { // ggf. neuer Manager
@@ -867,18 +956,18 @@ public class GostKursklausurManager {
 		return klausuren;
 	}
 
-	/**
-	 * Gibt eine Liste von Schüler-IDs zurück, die vom übergebenen Termin betroffen
-	 * sind.
-	 *
-	 * @param idTermin die ID des Klausurtermins
-	 *
-	 * @return die Liste der betroffenen Schüler-IDs
-	 */
-	public @NotNull List<@NotNull Long> schueleridsGetMengeByTerminid(final long idTermin) {
-		final List<@NotNull Long> schuelerIds = _schuelerIds_by_idTermin.get(idTermin);
-		return schuelerIds != null ? schuelerIds : new ArrayList<>();
-	}
+//	/**
+//	 * Gibt eine Liste von Schüler-IDs zurück, die vom übergebenen Termin betroffen
+//	 * sind.
+//	 *
+//	 * @param idTermin die ID des Klausurtermins
+//	 *
+//	 * @return die Liste der betroffenen Schüler-IDs
+//	 */
+//	public @NotNull List<@NotNull Long> schueleridsGetMengeByTerminid(final long idTermin) {
+//		final List<@NotNull Long> schuelerIds = _schuelerIds_by_idTermin.get(idTermin);
+//		return schuelerIds != null ? schuelerIds : new ArrayList<>();
+//	}
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
@@ -991,9 +1080,10 @@ public class GostKursklausurManager {
 			return DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin).quartal;
 		int quartal = -1;
 		for (@NotNull final GostKursklausur k : klausuren) {
+			@NotNull GostKlausurvorgabe v = vorgabeByKursklausur(k);
 			if (quartal == -1)
-				quartal = k.quartal;
-			if (quartal != k.quartal)
+				quartal = v.quartal;
+			if (quartal != v.quartal)
 				return -1;
 		}
 		return quartal;
@@ -1007,7 +1097,8 @@ public class GostKursklausurManager {
 	 * @return die Anzahl der Schülerklausuren des Termins.
 	 */
 	public int schuelerklausurAnzahlGetByTerminid(final long idTermin) {
-		return schueleridsGetMengeByTerminid(idTermin).size();
+		final List<@NotNull GostSchuelerklausurTermin> skts = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		return skts == null ? 0 : skts.size();
 	}
 
 	/**
@@ -1083,7 +1174,7 @@ public class GostKursklausurManager {
 		return maxDauer;
 	}
 
-	private static @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> berechneKonflikte(@NotNull final List<@NotNull GostKursklausur> klausuren1,
+	private @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> berechneKonflikte(@NotNull final List<@NotNull GostKursklausur> klausuren1,
 			@NotNull final List<@NotNull GostKursklausur> klausuren2) {
 		final Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> result = new HashMap<>();
 		final List<@NotNull GostKursklausur> kursklausuren2Copy = new ArrayList<>(klausuren2);
@@ -1100,9 +1191,9 @@ public class GostKursklausurManager {
 		return result;
 	}
 
-	private static @NotNull Set<@NotNull Long> berechneKlausurKonflikte(@NotNull final GostKursklausur kk1, @NotNull final GostKursklausur kk2) {
-		final HashSet<@NotNull Long> konflikte = new HashSet<>(kk1.schuelerIds);
-		konflikte.retainAll(kk2.schuelerIds);
+	private @NotNull Set<@NotNull Long> berechneKlausurKonflikte(@NotNull final GostKursklausur kk1, @NotNull final GostKursklausur kk2) {
+		final @NotNull HashSet<@NotNull Long> konflikte = new HashSet<>(getSchuelerIDsFromKursklausur(kk1));
+		konflikte.retainAll(getSchuelerIDsFromKursklausur(kk2));
 		return konflikte;
 	}
 
@@ -1232,12 +1323,38 @@ public class GostKursklausurManager {
 		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
 			List<@NotNull GostKursklausur> temp = entry.getValue();
 			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
-			if (klausur != null && klausur.idTermin != termin.id && klausur.schuelerIds.contains(entry.getKey()))
+			if (klausur != null && klausur.idTermin != termin.id && getSchuelerIDsFromKursklausur(klausur).contains(entry.getKey()))
 				klausuren.add(klausur);
 			if (klausuren.size() >= threshold)
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert für eine Liste von GostSchuelerklausur-Objekten die zugehörigen Schüler-IDs als Liste.
+	 *
+	 * @param sks        Die Liste von GostSchuelerklausur-Objekten
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public @NotNull List<@NotNull Long> getSchuelerIDsFromSchuelerklausuren(final @NotNull List<@NotNull GostSchuelerklausur> sks) {
+		final @NotNull List<@NotNull Long> ids = new ArrayList<>();
+		for (@NotNull GostSchuelerklausur sk : sks) {
+			ids.add(sk.idSchueler);
+		}
+		return ids;
+	}
+
+	/**
+	 * Liefert für ein GostKursklausur-Objekt die zugehörigen Schüler-IDs als Liste.
+	 *
+	 * @param kk        die Kursklausur, zu der die Schüler-IDs gesucht werden.
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public @NotNull List<@NotNull Long> getSchuelerIDsFromKursklausur(final @NotNull GostKursklausur kk) {
+		return getSchuelerIDsFromSchuelerklausuren(schuelerklausurGetMengeByKursklausurid(kk.id));
 	}
 
 	/**
@@ -1435,7 +1552,11 @@ public class GostKursklausurManager {
 		if (klausuren == null)
 			return null;
 		for (@NotNull GostKursklausur k : klausuren) {
-			if (k.kursKurzbezeichnung.equals(klausur.kursKurzbezeichnung)) // TODO unsauber, aber KursId geht nicht, weil ggf. in Schuljahresabschnitten unterschiedlich
+			final KursListeEintrag kKurs = getKursManager().get(k.idKurs);
+			final KursListeEintrag klausurKurs = getKursManager().get(klausur.idKurs);
+			if (kKurs == null || klausurKurs == null)
+				throw new DeveloperNotificationException("Keine Kurszuordnung im kursManager zu Kurs-ID");
+			if (kKurs.kuerzel.equals(klausurKurs.kuerzel)) // TODO unsauber, aber KursId geht nicht, weil ggf. in Schuljahresabschnitten unterschiedlich
 				return k;
 		}
 		return null;
@@ -1540,6 +1661,142 @@ public class GostKursklausurManager {
 				if (schuelerklausurGetByIdOrException(skt.idSchuelerklausur).idSchueler == idSchueler)
 					return skt;
 		return null;
+	}
+
+	/**
+	 * Liefert die GostSchuelerklausur-Objekte zur übergebenen Kursklausur-ID
+	 *
+	 * @param idKursklausur die ID der Kursklausur
+	 *
+	 * @return die GostSchuelerklausur-Objekte
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByKursklausurid(final long idKursklausur) {
+		List<@NotNull GostSchuelerklausur> listSks = _schuelerklausurmenge_by_idKursklausur.get(idKursklausur);
+		return listSks == null ? new ArrayList<>() : listSks;
+	}
+
+	/**
+	 * Liefert das Lehrerkürzel zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das Lehrerkürzel
+	 */
+	public @NotNull String kursLehrerKuerzelByKursklausur(final @NotNull GostKursklausur k) {
+		@NotNull KursListeEintrag kurs = getKursByKursklausur(k);
+		LehrerListeEintrag lehrer = getLehrerMap().get(kurs.lehrer);
+		if (lehrer == null)
+			throw new DeveloperNotificationException("Lehrer mit ID " + kurs.lehrer + " nicht in LehrerMap vorhanden.");
+		return lehrer.kuerzel;
+	}
+
+	/**
+	 * Liefert den KursListeEintrag aus dem KursManager zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return den KursListeEintrag
+	 */
+	public @NotNull KursListeEintrag getKursByKursklausur(final @NotNull GostKursklausur k) {
+		KursListeEintrag kurs = getKursManager().get(k.idKurs);
+		if (kurs == null)
+			throw new DeveloperNotificationException("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.");
+		return kurs;
+	}
+
+	/**
+	 * Liefert das GostFach aus dem GostFaecherManager zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das GostFach
+	 */
+	public @NotNull GostFach getGostFachByKursklausur(final @NotNull GostKursklausur k) {
+		GostFach fach = getFaecherManager().get(vorgabeByKursklausur(k).idFach);
+		if (fach == null)
+			throw new DeveloperNotificationException("Fach mit ID " + vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.");
+		return fach;
+	}
+
+	/**
+	 * Liefert das Lehrerkürzel zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return das Lehrerkürzel
+	 */
+	public @NotNull List<@NotNull Integer> kursSchieneByKursklausur(final @NotNull GostKursklausur k) {
+		return getKursByKursklausur(k).schienen;
+	}
+
+	/**
+	 * Liefert die Kurzbezeichnung des Kurses zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public @NotNull String kursKurzbezeichnungByKursklausur(final @NotNull GostKursklausur k) {
+		return getKursByKursklausur(k).kuerzel;
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler im Kurs zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Schüleranzahl
+	 */
+	public int kursAnzahlSchuelerGesamtByKursklausur(final @NotNull GostKursklausur k) {
+		return getKursByKursklausur(k).schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl der Klausurscheiber im Kurs zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Schüleranzahl
+	 */
+	public int kursAnzahlKlausurschreiberByKursklausur(final @NotNull GostKursklausur k) {
+		List<@NotNull GostSchuelerklausur> liste = _schuelerklausurmenge_by_idKursklausur.get(k.id);
+		return liste == null ? 0 : liste.size();
+	}
+
+	/**
+	 * Liefert das Kürzel zur Anzeige des Faches zu einer übergebenen Kursklausur.
+	 * Falls kein Anzeigekürzel gesetzt ist, wird das interne Kürzel zurückgegeben.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public @NotNull String fachKuerzelAnzeigeByKursklausur(final @NotNull GostKursklausur k) {
+		GostFach fach = getGostFachByKursklausur(k);
+		return fach.kuerzelAnzeige != null ? fach.kuerzelAnzeige : fach.kuerzel;
+	}
+
+	/**
+	 * Liefert das Kürzel zur Anzeige des Faches zu einer übergebenen Kursklausur.
+	 * Falls kein Anzeigekürzel gesetzt ist, wird das interne Kürzel zurückgegeben.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public @NotNull String fachKuerzelByKursklausur(final @NotNull GostKursklausur k) {
+		return getGostFachByKursklausur(k).kuerzel;
+	}
+
+	/**
+	 * Liefert die Hintergrundfarbe zur übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Hintergrundfarbe
+	 */
+	public @NotNull String fachBgColorByKursklausur(final @NotNull GostKursklausur k) {
+		return ZulaessigesFach.getByKuerzelASD(fachKuerzelByKursklausur(k)).getHMTLFarbeRGBA(1.0);
 	}
 
 }

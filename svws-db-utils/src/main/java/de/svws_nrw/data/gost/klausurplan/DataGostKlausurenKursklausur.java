@@ -18,6 +18,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebn
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -81,38 +82,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * @return die Liste der Kursklausuren
 	 */
 	public static List<GostKursklausur> getKursKlausuren(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) {
-
-		final Map<Long, GostKlausurvorgabe> mapVorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
-		if (mapVorgaben.isEmpty()) {
-			return new ArrayList<>();
-		}
-
-		final List<DTOGostKlausurenKursklausuren> kursklausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", mapVorgaben.keySet(), DTOGostKlausurenKursklausuren.class);
-		if (kursklausuren.isEmpty()) {
-			return new ArrayList<>();
-		}
-
-		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
-				.collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
-		if (mapSchuelerklausuren.isEmpty()) {
-			return new ArrayList<>();
-		}
-
-		final List<Long> kursIDs = kursklausuren.stream().map(k -> k.Kurs_ID).distinct().toList();
-		final Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-
-		final List<GostKursklausur> daten = new ArrayList<>();
-		kursklausuren.stream().forEach(k -> {
-			final GostKlausurvorgabe v = mapVorgaben.get(k.Vorgabe_ID);
-			final DTOKurs kurs = mapKurse.get(k.Kurs_ID);
-			final List<DTOGostKlausurenSchuelerklausuren> sKlausuren = mapSchuelerklausuren.get(k.ID);
-			if (sKlausuren != null && !sKlausuren.isEmpty()) {
-				final GostKursklausur kk = dtoMapper.apply(k, v, kurs, sKlausuren);
-				daten.add(kk);
-			}
-		});
-		return daten;
+		return getKursklausurenZuVorgaben(conn, DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr));
 	}
 
 	/**
@@ -167,6 +137,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 */
 	public static boolean blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) {
+		blockungDaten.richKlausuren = enrichKursklausuren(conn, blockungDaten.klausuren);
 		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
 
 		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
@@ -197,55 +168,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			conn.transactionPersist(klausur);
 		}
 	}
-
-	/**
-	 * Functional Interface
-	 *
-	 * @param <One>   One
-	 * @param <Two>   Two
-	 * @param <Three> Three
-	 * @param <Four>  Four
-	 * @param <Five>  Five
-	 */
-	@FunctionalInterface
-	interface Function5<One, Two, Three, Four, Five> {
-		/**
-		 * Apply Method
-		 *
-		 * @param one   one
-		 * @param two   two
-		 * @param three three
-		 * @param four  four
-		 *
-		 * @return ret
-		 */
-		Five apply(One one, Two two, Three three, Four four);
-	}
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
-	 * {@link DTOGostKlausurenVorgaben} in einen Core-DTO
-	 * {@link GostKlausurvorgabe}.
-	 */
-	public static final Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, List<DTOGostKlausurenSchuelerklausuren>, GostKursklausur> dtoMapper = (final DTOGostKlausurenKursklausuren k,
-			final GostKlausurvorgabe v, final DTOKurs kurs, final List<DTOGostKlausurenSchuelerklausuren> sKlausuren) -> {
-		final GostKursklausur kk = DataGostKlausurenKursklausur.dtoMapper2.apply(k);
-		kk.abijahr = v.abiJahrgang;
-		kk.kursart = v.kursart;
-		kk.idFach = v.idFach;
-		kk.quartal = v.quartal;
-		kk.halbjahr = v.halbjahr;
-		kk.kursKurzbezeichnung = kurs.KurzBez;
-		kk.idLehrer = kurs.Lehrer_ID;
-		try {
-			kk.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
-		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-			throw OperationError.BAD_REQUEST.exception("Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
-		}
-		if (sKlausuren != null)
-			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();
-		return kk;
-	};
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
@@ -339,9 +261,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			mapper.map(conn, dto, value, map);
 		}
 		conn.transactionPersist(dto);
-		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, dto.Kurs_ID);
-		final GostKlausurvorgabe vorgabe = DataGostKlausurenVorgabe.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenVorgaben.class, dto.Vorgabe_ID));
-		result.kursKlausurPatched = dtoMapper.apply(dto, vorgabe, kurs, sks);
+		result.kursKlausurPatched = dtoMapper2.apply(dto);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
@@ -349,5 +269,65 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
+
+	/**
+	 * Erzeugt eine Liste von GostKursklausurRich-Objekten, die für die Klausurblockung benötigte Informationen anreichert.
+	 *
+	 * @param conn Connection
+	 * @param kursklausuren   die Liste der anzureichernden GostKursklausur-Objekte
+	 *
+	 * @return die Liste von GostKursklausurRich-Objekten
+	 *
+	 */
+	public static List<GostKursklausurRich> enrichKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursklausuren) {
+		List<GostKursklausurRich> richKlausuren = new ArrayList<>();
+
+		final Map<Long, GostKlausurvorgabe> mapVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, kursklausuren).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
+		if (mapVorgaben.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
+				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.id).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
+				.collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
+		if (mapSchuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		final List<Long> kursIDs = kursklausuren.stream().map(k -> k.idKurs).distinct().toList();
+		final Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+
+		kursklausuren.stream().forEach(k -> {
+			final GostKlausurvorgabe v = mapVorgaben.get(k.idVorgabe);
+			final DTOKurs kurs = mapKurse.get(k.idKurs);
+			final List<DTOGostKlausurenSchuelerklausuren> sKlausuren = mapSchuelerklausuren.get(k.id);
+			if (sKlausuren != null && !sKlausuren.isEmpty()) {
+				final GostKursklausurRich kkr = new GostKursklausurRich();
+				kkr.abijahr = v.abiJahrgang;
+				kkr.bemerkung = k.bemerkung;
+				kkr.halbjahr = v.halbjahr;
+				kkr.id = k.id;
+				kkr.idFach = v.idFach;
+				kkr.idKurs = k.idKurs;
+				kkr.idLehrer = kurs.Lehrer_ID;
+				kkr.idTermin = k.idTermin;
+				kkr.idVorgabe = v.idVorgabe;
+				kkr.kursart = v.kursart;
+				kkr.kursKurzbezeichnung = kurs.KurzBez;
+				try {
+					kkr.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					throw OperationError.BAD_REQUEST.exception("Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
+				}
+				kkr.quartal = v.quartal;
+				kkr.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();
+				kkr.startzeit = k.startzeit;
+				richKlausuren.add(kkr);
+			}
+		});
+		return richKlausuren;
+	}
+
+
 
 }

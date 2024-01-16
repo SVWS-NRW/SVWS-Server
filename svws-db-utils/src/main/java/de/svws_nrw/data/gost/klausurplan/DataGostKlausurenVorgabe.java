@@ -13,6 +13,7 @@ import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -36,7 +37,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -76,21 +76,18 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 *
 	 * @return die Anzahl der erzeugten Kursklausuren
 	 */
-	public Response createKlausuren(final int hj, final int quartal) {
+	public GostKlausurenDataCollection createKlausuren(final int hj, final int quartal) {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
-		final List<GostKursklausur> retKlausuren = new ArrayList<>();
 
-		final List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(dtoMapper::apply).toList();
+		final List<GostKlausurvorgabe> vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, _abiturjahr, hj, false);
 		if (vorgaben.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
 		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben, null);
 
-		final List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(),
-				DTOGostKlausurenKursklausuren.class);
-		final Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
-				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
+		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
+		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
+				.collect(Collectors.groupingBy(k -> k.idKurs, Collectors.toMap(k -> k.idVorgabe, Function.identity())));
 
 		final List<DTOSchuljahresabschnitte> sjaList = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
 				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr)).setParameter("abschnitt", halbjahr.id % 2 + 1).getResultList();
@@ -120,7 +117,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 						idNextKursklausur++;
 						kursklausuren.add(kursklausur);
 						schuelerklausuren.addAll(listSk);
-						retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, listSk));
+//						retKlausuren.kursklausuren.add(DataGostKlausurenKursklausur.dtoMapper2.apply(kursklausur));
 					}
 				}
 			}
@@ -138,7 +135,12 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
+		final GostKlausurenDataCollection retKlausuren = new GostKlausurenDataCollection();
+		retKlausuren.kursklausuren = kursklausuren.stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
+		retKlausuren.schuelerklausuren = schuelerklausuren.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
+		retKlausuren.schuelerklausurtermine = sktermine.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
+
+		return retKlausuren;
 	}
 
 	private static List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausurenZuKursklausur(final DTOGostKlausurenKursklausuren kursklausur, final List<DTOSchuelerLernabschnittsdaten> lernDaten) {
@@ -247,6 +249,19 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			.setParameter("hj", Arrays.asList(ganzesSchuljahr ? GostHalbjahr.fromIDorException(halbjahr).getSchuljahr() : new GostHalbjahr[]{GostHalbjahr.fromIDorException(halbjahr)}))
 			.getResultList();
 		}
+		return vorgaben.stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Gibt die Liste der Klausurvorgaben zu einer Menge von Kursklausuren zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param kks die Kursklausuren, zu denen die Vorgaben gesucht werden.
+	 *
+	 * @return die Liste der Klausurvorgaben
+	 */
+	public static List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kks) {
+		List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", kks.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class);
 		return vorgaben.stream().map(dtoMapper::apply).toList();
 	}
 

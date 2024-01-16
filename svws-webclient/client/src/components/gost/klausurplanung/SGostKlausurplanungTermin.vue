@@ -8,11 +8,11 @@
 							<span v-if="dragIcon && !compact" class="group-hover:bg-black/10 dark:group-hover:bg-white/10 -ml-1 mr-0.5 rounded">
 								<i-ri-draggable :class="{'text-sm': compact, '-mx-0.5': !compact}" />
 							</span>
-							<span class="line-clamp-1 break-all">{{ termin.bezeichnung === null ? (kursklausuren().size() ? [...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kursmanager.get(k.idKurs)!.kuerzel!).join(", ") : 'Neuer Termin') : termin.bezeichnung || 'Klausurtermin' }}</span>
+							<span class="line-clamp-1 break-all">{{ termin.bezeichnung === null ? (kursklausuren().size() ? [...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") : 'Neuer Termin') : termin.bezeichnung || 'Klausurtermin' }}</span>
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kursklausurmanager().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ maximaleDauer }} Minuten</slot></span>
+							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ maximaleDauer }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -66,30 +66,28 @@
 									]">
 									<div class="svws-ui-td" role="cell">
 										<i-ri-draggable v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" class="i-ri-draggable -m-0.5 -ml-3" />
-										<span class="svws-ui-badge" :class="{'!ml-2': draggable !== undefined && !draggable(klausur)}" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
+										<span class="svws-ui-badge" :class="{'!ml-2': draggable !== undefined && !draggable(klausur)}" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									</div>
-									<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
-									<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)?.schueler.size() || 0 }}</div>
-									<div class="svws-ui-td svws-align-right" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
-									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
-									<div v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
+									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
+									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) || 0 }}</div>
+									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
+									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+									<div v-if="kMan().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 									<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 								</div>
 							</template>
 						</svws-ui-table>
 					</slot>
 					<slot name="schuelerklausuren" v-if="showSchuelerklausuren && schuelerklausurtermine().size()">
-						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="kursklausurmanager().schuelerklausurterminGetMengeByTerminid(termin.id)"
-							:kursmanager="kursmanager"
-							:kursklausurmanager="kursklausurmanager"
+						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="kMan().schuelerklausurterminGetMengeByTerminid(termin.id)"
+							:k-man="kMan"
 							:on-drag="onDrag"
-							:map-lehrer="mapLehrer"
 							:map-schueler="mapSchueler"
 							:draggable="draggable" />
 					</slot>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size()}">
-							<span class="font-bold">{{ kursklausurmanager().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
+							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
 							<span>bis {{ maximaleDauer }} Min</span>
 						</div>
 						<slot name="loeschen" />
@@ -102,7 +100,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, SchuelerListeEintrag, KursManager} from "@core";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, SchuelerListeEintrag, KursManager, GostFaecherManager} from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
@@ -110,10 +108,8 @@
 
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;
-		kursklausurmanager: () => GostKursklausurManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
+		kMan: () => GostKursklausurManager;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
-		kursmanager: KursManager;
 		klausurCssClasses?: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
@@ -135,14 +131,14 @@
 		showSchuelerklausuren: false,
 	});
 
-	const kursklausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
-	const schuelerklausurtermine = () => props.kursklausurmanager().schuelerklausurterminGetMengeByTerminid(props.termin.id);
+	const kursklausuren = () => props.kMan().kursklausurGetMengeByTerminid(props.termin.id);
+	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminGetMengeByTerminid(props.termin.id);
 
 	const datumVorklausur = (klausur: GostKursklausur) => {
-		const vorklausur = props.kursklausurmanager().kursklausurVorterminByKursklausur(klausur);
+		const vorklausur = props.kMan().kursklausurVorterminByKursklausur(klausur);
 		if (vorklausur === null)
 			return "-";
-		const termin = props.kursklausurmanager().terminByKursklausur(vorklausur);
+		const termin = props.kMan().terminByKursklausur(vorklausur);
 		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0,6);
 	};
 
@@ -158,7 +154,7 @@
 			cols.push({ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 1.75 })
 		}
 
-		if (props.kursklausurmanager().quartalGetByTerminid(props.termin.id) === -1) {
+		if (props.kMan().quartalGetByTerminid(props.termin.id) === -1) {
 			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 1.75 })
 		}
 
@@ -174,21 +170,11 @@
 	const maximaleDauer = computed(() => {
 		let dauer = 0;
 		for (const klausur of kursklausuren()) {
-			const vorgabe = props.kursklausurmanager().vorgabeByKursklausur(klausur);
+			const vorgabe = props.kMan().vorgabeByKursklausur(klausur);
 			dauer < vorgabe.dauer ? dauer = vorgabe.dauer : dauer;
 		}
 		return dauer;
 	});
-
-	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
-
-	function getLehrerKuerzel(kursid: number) {
-		const kurs = props.kursmanager.get(kursid);
-		const lehrerid = kurs?.lehrer;
-		if (typeof lehrerid === 'number')
-			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
-		return ''
-	}
 
 </script>
 
