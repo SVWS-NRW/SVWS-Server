@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -116,8 +117,13 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 	private static final Map<String, DataBasicMapper<DTOSchuelerSprachenfolge>> patchMappings = Map.ofEntries(
 		Map.entry("sprache", (conn, dto, value, map) -> {
 			final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
-			if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
+			if ((patchSprache == null) || (patchSprache.isBlank()))
 				throw OperationError.BAD_REQUEST.exception();
+			if (!patchSprache.equals(dto.Sprache)) {
+				if (!ZulaessigesFach.getListFremdsprachenKuerzelAtomar().contains(patchSprache))
+					throw OperationError.BAD_REQUEST.exception();
+				dto.Sprache = patchSprache;
+			}
 		}),
 		Map.entry("reihenfolge", (conn, dto, value, map) -> dto.ReihenfolgeNr = JSONMapper.convertToIntegerInRange(value, true, 0, 9)),
 		Map.entry("belegungVonJahrgang", (conn, dto, value, map) -> {
@@ -208,6 +214,8 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 			final long newID = conn.transactionGetNextID(DTOSchuelerSprachenfolge.class);
 			final String sprache = JSONMapper.convertToString(map.get("sprache"), false, false, 2);
 			if ((sprache == null) || (sprache.isBlank()))
+				throw OperationError.BAD_REQUEST.exception();
+			if (!ZulaessigesFach.getListFremdsprachenKuerzelAtomar().contains(sprache))
 				throw OperationError.BAD_REQUEST.exception();
 			final DTOSchuelerSprachenfolge dto = new DTOSchuelerSprachenfolge(newID, idSchueler, sprache);
 			applyPatchMappings(conn, dto, map, patchMappings, null);
