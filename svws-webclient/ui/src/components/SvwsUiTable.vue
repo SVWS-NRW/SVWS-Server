@@ -108,7 +108,7 @@
 						</span>
 					</div>
 				</div>
-				<div v-for="(row, index) in sortedRows" class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)"
+				<div v-for="(row, index) in sortedRows" class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="(el) => itemRefs.set(index, el)"
 					:class="{
 						'svws-selected': isRowSelected(row),
 						'svws-clicked': isRowClicked(row),
@@ -172,8 +172,7 @@
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
-	import { computed, useAttrs, toRef, toRaw, onMounted, onUpdated, ref } from "vue";
-	import { useDebounceFn } from "@vueuse/core";
+	import { computed, useAttrs, toRef, toRaw, ref, watch, nextTick } from "vue";
 
 	type DataTableColumnSource = DataTableColumn | string
 
@@ -279,6 +278,8 @@
 	}>();
 
 	const attrs = useAttrs();
+	const itemRefs = ref(new Map());
+
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
@@ -404,7 +405,6 @@
 	}
 
 	function selectRow(row: DataTableRow) {
-		preventScrollToClickedElement.value = true;
 		emit('update:modelValue', selectedItemsRaw.value.concat(row.source))
 	}
 
@@ -432,9 +432,16 @@
 	}
 
 	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));
+	const clickedItemIndex = ref<number|undefined>();
+
 	function isRowClicked(row: DataTableRow) {
-		return row.source === clickedItemRaw.value;
+		const is = row.source === clickedItemRaw.value;
+		if (!is)
+			return false;
+		clickedItemIndex.value = sortedRows.value.indexOf(row);
+		return true;
 	}
+
 	function resetClickedRow() {
 		if (props.allowUnclick)
 			emit('update:clicked', null);
@@ -448,23 +455,14 @@
 		else
 			setClickedRow(row);
 	}
+
 	function setClickedRow(row: DataTableRow) {
 		if (!props.clickable)
 			return;
 		emit('update:clicked', row.source);
 	}
 
-	const preventScrollToClickedElement = ref(false);
-
-	onMounted(scrollToClickedElement);
-
-	onUpdated(() => {
-		if (preventScrollToClickedElement.value) {
-			preventScrollToClickedElement.value = false;
-		} else {
-			useDebounceFn(scrollToClickedElement, 100)
-		}
-	});
+	watch(()=>props.items, ()=>nextTick(scrollToClickedElement))
 
 	function isInView(el: Element) {
 		const box = el.getBoundingClientRect();
@@ -472,11 +470,11 @@
 	}
 
 	function scrollToClickedElement() {
-		if (!props.scrollIntoView)
+		if (!props.scrollIntoView || clickedItemIndex.value == undefined)
 			return;
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
-		const clickedElementHtml: any = document.querySelector('.svws-ui-tr.svws-clicked');
-		const scrollOptions: ScrollIntoViewOptions = { behavior: "smooth", block: "center" };
+		const clickedElementHtml = itemRefs.value.get(clickedItemIndex.value);
+		const scrollOptions: ScrollIntoViewOptions = { behavior: "auto", block: "center" };
 		if (clickedElementHtml) {
 			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function") clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions)
 			else if(!isInView(clickedElementHtml)) clickedElementHtml.scrollIntoView(scrollOptions);
