@@ -1,11 +1,10 @@
 <template>
-	<div v-if="visible" class="page--flex">
+	<div v-if="gruppe" class="page--flex">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3">{{ bezeichnung }}</span>
+				<span class="inline-block mr-3">{{ gruppe.bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ id }}
+					ID: {{ gruppe.id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
@@ -20,15 +19,11 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
 
 	const props = defineProps<BenutzergruppeAppProps>();
 
-	const id: ComputedRef<string> = computed(() => "" + props.auswahl()?.id ?? "?");
-	const bezeichnung: ComputedRef<string> = computed(() => props.auswahl()?.bezeichnung ?? "–");
-
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
+	const gruppe = computed(() => props.auswahl());
 
 </script>
