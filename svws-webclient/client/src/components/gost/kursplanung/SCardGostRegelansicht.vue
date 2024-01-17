@@ -18,10 +18,10 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
-	import { GostKursblockungRegelTyp } from "@core";
 	import type { ComputedRef } from 'vue';
 	import { computed, shallowRef, ref } from 'vue';
+	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
+	import { GostKursblockungRegelTyp } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -43,16 +43,13 @@
 		return result;
 	});
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const disabled = ref<boolean>(props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
+	const disabled = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => {
 		return props.getDatenmanager().schieneGetListe();
 	});
 
-	const kurse = computed<List<GostBlockungKurs>>(() => {
-		return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer();
-	});
+	const kurse = computed<List<GostBlockungKurs>>(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
 
 	const _regel = shallowRef<GostBlockungRegel | undefined>(undefined);
 
@@ -69,12 +66,12 @@
 
 	const verletzungen = computed(()=> new Set(props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen));
 
-	const alle_regeln = computed<List<GostBlockungRegel>>(() => props.getDatenmanager().regelGetListe());
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
+
 	for (let i = 1; i < 11; i++)
 		regeln[i] = computed(() => {
 			const a = [];
-			for (const r of alle_regeln.value)
+			for (const r of props.getDatenmanager().regelGetListe())
 				if (r.typ === i)
 					if (!nurRegelverletzungen.value || verletzungen.value.has(r.id))
 						a.push(r);
