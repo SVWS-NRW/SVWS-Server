@@ -1264,11 +1264,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angegebenen ID gefunden.")
     public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).dupliziere(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).dupliziere(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1299,11 +1298,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockung der Gymnasialen Oberstufe hochzuschreiben.")
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
     public Response schreibeGostBlockungsErgebnisHoch(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).hochschreiben(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).hochschreiben(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1331,11 +1329,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Keine Daten für das Abiturjahr und das Halbjahr gefunden.")
     public Response restauriereGostBlockung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).restore(abiturjahr, halbjahr);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).restore(abiturjahr, halbjahr),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 

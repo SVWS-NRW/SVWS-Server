@@ -7,17 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
+import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
+import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFachwahlManager;
-import de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
@@ -87,48 +89,67 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 */
 	public List<GostStatistikFachwahl> getFachwahlen() {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-    	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
-		final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schueler == null) || (schueler.isEmpty()))
-			return new ArrayList<>();
-		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-    	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
-		if (fachbelegungen == null)
-			return new ArrayList<>();
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
 			return new ArrayList<>();
-    	// Ermittle die Fachwahlmatrix für alle angegebenen Schüler-IDs
+    	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
+		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
+		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
+			return new ArrayList<>();
 		final HashMap<Long, GostStatistikFachwahl> fachwahlen = new HashMap<>();
-	    for (final DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
-	        if ((fachbelegung.EF1_Kursart == null) && (fachbelegung.EF2_Kursart == null) && (fachbelegung.Q11_Kursart == null)
-	        		&& (fachbelegung.Q12_Kursart == null) && (fachbelegung.Q21_Kursart == null) && (fachbelegung.Q22_Kursart == null))
-	            continue;
-	        GostStatistikFachwahl fachwahl = fachwahlen.get(fachbelegung.Fach_ID);
-	        if (fachwahl == null) {
-	            final DTOFach fach = faecher.get(fachbelegung.Fach_ID);
-	            fachwahl = new GostStatistikFachwahl();
-	            fachwahl.abiturjahr = abijahr;
-	            fachwahl.id = fach.ID;
-	            fachwahl.kuerzel = fach.Kuerzel;
-	            fachwahl.bezeichnung = fach.Bezeichnung;
-	            fachwahl.kuerzelStatistik = fach.StatistikFach.daten.kuerzelASD;
-	            fachwahlen.put(fachwahl.id, fachwahl);
-	        }
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF1, fachbelegung.EF1_Kursart);
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF2, fachbelegung.EF2_Kursart);
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q11, fachbelegung.Q11_Kursart);
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q12, fachbelegung.Q12_Kursart);
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q21, fachbelegung.Q21_Kursart);
-	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q22, fachbelegung.Q22_Kursart);
-	        if (fachbelegung.AbiturFach != null) {
-	        	if (fachbelegung.AbiturFach == 3)
-	    	        fachwahl.wahlenAB3++;
-	        	if (fachbelegung.AbiturFach == 4)
-	        		fachwahl.wahlenAB4++;
-	        }
-	    }
+		for (final DTOViewGostSchuelerAbiturjahrgang schueler : schuelerAbijahrgang) {
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schueler.ID);
+			for (final AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+				final DTOFach fach = faecher.get(belegung.fachID);
+				if (fach == null)
+					continue;
+		        if ((belegung.belegungen[GostHalbjahr.EF1.id] == null) && (belegung.belegungen[GostHalbjahr.EF2.id] == null) && (belegung.belegungen[GostHalbjahr.Q11.id] == null)
+		        		&& (belegung.belegungen[GostHalbjahr.Q12.id] == null) && (belegung.belegungen[GostHalbjahr.Q21.id] == null) && (belegung.belegungen[GostHalbjahr.Q22.id] == null))
+		            continue;
+		        GostStatistikFachwahl statfw = fachwahlen.get(belegung.fachID);
+		        if (statfw == null) {
+		        	statfw = new GostStatistikFachwahl();
+		        	statfw.abiturjahr = abijahr;
+		        	statfw.id = fach.ID;
+		            statfw.kuerzel = fach.Kuerzel;
+		            statfw.bezeichnung = fach.Bezeichnung;
+		            statfw.kuerzelStatistik = fach.StatistikFach.daten.kuerzelASD;
+		            for (final GostHalbjahr halbjahr : GostHalbjahr.values())
+		            	statfw.fachwahlen[halbjahr.id] = new GostStatistikFachwahlHalbjahr();
+		            fachwahlen.put(statfw.id, statfw);
+		        }
+				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
+					if (belegung.belegungen[halbjahr.id] != null) {
+						final AbiturFachbelegungHalbjahr belegungHj = belegung.belegungen[halbjahr.id];
+				        final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
+				        if (kursart != null) {
+							switch (kursart) {
+								case GK -> {
+									statfw.fachwahlen[halbjahr.id].wahlenGK++;
+									if (belegungHj.schriftlich)
+										statfw.fachwahlen[halbjahr.id].wahlenGKSchriftlich++;
+									else
+										statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich++;
+								}
+								case LK -> statfw.fachwahlen[halbjahr.id].wahlenLK++;
+								case PJK, VTF -> {
+									statfw.fachwahlen[halbjahr.id].wahlenGK++;
+									statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich++;
+								}
+								case ZK -> statfw.fachwahlen[halbjahr.id].wahlenZK++;
+							}
+						}
+					}
+				}
+		        if (belegung.abiturFach != null) {
+		        	if (belegung.abiturFach == 3)
+		        		statfw.wahlenAB3++;
+		        	if (belegung.abiturFach == 4)
+		        		statfw.wahlenAB4++;
+		        }
+			}
+		}
 		return fachwahlen.values().stream()
 				.sorted((a, b) -> Integer.compare(faecher.get(a.id).SortierungAllg, faecher.get(b.id).SortierungAllg))
 				.toList();
@@ -144,7 +165,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
         final GostJahrgangFachwahlen daten = this.getSchuelerFachwahlen();
         boolean noDataExists = daten.abitur.fachwahlen.isEmpty();
         for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-        	if (!daten.halbjahr[halbjahr.id].fachwahlen.isEmpty()) {
+        	if ((daten.halbjahr[halbjahr.id] != null) && (!daten.halbjahr[halbjahr.id].fachwahlen.isEmpty())) {
         		noDataExists = false;
         		break;
         	}
@@ -185,52 +206,6 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	}
 
 
-	private static GostFachwahl getSchuelerFachwahl(final DTOSchueler schueler, final DTOGostSchuelerFachbelegungen fachbelegung, final DTOFach fach, final GostHalbjahr halbjahr) {
-		if ((halbjahr == null) && (fachbelegung.AbiturFach == null))
-			return null;
-		String strKursart = fachbelegung.Q22_Kursart;
-		if (halbjahr != null) {
-			strKursart = switch (halbjahr.id) {
-				case 0 -> fachbelegung.EF1_Kursart;
-				case 1 -> fachbelegung.EF2_Kursart;
-				case 2 -> fachbelegung.Q11_Kursart;
-				case 3 -> fachbelegung.Q12_Kursart;
-				case 4 -> fachbelegung.Q21_Kursart;
-				case 5 -> fachbelegung.Q22_Kursart;
-				default -> null;
-			};
-		}
-		if (strKursart == null)
-			return null;
-		final boolean istSchriftlich = switch (strKursart) {
-			case "S", "LK" -> true;
-			default -> false;
-		};
-		final GostKursart kursart = switch (strKursart) {
-		    case "M" -> {
-		    	if ("VX".equals(fach.StatistikFach.daten.kuerzelASD))
-		    		yield GostKursart.VTF;
-		    	if ("PX".equals(fach.StatistikFach.daten.kuerzelASD))
-		    		yield GostKursart.PJK;
-		    	yield GostKursart.GK;
-		    }
-		    case "S" -> GostKursart.GK;
-		    case "LK" -> GostKursart.LK;
-		    case "ZK" -> GostKursart.ZK;
-			default -> null;
-		};
-		if (kursart == null)
-			return null;
-		final GostFachwahl fw = new GostFachwahl();
-		fw.fachID = fachbelegung.Fach_ID;
-		fw.schuelerID = schueler.ID;
-		fw.kursartID = kursart.id;
-		fw.istSchriftlich = istSchriftlich;
-		fw.abiturfach = fachbelegung.AbiturFach;
-		return fw;
-	}
-
-
 	/**
 	 * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes für das angegebene Halbjahr.
 	 *
@@ -248,9 +223,6 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
 	        return new GostJahrgangFachwahlenHalbjahr();
 		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
-    	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
-		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
-	        return new GostJahrgangFachwahlenHalbjahr();
 		// Bestimme die Schüler und prüfe im Falle von Abgängern, ob diese in dem Halbjahr an der Schule waren
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
@@ -260,7 +232,6 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			if (!DataGostBlockungsdaten.checkIstAnSchule(conn, schueler, halbjahr, abijahr))
 				schuelerListe.remove(i);
 		}
-		final Map<Long, DTOSchueler> schuelerMap = schuelerListe.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
@@ -268,16 +239,26 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 
 		// Erstelle die Fachwahl-Objekte
 		final GostJahrgangFachwahlenHalbjahr result = new GostJahrgangFachwahlenHalbjahr();
-		for (final DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
-			final DTOSchueler schueler = schuelerMap.get(fachbelegung.Schueler_ID);
-			if (schueler == null)
-				continue;
-			final DTOFach fach = faecher.get(fachbelegung.Fach_ID);
-			if (fach == null)
-				continue;
-			final GostFachwahl fw = getSchuelerFachwahl(schueler, fachbelegung, fach, halbjahr);
-			if (fw != null)
-				result.fachwahlen.add(fw);
+		for (final DTOSchueler schueler : schuelerListe) {
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schueler.ID);
+			for (final AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+				final DTOFach fach = faecher.get(belegung.fachID);
+				if (fach == null)
+					continue;
+				if (belegung.belegungen[halbjahr.id] != null) {
+					final AbiturFachbelegungHalbjahr belegungHj = belegung.belegungen[halbjahr.id];
+					final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
+					if (kursart == null)
+						continue;
+					final GostFachwahl fw = new GostFachwahl();
+					fw.fachID = belegung.fachID;
+					fw.schuelerID = schueler.ID;
+					fw.kursartID = kursart.id;
+					fw.istSchriftlich = belegungHj.schriftlich;
+					fw.abiturfach = belegung.abiturFach;
+					result.fachwahlen.add(fw);
+				}
+			}
 		}
 		return result;
 	}
@@ -294,40 +275,46 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
 	        return new GostJahrgangFachwahlen();
-		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
-    	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
-		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
-	        return new GostJahrgangFachwahlen();
-		// Bestimme die Schülernamen
-		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
-	        return new GostJahrgangFachwahlen();
-		final Map<Long, DTOSchueler> schuelerMap = schuelerListe.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
 	        return new GostJahrgangFachwahlen();
-
 		// Erstelle die Fachwahl-Objekte
 		final GostJahrgangFachwahlen result = new GostJahrgangFachwahlen();
-		for (final DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
-			final DTOSchueler schueler = schuelerMap.get(fachbelegung.Schueler_ID);
-			if (schueler == null)
-				continue;
-			final DTOFach fach = faecher.get(fachbelegung.Fach_ID);
-			if (fach == null)
-				continue;
-			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-				final GostFachwahl fw = getSchuelerFachwahl(schueler, fachbelegung, fach, halbjahr);
-				if (fw != null) {
-					if (result.halbjahr[halbjahr.id] == null)
-						result.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
-					result.halbjahr[halbjahr.id].fachwahlen.add(fw);
+		for (final DTOViewGostSchuelerAbiturjahrgang schueler : schuelerAbijahrgang) {
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schueler.ID);
+			for (final AbiturFachbelegung belegung : abidaten.fachbelegungen) {
+				final DTOFach fach = faecher.get(belegung.fachID);
+				if (fach == null)
+					continue;
+				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
+					if (belegung.belegungen[halbjahr.id] != null) {
+						final AbiturFachbelegungHalbjahr belegungHj = belegung.belegungen[halbjahr.id];
+						final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
+						if (kursart == null)
+							continue;
+						final GostFachwahl fw = new GostFachwahl();
+						fw.fachID = belegung.fachID;
+						fw.schuelerID = schueler.ID;
+						fw.kursartID = kursart.id;
+						fw.istSchriftlich = belegungHj.schriftlich;
+						fw.abiturfach = belegung.abiturFach;
+						if (result.halbjahr[halbjahr.id] == null)
+							result.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
+						result.halbjahr[halbjahr.id].fachwahlen.add(fw);
+					}
+				}
+				if ((belegung.abiturFach != null) && (belegung.belegungen[GostHalbjahr.Q22.id] != null)) {
+					final AbiturFachbelegungHalbjahr belegungHj = belegung.belegungen[GostHalbjahr.Q22.id];
+					final GostFachwahl fwAbi = new GostFachwahl();
+					fwAbi.fachID = belegung.fachID;
+					fwAbi.schuelerID = schueler.ID;
+					fwAbi.kursartID = GostKursart.fromKuerzel(belegungHj.kursartKuerzel).id;
+					fwAbi.istSchriftlich = belegungHj.schriftlich;
+					fwAbi.abiturfach = belegung.abiturFach;
+					result.abitur.fachwahlen.add(fwAbi);
 				}
 			}
-			final GostFachwahl fwAbi = getSchuelerFachwahl(schueler, fachbelegung, fach, null);
-			if (fwAbi != null)
-				result.abitur.fachwahlen.add(fwAbi);
 		}
 		return result;
 	}

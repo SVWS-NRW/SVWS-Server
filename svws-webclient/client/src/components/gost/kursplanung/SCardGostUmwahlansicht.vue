@@ -163,7 +163,11 @@
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
 		if (props.schueler === undefined)
 			return new ArrayList<GostFachwahl>();
-		return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
+		try {
+			return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
+		} catch (e) {
+			return new ArrayList<GostFachwahl>();
+		}
 	});
 
 	function routeLaufbahnplanung() {

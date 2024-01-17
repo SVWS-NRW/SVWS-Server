@@ -1,12 +1,14 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { HashSet } from '../../../java/util/HashSet';
 
 export class GostFachbereich extends JavaEnum<GostFachbereich> {
 
@@ -110,6 +112,11 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * Fachbereich sportlich
 	 */
 	public static readonly SPORT : GostFachbereich = new GostFachbereich("SPORT", 18, null, ZulaessigesFach.SP);
+
+	/**
+	 * Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 */
+	private static readonly _setAlleFaecher : JavaSet<ZulaessigesFach> = new HashSet<ZulaessigesFach>();
 
 	/**
 	 * Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet.
@@ -230,6 +237,18 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 		if (bereiche !== null)
 			return bereiche;
 		return new ArrayList();
+	}
+
+	/**
+	 * Gibt alle Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 *
+	 * @return die Menge der Fächer
+	 */
+	public static getAlleFaecher() : JavaSet<ZulaessigesFach> {
+		if (GostFachbereich._setAlleFaecher.isEmpty())
+			for (const fb of GostFachbereich.values())
+				GostFachbereich._setAlleFaecher.addAll(fb.getFaecher());
+		return GostFachbereich._setAlleFaecher;
 	}
 
 	/**

@@ -1,8 +1,10 @@
 package de.svws_nrw.core.types.gost;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -88,6 +90,9 @@ public enum GostFachbereich {
 
 	/** Fachbereich sportlich */
 	SPORT(null, ZulaessigesFach.SP);
+
+	/** Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
+	private static final @NotNull Set<@NotNull ZulaessigesFach> _setAlleFaecher = new HashSet<@NotNull ZulaessigesFach>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
 	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach = new ArrayMap<>(ZulaessigesFach.values());
@@ -198,6 +203,19 @@ public enum GostFachbereich {
 		if (bereiche != null)
 			return bereiche;
 		return new ArrayList<>();
+	}
+
+
+	/**
+	 * Gibt alle Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 *
+	 * @return die Menge der Fächer
+	 */
+	public static @NotNull Set<@NotNull ZulaessigesFach> getAlleFaecher() {
+		if (_setAlleFaecher.isEmpty())
+			for (final @NotNull GostFachbereich fb : GostFachbereich.values())
+				_setAlleFaecher.addAll(fb.getFaecher());
+		return _setAlleFaecher;
 	}
 
 }
