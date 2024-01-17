@@ -1,1 +1,1 @@
-export const version = "0.8.8-SNAPSHOT"
+export const version = "0.8.8"
