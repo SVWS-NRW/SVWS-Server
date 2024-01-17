@@ -462,7 +462,7 @@
 		emit('update:clicked', row.source);
 	}
 
-	watch(()=>props.items, ()=>nextTick(scrollToClickedElement))
+	watch(() => props.items, () => nextTick(scrollToClickedElement));
 
 	function isInView(el: Element) {
 		const box = el.getBoundingClientRect();
@@ -476,8 +476,10 @@
 		const clickedElementHtml = itemRefs.value.get(clickedItemIndex.value);
 		const scrollOptions: ScrollIntoViewOptions = { behavior: "auto", block: "center" };
 		if (clickedElementHtml) {
-			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function") clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions)
-			else if(!isInView(clickedElementHtml)) clickedElementHtml.scrollIntoView(scrollOptions);
+			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function")
+				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
+			else if(!isInView(clickedElementHtml))
+				clickedElementHtml.scrollIntoView(scrollOptions);
 		}
 	}
 

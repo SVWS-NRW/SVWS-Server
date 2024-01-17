@@ -76,8 +76,11 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 *
 	 * @param patch   der Patch, welcher auf den aktuellen State angewendet wird.
 	 */
-	protected setPatchedState(patch: Partial<RouteState>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
+	protected setPatchedState(patch: Partial<RouteState>, newobj: boolean = true) {
+		if (newobj)
+			this._state.value = Object.assign({ ... this._state.value }, patch);
+		else
+			this._state.value = Object.assign(this._state.value, patch);
 	}
 
 	/**

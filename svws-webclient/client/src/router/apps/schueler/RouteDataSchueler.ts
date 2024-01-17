@@ -87,7 +87,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			auswahl = this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.schuelerListeManager.setDaten(stammdaten);
-		// this.commit();
+		this.setPatchedState({schuelerListeManager: this.schuelerListeManager}, false);
 	}
 
 	get schuelerListeManager(): SchuelerListeManager {
