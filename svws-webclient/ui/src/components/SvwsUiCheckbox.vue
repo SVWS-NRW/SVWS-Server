@@ -50,7 +50,7 @@
 	const checked = computed<boolean>({
 		get: () => props.modelValue,
 		set: (value) =>	{
-			if ((value !== props.modelValue) && (props.readonly === false))
+			if (props.readonly === false)
 				emit("update:modelValue", value);
 		}
 	})
