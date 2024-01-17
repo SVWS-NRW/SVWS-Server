@@ -4,6 +4,7 @@
 		<template #modalTitle>Standardsortierung anwenden</template>
 		<template #modalContent>
 			Sollen alle Klassen nach der Standardsortierung sortiert werden, die sich an der Klassenbezeichnung orientiert? Dabei geht die aktuell hinterlegt Sortierreihenfolge verloren.
+			<br>Die Standardsortierung orientiert sich an der Jahrgang-Sortierung und Parallelität. Die Jahrgangssortierung wird im Katalog der Jahrgänge festgelegt.
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal = false"> Abbrechen </svws-ui-button>
