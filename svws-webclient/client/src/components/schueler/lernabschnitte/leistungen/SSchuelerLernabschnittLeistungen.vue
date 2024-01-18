@@ -1,23 +1,20 @@
 <template>
 	<div class="content">
-		<svws-ui-table :columns="cols" :items="props.manager().leistungGetMengeAsListSortedByFach()" has-background class="col-span-2 -mt-1">
+		<svws-ui-table :columns="cols" :items="manager().leistungGetMengeAsListSortedByFach()" has-background class="col-span-2 -mt-1">
 			<template #body="{rows}">
 				<template v-for="row in rows" :key="row.source.id">
-					<div v-if="row.source.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': props.manager().fachFarbeGetByLeistungsIdOrException(row.source.id) }">
+					<div v-if="row.source.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrException(row.source.id) }">
 						<div class="svws-ui-td" role="cell">
-							<span>{{ props.manager().fachGetByLeistungIdOrException(row.source.id).bezeichnung }}</span>
-							<!--
-								<svws-ui-select title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
-									:model-value="manager().fachGetByLeistungIdOrException(row.source.id)"
-									@update:model-value="value => patchLeistung({ fachID: ((value === null) || (value === undefined)) ? -1 : value.id }, row.source.id)"
-									class="w-full" headless />
-								-->
+							<svws-ui-select title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
+								:model-value="manager().fachGetByLeistungIdOrException(row.source.id)"
+								@update:model-value="value => patchLeistung({ fachID: ((value === null) || (value === undefined)) ? -1 : value.id, kursID: null }, row.source.id)"
+								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="manager().kursGetMengeFilteredByLeistung(row.source.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
 								:model-value="manager().kursGetByLeistungIdOrNull(row.source.id)"
-								@update:model-value="value => patchLeistung({ kursID: ((value === null) || (value === undefined)) ? null : value.id }, row.source.id)"
-								class="w-full" headless />
+								@update:model-value="value => patchLeistung(((value === null) || (value === undefined)) ? { kursID: null } : { kursID: value.id, lehrerID: value.lehrer }, row.source.id)"
+								class="w-full" headless removable />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
@@ -32,7 +29,7 @@
 							</template>
 						</div>
 						<div class="svws-ui-td svws-divider" role="cell">
-							<svws-ui-select title="—" :items="props.manager().lehrerGetMenge()" :item-text="lehrer => (lehrer === null) ? '—' : lehrer.kuerzel + ' (' + lehrer.nachname + ', ' + lehrer.vorname + ')'"
+							<svws-ui-select title="—" :items="manager().lehrerGetMenge()" :item-text="lehrer => (lehrer === null) ? '—' : lehrer.kuerzel + ' (' + lehrer.nachname + ', ' + lehrer.vorname + ')'"
 								:model-value="manager().lehrerGetByLeistungIdOrNull(row.source.id)"
 								@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, row.source.id)"
 								class="w-full" headless />

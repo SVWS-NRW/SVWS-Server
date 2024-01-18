@@ -138,11 +138,16 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			if (conn.queryByKey(DTOFach.class, idFach) == null)
 				throw OperationError.CONFLICT.exception();
 			dto.Fach_ID = idFach;
+			dto.Kurs_ID = null;
 		}),
 		Map.entry("kursID", (conn, dto, value, map) -> {
 			final Long idKurs = JSONMapper.convertToLong(value, true);
-			if ((idKurs != null) && (conn.queryByKey(DTOKurs.class, idKurs) == null))
-				throw OperationError.CONFLICT.exception();
+			if (idKurs != null)	{
+				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
+				if (kurs == null)
+					throw OperationError.CONFLICT.exception();
+				dto.Fachlehrer_ID = kurs.Lehrer_ID;
+			}
 			dto.Kurs_ID = idKurs;
 		}),
 		Map.entry("kursart", (conn, dto, value, map) -> {
