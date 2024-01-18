@@ -427,7 +427,7 @@ public class SchuelerLernabschnittManager {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
 		for (final @NotNull KursListeEintrag k : this._kurse) {
-			if ((k.idFach == leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
+			if ((k.idFach == leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID)))
 				result.add(k);
 		}
 		return result;

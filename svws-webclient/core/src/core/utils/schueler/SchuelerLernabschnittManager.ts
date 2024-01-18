@@ -413,7 +413,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		const result : List<KursListeEintrag> = new ArrayList();
 		for (const k of this._kurse) {
-			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
+			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID)))
 				result.add(k);
 		}
 		return result;
