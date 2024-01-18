@@ -7,7 +7,6 @@
 			:statistics="statistics"
 			:headless="headless"
 			:disabled="disabled"
-			:removable="removable"
 			role="combobox"
 			:aria-label="label || title"
 			:aria-expanded="showList"
