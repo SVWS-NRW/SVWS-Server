@@ -97,7 +97,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						return false;
 					}
 				} else {
-					logger.logLn("... und es existiert noch ein Folgeabschnitt");
+					logger.logLn("... und es existiert ein Folgeabschnitt");
 					// Setze den Abschnitt in EigeneSchule auf den FolgeAbschnitt, die Anpassung der Schülerleistungsdaten erfolgt später automatisch
 					logger.logLn("- Setze den Abschnitt in EigeneSchule auf den FolgeAbschnitt, die Anpassung der Schülerleistungsdaten erfolgt später automatisch...");
 					if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("UPDATE EigeneSchule JOIN Schuljahresabschnitte ON EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID SET EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
@@ -220,7 +220,8 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						final long folgeLernabschnittID = tmpFolgeLernabschnitte.get(0);
 						// Kopiere die Quartalsnoten und die Teilleistungen, wenn sich die Leistungsdaten zuordnen lassen
 						sql = "UPDATE SchuelerLeistungsdaten q1 JOIN SchuelerLeistungsdaten q2 "
-							+ "ON q1.Abschnitt_ID = " + lernabschnittID + " AND q2.Abschnitt_ID = " + folgeLernabschnittID + " AND q1.Fach_ID = q2.Fach_ID AND q1.Kursart = q2.Kursart "
+							+ "ON q1.Abschnitt_ID = " + lernabschnittID + " AND q2.Abschnitt_ID = " + folgeLernabschnittID + " AND q1.Fach_ID = q2.Fach_ID "
+							+ "AND (q1.Kursart = q2.Kursart OR (q1.KursartAllg IN ('GK', 'LK') AND q1.KursartAllg = q2.KursartAllg)) "
 							+ "SET q2.NotenKrzQuartal = q1.NotenKrz";
 						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 							logger.logLn("Fehler beim Kopieren der Quartalsnoten");
@@ -229,15 +230,25 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						// Verschiebe die Teilleistungen zu den Leistungsdaten im 2. Quartal, wenn sich die Leistungsdaten zuordnen lassen
 						sql = "UPDATE SchuelerEinzelleistungen e JOIN SchuelerLeistungsdaten q1 ON e.Leistung_ID = q1.ID AND q1.Abschnitt_ID = "
 							+ lernabschnittID + " JOIN SchuelerLeistungsdaten q2 ON q2.Abschnitt_ID = "
-							+ folgeLernabschnittID + " AND q1.Fach_ID = q2.Fach_ID AND q1.Kursart = q2.Kursart SET e.Leistung_ID = q2.ID";
+							+ folgeLernabschnittID + " AND q1.Fach_ID = q2.Fach_ID"
+							+ " AND (q1.Kursart = q2.Kursart OR (q1.KursartAllg IN ('GK', 'LK') AND q1.KursartAllg = q2.KursartAllg))"
+							+ " SET e.Leistung_ID = q2.ID";
 						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 							logger.logLn("Fehler beim Kopieren der Teilleistungen");
 							return false;
 						}
-						// Entferne die Leistungsdaten, wo die Noten zuvor kopiert wurden bzw. die Teilleistungen verschoben wurden.
+						// Entferne die Leistungsdaten, wo die Noten zuvor kopiert wurden bzw. die Teilleistungen verschoben wurden (Teil 1).
 						sql = "DELETE FROM SchuelerLeistungsdaten WHERE Abschnitt_ID = "
 							+ lernabschnittID + " AND (Fach_ID, Kursart) IN (SELECT Fach_ID, Kursart FROM SchuelerLeistungsdaten WHERE Abschnitt_ID = "
 							+ folgeLernabschnittID + ")";
+						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
+							logger.logLn("Fehler beim Entfernen von zuvor kopierten verschobenen Leistungsdaten");
+							return false;
+						}
+						// Entferne die Leistungsdaten, wo die Noten zuvor kopiert wurden bzw. die Teilleistungen verschoben wurden (Teil 2).
+						sql = "DELETE FROM SchuelerLeistungsdaten WHERE Abschnitt_ID = "
+							+ lernabschnittID + " AND (Fach_ID, KursartAllg) IN (SELECT Fach_ID, KursartAllg FROM SchuelerLeistungsdaten WHERE Abschnitt_ID = "
+							+ folgeLernabschnittID + " AND KursartAllg IN ('GK', 'LK'))";
 						if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 							logger.logLn("Fehler beim Entfernen von zuvor kopierten verschobenen Leistungsdaten");
 							return false;
