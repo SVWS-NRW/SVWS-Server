@@ -517,7 +517,11 @@ export class KursblockungDynDaten extends JavaObject {
 		while (schieneLage.size() < kurs.anzahlSchienen) {
 			UserNotificationException.ifTrue("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
 			const indexLast : number = schieneFrei.size() - 1;
-			schieneLage.add(schieneFrei.remove(indexLast));
+			const s : KursblockungDynSchiene | null = schieneFrei.get(indexLast);
+			if (s !== null) {
+				schieneFrei.remove(s);
+				schieneLage.add(s);
+			}
 		}
 		const schienenLageArray : Array<KursblockungDynSchiene> = schieneLage.toArray(Array(0).fill(null));
 		const schienenFreiArray : Array<KursblockungDynSchiene> = schieneFrei.toArray(Array(0).fill(null));

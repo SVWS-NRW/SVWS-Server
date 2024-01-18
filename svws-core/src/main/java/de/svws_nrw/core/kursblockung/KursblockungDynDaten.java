@@ -619,7 +619,11 @@ public class KursblockungDynDaten {
 		while (schieneLage.size() < kurs.anzahlSchienen) {
 			UserNotificationException.ifTrue("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
 			final int indexLast = schieneFrei.size() - 1;
-			schieneLage.add(schieneFrei.remove(indexLast));
+			final KursblockungDynSchiene s = schieneFrei.get(indexLast);
+			if (s != null) {
+				schieneFrei.remove(s);
+				schieneLage.add(s);
+			}
 		}
 
 		// KursblockungDynKurs-Objekt erzeugen.
