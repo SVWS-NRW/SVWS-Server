@@ -2,13 +2,40 @@ plugins {
 	id 'svws.gradle.node.plugin'
 }
 
-task testBrowser(type: NpmRun) {
-	group "svws"
+task playwrightInstall(type: NpmRun) {
+	group "testing"
 	dependsOn ':svws-webclient:client:assemble'
-	inputs.files file("$projectDir/src"), file("$projectDir/data")
-	outputs.dir file("$projectDir/build/output")
+	//TODO inputs outputs?
+	args = [ 'install' ]
+	environment PLAYWRIGHT_BROWSERS_PATH: "$rootDir/download/playwright/"
+	doFirst {
+		mkdir file("$rootDir/download/playwright")
+	}
+}
+
+task playwrightInstallDeps(type: NpmRun) {
+	group "testing"
+	dependsOn 'playwrightInstall'
+	//TODO inputs outputs?
+	args = [ 'installdeps' ]
+	environment PLAYWRIGHT_BROWSERS_PATH: "$rootDir/download/playwright/"
+	doFirst {
+		mkdir file("$rootDir/download/playwright")
+	}
+	ignoreExitValue = true
+}
+
+task testBrowser(type: NpmRun) {
+	group "testing"
+	dependsOn ':svws-webclient:client:assemble'
+	inputs.dir file("$projectDir/src")
+	inputs.dir file("$projectDir/data")
+	outputs.dir file("$projectDir/build/testresults")
+	outputs.dir file("$projectDir/build/playwright-report") 
+	environment PLAYWRIGHT_BROWSERS_PATH: "$rootDir/download/playwright/"
 	args = [ 'test' ]
 	doFirst {
-		mkdir file("$projectDir/build/output")
+		mkdir file("$projectDir/build/testresults")
+		mkdir file("$projectDir/build/playwright-report")
 	}
 }

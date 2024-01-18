@@ -1,4 +1,4 @@
-import type { KlassenListeEintrag, List, SchuelerListeEintrag } from "@core";
+import type { KlassenListeEintrag, List, SchuelerListeEintrag} from "@core";
 import { api } from "~/Api";
 import type { Schueler } from "./DataSchueler";
 
@@ -14,10 +14,23 @@ class DataSchuelerAuswahl{
 	}
 
 	async laden () {
-		await api.connectTo('localhost');
+		await api.connectTo(process.env.PLAYWRIGHT_svws_testing_api_host ?? 'https://localhost') + (process.env.PLAYWRIGHT_svws_testing_api_port != null ? ':' + process.env.PLAYWRIGHT_svws_testing_api_port : '');
 		await api.login('gymabi', 'Admin', '');
 		this.listeSchueler = await api.server.getSchuelerAktuell(api.schema);
 		this.listeKlassen = await api.getKlassenListe(1);
+	}
+
+	/**
+     * liefert einen zufälligen aktiven Schüler
+     */
+	public async getZufallsSchuelerabJG9bisJG11(): Promise<Schueler|undefined>{
+		const schueler = await this.getSchuelermitJahrgang_N([5,10,11], 10000);
+		const anzahlSchueler = schueler.length;
+		if(anzahlSchueler > 0){
+			const index : number = Math.floor(Math.random()* (await this.getSchueler()).length)
+			return schueler[index];
+		}
+		return undefined;
 	}
 
 	/**
@@ -93,6 +106,48 @@ class DataSchuelerAuswahl{
 		}
 		return liste;
 	}
+
+	/**
+	 * liefert die Schülerliste mit den übegebenen IDs
+	 * @param ids IDs der Schüler
+	 * @param n Anzahl der ausgewählten Schüler
+	 * @returns Schülerlister
+	 */
+	public async getSchuelermitIDs(ids : number[]) : Promise<Schueler[]> {
+		await this.laden();
+		if (this.listeSchueler === undefined || this.listeKlassen === undefined)
+			return [];
+		const liste : Schueler[] = [];
+		for (const value of this.listeSchueler) {
+			if ( ids.includes(value.id) && (value.status === 2)){
+				let _jahrgang : number = -1;
+				const jahrgang = this.listeKlassen.get(value.idKlasse)?.idJahrgang;
+				if( jahrgang !== undefined && jahrgang !== null)
+					_jahrgang = jahrgang;
+				const klassen_kuerzel = this.listeKlassen.get(value.idKlasse)?.kuerzel;
+				const role_name = klassen_kuerzel+' '+value.nachname+' '+value.vorname;
+				const dataSchueler : Schueler = {
+					id : value.id,
+					name : value.vorname+" "+value.nachname,
+					name2click: role_name,
+					import_lp_name: 'Export_Laufbahnplanung'+value.id+'_'+value.vorname+'_'+value.nachname+'.lp',
+					export_lp_name: 'Export_Laufbahnplanung'+value.id+'_'+value.vorname+'_'+value.nachname+'.lp',
+					abiturjahr: 2022,
+					jahrgang: _jahrgang,
+				}
+				liste.push(dataSchueler);
+			}
+		}
+		console.log(liste);
+		return liste;
+	}
+
+	async getSchulerStammdaten(id:number){
+		const schuler= await api.server.getSchuelerStammdaten(api.schema,id);
+		console.log(schuler);
+	}
+
+
 }
 
 /** Die dataSchuelerAuswahl-Instanz zur Verwendung im Browser-Test */

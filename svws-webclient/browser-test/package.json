@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"installdeps": "playwright install-deps",
 		"install": "playwright install",
 		"test" : "playwright test",
 		"show": "playwright show-report",

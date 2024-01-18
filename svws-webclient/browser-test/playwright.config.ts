@@ -15,44 +15,44 @@ export default defineConfig({
 	 // path to the global setup files.
 	//globalSetup: './global.d.ts',
 
-	timeout: 3 * 50 * 1000,
+	timeout: 5 * 6 * 1000,
 	expect: {
 		/**
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 10000
+		timeout: 3000
 	},
 	/* Run tests in files in parallel */
-	fullyParallel: true,
+	fullyParallel: false,
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 	/* Retry on CI only */
 	//retries: process.env.CI ? 2 : 0,
 	retries: 2,
 	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? 15 : undefined,
+	workers: process.env.CI ? 30 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: [	['dot'],['html'],['junit', { outputFile: './playwright-report/results.xml' }]],
+	reporter: [	/*['dot'],['html'],*/['junit', { outputFile: 'build/testresults/results.xml' }]],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
 		actionTimeout: 0,
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: 'localhost:3000/#/',
+		baseURL: (process.env.PLAYWRIGHT_svws_testing_api_host?? 'https://localhost') + (process.env.PLAYWRIGHT_svws_testing_api_port == null ? '' : (':' + process.env.PLAYWRIGHT_svws_testing_api_port)) + '/#/',
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'on-first-retry',
-		headless: true,
-		screenshot: "on",
-    	video: "on",
+		headless: !!process.env.CI,
+		screenshot: "only-on-failure",
+    	video: "retain-on-failure", //https://playwright.dev/docs/videos
 		ignoreHTTPSErrors: true,
 	},
 	/* Configure projects for major browsers */
 	projects: [
-		// {
-		//    name: 'chromium',
-		//    use: { ...devices['Desktop Chrome'] },
-		// },
+		{
+		    name: 'chromium',
+		    use: { ...devices['Desktop Chrome'] },
+		},
 		// {
 		// 	name: 'firefox',
 		// 	use: {
@@ -80,13 +80,13 @@ export default defineConfig({
 		//   name: 'Microsoft Edge',
 		//   use: { channel: 'msedge' },
 		// },
-		{
-		  name: 'Google Chrome',
-		  use: { channel: 'chrome' },
-		},
+		//{
+		//  name: 'Google Chrome',
+		//  use: { channel: 'chrome' },
+		//},
 	],
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
-	// outputDir: 'test-results/',
+	outputDir: 'build/playwright-report/',
 
 	/* Run your local dev server before starting the tests */
 	// webServer: {

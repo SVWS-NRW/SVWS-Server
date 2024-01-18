@@ -1,0 +1,91 @@
+dependencies {
+	implementation project(':svws-webclient:browser-test')
+}
+
+apply from: ('../subproject-plugin.gradle')
+
+def testResultSrc = "$rootDir/svws-webclient/browser-test/build/testresults/"
+def testResultTarget = 'build/test-results/svws-browser-test'
+
+// lokale variablen, um copyConfigApiTest zu ergänzen
+def targetHost = project.TESTING_SVWS_HOST
+def targetPort = project.TESTING_SVWS_PORT
+def propertyFile = "../testing/svws-browser-test/local.properties"
+// Variable fängt das execResult des Browser-Tests, da bei forbidOnly ein fehlerfreies results.xml erstellt wird
+def execResult = 0
+print ('targetport' + targetPort)
+
+// Test-Task für die Browsertests, konfiguration wird in 
+task browserTest(type: Test) {
+	group 'verification'
+	description 'Browser Tests ausführen'
+	// Properties aus Propertyfile lesen
+	if(new File(propertyFile).exists()) {
+		inputs.file(propertyFile)
+	}
+	// zunächst den eigentlichen Testtask konfigurieren, dieser wird vor diesem Task ausgeführt
+	dependsOn( ':svws-webclient:browser-test:testBrowser')
+	tasks.getByPath(':svws-webclient:browser-test:testBrowser').configure {
+		// dependency für Start der Testumgebung 
+		dependsOn(':testing:svws-browser-test:startTestumgebung')
+		// der Task führt npm run test aus, der Exitvalue darf den Build nicht 
+		// abbrechen, da zunächst die Testumgebung gestoppt werden soll
+		ignoreExitValue = true
+		// führe diesen Task auch aus, wenn der Output upToDate ist (wiederholte Mehrfachausführung von Tests soll möglich sein)
+		outputs.upToDateWhen {false}
+
+		// Playwright environment
+		environment NODE_TLS_REJECT_UNAUTHORIZED: 0
+		environment PLAYWRIGHT_svws_testing_api_host: targetHost
+		environment PLAYWRIGHT_svws_testing_api_port: targetPort
+		environment CI: true
+		// merke das executionResult 
+		doLast {
+			execResult = executionResult.get().exitValue
+		}
+	}
+	// reportLocation
+	reports.junitXml.outputLocation.set(file(testResultSrc))
+	// Fehler im Test-Task ignorieren
+	ignoreFailures = true
+	// Testumgebung im Anschluss stoppen
+	finalizedBy ':testing:svws-browser-test:stopTestumgebung'
+}
+
+// Runner für den Browsertest inklusive Analyse der Testergebnisse
+task runBrowserTest() {
+	group 'verification'
+	description 'Browser Tests aufrufen'
+	dependsOn('browserTest')
+	doLast {
+		// Sammeln der Test-Failure und -Error aus results.xml
+		def totalFailures = 0
+		def totalErrors = 0
+		def reportFolder = new File(testResultSrc)
+		println "Collecting Failures from Folder ${testResultSrc}"
+		if (reportFolder.listFiles() == null || reportFolder.listFiles().length == 0) {
+			// kein results-xml gefunden
+			throw new GradleException("Test Reports for project not found in ${reportFolder}")
+		}
+		reportFolder.listFiles().each { report ->
+			if (!report.isDirectory()) {
+				// ggf. entstehen mehrere junit Reports, einzelne Files iterieren und die XML-Attribute parsen
+				println "Collecting Failures from ${report.name}"
+				def attributes = (new XmlParser().parse(report) as Node).attributes()
+				def failures = attributes.failures.toInteger()
+				def errors = attributes.errors.toInteger()
+				totalFailures += failures
+				totalErrors += errors
+			}
+		}
+		if (totalFailures > 0 || totalErrors > 0) {
+			// Build abbrechen, wenn Fehler gefunden
+			throw new GradleException("The build finished, but tests resulted with ${totalErrors} errors and ${totalFailures} failures! ")
+		}
+		if (execResult != 0) {
+			// sollte das ExecResult des NpmRun ungleich 0, aber kein oder ein Fehlerfreies results.xml erstellt worden sein (bspw. bei forbidOnly oder Fehlern in der Npm Ausführung)
+			// der Konkrete Fehler sollte dann im Build-Log zu finden sein
+			throw new GradleException("Test returned non-zero Exit-Value $execResult")
+		}
+	}
+}

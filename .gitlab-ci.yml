@@ -107,7 +107,7 @@ integration-tests:
     script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER -PJOB_ID=$CI_JOB_ID
+        - ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
     cache:
         <<: *global_cache
         policy: pull
@@ -116,6 +116,22 @@ integration-tests:
         expire_in: "7 days"
         reports:
             junit: ./testing/**/build/test-results/**/*.xml
+
+e2e-tests:
+    dependencies:
+        - build
+    stage: integration-tests
+    when: manual
+    script:
+        - ./gradlew --build-cache svws-webclient:browser-test:playwrightInstallDeps --stacktrace
+        - ./gradlew --build-cache testing:svws-browser-test:runBrowserTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+    artifacts:
+        when: always
+        expire_in: "1 days"
+        reports:
+            junit: "./svws-webclient/browser-test/build/testresults/results.xml"
+        paths:
+         - "./svws-webclient/browser-test/build/playwright-report/**"
 
 build:
     stage: build

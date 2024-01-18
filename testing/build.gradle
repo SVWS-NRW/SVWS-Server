@@ -9,9 +9,8 @@ subprojects {
 	}
 }
 
-// Liste der Auszuführenden Subproject-Tests
+// Liste der zu auszuführenden Integration-Tests
 def testTasks = ['svws-dav-api-test:apiTest', 'svws-webclient-integration-test:apiTest']
-
 //Baut ein docker image namens dockertest aus den sourcen im tmp folder
 task buildSVWSApplication(type: Exec){
 	group = 'testenvironment'
@@ -63,13 +62,12 @@ task integrationTest() {
 	testTasks.each {testTask ->
 		//diesem Task alle TestTasks als dependency zufügen
 		dependsOn(testTask)
-
 		// Konfigurationen für auszuführende Testtasks ergänzen
 		tasks.getByPath(testTask).configure {
 			dependsOn('startTestumgebung')
 			ignoreFailures = true
 			finalizedBy.add('stopTestumgebung')
-		}
+		}	
 	}
 	finalizedBy 'analyzeTestResults'
 }

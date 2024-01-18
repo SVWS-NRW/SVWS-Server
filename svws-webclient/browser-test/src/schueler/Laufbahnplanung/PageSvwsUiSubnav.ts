@@ -27,7 +27,7 @@ export class PageSvwsUiSubnav {
 		expect(this.menue_items).toContain('Exportieren');
 		expect(this.menue_items).toContain('Importieren…');
 		expect(this.menue_items).toContain('Planung merken');
-		expect(this.menue_items).toContain('Zurücksetzen');
+		expect(this.menue_items).toContain('Fachwahlen löschen');
 		this.schueler= schueler;
 	}
 
@@ -44,13 +44,15 @@ export class PageSvwsUiSubnav {
 		if (await errorPage.isVisible())
 			expect((await errorPage.getMessage())).toBe("t");
 	}
-
+	// TODO funktioniert nur für einen Schüler!
 	async clickImportieren(errorPage : ErrorPage) {
+
 		await this.page.getByRole('button', { name: 'Importieren…' }).click();
 		const fileChooserPromise = this.page.waitForEvent('filechooser');
 		await this.page.getByRole('textbox').click();
 		const fileChooser = await fileChooserPromise;
-
+		console.log(this.schueler?.name2click);
+		console.log(this.schueler?.import_lp_name);
 		if (this.schueler?.import_lp_name)
 			await fileChooser.setFiles("./data/schueler/"+this.schueler?.import_lp_name);
 		else
@@ -58,19 +60,20 @@ export class PageSvwsUiSubnav {
 
 		if (await errorPage.isVisible())
 			expect((await errorPage.getMessage())).toBe("t");
+
+
   	}
 
 	async clickPanungmerken() {
 		await this.page.getByRole('button', { name: 'Planung merken' }).click();
-		await expect(this.page.getByRole('button', { name: 'Planung wiederherstellen' })).toBeVisible();
-		await expect(this.page.getByRole('button', { name: 'Planung merken' })).toBeVisible();
+		await this.page.waitForLoadState('networkidle');
+
 	}
 
 	async clickPlanungWiederherstellen() {
 		await this.page.getByRole('button', { name: 'Planung wiederherstellen' }).click();
-		await expect(this.page.getByRole('button', { name: 'Planung merken' })).toBeVisible();
+		await this.page.waitForLoadState('networkidle');
 		await expect(this.page.getByRole('button', { name: 'Planung wiederherstellen' })).not.toBeVisible();
-
 	}
 
 	async clickModusJG9() {
@@ -131,5 +134,21 @@ export class PageSvwsUiSubnav {
 
 	async clickManuellermodus() {
 		await this.page.getByRole('button', { name: 'Modus: manuell' }).click();
+	}
+
+	async clickZurücksetzenmitAbbrechen() {
+		await this.page.getByRole('button', { name: 'Fachwahlen löschen' }).click();
+		await expect(this.page.getByRole('button', { name: 'Abbrechen' })).toBeVisible();
+		await expect(this.page.getByRole('button', { name: 'Ja' })).toBeVisible();
+  		await this.page.getByRole('button', { name: 'Abbrechen' }).click();
+		await expect(this.page.getByRole('button', { name: 'Ja' })).not.toBeVisible();
+	}
+
+	async clickZurücksetzenmitJaLoeschen() {
+		await this.page.getByRole('button', { name: 'Fachwahlen löschen' }).click();
+		await expect(this.page.getByRole('button', { name: 'Abbrechen' })).toBeVisible();
+		await expect(this.page.getByRole('button', { name: 'Ja' })).toBeVisible();
+  		await this.page.getByRole('button', { name: 'Ja' }).click();
+		await expect(this.page.getByRole('button', { name: 'Ja' })).not.toBeVisible();
 	}
 }

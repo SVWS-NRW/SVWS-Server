@@ -8,7 +8,7 @@ export class ApiConnection {
 	protected _authenticated: boolean = false;
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname: string = 'localhost'
+	protected _hostname: string = process.env.PLAYWRIGHT_svws_testing_api_host ?? 'https://localhost' + (process.env.PLAYWRIGHT_svws_testing_api_port != null ? ':' + process.env.PLAYWRIGHT_svws_testing_api_port : '');
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -134,7 +134,7 @@ export class ApiConnection {
 	 * @returns {Promise<List<DBSchemaListeEintrag>>}
 	 */
 	connectTo = async (name: string): Promise<List<DBSchemaListeEintrag>> => {
-		const url = new URL('https://' + name);
+		const url = new URL(name);
 		const host = url.host;
 		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {

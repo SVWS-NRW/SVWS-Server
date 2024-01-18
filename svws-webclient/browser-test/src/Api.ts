@@ -352,6 +352,14 @@ class Api {
 		return mapJahrgaenge;
 	}
 
+	public async verbinde(){
+		const adrHost = process.env.PLAYWRIGHT_svws_testing_api_host;
+		const adrPort = process.env.PLAYWRIGHT_svws_testing_api_port;
+		const adresse =  (adrHost ?? 'https://localhost') + (adrPort != null ? (':' + adrPort) : '');
+		await this.connectTo(adresse);
+		await this.login('gymabi', 'Admin', '');
+	}
+
 }
 
 /** Die Api-Instanz zur Verwendung im SVWS-Client */

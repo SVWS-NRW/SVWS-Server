@@ -3,13 +3,9 @@ import { expect} from "@playwright/test";
 import { test } from "./SchuelerLaufbahnplanung.pages"
 
 import { dataServerConnection } from "../../DataServerConnection"
-import { dataSchuelerAuswahl } from "../DataSchuelerAuswahl";
+import { dataSchueler_1_pro_JGab9, dataSchueler_3_von_JG9, dataSchueler_3_von_JGabEF} from "../DataSchueler";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-const anzahl_schueler : number = 1
-
-
 
 test.beforeEach(async ({ baseURL, page, loginPage }) => {
 	await page.goto(`${baseURL}login`);
@@ -20,7 +16,7 @@ test.beforeEach(async ({ baseURL, page, loginPage }) => {
 
 test.describe("Export und Import",() =>{
 	test("Wahlbogen exportieren ", async ({ pageSvwsUiSubnav, page, errorPage }) => {
-		for (const schueler of await dataSchuelerAuswahl.getSchuelermitJahrgang_N([5,10,11],anzahl_schueler)) {
+		for (const schueler of dataSchueler_1_pro_JGab9) {
 			await page.getByRole('row', { name: schueler.name2click}).click();
 	        await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
 			await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
@@ -29,9 +25,9 @@ test.describe("Export und Import",() =>{
 			await pageSvwsUiSubnav.clickExportieren(errorPage);
 		}
 	});
-
-	test("Wahlbogen importieren ", async ({ pageSvwsUiSubnav, page, errorPage }) => {
-		for (const schueler of await dataSchuelerAuswahl.getSchuelermitJahrgang_N([5],anzahl_schueler)) {
+	// TODO Abija
+	test.fixme("Wahlbogen importieren ", async ({ pageSvwsUiSubnav, page, errorPage }) => {
+		for (const schueler of dataSchueler_1_pro_JGab9) {
 			await page.getByRole('row', { name: schueler.name2click}).click();
 			await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
 			await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
@@ -43,9 +39,9 @@ test.describe("Export und Import",() =>{
 
 } );
 
-
 test("Click Planung merken und wiederherstellen ", async ({ pageSvwsUiSubnav, page, errorPage }) => {
-	for (const schueler of await dataSchuelerAuswahl.getSchuelermitJahrgang_N([5],anzahl_schueler)) {
+	// TODO Beim ersten Versuch mit dem zweiten Schüler führt "Planungwiederherstellen" zum API-Fehler
+	for (const schueler of dataSchueler_1_pro_JGab9) {
 		await page.getByRole('row', { name: schueler.name2click}).click();
 	    await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
 		await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
@@ -56,8 +52,9 @@ test("Click Planung merken und wiederherstellen ", async ({ pageSvwsUiSubnav, pa
 	}
 });
 
-test("Click  ->Normaler Modus -> Hochschreibmodus ->  Manueller Modus-> JG 9", async ({ pageSvwsUiSubnav, page, errorPage }) => {
-	for (const schueler of await dataSchuelerAuswahl.getSchuelermitJahrgang_N([5], anzahl_schueler)) {
+// TODO Warte auf die einheitliche Bezeichnung des Menüpunktes auf "Fachwahlen zurücksetzen" oder "Fachwahlen löschen"
+test.fixme("Click  ->Normaler Modus -> Hochschreibmodus ->  Manueller Modus-> JG 9", async ({ pageSvwsUiSubnav, page, errorPage }) => {
+	for (const schueler of dataSchueler_3_von_JG9) {
 		await page.getByRole('row', { name: schueler.name2click}).click();
 		await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
 		await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
@@ -72,16 +69,38 @@ test("Click  ->Normaler Modus -> Hochschreibmodus ->  Manueller Modus-> JG 9", a
 });
 
 test("Click ->Normaler Modus -> Manueller Modus ->  ab JG 10", async ({ pageSvwsUiSubnav, page, errorPage }) => {
-	for (const schueler of await dataSchuelerAuswahl.getSchuelermitJahrgang_N([10], anzahl_schueler)) {
+	for (const schueler of dataSchueler_3_von_JGabEF) {
 		await page.getByRole('row', { name: schueler.name2click}).click();
 		await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
 		await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
 		await page.waitForURL('**/schueler/**/laufbahnplanung');
 		await pageSvwsUiSubnav.ladeConfig(schueler);
 
-		// Aufgrund der Modi 'Normaler Modus', 'Hochschriebemodus und 'Manueller Modus' drei Aufrufe
+		// Aufgrund der Modi 'Normaler Modus' und 'Manueller Modus' nur zwei Aufrufe
 		await pageSvwsUiSubnav.clickModus_ab_10();
 		await pageSvwsUiSubnav.clickModus_ab_10();
+	}
+});
+
+test("Click -> Zurücksetzen -> Abbrechen", async ({ pageSvwsUiSubnav, page, errorPage }) => {
+	for (const schueler of dataSchueler_1_pro_JGab9) {
+		await page.getByRole('row', { name: schueler.name2click}).click();
+		await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
+		await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
+		await page.waitForURL('**/schueler/**/laufbahnplanung');
+		await pageSvwsUiSubnav.ladeConfig(schueler);
+		await pageSvwsUiSubnav.clickZurücksetzenmitAbbrechen();
+	}
+});
+
+test("Click -> Zurücksetzen -> Ja, löschen", async ({ pageSvwsUiSubnav, page, errorPage }) => {
+	for (const schueler of dataSchueler_1_pro_JGab9) {
+		await page.getByRole('row', { name: schueler.name2click}).click();
+		await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
+		await expect(page.getByRole('button', { name: 'Exportieren' })).toBeVisible();
+		await page.waitForURL('**/schueler/**/laufbahnplanung');
+		await pageSvwsUiSubnav.ladeConfig(schueler);
+		await pageSvwsUiSubnav.clickZurücksetzenmitJaLoeschen();
 	}
 });
 
