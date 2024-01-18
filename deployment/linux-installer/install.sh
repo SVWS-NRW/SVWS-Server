@@ -275,7 +275,6 @@ else
     echo "TESTDB_PASSWORD=$TESTDB_PASSWORD" >> .env
     echo "TMP_DIR=$TMP_DIR" >> .env
     echo "MDBFILE=$MDBFILE" >> .env
-    echo "DOWNLOAD_PFAD=$DOWNLOAD_PFAD" >> .env
     echo "INIT_EMPTY_DB=$INIT_EMPTY_DB" >> .env
 fi
 
