@@ -980,7 +980,7 @@ public class GostBlockungsdatenManager {
 	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
 	 */
 	public @NotNull List<@NotNull GostBlockungSchiene> schieneGetListe() {
-		return _daten.schienen;
+		return new ArrayList<>(_daten.schienen);
 	}
 
 	/**
