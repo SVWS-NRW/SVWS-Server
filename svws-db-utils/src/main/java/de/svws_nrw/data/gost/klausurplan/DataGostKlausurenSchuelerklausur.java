@@ -65,7 +65,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 
 		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0)";
 
-		TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID = :tid" + skFilter,
+		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID = :tid" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
 
 		if (!kkSkIds.isEmpty())
@@ -89,10 +89,10 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 * @return die Liste der Schülerklausuren
 	 */
 	public static GostKlausurenCollectionSkSkt getCollectionSkSktNachschreiber(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) {
-		GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
-		List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
+		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
+		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, false);
 		if (!kursKlausuren.isEmpty()) {
-			List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query(
+			final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query(
 					"SELECT DISTINCT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenSchuelerklausurenTermine skt ON sk.ID = skt.Schuelerklausur_ID AND sk.Kursklausur_ID IN :kkids WHERE skt.Folge_Nr > 0",
 					DTOGostKlausurenSchuelerklausuren.class).setParameter("kkids", kursKlausuren.stream().map(kk -> kk.id).toList()).getResultList();
 			ergebnis.schuelerklausuren = schuelerKlausurDTOs.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
@@ -114,8 +114,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 * @return die Liste der Schülerklausuren
 	 */
 	public static GostKlausurenCollectionSkSkt getCollectionSkSkt(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final boolean ganzesSchuljahr) {
-		GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
-		List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, ganzesSchuljahr);
+		final GostKlausurenCollectionSkSkt ergebnis = new GostKlausurenCollectionSkSkt();
+		final List<GostKursklausur> kursKlausuren = DataGostKlausurenKursklausur.getKursKlausuren(conn, abiturjahr, halbjahr.id, ganzesSchuljahr);
 		ergebnis.schuelerklausuren = getSchuelerKlausurenZuKursklausuren(conn, kursKlausuren);
 		ergebnis.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, ergebnis.schuelerklausuren);
 		return ergebnis;
@@ -133,7 +133,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	public static List<GostSchuelerklausur> getSchuelerKlausurenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursKlausuren) {
 		if (kursKlausuren.isEmpty())
 			return new ArrayList<>();
-		List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausuren.stream().map(kk -> kk.id).toList(), DTOGostKlausurenSchuelerklausuren.class);
+		final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausuren.stream().map(kk -> kk.id).toList(), DTOGostKlausurenSchuelerklausuren.class);
 		return schuelerKlausurDTOs.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
 	}
 
@@ -215,10 +215,12 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 			result.vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", result.kursklausuren.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class).stream()
 					.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
 
-			List<Long> terminIds = new ArrayList<>();
+			final List<Long> terminIds = new ArrayList<>();
 			terminIds.addAll(result.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 			terminIds.addAll(result.kursklausuren.stream().filter(kk -> kk.idTermin != null).map(kk -> kk.idTermin).toList());
-			result.termine = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", terminIds, DTOGostKlausurenTermine.class).stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+			result.termine = terminIds.isEmpty()
+					? new ArrayList<>()
+					: conn.queryNamed("DTOGostKlausurenTermine.id.multiple", terminIds, DTOGostKlausurenTermine.class).stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
 		}
 
 		return result;
