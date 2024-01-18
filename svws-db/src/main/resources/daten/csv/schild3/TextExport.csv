@@ -65,13 +65,13 @@ Lehrer;Vorname;Vorname;S;;;;;ALLE
 Lehrer;Vschluessel;Vergütungsschlüssel;S;;;;;ALLE
 Lehrer;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Lehrer;ID;Pflichtstunden-Soll;S;;x;PflichtstdSoll;select A.PflichtstdSoll from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;RechtsverhÃ¤ltnis;S;;x;Rechtsverhaeltnis;select A.Rechtsverhaeltnis from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;BeschÃ¤ftigungsart;S;;x;Beschaeftigungsart;select A.Beschaeftigungsart from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;Rechtsverhältnis;S;;x;Rechtsverhaeltnis;select A.Rechtsverhaeltnis from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;Beschäftigungsart;S;;x;Beschaeftigungsart;select A.Beschaeftigungsart from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Lehrer;ID;Einsatzstatus;S;;x;Einsatzstatus;select A.Einsatzstatus from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Lehrer;ID;Unterrichtsstunden;S;;x;UnterrichtsStd;select A.UnterrichtsStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Lehrer;ID;Mehrleistungsstunden;S;;x;MehrleistungStd;select A.MehrleistungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Lehrer;ID;Minderleistungsstunden;S;;x;EntlastungStd;select A.EntlastungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;nicht-unterrichtliche TÃ¤tigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Lehrer;ID;Reststunden;S;;x;RestStd;select A.RestStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
@@ -93,7 +93,7 @@ Schueler;Einschulungsjahr;Einschulungsjahr;I;;;;;ALLE
 Schueler;Email;E-Mail (privat);S;;;;;ALLE
 Schueler;EndeAnschlussfoerderung;Ende der Anschlussförderung;D;;;;;ALLE
 Schueler;EndeEingliederung;Ende der Eingliederungsphase;D;;;;;ALLE
-Schueler;Entlassart;Abschlussart an eigener Schule (Statistik-KÃ¼rzel);S;;;;;ALLE
+Schueler;Entlassart;Abschlussart an eigener Schule (Statistik-Kürzel);S;;;;;ALLE
 Schueler;Entlassdatum;Entlassdatum;D;;;;;ALLE
 Schueler;Entlassjahrgang_ID;Entlassjahrgang;S;;;ASDJahrgang;SELECT ASDJahrgang from EigeneSchule_Jahrgaenge WHERE ID=%;ALLE
 Schueler;Entlassjahrgang_ID;Entlassjahrgang (interne Bezeichnung);S;;;InternKrz;SELECT InternKrz from EigeneSchule_Jahrgaenge WHERE ID=%;ALLE
