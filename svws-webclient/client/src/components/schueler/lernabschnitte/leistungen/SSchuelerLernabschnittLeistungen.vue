@@ -14,7 +14,7 @@
 								-->
 						</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-select title="—" :items="props.manager().kursGetMengeFilteredByLeistung(row.source.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
+							<svws-ui-select title="—" :items="manager().kursGetMengeFilteredByLeistung(row.source.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
 								:model-value="manager().kursGetByLeistungIdOrNull(row.source.id)"
 								@update:model-value="value => patchLeistung({ kursID: ((value === null) || (value === undefined)) ? null : value.id }, row.source.id)"
 								class="w-full" headless />
