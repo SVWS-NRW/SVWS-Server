@@ -148,8 +148,8 @@
 						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
-								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
-								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur).datum !== null ? kMan().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
+								<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="text-sm font-medium">{{ getDatum(klausur) }}</span>
 							</span>
 						</div>
 					</li>
@@ -166,8 +166,8 @@
 <script setup lang="ts">
 
 	import type { JavaMapEntry, JavaSet, List} from "@core";
-	import { HashMap, OpenApiError } from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
+	import { OpenApiError } from "@core";
+	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import type { Ref } from 'vue';
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
@@ -188,6 +188,15 @@
 		terminSelected.value = undefined;
 		dragData.value = data;
 	};
+
+	function getDatum(klausur: GostKursklausur) {
+		const termin = props.kMan().terminByKursklausur(klausur);
+		if (termin !== null && termin.datum !== null)
+			return DateUtils.gibDatumGermanFormat(termin.datum);
+		if (terminSelected.value !== undefined && terminSelected.value.datum !== null)
+			return DateUtils.gibDatumGermanFormat(terminSelected.value.datum);
+		return "N.N."
+	}
 
 	const modal = ref<boolean>(false);
 
@@ -220,10 +229,10 @@
 	const anzahlProKwKonflikte = (threshold: number) => {
 		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
 			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
+				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold).entrySet();
 		} else if (terminSelected.value !== undefined)
-			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold);
-		return new HashMap<number, List<GostKursklausur>>();
+			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold).entrySet();
+		return new HashSet<JavaMapEntry<number, List<GostKursklausur>>>();
 	}
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {

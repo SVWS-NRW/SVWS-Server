@@ -36,7 +36,7 @@
 						:class="undefined"
 						:k-man="kMan"
 						:map-schueler="mapSchueler"
-						:drag-data="() => dragData"
+						:drag-data="dragData"
 						:on-drag="onDrag"
 						:on-drop="onDrop"
 						:draggable="draggable"
@@ -110,11 +110,9 @@
 
 <script setup lang="ts">
 
-	import type { JavaMapEntry, JavaSet} from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, DateUtils, GostSchuelerklausurTermin } from "@core";
+	import {GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type {DataTableColumn} from "@ui";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
 
 	const props = defineProps<GostKlausurplanungNachschreiberProps>();

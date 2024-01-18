@@ -1,9 +1,9 @@
 <template>
 	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())"
 		:class="{
-			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
-			'border-dashed border-error dark:border-error': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData === undefined,
+			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
+			'border-dashed border-error dark:border-error': (dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
 			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
@@ -18,7 +18,7 @@
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
-					<span v-if="(dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
+					<span v-if="(dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 						<i-ri-alert-line />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>
 					</span>
@@ -54,7 +54,7 @@
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		klausurCssClasses: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
-		dragData: () => GostKlausurplanungDragData;
+		dragData: GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		draggable: (data: GostKlausurplanungDragData) => boolean;
@@ -85,11 +85,11 @@
 	}
 
 	function isDropZone(termin: GostKlausurtermin) : boolean {
-		if (props.dragData() !== undefined) {
-			if (props.dragData() instanceof GostKursklausur) {
+		if (props.dragData !== undefined) {
+			if (props.dragData instanceof GostKursklausur) {
 				return false;
-			} else if (props.dragData() instanceof GostSchuelerklausurTermin) {
-				return props.kMan().schuelerklausurterminByTerminidAndSchuelerid(termin.id, props.kMan().schuelerklausurGetByIdOrException(props.dragData().idSchuelerklausur).idSchueler) === null;
+			} else if (props.dragData instanceof GostSchuelerklausurTermin) {
+				return props.kMan().schuelerklausurterminByTerminidAndSchuelerid(termin.id, props.kMan().schuelerklausurGetByIdOrException(props.dragData.idSchuelerklausur).idSchueler) === null;
 			}
 		}
 		return false;
@@ -101,9 +101,8 @@
 	}
 
 	const konflikteTerminDragKlausur = computed(() => {
-		const data = props.dragData();
-		if (data instanceof GostKursklausur)
-			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), data)
+		if (props.dragData instanceof GostKursklausur)
+			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), props.dragData)
 		else
 			return -1
 	});
