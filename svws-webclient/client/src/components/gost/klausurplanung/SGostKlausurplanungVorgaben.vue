@@ -214,9 +214,8 @@
 	window.addEventListener('click', function(e) {
 		const vT = document.getElementById('vorgabenTable');
 		const vE = document.getElementById('vorgabenEdit');
-		const vL = document.getElementById('svws-ui-dropdown-list-id');
-		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")) {
-			// if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && (vL === null || !vL.contains(e.target as Node)))
+		// const vL = document.getElementById('svws-ui-dropdown-list-id');
+		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list") && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list")) {
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;
 		}
