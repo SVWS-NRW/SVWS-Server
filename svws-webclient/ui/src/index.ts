@@ -38,19 +38,5 @@ export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabB
 export { default as SvwsUiRouterTabBarButton } from "./components/App/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRouterVerticalTabBar.vue";
 // DEPRECATED
-export { default as SvwsUiDataTable } from "./components/Deprecated/DataTable/SvwsUiDataTable.vue";
-export { default as SvwsUiDataTableRow } from "./components/Deprecated/DataTable/SvwsUiTableRow.vue";
-export { default as SvwsUiDataTableCell } from "./components/Deprecated/DataTable/SvwsUiTableCell.vue";
-export { default as SvwsUiProgressBar } from "./components/Deprecated/SvwsUiProgressBar.vue";
-export { default as SvwsUiIcon } from "./components/Deprecated/SvwsUiIcon.vue";
-export { default as SvwsUiDropdown } from "./components/Deprecated/SvwsUiDropdown.vue";
-export { default as SvwsUiDropdownItem } from "./components/Deprecated/SvwsUiDropdownItem.vue";
-export { default as SvwsUiDropdownWithAction } from "./components/Deprecated/SvwsUiDropdownWithAction.vue";
-export { default as SvwsUiSelectInput } from "./components/Deprecated/SvwsUiSelectInput.vue";
-export { default as SvwsUiTabBar } from "./components/Deprecated/SvwsUiTabBar.vue";
-export { default as SvwsUiTabButton } from "./components/Deprecated/SvwsUiTabButton.vue";
-export { default as SvwsUiTabPanel } from "./components/Deprecated/SvwsUiTabPanel.vue";
-export { default as SvwsUiDragData } from "./components/Deprecated/SvwsUiDragData.vue";
-export { default as SvwsUiDropData } from "./components/Deprecated/SvwsUiDropData.vue";
 
 export type { DataTableColumn, InputDataType, SortByAndOrder } from "./types";

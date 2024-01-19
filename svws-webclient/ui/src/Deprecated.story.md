@@ -10,6 +10,9 @@ icon: 'carbon:bookmark'
 
 Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfernt wurden.
 
+## ab 0.8.9
+alle Deprecated-Komponenten wurden entfernt
+
 ## ab 0.7.3-SNAPSHOT
 ### **Data-Table**
 Es wird nun der Table verwendet. Funktionalität bleibt gleich, aber intern wurden einige Sachen angepasst.
