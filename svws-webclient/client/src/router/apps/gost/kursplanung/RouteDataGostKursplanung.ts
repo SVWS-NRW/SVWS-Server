@@ -1,7 +1,7 @@
 
-import { type Ref, ref, shallowRef, computed } from "vue";
+import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
@@ -586,25 +586,30 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return true;
 	});
 
-	removeKursSchuelerZuordnung = api.call(async (idSchueler: number, idKurs: number): Promise<boolean> => {
-		let zugeordnet : boolean = this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs);
-		if (!zugeordnet) {
-			const map = this.ergebnismanager.getOfSchuelerMapIDzuUngueltigeKurse();
-			const set = map.get(idSchueler);
-			if (set !== null) {
-				for (const kurs of set) {
-					if (kurs.id === idKurs) {
-						zugeordnet = true;
-						break;
+	removeKursSchuelerZuordnung = api.call(async (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>): Promise<boolean> => {
+		const liste: List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();
+		for (const zuordnung of zuordnungen) {
+			if (this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(zuordnung.idSchueler, zuordnung.idKurs)) {
+				liste.add(zuordnung);
+				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
+			} else {
+				const map = this.ergebnismanager.getOfSchuelerMapIDzuUngueltigeKurse();
+				const set = map.get(zuordnung.idSchueler);
+				if (set !== null) {
+					for (const kurs of set) {
+						if (kurs.id === zuordnung.idKurs) {
+							liste.add(zuordnung);
+							this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
+							break;
+						}
 					}
 				}
 			}
 		}
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined) || !zugeordnet)
+		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined) || liste.size() === 0)
 			return false;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKurs);
-		this.ergebnismanager.setSchuelerKurs(idSchueler, idKurs, false);
+		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnungen(liste, api.schema, ergebnisid);
 		const ergebnis = this.ergebnismanager.getErgebnis();
 		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();

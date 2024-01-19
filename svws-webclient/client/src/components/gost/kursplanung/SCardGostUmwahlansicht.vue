@@ -142,7 +142,7 @@
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 	import type { ComputedRef, Ref} from "vue";
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
+	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel, GostBlockungsergebnisKursSchuelerZuordnung, KursDaten } from "@core";
 	import { computed, ref } from "vue";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
@@ -235,7 +235,10 @@
 		const obj = dragAndDropData.value;
 		if ((schuelerid === undefined) || (obj === undefined) || (obj.id === undefined))
 			return;
-		await props.removeKursSchuelerZuordnung(schuelerid, obj.id);
+		const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+		zuordnung.idSchueler = schuelerid;
+		zuordnung.idKurs = obj.id;
+		await props.removeKursSchuelerZuordnung([zuordnung]);
 	}
 
 	function bgColor(idKurs : number, idSchueler : number) : string {

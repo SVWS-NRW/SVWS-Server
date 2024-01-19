@@ -23,12 +23,13 @@
 		kurs: GostBlockungsergebnisKurs;
 	}
 
-	import type { GostBlockungsergebnisManager, GostBlockungsergebnisKurs } from '@core';
+	import type { GostBlockungsergebnisManager, GostBlockungsergebnisKurs, List } from '@core';
+	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung } from '@core';
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		removeKursSchuelerZuordnung: (id: number, kurs: number) => Promise<boolean>;
+		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	}>();
 
 	const zuordnungen = computed<Item[]>(()=>{
@@ -45,9 +46,14 @@
 
 	async function removeZuordnung() {
 		showModal().value = false;
-		//TODO mit multiple-Aufruf ersetzen #1431
-		for (const i of selected.value)
-			await props.removeKursSchuelerZuordnung(i.name, i.kurs.id);
+		const list: List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();
+		for (const i of selected.value) {
+			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+			zuordnung.idSchueler = i.name;
+			zuordnung.idKurs = i.kurs.id;
+			list.add(zuordnung);
+		}
+		await props.removeKursSchuelerZuordnung(list);
 		selected.value = [];
 	}
 

@@ -1,5 +1,5 @@
 import { type WritableComputedRef } from "vue";
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet, List } from "@core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet, List, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
 
@@ -45,5 +45,5 @@ export interface GostKursplanungProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	removeKursSchuelerZuordnung: (id: number, kurs: number) => Promise<boolean>;
+	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 }
