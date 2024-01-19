@@ -45,6 +45,7 @@ import { GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+import { GostBlockungsergebnisKursSchuelerZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
@@ -4154,6 +4155,30 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchienenZuordnung>).map(d => GostBlockungsergebnisKursSchienenZuordnung.transpilerToJSON(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungsergebnisKursSchuelerZuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/removeKursSchuelerZuordnungen
+	 *
+	 * Entfernt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Zuordnungen wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen.
+	 *   Code 404: Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.
+	 *
+	 * @param {List<GostBlockungsergebnisKursSchuelerZuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 */
+	public async deleteGostBlockungsergebnisKursSchuelerZuordnungen(data : List<GostBlockungsergebnisKursSchuelerZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchuelerZuordnungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchuelerZuordnung>).map(d => GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}

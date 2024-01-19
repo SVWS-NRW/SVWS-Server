@@ -4,6 +4,7 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -382,6 +383,20 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         return Response.status(Status.NO_CONTENT).build();
 	}
 
+
+    /**
+     * Entfernt die die Zuordnungen von Schülern zu Kursen bei einem Zwischenergebnis.
+     *
+     * @param idZwischenergebnis   die ID der Zwischenergebnis
+     * @param zuordnungen          die Kurs-Schüler-Zuordnungen
+     *
+     * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+     */
+    public Response deleteKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> zuordnungen) {
+    	for (final GostBlockungsergebnisKursSchuelerZuordnung zuordnung : zuordnungen)
+    		this._deleteKursSchuelerZuordnung(idZwischenergebnis, zuordnung.idSchueler, zuordnung.idKurs);
+        return Response.status(Status.NO_CONTENT).build();
+    }
 
 
     private void _createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {

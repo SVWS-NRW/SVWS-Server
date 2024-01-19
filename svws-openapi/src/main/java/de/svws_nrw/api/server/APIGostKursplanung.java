@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -1399,6 +1400,36 @@ public class APIGostKursplanung {
     		                                    @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		                                    @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Löschen mehrerer Kurs-Schüler-Zuordnungen bei einem Blockungsergebnis einer
+     * Blockung der gymnasialen Oberstufe.
+     *
+     * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idErgebnis   die ID des Blockungsergebnisses
+     * @param zuordnungen  die zu entfernenden Kurs-Schüler-Zuordnungen
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return eine Response mit dem Status-Code
+     */
+    @DELETE
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchuelerZuordnungen")
+    @Operation(summary = "Entfernt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe.",
+               description = "Entfernt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. "
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnungen wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
+    public Response deleteGostBlockungsergebnisKursSchuelerZuordnungen(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+    		@RequestBody(description = "Die Liste der zu löschenden Kurs-Schüler-Zuordnungen", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnisKursSchuelerZuordnung.class)))) final @NotNull List<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> zuordnungen,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteKursSchuelerZuordnungen(idErgebnis, zuordnungen),
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
