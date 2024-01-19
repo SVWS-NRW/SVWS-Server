@@ -27,7 +27,6 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -87,101 +86,90 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() <= 0)
 	    	return Response.status(Status.OK).build();
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Bestimme die Regel der Blockung
-			final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
-			if (regel == null)
-				return OperationError.NOT_FOUND.getResponse();
-	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
-	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
-	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-	        if (vorlage == null)
-	        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-	    			case "typ" -> {
-						final Integer patch_typ = JSONMapper.convertToInteger(value, true);
-						if ((patch_typ == null) || (patch_typ != regel.Typ.typ))
-							throw OperationError.BAD_REQUEST.exception();
-	    			}
-	    			case "parameter" -> {
-	    				if (!(value instanceof List))
-	    					throw OperationError.BAD_REQUEST.exception();
-	    				@SuppressWarnings("unchecked")
-						final
-						List<? extends Number> params = (List<? extends Number>) value;
-	    				// Überprüfe zunächst die Anzahl der Parameter
-	    				final int pcount = regel.Typ.getParamCount();
-	    				if (pcount != params.size())
-	    					throw OperationError.BAD_REQUEST.exception();
-	    				// Aktualisiere die Parameter
-	    				for (int i = 0; i < pcount; i++) {
-	    					// Bestimme Typ und Wert
-	    					final GostKursblockungRegelParameterTyp ptype = regel.Typ.getParamType(i);
-	    					final long pvalue = params.get(i).longValue();
-	    					// Überprüfe den Parameter-Wert, ob dieser einen gültigen Wert für die Blockung enthält
-	    					switch (ptype) {
-								case KURSART -> {
-									final GostKursart kursart = GostKursart.fromIDorNull((int) pvalue);
-									if (kursart == null)
-										throw OperationError.BAD_REQUEST.exception();
-								}
-								case KURS_ID -> {
-									final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, pvalue);
-									if ((kurs == null) || (kurs.Blockung_ID != regel.Blockung_ID))
-										throw OperationError.BAD_REQUEST.exception();
-								}
-								case SCHIENEN_NR -> {
-									final List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
-									if ((dtos == null) || (dtos.isEmpty()))
-										throw OperationError.BAD_REQUEST.exception();
-									final Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
-									if (!schienen.contains((int) pvalue))
-										throw OperationError.BAD_REQUEST.exception();
-								}
-								case SCHUELER_ID -> {
-									final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, pvalue);
-									if (schueler == null)
-										throw OperationError.BAD_REQUEST.exception();
-								}
-								case BOOLEAN -> {
-									if ((pvalue < 0) || (pvalue > 1))
-										throw OperationError.BAD_REQUEST.exception();
-								}
-								case GANZZAHL -> {
-									break; // immer gültig
-								}
-								default -> throw OperationError.BAD_REQUEST.exception();
-	    					}
-	    					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
-	    					final DTOGostBlockungRegelParameter param = conn.queryByKey(DTOGostBlockungRegelParameter.class, id, i);
-							if (param.Parameter != pvalue) {
-								param.Parameter = pvalue;
-								conn.transactionPersist(param);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme die Regel der Blockung
+		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
+		if (regel == null)
+			return OperationError.NOT_FOUND.getResponse();
+        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
+        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+        if (vorlage == null)
+        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+    	for (final Entry<String, Object> entry : map.entrySet()) {
+    		final String key = entry.getKey();
+    		final Object value = entry.getValue();
+    		switch (key) {
+				case "id" -> {
+					final Long patch_id = JSONMapper.convertToLong(value, true);
+					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+						throw OperationError.BAD_REQUEST.exception();
+				}
+    			case "typ" -> {
+					final Integer patch_typ = JSONMapper.convertToInteger(value, true);
+					if ((patch_typ == null) || (patch_typ != regel.Typ.typ))
+						throw OperationError.BAD_REQUEST.exception();
+    			}
+    			case "parameter" -> {
+    				if (!(value instanceof List))
+    					throw OperationError.BAD_REQUEST.exception();
+    				@SuppressWarnings("unchecked")
+					final
+					List<? extends Number> params = (List<? extends Number>) value;
+    				// Überprüfe zunächst die Anzahl der Parameter
+    				final int pcount = regel.Typ.getParamCount();
+    				if (pcount != params.size())
+    					throw OperationError.BAD_REQUEST.exception();
+    				// Aktualisiere die Parameter
+    				for (int i = 0; i < pcount; i++) {
+    					// Bestimme Typ und Wert
+    					final GostKursblockungRegelParameterTyp ptype = regel.Typ.getParamType(i);
+    					final long pvalue = params.get(i).longValue();
+    					// Überprüfe den Parameter-Wert, ob dieser einen gültigen Wert für die Blockung enthält
+    					switch (ptype) {
+							case KURSART -> {
+								final GostKursart kursart = GostKursart.fromIDorNull((int) pvalue);
+								if (kursart == null)
+									throw OperationError.BAD_REQUEST.exception();
 							}
-	    				}
-	    			}
-	    			default -> throw OperationError.BAD_REQUEST.exception();
-	    		}
-	    	}
-	    	conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+							case KURS_ID -> {
+								final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, pvalue);
+								if ((kurs == null) || (kurs.Blockung_ID != regel.Blockung_ID))
+									throw OperationError.BAD_REQUEST.exception();
+							}
+							case SCHIENEN_NR -> {
+								final List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
+								if ((dtos == null) || (dtos.isEmpty()))
+									throw OperationError.BAD_REQUEST.exception();
+								final Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
+								if (!schienen.contains((int) pvalue))
+									throw OperationError.BAD_REQUEST.exception();
+							}
+							case SCHUELER_ID -> {
+								final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, pvalue);
+								if (schueler == null)
+									throw OperationError.BAD_REQUEST.exception();
+							}
+							case BOOLEAN -> {
+								if ((pvalue < 0) || (pvalue > 1))
+									throw OperationError.BAD_REQUEST.exception();
+							}
+							case GANZZAHL -> {
+								break; // immer gültig
+							}
+							default -> throw OperationError.BAD_REQUEST.exception();
+    					}
+    					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
+    					final DTOGostBlockungRegelParameter param = conn.queryByKey(DTOGostBlockungRegelParameter.class, id, i);
+						if (param.Parameter != pvalue) {
+							param.Parameter = pvalue;
+							conn.transactionPersist(param);
+						}
+    				}
+    			}
+    			default -> throw OperationError.BAD_REQUEST.exception();
+    		}
+    	}
     	return Response.status(Status.OK).build();
 	}
 
@@ -196,94 +184,84 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @return Eine Response mit der neuen Regel
 	 */
 	public Response addRegel(final long idBlockung, final int idRegelTyp, final List<Long> regelParameter) {
-		try {
-			conn.transactionBegin();
-			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
-	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
-	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-	        if (vorlage == null)
-	        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-			// Prüfe ob die ID des Typs korrekt ist
-			final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
-			if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
-				throw OperationError.CONFLICT.exception();
-			// Prüfe, ob die Anzahl der Parameter korrekt ist
-	    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
-	    		throw OperationError.CONFLICT.exception();
-			// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
-			final List<DTOGostBlockungRegel> regeln = conn.queryList("SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1 AND e.Typ = ?2", DTOGostBlockungRegel.class, idBlockung, regelTyp);
-			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
-			if (!regeln.isEmpty()) {
-				switch (regelTyp) {
-					case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
-						if (regelParameter == null)
-							throw OperationError.CONFLICT.exception();
-						final List<DTOGostBlockungRegelParameter> duplicates = conn.queryList("SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN ?1 AND e.Nummer = 0 AND e.Parameter = ?2", DTOGostBlockungRegelParameter.class, regelIDs, regelParameter.get(0));
-						if (!duplicates.isEmpty())
-							throw OperationError.CONFLICT.exception("Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regelParameter.get(0)));
-						final long anzahl = regelParameter.get(1);
-						if ((anzahl < 1) || (anzahl > 99))
-							throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
-					}
-					default -> { /* TODO weitere Regeltypen prüfen */ }
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+        if (vorlage == null)
+        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		// Prüfe ob die ID des Typs korrekt ist
+		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
+		if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
+			throw OperationError.CONFLICT.exception();
+		// Prüfe, ob die Anzahl der Parameter korrekt ist
+    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
+    		throw OperationError.CONFLICT.exception();
+		// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
+		final List<DTOGostBlockungRegel> regeln = conn.queryList("SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1 AND e.Typ = ?2", DTOGostBlockungRegel.class, idBlockung, regelTyp);
+		final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
+		if (!regeln.isEmpty()) {
+			switch (regelTyp) {
+				case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
+					if (regelParameter == null)
+						throw OperationError.CONFLICT.exception();
+					final List<DTOGostBlockungRegelParameter> duplicates = conn.queryList("SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN ?1 AND e.Nummer = 0 AND e.Parameter = ?2", DTOGostBlockungRegelParameter.class, regelIDs, regelParameter.get(0));
+					if (!duplicates.isEmpty())
+						throw OperationError.CONFLICT.exception("Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regelParameter.get(0)));
+					final long anzahl = regelParameter.get(1);
+					if ((anzahl < 1) || (anzahl > 99))
+						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
 				}
+				default -> { /* TODO weitere Regeltypen prüfen */ }
 			}
-			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
-			// Füge die Regel hinzu
-	    	final DTOGostBlockungRegel regel = new DTOGostBlockungRegel(idRegel, idBlockung, regelTyp);
-	    	conn.transactionPersist(regel);
-	    	final GostBlockungRegel daten = new GostBlockungRegel();
-	    	daten.id = idRegel;
-	    	daten.typ = regelTyp.typ;
-	    	// Füge Default-Parameter zu der Regel hinzu.
-	    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
-	    		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
-	    		final long paramValue;
-	    		if (regelParameter == null) {
-		    		paramValue = switch (paramType) {
-						case KURSART -> GostKursart.LK.id;
-						case KURS_ID -> {
-					    	final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
-							if ((kurse == null) || (kurse.isEmpty()))
-								throw OperationError.NOT_FOUND.exception();
-							yield kurse.get(0).ID;
-						}
-						case SCHIENEN_NR -> {
-							final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min(Integer::compare);
-							if (minSchiene.isEmpty())
-								throw OperationError.NOT_FOUND.exception();
-							yield minSchiene.get();
-						}
-						case SCHUELER_ID -> {
-							final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-							if ((schueler == null) || (schueler.isEmpty()))
-								throw OperationError.NOT_FOUND.exception();
-							yield schueler.get(0).ID;
-						}
-						case BOOLEAN -> 0L;
-						case GANZZAHL -> 0L;
-		    		};
-	    		} else {
-					paramValue = regelParameter.get(i);
-					validateRegelParameter(blockung.Abi_Jahrgang, idBlockung, paramType, paramValue);
-	    		}
-	    		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
-	    		conn.transactionPersist(param);
-	    		daten.parameter.add(paramValue);
-	    	}
-			conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
-				throw OperationError.NOT_FOUND.exception(e);
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
 		}
+		// Bestimme die ID, für welche der Datensatz eingefügt wird
+		final long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
+		// Füge die Regel hinzu
+    	final DTOGostBlockungRegel regel = new DTOGostBlockungRegel(idRegel, idBlockung, regelTyp);
+    	conn.transactionPersist(regel);
+    	conn.transactionFlush();
+    	final GostBlockungRegel daten = new GostBlockungRegel();
+    	daten.id = idRegel;
+    	daten.typ = regelTyp.typ;
+    	// Füge Default-Parameter zu der Regel hinzu.
+    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
+    		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
+    		final long paramValue;
+    		if (regelParameter == null) {
+	    		paramValue = switch (paramType) {
+					case KURSART -> GostKursart.LK.id;
+					case KURS_ID -> {
+				    	final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
+						if ((kurse == null) || (kurse.isEmpty()))
+							throw OperationError.NOT_FOUND.exception();
+						yield kurse.get(0).ID;
+					}
+					case SCHIENEN_NR -> {
+						final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min(Integer::compare);
+						if (minSchiene.isEmpty())
+							throw OperationError.NOT_FOUND.exception();
+						yield minSchiene.get();
+					}
+					case SCHUELER_ID -> {
+						final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
+						if ((schueler == null) || (schueler.isEmpty()))
+							throw OperationError.NOT_FOUND.exception();
+						yield schueler.get(0).ID;
+					}
+					case BOOLEAN -> 0L;
+					case GANZZAHL -> 0L;
+	    		};
+    		} else {
+				paramValue = regelParameter.get(i);
+				validateRegelParameter(blockung.Abi_Jahrgang, idBlockung, paramType, paramValue);
+    		}
+    		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
+    		conn.transactionPersist(param);
+    		daten.parameter.add(paramValue);
+    	}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

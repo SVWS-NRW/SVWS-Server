@@ -19,7 +19,6 @@ import de.svws_nrw.data.gost.DataGostBlockungSchiene;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostBlockungsliste;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.reporting.pdf.gost.kursplanung.PdfGostKursplanungKurseMitKursschuelern;
 import de.svws_nrw.module.reporting.pdf.gost.kursplanung.PdfGostKursplanungSchuelerMitKursen;
 import de.svws_nrw.module.reporting.pdf.gost.kursplanung.PdfGostKursplanungSchuelerMitSchienenKursen;
@@ -80,11 +79,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockungs-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangBlockungsliste(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsliste(conn, abiturjahr)).get(halbjahr);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsliste(conn, abiturjahr).get(halbjahr),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -115,11 +113,10 @@ public class APIGostKursplanung {
     		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@PathParam("halbjahr") final int halbjahr,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).create(abiturjahr, halbjahr);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).create(abiturjahr, halbjahr),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -143,11 +140,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu löschen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response deleteGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).delete(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).delete(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -172,13 +168,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).get(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).get(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -205,11 +198,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response rechneGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @PathParam("zeit") final long zeit, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).berechne(id, zeit);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).berechne(id, zeit),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -240,11 +232,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für die Blockungsdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsdaten(conn)).patch(id, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).patch(id, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -275,11 +266,10 @@ public class APIGostKursplanung {
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
             @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).addKurs(idBlockung, idFach, idKursart);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).addKurs(idBlockung, idFach, idKursart),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -310,11 +300,10 @@ public class APIGostKursplanung {
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
             @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).deleteKurs(idBlockung, idFach, idKursart);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).deleteKurs(idBlockung, idFach, idKursart),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -339,11 +328,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Kurs einer Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungKurs(@PathParam("schema") final String schema, @PathParam("kursid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).get(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).get(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -374,11 +362,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKurs.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).patch(id, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).patch(id, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -406,11 +393,10 @@ public class APIGostKursplanung {
     public Response splitGostBlockungKurs(
     		@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).splitKurs(idKurs);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).splitKurs(idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -440,11 +426,10 @@ public class APIGostKursplanung {
     public Response combineGostBlockungKurs(
     		@PathParam("schema") final String schema, @PathParam("kursid1") final long idKurs1,
     		@PathParam("kursid2") final long idKurs2, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).combineKurs(idKurs1, idKurs2);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).combineKurs(idKurs1, idKurs2),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -469,11 +454,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden.")
     public Response deleteGostBlockungKursByID(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		                                   @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKurs(conn)).delete(idKurs);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).delete(idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -499,11 +483,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
     public Response getGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKursLehrer(conn, idKurs)).get(idLehrer);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKursLehrer(conn, idKurs).get(idLehrer),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -532,11 +515,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content =
 				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKursLehrer.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKursLehrer(conn, idKurs)).patch(idLehrer, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKursLehrer(conn, idKurs).patch(idLehrer, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -562,11 +544,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
     public Response addGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKursLehrer(conn, idKurs)).addKurslehrer(idLehrer);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKursLehrer(conn, idKurs).addKurslehrer(idLehrer),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -591,11 +572,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht bei dem Kurs.")
     public Response deleteGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungKursLehrer(conn, idKurs)).deleteKurslehrer(idLehrer);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKursLehrer(conn, idKurs).deleteKurslehrer(idLehrer),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -623,11 +603,10 @@ public class APIGostKursplanung {
     public Response addGostBlockungSchiene(
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungSchiene(conn)).addSchiene(idBlockung);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungSchiene(conn).addSchiene(idBlockung),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -655,11 +634,10 @@ public class APIGostKursplanung {
     public Response deleteGostBlockungSchiene(
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungSchiene(conn)).deleteSchiene(idBlockung);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungSchiene(conn).deleteSchiene(idBlockung),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -684,11 +662,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Schiene einer Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungSchiene(@PathParam("schema") final String schema, @PathParam("schienenid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungSchiene(conn)).get(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungSchiene(conn).get(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -719,11 +696,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für die Schiene der Blockung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungSchiene.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungSchiene(conn)).patch(id, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungSchiene(conn).patch(id, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -748,11 +724,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "404", description = "Die Schiene wurde nicht bei einer Blockung gefunden.")
     public Response deleteGostBlockungSchieneByID(@PathParam("schema") final String schema, @PathParam("schienenid") final long idSchiene,
     		                                   @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungSchiene(conn)).delete(idSchiene);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungSchiene(conn).delete(idSchiene),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -785,11 +760,10 @@ public class APIGostKursplanung {
             @RequestBody(description = "Die Regel-Parameter", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> regelParameter,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel, regelParameter);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungRegel(conn).addRegel(idBlockung, typRegel, regelParameter),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -848,11 +822,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Regel einer Blockung mit der angegebenen ID gefunden.")
     public Response getGostBlockungRegel(@PathParam("schema") final String schema, @PathParam("regelid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungRegel(conn)).get(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungRegel(conn).get(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -883,11 +856,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für die Regel der Blockung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungRegel.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungRegel(conn)).patch(id, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungRegel(conn).patch(id, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -969,11 +941,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsergebnisse einer Blockung der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).get(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).get(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1004,11 +975,10 @@ public class APIGostKursplanung {
     		@RequestBody(description = "Der Patch für das Blockungsergebnis", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsergebnisListeneintrag.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).patch(id, is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).patch(id, is),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1231,11 +1201,10 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Zwischenergebnis einer Blockung der Gymnasialen Oberstufe zu löschen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response deleteGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).delete(id);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).delete(id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1363,11 +1332,10 @@ public class APIGostKursplanung {
     		@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
             @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).createKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).createKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1398,11 +1366,10 @@ public class APIGostKursplanung {
             @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
             @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKursAlt, @PathParam("kursidneu") final long idKursNeu,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).updateKursSchuelerZuordnung(idErgebnis, idSchueler, idKursAlt, idKursNeu),
+        		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-            return (new DataGostBlockungsergebnisse(conn)).updateKursSchuelerZuordnung(idErgebnis, idSchueler, idKursAlt, idKursNeu);
-        }
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1429,11 +1396,10 @@ public class APIGostKursplanung {
     public Response deleteGostBlockungsergebnisKursSchuelerZuordnung(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
     		                                    @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1464,11 +1430,10 @@ public class APIGostKursplanung {
             @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
             @PathParam("schienenid") final long idSchiene, @PathParam("kursid") final long idKurs,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).createKursSchieneZuordnung(idErgebnis, idSchiene, idKurs),
+        		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-            return (new DataGostBlockungsergebnisse(conn)).createKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
-        }
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1499,11 +1464,10 @@ public class APIGostKursplanung {
             @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
             @PathParam("schienenid") final long idSchieneAlt, @PathParam("kursid") final long idKurs, @PathParam("schienenidneu") final long idSchieneNeu,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).updateKursSchieneZuordnung(idErgebnis, idKurs, idSchieneAlt, idSchieneNeu),
+        		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-            return (new DataGostBlockungsergebnisse(conn)).updateKursSchieneZuordnung(idErgebnis, idKurs, idSchieneAlt, idSchieneNeu);
-        }
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -1530,11 +1494,10 @@ public class APIGostKursplanung {
     public Response deleteGostBlockungsergebnisKursSchieneZuordnung(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
                                                 @PathParam("schienenid") final long idSchiene, @PathParam("kursid") final long idKurs,
                                                 @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteKursSchieneZuordnung(idErgebnis, idSchiene, idKurs),
+        		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-            return (new DataGostBlockungsergebnisse(conn)).deleteKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
-        }
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 }

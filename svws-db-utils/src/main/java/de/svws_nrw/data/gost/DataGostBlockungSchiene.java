@@ -25,7 +25,6 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -85,51 +84,40 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() <= 0)
 	    	return Response.status(Status.OK).build();
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Bestimme die Schiene der Blockung
-			final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
-			if (schiene == null)
-				return OperationError.NOT_FOUND.getResponse();
-	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
-	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, schiene.Blockung_ID);
-	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-	        if (vorlage == null)
-	        	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-	    			case "bezeichnung" -> schiene.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung_Schienen.col_Bezeichnung.datenlaenge());
-	    			case "wochenstunden" -> {
-	    				schiene.Wochenstunden = JSONMapper.convertToInteger(value, false);
-	    				if ((schiene.Wochenstunden < 1) || (schiene.Wochenstunden > 40))
-	    					throw OperationError.BAD_REQUEST.exception();
-	    			}
-	    			case "nummer" -> {
-						final Integer patch_nummer = JSONMapper.convertToInteger(value, true);
-	    				if ((patch_nummer == null) || (!patch_nummer.equals(schiene.Nummer)))
-	    					throw OperationError.BAD_REQUEST.exception();
-	    			}
-	    			default -> throw OperationError.BAD_REQUEST.exception();
-	    		}
-	    	}
-	    	conn.transactionPersist(schiene);
-	    	conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme die Schiene der Blockung
+		final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
+		if (schiene == null)
+			return OperationError.NOT_FOUND.getResponse();
+        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, schiene.Blockung_ID);
+        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+        if (vorlage == null)
+        	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+    	for (final Entry<String, Object> entry : map.entrySet()) {
+    		final String key = entry.getKey();
+    		final Object value = entry.getValue();
+    		switch (key) {
+				case "id" -> {
+					final Long patch_id = JSONMapper.convertToLong(value, true);
+					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+						throw OperationError.BAD_REQUEST.exception();
+				}
+    			case "bezeichnung" -> schiene.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung_Schienen.col_Bezeichnung.datenlaenge());
+    			case "wochenstunden" -> {
+    				schiene.Wochenstunden = JSONMapper.convertToInteger(value, false);
+    				if ((schiene.Wochenstunden < 1) || (schiene.Wochenstunden > 40))
+    					throw OperationError.BAD_REQUEST.exception();
+    			}
+    			case "nummer" -> {
+					final Integer patch_nummer = JSONMapper.convertToInteger(value, true);
+    				if ((patch_nummer == null) || (!patch_nummer.equals(schiene.Nummer)))
+    					throw OperationError.BAD_REQUEST.exception();
+    			}
+    			default -> throw OperationError.BAD_REQUEST.exception();
+    		}
+    	}
+    	conn.transactionPersist(schiene);
     	return Response.status(Status.OK).build();
 	}
 
@@ -219,21 +207,12 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response delete(final Long id) {
-		try {
-		    if (id == null)
-		        return OperationError.CONFLICT.getResponse();
-			// Bestimme die Schiene der Blockung
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-            final GostBlockungSchiene daten = _delete(conn.queryByKey(DTOGostBlockungSchiene.class, id));
-    		conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+	    if (id == null)
+	        return OperationError.CONFLICT.getResponse();
+		// Bestimme die Schiene der Blockung
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+        final GostBlockungSchiene daten = _delete(conn.queryByKey(DTOGostBlockungSchiene.class, id));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -245,42 +224,31 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	 * @return Eine Response mit der ID der neuen Schiene
 	 */
 	public Response addSchiene(final long idBlockung) {
-		try {
-			conn.transactionBegin();
-			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Prüfe, ob die Blockung mit der ID existiert
-			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
-			if (blockung == null)
-				throw OperationError.NOT_FOUND.exception();
-	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
-	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-	        if (vorlage == null)
-	        	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
-			final long idSchiene = dbSchienenID == null ? 1 : dbSchienenID.MaxID + 1;
-			// Ermittle, ob bereits Schienen existieren
-			final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
-	    	int schienennummer = 1;
-	    	if ((schienen != null) && (!schienen.isEmpty())) { // Bestimme die erste freie Schienennummer
-	    		final Set<Integer> schienenIDs = schienen.stream().map(e -> e.Nummer).collect(Collectors.toSet());
-	    		while (schienenIDs.contains(schienennummer))
-	    			schienennummer++;
-	    	}
-	    	final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(idSchiene, idBlockung, schienennummer, "Schiene " + schienennummer, 3);
-	    	conn.transactionPersist(schiene);
-			conn.transactionCommit();
-			final GostBlockungSchiene daten = dtoMapper.apply(schiene);
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof IllegalArgumentException)
-				return OperationError.NOT_FOUND.getResponse();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Prüfe, ob die Blockung mit der ID existiert
+		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+		if (blockung == null)
+			throw OperationError.NOT_FOUND.exception();
+        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+        if (vorlage == null)
+        	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		// Bestimme die ID, für welche der Datensatz eingefügt wird
+		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
+		final long idSchiene = dbSchienenID == null ? 1 : dbSchienenID.MaxID + 1;
+		// Ermittle, ob bereits Schienen existieren
+		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
+    	int schienennummer = 1;
+    	if ((schienen != null) && (!schienen.isEmpty())) { // Bestimme die erste freie Schienennummer
+    		final Set<Integer> schienenIDs = schienen.stream().map(e -> e.Nummer).collect(Collectors.toSet());
+    		while (schienenIDs.contains(schienennummer))
+    			schienennummer++;
+    	}
+    	final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(idSchiene, idBlockung, schienennummer, "Schiene " + schienennummer, 3);
+    	conn.transactionPersist(schiene);
+		final GostBlockungSchiene daten = dtoMapper.apply(schiene);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -292,26 +260,17 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response deleteSchiene(final long idBlockung) {
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
-	    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
-	    	if ((schienen == null) || (schienen.isEmpty()))
-	    		throw OperationError.NOT_FOUND.exception();
-	    	final Optional<DTOGostBlockungSchiene> optSchiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer));
-	    	if (optSchiene.isEmpty())
-	    		throw OperationError.NOT_FOUND.exception();
-	    	final DTOGostBlockungSchiene schiene = optSchiene.get();
-            final GostBlockungSchiene daten = _delete(schiene);
-    		conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
+    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
+    	if ((schienen == null) || (schienen.isEmpty()))
+    		throw OperationError.NOT_FOUND.exception();
+    	final Optional<DTOGostBlockungSchiene> optSchiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer));
+    	if (optSchiene.isEmpty())
+    		throw OperationError.NOT_FOUND.exception();
+    	final DTOGostBlockungSchiene schiene = optSchiene.get();
+        final GostBlockungSchiene daten = _delete(schiene);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 }

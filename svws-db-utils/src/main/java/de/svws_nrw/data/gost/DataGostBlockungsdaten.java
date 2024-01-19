@@ -64,7 +64,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -330,45 +329,34 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() <= 0)
 			return Response.status(Status.OK).build();
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Bestimme die Blockung
-			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
-			if (blockung == null)
-				return OperationError.NOT_FOUND.getResponse();
-			for (final Entry<String, Object> entry : map.entrySet()) {
-				final String key = entry.getKey();
-				final Object value = entry.getValue();
-				switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
-					case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
-					case "istAktiv" -> {
-						final boolean result = JSONMapper.convertToBoolean(value, false);
-						if (result)
-							blockung = markiereBlockungAktiv(conn, blockung.ID, true);
-						else
-							blockung.IstAktiv = false;
-					}
-					// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
-					default -> throw OperationError.BAD_REQUEST.exception();
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme die Blockung
+		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
+		if (blockung == null)
+			return OperationError.NOT_FOUND.getResponse();
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			switch (key) {
+				case "id" -> {
+					final Long patch_id = JSONMapper.convertToLong(value, true);
+					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+						throw OperationError.BAD_REQUEST.exception();
 				}
+				case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
+				case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
+				case "istAktiv" -> {
+					final boolean result = JSONMapper.convertToBoolean(value, false);
+					if (result)
+						blockung = markiereBlockungAktiv(conn, blockung.ID, true);
+					else
+						blockung.IstAktiv = false;
+				}
+				// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
+				default -> throw OperationError.BAD_REQUEST.exception();
 			}
-			conn.transactionPersist(blockung);
-			conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
 		}
+		conn.transactionPersist(blockung);
 		return Response.status(Status.OK).build();
 	}
 
@@ -382,119 +370,114 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return Eine Response mit der neuen Blockung
 	 */
 	public Response create(final int abiturjahr, final int halbjahr) {
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Prüfe die Parameter
-			final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
-			if (gostHalbjahr == null)
-				throw OperationError.CONFLICT.exception();
-			final int anzahlSchienen = GostBlockungsdatenManager.schieneGetDefaultAnzahl(gostHalbjahr);
-			final DTOGostJahrgangsdaten abijahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
-			if (abijahrgang == null)
-				throw OperationError.CONFLICT.exception();
-			// Lese die Fachwahlstatistiken aus der Datenbank - liegen keine vor, so kann auch keine Blockung erstellt
-			// werden.
-			final DataGostAbiturjahrgangFachwahlen dataFachwahlen = new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr);
-			final List<GostStatistikFachwahl> fachwahlen = dataFachwahlen.getFachwahlen();
-			if (fachwahlen == null)
-				throw OperationError.NOT_FOUND.exception();
-			// Bestimme die ID der neuen Blockung
-			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
-			final Long blockungID = lastID == null ? 1 : lastID.MaxID + 1;
-			// Lese zunächst die bestehenden Blockungen mit dem Abiturjahr und dem Halbjahr ein (für weitere Prüfungen)
-			final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang.Abi_Jahrgang, gostHalbjahr);
-			// Bestimme den Namen der neuen Blockung
-			final Set<String> namen = blockungen.stream().map(b -> b.Name).collect(Collectors.toUnmodifiableSet());
-			int nameIndex = 1;
-			String name = "Blockung ";
-			while (namen.contains(name + nameIndex))
-				nameIndex++;
-			name += nameIndex;
-			// Lese die Fächer der gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
-			final GostFaecherManager faecherManager = (new DataGostFaecher(conn, abiturjahr)).getListInternal();
-			if (faecherManager == null)
-				return OperationError.NOT_FOUND.getResponse();
-			// Lege ein "leeres" Ergebnis für manuelles Blocken an
-			final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
-			final long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
-			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false);
-			// Blockung anlegen
-			final DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false);
-			conn.transactionPersist(blockung);
-			conn.transactionPersist(erg);
-			final GostBlockungsdaten daten = dtoMapper.apply(blockung);
-			final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(daten, faecherManager);
-			// Schienen anlegen
-			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
-			final long schienenID = dbSchienenID == null ? 0 : dbSchienenID.MaxID;
-			for (int i = 1; i <= anzahlSchienen; i++) {
-				final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i,
-						"Schiene " + i, 3);
-				conn.transactionPersist(schiene);
-				manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
-			}
-			// Anhand der Fachwahlstatistik eine Default-Anzahl für die Kursanzahl ermitteln und
-			// DTOGostBlockungKurs-Objekte dafür persistieren
-			// TODO Verbesserung des Algorithmus -> Optimierung... erstmal nur eine primitive Variante
-			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
-			long kurseID = dbKurseID == null ? 0 : dbKurseID.MaxID;
-			for (final GostStatistikFachwahl fw : fachwahlen) {
-				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
-				if (zulFach == ZulaessigesFach.VF)
-					throw OperationError.INTERNAL_SERVER_ERROR.exception();
-				final GostStatistikFachwahlHalbjahr fwHj = fw.fachwahlen[gostHalbjahr.id];
-				final int anzahlLK = (fwHj.wahlenLK + 10) / 20;
-				final int anzahlGK = (fwHj.wahlenGK + 10) / 20;
-				int anzahlZK = (fwHj.wahlenZK + 10) / 20;
-				if ((fwHj.wahlenZK > 0) && (anzahlZK < 1))
-					anzahlZK = 1;
-				for (int i = 1; i <= anzahlLK; i++) {
-					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
-					conn.transactionPersist(kurs);
-					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
-				}
-				for (int i = 1; i <= anzahlGK; i++) {
-					GostKursart kursart = GostKursart.GK;
-					if (zulFach == ZulaessigesFach.VX)
-						kursart = GostKursart.VTF;
-					if (zulFach == ZulaessigesFach.PX)
-						kursart = GostKursart.PJK;
-					int wstd = 3;
-					if ((kursart == GostKursart.GK) && ((Jahrgaenge.JG_EF == zulFach.getJahrgangAb()) || (Jahrgaenge.JG_11 == zulFach.getJahrgangAb()))) {
-						wstd = 4;
-					} else if (kursart == GostKursart.PJK) {
-						// Wochenstunden des PJK anhand der Tabelle GostFaecher bestimmen
-					} else if (kursart == GostKursart.VTF) {
-						wstd = 2;
-					}
-					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, 1, wstd);
-					conn.transactionPersist(kurs);
-					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
-				}
-				for (int i = 1; i <= anzahlZK; i++) {
-					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 1, 3);
-					conn.transactionPersist(kurs);
-					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
-				}
-			}
-			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
-			for (final GostBlockungKurs kurs : manager.daten().kurse)
-				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
-            // Bestimme die Fachwahlen aus der DB
-            daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
-            // Ergänze Blockungsliste
-            conn.transactionCommit();
-            conn.transactionBegin();
-            (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
-			conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Prüfe die Parameter
+		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
+		if (gostHalbjahr == null)
+			throw OperationError.CONFLICT.exception();
+		final int anzahlSchienen = GostBlockungsdatenManager.schieneGetDefaultAnzahl(gostHalbjahr);
+		final DTOGostJahrgangsdaten abijahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
+		if (abijahrgang == null)
+			throw OperationError.CONFLICT.exception();
+		// Lese die Fachwahlstatistiken aus der Datenbank - liegen keine vor, so kann auch keine Blockung erstellt
+		// werden.
+		final DataGostAbiturjahrgangFachwahlen dataFachwahlen = new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr);
+		final List<GostStatistikFachwahl> fachwahlen = dataFachwahlen.getFachwahlen();
+		if (fachwahlen == null)
+			throw OperationError.NOT_FOUND.exception();
+		// Bestimme die ID der neuen Blockung
+		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
+		final Long blockungID = lastID == null ? 1 : lastID.MaxID + 1;
+		// Lese zunächst die bestehenden Blockungen mit dem Abiturjahr und dem Halbjahr ein (für weitere Prüfungen)
+		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang.Abi_Jahrgang, gostHalbjahr);
+		// Bestimme den Namen der neuen Blockung
+		final Set<String> namen = blockungen.stream().map(b -> b.Name).collect(Collectors.toUnmodifiableSet());
+		int nameIndex = 1;
+		String name = "Blockung ";
+		while (namen.contains(name + nameIndex))
+			nameIndex++;
+		name += nameIndex;
+		// Lese die Fächer der gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
+		final GostFaecherManager faecherManager = (new DataGostFaecher(conn, abiturjahr)).getListInternal();
+		if (faecherManager == null)
+			return OperationError.NOT_FOUND.getResponse();
+		// Lege ein "leeres" Ergebnis für manuelles Blocken an
+		final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+		final long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
+		final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false);
+		// Blockung anlegen
+		final DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false);
+		conn.transactionPersist(blockung);
+		conn.transactionFlush();
+		conn.transactionPersist(erg);
+		conn.transactionFlush();
+		final GostBlockungsdaten daten = dtoMapper.apply(blockung);
+		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(daten, faecherManager);
+		// Schienen anlegen
+		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
+		final long schienenID = dbSchienenID == null ? 0 : dbSchienenID.MaxID;
+		for (int i = 1; i <= anzahlSchienen; i++) {
+			final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i,
+					"Schiene " + i, 3);
+			conn.transactionPersist(schiene);
+			manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
 		}
+		conn.transactionFlush();
+		// Anhand der Fachwahlstatistik eine Default-Anzahl für die Kursanzahl ermitteln und
+		// DTOGostBlockungKurs-Objekte dafür persistieren
+		// TODO Verbesserung des Algorithmus -> Optimierung... erstmal nur eine primitive Variante
+		final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
+		long kurseID = dbKurseID == null ? 0 : dbKurseID.MaxID;
+		for (final GostStatistikFachwahl fw : fachwahlen) {
+			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
+			if (zulFach == ZulaessigesFach.VF)
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			final GostStatistikFachwahlHalbjahr fwHj = fw.fachwahlen[gostHalbjahr.id];
+			final int anzahlLK = (fwHj.wahlenLK + 10) / 20;
+			final int anzahlGK = (fwHj.wahlenGK + 10) / 20;
+			int anzahlZK = (fwHj.wahlenZK + 10) / 20;
+			if ((fwHj.wahlenZK > 0) && (anzahlZK < 1))
+				anzahlZK = 1;
+			for (int i = 1; i <= anzahlLK; i++) {
+				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
+				conn.transactionPersist(kurs);
+				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+			}
+			for (int i = 1; i <= anzahlGK; i++) {
+				GostKursart kursart = GostKursart.GK;
+				if (zulFach == ZulaessigesFach.VX)
+					kursart = GostKursart.VTF;
+				if (zulFach == ZulaessigesFach.PX)
+					kursart = GostKursart.PJK;
+				int wstd = 3;
+				if ((kursart == GostKursart.GK) && ((Jahrgaenge.JG_EF == zulFach.getJahrgangAb()) || (Jahrgaenge.JG_11 == zulFach.getJahrgangAb()))) {
+					wstd = 4;
+				} else if (kursart == GostKursart.PJK) {
+					// Wochenstunden des PJK anhand der Tabelle GostFaecher bestimmen
+				} else if (kursart == GostKursart.VTF) {
+					wstd = 2;
+				}
+				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, 1, wstd);
+				conn.transactionPersist(kurs);
+				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+			}
+			for (int i = 1; i <= anzahlZK; i++) {
+				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 1, 3);
+				conn.transactionPersist(kurs);
+				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+			}
+		}
+		conn.transactionFlush();
+		// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
+		for (final GostBlockungKurs kurs : manager.daten().kurse)
+			conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
+		conn.transactionFlush();
+        // Bestimme die Fachwahlen aus der DB
+        daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
+        // Ergänze Blockungsliste
+        conn.transactionFlush();
+        (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
@@ -505,52 +488,42 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response delete(final Long id) {
-		// TODO use transaction
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
 			return OperationError.NOT_FOUND.getResponse();
 		// Entferne die Blockung
-		conn.remove(blockung);
+		conn.transactionRemove(blockung);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
 
 	private static synchronized List<Long> schreibeErgebnisse(final DBEntityManager conn, final long id, final List<GostBlockungsergebnisManager> outputs) {
-		try {
-			final ArrayList<Long> ergebnisse = new ArrayList<>();
-			conn.transactionBegin();
-			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
-			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
-			for (final GostBlockungsergebnisManager output : outputs) {
-				// Schreibe das Ergebnis in die Datenbank.
-				final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false);
-				conn.transactionPersist(erg);
+		final ArrayList<Long> ergebnisse = new ArrayList<>();
+		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+		long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
+		for (final GostBlockungsergebnisManager output : outputs) {
+			// Schreibe das Ergebnis in die Datenbank.
+			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false);
+			conn.transactionPersist(erg);
+			conn.transactionFlush();
+			// Kurse <--> Schüler
+			final Map<Long, Set<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
+			for (final Map.Entry<Long, Set<Long>> entry : map_KursID_SchuelerIDs.entrySet())
+				for (final long schuelerID : entry.getValue())
+					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, entry.getKey(), schuelerID));
+			// Kurse <--> Schienen
+			final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
+			for (final Map.Entry<Long, Set<GostBlockungsergebnisSchiene>> entry : map_KursID_SchienenIDs.entrySet())
+				for (@NotNull final GostBlockungsergebnisSchiene schiene : entry.getValue())
+					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, entry.getKey(), schiene.id));
 
-				// Kurse <--> Schüler
-				final Map<Long, Set<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
-				for (final Map.Entry<Long, Set<Long>> entry : map_KursID_SchuelerIDs.entrySet())
-					for (final long schuelerID : entry.getValue())
-						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, entry.getKey(), schuelerID));
-
-				// Kurse <--> Schienen
-				final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
-				for (final Map.Entry<Long, Set<GostBlockungsergebnisSchiene>> entry : map_KursID_SchienenIDs.entrySet())
-					for (@NotNull final GostBlockungsergebnisSchiene schiene : entry.getValue())
-						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, entry.getKey(), schiene.id));
-
-				// Ergänze die ID bei der Liste der berechneten Ergebnisse
-				ergebnisse.add(ergebnisID);
-				ergebnisID++;
-			}
-			if (conn.transactionCommit())
-				return ergebnisse;
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("\"Fehler beim Schreiben der Zwischenergebnisse für die Kursblockung.\"");
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			throw exception;
+			// Ergänze die ID bei der Liste der berechneten Ergebnisse
+			ergebnisse.add(ergebnisID);
+			ergebnisID++;
 		}
+		return ergebnisse;
 	}
 
 	/**
@@ -571,27 +544,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse("Keine Fächer für den Abiturjahrgang gefunden.");
 		if (manager.daten().kurse.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("Es sind keine Kurse für die Blockung angelegt.");
-
 		manager.setMaxTimeMillis(zeit);
-
 		final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
-
-		ArrayList<GostBlockungsergebnisManager> outputs;
-
-		try {
-			outputs = algo.handle(manager);
-		} catch (final Exception exception) {
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(exception);
-		}
-
-		try {
-			final List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
-		} catch (final Exception exception) {
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(exception);
-		}
+		final ArrayList<GostBlockungsergebnisManager> outputs = algo.handle(manager);
+		final List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
 	}
 
 

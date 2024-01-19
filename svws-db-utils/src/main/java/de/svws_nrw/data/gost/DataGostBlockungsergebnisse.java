@@ -209,42 +209,31 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() <= 0)
 			return Response.status(Status.OK).build();
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			// Bestimme die Blockung
-			DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
-			if (ergebnis == null)
-				return OperationError.NOT_FOUND.getResponse();
-			for (final Entry<String, Object> entry : map.entrySet()) {
-				final String key = entry.getKey();
-				final Object value = entry.getValue();
-				switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "istAktiv" -> {
-						final boolean result = JSONMapper.convertToBoolean(value, false);
-						if (result)
-							ergebnis = markiereErgebnisAktiv(conn, ergebnis.ID, true);
-						else
-							ergebnis.IstAktiv = false;
-					}
-					default -> throw OperationError.BAD_REQUEST.exception();
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme die Blockung
+		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
+		if (ergebnis == null)
+			return OperationError.NOT_FOUND.getResponse();
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			switch (key) {
+				case "id" -> {
+					final Long patch_id = JSONMapper.convertToLong(value, true);
+					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+						throw OperationError.BAD_REQUEST.exception();
 				}
+				case "istAktiv" -> {
+					final boolean result = JSONMapper.convertToBoolean(value, false);
+					if (result)
+						ergebnis = markiereErgebnisAktiv(conn, ergebnis.ID, true);
+					else
+						ergebnis.IstAktiv = false;
+				}
+				default -> throw OperationError.BAD_REQUEST.exception();
 			}
-			conn.transactionPersist(ergebnis);
-			conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
 		}
+		conn.transactionPersist(ergebnis);
 		return Response.status(Status.OK).build();
 	}
 
@@ -263,7 +252,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		if (erg == null)
 			return OperationError.NOT_FOUND.getResponse();
 		// Entferne das Ergebnis
-		conn.remove(erg);
+		conn.transactionRemove(erg);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
@@ -325,6 +314,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 		// Füge die neue Kurszuordnung hinzu
 		conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(idZwischenergebnis, idKurs, idSchueler));
+		conn.transactionFlush();
 	}
 
 
@@ -338,6 +328,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
 		conn.transactionRemove(dto);
+		conn.transactionFlush();
 	}
 
 
@@ -351,17 +342,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
 	 */
 	public Response createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
-		try {
-			conn.transactionBegin();
-			this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
-			conn.transactionCommit();
-	        return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -378,19 +360,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	public Response updateKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKursAlt, final Long idKursNeu) {
 		if (idKursNeu == null)
 			return deleteKursSchuelerZuordnung(idZwischenergebnis, idKursAlt, idSchueler);
-		try {
-			conn.transactionBegin();
-			// TODO prüfe, ob die Kursarten übereinstimmen...
-			this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursAlt);
-			this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursNeu);
-			conn.transactionCommit();
-	        return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		// TODO prüfe, ob die Kursarten übereinstimmen...
+		this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursAlt);
+		this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursNeu);
+        return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -404,17 +377,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
-		try {
-			conn.transactionBegin();
-			this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
-			conn.transactionCommit();
-	        return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -445,6 +409,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             throw OperationError.CONFLICT.exception(); // Fehler in der DB
         // Füge die neue Kurs-Schienen-Zuordnung hinzu
         conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(idZwischenergebnis, idKurs, idSchiene));
+        conn.transactionFlush();
     }
 
 
@@ -471,17 +436,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
      */
     public Response createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
-        try {
-            conn.transactionBegin();
-            this._createKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
-            conn.transactionCommit();
-            return Response.status(Status.NO_CONTENT).build();
-        } catch (final Exception exception) {
-            conn.transactionRollback();
-            if (exception instanceof final WebApplicationException webex)
-                return webex.getResponse();
-            throw exception;
-        }
+        this._createKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
 
@@ -498,18 +454,9 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     public Response updateKursSchieneZuordnung(final Long idZwischenergebnis, final Long idKurs, final Long idSchieneAlt, final Long idSchieneNeu) {
         if (idSchieneNeu == null)
             return deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
-        try {
-            conn.transactionBegin();
-            this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
-            this._createKursSchieneZuordnung(idZwischenergebnis, idSchieneNeu, idKurs);
-            conn.transactionCommit();
-            return Response.status(Status.NO_CONTENT).build();
-        } catch (final Exception exception) {
-            conn.transactionRollback();
-            if (exception instanceof final WebApplicationException webex)
-                return webex.getResponse();
-            throw exception;
-        }
+        this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
+        this._createKursSchieneZuordnung(idZwischenergebnis, idSchieneNeu, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
 
@@ -523,17 +470,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
      */
     public Response deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
-        try {
-            conn.transactionBegin();
-            this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
-            conn.transactionCommit();
-            return Response.status(Status.NO_CONTENT).build();
-        } catch (final Exception exception) {
-            conn.transactionRollback();
-            if (exception instanceof final WebApplicationException webex)
-                return webex.getResponse();
-            throw exception;
-        }
+        this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
 
