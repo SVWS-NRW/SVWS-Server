@@ -793,6 +793,9 @@ public final class SVWSKonfiguration {
 				break;
 			}
 		}
+		// Entferne Flags, dass das Scheme gesperrt oder deaktiviert ist
+		schemataDeactivated.remove(schemaName);
+		schemataLocked.remove(schemaName);
 		// Persistiere die Änderungen in der Konfigurationsdatei
 		return write();
 	}
