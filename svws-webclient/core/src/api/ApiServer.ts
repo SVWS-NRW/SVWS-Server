@@ -44,6 +44,7 @@ import { GostBlockungRegel } from '../core/data/gost/GostBlockungRegel';
 import { GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
+import { GostBlockungsergebnisKursSchienenZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
@@ -4131,6 +4132,30 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungsergebnisKursSchieneZuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/removeKursSchienenZuordnungen
+	 *
+	 * Entfernt mehrere Kurs-Schienen-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Zuordnungen wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen.
+	 *   Code 404: Das Zwischenergebnis, eine Schiene oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.
+	 *
+	 * @param {List<GostBlockungsergebnisKursSchienenZuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 */
+	public async deleteGostBlockungsergebnisKursSchieneZuordnungen(data : List<GostBlockungsergebnisKursSchienenZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchienenZuordnungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchienenZuordnung>).map(d => GostBlockungsergebnisKursSchienenZuordnung.transpilerToJSON(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 

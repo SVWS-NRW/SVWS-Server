@@ -3,6 +3,7 @@ package de.svws_nrw.data.gost;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -423,6 +424,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         if (dto == null)
             throw OperationError.NOT_FOUND.exception();
         conn.transactionRemove(dto);
+        conn.transactionFlush();
     }
 
 
@@ -471,6 +473,21 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      */
     public Response deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
         this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
+        return Response.status(Status.NO_CONTENT).build();
+    }
+
+
+    /**
+     * Entfernt die die Zuordnungen von Kursen zu Schienen bei einem Zwischenergebnis.
+     *
+     * @param idZwischenergebnis   die ID der Zwischenergebnis
+     * @param zuordnungen          die Kurs-Schienen-Zuordnungen
+     *
+     * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+     */
+    public Response deleteKursSchieneZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchienenZuordnung> zuordnungen) {
+    	for (final GostBlockungsergebnisKursSchienenZuordnung zuordnung : zuordnungen)
+    		this._deleteKursSchieneZuordnung(idZwischenergebnis, zuordnung.idSchiene, zuordnung.idKurs);
         return Response.status(Status.NO_CONTENT).build();
     }
 
