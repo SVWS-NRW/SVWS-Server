@@ -183,6 +183,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
 	 */
 	public static List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> termine) {
+		if (termine.isEmpty())
+			return new ArrayList<>();
 		return conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", termine.stream().map(sk -> sk.idSchuelerklausur).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
 				.map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
 	}
@@ -211,7 +213,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 					DTOGostKlausurenSchuelerklausurenTermine.class).stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 			result.kursklausuren = conn
 					.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", result.schuelerklausuren.stream().map(sk -> sk.idKursklausur).toList(), DTOGostKlausurenKursklausuren.class).stream()
-					.map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
+					.map(DataGostKlausurenKursklausur.dtoMapper::apply).toList();
 			result.vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", result.kursklausuren.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class).stream()
 					.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
 

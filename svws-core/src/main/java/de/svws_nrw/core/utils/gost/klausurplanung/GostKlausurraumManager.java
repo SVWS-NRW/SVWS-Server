@@ -200,7 +200,7 @@ public class GostKlausurraumManager {
 		for (final @NotNull GostSchuelerklausurterminraumstunde skrs : _schuelerklausurterminraumstundenmenge) {
 			@NotNull
 			final List<@NotNull GostKlausurraumstunde> krsList = DeveloperNotificationException.ifMapGetIsNull(_raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin);
-			for (@NotNull final GostKlausurraumstunde krs : krsList) {
+			for (final @NotNull GostKlausurraumstunde krs : krsList) {
 				@NotNull
 				final GostKlausurraum kr = DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, krs.idRaum);
 				final GostKlausurraum krAlt = _klausurraum_by_idSchuelerklausurtermin.put(skrs.idSchuelerklausurtermin, kr);
@@ -301,7 +301,7 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifMapRemoveFailes(_raum_by_id, idRaum);
 		final List<@NotNull GostKlausurraumstunde> rsList = _raumstundenmenge_by_idRaum.get(idRaum);
 		if (rsList != null)
-			for (@NotNull final GostKlausurraumstunde rs : rsList)
+			for (final @NotNull GostKlausurraumstunde rs : rsList)
 				raumstundeRemoveOhneUpdateById(rs.id);
 	}
 
@@ -419,7 +419,7 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifMapRemoveFailes(_raumstunde_by_id, idRaumstunde);
 		final List<@NotNull GostSchuelerklausurterminraumstunde> skrsList = _schuelerklausurterminraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
 		if (skrsList != null)
-			for (@NotNull final GostSchuelerklausurterminraumstunde skrs : skrsList)
+			for (final @NotNull GostSchuelerklausurterminraumstunde skrs : skrsList)
 				schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
@@ -670,7 +670,7 @@ public class GostKlausurraumManager {
 	private void schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(final long idSchuelerklausur) {
 		final List<@NotNull GostSchuelerklausurterminraumstunde> skrsList = _schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin.get(idSchuelerklausur);
 		if (skrsList != null)
-			for (@NotNull final GostSchuelerklausurterminraumstunde skrs : skrsList)
+			for (final @NotNull GostSchuelerklausurterminraumstunde skrs : skrsList)
 				DeveloperNotificationException.ifMap2DRemoveFailes(_schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde, skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
@@ -848,9 +848,9 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der nicht verplanten StundenplanRäume
 	 */
-	public @NotNull List<@NotNull StundenplanRaum> stundenplanraumVerfuegbarGetMenge(@NotNull final List<@NotNull StundenplanRaum> alleRaeume) {
+	public @NotNull List<@NotNull StundenplanRaum> stundenplanraumVerfuegbarGetMenge(final @NotNull List<@NotNull StundenplanRaum> alleRaeume) {
 		final List<@NotNull StundenplanRaum> raeume = new ArrayList<>();
-		for (@NotNull final StundenplanRaum raum : alleRaeume)
+		for (final @NotNull StundenplanRaum raum : alleRaeume)
 			if (!_klausurraum_by_idStundenplanraum.containsKey(raum.id))
 				raeume.add(raum);
 		return raeume;
@@ -865,7 +865,7 @@ public class GostKlausurraumManager {
 	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
 	 */
 	public boolean isAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
-		for (@NotNull final GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
+		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
 			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -903,8 +903,8 @@ public class GostKlausurraumManager {
 	 */
 	public Integer getGemeinsameKursklausurdauerByKlausurraum(final @NotNull GostKlausurraum raum) {
 		int dauer = -1;
-		for (@NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
-			@NotNull GostKlausurvorgabe vorgabe = _kursklausurManager.vorgabeByKursklausur(klausur);
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
+			final @NotNull GostKlausurvorgabe vorgabe = _kursklausurManager.vorgabeByKursklausur(klausur);
 			if (dauer == -1)
 				dauer = vorgabe.dauer;
 			if (dauer != vorgabe.dauer)
@@ -923,7 +923,7 @@ public class GostKlausurraumManager {
 	 */
 	public Integer getGemeinsamerKursklausurstartByKlausurraum(final @NotNull GostKlausurraum raum) {
 		Integer start = -1;
-		for (@NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
 			if (start != null && start == -1)
 				start = klausur.startzeit;
 			if (_kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))

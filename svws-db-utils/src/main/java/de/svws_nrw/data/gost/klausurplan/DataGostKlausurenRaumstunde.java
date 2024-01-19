@@ -60,9 +60,8 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 
 		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeume(idTermin);
 
-		if (listRaeume.isEmpty()) {
+		if (listRaeume.isEmpty())
 			return new ArrayList<>();
-		}
 
 		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(), DTOGostKlausurenRaumstunden.class);
 

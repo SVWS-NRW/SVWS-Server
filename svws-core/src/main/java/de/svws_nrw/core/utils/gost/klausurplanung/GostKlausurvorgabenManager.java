@@ -247,14 +247,14 @@ public class GostKlausurvorgabenManager {
 	 */
 	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
 		if (quartal == 0) {
-			List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
+			final List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
 			if (_vorgabenmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
-				for (@NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				for (final @NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
 					vorgaben.addAll(vQuartal);
 				}
 			return vorgaben;
 		}
-		List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
+		final List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
 		return vorgaben != null ? vorgaben : new ArrayList<>();
 	}
 
@@ -317,9 +317,9 @@ public class GostKlausurvorgabenManager {
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe getPrevious(final @NotNull GostKlausurvorgabe vorgabe) {
-		List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
+		final List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
 		if (vorgabe.halbjahr % 2 == 1) {
-			List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
+			final List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
 			if (vorgabenVorhalbjahr != null)
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
 		}

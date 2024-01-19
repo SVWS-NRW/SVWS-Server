@@ -26,7 +26,6 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
@@ -60,13 +59,17 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	}
 
 	private static long ermittleRaumidAusSchuelerklausurterminen(final DBEntityManager conn, final List<Long> idsSchuelerklausurtermine) {
+		if (idsSchuelerklausurtermine.isEmpty())
+			throw OperationError.NOTHING_TO_DO.exception();
 		final List<Long> idsRaumstunden = conn
 				.queryNamed("DTOGostKlausurenSchuelerklausurenTermineRaumstunden.schuelerklausurtermin_id.multiple", idsSchuelerklausurtermine, DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class).stream()
 				.map(skrs -> skrs.Raumstunde_ID).distinct().toList();
+		if (idsRaumstunden.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine SchuelerklausurenTermineRaumstunden gefunden.");
 		final List<Long> idsRaeume = conn.queryNamed("DTOGostKlausurenRaumstunden.id.multiple", idsRaumstunden, DTOGostKlausurenRaumstunden.class).stream().map(krs -> krs.Klausurraum_ID)
 				.distinct().toList();
 		if (idsRaeume.size() != 1)
-			return -1;
+			throw OperationError.CONFLICT.exception("Verschiedene Raumids in Schuelerklausuren gefunden.");
 		return idsRaeume.get(0);
 	}
 
@@ -105,6 +108,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 */
 	public static GostKlausurenCollectionSkrsKrs loescheRaumZuSchuelerklausurenTransaction(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
+		if (idsSchuelerklausuren.isEmpty())
+			return result;
+
 		result.idsSchuelerklausurtermine = idsSchuelerklausuren;
 
 		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> stundenAlt = conn.queryList("SELECT e FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden e WHERE e.Schuelerklausurtermin_ID IN ?1",
@@ -146,8 +152,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		if (idsSchuelerklausuren.isEmpty())
 			throw OperationError.NOTHING_TO_DO.exception();
 		final long idRaum = _idRaum != null ? _idRaum : ermittleRaumidAusSchuelerklausurterminen(conn, idsSchuelerklausuren);
-		if (idRaum == -1)
-			throw OperationError.CONFLICT.exception("Verschiedene Raumids in Schuelerklausuren gefunden.");
 
 		// Raum und Termin holen
 		final GostKlausurraum raum = DataGostKlausurenRaum.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenRaeume.class, idRaum));
@@ -167,13 +171,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			listSchuelerklausurtermine.addAll(listSchuelerklausurtermineNeu);
 
 
-		List<GostSchuelerklausur> listSchuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSchuelerklausurtermine);
+		final List<GostSchuelerklausur> listSchuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSchuelerklausurtermine);
 
-
-		final List<GostKursklausur> listKursklausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.id.multiple",
-				listSchuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct().toList(),
-				DTOGostKlausurenKursklausuren.class).stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
-
+		final List<GostKursklausur> listKursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSchuelerklausuren);
 
 		final List<GostKlausurraumstunde> listRaumstunden = conn.queryNamed("DTOGostKlausurenRaumstunden.klausurraum_id", idRaum, DTOGostKlausurenRaumstunden.class).stream()
 				.map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();

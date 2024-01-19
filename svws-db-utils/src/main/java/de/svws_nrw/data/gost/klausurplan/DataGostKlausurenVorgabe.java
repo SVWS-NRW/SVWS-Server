@@ -128,7 +128,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			sk.ID = idNextSchuelerklausur++;
 
 		// SchülerklausurTermine erstellen und ID in SchülerklausurTermine einfügen
-		List<DTOGostKlausurenSchuelerklausurenTermine> sktermine = createSchuelerklausurenTermineZuSchuelerklausuren(schuelerklausuren);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> sktermine = createSchuelerklausurenTermineZuSchuelerklausuren(schuelerklausuren);
 		long idNextSchuelerklausurTermin = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class);
 		for (final DTOGostKlausurenSchuelerklausurenTermine skt : sktermine)
 			skt.ID = idNextSchuelerklausurTermin++;
@@ -136,7 +136,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 		final GostKlausurenDataCollection retKlausuren = new GostKlausurenDataCollection();
-		retKlausuren.kursklausuren = kursklausuren.stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
+		retKlausuren.kursklausuren = kursklausuren.stream().map(DataGostKlausurenKursklausur.dtoMapper::apply).toList();
 		retKlausuren.schuelerklausuren = schuelerklausuren.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
 		retKlausuren.schuelerklausurtermine = sktermine.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 
@@ -261,7 +261,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return die Liste der Klausurvorgaben
 	 */
 	public static List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kks) {
-		List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", kks.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class);
+		if (kks.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", kks.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class);
 		return vorgaben.stream().map(dtoMapper::apply).toList();
 	}
 
@@ -396,26 +398,26 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
+		final EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (GostHalbjahr hj : GostHalbjahr.values())
 			manager.put(hj, new GostKlausurvorgabenManager(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).map(dtoMapper::apply).toList(), null));
-		List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).getFaecherSchriftlichMoeglich();
-		List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
+		final List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).getFaecherSchriftlichMoeglich();
+		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
-		Set<Integer> quartale = new HashSet<>();
+		final Set<Integer> quartale = new HashSet<>();
 		if (quartal == 0) {
 			quartale.add(1);
 			quartale.add(2);
 		} else
 			quartale.add(quartal);
-		GostKursart[] arten = halbjahr.istEinfuehrungsphase() ? new GostKursart[] { GostKursart.GK } : new GostKursart[] { GostKursart.GK, GostKursart.LK };
+		final GostKursart[] arten = halbjahr.istEinfuehrungsphase() ? new GostKursart[] { GostKursart.GK } : new GostKursart[] { GostKursart.GK, GostKursart.LK };
 		for (GostFach fach : faecher) {
 			for (GostKursart ka : arten) {
 				if (ka == GostKursart.LK && !fach.istMoeglichAbiLK || halbjahr == GostHalbjahr.Q22 && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK))
 					continue;
 				for (int q : quartale) {
-					DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++, -1, halbjahr, q, fach.id, ka, berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false);
+					final DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++, -1, halbjahr, q, fach.id, ka, berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false);
 					if (manager.get(vorgabeNeu.Halbjahr).vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr, vorgabeNeu.Quartal, vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null)
 						neueVorgaben.add(vorgabeNeu);
 				}

@@ -864,8 +864,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public getGemeinsameKursklausurdauerByKlausurraum(raum : GostKlausurraum) : number | null {
 		let dauer : number = -1;
-		for (let klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
-			let vorgabe : GostKlausurvorgabe = this._kursklausurManager.vorgabeByKursklausur(klausur);
+		for (const klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
+			const vorgabe : GostKlausurvorgabe = this._kursklausurManager.vorgabeByKursklausur(klausur);
 			if (dauer === -1)
 				dauer = vorgabe.dauer;
 			if (dauer !== vorgabe.dauer)
@@ -884,7 +884,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public getGemeinsamerKursklausurstartByKlausurraum(raum : GostKlausurraum) : number | null {
 		let start : number | null = -1;
-		for (let klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
+		for (const klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
 			if (start !== null && start === -1)
 				start = klausur.startzeit;
 			if (this._kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))

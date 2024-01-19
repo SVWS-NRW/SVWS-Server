@@ -222,14 +222,14 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public vorgabeGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0) {
-			let vorgaben : List<GostKlausurvorgabe> | null = new ArrayList();
+			const vorgaben : List<GostKlausurvorgabe> | null = new ArrayList();
 			if (this._vorgabenmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
-				for (let vQuartal of this._vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				for (const vQuartal of this._vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
 					vorgaben.addAll(vQuartal);
 				}
 			return vorgaben;
 		}
-		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
+		const vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
 		return vorgaben !== null ? vorgaben : new ArrayList();
 	}
 
@@ -292,9 +292,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public getPrevious(vorgabe : GostKlausurvorgabe) : GostKlausurvorgabe | null {
-		let vorgabenSchuljahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
+		const vorgabenSchuljahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
 		if (vorgabe.halbjahr % 2 === 1) {
-			let vorgabenVorhalbjahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
+			const vorgabenVorhalbjahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
 			if (vorgabenVorhalbjahr !== null)
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
 		}

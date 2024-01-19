@@ -99,8 +99,21 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	public static List<GostKursklausur> getKursklausurenZuVorgaben(final DBEntityManager conn, final List<GostKlausurvorgabe> vorgaben) {
 		if (vorgaben.isEmpty())
 			return new ArrayList<>();
-		List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
-		return kursKlausurDTOs.stream().map(dtoMapper2::apply).toList();
+		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
+		return kursKlausurDTOs.stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Gibt die Liste der Kursklausuren zu den übergebenen Schülerklausuren zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param schuelerklausuren die Liste der Schülerklausuren, zu denen die Kursklausuren gesucht werden.
+	 *
+	 * @return die Liste der Schülerklausuren
+	 */
+	public static List<GostKursklausur> getKursklausurenZuSchuelerklausuren(final DBEntityManager conn, final List<GostSchuelerklausur> schuelerklausuren) {
+		return conn.queryNamed("DTOGostKlausurenKursklausuren.id.multiple",	schuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct().toList(),
+			DTOGostKlausurenKursklausuren.class).stream().map(DataGostKlausurenKursklausur.dtoMapper::apply).toList();
 	}
 
 
@@ -177,7 +190,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * {@link DTOGostKlausurenKursklausuren} in einen Core-DTO
 	 * {@link GostKursklausur}.
 	 */
-	public static final Function<DTOGostKlausurenKursklausuren, GostKursklausur> dtoMapper2 = (final DTOGostKlausurenKursklausuren k) -> {
+	public static final Function<DTOGostKlausurenKursklausuren, GostKursklausur> dtoMapper = (final DTOGostKlausurenKursklausuren k) -> {
 		final GostKursklausur kk = new GostKursklausur();
 		kk.id = k.ID;
 		kk.idVorgabe = k.Vorgabe_ID;
@@ -205,7 +218,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	public static GostKursklausur getKursklausurById(final DBEntityManager conn, final long id) {
 		final DTOGostKlausurenKursklausuren data = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (data != null)
-			return dtoMapper2.apply(data);
+			return dtoMapper.apply(data);
 		return null;
 	}
 
@@ -236,7 +249,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final DTOGostKlausurenKursklausuren dto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper2.apply(dto)));
+		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper.apply(dto)));
 		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, sks);
 		final List<Long> skts_ids = skts.stream().map(skt -> skt.id).toList();
 		GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
@@ -265,7 +278,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			mapper.map(conn, dto, value, map);
 		}
 		conn.transactionPersist(dto);
-		result.kursKlausurPatched = dtoMapper2.apply(dto);
+		result.kursKlausurPatched = dtoMapper.apply(dto);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
@@ -284,7 +297,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 *
 	 */
 	public static List<GostKursklausurRich> enrichKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursklausuren) {
-		List<GostKursklausurRich> richKlausuren = new ArrayList<>();
+		final List<GostKursklausurRich> richKlausuren = new ArrayList<>();
+		if (kursklausuren.isEmpty())
+			return richKlausuren;
 
 		final Map<Long, GostKlausurvorgabe> mapVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, kursklausuren).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
 		if (mapVorgaben.isEmpty()) {
