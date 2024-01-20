@@ -1,5 +1,6 @@
 package de.svws_nrw.data.gost;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -355,7 +356,143 @@ public final class DBUtilsGost {
 					}
 				}
 			}
-			// Sortiere Fächer anhand der SII-Sortierung der Fächer
+			// Sortiere Fächer anhand der Sortierung der Fächer
+			faecher.values().stream()
+				.sorted((a, b) -> Integer.compare(a.fach.sortierung, b.fach.sortierung))
+				.forEach(daten.faecher::add);
+			result.put(id, daten);
+    	}
+    	return result;
+	}
+
+
+	/**
+	 * Ermittelt die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
+	 * angegebenen IDs aus der Datenbank.
+	 *
+	 * @param ids                          die IDs der Schüler
+	 * @param gostFaecherManager           der Manager für die Fächer des Abiturjahrgangs
+	 * @param mapSchuljahresabschnitte     die Schuljahresabschnitte
+	 * @param mapSchueler                  die DTOs der Schüler
+	 * @param mapAlleGostAbschnitte        die Lernabschnitte der Schüler
+	 * @param mapLeistungenByAbschnittID   die Leistungsdaten zu den Lernabschnitten
+	 * @param mapSprachendaten             die Sprachendaten der Schüler
+	 *
+	 * @return die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
+	 *         angegebenen IDs
+	 */
+	public static Map<Long, GostLeistungen> getLeistungsdatenFromDTOs(final List<Long> ids, final GostFaecherManager gostFaecherManager,
+			final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte, final Map<Long, DTOSchueler> mapSchueler,
+			final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitte,
+			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID,
+			final Map<Long, Sprachendaten> mapSprachendaten) {
+    	final HashMap<Long, GostLeistungen> result = new HashMap<>();
+    	for (final long id : ids) {
+			final DTOSchueler schueler = mapSchueler.get(id);
+			if (schueler == null)
+				throw OperationError.NOT_FOUND.exception();
+
+			final DTOSchuljahresabschnitte abschnittSchueler = mapSchuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
+			if (abschnittSchueler == null)
+				throw OperationError.NOT_FOUND.exception();
+
+			final Sprachendaten sprachendaten = mapSprachendaten.get(id);
+
+			// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = mapAlleGostAbschnitte.get(id)
+					.stream()
+					.sorted((l1, l2) -> {
+						final DTOSchuljahresabschnitte a1 = mapSchuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
+						final DTOSchuljahresabschnitte a2 = mapSchuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
+						return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
+					})
+					.toList();
+
+			// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
+			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
+
+			// Ermittle nun die Leistungsdaten aus den Lernabschnitten
+			final GostLeistungen daten = new GostLeistungen();
+			daten.id = schueler.ID;
+			daten.aktuellesSchuljahr = abschnittSchueler.Jahr;
+			daten.aktuellerJahrgang = aktLernabschnitt.ASDJahrgang;
+			daten.sprachendaten = sprachendaten;
+			final String biliZweig = aktLernabschnitt.BilingualerZweig;
+			if ((biliZweig != null) && (!"".equals(biliZweig)))
+				daten.bilingualeSprache = biliZweig.toUpperCase().substring(0, 1);
+			// eine HashMap zur temporären Speicherung der Fächer -> muss später noch sortiert werden
+			final HashMap<String, GostLeistungenFachwahl> faecher = new HashMap<>();
+			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
+				final DTOSchuljahresabschnitte abschnittLeistungsdaten = mapSchuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
+				if (abschnittLeistungsdaten == null)
+					continue;
+				if (!("EF".equals(lernabschnitt.ASDJahrgang) || "Q1".equals(lernabschnitt.ASDJahrgang) || "Q2".equals(lernabschnitt.ASDJahrgang)))
+					continue;
+				final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
+				if (halbjahr == null)
+					continue;
+				if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
+					daten.bewertetesHalbjahr[halbjahr.id] = true;
+
+				List<DTOSchuelerLeistungsdaten> leistungen = mapLeistungenByAbschnittID.get(lernabschnitt.ID);
+				if (leistungen == null)
+					leistungen = new ArrayList<>();
+				if (leistungen.isEmpty())
+					daten.bewertetesHalbjahr[halbjahr.id] = false;
+				for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
+					// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
+					final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
+					if (kursart == null)
+						continue;
+					final GostFach gostFach = gostFaecherManager.get(leistung.Fach_ID);
+					// Füge die Fächer aus den Leistungsdaten zunächst in die HashMap ein...
+					GostLeistungenFachwahl fach = faecher.get(gostFach.kuerzelAnzeige);
+					if (fach == null) {
+						fach = new GostLeistungenFachwahl();
+						fach.fach = gostFach;
+						faecher.put(gostFach.kuerzelAnzeige, fach);
+					}
+					// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
+					final String fremdsprache = GostFachUtils.getFremdsprache(gostFach);
+					if (fremdsprache != null)
+						fach.istFSNeu = (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(sprachendaten, fremdsprache));
+
+					final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
+					fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
+
+					// Füge eine Belegung der Kurse für die einzelnen Fächer in dem Halbjahr ein
+					final GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
+					belegung.id = leistung.ID;
+					belegung.schuljahr = abschnittLeistungsdaten.Jahr;
+					belegung.halbjahrKuerzel = halbjahr.kuerzel;
+					belegung.abschnitt = abschnittLeistungsdaten.Abschnitt;
+					belegung.abschnittGewertet = lernabschnitt.SemesterWertung;
+					belegung.jahrgang = lernabschnitt.ASDJahrgang;
+					belegung.lehrer = leistung.Fachlehrer_ID;
+					belegung.notenKuerzel = leistung.NotenKrz.kuerzel;
+					belegung.kursartKuerzel = kursart.kuerzel;
+					belegung.istSchriftlich = (kursart == GostKursart.LK)
+							|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
+									|| ("AB3".equals(leistung.Kursart))
+									|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
+					belegung.bilingualeSprache = gostFach.biliSprache;
+					belegung.wochenstunden = leistung.Wochenstunden == null
+							? kursart.getWochenstunden(fach.istFSNeu)
+							: leistung.Wochenstunden;
+					belegung.fehlstundenGesamt = leistung.FehlStd;
+					belegung.fehlstundenUnentschuldigt = leistung.uFehlStd;
+					fach.belegungen.add(belegung);
+
+					// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer
+					if (kursart == GostKursart.PJK) {
+						daten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
+						daten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
+						if ((leistung.Lernentw != null) && (!"".equals(leistung.Lernentw)))
+							daten.projektkursThema = leistung.Lernentw;
+					}
+				}
+			}
+			// Sortiere Fächer anhand der Sortierung der Fächer
 			faecher.values().stream()
 				.sorted((a, b) -> Integer.compare(a.fach.sortierung, b.fach.sortierung))
 				.forEach(daten.faecher::add);
