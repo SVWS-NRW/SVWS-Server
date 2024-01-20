@@ -22,7 +22,6 @@ import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
-import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -30,7 +29,6 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.utils.gost.GostFachwahlManager;
@@ -129,42 +127,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 
 	/**
-	 * Prüft, ob der Schüler bei dem angegebehen GOSt-Halbjahr des angegeben Halbjahres an der Schule gewesen ist.
-	 *
-	 * @param conn          die Datenbankverbindung
-	 * @param dto           der Schüler
-	 * @param halbjahr      das GOSt-Halbjahr
-	 * @param abijahrgang   der Abiturjahrgang
-	 *
-	 * @return true, wenn der Schüler an der Schule ist, und ansonsten false
-	 */
-	public static boolean checkIstAnSchule(final DBEntityManager conn, final DTOSchueler dto, final GostHalbjahr halbjahr, final int abijahrgang) {
-		// Ist ein aktueller Schuljahresabschnitt zugewiesen? Das ist notwendig, wenn der Schüler an der Schule ist oder war
-		if (dto.Schuljahresabschnitts_ID == null)
-			return false;
-		// Dieser Schuljahresabschnitt muss auch gültig sein
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			return false;
-		// In dem Fall, dass der Schüler bereits abgegangen ist, wird das Entlassdatum und der Schuljahresabschnitt mit dem Schuljahresabschnitt des GOSt-Halbjahres abgegleichen
-		if ((dto.Status == SchuelerStatus.ABGANG) || (dto.Status == SchuelerStatus.ABSCHLUSS)) {
-			final int blockungSchuljahr = halbjahr.getSchuljahrFromAbiturjahr(abijahrgang);
-			final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
-			if (entlassung == null) {
-				// Prüfe, ob der aktuelle Schuljahresabschnitt des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
-				if ((schuljahresabschnitt.Jahr < blockungSchuljahr) || ((schuljahresabschnitt.Jahr == blockungSchuljahr) && (schuljahresabschnitt.Abschnitt < halbjahr.halbjahr)))
-					return false;
-			} else {
-				// Prüfe, ob der Schuljahresabschnitt der Entlassung des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
-				if ((entlassung[0] < blockungSchuljahr) || ((entlassung[0] == blockungSchuljahr) && (entlassung[1] < halbjahr.halbjahr)))
-					return false;
-			}
-		}
-		return true;
-	}
-
-
-	/**
 	 * Bestimmt für die angegebene ID alle Daten für die Initialisierung eines
 	 * Blockungsdaten-Managers zur Bestimmung der Blockungsdaten.
 	 * Folgende Information werden nicht geladen: die Liste
@@ -177,7 +139,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
 		// Bestimme den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = mapSchuljahresabschnitte.get(schule.Schuljahresabschnitts_ID);
 		if (dtoSchuleSchuljahresabschnitt == null)
 			throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
 
@@ -262,7 +225,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
-			if (!checkIstAnSchule(conn, dto, blockung.Halbjahr, blockung.Abi_Jahrgang))
+			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, mapSchuljahresabschnitte))
 				continue;
 			final Schueler daten = new Schueler();
 			daten.id = dto.ID;
@@ -866,6 +829,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
 
 		// Bestimme den zugehörigen Schuljahresabschnitt
+		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn
 				.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
 						DTOSchuljahresabschnitte.class, schuljahr, halbjahr.halbjahr);
@@ -929,7 +893,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				mapLernabschnitte.remove(laid);
 			} else {
 				final DTOSchueler dtoSchueler = mapSchueler.get(la.Schueler_ID);
-				if ((dtoSchueler == null) || (!checkIstAnSchule(conn, dtoSchueler, halbjahr, abiturjahr)))
+				if ((dtoSchueler == null) || (!DBUtilsGost.pruefeIstAnSchule(dtoSchueler, halbjahr, abiturjahr, mapSchuljahresabschnitte)))
 					mapLernabschnitte.remove(laid);
 			}
 		}

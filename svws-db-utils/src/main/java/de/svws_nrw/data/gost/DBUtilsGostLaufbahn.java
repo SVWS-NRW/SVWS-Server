@@ -433,7 +433,7 @@ public final class DBUtilsGostLaufbahn {
     	final @NotNull Map<@NotNull Long, @NotNull Abiturdaten> result = new HashMap<>();
     	// Bestimme die Fächer des Abiturjahrgangs und die Schuljahresabschnitte
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahrgang);
-    	final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+    	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs und deren DTOs
 		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
@@ -458,7 +458,7 @@ public final class DBUtilsGostLaufbahn {
     	final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", listAlleGostLernabschnittsIDs, DTOSchuelerLeistungsdaten.class)
     			.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
     	listAlleGostLernabschnittsIDs.stream().forEach(id -> mapLeistungenByAbschnittID.computeIfAbsent(id, k -> new ArrayList<>()));
-    	final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapAbschnitte, mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten);
+    	final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapSchuljahresabschnitte, mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten);
     	// Bestimme die allgemeinen Daten des Schülers und die Fachbelegungen für die Gymnasiale Obertufe und lege dabei ggf. Default-Werte an
     	getSchuelerOrInit(conn, schuelerIDs, abijahrgang);
     	final List<DTOGostSchuelerFachbelegungen> listAlleFachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
@@ -467,7 +467,7 @@ public final class DBUtilsGostLaufbahn {
     	// Erstelle die Abiturdaten aus den DTOs
     	for (final long idSchueler : schuelerIDs) {
         	final DTOSchueler dtoSchueler = mapSchueler.get(idSchueler);
-        	final DTOSchuljahresabschnitte dtoAbschnitt = mapAbschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
+        	final DTOSchuljahresabschnitte dtoAbschnitt = mapSchuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
         	final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitteBySchuelerID.get(idSchueler);
         	if (aktAbschnitt == null)
         		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());

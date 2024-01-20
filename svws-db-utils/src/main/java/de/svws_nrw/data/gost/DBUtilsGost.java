@@ -11,10 +11,12 @@ import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -84,6 +86,42 @@ public final class DBUtilsGost {
 				return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Prüft, ob der Schüler bei dem angegebehen GOSt-Halbjahr des angegeben Halbjahres an der Schule gewesen ist.
+	 *
+	 * @param dto                        der Schüler
+	 * @param halbjahr                   das GOSt-Halbjahr
+	 * @param abijahrgang                der Abiturjahrgang
+	 * @param mapSchuljahresabschnitte   die Schuljahresabschnitte, welche ihrer ID zugeordnet sind
+	 *
+	 * @return true, wenn der Schüler an der Schule ist, und ansonsten false
+	 */
+	public static boolean pruefeIstAnSchule(final DTOSchueler dto, final GostHalbjahr halbjahr, final int abijahrgang, final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte) {
+		// Ist ein aktueller Schuljahresabschnitt zugewiesen? Das ist notwendig, wenn der Schüler an der Schule ist oder war
+		if (dto.Schuljahresabschnitts_ID == null)
+			return false;
+		// Dieser Schuljahresabschnitt muss auch gültig sein
+		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			return false;
+		// In dem Fall, dass der Schüler bereits abgegangen ist, wird das Entlassdatum und der Schuljahresabschnitt mit dem Schuljahresabschnitt des GOSt-Halbjahres abgegleichen
+		if ((dto.Status == SchuelerStatus.ABGANG) || (dto.Status == SchuelerStatus.ABSCHLUSS)) {
+			final int blockungSchuljahr = halbjahr.getSchuljahrFromAbiturjahr(abijahrgang);
+			final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
+			if (entlassung == null) {
+				// Prüfe, ob der aktuelle Schuljahresabschnitt des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
+				if ((schuljahresabschnitt.Jahr < blockungSchuljahr) || ((schuljahresabschnitt.Jahr == blockungSchuljahr) && (schuljahresabschnitt.Abschnitt < halbjahr.halbjahr)))
+					return false;
+			} else {
+				// Prüfe, ob der Schuljahresabschnitt der Entlassung des Schülers < dem Schuljahresabschnitt des GOSt-Halbjahres / der Blockung ist -> dann muss der Schüler ignoriert werden
+				if ((entlassung[0] < blockungSchuljahr) || ((entlassung[0] == blockungSchuljahr) && (entlassung[1] < halbjahr.halbjahr)))
+					return false;
+			}
+		}
+		return true;
 	}
 
 
