@@ -447,15 +447,15 @@ public final class DBUtilsGost {
 					.toList();
 
 			// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
-			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
+			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.isEmpty() ? null : lernabschnitte.get(lernabschnitte.size() - 1);
 
 			// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 			final GostLeistungen daten = new GostLeistungen();
 			daten.id = schueler.ID;
 			daten.aktuellesSchuljahr = abschnittSchueler.Jahr;
-			daten.aktuellerJahrgang = aktLernabschnitt.ASDJahrgang;
+			daten.aktuellerJahrgang = aktLernabschnitt == null ? null : aktLernabschnitt.ASDJahrgang;
 			daten.sprachendaten = sprachendaten;
-			final String biliZweig = aktLernabschnitt.BilingualerZweig;
+			final String biliZweig = aktLernabschnitt == null ? null : aktLernabschnitt.BilingualerZweig;
 			if ((biliZweig != null) && (!"".equals(biliZweig)))
 				daten.bilingualeSprache = biliZweig.toUpperCase().substring(0, 1);
 			// eine HashMap zur temporären Speicherung der Fächer -> muss später noch sortiert werden
@@ -483,6 +483,8 @@ public final class DBUtilsGost {
 					if (kursart == null)
 						continue;
 					final GostFach gostFach = gostFaecherManager.get(leistung.Fach_ID);
+					if (gostFach == null)
+						continue;
 					// Füge die Fächer aus den Leistungsdaten zunächst in die HashMap ein...
 					GostLeistungenFachwahl fach = faecher.get(gostFach.kuerzelAnzeige);
 					if (fach == null) {

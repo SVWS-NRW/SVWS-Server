@@ -249,76 +249,65 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response patchFachwahl(final Long schueler_id, final Long fach_id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-				final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-				if (schueler == null)
-					throw OperationError.NOT_FOUND.exception();
-				// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
-				final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
-				if (abschnitt == null)
-					throw OperationError.NOT_FOUND.exception();
-				final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
-				final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
-						.setParameter("schueler_id", schueler.ID)
-						.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
-						.getResultList().stream().findFirst().orElse(null);
-				if (lernabschnitt == null)
-					throw OperationError.NOT_FOUND.exception();
-				final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
-						? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
-						: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
-				// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
-				final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-				if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
-					throw OperationError.NOT_FOUND.exception();
-				DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
-				if (fachbelegung == null)
-					fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-						case "halbjahre" -> {
-							final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
-							if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
-								throw OperationError.CONFLICT.exception();
-							if (wahlen.length == 0) {
-								fachbelegung.EF1_Kursart = null;
-								fachbelegung.EF2_Kursart = null;
-								fachbelegung.Q11_Kursart = null;
-								fachbelegung.Q12_Kursart = null;
-								fachbelegung.Q21_Kursart = null;
-								fachbelegung.Q22_Kursart = null;
-							} else {
-								fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
-								fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
-								fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
-								fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
-								fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
-								fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
-							}
+			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+			if (schueler == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
+			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
+			if (abschnitt == null)
+				throw OperationError.NOT_FOUND.exception();
+			final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
+					.setParameter("schueler_id", schueler.ID)
+					.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
+					.getResultList().stream().findFirst().orElse(null);
+			if (lernabschnitt == null)
+				throw OperationError.NOT_FOUND.exception();
+			final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
+					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
+					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
+			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
+			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
+			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.TRUE.equals(!fach.IstOberstufenFach))
+				throw OperationError.NOT_FOUND.exception();
+			DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
+			if (fachbelegung == null)
+				fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "halbjahre" -> {
+						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
+						if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
+							throw OperationError.CONFLICT.exception();
+						if (wahlen.length == 0) {
+							fachbelegung.EF1_Kursart = null;
+							fachbelegung.EF2_Kursart = null;
+							fachbelegung.Q11_Kursart = null;
+							fachbelegung.Q12_Kursart = null;
+							fachbelegung.Q21_Kursart = null;
+							fachbelegung.Q22_Kursart = null;
+						} else {
+							fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
+							fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
+							fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
+							fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
+							fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
+							fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
 						}
-						case "abiturFach" -> {
-							final Integer af = JSONMapper.convertToInteger(value, true);
-								if ((af != null) && ((af < 1) || (af > 4)))
-									throw OperationError.CONFLICT.exception();
-								fachbelegung.AbiturFach = af;
-						}
-						default -> throw OperationError.BAD_REQUEST.exception();
 					}
+					case "abiturFach" -> {
+						final Integer af = JSONMapper.convertToInteger(value, true);
+							if ((af != null) && ((af < 1) || (af > 4)))
+								throw OperationError.CONFLICT.exception();
+							fachbelegung.AbiturFach = af;
+					}
+					default -> throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(fachbelegung);
-				conn.transactionCommit();
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
 			}
+			conn.transactionPersist(fachbelegung);
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -867,75 +856,71 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die Belegprüfungsergebnisse
 	 */
 	public Response pruefeBelegungAbitujahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
-		try {
-			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
 
-			// Erstelle das DTO für die Eregbnisrückmeldung
-			final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
+		// Erstelle das DTO für die Eregbnisrückmeldung
+		final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
 
-			// Bestimme die Jahrgangsdaten des Abiturjahrgangs
-	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
+		// Bestimme die Jahrgangsdaten des Abiturjahrgangs
+    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
 
-			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
-	    	final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
+		// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
+    	final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
 
-			// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
-	    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
+		// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
+    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
 
-			// Führe für alle Schüler nacheinander die Belegprüfung durch
-			for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
-				if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN) && (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME))
-					continue;
+		// Führe für alle Schüler nacheinander die Belegprüfung durch
+		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
+			if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN) && (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME))
+				continue;
 
-				// Bestimme die Laufbahndaten des Schülers
-				final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
+			// Bestimme die Laufbahndaten des Schülers
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 
-				// Erzeuge das Ergebnis-DTO für die Rückgabe
-				final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
+			// Erzeuge das Ergebnis-DTO für die Rückgabe
+			final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
-				// Führe die Belegprüfung für den Schüler durch
-				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
-				ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
+			// Führe die Belegprüfung für den Schüler durch
+			final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
+			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 
-				// F+lle das zugehörige Schüler-DTO
-				ergebnisse.schueler.id = dtoSchueler.ID;
-				ergebnisse.schueler.vorname = dtoSchueler.Vorname;
-				ergebnisse.schueler.nachname = dtoSchueler.Nachname;
-				ergebnisse.schueler.status = dtoSchueler.Status.id;
-				ergebnisse.schueler.geschlecht = dtoSchueler.Geschlecht.id;
+			// F+lle das zugehörige Schüler-DTO
+			ergebnisse.schueler.id = dtoSchueler.ID;
+			ergebnisse.schueler.vorname = dtoSchueler.Vorname;
+			ergebnisse.schueler.nachname = dtoSchueler.Nachname;
+			ergebnisse.schueler.status = dtoSchueler.Status.id;
+			ergebnisse.schueler.geschlecht = dtoSchueler.Geschlecht.id;
 
-				// Schreibe das Ergebnis in die Rückmeldung
-				daten.add(ergebnisse);
-			}
-
-			daten.sort((a, b) -> {
-				final Collator collator = Collator.getInstance(Locale.GERMAN);
-	    		if ((a.schueler.nachname == null) && (b.schueler.nachname != null))
-	    			return -1;
-	    		else if ((a.schueler.nachname != null) && (b.schueler.nachname == null))
-	    			return 1;
-	    		else if ((a.schueler.nachname == null) && (b.schueler.nachname == null))
-	    			return 0;
-	    		int result = collator.compare(a.schueler.nachname, b.schueler.nachname);
-				if (result == 0) {
-		    		if ((a.schueler.vorname == null) && (b.schueler.vorname != null))
-		    			return -1;
-		    		else if ((a.schueler.vorname != null) && (b.schueler.vorname == null))
-		    			return 1;
-		    		else if ((a.schueler.vorname == null) && (b.schueler.vorname == null))
-		    			return 0;
-		    		result = collator.compare(a.schueler.vorname, b.schueler.vorname);
-				}
-				return result;
-			});
-
-			// Erzeuge die Response mit den Belegprüfungsergebnissen
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final WebApplicationException wae) {
-			return wae.getResponse();
+			// Schreibe das Ergebnis in die Rückmeldung
+			daten.add(ergebnisse);
 		}
+
+		daten.sort((a, b) -> {
+			final Collator collator = Collator.getInstance(Locale.GERMAN);
+    		if ((a.schueler.nachname == null) && (b.schueler.nachname != null))
+    			return -1;
+    		else if ((a.schueler.nachname != null) && (b.schueler.nachname == null))
+    			return 1;
+    		else if ((a.schueler.nachname == null) && (b.schueler.nachname == null))
+    			return 0;
+    		int result = collator.compare(a.schueler.nachname, b.schueler.nachname);
+			if (result == 0) {
+	    		if ((a.schueler.vorname == null) && (b.schueler.vorname != null))
+	    			return -1;
+	    		else if ((a.schueler.vorname != null) && (b.schueler.vorname == null))
+	    			return 1;
+	    		else if ((a.schueler.vorname == null) && (b.schueler.vorname == null))
+	    			return 0;
+	    		result = collator.compare(a.schueler.vorname, b.schueler.vorname);
+			}
+			return result;
+		});
+
+		// Erzeuge die Response mit den Belegprüfungsergebnissen
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -949,43 +934,31 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return Die HTTP-Response der Operation
 	 */
 	public Response reset(final long idSchueler) {
-		try {
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
-			conn.transactionBegin();
-			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
-			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id]) {
-				DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
-				conn.transactionCommit();
-				return Response.status(Status.NO_CONTENT).build();
-			}
-			final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", idSchueler, DTOGostSchuelerFachbelegungen.class);
-			for (final DTOGostSchuelerFachbelegungen fw : fachwahlen) {
-				fw.AbiturFach = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id])
-					fw.EF1_Kursart = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF2.id])
-					fw.EF2_Kursart = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id])
-					fw.Q11_Kursart = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
-					fw.Q12_Kursart = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id])
-					fw.Q21_Kursart = null;
-				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id])
-					fw.Q22_Kursart = null;
-				conn.transactionPersist(fw);
-			}
-			conn.transactionCommit();
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
+		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
+		if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id]) {
+			DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
 			return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
 		}
+		final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", idSchueler, DTOGostSchuelerFachbelegungen.class);
+		for (final DTOGostSchuelerFachbelegungen fw : fachwahlen) {
+			fw.AbiturFach = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id])
+				fw.EF1_Kursart = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF2.id])
+				fw.EF2_Kursart = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id])
+				fw.Q11_Kursart = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
+				fw.Q12_Kursart = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id])
+				fw.Q21_Kursart = null;
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id])
+				fw.Q22_Kursart = null;
+			conn.transactionPersist(fw);
+		}
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 }

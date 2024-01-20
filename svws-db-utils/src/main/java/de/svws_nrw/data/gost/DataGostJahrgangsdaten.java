@@ -21,7 +21,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -146,14 +145,8 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 	@Override
 	public Response get(final Integer abi_jahrgang) {
-		try {
-			final GostJahrgangsdaten daten = getJahrgangsdaten(conn, abi_jahrgang);
-	        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException wae)
-				return wae.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(e);
-		}
+		final GostJahrgangsdaten daten = getJahrgangsdaten(conn, abi_jahrgang);
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -161,57 +154,46 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() <= 0)
 	    	return Response.status(Status.OK).build();
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
-	    	if (jahrgangsdaten == null)
-	    		throw OperationError.NOT_FOUND.exception();
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
-					case "abiturjahr" -> {
-						final Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
-						if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-    				case "jahrgang" -> throw OperationError.BAD_REQUEST.exception();
-    				case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
-    				case "istAbgeschlossen" -> throw OperationError.BAD_REQUEST.exception();
-    				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
-    				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
-    				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
-    				case "beginnZusatzkursGE" -> {
-    					final String tmp = JSONMapper.convertToString(value, false, false, null);
-    					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
-    					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
-    						throw OperationError.BAD_REQUEST.exception();
-    					jahrgangsdaten.ZusatzkursGEErstesHalbjahr = halbjahr.kuerzel;
-    				}
-    				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
-    				case "beginnZusatzkursSW" -> {
-    					final String tmp = JSONMapper.convertToString(value, false, false, null);
-    					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
-    					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
-    						throw OperationError.BAD_REQUEST.exception();
-    					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
-    				}
-    				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API
-	    			default -> throw OperationError.BAD_REQUEST.exception();
-	    		}
-	    	}
-	    	conn.transactionPersist(jahrgangsdaten);
-	    	conn.transactionCommit();
-	    	return Response.status(Status.OK).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
+    	if (jahrgangsdaten == null)
+    		throw OperationError.NOT_FOUND.exception();
+    	for (final Entry<String, Object> entry : map.entrySet()) {
+    		final String key = entry.getKey();
+    		final Object value = entry.getValue();
+    		switch (key) {
+				case "abiturjahr" -> {
+					final Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
+					if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
+						throw OperationError.BAD_REQUEST.exception();
+				}
+				case "jahrgang" -> throw OperationError.BAD_REQUEST.exception();
+				case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
+				case "istAbgeschlossen" -> throw OperationError.BAD_REQUEST.exception();
+				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
+				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
+				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
+				case "beginnZusatzkursGE" -> {
+					final String tmp = JSONMapper.convertToString(value, false, false, null);
+					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
+					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
+						throw OperationError.BAD_REQUEST.exception();
+					jahrgangsdaten.ZusatzkursGEErstesHalbjahr = halbjahr.kuerzel;
+				}
+				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
+				case "beginnZusatzkursSW" -> {
+					final String tmp = JSONMapper.convertToString(value, false, false, null);
+					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
+					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
+						throw OperationError.BAD_REQUEST.exception();
+					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
+				}
+				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API
+    			default -> throw OperationError.BAD_REQUEST.exception();
+    		}
+    	}
+    	conn.transactionPersist(jahrgangsdaten);
+    	return Response.status(Status.OK).build();
 	}
 
 }

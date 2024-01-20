@@ -100,7 +100,6 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	/**
 	 * Führt den Fachwahl-Patch für das angegebene Halbjahr aus, sofern dieser gültig ist.
 	 *
-	 * @param jahrgang      der Abiturjahrgang, für welchen die Fachwahl angepasst wird
 	 * @param fwDB          der Wert für die Fachwahl aus der DB
 	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
 	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
@@ -110,7 +109,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * @throws WebApplicationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private static String patchFachwahlHalbjahr(final DTOGostJahrgangsdaten jahrgang, final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw) throws WebApplicationException {
+	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw) throws WebApplicationException {
 		if ("".equals(fw))
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
@@ -138,62 +137,51 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	public Response patchFachwahl(final Integer abijahr, final Long fach_id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-				final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-				if (jahrgang == null)
-					return OperationError.NOT_FOUND.getResponse();
-				// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
-				final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-				if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
-					throw OperationError.NOT_FOUND.exception();
-				DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
-				if (fachbelegung == null)
-					fachbelegung = new DTOGostJahrgangFachbelegungen(abijahr, fach.ID);
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-						case "halbjahre" -> {
-							final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
-							if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
-								throw OperationError.CONFLICT.exception();
-							if (wahlen.length == 0) {
-								fachbelegung.EF1_Kursart = null;
-								fachbelegung.EF2_Kursart = null;
-								fachbelegung.Q11_Kursart = null;
-								fachbelegung.Q12_Kursart = null;
-								fachbelegung.Q21_Kursart = null;
-								fachbelegung.Q22_Kursart = null;
-							} else {
-								fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, fach, wahlen[0]);
-								fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, fach, wahlen[1]);
-								fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, fach, wahlen[2]);
-								fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, fach, wahlen[3]);
-								fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, fach, wahlen[4]);
-								fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(jahrgang, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, fach, wahlen[5]);
-							}
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+			if (jahrgang == null)
+				return OperationError.NOT_FOUND.getResponse();
+			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
+			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
+			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
+				throw OperationError.NOT_FOUND.exception();
+			DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
+			if (fachbelegung == null)
+				fachbelegung = new DTOGostJahrgangFachbelegungen(abijahr, fach.ID);
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "halbjahre" -> {
+						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
+						if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
+							throw OperationError.CONFLICT.exception();
+						if (wahlen.length == 0) {
+							fachbelegung.EF1_Kursart = null;
+							fachbelegung.EF2_Kursart = null;
+							fachbelegung.Q11_Kursart = null;
+							fachbelegung.Q12_Kursart = null;
+							fachbelegung.Q21_Kursart = null;
+							fachbelegung.Q22_Kursart = null;
+						} else {
+							fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(fachbelegung.EF1_Kursart, GostHalbjahr.EF1, fach, wahlen[0]);
+							fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(fachbelegung.EF2_Kursart, GostHalbjahr.EF2, fach, wahlen[1]);
+							fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(fachbelegung.Q11_Kursart, GostHalbjahr.Q11, fach, wahlen[2]);
+							fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(fachbelegung.Q12_Kursart, GostHalbjahr.Q12, fach, wahlen[3]);
+							fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(fachbelegung.Q21_Kursart, GostHalbjahr.Q21, fach, wahlen[4]);
+							fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(fachbelegung.Q22_Kursart, GostHalbjahr.Q22, fach, wahlen[5]);
 						}
-						case "abiturFach" -> {
-							final Integer af = JSONMapper.convertToInteger(value, true);
-								if ((af != null) && ((af < 1) || (af > 4)))
-									throw OperationError.CONFLICT.exception();
-								fachbelegung.AbiturFach = af;
-						}
-						default -> throw OperationError.BAD_REQUEST.exception();
 					}
+					case "abiturFach" -> {
+						final Integer af = JSONMapper.convertToInteger(value, true);
+							if ((af != null) && ((af < 1) || (af > 4)))
+								throw OperationError.CONFLICT.exception();
+							fachbelegung.AbiturFach = af;
+					}
+					default -> throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(fachbelegung);
-				conn.transactionCommit();
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
 			}
+			conn.transactionPersist(fachbelegung);
 		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -350,27 +338,15 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @return Die HTTP-Response der Operation
 	 */
 	public Response reset(final Integer abijahr) {
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-			if (jahrgang == null)
-				return OperationError.NOT_FOUND.getResponse();
-			if (abijahr == -1) {
-				transactionResetJahrgangVorlage(conn);
-			} else {
-				transactionResetJahrgang(conn, jahrgang);
-			}
-			conn.transactionCommit();
-			return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+		if (jahrgang == null)
+			return OperationError.NOT_FOUND.getResponse();
+		if (abijahr == -1)
+			transactionResetJahrgangVorlage(conn);
+		else
+			transactionResetJahrgang(conn, jahrgang);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -383,25 +359,14 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @return Die HTTP-Response der Operation
 	 */
 	public Response resetSchuelerAlle(final Integer abijahr) {
-		try {
-			conn.transactionBegin();
-			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-			if (jahrgang == null)
-				return OperationError.NOT_FOUND.getResponse();
-			final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
-			for (final DTOSchueler schueler : listSchueler)
-				transactionResetSchueler(conn, jahrgang, schueler.ID);
-			conn.transactionCommit();
-			return Response.status(Status.NO_CONTENT).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+		if (jahrgang == null)
+			return OperationError.NOT_FOUND.getResponse();
+		final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
+		for (final DTOSchueler schueler : listSchueler)
+			transactionResetSchueler(conn, jahrgang, schueler.ID);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 }

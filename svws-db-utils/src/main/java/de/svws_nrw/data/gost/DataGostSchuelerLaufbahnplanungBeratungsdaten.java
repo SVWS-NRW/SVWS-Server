@@ -113,40 +113,29 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	public Response patch(final Long schueler_id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (!map.isEmpty()) {
-    		try {
-    			conn.transactionBegin();
-	    		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
-		    	if (gostSchueler == null)
-		    		throw OperationError.NOT_FOUND.exception();
-		    	for (final Entry<String, Object> entry : map.entrySet()) {
-		    		final String key = entry.getKey();
-		    		final Object value = entry.getValue();
-		    		switch (key) {
-		    			case "beratungslehrerID" -> {
-		    				final Long beratungslehrerID = JSONMapper.convertToLong(value, true);
-		    				if (beratungslehrerID != null) {
-		    					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, beratungslehrerID);
-		    					if (lehrer == null)
-		    						throw OperationError.CONFLICT.exception();
-		    				}
-		    				gostSchueler.Beratungslehrer_ID = beratungslehrerID;
-		    			}
-		    			case "beratungsdatum" -> gostSchueler.DatumBeratung = JSONMapper.convertToString(value, true, false, null);
-		    			case "kommentar" -> gostSchueler.Kommentar = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Schueler.col_Kommentar.datenlaenge());
-		    			case "ruecklaufdatum" -> gostSchueler.DatumRuecklauf = JSONMapper.convertToString(value, true, false, null);
-		    			default -> throw OperationError.BAD_REQUEST.exception();
-		    		}
-		    	}
-		    	conn.transactionPersist(gostSchueler);
-		    	conn.transactionCommit();
-    		} catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+    		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+	    	if (gostSchueler == null)
+	    		throw OperationError.NOT_FOUND.exception();
+	    	for (final Entry<String, Object> entry : map.entrySet()) {
+	    		final String key = entry.getKey();
+	    		final Object value = entry.getValue();
+	    		switch (key) {
+	    			case "beratungslehrerID" -> {
+	    				final Long beratungslehrerID = JSONMapper.convertToLong(value, true);
+	    				if (beratungslehrerID != null) {
+	    					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, beratungslehrerID);
+	    					if (lehrer == null)
+	    						throw OperationError.CONFLICT.exception();
+	    				}
+	    				gostSchueler.Beratungslehrer_ID = beratungslehrerID;
+	    			}
+	    			case "beratungsdatum" -> gostSchueler.DatumBeratung = JSONMapper.convertToString(value, true, false, null);
+	    			case "kommentar" -> gostSchueler.Kommentar = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Schueler.col_Kommentar.datenlaenge());
+	    			case "ruecklaufdatum" -> gostSchueler.DatumRuecklauf = JSONMapper.convertToString(value, true, false, null);
+	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    		}
+	    	}
+	    	conn.transactionPersist(gostSchueler);
     	}
     	return Response.status(Status.OK).build();
 	}
