@@ -455,7 +455,9 @@ public final class DBUtilsGostLaufbahn {
     	final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitteBySchuelerID = listAlleGostAbschnitte.stream().collect(Collectors.groupingBy(a -> a.Schueler_ID, Collectors.toList()));
     	schuelerIDs.stream().forEach(id -> mapAlleGostAbschnitteBySchuelerID.computeIfAbsent(id, k -> new ArrayList<>()));
     	final Map<Long, Sprachendaten> mapSprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, schuelerIDs).stream().collect(Collectors.toMap(sd -> sd.schuelerID, sd -> sd));
-    	final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", listAlleGostLernabschnittsIDs, DTOSchuelerLeistungsdaten.class)
+    	final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID = listAlleGostLernabschnittsIDs.isEmpty()
+    			? new HashMap<>()
+    			: conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", listAlleGostLernabschnittsIDs, DTOSchuelerLeistungsdaten.class)
     			.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
     	listAlleGostLernabschnittsIDs.stream().forEach(id -> mapLeistungenByAbschnittID.computeIfAbsent(id, k -> new ArrayList<>()));
     	final Map<Long, GostLeistungen> mapGostLeistungen = DBUtilsGost.getLeistungsdatenFromDTOs(schuelerIDs, gostFaecher, mapSchuljahresabschnitte, mapSchueler, mapAlleGostAbschnitteBySchuelerID, mapLeistungenByAbschnittID, mapSprachendaten);
