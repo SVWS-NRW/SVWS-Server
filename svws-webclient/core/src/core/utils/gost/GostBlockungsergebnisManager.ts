@@ -24,11 +24,13 @@ import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
+import { Pair } from '../../../core/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
+import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
@@ -2601,7 +2603,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
 	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
 	 */
@@ -2622,6 +2624,38 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 		}
 		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
+	}
+
+	/**
+	 * Liefert alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
+	 * <br>Pro innerer Liste gilt: Das erste Paar ist der Kurs, welcher mit allen anderen verglichen wurde, zusammen mit der Kollisions-Summe.
+	 * <br>Anschließend folgen alle anderen Kurse mit ihrer Kollisions-Anzahl, falls diese größer 0 ist.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
+	 */
+	public getOfSchieneTooltipKurskollisionenAsData(idSchiene : number) : List<List<Pair<GostBlockungsergebnisKurs, number>>> {
+		const listOfLists : List<List<Pair<GostBlockungsergebnisKurs, number>>> = new ArrayList();
+		for (const kurs1 of this.getSchieneE(idSchiene).kurse) {
+			const listOfPairs : List<Pair<GostBlockungsergebnisKurs, number>> = new ArrayList();
+			let summe : number = 0;
+			const temp : LinkedCollection<number | null> | null = new LinkedCollection();
+			temp.addFirst(77);
+			temp.addFirst(88);
+			for (const kurs2 of this.getSchieneE(idSchiene).kurse) {
+				const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+				if (anzahl > 0) {
+					listOfPairs.add(new Pair<GostBlockungsergebnisKurs, number>(kurs2, anzahl));
+					summe += anzahl;
+				}
+			}
+			if (summe > 0) {
+				listOfPairs.add(0, new Pair<GostBlockungsergebnisKurs, number>(kurs1, summe));
+				listOfLists.add(listOfPairs);
+			}
+		}
+		return listOfLists;
 	}
 
 	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {

@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.Map.Entry;
 
+import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -2764,7 +2766,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
 	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
 	 */
@@ -2789,6 +2791,44 @@ public class GostBlockungsergebnisManager {
 		}
 
 		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
+	}
+
+	/**
+	 * Liefert alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
+	 * <br>Pro innerer Liste gilt: Das erste Paar ist der Kurs, welcher mit allen anderen verglichen wurde, zusammen mit der Kollisions-Summe.
+	 * <br>Anschließend folgen alle anderen Kurse mit ihrer Kollisions-Anzahl, falls diese größer 0 ist.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
+	 */
+	public @NotNull List<@NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>>> getOfSchieneTooltipKurskollisionenAsData(final long idSchiene) {
+		final @NotNull List<@NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>>> listOfLists = new ArrayList<>();
+
+		for (final GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
+			final @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>> listOfPairs = new ArrayList<>();
+
+			int summe = 0;
+
+			final LinkedCollection<Integer> temp = new LinkedCollection<>();
+			temp.addFirst(77);
+			temp.addFirst(88);
+
+			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
+				final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+				if (anzahl > 0) {
+					listOfPairs.add(new Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>(kurs2, anzahl));
+					summe += anzahl;
+				}
+			}
+
+			if (summe > 0) {
+				listOfPairs.add(0, new Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>(kurs1, summe));
+				listOfLists.add(listOfPairs);
+			}
+		}
+
+		return listOfLists;
 	}
 
 	private static int getOfKursOfKursAnzahlGemeinsamerSchueler(final @NotNull GostBlockungsergebnisKurs kurs1, final @NotNull GostBlockungsergebnisKurs kurs2) {
