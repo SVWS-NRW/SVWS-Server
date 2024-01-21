@@ -394,7 +394,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		for (final GostStatistikFachwahl fw : fachwahlen) {
 			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
 			if (zulFach == ZulaessigesFach.VF)
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+				continue;
 			final GostStatistikFachwahlHalbjahr fwHj = fw.fachwahlen[gostHalbjahr.id];
 			final int anzahlLK = (fwHj.wahlenLK + 10) / 20;
 			final int anzahlGK = (fwHj.wahlenGK + 10) / 20;
