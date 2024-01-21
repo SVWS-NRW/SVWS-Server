@@ -63,8 +63,10 @@
 			</template>
 			<template #body>
 				<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
-					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
+					<template v-if="!(faecherNichtWaehlbarAusblenden && !(row.istMoeglichEF1 || row.istMoeglichEF2 || row.istMoeglichQ11 || row.istMoeglichQ12 || row.istMoeglichQ21 || row.istMoeglichQ22))">
+						<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
+							:fach="row" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
+					</template>
 				</template>
 			</template>
 			<template #dataFooter>
@@ -210,6 +212,7 @@
 		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
+		faecherNichtWaehlbarAusblenden: boolean;
 		title?: string | undefined;
 	}>(), {
 		title: undefined,

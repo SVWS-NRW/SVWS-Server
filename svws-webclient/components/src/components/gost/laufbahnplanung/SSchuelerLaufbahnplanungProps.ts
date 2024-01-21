@@ -22,5 +22,7 @@ export interface SchuelerLaufbahnplanungProps {
 	resetFachwahlen: () => Promise<void>;
 	modus: 'manuell'|'normal'|'hochschreiben';
 	setModus: (modus: 'manuell'|'normal'|'hochschreiben') => Promise<void>;
+	faecherNichtWaehlbarAusblenden: boolean;
+	setFaecherNichtWaehlbarAusblenden: (value: boolean) => Promise<void>;
 	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 }

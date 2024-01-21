@@ -12,6 +12,9 @@
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
+				<svws-ui-button v-if="hatFaecherNichtWaehlbar" type="transparent" title="Alle Fächer anzeigen" @click="setFaecherNichtWaehlbarAusblenden(!faecherNichtWaehlbarAusblenden)">
+					{{ faecherNichtWaehlbarAusblenden ? 'Alle Fächer anzeigen' : 'Nicht wählbare Fächer ausblenden' }}
+				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
@@ -22,7 +25,7 @@
 		</Teleport>
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" />
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" :faecher-nicht-waehlbar-ausblenden="faecherNichtWaehlbarAusblenden" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
@@ -45,6 +48,13 @@
 
 	const _showModalImport = ref<boolean>(false);
 	const showModalImport = () => _showModalImport;
+
+	const hatFaecherNichtWaehlbar = computed<boolean>(() => {
+		for (const fach of props.abiturdatenManager().faecher().faecher())
+			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
+				return true;
+		return false;
+	});
 
 	async function switchModus() {
 		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus

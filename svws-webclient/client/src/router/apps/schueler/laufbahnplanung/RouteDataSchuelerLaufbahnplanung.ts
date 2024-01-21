@@ -109,6 +109,19 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
 	}
 
+	get faecherNichtWaehlbarAusblenden(): boolean {
+		const s = api.config.getValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen");
+		if (s === 'true' || s === 'false')
+			return s === 'false';
+		void api.config.setValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen", 'false');
+		throw new DeveloperNotificationException("Es wurde eine fehlerhafter Wert als Standardauswahl hinterlegt");
+	}
+
+	setFaecherNichtWaehlbarAusblenden = async (value: boolean) => {
+		await api.config.setValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen", value ? "false" : "true");
+		this.commit();
+	}
+
 	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined)

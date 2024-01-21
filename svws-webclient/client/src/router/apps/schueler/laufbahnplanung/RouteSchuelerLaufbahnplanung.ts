@@ -29,6 +29,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
 		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
+		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.alle_anzeigen", "user", "false")]);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -78,6 +79,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			resetFachwahlen: this.data.resetFachwahlen,
 			modus: this.data.modus,
 			setModus: this.data.setModus,
+			faecherNichtWaehlbarAusblenden: this.data.faecherNichtWaehlbarAusblenden,
+			setFaecherNichtWaehlbarAusblenden: this.data.setFaecherNichtWaehlbarAusblenden,
 			gotoKursblockung: this.data.gotoKursblockung,
 		};
 	}
