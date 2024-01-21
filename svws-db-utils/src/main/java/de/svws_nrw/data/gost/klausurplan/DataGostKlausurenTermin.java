@@ -149,6 +149,37 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		return termine;
 	}
 
+	/**
+	 * Gibt den Klausurtermin zur übergebenen ID zurück oder eine Exception, falls er nicht in der DB vorhanden ist.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return der Klausurtermin
+	 */
+	public static GostKlausurtermin getKlausurterminZuId(final DBEntityManager conn, final long idTermin) {
+		final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, idTermin);
+		if (termin == null)
+			throw OperationError.BAD_REQUEST.exception("Klausurtermin nicht gefunden, ID: " + idTermin);
+		return dtoMapper.apply(termin);
+	}
+
+	/**
+	 * Gibt die Klausurtermine zur übergebenen ID-Liste zurück oder eine Exception, falls er nicht in der DB vorhanden ist.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param listIds	 die Liste von IDs der Klausurtermine
+	 *
+	 * @return der Klausurtermin
+	 */
+	public static List<GostKlausurtermin> getKlausurtermineZuIds(final DBEntityManager conn, final List<Long> listIds) {
+		if (listIds.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenTermine> termine = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", listIds, DTOGostKlausurenTermine.class);
+		return termine.stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+	}
+
+
 	@Override
 	public Response get(final Long halbjahr) {
 		throw new UnsupportedOperationException();

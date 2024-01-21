@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
@@ -18,11 +17,8 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
@@ -51,17 +47,19 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	}
 
 	private List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTermin(final long terminId) {
-		if (conn.queryByKey(DTOGostKlausurenTermine.class, terminId) == null)
-			throw OperationError.BAD_REQUEST.exception("Klausurtermin nicht gefunden, ID: " + terminId);
-		final List<Long> kursKlausurIds = conn.queryNamed("DTOGostKlausurenKursklausuren.termin_id", terminId, DTOGostKlausurenKursklausuren.class).stream().map(k -> k.ID).distinct().toList();
+		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, terminId) == null)
+			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(terminId));
 
-		final List<Long> kkSkIds = new ArrayList<>();
-		if (!kursKlausurIds.isEmpty()) {
-			final Map<Long, DTOGostKlausurenSchuelerklausuren> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausurIds, DTOGostKlausurenSchuelerklausuren.class).stream()
-				.collect(Collectors.toMap(sk -> sk.ID, sk -> sk));
-			kkSkIds.addAll(mapSchuelerklausuren.keySet());
-		}
+		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminid(conn, terminId);
+		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
+
+		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
+//		if (!kursklausuren.isEmpty()) {
+//			final Map<Long, DTOGostKlausurenSchuelerklausuren> mapSchuelerklausuren = conn
+//				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.id).distinct().toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
+//				.collect(Collectors.toMap(sk -> sk.ID, sk -> sk));
+//			kkSkIds.addAll(mapSchuelerklausuren.keySet());
+//		}
 
 		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0)";
 
@@ -185,8 +183,11 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	public static List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> termine) {
 		if (termine.isEmpty())
 			return new ArrayList<>();
-		return conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", termine.stream().map(sk -> sk.idSchuelerklausur).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
+		final List<GostSchuelerklausur> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", termine.stream().map(sk -> sk.idSchuelerklausur).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
 				.map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
+		if (sks.isEmpty())
+			throw OperationError.CONFLICT.exception("Schülerklausuren zu Schülerklausurterminen nicht gefunden.");
+		return sks;
 	}
 
 	/**
@@ -208,21 +209,13 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 				.getResultList().stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
 
 		if (!result.schuelerklausuren.isEmpty()) {
-
-			result.schuelerklausurtermine = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", result.schuelerklausuren.stream().map(sk -> sk.id).toList(),
-					DTOGostKlausurenSchuelerklausurenTermine.class).stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
-			result.kursklausuren = conn
-					.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", result.schuelerklausuren.stream().map(sk -> sk.idKursklausur).toList(), DTOGostKlausurenKursklausuren.class).stream()
-					.map(DataGostKlausurenKursklausur.dtoMapper::apply).toList();
-			result.vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", result.kursklausuren.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class).stream()
-					.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
-
+			result.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, result.schuelerklausuren);
+			result.kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, result.schuelerklausuren);
+			result.vorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, result.kursklausuren);
 			final List<Long> terminIds = new ArrayList<>();
 			terminIds.addAll(result.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 			terminIds.addAll(result.kursklausuren.stream().filter(kk -> kk.idTermin != null).map(kk -> kk.idTermin).toList());
-			result.termine = terminIds.isEmpty()
-					? new ArrayList<>()
-					: conn.queryNamed("DTOGostKlausurenTermine.id.multiple", terminIds, DTOGostKlausurenTermine.class).stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+			result.termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, terminIds);
 		}
 
 		return result;

@@ -253,6 +253,59 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Klausurvorgaben zu einer Menge von IDs zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param vids die IDs der Kursklausuren, zu denen die Vorgaben gesucht werden.
+	 *
+	 * @return die Liste der Klausurvorgaben
+	 */
+	public static List<GostKlausurvorgabe> getKlausurvorgabenZuIds(final DBEntityManager conn, final List<Long> vids) {
+		return getKlausurvorgabDTOsZuIds(conn, vids).stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param vids die IDs der Kursklausuren, zu denen die Vorgaben gesucht werden.
+	 *
+	 * @return die Liste der Klausurvorgaben
+	 */
+	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabDTOsZuIds(final DBEntityManager conn, final List<Long> vids) {
+		if (vids.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", vids, DTOGostKlausurenVorgaben.class);
+		if (vorgaben.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Klausurvorgabe-DTOs zu angegebenen IDs nicht gefunden.");
+		return vorgaben;
+	}
+
+	/**
+	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param kks die Kursklausur-DTOs, zu denen die Vorgaben gesucht werden.
+	 *
+	 * @return die Liste der Klausurvorgaben
+	 */
+	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabeDTOsZuKursklausurDTOs(final DBEntityManager conn, final List<DTOGostKlausurenKursklausuren> kks) {
+		return getKlausurvorgabDTOsZuIds(conn, kks.stream().map(kk -> kk.Vorgabe_ID).toList());
+	}
+
+	/**
+	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param kks die Kursklausur-DTOs, zu denen die Vorgaben gesucht werden.
+	 *
+	 * @return die Liste der Klausurvorgaben
+	 */
+	public static List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausurDTOs(final DBEntityManager conn, final List<DTOGostKlausurenKursklausuren> kks) {
+		return getKlausurvorgabeDTOsZuKursklausurDTOs(conn, kks).stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
 	 * Gibt die Liste der Klausurvorgaben zu einer Menge von Kursklausuren zurück.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
@@ -261,10 +314,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return die Liste der Klausurvorgaben
 	 */
 	public static List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kks) {
-		if (kks.isEmpty())
-			return new ArrayList<>();
-		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryNamed("DTOGostKlausurenVorgaben.id.multiple", kks.stream().map(kk -> kk.idVorgabe).toList(), DTOGostKlausurenVorgaben.class);
-		return vorgaben.stream().map(dtoMapper::apply).toList();
+		return getKlausurvorgabenZuIds(conn, kks.stream().map(kk -> kk.idVorgabe).toList());
 	}
 
 	@Override

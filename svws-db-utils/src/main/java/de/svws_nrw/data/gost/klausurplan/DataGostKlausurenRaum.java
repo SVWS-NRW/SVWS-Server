@@ -77,12 +77,13 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurräume
 	 */
-	public List<GostKlausurraum> getKlausurraeume(final Long idTermin) {
-		if (conn.queryByKey(DTOGostKlausurenTermine.class, idTermin) == null)
+	public static List<GostKlausurraum> getKlausurraeumeZuTermin(final DBEntityManager conn, final Long idTermin) {
+		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
 			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id", idTermin, DTOGostKlausurenRaeume.class);
 		return raeume.stream().map(dtoMapper::apply).toList();
@@ -91,7 +92,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	@Override
 	public Response get(final Long idTermin) {
 		// Klausurräume zu einem Klausurtermin
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurraeume(idTermin)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraeumeZuTermin(conn, idTermin)).build();
 	}
 
 	@Override

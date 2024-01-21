@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
@@ -49,32 +50,67 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	};
 
 	/**
-	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
-	 * Gost-Halbjahr zurück.
+	 * Gibt die Liste der Klausurraumstunden zu einem Klausurtermin zurück.
 	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurraumstunden
 	 */
-	private List<GostKlausurraumstunde> getKlausurraumstunden(final Long idTermin) {
-
-		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeume(idTermin);
-
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final DBEntityManager conn, final Long idTermin) {
+		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin);
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
+		return getKlausurraumstundenZuRaeumen(conn, listRaeume);
+	}
 
-		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(), DTOGostKlausurenRaumstunden.class);
+	/**
+	 * Gibt die Liste der Klausurraumstunden zu einer Liste von Räumen zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param listRaeume die Liste der Klausurräume
+	 *
+	 * @return die Liste der Klausurraumstunden
+	 */
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final DBEntityManager conn, final List<GostKlausurraum> listRaeume) {
+		if (listRaeume.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryNamed("DTOGostKlausurenRaumstunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.id).toList(), DTOGostKlausurenRaumstunden.class);
+		return stunden.stream().map(dtoMapper::apply).toList();
+	}
 
-		final List<GostKlausurraumstunde> daten = new ArrayList<>();
-		for (final DTOGostKlausurenRaumstunden s : stunden)
-			daten.add(dtoMapper.apply(s));
-		return daten;
+	/**
+	 * Gibt die Liste der Klausurraumstunden zu einer Raumid zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idRaum	 die ID des Raums
+	 *
+	 * @return die Liste der Klausurraumstunden
+	 */
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuRaumid(final DBEntityManager conn, final long idRaum) {
+		final List<DTOGostKlausurenRaumstunden> listKlausurraumstunden = conn.queryNamed("DTOGostKlausurenRaumstunden.klausurraum_id", idRaum, DTOGostKlausurenRaumstunden.class);
+		return listKlausurraumstunden.stream().map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminraumstunden die Klausurraumstunden
+	 *
+	 * @param conn    x
+	 * @param listSktrs die Liste der GostSchuelerklausurterminraumstunden
+	 *
+	 * @return die Liste der zugehörigen Klausurraumstunden-Objekte
+	 */
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final DBEntityManager conn, final List<GostSchuelerklausurterminraumstunde> listSktrs) {
+		if (listSktrs.isEmpty())
+			return new ArrayList<>();
+		final List<DTOGostKlausurenRaumstunden> sks = conn.queryNamed("DTOGostKlausurenRaumstunden.id.multiple", listSktrs.stream().map(sktrs -> sktrs.idRaumstunde).toList(), DTOGostKlausurenRaumstunden.class);
+		return sks.stream().map(dtoMapper::apply).toList();
 	}
 
 	@Override
 	public Response get(final Long idTermin) {
 		// Klausurraumstunden zu einem Klausurtermin
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurraumstunden(idTermin)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraumstundenZuTermin(conn, idTermin)).build();
 	}
 
 	@Override

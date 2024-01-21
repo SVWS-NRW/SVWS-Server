@@ -10,6 +10,7 @@ import java.util.function.Function;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -116,10 +117,54 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
 	 */
 	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausuren(final DBEntityManager conn, final List<GostSchuelerklausur> klausuren) {
-		if (klausuren.isEmpty())
+		return getSchuelerklausurtermineZuSchuelerklausurids(conn, klausuren.stream().map(sk -> sk.id).toList());
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausuren-IDs gehörigen
+	 * GostSchuelerklausurtermin-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listSkIds die Liste der GostSchuelerklausuren-IDs
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurids(final DBEntityManager conn, final List<Long> listSkIds) {
+		if (listSkIds.isEmpty())
 			return new ArrayList<>();
-		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", klausuren.stream().map(sk -> sk.id).toList(), DTOGostKlausurenSchuelerklausurenTermine.class).stream()
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.schuelerklausur_id.multiple", listSkIds, DTOGostKlausurenSchuelerklausurenTermine.class).stream()
 				.map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurtermin-IDs gehörigen
+	 * GostSchuelerklausurtermin-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listSkIds die Liste der GostSchuelerklausurtermin-IDs
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminids(final DBEntityManager conn, final List<Long> listSkIds) {
+		if (listSkIds.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSkIds, DTOGostKlausurenSchuelerklausurenTermine.class).stream()
+				.map(dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminraumstunden gehörigen
+	 * GostSchuelerklausurtermin-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listSktrs die Liste der GostSchuelerklausurterminraumstunden
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(final DBEntityManager conn, final List<GostSchuelerklausurterminraumstunde> listSktrs) {
+		if (listSktrs.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSktrs.stream().map(skrs -> skrs.idSchuelerklausurtermin).distinct().toList(), DTOGostKlausurenSchuelerklausurenTermine.class).stream().map(dtoMapper::apply).toList();
 	}
 
 	/**
