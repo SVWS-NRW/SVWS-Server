@@ -29,7 +29,7 @@
 					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungBisJahrgang: jahrgang.daten.kuerzel}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
