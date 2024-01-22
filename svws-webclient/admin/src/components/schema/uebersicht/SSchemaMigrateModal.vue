@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal">
+	<svws-ui-modal :show="showModal" size="big">
 		<template #modalTitle>Schema migrieren</template>
 		<template #modalContent>
 			<div class="flex items-start gap-3">

@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal">
+	<svws-ui-modal :show="showModal" size="big">
 		<template #modalTitle>Schema importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
@@ -29,6 +29,9 @@
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
 			</template>
+		</template>
+		<template #modalLogs>
+			<log-box :logs="logs" :status="status" />
 		</template>
 	</svws-ui-modal>
 </template>
