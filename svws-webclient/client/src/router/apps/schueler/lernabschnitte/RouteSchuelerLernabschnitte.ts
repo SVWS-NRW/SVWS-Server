@@ -54,6 +54,10 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		}
 		if ((to === this) && (this.data.hatAuswahl))
 			return this.getChildRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					this.data.setView(child, this.children);
 	}
 
 	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
