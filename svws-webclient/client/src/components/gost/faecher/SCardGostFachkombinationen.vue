@@ -4,7 +4,7 @@
 			<svws-ui-tooltip>
 				<span class="content-card--headline">{{ title }}</span>
 				<template #content>
-					{{ typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH ? 'Fach 1 und Fach 2 schließen sich gegenseitig aus in den angegebenen Kursarten':'Fach 1 erfordert Fach 2 in den angegebenen Kursarten'}}
+					{{ typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH ? 'Fach 1 und Fach 2 schließen sich gegenseitig aus in den angegebenen Kursarten' : 'Fach 1 erfordert Fach 2 in den angegebenen Kursarten' }}
 				</template>
 			</svws-ui-tooltip>
 		</template>

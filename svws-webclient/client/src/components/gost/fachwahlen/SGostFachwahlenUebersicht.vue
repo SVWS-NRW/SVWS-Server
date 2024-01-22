@@ -113,7 +113,7 @@
 			return true;
 		if (group === "Abitur")
 			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
-		if ((group == "ZK") || (group == "LK"))
+		if ((group === "ZK") || (group === "LK"))
 			return false; // Evtl. für weitere Ansichten: return getData(row, group, "") !== "";
 		const hj = GostHalbjahr.fromKuerzel(group);
 		if (hj === null)

@@ -3,9 +3,9 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="klasse" @update:model-value="value => patch({ klassenID: (value == undefined) ? null : value.id })" />
+					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: (value == undefined) ? null : value.id })" />
+					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				<svws-ui-text-input placeholder="Datum von" type="date"
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined"
 					@change="datumAnfang => patch({datumAnfang})" />
@@ -24,9 +24,9 @@
 				</div>
 				<div class="flex flex-col gap-3">
 					<svws-ui-select title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-						:model-value="tutor" @update:model-value="value => patch({ tutorID: (value == undefined) ? null : value.id })" />
+						:model-value="tutor" @update:model-value="value => patch({ tutorID: ((value === undefined) || (value === null)) ? null : value.id })" />
 					<svws-ui-select title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: (value == undefined) ? null : value.id })" />
+						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">

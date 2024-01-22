@@ -470,7 +470,7 @@
 	}
 
 	function scrollToClickedElement() {
-		if (!props.scrollIntoView || clickedItemIndex.value == undefined)
+		if (!props.scrollIntoView || clickedItemIndex.value === undefined)
 			return;
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
 		const clickedElementHtml = itemRefs.value.get(clickedItemIndex.value);

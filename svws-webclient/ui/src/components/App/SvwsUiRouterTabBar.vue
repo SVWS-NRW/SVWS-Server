@@ -97,7 +97,7 @@
 	}
 
 	function scroll(direction: 'left' | 'right') {
-		const dir = direction == "left" ? -1 : 1;
+		const dir = direction === "left" ? -1 : 1;
 		tabsListElement.value?.scrollBy({
 			top: 0,
 			left: (dir * tabsListElement.value.scrollWidth) / state.value.scrollFactor,

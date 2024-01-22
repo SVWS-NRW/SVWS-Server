@@ -123,7 +123,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 
 	public async setSchueler(idSchueler: number) : Promise<void> {
-		if (idSchueler == this._state.value.idSchueler)
+		if (idSchueler === this._state.value.idSchueler)
 			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);

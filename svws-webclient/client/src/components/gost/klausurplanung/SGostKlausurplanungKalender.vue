@@ -67,7 +67,7 @@
 			<svws-ui-content-card class="border p-2">
 				<template #title>
 					<span class="text-headline-md leading-none inline-flex gap-1">
-						<template v-if="anzahlProKwKonflikte2(4, false).length == 0">
+						<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
 							<i-ri-checkbox-circle-fill class="text-success -my-1" />
 							<span>Keine Konflikte</span>
 						</template>
@@ -98,7 +98,7 @@
 			<svws-ui-content-card class="border p-2 op">
 				<template #title>
 					<span class="text-headline-md leading-none inline-flex gap-1">
-						<template v-if="anzahlProKwKonflikte2(3, true).length == 0">
+						<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
 							<i-ri-checkbox-circle-fill class="text-success -my-1" />
 							<span>Keine Warnungen</span>
 						</template>

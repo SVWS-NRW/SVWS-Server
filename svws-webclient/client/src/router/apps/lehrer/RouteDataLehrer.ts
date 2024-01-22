@@ -122,7 +122,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		if (!this.lehrerListeManager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const abschnittsdaten = this.lehrerListeManager.getAbschnittById(id);
-		if (abschnittsdaten == null)
+		if (abschnittsdaten === null)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id + " geladen.");
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
 		Object.assign(abschnittsdaten, data);

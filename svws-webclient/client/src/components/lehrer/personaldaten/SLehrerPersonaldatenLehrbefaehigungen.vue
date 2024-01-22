@@ -43,7 +43,7 @@
 
 	function getLehrbefaehigung(eintrag: LehrerLehrbefaehigungEintrag) : LehrerLehrbefaehigung {
 		const lehrbefaehigung = LehrerLehrbefaehigung.getByID(eintrag.idLehrbefaehigung);
-		if (lehrbefaehigung == null)
+		if (lehrbefaehigung === null)
 			throw new DeveloperNotificationException("Die ID der Lehrbefähigung ist unzulässig. Die vorhandenen Daten sind inkonsistent.");
 		return lehrbefaehigung;
 	}

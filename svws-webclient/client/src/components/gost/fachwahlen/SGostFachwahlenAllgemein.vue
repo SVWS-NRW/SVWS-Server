@@ -106,7 +106,7 @@
 	function onClick(fws : GostStatistikFachwahl, halbjahr: GostHalbjahr | undefined): void {
 		if (fws.id === aktuell.value.fachwahl?.id) {
 			// Das gleiche Fach wurde angeklickt
-			if (halbjahr == undefined) { // Klick auf das Fach
+			if (halbjahr === undefined) { // Klick auf das Fach
 				if (aktuell.value.halbjahr === undefined) {
 					// Das Fach war zuvor nicht ausgewählt und muss daher aufgeklappt werden
 					aktuell.value = { fachwahl: undefined, halbjahr: undefined }; // GostHalbjahr.EF1 // TODO Bestimmung des ersten Halbjahres mit Fachwahlen

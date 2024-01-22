@@ -8,7 +8,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="add" :disabled="lehramt == undefined"> Lehramt hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="add" :disabled="lehramt === undefined"> Lehramt hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -27,7 +27,7 @@
 	const lehramt = ref<LehrerLehramt | undefined>(undefined);
 
 	function add() {
-		if (lehramt.value == undefined)
+		if (lehramt.value === undefined)
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerLehramtEintrag();
 		l.id = props.idLehrer;

@@ -43,7 +43,7 @@
 
 	function getFachrichtung(eintrag: LehrerFachrichtungEintrag) : LehrerFachrichtung {
 		const fachrichtung = LehrerFachrichtung.getByID(eintrag.idFachrichtung);
-		if (fachrichtung == null)
+		if (fachrichtung === null)
 			throw new DeveloperNotificationException("Die ID der Fachrichtung ist unzulässig. Die vorhandenen Daten sind inkonsistent.");
 		return fachrichtung;
 	}

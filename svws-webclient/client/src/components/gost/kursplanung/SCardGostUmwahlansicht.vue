@@ -203,7 +203,7 @@
 		if (dragAndDropData.value === undefined)
 			return false
 		const { id, fachID, kursart } = dragAndDropData.value;
-		if ((id != undefined) && (id === kurs.id))
+		if ((id !== undefined) && (id === kurs.id))
 			return false;
 		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
 			return false;

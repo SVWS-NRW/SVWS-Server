@@ -149,10 +149,10 @@
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur || dragData.value instanceof GostSchuelerklausurTermin) {
-			if (zone === undefined && dragData.value.idTermin != null)
+			if (zone === undefined && dragData.value.idTermin !== null)
 				await props.patchKlausur(dragData.value, {idTermin: null});
 			else if (zone instanceof GostKlausurtermin) {
-				if (zone.id != dragData.value.idTermin) {
+				if (zone.id !== dragData.value.idTermin) {
 					await props.patchKlausur(dragData.value, {idTermin: zone.id});
 					terminSelected.value = zone;
 				}

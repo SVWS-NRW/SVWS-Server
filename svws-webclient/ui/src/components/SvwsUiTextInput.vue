@@ -188,7 +188,7 @@
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value != data.value)
+		if (value !== data.value)
 			updateData(props.type === "number" ? Number(value) : value);
 	}
 

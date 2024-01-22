@@ -95,7 +95,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await api.server.patchKlasse(data, api.schema, idKlasse);
 		Object.assign(daten, data);
 		const eintrag = this.klassenListeManager.liste.get(idKlasse);
-		if (eintrag != null) {
+		if (eintrag !== null) {
 			if (data.kuerzel !== undefined)
 				eintrag.kuerzel = data.kuerzel;
 			if (data.sortierung !== undefined)

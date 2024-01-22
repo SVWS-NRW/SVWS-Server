@@ -105,7 +105,7 @@
 			if (fach.value.projektKursLeitfach1ID === null)
 				return undefined;
 			let result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
-			return result == null ? undefined : result;
+			return result === null ? undefined : result;
 		},
 		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
 	});
@@ -115,7 +115,7 @@
 			if (fach.value.projektKursLeitfach2ID === null)
 				return undefined;
 			let result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
-			return result == null ? undefined : result;
+			return result === null ? undefined : result;
 		},
 		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
 	});

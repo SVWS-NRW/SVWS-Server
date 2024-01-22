@@ -93,7 +93,7 @@
 	}
 
 	function scroll(direction: 'up' | 'down') {
-		const dir = direction == "up" ? -1 : 1;
+		const dir = direction === "up" ? -1 : 1;
 		contentEl.value?.scrollBy({
 			left: 0,
 			top: (dir * contentEl.value.scrollHeight) / state.value.scrollFactor,

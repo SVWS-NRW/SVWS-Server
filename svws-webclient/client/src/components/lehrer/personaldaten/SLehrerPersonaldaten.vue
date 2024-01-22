@@ -63,7 +63,7 @@
 			return LehrerRechtsverhaeltnis.values().find(r => r.daten.kuerzel === personalabschnittsdaten.value?.rechtsverhaeltnis);
 		},
 		set(val: LehrerRechtsverhaeltnis | undefined) {
-			if (personalabschnittsdaten.value != null)
+			if (personalabschnittsdaten.value !== null)
 				void props.patchAbschnittsdaten({ rechtsverhaeltnis: val?.daten.kuerzel }, personalabschnittsdaten.value.id);
 		}
 	});
@@ -73,7 +73,7 @@
 			return LehrerBeschaeftigungsart.values().find(r => r.daten.kuerzel === personalabschnittsdaten.value?.beschaeftigungsart);
 		},
 		set(val: LehrerBeschaeftigungsart | undefined) {
-			if (personalabschnittsdaten.value != null)
+			if (personalabschnittsdaten.value !== null)
 				void props.patchAbschnittsdaten({ beschaeftigungsart: val?.daten.kuerzel }, personalabschnittsdaten.value.id);
 		}
 	});
@@ -83,7 +83,7 @@
 			return LehrerEinsatzstatus.values().find(r => r.daten.kuerzel === personalabschnittsdaten.value?.einsatzstatus);
 		},
 		set(val: LehrerEinsatzstatus | undefined) {
-			if (personalabschnittsdaten.value != null)
+			if (personalabschnittsdaten.value !== null)
 				void props.patchAbschnittsdaten({ einsatzstatus: val?.daten.kuerzel }, personalabschnittsdaten.value.id);
 		}
 	});

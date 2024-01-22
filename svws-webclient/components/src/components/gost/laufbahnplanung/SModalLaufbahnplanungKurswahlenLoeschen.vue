@@ -45,7 +45,7 @@
 
 	const hatFesteWahlen = computed<boolean>(() => {
 		const jg = props.gostJahrgangsdaten.jahrgang;
-		return (jg === "Q1") || (jg == "Q2") || ((jg == "EF") && (props.gostJahrgangsdaten.istBlockungFestgelegt[0]));
+		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (props.gostJahrgangsdaten.istBlockungFestgelegt[0]));
 	});
 
 	const _showModal = ref<boolean>(false);

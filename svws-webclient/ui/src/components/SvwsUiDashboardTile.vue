@@ -34,6 +34,9 @@
 		color: 'light',
 		span: 1,
 		clickable: false,
+		title: undefined,
+		number: undefined,
+		numberLabel: undefined
 	});
 </script>
 

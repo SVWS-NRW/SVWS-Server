@@ -8,7 +8,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="add" :disabled="fachrichtung == undefined"> Fachrichtung hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="add" :disabled="fachrichtung === undefined"> Fachrichtung hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -27,7 +27,7 @@
 	const fachrichtung = ref<LehrerFachrichtung | undefined>(undefined);
 
 	function add() {
-		if (fachrichtung.value == undefined)
+		if (fachrichtung.value === undefined)
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerFachrichtungEintrag();
 		l.id = props.idLehrer;

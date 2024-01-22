@@ -22,10 +22,10 @@ describe("TestDequeRandom", () => {
 		const i2 = d2.iterator();
 
 		while (i1.hasNext() || i2.hasNext()) {
-			if (i1.hasNext() != i2.hasNext()) return true;
+			if (i1.hasNext() !== i2.hasNext()) return true;
 			const v1 = i1.next();
 			const v2 = i2.next();
-			if (v1 != v2) return false;
+			if (v1 !== v2) return false;
 		}
 		return true;
 	}
@@ -182,7 +182,7 @@ describe("TestDequeRandom", () => {
 					case 0:
 						test("testRemoveFirst", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								expect(d1.removeFirst()).toBe(d2.removeFirst());
 							} else {
 								expect(() => d1.removeFirst()).toThrow( NoSuchElementException)
@@ -193,7 +193,7 @@ describe("TestDequeRandom", () => {
 					case 1:
 						test("testRemoveLast", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								expect(d1.removeLast()).toBe(d2.removeLast());
 							} else {
 								expect(() => d1.removeLast()).toThrow(NoSuchElementException);
@@ -204,7 +204,7 @@ describe("TestDequeRandom", () => {
 					case 2:
 						test("testPollFirst", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								expect(d1.pollFirst()).toBe(d2.pollFirst());
 							} else {
 								expect(d1.pollFirst()).toBe(null);
@@ -215,7 +215,7 @@ describe("TestDequeRandom", () => {
 					case 3:
 						test("testPollLast", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								expect(d1.pollLast()).toBe(d2.pollLast());
 							} else {
 								expect(d1.pollLast()).toBe(null);
@@ -257,7 +257,7 @@ describe("TestDequeRandom", () => {
 					case 8:
 						test("testPop", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								const i1 = d1.pop();
 								const i2 = d2.pop();
 								expect(i1).toBe(i2);
@@ -339,7 +339,7 @@ describe("TestDequeRandom", () => {
 					case 14:
 						test("testRemoveToElement", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								const i1 = d1.remove();
 								const i2 = d2.remove();
 								expect(i1).toBe(i2);
@@ -394,7 +394,7 @@ describe("TestDequeRandom", () => {
 					case 5:
 						test("testElement", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() != 0) {
+							if (d1.size() !== 0) {
 								const i1 = d1.element();
 								const i2 = d1.element();
 								expect(i1).toBe(i2);
@@ -533,7 +533,7 @@ describe("TestDequeRandom", () => {
 
 							let old: null | any = null;
 							for (const value of temp1) {
-								if (old != null) expect(old - value).toBeLessThanOrEqual(0);
+								if (old !== null) expect(old - value).toBeLessThanOrEqual(0);
 								old = value;
 							}
 						});

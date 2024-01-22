@@ -71,7 +71,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 			api.status.stop();
 			return res;
 		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response != null) && ((e.response.status === 400) || (e.response.status === 409))) {
+			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 409))) {
 				const json : string = await e.response.text();
 				return SimpleOperationResponse.transpilerFromJSON(json);
 			}

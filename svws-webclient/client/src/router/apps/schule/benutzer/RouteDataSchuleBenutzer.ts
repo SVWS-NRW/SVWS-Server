@@ -244,7 +244,7 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 	addBenutzerToBenutzergruppe = async (idGroup: number): Promise<void> => {
 		if (this.benutzerManager === undefined)
 			return;
-		if (idGroup != -1) {
+		if (idGroup !== -1) {
 			const bg_ids = new ArrayList<number>();
 			bg_ids.add(this.benutzerManager.getID());
 			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);

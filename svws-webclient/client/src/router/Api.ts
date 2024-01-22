@@ -408,7 +408,7 @@ class Api {
 		try {
 			return await op();
 		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response != null) && (errorResponses.includes(e.response.status))) {
+			if ((e instanceof OpenApiError) && (e.response !== null) && (errorResponses.includes(e.response.status))) {
 				const json : string = await e.response.text();
 				return SimpleOperationResponse.transpilerFromJSON(json);
 			}

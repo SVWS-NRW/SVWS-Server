@@ -129,7 +129,7 @@
 	function onInput(event: Event) {
 		const strValue = (event.target as HTMLInputElement).value;
 		const value = (strValue === "") ? null : Number(strValue);
-		if (value != data.value)
+		if (value !== data.value)
 			updateData(value);
 	}
 

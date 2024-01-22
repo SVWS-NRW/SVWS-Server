@@ -80,7 +80,7 @@
 				result.add(s);
 			}
 			if (!changed)
-				changed = (props.data().schienen.size() != result.size());
+				changed = (props.data().schienen.size() !== result.size());
 			if (changed)
 				void props.patch({ schienen : result });
 		}
@@ -99,7 +99,7 @@
 		for (const art of ZulaessigeKursart.get(props.schulform)) {
 			if (art.daten.kuerzel === "PUK")
 				continue;
-			if ((art.daten.kuerzelAllg != null) && (art.daten.bezeichnungAllg != null))
+			if ((art.daten.kuerzelAllg !== null) && (art.daten.bezeichnungAllg !== null))
 				arten.set(art.daten.kuerzelAllg, art.daten.bezeichnungAllg);
 			else
 				arten.set(art.daten.kuerzel, art.daten.bezeichnung);

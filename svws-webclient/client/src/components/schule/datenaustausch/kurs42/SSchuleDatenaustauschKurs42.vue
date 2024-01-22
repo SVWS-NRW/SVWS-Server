@@ -2,7 +2,7 @@
 	<div class="page--content page--content--full">
 		<svws-ui-content-card title="Blockung aus Kurs42 hochladen">
 			<div class="flex flex-col gap-2 mb-16 lg:mb-20">
-				<p><i-ri-information-line class="inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs 42 exportiert werden müssen: </p>
+				<p><i-ri-information-line class="inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs42 exportiert werden müssen: </p>
 				<ul class="list-disc list-inside">
 					<li> Blockung.txt </li>
 					<li> Schueler.txt </li>
@@ -14,11 +14,11 @@
 				</ul>
 				<p> Diese Text-Dateien müssen für den Import im Hauptverzeichnis einer zip-Datei vorliegen. </p>
 				<p>
-					Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs 42 gut zu den Daten der Schild-Datenbank passen!<br>
+					Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs42 gut zu den Daten der Schild-Datenbank passen!<br>
 					Ist dies nicht der Fall, so schlägt der Import fehl.
 				</p>
 				<p>
-					<b>Wichtig:</b> Wurde die Kurs42-Datei Quartals-weise verwaltet, so ist in der Datei "Blockung.txt" der Eintrag Abschnitt
+					<b>Wichtig:</b> Wurde die Kurs42-Datei quartalsweise verwaltet, so ist in der Datei "Blockung.txt" der Eintrag Abschnitt
 					entsprechend auf das Halbjahr zu korrigieren, für welches die Blockung importiert werden soll.
 				</p>
 			</div>
@@ -39,8 +39,8 @@
 <script setup lang="ts">
 
 	import { ref, onMounted } from 'vue';
-	import { type List } from '@core';
-	import { type SchuleDatenaustauschKurs42Props } from './SSchuleDatenaustauschKurs42Props';
+	import type { List } from '@core';
+	import type { SchuleDatenaustauschKurs42Props } from './SSchuleDatenaustauschKurs42Props';
 
 	const props = defineProps<SchuleDatenaustauschKurs42Props>();
 

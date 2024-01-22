@@ -43,7 +43,7 @@
 
 	function getLehramt(eintrag: LehrerLehramtEintrag) : LehrerLehramt {
 		const lehramt = LehrerLehramt.getByID(eintrag.idLehramt);
-		if (lehramt == null)
+		if (lehramt === null)
 			throw new DeveloperNotificationException("Die ID des Lehramtes ist unzulässig. Die vorhandenen Daten sind inkonsistent.");
 		return lehramt;
 	}
