@@ -14,7 +14,7 @@
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung="gotoKursblockung"
-			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus"
+			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus" :faecher-nicht-waehlbar-ausblenden="false"
 			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
@@ -27,7 +27,7 @@
 					</template>
 					<template #actions>
 						<!-- TODO: Hier kommt das Dropdown hin -->
-						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => addLehrer(lehrer || undefined)" headless indeterminate
+						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => lehrer && addBeratungslehrer(lehrer.id)" headless indeterminate
 							autocomplete :item-filter="lehrer_filter" :items="lehrer" removable title="Lehrkraft hinzufügen…" :item-text="l=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 						<svws-ui-button @click="removeBeratungslehrer(selected)" type="trash" :disabled="!selected.length" />
 					</template>
@@ -38,9 +38,9 @@
 			<svws-ui-content-card title="Textvorlagen">
 				<svws-ui-input-wrapper>
 					<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
-						@change="textBeratungsbogen => doPatch({ textBeratungsbogen })" resizeable="vertical" autoresize />
+						@change="textBeratungsbogen => patchJahrgangsdaten({ textBeratungsbogen }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
 					<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
-						@change="textMailversand => doPatch({ textMailversand })" resizeable="vertical" autoresize />
+						@change="textMailversand => patchJahrgangsdaten({ textMailversand }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</div>
@@ -50,7 +50,7 @@
 <script setup lang="ts">
 
 	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import type { GostBeratungslehrer, LehrerListeEintrag, GostJahrgangsdaten } from "@core";
+	import type { GostBeratungslehrer, LehrerListeEintrag } from "@core";
 	import { onMounted, computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
 
@@ -60,7 +60,8 @@
 
 	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
 
-	const istManuellerModus = ref(false)
+	const istManuellerModus = ref(false);
+
 	function switchManuellerModus() {
 		istManuellerModus.value = !istManuellerModus.value;
 	}
@@ -72,20 +73,9 @@
 		return map;
 	})
 
-	async function addLehrer(lehrer?: LehrerListeEintrag) {
-		if (lehrer === undefined)
-			return;
-		await props.addBeratungslehrer(lehrer.id);
-	}
-
-	async function doPatch(data: Partial<GostJahrgangsdaten>) {
-		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
-	}
 	// Check if component is mounted
 	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
+	onMounted(() => isMounted.value = true);
 
 </script>
 
