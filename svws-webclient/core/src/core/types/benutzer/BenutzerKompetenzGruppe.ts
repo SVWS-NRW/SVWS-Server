@@ -98,7 +98,7 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	/**
 	 * Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KLAUSURPLANUNG", 17, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - -Klausurplanung", 5, 3));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KLAUSURPLANUNG", 17, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3));
 
 	/**
 	 * Gruppe für Rechte bezüglich des Abiturs.
@@ -113,7 +113,7 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	/**
 	 * Gruppe für Rechte bezüglich der Kalender.
 	 */
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 20, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 20, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I.

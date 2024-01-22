@@ -63,7 +63,7 @@ public enum BenutzerKompetenzGruppe {
 	OBERSTUFE_KURSPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2)),
 
 	/** Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe. */
-	OBERSTUFE_KLAUSURPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - -Klausurplanung", 5, 3)),
+	OBERSTUFE_KLAUSURPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3)),
 
 	/** Gruppe für Rechte bezüglich des Abiturs. */
 	ABITUR(new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4)),
@@ -72,7 +72,7 @@ public enum BenutzerKompetenzGruppe {
 	CARDDAV(new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4)),
 
 	/** Gruppe für Rechte bezüglich der Kalender. */
-	CALDAV(new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5)),
+	CALDAV(new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5)),
 	/** Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I. */
 	ABSCHLUSS_SEKI(new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1)),
 
