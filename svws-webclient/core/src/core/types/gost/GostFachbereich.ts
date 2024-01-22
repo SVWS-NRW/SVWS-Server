@@ -26,7 +26,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	/**
 	 * Fachbereich fremdsprachlich
 	 */
-	public static readonly FREMDSPRACHE : GostFachbereich = new GostFachbereich("FREMDSPRACHE", 1, null, ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9, ZulaessigesFach.E, ZulaessigesFach.F, ZulaessigesFach.F0, ZulaessigesFach.F5, ZulaessigesFach.F6, ZulaessigesFach.F7, ZulaessigesFach.F8, ZulaessigesFach.F9, ZulaessigesFach.G, ZulaessigesFach.G0, ZulaessigesFach.G5, ZulaessigesFach.G6, ZulaessigesFach.G7, ZulaessigesFach.G8, ZulaessigesFach.G9, ZulaessigesFach.H, ZulaessigesFach.H0, ZulaessigesFach.H5, ZulaessigesFach.H6, ZulaessigesFach.H7, ZulaessigesFach.H8, ZulaessigesFach.H9, ZulaessigesFach.I, ZulaessigesFach.I0, ZulaessigesFach.I5, ZulaessigesFach.I6, ZulaessigesFach.I7, ZulaessigesFach.I8, ZulaessigesFach.I9, ZulaessigesFach.K, ZulaessigesFach.K0, ZulaessigesFach.K5, ZulaessigesFach.K6, ZulaessigesFach.K7, ZulaessigesFach.K8, ZulaessigesFach.K9, ZulaessigesFach.L, ZulaessigesFach.L0, ZulaessigesFach.L5, ZulaessigesFach.L6, ZulaessigesFach.L7, ZulaessigesFach.L8, ZulaessigesFach.L9, ZulaessigesFach.N, ZulaessigesFach.N0, ZulaessigesFach.N5, ZulaessigesFach.N6, ZulaessigesFach.N7, ZulaessigesFach.N8, ZulaessigesFach.N9, ZulaessigesFach.O, ZulaessigesFach.O0, ZulaessigesFach.O5, ZulaessigesFach.O6, ZulaessigesFach.O7, ZulaessigesFach.O8, ZulaessigesFach.O9, ZulaessigesFach.R, ZulaessigesFach.R0, ZulaessigesFach.R5, ZulaessigesFach.R6, ZulaessigesFach.R7, ZulaessigesFach.R8, ZulaessigesFach.R9, ZulaessigesFach.S, ZulaessigesFach.S0, ZulaessigesFach.S5, ZulaessigesFach.S6, ZulaessigesFach.S7, ZulaessigesFach.S8, ZulaessigesFach.S9, ZulaessigesFach.T, ZulaessigesFach.T0, ZulaessigesFach.T5, ZulaessigesFach.T6, ZulaessigesFach.T7, ZulaessigesFach.T8, ZulaessigesFach.T9, ZulaessigesFach.Z, ZulaessigesFach.Z0, ZulaessigesFach.Z5, ZulaessigesFach.Z6, ZulaessigesFach.Z7, ZulaessigesFach.Z8, ZulaessigesFach.Z9);
+	public static readonly FREMDSPRACHE : GostFachbereich = new GostFachbereich("FREMDSPRACHE", 1, null, ZulaessigesFach.E, ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9, ZulaessigesFach.F, ZulaessigesFach.F0, ZulaessigesFach.F5, ZulaessigesFach.F6, ZulaessigesFach.F7, ZulaessigesFach.F8, ZulaessigesFach.F9, ZulaessigesFach.G, ZulaessigesFach.G0, ZulaessigesFach.G5, ZulaessigesFach.G6, ZulaessigesFach.G7, ZulaessigesFach.G8, ZulaessigesFach.G9, ZulaessigesFach.H, ZulaessigesFach.H0, ZulaessigesFach.H5, ZulaessigesFach.H6, ZulaessigesFach.H7, ZulaessigesFach.H8, ZulaessigesFach.H9, ZulaessigesFach.I, ZulaessigesFach.I0, ZulaessigesFach.I5, ZulaessigesFach.I6, ZulaessigesFach.I7, ZulaessigesFach.I8, ZulaessigesFach.I9, ZulaessigesFach.K, ZulaessigesFach.K0, ZulaessigesFach.K5, ZulaessigesFach.K6, ZulaessigesFach.K7, ZulaessigesFach.K8, ZulaessigesFach.K9, ZulaessigesFach.L, ZulaessigesFach.L0, ZulaessigesFach.L5, ZulaessigesFach.L6, ZulaessigesFach.L7, ZulaessigesFach.L8, ZulaessigesFach.L9, ZulaessigesFach.N, ZulaessigesFach.N0, ZulaessigesFach.N5, ZulaessigesFach.N6, ZulaessigesFach.N7, ZulaessigesFach.N8, ZulaessigesFach.N9, ZulaessigesFach.O, ZulaessigesFach.O0, ZulaessigesFach.O5, ZulaessigesFach.O6, ZulaessigesFach.O7, ZulaessigesFach.O8, ZulaessigesFach.O9, ZulaessigesFach.R, ZulaessigesFach.R0, ZulaessigesFach.R5, ZulaessigesFach.R6, ZulaessigesFach.R7, ZulaessigesFach.R8, ZulaessigesFach.R9, ZulaessigesFach.S, ZulaessigesFach.S0, ZulaessigesFach.S5, ZulaessigesFach.S6, ZulaessigesFach.S7, ZulaessigesFach.S8, ZulaessigesFach.S9, ZulaessigesFach.T, ZulaessigesFach.T0, ZulaessigesFach.T5, ZulaessigesFach.T6, ZulaessigesFach.T7, ZulaessigesFach.T8, ZulaessigesFach.T9, ZulaessigesFach.Z, ZulaessigesFach.Z0, ZulaessigesFach.Z5, ZulaessigesFach.Z6, ZulaessigesFach.Z7, ZulaessigesFach.Z8, ZulaessigesFach.Z9);
 
 	/**
 	 * Fachbereich künstlerisch musikalisch
@@ -114,9 +114,24 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	public static readonly SPORT : GostFachbereich = new GostFachbereich("SPORT", 18, null, ZulaessigesFach.SP);
 
 	/**
+	 * Pseudo-Fachbereich Vertiefungskurse
+	 */
+	public static readonly VERTIEFUNGSKURSE : GostFachbereich = new GostFachbereich("VERTIEFUNGSKURSE", 19, null, ZulaessigesFach.VX);
+
+	/**
+	 * Pseudo-Fachbereich Projektkurse
+	 */
+	public static readonly PROJEKTKURSE : GostFachbereich = new GostFachbereich("PROJEKTKURSE", 20, null, ZulaessigesFach.PX);
+
+	/**
 	 * Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
 	 */
 	private static readonly _setAlleFaecher : JavaSet<ZulaessigesFach> = new HashSet<ZulaessigesFach>();
+
+	/**
+	 * Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 */
+	private static readonly _listAlleFaecher : List<ZulaessigesFach> = new ArrayList<ZulaessigesFach>();
 
 	/**
 	 * Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet.
@@ -249,6 +264,28 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 			for (const fb of GostFachbereich.values())
 				GostFachbereich._setAlleFaecher.addAll(fb.getFaecher());
 		return GostFachbereich._setAlleFaecher;
+	}
+
+	/**
+	 * Gibt alle Fächer in einer Standard-Sortierung zurück, welche einem Fachbereich der gymnasialen
+	 * Oberstufe zugeordnet sind.
+	 *
+	 * @return die Liste der Fächer
+	 */
+	public static getAlleFaecherSortiert() : List<ZulaessigesFach> {
+		if (GostFachbereich._listAlleFaecher.isEmpty()) {
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.GESCHICHTE.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.SOZIALWISSENSCHAFTEN.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.PHILOSOPHIE.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.RELIGION.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.SPORT.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.VERTIEFUNGSKURSE.getFaecher());
+			GostFachbereich._listAlleFaecher.addAll(GostFachbereich.PROJEKTKURSE.getFaecher());
+		}
+		return GostFachbereich._listAlleFaecher;
 	}
 
 	/**

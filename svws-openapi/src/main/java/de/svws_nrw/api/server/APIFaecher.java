@@ -392,4 +392,29 @@ public class APIFaecher {
         	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Setzen der Sortierung bei der Liste der Fächer im angegebenen Schema
+     * auf eine Standard-Sortierung für dei Sekundarstufe II. Für den Aufruf dieser API-Methode
+     * muss die Schulform eine Gymnasiale Oberstufe besitzen.
+     *
+     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request     die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Response
+     */
+    @POST
+    @Path("/sortierung/setSekII")
+    @Operation(summary = "Setzte eine Sortierung für die Fächer auf eine Standard-Sortierung für die Sekundarstufe II.",
+               description = "Setzte eine Sortierung für die Fächer auf eine Standard-Sortierung für die Sekundarstufe II."
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fächerdaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Sortierung wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fächerdaten anzupassen.")
+    @ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden")
+    public Response setFaecherSortierungSekII(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataFaecherliste.setDefaultSortierungSekII(conn),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
 }

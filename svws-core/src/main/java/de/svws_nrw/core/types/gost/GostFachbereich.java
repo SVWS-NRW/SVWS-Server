@@ -24,8 +24,8 @@ public enum GostFachbereich {
 
 	/** Fachbereich fremdsprachlich */
 	FREMDSPRACHE(null,
-			ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9,
 			ZulaessigesFach.E,
+			ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9,
 			ZulaessigesFach.F, ZulaessigesFach.F0, ZulaessigesFach.F5, ZulaessigesFach.F6, ZulaessigesFach.F7, ZulaessigesFach.F8, ZulaessigesFach.F9,
 			ZulaessigesFach.G, ZulaessigesFach.G0, ZulaessigesFach.G5, ZulaessigesFach.G6, ZulaessigesFach.G7, ZulaessigesFach.G8, ZulaessigesFach.G9,
 			ZulaessigesFach.H, ZulaessigesFach.H0, ZulaessigesFach.H5, ZulaessigesFach.H6, ZulaessigesFach.H7, ZulaessigesFach.H8, ZulaessigesFach.H9,
@@ -89,10 +89,20 @@ public enum GostFachbereich {
 	MATHEMATISCH_NATURWISSENSCHAFTLICH(Arrays.asList(MATHEMATIK, NATURWISSENSCHAFTLICH_KLASSISCH, NATURWISSENSCHAFTLICH_NEU_EINSETZEND)),
 
 	/** Fachbereich sportlich */
-	SPORT(null, ZulaessigesFach.SP);
+	SPORT(null, ZulaessigesFach.SP),
+
+	/** Pseudo-Fachbereich Vertiefungskurse */
+	VERTIEFUNGSKURSE(null, ZulaessigesFach.VX),
+
+	/** Pseudo-Fachbereich Projektkurse */
+	PROJEKTKURSE(null, ZulaessigesFach.PX);
+
 
 	/** Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
 	private static final @NotNull Set<@NotNull ZulaessigesFach> _setAlleFaecher = new HashSet<@NotNull ZulaessigesFach>();
+
+	/** Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
+	private static final @NotNull List<@NotNull ZulaessigesFach> _listAlleFaecher = new ArrayList<@NotNull ZulaessigesFach>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
 	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach = new ArrayMap<>(ZulaessigesFach.values());
@@ -216,6 +226,29 @@ public enum GostFachbereich {
 			for (final @NotNull GostFachbereich fb : GostFachbereich.values())
 				_setAlleFaecher.addAll(fb.getFaecher());
 		return _setAlleFaecher;
+	}
+
+
+	/**
+	 * Gibt alle Fächer in einer Standard-Sortierung zurück, welche einem Fachbereich der gymnasialen
+	 * Oberstufe zugeordnet sind.
+	 *
+	 * @return die Liste der Fächer
+	 */
+	public static @NotNull List<@NotNull ZulaessigesFach> getAlleFaecherSortiert() {
+		if (_listAlleFaecher.isEmpty()) {
+			_listAlleFaecher.addAll(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.GESCHICHTE.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.SOZIALWISSENSCHAFTEN.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.PHILOSOPHIE.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.RELIGION.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.SPORT.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.VERTIEFUNGSKURSE.getFaecher());
+			_listAlleFaecher.addAll(GostFachbereich.PROJEKTKURSE.getFaecher());
+		}
+		return _listAlleFaecher;
 	}
 
 }

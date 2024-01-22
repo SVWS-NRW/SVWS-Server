@@ -2345,6 +2345,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setFaecherSortierungSekII für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/sortierung/setSekII
+	 *
+	 * Setzte eine Sortierung für die Fächer auf eine Standard-Sortierung für die Sekundarstufe II.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fächerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Sortierung wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fächerdaten anzupassen.
+	 *   Code 404: Keine Fächer-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async setFaecherSortierungSekII(schema : string) : Promise<void> {
+		const path = "/db/{schema}/faecher/sortierung/setSekII"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGesamtschuleSchuelerPrognoseLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gesamtschule/schueler/{id : \d+}/prognose_leistungsdaten
 	 *
 	 * Liest die Leistungsdaten des aktuellen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der Gesamtschule des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.

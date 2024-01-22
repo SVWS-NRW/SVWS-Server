@@ -15,6 +15,13 @@
 				<!--<template #cell(bezeichnung)="{rowData}">
 					<span class="svws-ui-badge" :style="`&#45;&#45;background-color: ${getBgColor(rowData.kuerzelStatistik || '')}`">{{ rowData.bezeichnung }}</span>
 				</template>-->
+				<template #actions>
+					<template v-if="schulform.daten.hatGymOb">
+						<s-faecher-auswahl-sortierung-sek-i-i-modal v-slot="{ openModal }" :setze-default-sortierung-sek-i-i="setzeDefaultSortierungSekII">
+							<svws-ui-button type="secondary" @click="openModal">Standardsortierung Sek II anwenden …</svws-ui-button>
+						</s-faecher-auswahl-sortierung-sek-i-i-modal>
+					</template>
+				</template>
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
