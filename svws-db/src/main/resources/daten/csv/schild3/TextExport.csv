@@ -33,15 +33,15 @@ ErzAdr;ErzOrt_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
 ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(ErzStrassenname, ' ', ErzHausNr) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
 ErzAdr;Name1;1. Person: Nachname;S;;;;;ALLE
 ErzAdr;Name2;2. Person: Nachname;S;;;;;ALLE
-ErzAdr;Schueler_ID;Schüler-Jahrgang;S;;;InternKrz;SELECT J.InternKrz FROM EigeneSchule_Jahrgaenge J WHERE J.ID=(SELECT A.Jahrgang_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr IS NULL);ALLE
-ErzAdr;Schueler_ID;Schüler-Klasse;S;;;Klasse;SELECT K.Klasse FROM Klassen K WHERE K.ID=(SELECT A.Klassen_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr IS NULL);ALLE
+ErzAdr;Schueler_ID;Schüler-Jahrgang;S;;;InternKrz;SELECT J.InternKrz FROM EigeneSchule_Jahrgaenge J WHERE J.ID=(SELECT A.Jahrgang_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
+ErzAdr;Schueler_ID;Schüler-Klasse;S;;;Klasse;SELECT K.Klasse FROM Klassen K WHERE K.ID=(SELECT A.Klassen_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
 ErzAdr;Schueler_ID;Schüler-Nachname;S;;;Name;SELECT Name FROM Schueler WHERE ID=%;ALLE
 ErzAdr;Schueler_ID;Schüler-Vorname;S;;;Vorname;SELECT Vorname FROM Schueler WHERE ID=%;ALLE
 ErzAdr;Titel1;1. Person: Titel;S;;;;;ALLE
 ErzAdr;Titel2;2. Person: Titel;S;;;;;ALLE
 ErzAdr;Vorname1;1. Person: Vorname;S;;;;;ALLE
 ErzAdr;Vorname2;2. Person: Vorname;S;;;;;ALLE
-ErzAdr;Schueler_ID;Schüler-ID;I;;;;;
+ErzAdr;Schueler_ID;Schüler-ID;I;;;;;ALLE
 Lehrer;Amtsbezeichnung;Amtsbezeichnung;S;;;;;ALLE
 Lehrer;Anrede;Anrede;S;;;;;ALLE
 Lehrer;Email;E-Mail;S;;;;;ALLE
@@ -64,21 +64,20 @@ Lehrer;Titel;Titel;S;;;;;ALLE
 Lehrer;Vorname;Vorname;S;;;;;ALLE
 Lehrer;Vschluessel;Vergütungsschlüssel;S;;;;;ALLE
 Lehrer;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
-Lehrer;ID;Pflichtstunden-Soll;S;;x;PflichtstdSoll;select A.PflichtstdSoll from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Rechtsverhältnis;S;;x;Rechtsverhaeltnis;select A.Rechtsverhaeltnis from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Beschäftigungsart;S;;x;Beschaeftigungsart;select A.Beschaeftigungsart from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Einsatzstatus;S;;x;Einsatzstatus;select A.Einsatzstatus from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Unterrichtsstunden;S;;x;UnterrichtsStd;select A.UnterrichtsStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Mehrleistungsstunden;S;;x;MehrleistungStd;select A.MehrleistungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Minderleistungsstunden;S;;x;EntlastungStd;select A.EntlastungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;Pflichtstunden-Soll;S;;x;PflichtstdSoll;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Rechtsverhältnis;S;;x;Rechtsverhaeltnis;select LA.Rechtsverhaeltnis from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Beschäftigungsart;S;;x;Beschaeftigungsart;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Einsatzstatus;S;;x;Einsatzstatus;select LA.Einsatzstatus from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Unterrichtsstunden;S;;x;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Mehrleistungsstunden;S;;x;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Minderleistungsstunden;S;;x;EntlastungStd;select LA.EntlastungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
-Lehrer;ID;Reststunden;S;;x;RestStd;select A.RestStd from LehrerAbschnittsdaten A where A.Lehrer_ID=% order by A.Jahr desc, A.Abschnitt desc;ALLE
+Lehrer;ID;Reststunden;S;;x;RestStd;select LA.RestStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
-Schueler;Schueler_ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr IS NULL;ALLE
+Schueler;Schueler_ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0;ALLE
 Schueler;AbschlussDatum;vorauss. Abschlussdatum;S;;;;;ALLE
 Schueler;Schuljahresabschnitts_ID;Aktueller Abschnitt;I;;;Abschnitt;SELECT SJA.Abschnitt from Schuljahresabschnitte SJA where SJA.ID=%;ALLE
-Schueler;Anschreibdatum;Datum letzes Anschreiben;B;;;;;ALLE
 Schueler;Aufnahmedatum;Aufnahmedatum;D;;;;;ALLE
 Schueler;Aussiedler;Aussiedler;B;;;;;ALLE
 Schueler;Ausweisnummer;Ausweisnummer;S;;;;;ALLE
@@ -100,8 +99,8 @@ Schueler;Entlassjahrgang_ID;Entlassjahrgang (interne Bezeichnung);S;;;InternKrz;
 Schueler;ErsteSchulform_SI;Erste Schulform in Sek.I;S;;;;;ALLE
 Schueler;Fahrschueler_ID;Fahrschülerart;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Fahrschuelerart WHERE ID=%;ALLE
 Schueler;Fax;Fax-Nr.;S;;;;;ALLE
-Schueler;Foerderschwerpunkt2_ID;Förderschwerpunkt 2;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt2_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr IS NULL);ALLE
-Schueler;Foerderschwerpunkt_ID;Förderschwerpunkt 1;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr IS NULL);ALLE
+Schueler;Foerderschwerpunkt2_ID;Förderschwerpunkt 2;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt2_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
+Schueler;Foerderschwerpunkt_ID;Förderschwerpunkt 1;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
 Schueler;GU_ID;eindeutige Nummer (GUID);S;;;;;ALLE
 Schueler;Geburtsdatum;Geburtsdatum;D;;;;;ALLE
 Schueler;GeburtslandMutter;Geburtsland Mutter;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
@@ -111,7 +110,7 @@ Schueler;Geburtsname;Geburtsname;S;;;;;ALLE
 Schueler;Geburtsort;Geburtsort;S;;;;;ALLE
 Schueler;Geloescht;Gelöscht?;B;;;;;ALLE
 Schueler;Geschlecht;Anrede;S;"3;4;5;6";"Herr;Frau;Hallo;Hallo";;;ALLE
-Schueler;Geschlecht;Briefanrede;S;"3;4";"Sehr geehrter Herr;Sehr geehrte Frau;Guten Tag;Guten Tag";;;ALLE
+Schueler;Geschlecht;Briefanrede;S;"3;4;5;6";"Sehr geehrter Herr;Sehr geehrte Frau;Guten Tag;Guten Tag";;;ALLE
 Schueler;Geschlecht;Geschlecht;S;"3;4;5;6";"m;w;d;oA";;;ALLE
 Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Haltstelle WHERE ID=%;ALLE
 Schueler;Hausnr;Hausnummer;S;;;;;ALLE
@@ -166,11 +165,11 @@ Schueler;ID;Interne ID-Nummer;I;;;;;ALLE
 Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_Telefonart T, SchuelerTelefone ST WHERE T.ID=ST.Telefonart_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Bemerkung;S;;;Bemerkung;SELECT Bemerkung FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Telefon-Nummer;S;;;Telefonnummer;SELECT Telefonnummer FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
-Schueler;ID;Versetzung;S;;;StatistikKrz;SELECT P.StatistikKrz, A.ID FROM PrfSemAbschl P, SchuelerLernabschnittsdaten A WHERE A.Schueler_ID=% AND A.Jahr=$J AND A.Abschnitt=$A AND P.Nr=A.VersetzungKrz;ALLE
+Schueler;ID;Versetzung;S;;;StatistikKrz;SELECT LA.VersetzungKrz FROM SchuelerLernabschnittsdaten LA, Schueler S WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0;ALLE
 Schueler;ID;bes. Merkmal;S;;;Kurztext;select SM1.Kurztext from SchuelerMerkmale SM1 where SM1.Schueler_ID=% order by SM1.DatumVon desc;ALLE
 Schueler;IDExt;Externe ID-Nummer;S;;;;;ALLE
 Schueler;JahrZuzug;Zuzugsjahr;I;;;;;ALLE
-Schueler;Jahrgang;Schulbesuchsjahre;I;;;;;ALLE
+Schueler;ID;Schulbesuchsjahre;I;;;Schulbesuchsjahre;;ALLE
 Schueler;Kindergarten_ID;Kindergarten;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Kindergarten WHERE ID=%;ALLE
 Schueler;LSEntlassart;Höchster allg. Abschluss;S;;;;;ALLE
 Schueler;LSEntlassart;Letzte Schule: Abschluss;S;;;;;ALLE
@@ -194,7 +193,7 @@ Schueler;Ort_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
 Schueler;Religion_ID;Konfession (Klartext);S;;;Bezeichnung;SELECT Bezeichnung FROM K_Religion WHERE ID=%;ALLE
 Schueler;Religionsabmeldung;Datum Religionsabmeldung;D;;;;;ALLE
 Schueler;Religionsanmeldung;Datum Religionsanmeldung;D;;;;;ALLE
-Schueler;SchulEmail;E-Mail schulisch);S;;;;;ALLE
+Schueler;SchulEmail;E-Mail (schulisch);S;;;;;ALLE
 Schueler;SchulpflichtErf;Schulpflicht erfüllt;B;;;;;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Name;S;;;Name;SELECT Name from K_Schule where SchulNr=%;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Ort;S;;;Ort;SELECT Ort from K_Schule where SchulNr=%;ALLE
@@ -204,7 +203,7 @@ Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(St
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
 Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
-Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
+Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
 Schueler;Status;Status;I;;;;;ALLE
 Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(Strassenname, ' ', HausNr) AS Strasse FROM Schueler WHERE ID=%;ALLE
@@ -214,10 +213,20 @@ Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie;S;;;mtblVerkehrss
 Schueler;Volljaehrig;Volljährig;B;;;;;ALLE
 Schueler;Vorname;Vorname;S;;;;;ALLE
 Schueler;Zusatz;Alle Vornamen;S;;;;;ALLE
-Schueler;ZusatzNachname;Namenszusatz;S;;;;;ALLE
 Schueler;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Tel;Bemerkung;Bemerkung;S;;;;;ALLE
 Tel;Schueler_ID;Schüler-Nachname;S;;;Name;SELECT Name FROM Schueler WHERE ID=%;ALLE
 Tel;Schueler_ID;Schüler-Vorname;S;;;Vorname;SELECT Vorname FROM Schueler WHERE ID=%;ALLE
 Tel;Telefonart_ID;Anschluss-Art;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Telefonart WHERE ID=%;ALLE
 Tel;Telefonnummer;Telefon-Nummer;S;;;;;ALLE
+Schueler;ID;Klasse;S;;;Klasse;SELECT K.Klasse FROM SchuelerLernabschnittsdaten LA, Schueler S, Klassen K WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND K.ID=LA.Klassen_ID;ALLE
+Schueler;ID;Jahrgang;S;;;ASDJahrgang;SELECT J.ASDJahrgang FROM SchuelerLernabschnittsdaten LA, Schueler S, EigeneSchule_Jahrgaenge J WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND J.ID=LA.Jahrgang_ID;ALLE
+Schueler;ID;Jahrgang (interne Bezeichnung);S;;;InternKrz;SELECT J.InternKrz FROM SchuelerLernabschnittsdaten LA, Schueler S, EigeneSchule_Jahrgaenge J WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND J.ID=LA.Jahrgang_ID;ALLE
+Schueler;ID;Fachklasse (Kürzel);S;;;FKS_AP_SIM;SELECT F.FKS_AP_SIM FROM SchuelerLernabschnittsdaten LA, Schueler S, EigeneSchule_Fachklassen F WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND F.ID=LA.Fachklasse_ID;ALLE
+Schueler;ID;Fachklasse (Bezeichnung);S;;;Bezeichnung;SELECT F.Bezeichnung FROM SchuelerLernabschnittsdaten LA, Schueler S, EigeneSchule_Fachklassen F WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND F.ID=LA.Fachklasse_ID;
+Schueler;ID;Letzter allg. Abschluss (Kürzel);S;;;Abschluss;SELECT LA.Abschluss FROM SchuelerLernabschnittsdaten LA, Schueler S WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0;ALLE
+Schueler;ID;Letzter berufsbez. Abschluss (Kürzel);S;;;Abschluss_B;SELECT LA.Abschluss_B FROM SchuelerLernabschnittsdaten LA, Schueler S WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0;ALLE
+Schueler;ID;Schuljahr;S;;;Schuljahr;SELECT CONCAT( SJA.Jahr, '/', SJA.Jahr+1) as Schuljahr FROM SchuelerLernabschnittsdaten LA, Schueler S, Schuljahresabschnitte SJA WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and SJA.ID=S.Schuljahresabschnitts_ID;ALLE
+Schueler;Religionsabmeldung;Religionsabmeldung;D;;;;;ALLE
+Schueler;Religionsanmeldung;Religionsanmeldung;D;;;;;ALLE
+Schueler;ID;Schwerpunkt;S;;;Bezeichnung;SELECT SP.Bezeichnung FROM SchuelerLernabschnittsdaten LA, Schueler S, K_Schwerpunkt SP WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND SP.ID=LA.Schwerpunkt_ID;ALLE
