@@ -207,8 +207,7 @@ public final class DBRootManager {
 			conn.transactionBegin();
 			final int c1 = conn.transactionNativeUpdate("GRANT ALL PRIVILEGES ON `" + nameSchema + "`.* TO " + nameUser);
 			final int c2 = conn.transactionNativeUpdate("GRANT GRANT OPTION ON `" + nameSchema + "`.* TO " + nameUser);
-			final int c3 = conn.transactionNativeUpdate("GRANT CREATE USER ON *.* TO " + nameUser);
-			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE) && (c3 > Integer.MIN_VALUE);
+			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
 		}
 		if (conn.getDBDriver() == DBDriver.MSSQL) {
 			conn.transactionBegin();
@@ -221,6 +220,32 @@ public final class DBRootManager {
 		return false;
 	}
 
+
+	/**
+	 * Entfernt administrative Rechte für das angegebene Schema nameSchema an den angegebenen
+	 * Datenbank-Benutzer nameUser auf der Verbindung, welche durch den angegebenen DBEntityManager conn
+	 * aufgebaut ist. Diese Verbindung muss durch einen DB-Benutzer mit entsprechenden administrativen
+	 * Rechten auf dem angebenen Schema aufgebaut sein.
+	 *
+	 * @param conn         die Datenbank-Verbindung
+	 * @param nameUser     der Name des Benutzers dem die adminstrativen Rechte entzogen werden sollen
+	 * @param nameSchema   das Schema, auf dem der Benutzer seine Rechte entzogen bekommen soll
+	 *
+	 * @return true wenn die administrativen Rechte entfernt wurden und ansonsten false
+	 */
+	private static boolean revokeAdminRights(final DBEntityManager conn, final String nameUser, final String nameSchema) {
+		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema))
+			return false;
+		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
+			conn.transactionBegin();
+			final int c1 = conn.transactionNativeUpdate("REVOKE GRANT OPTION ON `" + nameSchema + "`.* FROM " + nameUser);
+			final int c2 = conn.transactionNativeUpdate("REVOKE ALL PRIVILEGES ON `" + nameSchema + "`.* FROM " + nameUser);
+			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
+		}
+		if (conn.getDBDriver() == DBDriver.MSSQL)
+			throw new UnsupportedOperationException("MSSQL-Datenbanken werden zur Zeit nicht vollständig unterstützt.");
+		return false;
+	}
 
 
 	/**
@@ -276,11 +301,19 @@ public final class DBRootManager {
 		final String name = DTOInformationSchema.getSchemanameCaseDB(conn, nameSchema);
 		if (name == null)
 			return true;
+		// Entferne das Schema aus der Datenbank
 		boolean success = switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + name + "`") > Integer.MIN_VALUE;
 			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + name + "]") > Integer.MIN_VALUE;
 			default -> false;
 		};
+		// Entferne die Rechte des zugeordneten Datenbank-Benutzers von dem Schema
+		final String nameSchemaConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(nameSchema);
+		if (nameSchemaConfig != null) {
+			final DBConfig dbConfig = SVWSKonfiguration.get().getDBConfig(nameSchemaConfig);
+			if (dbConfig != null)
+				revokeAdminRights(conn, dbConfig.getUsername(), dbConfig.getDBSchema());
+		}
 		// Aktualisieren der DB-Konfiguration
 		if (success)
 			success = SVWSKonfiguration.get().removeSchema(nameSchema);
