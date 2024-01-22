@@ -82,13 +82,20 @@
 				</svws-ui-content-card>
 			</div>
 		</Variant>
+		<Variant title="Sortierung">
+			<div class="px-3">
+				<svws-ui-content-card>
+					<svws-ui-table v-model="selectedRows" :items="dataSorted" :columns="cols2" clickable v-model:sort-by-and-order="sortByAndOrder" />
+				</svws-ui-content-card>
+			</div>
+		</Variant>
 	</Story>
 </template>
 
 <script setup lang="ts">
 	import type { Ref} from "vue";
-	import { ref, reactive } from "vue";
-	import type { DataTableColumn } from "../types";
+	import { ref, reactive, computed } from "vue";
+	import type { DataTableColumn, SortByAndOrder } from "../types";
 
 	const itemRefs = ref(new Map());
 
@@ -123,23 +130,17 @@
 		{key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true},
 	]);
 
-	const cols2 = ref([
-		{key: "name", label: "Name", sortable: true, span: 1,},
-		{key: "fach", label: "Fach", span: 0.5},
-		{key: "email", label: "Note"},
-	]);
-
 	const data = ref([
 		{id: 0,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
 		{id: 1,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
-		{id: 2,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
+		{id: 2,name: "Andere Person 6", email: "person6@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
 		{id: 3,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{id: 4,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
+		{id: 4,name: "Erster Schüler", email: "schueler4example.com", customIcon: "1999", test: "Data", itemID: '1', fach: ''},
 		{id: 5,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
 		{id: 6,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch'},
 		{id: 7,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
 		{id: 8,name: "Nico Beispiel", email: "nico@example.com", customIcon: "2022", test: "Beispiel", itemID: '0', fach: 'Musik'},
-		{id: 9,name: "Erster Schüler", email: "schueler@example.com", customIcon: "1999", test: "", itemID: '1', fach: ''},
+		{id: 9,name: "Erster Schüler mit Bart", email: "schueler9@example.com", customIcon: "1999", test: "", itemID: '1', fach: 'Französisch'},
 		{id: 10,name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch'},
 		{id: 11,name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "", itemID: '99', fach: 'Englisch'},
 		{id: 12,name: "Andere Person", email: "person@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: ''},
@@ -175,6 +176,31 @@
 			el.input.focus();
 	}
 
+	// Funktionen für die Sortierung	// Sortiere nur Name und Fach
+	const cols2 = ref([
+		{key: "name", label: "Name", sortable: true, span: 1,},
+		{key: "fach", label: "Fach", sortable: true, span: 0.5},
+		{key: "email", label: "Note"},
+	]);
+	const sortByAndOrder = ref<SortByAndOrder | undefined>()
+
+	const dataSorted = computed(()=>{
+		const temp = sortByAndOrder.value;
+		if (temp === undefined)
+			return data.value;
+		const arr = [...data.value];
+		arr.sort((a, b) => {
+			switch (temp.key) {
+				case 'name':
+					return a.name.localeCompare(b.name, "de-DE",);
+				case 'fach':
+					return a.fach.localeCompare(b.fach, "de-DE");
+				default:
+					return 0;
+			}
+		})
+		return temp.order === true ? arr : arr.reverse();
+	})
 </script>
 
 <docs lang="md">

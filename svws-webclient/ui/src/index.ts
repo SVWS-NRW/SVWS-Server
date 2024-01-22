@@ -39,4 +39,6 @@ export { default as SvwsUiRouterTabBarButton } from "./components/App/SvwsUiRout
 export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRouterVerticalTabBar.vue";
 // DEPRECATED
 
+
+// Type exorts
 export type { DataTableColumn, InputDataType, SortByAndOrder } from "./types";
