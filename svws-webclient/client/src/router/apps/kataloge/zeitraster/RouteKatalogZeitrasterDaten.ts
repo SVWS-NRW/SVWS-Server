@@ -5,6 +5,7 @@ import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteKatalogZeitraster} from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
+import { api } from "~/router/Api";
 
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
 
@@ -36,6 +37,7 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalog
 			addAufsichtUndBereich: async ()=>{},//routeKatalogZeitraster.data.addAufsichtUndBereich,
 			selected: () => routeKatalogZeitraster.data.selected,
 			setSelection: routeKatalogZeitraster.data.setSelection,
+			schulform: api.schulform,
 		};
 	}
 

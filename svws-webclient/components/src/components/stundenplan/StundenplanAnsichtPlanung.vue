@@ -70,8 +70,8 @@
 					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 				</svws-ui-button>
 			</div>
-			<svws-ui-button type="secondary" @click="addBlock" title="Alle Zeitraster Montag - Freitag, 1.- 9. Stunde erstellen">
-				<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />Mo-Fr / 1.-9. erstellen
+			<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
+				<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
 			</svws-ui-button>
 			<template v-if="importZeitraster !== undefined">
 				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
@@ -86,8 +86,8 @@
 <script setup lang="ts">
 
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import type { StundenplanPausenzeit, StundenplanZeitraster} from "@core";
-	import { Wochentag } from "@core";
+	import type { StundenplanPausenzeit, StundenplanZeitraster } from "@core";
+	import { Wochentag, Schulform } from "@core";
 	import { computed, ref, toRaw } from "vue";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
@@ -194,7 +194,8 @@
 	}
 
 	async function addBlock() {
-		const list = props.manager().zeitrasterGetDummyListe(1, 5, 1, 9)
+		const letzteStunde = Schulform.G === props.schulform ? 6 : 9;
+		const list = props.manager().zeitrasterGetDummyListe(1, 5, 1, letzteStunde);
 		await props.addZeitraster(list);
 	}
 

@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content page--content--full">
-		<stundenplan-ansicht-planung :manager="stundenplanManager" :add-zeitraster="addZeitraster" :remove-zeitraster="removeZeitraster" @selected:updated="setSelection" :import-zeitraster="importZeitraster">
+		<stundenplan-ansicht-planung :manager="stundenplanManager" :add-zeitraster="addZeitraster" :remove-zeitraster="removeZeitraster" @selected:updated="setSelection" :import-zeitraster="importZeitraster" :schulform="schulform">
 			<span class="opacity-50" v-if="!selected"><i-ri-information-line class="inline-block -mt-0.5" /> Im Zeitraster klicken, um einen Eintrag, Pausenzeit, Wochentag oder Stunde auszuwählen.</span>
 			<stundenplan-detail-zeitrastereintrag :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :item="item" :stundenplan-manager="stundenplanManager" v-if="(item instanceof StundenplanZeitraster)" />
 			<stundenplan-detail-pausenzeit :patch-pausenzeit="patchPausenzeit" :remove-pausenzeiten="removePausenzeiten" :item="item" :stundenplan-manager="stundenplanManager" v-if="(item instanceof StundenplanPausenzeit)" :list-lehrer="listLehrer" :add-aufsicht-und-bereich="addAufsichtUndBereich" :list-aufsichtsbereiche="listAufsichtsbereiche" />

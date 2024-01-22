@@ -4,6 +4,7 @@ import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenp
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { api } from "~/router/Api";
 
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
 
@@ -38,6 +39,7 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<unknown, Rou
 			addAufsichtUndBereich: routeStundenplan.data.addAufsichtUndBereich,
 			selected: () => routeStundenplan.data.selected,
 			setSelection: routeStundenplan.data.setSelection,
+			schulform: api.schulform,
 		};
 	}
 
