@@ -122,14 +122,6 @@
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
 	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
-	const zuordnungen = computed(()=>{
-		const arr = [];
-		for (const i of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().values().toArray())
-			arr.push(i);
-		console.log(arr, props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse())
-		return arr;
-	})
-
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
@@ -141,7 +133,6 @@
 		get: () => props.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true',
 		set: (value) => void props.config.setValue("gost.kursplanung.kursansicht.ausgeblendet", value === true ? 'true' : 'false')
 	});
-
 
 	const dropdownList = [
 		{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true },

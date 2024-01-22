@@ -53,7 +53,14 @@
 						<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" autosize>
 							<span class="inline-flex items-center"><i-ri-alert-line />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
 							<template #content>
-								<span v-html="getErgebnismanager().getOfSchieneTooltipKurskollisionen(s.id).replaceAll('\n', '<br>')" />
+								<template v-for="list, indexTooltip of getErgebnismanager().getOfSchieneTooltipKurskollisionenAsData(s.id)" :key="indexTooltip">
+									<p>
+										<template v-for="pair, listIndex of list" :key="pair.a.id">
+											<span v-if="listIndex === 0" class="font-bold">{{ getDatenmanager().kursGetName(pair.a.id) }}:&nbsp;</span>
+											<span v-else>{{ getDatenmanager().kursGetName(pair.a.id) }} ({{ pair.b ?? 0 }}){{ listIndex !== list.size()-1 ? ',&nbsp;': '' }}</span>
+										</template>
+									</p>
+								</template>
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="opacity-25 font-normal">0</span>
