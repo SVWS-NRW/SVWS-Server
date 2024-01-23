@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { type LehrerListeEintrag, type List, ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart,
-	ErzieherListeEintrag, FaecherListeEintrag, GostFach } from "@core";
+import type {  LehrerListeEintrag,  List} from "@core";
+import { ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag, FaecherListeEintrag, GostFach } from "@core";
 
 const username = "Admin";
 const password = "";
@@ -33,27 +33,14 @@ describe("Server", () => {
 		//expect(res).toBeTruthy();
 	});
 	test("patchErzieherStammdaten", async () => {
-		await expect(server.patchErzieherStammdaten(
-			{ hausnummer: "443" },
-			schema,
-			19942
-		)).resolves.not.toThrow();
+		await expect(server.patchErzieherStammdaten( { hausnummer: "443" }, schema, 19942)).resolves.not.toThrow();
 	});
 	test.skip("patchGostAbiturjahrgang", async () => {
-		const res = await server.patchGostAbiturjahrgang(
-			{ abiturjahr: 2021 },
-			schema,
-			2021
-		);
+		const res = await server.patchGostAbiturjahrgang( { abiturjahr: 2021 }, schema, 2021);
 		expect(res).toBeTruthy();
 	});
 	test.skip("patchGostAbiturjahrgangFach", async () => {
-		const res = await server.patchGostAbiturjahrgangFach(
-			{ bezeichnung: "Deutsch" },
-			schema,
-			2021,
-			16
-		);
+		const res = await server.patchGostAbiturjahrgangFach( { bezeichnung: "Deutsch" }, schema, 2021, 16);
 		expect(res).toBeTruthy();
 	});
 	test.skip("patchGostBlockung", async () => {
@@ -77,51 +64,47 @@ describe("Server", () => {
 		// expect(res).toBeTruthy()
 	});
 	test.skip("patchGostSchuelerFachwahl", async () => {
-		const res = await server.patchGostSchuelerFachwahl(schema, 1199, 16);
-		expect(res).toBeTruthy();
+		// const res = await server.patchGostSchuelerFachwahl(schema, 1199, 16);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchBeschaeftigungsart", async () => {
-		const res = await server.patchBeschaeftigungsart(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchBeschaeftigungsart(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchBetriebsart", async () => {
-		const res = await server.patchBetriebsart(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchBetriebsart(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchLehrerPersonaldaten", async () => {
-		const res = await server.patchLehrerPersonaldaten(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchLehrerPersonaldaten(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchLehrerStammdaten", async () => {
-		const res = await server.patchLehrerStammdaten(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchLehrerStammdaten(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchSchuelerBetrieb", async () => {
-		const res = await server.patchSchuelerBetrieb(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchSchuelerBetrieb(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchSchuelerSchulbesuch", async () => {
-		const res = await server.patchSchuelerSchulbesuch(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchSchuelerSchulbesuch(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchSchuelerStammdaten", async () => {
-		const res = await server.patchSchuelerStammdaten(schema, 1);
-		expect(res).toBeTruthy();
+		// const res = await server.patchSchuelerStammdaten(schema, 1);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("patchSchuleStammdaten", async () => {
-		const res = await server.patchSchuleStammdaten(schema);
-		expect(res).toBeTruthy();
+		// const res = await server.patchSchuleStammdaten(schema);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("putSchullogo", async () => {
-		const res = await server.putSchullogo(schema);
-		expect(res).toBeTruthy();
+		// const res = await server.putSchullogo(schema);
+		// expect(res).toBeTruthy();
 	});
 	test.skip("createGostAbiturjahrgangBlockung", async () => {
-		const res = await server.createGostAbiturjahrgangBlockung(
-			schema,
-			2021,
-			1
-		);
+		const res = await server.createGostAbiturjahrgangBlockung( schema, 2021, 1);
 		expect(res).toBeTruthy();
 	});
 	test.skip("patchBetriebStammdaten", async () => {
@@ -197,28 +180,20 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 	});
 	test.todo("getGesamtschuleSchuelerPrognoseLeistungsdaten", async () => {
-		const res = await server.getGesamtschuleSchuelerPrognoseLeistungsdaten(
-			schema,
-			1199
-		);
+		const res = await server.getGesamtschuleSchuelerPrognoseLeistungsdaten( schema, 1199);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt", async () => {
-		const res =
-			await server.getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(
-				schema,
-				1199,
-				13
-			);
+		const res = await server.getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt( schema, 1199, 13);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturBelegpruefungEF1", async () => {
-		const res = await server.getGostAbiturBelegpruefungEF1();
-		expect(res).matchSnapshot();
+		// const res = await server.getGostAbiturBelegpruefungEF1();
+		// expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturBelegpruefungGesamt", async () => {
-		const res = await server.getGostAbiturBelegpruefungGesamt();
-		expect(res).matchSnapshot();
+		// const res = await server.getGostAbiturBelegpruefungGesamt();
+		// expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturjahrgaenge", async () => {
 		const res = await server.getGostAbiturjahrgaenge(schema);
@@ -229,11 +204,7 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturjahrgangBlockungsliste", async () => {
-		const res = await server.getGostAbiturjahrgangBlockungsliste(
-			schema,
-			2021,
-			3
-		);
+		const res = await server.getGostAbiturjahrgangBlockungsliste( schema, 2021, 3);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturjahrgangFach", async () => {
@@ -242,8 +213,8 @@ describe("Server", () => {
 		expect(res).toBeInstanceOf(GostFach);
 	});
 	test.skip("getGostAbiturjahrgangHalbjahrFachwahlen", async () => {
-		const res = await server.getGostAbiturjahrgangHalbjahrFachwahlen(schema, 2021);
-		expect(res).matchSnapshot();
+		// const res = await server.getGostAbiturjahrgangHalbjahrFachwahlen(schema, 2021);
+		// expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturjahrgangFaecher", async () => {
 		const res = await server.getGostAbiturjahrgangFaecher(schema, 2021);
@@ -254,22 +225,19 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostFach", async () => {
-		const res = await server.getGostFach(schema, 16);
-		expect(res).matchSnapshot();
+		// const res = await server.getGostFach(schema, 16);
+		// expect(res).matchSnapshot();
 	});
 	test.skip("getGostFaecher", async () => {
-		const res = await server.getGostFaecher(schema);
-		expect(res).matchSnapshot();
+		// const res = await server.getGostFaecher(schema);
+		// expect(res).matchSnapshot();
 	});
 	test.todo("getGostSchuelerAbiturdaten", async () => {
 		const res = await server.getGostSchuelerAbiturdaten(schema, 1199);
 		expect(res).matchSnapshot();
 	});
 	test.todo("getGostSchuelerAbiturdatenAusLeistungsdaten", async () => {
-		const res = await server.getGostSchuelerAbiturdatenAusLeistungsdaten(
-			schema,
-			1199
-		);
+		const res = await server.getGostSchuelerAbiturdatenAusLeistungsdaten( schema, 1199);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostSchuelerLaufbahnplanung", async () => {
@@ -302,8 +270,8 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 	});
 	test.skip("getKatalogHaltestellen", async () => {
-		const res = await server.getKatalogHaltestellen(schema);
-		expect(res).matchSnapshot();
+		// const res = await server.getKatalogHaltestellen(schema);
+		// expect(res).matchSnapshot();
 	});
 	test.skip("getKatalogOrte", async () => {
 		const res = await server.getKatalogOrte(schema);
