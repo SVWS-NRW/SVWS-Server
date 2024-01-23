@@ -33,7 +33,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 		return {
 			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
-			klausurManager: () => routeSchuelerLernabschnitte.data.klausurManager,
+			kMan: () => routeSchuelerLernabschnitte.data.klausurManager,
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,
 			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
 			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,

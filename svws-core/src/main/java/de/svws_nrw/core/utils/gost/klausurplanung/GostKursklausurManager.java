@@ -1728,6 +1728,17 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert die Kurzbezeichnung des Kurses zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public @NotNull String kursKurzbezeichnungBySchuelerklausur(final @NotNull GostSchuelerklausur k) {
+		return getKursByKursklausur(kursklausurBySchuelerklausur(k)).kuerzel;
+	}
+
+	/**
 	 * Liefert die Anzahl aller Schüler im Kurs zu einer übergebenen Kursklausur.
 	 *
 	 * @param k die Kursklausur

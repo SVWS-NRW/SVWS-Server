@@ -38,7 +38,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
@@ -90,7 +89,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 				.collect(Collectors.groupingBy(k -> k.idKurs, Collectors.toMap(k -> k.idVorgabe, Function.identity())));
 
 		final List<DTOSchuljahresabschnitte> sjaList = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
-				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr)).setParameter("abschnitt", halbjahr.id % 2 + 1).getResultList();
+				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
+				.setParameter("abschnitt", halbjahr.id % 2 + 1)
+				.getResultList();
 		if (sjaList == null || sjaList.size() != 1)
 			throw OperationError.NOT_FOUND.exception("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
@@ -386,10 +387,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public Response copyVorgaben(final int halbjahr, final int quartal) {
+	public List<GostKlausurvorgabe> copyVorgaben(final int halbjahr, final int quartal) {
 		checkQuartal(quartal);
-		copyVorgabenToJahrgang(conn, _abiturjahr, checkHalbjahr(halbjahr), checkQuartal(quartal));
-		return Response.status(Status.OK).build();
+		return copyVorgabenToJahrgang(conn, _abiturjahr, checkHalbjahr(halbjahr), checkQuartal(quartal));
 	}
 
 	/**
@@ -402,7 +402,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public static boolean copyVorgabenToJahrgang(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final int quartal) {
+	public static List<GostKlausurvorgabe> copyVorgabenToJahrgang(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final int quartal) {
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
 		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", abiturjahr, DTOGostKlausurenVorgaben.class);
 		// Prüfe, ob die Vorlage eingelesen werden kann
@@ -431,7 +431,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		}
 		if (!conn.transactionPersistAll(vorgabenNeu))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Gost-Klausurvorgaben.");
-		return true;
+		return vorgabenNeu.stream().map(dtoMapper::apply).toList();
 	}
 
 	/**

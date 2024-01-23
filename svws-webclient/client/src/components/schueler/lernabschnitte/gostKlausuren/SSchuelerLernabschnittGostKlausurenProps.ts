@@ -3,7 +3,7 @@ import type { SchuleStammdaten, SchuelerLernabschnittsdaten, SchuelerLernabschni
 export interface SchuelerLernabschnittGostKlausurenProps {
 	schule: SchuleStammdaten;
 	manager: () => SchuelerLernabschnittManager;
-	klausurManager: () => GostKursklausurManager;
+	kMan: () => GostKursklausurManager;
 	hatKlausurManager: () => boolean;
 	createSchuelerklausurTermin: (id: number) => Promise<void>;
 	deleteSchuelerklausurTermin: (sk : GostSchuelerklausurTermin) => Promise<void>;

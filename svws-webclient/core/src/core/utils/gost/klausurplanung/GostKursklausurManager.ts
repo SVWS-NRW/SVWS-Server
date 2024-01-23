@@ -1657,6 +1657,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Kurzbezeichnung des Kurses zu einer übergebenen Kursklausur.
+	 *
+	 * @param k die Kursklausur
+	 *
+	 * @return die Kurzbezeichnung
+	 */
+	public kursKurzbezeichnungBySchuelerklausur(k : GostSchuelerklausur) : string {
+		return this.getKursByKursklausur(this.kursklausurBySchuelerklausur(k)).kuerzel;
+	}
+
+	/**
 	 * Liefert die Anzahl aller Schüler im Kurs zu einer übergebenen Kursklausur.
 	 *
 	 * @param k die Kursklausur

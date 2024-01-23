@@ -165,7 +165,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				halbjahr: halbjahr,
 				kursklausurmanager: undefined,
 				stundenplanmanager: undefined,
-			};
+			}
 			if (this._state.value.abiturjahr === -1) {
 				this.setPatchedState(result);
 				return true;
@@ -369,10 +369,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {
 		api.status.start();
-		this._state.value.klausurvorgabenmanager?.vorgabeRemoveAll(this._state.value.klausurvorgabenmanager.vorgabeGetMengeAsList());
-		await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, this.halbjahr.id);
-		this._state.value.klausurvorgabenmanager?.vorgabeAddAll(listKlausurvorgaben);
+		const listKlausurvorgaben = await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+		this.klausurvorgabenmanager.vorgabeAddAll(listKlausurvorgaben);
 		this.commit();
 		api.status.stop();
 	}

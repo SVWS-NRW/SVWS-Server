@@ -1,5 +1,5 @@
 import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausur, GostSchuelerklausurTermin} from "@core";
-import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, SchuelerLernabschnittManager } from "@core";
+import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -115,6 +115,11 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
 				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben, null);
 				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
+				klausurManager.setKursManager(new KursManager(listKurse));
+				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
+				for (const l of curState.listLehrer)
+					mapLehrer.put(l.id, l);
+				klausurManager.setLehrerMap(mapLehrer);
 			}
 		}
 		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager, klausurManager });

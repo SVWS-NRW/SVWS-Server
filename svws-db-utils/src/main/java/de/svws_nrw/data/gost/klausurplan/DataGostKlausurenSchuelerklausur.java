@@ -49,31 +49,17 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	private List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTermin(final long terminId) {
 		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, terminId) == null)
 			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(terminId));
-
 		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminid(conn, terminId);
 		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
-
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-//		if (!kursklausuren.isEmpty()) {
-//			final Map<Long, DTOGostKlausurenSchuelerklausuren> mapSchuelerklausuren = conn
-//				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.id).distinct().toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
-//				.collect(Collectors.toMap(sk -> sk.ID, sk -> sk));
-//			kkSkIds.addAll(mapSchuelerklausuren.keySet());
-//		}
-
 		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0)";
-
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID = :tid" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
-
 		if (!kkSkIds.isEmpty())
 			query.setParameter("skIds", kkSkIds);
-
-
 		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tid", terminId).getResultList();
 
 		return skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
-
 	}
 
 	/**
