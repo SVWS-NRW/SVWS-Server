@@ -14,6 +14,17 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Überprüfe, ob der Service läuft
+if systemctl is-active --quiet svws.service; then
+	if [[ "$1" == "--update" ]]; then
+		  echo "SVWS ist bereits gestartet. Bende Service ..."
+		  systemctl stop svws.service
+	else
+		   echo "SVWS ist bereits installiert und gestartet! Zum updaten bitte --update verwenden"
+           exit 1
+	fi
+fi
+
 script_dir="$PWD"
 
 # Variablen für Passwortlänge und erlaubte Zeichen
@@ -79,6 +90,7 @@ if [[ "$1" == "--update" ]]; then
     echo "lösche SVWS ..."
     rm -r $APP_PATH/app
     rm -r $APP_PATH/client
+    rm -r $APP_PATH/adminclient
 
     # Entpacke die SVWS-Installationsdatei
     tar xzf ./LINUX_INSTALLER_FILE_NAME
