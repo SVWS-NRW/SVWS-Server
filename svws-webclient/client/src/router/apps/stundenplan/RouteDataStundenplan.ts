@@ -485,15 +485,17 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	removeEintraege = async (eintraege: StundenplanListeEintrag[]) => {
 		api.status.start();
 		for (const eintrag of eintraege) {
-			if (eintrag.id === this.auswahl?.id)
+			if (this._state.value.auswahl?.id === eintrag.id)
 				this._state.value.auswahl = undefined;
 			await api.server.deleteStundenplan(api.schema, eintrag.id);
 			this.mapKatalogeintraege.delete(eintrag.id);
 		}
-		this.commit();
+		if ((this.auswahl === undefined) && (this.mapKatalogeintraege.size > 0))
+			this._state.value.auswahl = this.mapKatalogeintraege.values().next().value;
 		api.status.stop();
+		await this.gotoEintrag(this.auswahl);
 	}
 
-	gotoEintrag = async (eintrag: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag?.id));
 
 }
