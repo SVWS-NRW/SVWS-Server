@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
+	<div class="page--content page--content--full page--content--laufbahnplanung">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportieren</svws-ui-button>
@@ -23,11 +23,11 @@
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div class="flex-grow">
+		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
 				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" :faecher-nicht-waehlbar-ausblenden="faecherNichtWaehlbarAusblenden" />
 		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
+		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
 				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten="gostLaufbahnBeratungsdaten" :patch-beratungsdaten="patchBeratungsdaten" :map-lehrer="mapLehrer" :id="id" :schueler="schueler" />
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager"
@@ -119,3 +119,12 @@
 	});
 
 </script>
+
+<style lang="postcss" scoped>
+
+	.page--content--laufbahnplanung {
+		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
+		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-8;
+	}
+
+</style>

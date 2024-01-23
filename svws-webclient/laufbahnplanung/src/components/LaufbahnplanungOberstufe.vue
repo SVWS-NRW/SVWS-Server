@@ -27,13 +27,13 @@
 		</svws-ui-button>
 		<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
 	</svws-ui-sub-nav>
-	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<div class="flex-grow">
+	<div class="page--content page--content--full page--content--laufbahnplanung">
+		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
 				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="async (halbjahr: GostHalbjahr) => {}"
 				:faecher-nicht-waehlbar-ausblenden="true" />
 		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
+		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-16">
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager"
 					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
@@ -110,3 +110,13 @@
 	});
 
 </script>
+
+
+<style lang="postcss" scoped>
+
+	.page--content--laufbahnplanung {
+		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
+		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-16;
+	}
+
+</style>
