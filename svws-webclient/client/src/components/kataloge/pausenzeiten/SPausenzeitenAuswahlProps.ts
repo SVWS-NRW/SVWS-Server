@@ -4,7 +4,7 @@ export interface PausenzeitenAuswahlProps {
 	auswahl: StundenplanPausenzeit | undefined;
 	mapKatalogeintraege: () => Map<number, StundenplanPausenzeit>;
 	addEintrag: (eintrag: Partial<StundenplanPausenzeit>) => Promise<void>;
-	deleteEintraege: (eintraege: StundenplanPausenzeit[]) => Promise<void>;
+	deleteEintraege: (eintraege: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	gotoEintrag: (eintrag: StundenplanPausenzeit) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
