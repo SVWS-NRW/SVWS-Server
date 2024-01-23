@@ -40,16 +40,16 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
+		if (to_params.id === undefined)
 			await this.data.ladeListe();
-		} else {
+		else {
 			const id = parseInt(to_params.id);
 			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined && this.data.auswahl !== undefined) {
+			if (eintrag === undefined) {
 				await this.data.ladeListe();
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRoute(this.data.auswahl?.id);
 			}
-			else if (eintrag)
+			else
 				await this.data.setEintrag(eintrag);
 		}
 		if (to.name === this.name && this.data.auswahl !== undefined)
@@ -105,7 +105,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-		await this.data.setView(node, this.children);
+		this.data.setView(node, this.children);
 	}
 }
 

@@ -44,14 +44,15 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 		const listKatalogeintraege = await api.server.getFaecher(api.schema);
 		const mapKatalogeintraege = new Map<number, FaecherListeEintrag>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		const daten = auswahl !== undefined ? await this.getDatenInternal(auswahl) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		return { auswahl, mapKatalogeintraege };
+		return { auswahl, mapKatalogeintraege, daten };
 	}
 
 	public async ladeListe() {
-		const result = await this.ladeListeIntern();
-		this.setPatchedDefaultState({ auswahl: result.auswahl, mapKatalogeintraege: result.mapKatalogeintraege })
+		const { auswahl, mapKatalogeintraege, daten } = await this.ladeListeIntern();
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, daten });
 	}
 
 	private async getDatenInternal(auswahl: FaecherListeEintrag) {
