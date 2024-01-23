@@ -44,7 +44,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
 		let eintrag: JahrgangsListeEintrag | undefined;
-		if (!to_params.id && this.data.auswahl)
+		if (!to_params.id && this.data.auswahl !== undefined)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
 			eintrag = this.data.mapKatalogeintraege.get(0);
@@ -53,9 +53,8 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 		else {
 			const id = parseInt(to_params.id);
 			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined) {
-				return;
-			}
+			if (eintrag === undefined)
+				return this.getRoute(undefined);
 		}
 		if (eintrag !== undefined)
 			await this.data.setEintrag(eintrag);

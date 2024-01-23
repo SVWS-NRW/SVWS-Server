@@ -55,9 +55,8 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		else {
 			const id = parseInt(to_params.id);
 			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined) {
-				return;
-			}
+			if (eintrag === undefined)
+				return this.getRoute(undefined);
 		}
 		if (eintrag !== undefined)
 			await this.data.setEintrag(eintrag);
