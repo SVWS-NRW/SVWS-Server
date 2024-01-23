@@ -33,14 +33,14 @@ export abstract class JavaString {
 	public static format(s : string, ...args: any[]): string {
 		let i = -1;
 		function handleParam(expression: string, ...formatParams: any[]) : string {
-			if (expression == '%%')
+			if (expression === '%%')
 				return '%';
 			// Bestimme den Wert, der für den Parameter eingesetzt wird
 			if (args[++i] === undefined)
 				throw new IllegalFormatException();
 			const replacement = args[i];
 			const hasLeftJustifiedResult = formatParams[0] !== undefined;
-			const paddingChar = (formatParams[1] !== undefined) && (formatParams[1][0] == '0') ? '0' : ' ';
+			const paddingChar = (formatParams[1] !== undefined) && (formatParams[1][0] === '0') ? '0' : ' ';
 			const paddingSize = parseInt(formatParams[1]);
 			const precision = formatParams[2] === undefined ? undefined : parseInt(formatParams[2].substr(1));
 			const base = formatParams[3] === undefined ? undefined : parseInt(formatParams[3].substr(1));
@@ -82,7 +82,8 @@ export abstract class JavaString {
 		if (b === null)
 			return -1;
 		return a.localeCompare(b, undefined, { sensitivity: 'accent' });
-/*		const ca : string[] = a.split('');
+		/*
+		const ca : string[] = a.split('');
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {
@@ -97,14 +98,15 @@ export abstract class JavaString {
 				return cpa - cpb;
 			}
 		}
-		return ca.length - cb.length;*/
+		return ca.length - cb.length;
+		*/
 	}
 
 	public static compareTo(a: string, b : string | null) : number {
 		if (b === null)
 			return -1;
 		return a.localeCompare(b, undefined, { sensitivity: 'variant' });
-/*		const ca : string[] = a.split('');
+		/*		const ca : string[] = a.split('');
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {

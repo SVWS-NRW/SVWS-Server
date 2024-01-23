@@ -3,10 +3,10 @@ import type { JavaIterator } from './JavaIterator';
 import type { Class } from '../../java/lang/Class';
 import type { TranspiledObject } from '../../java/lang/TranspiledObject';
 import type { JavaMapEntry } from './JavaMapEntry';
+import type { JavaObject } from '../../java/lang/JavaObject';
+import type { HashMap } from './HashMap';
 
-import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
-import { HashMap } from './HashMap';
 
 
 export class HashMapCollection<K, V> implements Collection<V> {
@@ -49,7 +49,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	public toArray() : Array<unknown>;
 	public toArray<U>(a: Array<U>) : Array<U>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
+		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this.size())) {
 			const r : Array<V> = new Array<V>(this.size());
 			const it : JavaIterator<V> = this.iterator();
 			let i : number = 0

@@ -69,7 +69,7 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 	public toArray() : Array<unknown>;
 	public toArray<U>(a: Array<U>) : Array<U>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this._set.size)) {
+		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this._set.size)) {
 			const result : Array<E> = [];
 			this._set.forEach((value : E) => {result.push(value)});
 			return result;

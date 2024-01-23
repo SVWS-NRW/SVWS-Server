@@ -23,7 +23,7 @@ export function compare(cs1 : CharSequence, cs2 : CharSequence) : number {
 	for (let i : number = 0, len = Math.min(cs1.length(), cs2.length()); i < len; i++) {
 		const a : string = cs1.charAt(i);
 		const b : string = cs2.charAt(i);
-		if (a != b) {
+		if (a !== b) {
 			const cpA : number | undefined = a.codePointAt(0);
 			const cpB : number | undefined = b.codePointAt(0);
 			if (!cpA)

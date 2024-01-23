@@ -30,7 +30,7 @@ export class HashSetIterator<E> extends JavaObject implements JavaIterator<E> {
 
 
 	public hasNext() : boolean {
-		return this.cur != this.elements.length;
+		return this.cur !== this.elements.length;
 	}
 
 
@@ -66,7 +66,7 @@ export class HashSetIterator<E> extends JavaObject implements JavaIterator<E> {
 
 
 	public checkForComodification() : void {
-		if (this.hashSet.modCount != this.modCount)
+		if (this.hashSet.modCount !== this.modCount)
 			throw new ConcurrentModificationException();
 	}
 

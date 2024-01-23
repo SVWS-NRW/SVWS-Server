@@ -2,10 +2,10 @@ import type { JavaSet } from './JavaSet';
 import type { JavaMapEntry } from './JavaMapEntry';
 import type { Collection } from './Collection';
 import type { JavaIterator } from './JavaIterator';
+import type { HashMap } from './HashMap';
 
 import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
-import { HashMap } from './HashMap';
 
 export class HashMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 
@@ -48,7 +48,7 @@ export class HashMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	public toArray() : Array<unknown>;
 	public toArray<U>(a: Array<U>) : Array<U>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
+		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this.size())) {
 			const r : Array<K> = [];
 			for (const e of this._map)
 				r.push(e.getKey());

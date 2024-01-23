@@ -15,6 +15,7 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		project: [
 			"./tsconfig.base.json",
+			"./svws-transpile/tsconfig.json",
 			"./svws-transpile/src/test/ts/tsconfig.json",
 			"./svws-webclient/core/tsconfig.json",
 			"./svws-webclient/ui/tsconfig.json",

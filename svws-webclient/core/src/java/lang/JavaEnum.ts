@@ -1,7 +1,6 @@
-import { Class } from './Class';
 import { JavaObject } from './JavaObject';
 import { JavaString } from './JavaString';
-import { Comparable } from './Comparable';
+import type { Comparable } from './Comparable';
 
 /**
  * Dieses Abstrakte Klasse dient der Emulation der abstrakten Java-Klasse java.lang.Enum

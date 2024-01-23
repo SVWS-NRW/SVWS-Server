@@ -17,7 +17,7 @@ export abstract class AbstractCollection<E> extends JavaObject implements Collec
 
 
     public isEmpty() : boolean {
-    	return this.size() == 0;
+    	return this.size() === 0;
     }
 
 
@@ -52,7 +52,7 @@ export abstract class AbstractCollection<E> extends JavaObject implements Collec
     public toArray() : Array<unknown>;
     public toArray<U>(a: Array<U>) : Array<U>;
     public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-    	if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
+    	if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this.size())) {
     		const r : Array<E> = new Array<E>(this.size());
     		const it : JavaIterator<E> = this.iterator();
     		let i : number = 0
@@ -191,9 +191,9 @@ export abstract class AbstractCollection<E> extends JavaObject implements Collec
     }
 
 
-	public transpilerCanonicalName(): string {
-		return 'java.util.AbstractCollection';
-	}
+    public transpilerCanonicalName(): string {
+    	return 'java.util.AbstractCollection';
+    }
 
     public isTranspiledInstanceOf(name : string): boolean {
     	return [

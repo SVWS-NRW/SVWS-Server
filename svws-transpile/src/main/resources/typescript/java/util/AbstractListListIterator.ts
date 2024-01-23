@@ -20,7 +20,7 @@ export class AbstractListListIterator<E> extends AbstractListIterator<E> impleme
 
 
 	public hasPrevious() : boolean {
-		return this.current != 0;
+		return this.current !== 0;
 	}
 
 

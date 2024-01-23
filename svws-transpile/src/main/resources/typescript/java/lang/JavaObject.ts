@@ -95,7 +95,7 @@ export abstract class JavaObject implements TranspiledObject {
 			if (obj instanceof Date)
 				return JavaObject._hashCode(JSON.stringify(obj));
 			if (obj instanceof Array) {
-				if (obj == null)
+				if (obj === null)
 					return 0;
 				let result : number = 1;
 				for (const e of obj) {

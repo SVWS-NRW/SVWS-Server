@@ -320,7 +320,7 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
 	public toArray() : Array<unknown>;
 	public toArray<T>(a : Array<T>) : Array<T>;
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
-		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
+		if ((typeof __param0 === "undefined") || (__param0 === null) || (__param0.length < this.size())) {
 			return [...this.elementData];
 		} else if (Array.isArray(__param0)) {
 			const a : Array<T> = __param0;

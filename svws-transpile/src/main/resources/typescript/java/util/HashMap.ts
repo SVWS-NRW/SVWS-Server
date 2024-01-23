@@ -4,6 +4,7 @@ import type { JavaMapEntry } from './JavaMapEntry';
 import type { JavaSet } from './JavaSet';
 import type { Cloneable } from '../../java/lang/Cloneable';
 import type { Serializable } from '../../java/io/Serializable';
+import type { JavaFunction } from './function/JavaFunction';
 
 import { HashMapCollection } from './HashMapCollection';
 import { JavaObject } from '../../java/lang/JavaObject';
@@ -12,7 +13,6 @@ import { UnsupportedOperationException } from '../lang/UnsupportedOperationExcep
 import { HashMapEntrySet } from './HashMapEntrySet';
 import { HashMapEntry } from './HashMapEntry';
 import { HashMapKeySet } from './HashMapKeySet';
-import { JavaFunction } from './function/JavaFunction';
 
 interface HashMapIterator<E> extends Iterator<E, E> {
 	iter : IterableIterator<[number, Array<E>]>;
@@ -165,7 +165,7 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 			return null;
 		// ermittle die Kollisionsliste, aus der der Wert entfernt werden soll...
 		const hash = JavaObject.getTranspilerHashCode(key);
-		let koll : Array<JavaMapEntry<K, V>> | undefined = this._map.get(hash);
+		const koll : Array<JavaMapEntry<K, V>> | undefined = this._map.get(hash);
 		if (koll === undefined)
 			return null;   // Keine Kollisionsliste vorhanden, also auch kein Wert...
 		let oldValue : V | null = null;   // gehe zunächst davon aus, dass kein Wert für den Schlüsselwert vorhanden ist...
@@ -245,11 +245,11 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 
 
 	public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {
-        const v : V | null = this.get(key);
-		if (v != null)
+		const v : V | null = this.get(key);
+		if (v !== null)
 			return v;
 		const newValue : V = mappingFunction.apply(key);
-		if (newValue == null)
+		if (newValue === null)
 			return null;
 		this.put(key, newValue);
 		return newValue;
@@ -274,7 +274,7 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 					throw new IndexOutOfBoundsException("Hash-Map-Iterator: Fehlerhafter Index in die Kollisionsliste");
 				const entry = koll[this.pos];
 				// Die Kollisionsliste ist abgearbeitet - als nächstes muss eine neue geladen und abgearbeitet werden...
-				if (this.pos == koll.length -1) {
+				if (this.pos === koll.length -1) {
 					this.current = undefined;
 					this.pos = -1;
 				}

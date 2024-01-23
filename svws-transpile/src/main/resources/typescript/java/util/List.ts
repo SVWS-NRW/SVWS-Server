@@ -2,7 +2,7 @@ import type { JavaIterator } from './JavaIterator';
 import type { ListIterator } from './ListIterator';
 import type { Collection } from './Collection';
 import type { Comparator } from './Comparator';
-import type { SequencedCollection } from './SequencedCollection';
+
 import { NoSuchElementException } from './NoSuchElementException';
 
 // TODO extends SequencedCollection instead of Collection
@@ -72,7 +72,7 @@ export interface List<E> extends Collection<E> {
 	getFirst() : E | null;
 
 	getLast() : E | null;
-	
+
 	removeFirst() : E | null;
 
 	removeLast() : E | null;

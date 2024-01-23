@@ -5,7 +5,6 @@ import { java_util_List_addFirst, java_util_List_addLast, java_util_List_getFirs
 	java_util_List_removeFirst, java_util_List_removeLast } from './List';
 import type { ListIterator } from './ListIterator';
 import type { Comparator } from './Comparator';
-import { NoSuchElementException } from './NoSuchElementException';
 
 import { AbstractCollection } from './AbstractCollection';
 import { AbstractListListIterator } from './AbstractListListIterator';
@@ -178,19 +177,19 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 
 	/* Implementierung der Default-Methode addFirst */
 	public addFirst: (e: E | null) => void = java_util_List_addFirst;
-	
+
 	/* Implementierung der Default-Methode addLast */
 	public addLast: (e: E | null) => void = java_util_List_addLast;
-	
+
 	/* Implementierung der Default-Methode getFirst */
 	public getFirst: () => E | null = java_util_List_getFirst;
-	
+
 	/* Implementierung der Default-Methode getLast */
 	public getLast: () => E | null = java_util_List_getLast;
-	
+
 	/* Implementierung der Default-Methode removeFirst */
 	public removeFirst: () => E | null = java_util_List_removeFirst;
-	
+
 	/* Implementierung der Default-Methode removeLast */
 	public removeLast: () => E | null = java_util_List_removeLast;
 

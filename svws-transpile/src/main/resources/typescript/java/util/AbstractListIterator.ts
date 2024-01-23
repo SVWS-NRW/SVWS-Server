@@ -27,7 +27,7 @@ export class AbstractListIterator<E> extends JavaObject implements JavaIterator<
 
 
 	public hasNext() : boolean {
-		return this.current != this.list.size();
+		return this.current !== this.list.size();
 	}
 
 
@@ -65,7 +65,7 @@ export class AbstractListIterator<E> extends JavaObject implements JavaIterator<
 
 
 	public checkForComodification() : void {
-		if (this.list.modCount != this.modCount)
+		if (this.list.modCount !== this.modCount)
 			throw new ConcurrentModificationException();
 	}
 
