@@ -120,7 +120,9 @@ export function java_util_List_removeFirst<E>(this: List<E>) : E | null {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
-		return this.remove(0);
+		const e = this.get(0);
+		this.removeElementAt(0);
+		return e;
 	}
 }
 
@@ -130,7 +132,9 @@ export function java_util_List_removeLast<E>(this: List<E>) : E | null {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
-		return this.remove(this.size() - 1);
+		const e = this.get(this.size() - 1);
+		this.removeElementAt(this.size() - 1)
+		return e;
 	}
 }
 
