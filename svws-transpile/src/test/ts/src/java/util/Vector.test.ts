@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { Vector, VectorEnumerator, ArrayIndexOutOfBoundsException, NullPointerException } from "@transpiled";
+import { Vector, VectorEnumerator, ArrayIndexOutOfBoundsException, NullPointerException, NoSuchElementException } from "@transpiled";
 import { l,n,s } from "../../shared/TestObjects";
 import { TestConsumer } from "../../shared/TestConsumer";
 import { TestMaxComparator } from "../../shared/TestComparator";
@@ -43,9 +43,6 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.add(1, "a+");
 		expect(v.indexOf("a+")).toEqual(1);
 	});
-	test("addAll: add Collection to Vector", () => {
-		//
-	});
 	test("addElement: Vector adds element", () => {
 		v.addElement(b);
 		expect(v.contains(b)).toBeTruthy();
@@ -83,14 +80,10 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v2.contains(c)).toBeTruthy();
 	});
 	test("removeElementAt: Vector throws on wrong index", () => {
-		expect(() => v.removeElementAt(1)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.removeElementAt(1)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: Vector throws on negative index", () => {
-		expect(() => v.removeElementAt(-2)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.removeElementAt(-2)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: Vector removes 'c' element in second position", () => {
 		v.add(c);
@@ -128,9 +121,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(array).toEqual([a, b, c, d, e]);
 	});
 	test("elementAt: Vector throws on wrong index", () => {
-		expect(() => v.elementAt(-1)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.elementAt(-1)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("elementAt: returns element from index", () => {
 		expect(v.elementAt(0)).toEqual(a);
@@ -143,14 +134,10 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.lastElement()).toEqual(b);
 	});
 	test("setElementAt: Vector throws on wrong index", () => {
-		expect(() => v.setElementAt(c, 3)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.setElementAt(c, 3)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: Vector throws on negative index", () => {
-		expect(() => v.setElementAt(c, -2)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.setElementAt(c, -2)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: Vector sets element at index", () => {
 		v.setElementAt(b, 0);
@@ -291,9 +278,8 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 	test("symbol iterator:", () => {
 		v.add(b);
 		v.add(c);
-		for (const e of v) {
+		for (const e of v)
 			expect(e).toBeDefined();
-		}
 	});
 	test("listIterator: returns an Iterator for the Vector", () => {
 		v.add(b);
@@ -327,5 +313,63 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.elementAt(0)).toEqual(a);
 		v.sort(maxComparator);
 		expect(v.elementAt(0)).toEqual(c);
+	});
+	test("removeFirst: removes first element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.removeFirst()).toBeTruthy();
+		expect(v.size()).toEqual(2);
+	});
+	test("removeLast: removes last element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.removeLast()).toBeTruthy()
+		expect(v.size()).toEqual(2);
+	});
+	test("getFirst: gets first element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.getFirst()).toBe(a);
+	});
+	test("getLast: gets last element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.getLast()).toBe(c)
+	});
+	test("getFirst: gets exception when list empty", () => {
+		const vv = new Vector();
+		expect(() => vv.getFirst()).toThrow(NoSuchElementException);
+	});
+	test("getLast: gets exception when list empty", () => {
+		const vv = new Vector();
+		expect(() => vv.getLast()).toThrow(NoSuchElementException);
+	});
+	test("addFirst: add at the front of the list", () => {
+		v.add(b);
+		v.add(c);
+		v.addFirst("a+");
+		expect(v.indexOf("a+")).toEqual(0);
+	});
+	test("addFirst: add null fails", () => {
+		v.add(b);
+		v.add(c);
+		expect(() => v.addFirst(null)).toThrow(NullPointerException);
+	});
+	test("addLast: add at the end of the list", () => {
+		v.add(b);
+		v.add(c);
+		v.addLast("a+");
+		expect(v.indexOf("a+")).toEqual(3);
+	});
+	test("addLast: add null fails", () => {
+		v.add(b);
+		v.add(c);
+		expect(() => v.addLast(null)).toThrow(NullPointerException);
+	});
+	test("addAll: add Collection to Vector", () => {
+		const vv = new Vector();
+		vv.add(b);
+		vv.addAll(v);
+		expect(vv.size()).toEqual(2);
 	});
 });

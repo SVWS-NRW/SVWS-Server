@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { ArrayList, ArrayListEnumerator, ArrayIndexOutOfBoundsException, NullPointerException } from "@transpiled";
+import { ArrayList, ArrayListEnumerator, ArrayIndexOutOfBoundsException, NullPointerException, NoSuchElementException } from "@transpiled";
 import { l,n,s } from "../../shared/TestObjects";
 import { TestConsumer } from "../../shared/TestConsumer";
 import { TestMaxComparator } from "../../shared/TestComparator";
@@ -49,14 +49,27 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		v.addFirst("a+");
 		expect(v.indexOf("a+")).toEqual(0);
 	});
+	test("addFirst: add null fails", () => {
+		v.add(b);
+		v.add(c);
+		expect(() => v.addFirst(null)).toThrow(NullPointerException);
+	});
 	test("addLast: add at the end of the list", () => {
 		v.add(b);
 		v.add(c);
 		v.addLast("a+");
 		expect(v.indexOf("a+")).toEqual(3);
 	});
+	test("addLast: add null fails", () => {
+		v.add(b);
+		v.add(c);
+		expect(() => v.addLast(null)).toThrow(NullPointerException);
+	});
 	test("addAll: add Collection to ArrayList", () => {
-		//
+		const vv = new ArrayList();
+		vv.add(b);
+		vv.addAll(v);
+		expect(vv.size()).toEqual(2);
 	});
 	test("addElement: ArrayList adds element", () => {
 		v.addElement(b);
@@ -95,14 +108,10 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v2.contains(c)).toBeTruthy();
 	});
 	test("removeElementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.removeElementAt(1)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.removeElementAt(1)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: ArrayList throws on negative index", () => {
-		expect(() => v.removeElementAt(-2)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.removeElementAt(-2)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: ArrayList removes 'c' element in second position", () => {
 		v.add(c);
@@ -122,12 +131,13 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v.contains(c)).toBeFalsy();
 		expect(v.size()).toEqual(1);
 	});
-	test("removeElementAt: ArrayList firstelement is removed", () => {
+	test("removeElementAt: ArrayList first element is removed", () => {
 		v.add(c);
 		v.removeElementAt(0);
 		expect(v.contains(a)).toBeFalsy();
 		expect(v.size()).toEqual(1);
 	});
+
 	test("copyInto: ArrayList copies elements into array", () => {
 		const array = [1, 2, 3];
 		v.copyInto(array);
@@ -140,9 +150,7 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(array).toEqual([a, b, c, d, e]);
 	});
 	test("elementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.elementAt(-1)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.elementAt(-1)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("elementAt: returns element from index", () => {
 		expect(v.elementAt(0)).toEqual(a);
@@ -155,14 +163,10 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v.lastElement()).toEqual(b);
 	});
 	test("setElementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.setElementAt(c, 3)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.setElementAt(c, 3)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: ArrayList throws on negative index", () => {
-		expect(() => v.setElementAt(c, -2)).toThrow(
-			ArrayIndexOutOfBoundsException
-		);
+		expect(() => v.setElementAt(c, -2)).toThrow( ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: ArrayList sets element at index", () => {
 		v.setElementAt(b, 0);
@@ -189,6 +193,24 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 	test("get: throw at wrong index", () => {
 		expect(() => v.get(2)).toThrow(ArrayIndexOutOfBoundsException);
 		expect(() => v.get(-1)).toThrow(ArrayIndexOutOfBoundsException);
+	});
+	test("getFirst: gets first element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.getFirst()).toBe(a);
+	});
+	test("getLast: gets last element of the list", () => {
+		v.add(b);
+		v.add(c);
+		expect(v.getLast()).toBe(c)
+	});
+	test("getFirst: gets exception when list empty", () => {
+		const vv = new ArrayList();
+		expect(() => vv.getFirst()).toThrow(NoSuchElementException);
+	});
+	test("getLast: gets exception when list empty", () => {
+		const vv = new ArrayList();
+		expect(() => vv.getLast()).toThrow(NoSuchElementException);
 	});
 	test("set: sets element at index", () => {
 		v.set(0, b);

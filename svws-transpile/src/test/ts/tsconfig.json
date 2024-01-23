@@ -10,8 +10,9 @@
 		}
 	},
 	"include": [
-		"./*.ts",
-		"./src/**/*",
-		"../../../build/tests/ts/**/*"
-	]
+		"./vitest.config.ts",
+		"./src/**/*.ts",
+		"../../../build/tests/ts/**/*",
+		"./src/java/util/__snapshots__/*.snap"
+	],
 }
