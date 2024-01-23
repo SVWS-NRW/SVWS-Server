@@ -275,11 +275,11 @@ export class BaseApi {
 	}
 
 	public deleteText(path : string, body : string | null) : Promise<string> {
-		return this.deleteTextBased(path, (body == null) ? null : 'text/plain', 'text/plain', body);
+		return this.deleteTextBased(path, (body === null) ? null : 'text/plain', 'text/plain', body);
 	}
 
 	public deleteJSON(path : string, body : string | null) : Promise<string> {
-		return this.deleteTextBased(path, (body == null) ? null : 'application/json', 'application/json', body);
+		return this.deleteTextBased(path, (body === null) ? null : 'application/json', 'application/json', body);
 	}
 
 }
