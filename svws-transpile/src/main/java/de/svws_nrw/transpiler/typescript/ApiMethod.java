@@ -397,7 +397,7 @@ public final class ApiMethod {
 			if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
 				if (requestBody.content.isArrayType) {
                     if (isTSPrimitive(getTSArrayElementType(requestBody.content))) {
-                    	sb.append("\t\tconst body : string = \"[\" + data.toArray().map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator());
+                    	sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + getTSArrayElementType(requestBody.content) + ">).map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator());
                     } else {
     					if (httpMethod == ApiHttpMethod.PATCH || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
         					sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => " + requestBody.content.arrayElementType + ".transpilerToJSONPatch(d)).join() + \"]\";" + System.lineSeparator());
