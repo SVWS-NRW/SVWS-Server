@@ -478,9 +478,8 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.start();
 		const eintrag = await api.server.addStundenplan(api.schema, api.abschnitt.id);
 		this.mapKatalogeintraege.set(eintrag.id, eintrag)
-		const result = await this.ladeEintrag(eintrag);
-		this.setPatchedState({ auswahl: eintrag, daten: result.daten, stundenplanManager: result.stundenplanManager, mapKatalogeintraege: this.mapKatalogeintraege });
 		api.status.stop();
+		await this.gotoEintrag(eintrag);
 	}
 
 	removeEintraege = async (eintraege: StundenplanListeEintrag[]) => {
