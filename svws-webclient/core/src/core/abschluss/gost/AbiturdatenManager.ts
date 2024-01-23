@@ -1398,7 +1398,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Fachbelegung oder null
 	 */
 	public getFachbelegung(fachbereich : GostFachbereich) : AbiturFachbelegung | null {
-		const faecher : ArrayList<AbiturFachbelegung | null> | null = this.mapFachbereiche.get(fachbereich);
+		const faecher : ArrayList<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
 		if ((faecher === null) || (faecher.isEmpty()))
 			return null;
 		return faecher.get(0);

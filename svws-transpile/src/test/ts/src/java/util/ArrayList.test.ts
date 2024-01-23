@@ -43,6 +43,18 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		v.add(1, "a+");
 		expect(v.indexOf("a+")).toEqual(1);
 	});
+	test("addFirst: add at the front of the list", () => {
+		v.add(b);
+		v.add(c);
+		v.addFirst("a+");
+		expect(v.indexOf("a+")).toEqual(0);
+	});
+	test("addLast: add at the end of the list", () => {
+		v.add(b);
+		v.add(c);
+		v.addLast("a+");
+		expect(v.indexOf("a+")).toEqual(3);
+	});
 	test("addAll: add Collection to ArrayList", () => {
 		//
 	});
@@ -253,7 +265,7 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v.elementAt(0)).toEqual(a);
 		expect(v.elementAt(1)).toEqual(a);
 	});
-	test("adAll: add all incoming elements from Collection beginning from index", () => {
+	test("addAll: add all incoming elements from Collection beginning from index", () => {
 		const v2 = new ArrayList();
 		v2.add(a);
 		v2.add(b);

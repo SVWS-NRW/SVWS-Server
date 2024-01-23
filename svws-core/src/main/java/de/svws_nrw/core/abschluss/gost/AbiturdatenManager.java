@@ -1473,7 +1473,7 @@ public class AbiturdatenManager {
 	 * @return die Fachbelegung oder null
 	 */
 	public AbiturFachbelegung getFachbelegung(final @NotNull GostFachbereich fachbereich) {
-		final ArrayList<AbiturFachbelegung> faecher = mapFachbereiche.get(fachbereich);
+		final ArrayList<@NotNull AbiturFachbelegung> faecher = mapFachbereiche.get(fachbereich);
 		if ((faecher == null) || (faecher.isEmpty()))
 			return null;
 		return faecher.get(0);

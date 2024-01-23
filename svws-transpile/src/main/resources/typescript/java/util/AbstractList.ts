@@ -1,8 +1,11 @@
 import type { Collection } from './Collection';
 import type { JavaIterator } from './JavaIterator';
 import type { List } from './List';
+import { java_util_List_addFirst, java_util_List_addLast, java_util_List_getFirst, java_util_List_getLast,
+	java_util_List_removeFirst, java_util_List_removeLast } from './List';
 import type { ListIterator } from './ListIterator';
 import type { Comparator } from './Comparator';
+import { NoSuchElementException } from './NoSuchElementException';
 
 import { AbstractCollection } from './AbstractCollection';
 import { AbstractListListIterator } from './AbstractListListIterator';
@@ -97,7 +100,7 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 	public addAll(index : number, c : Collection<E>) : boolean;
 	public addAll(param1 : number | Collection<E>, param2? : Collection<E>) : boolean {
 		if (((typeof param1 === "number") && (typeof param2 === "undefined")) ||
-            ((typeof param1 !== "number") && (typeof param2 !== "undefined")))
+			((typeof param1 !== "number") && (typeof param2 !== "undefined")))
 			throw new Error("invalid method overload");
 		let index : number = (typeof param1 === "number") ? param1 : 0;
 		const c : Collection<E> | undefined = (typeof param1 === "number") ? param2 : param1;
@@ -151,39 +154,61 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 		}
 	}
 
-    public abstract get(index : number) : E;
+	public abstract get(index : number) : E;
 
 
-    public set(index : number, element : E) : E {
-    	throw new UnsupportedOperationException();
-    }
+	public set(index : number, element : E) : E {
+		throw new UnsupportedOperationException();
+	}
 
-    /** Sort the List with the given Comparator function
-     * @param {Comparator<E>} c
-     */
-    public sort(c: Comparator<E>): void {
-    	const sorted = super.toArray() as E[];
-    	sorted.sort(c.compare);
-    	this.clear();
-    	for (const e of sorted) {
-    		this.add(e);
-    	}
-    }
+	/**
+	 * Sort the List with the given Comparator function
+	 *
+	 * @param {Comparator<E>} c
+	 */
+	public sort(c: Comparator<E>): void {
+		const sorted = super.toArray() as E[];
+		sorted.sort(c.compare);
+		this.clear();
+		for (const e of sorted) {
+			this.add(e);
+		}
+	}
+
+
+	/* Implementierung der Default-Methode addFirst */
+	public addFirst: (e: E | null) => void = java_util_List_addFirst;
+	
+	/* Implementierung der Default-Methode addLast */
+	public addLast: (e: E | null) => void = java_util_List_addLast;
+	
+	/* Implementierung der Default-Methode getFirst */
+	public getFirst: () => E | null = java_util_List_getFirst;
+	
+	/* Implementierung der Default-Methode getLast */
+	public getLast: () => E | null = java_util_List_getLast;
+	
+	/* Implementierung der Default-Methode removeFirst */
+	public removeFirst: () => E | null = java_util_List_removeFirst;
+	
+	/* Implementierung der Default-Methode removeLast */
+	public removeLast: () => E | null = java_util_List_removeLast;
+
 
 	public transpilerCanonicalName(): string {
 		return 'java.util.AbstractList';
 	}
 
-    public isTranspiledInstanceOf(name : string): boolean {
-    	return [
-    		'java.util.AbstractList',
-    		'java.util.AbstractCollection',
-    		'java.util.List',
-    		'java.util.Collection',
-    		'java.lang.Iterable',
-    		'java.lang.Object'
-    	].includes(name);
-    }
+	public isTranspiledInstanceOf(name : string): boolean {
+		return [
+			'java.util.AbstractList',
+			'java.util.AbstractCollection',
+			'java.util.List',
+			'java.util.Collection',
+			'java.lang.Iterable',
+			'java.lang.Object'
+		].includes(name);
+	}
 
 }
 
