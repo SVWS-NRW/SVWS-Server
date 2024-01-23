@@ -78,15 +78,17 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
-		this.stundenplanManager.raumAdd(raum);
+		const stundenplanManager = this.stundenplanManager;
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		stundenplanManager.raumAdd(raum);
 		mapKatalogeintraege.set(raum.id, raum);
-		this.setPatchedState({mapKatalogeintraege});
+		this.setPatchedState({mapKatalogeintraege, stundenplanManager});
 		await this.gotoEintrag(raum);
 	}
 
-	deleteEintraege = async (eintraege: Raum[]) => {
+	deleteEintraege = async (eintraege: Iterable<Raum>) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const stundenplanManager = this.stundenplanManager;
 		const listID = new ArrayList<number>;
 		for (const eintrag of eintraege) {
 			listID.add(eintrag.id);
@@ -94,9 +96,10 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		}
 		let auswahl;
 		const raeume = await api.server.deleteRaeume(listID, api.schema);
+		stundenplanManager.raumRemoveAll(raeume);
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
+		this.setPatchedState({mapKatalogeintraege, auswahl, stundenplanManager});
 	}
 
 	patch = async (eintrag : Partial<Raum>) => {

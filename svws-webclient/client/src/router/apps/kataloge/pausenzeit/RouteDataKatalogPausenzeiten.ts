@@ -84,16 +84,16 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		await this.gotoEintrag(pausenzeit);
 	}
 
-	deleteEintraege = async (eintraege: StundenplanPausenzeit[]) => {
+	deleteEintraege = async (eintraege: Iterable<StundenplanPausenzeit>) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		const stundenplanManager = this.stundenplanManager;
 		const list = new ArrayList<number>();
 		for (const eintrag of eintraege) {
 			list.add(eintrag.id)
 			mapKatalogeintraege.delete(eintrag.id);
-			stundenplanManager.pausenzeitRemoveById(eintrag.id);
 		}
-		await api.server.deletePausenzeiten(list, api.schema);
+		const pausenzeiten = await api.server.deletePausenzeiten(list, api.schema);
+		stundenplanManager.pausenzeitRemoveAll(pausenzeiten);
 		let auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;

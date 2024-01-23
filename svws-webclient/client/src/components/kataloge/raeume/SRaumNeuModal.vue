@@ -11,7 +11,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel || !item.groesse"> Raum hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel || (item.groesse < 1)"> Raum hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -38,6 +38,7 @@
 	async function importer() {
 		await props.addRaum(item.value);
 		item.value = new Raum();
+		item.value.groesse = 1;
 		showModal().value = false;
 	}
 

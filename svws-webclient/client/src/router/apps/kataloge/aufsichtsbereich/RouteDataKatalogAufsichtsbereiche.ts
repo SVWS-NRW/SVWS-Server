@@ -78,25 +78,28 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);
-		this.stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);
+		const stundenplanManager = this.stundenplanManager;
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		stundenplanManager.aufsichtsbereichAdd(aufsichtsbereich);
 		mapKatalogeintraege.set(aufsichtsbereich.id, aufsichtsbereich);
-		this.setPatchedState({mapKatalogeintraege});
+		this.setPatchedState({mapKatalogeintraege, stundenplanManager});
 		await this.gotoEintrag(aufsichtsbereich);
 	}
 
-	deleteEintraege = async (eintraege: StundenplanAufsichtsbereich[]) => {
+	deleteEintraege = async (eintraege: Iterable<StundenplanAufsichtsbereich>) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const stundenplanManager = this.stundenplanManager;
 		const list = new ArrayList<number>();
 		for (const eintrag of eintraege) {
 			mapKatalogeintraege.delete(eintrag.id);
 			list.add(eintrag.id);
 		}
 		let auswahl;
-		await api.server.deleteAufsichtsbereiche(list, api.schema);
+		const aufsichtsbereiche = await api.server.deleteAufsichtsbereiche(list, api.schema);
+		stundenplanManager.aufsichtsbereichRemoveAll(aufsichtsbereiche);
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
+		this.setPatchedState({mapKatalogeintraege, auswahl, stundenplanManager});
 	}
 
 	patch = async (eintrag : Partial<StundenplanAufsichtsbereich>) => {
