@@ -29,8 +29,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getAuswahlProps(route));
-		super.children = [
-		];
+		super.children = [];
 		super.menu = [
 			// TODO { title: "Schule bearbeiten", value: "schule_bearbeiten" },
 			// TODO { title: "Einstellungen", value: "einstellungen" },
@@ -40,7 +39,6 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleBenutzer,
 			routeSchuleBenutzergruppe,
 			routeSchuleDatenaustausch,
-			// TODO { title: "Hilfe", value: "hilfe" }
 		];
 		super.defaultChild = undefined;
 	}
@@ -50,9 +48,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleAppProps {
-		return {
-			schule: api.schuleStammdaten,
-		};
+		return { schule: api.schuleStammdaten, };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {

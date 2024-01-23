@@ -50,6 +50,13 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		return this.setChild(this.defaultChild!);
 	}
 
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					this.data.setView(child, this.children);
+	}
+
 	public getRoute() : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: {}};
 	}
