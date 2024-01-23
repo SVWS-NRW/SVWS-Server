@@ -76,25 +76,28 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 			throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 		delete eintrag.id;
 		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
-		this.stundenplanManager.pausenzeitAdd(pausenzeit);
+		const stundenplanManager = this.stundenplanManager;
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		stundenplanManager.pausenzeitAdd(pausenzeit);
 		mapKatalogeintraege.set(pausenzeit.id, pausenzeit);
-		this.setPatchedState({mapKatalogeintraege});
+		this.setPatchedState({mapKatalogeintraege, stundenplanManager});
 		await this.gotoEintrag(pausenzeit);
 	}
 
 	deleteEintraege = async (eintraege: StundenplanPausenzeit[]) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const stundenplanManager = this.stundenplanManager;
 		const list = new ArrayList<number>();
 		for (const eintrag of eintraege) {
 			list.add(eintrag.id)
 			mapKatalogeintraege.delete(eintrag.id);
+			stundenplanManager.pausenzeitRemoveById(eintrag.id);
 		}
 		await api.server.deletePausenzeiten(list, api.schema);
 		let auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
+		this.setPatchedState({mapKatalogeintraege, auswahl, stundenplanManager});
 	}
 
 	patch = async (eintrag : Partial<StundenplanPausenzeit>) => {
