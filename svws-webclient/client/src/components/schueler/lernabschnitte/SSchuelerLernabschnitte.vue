@@ -3,17 +3,19 @@
 		<div class="flex-none w-28 h-full">
 			<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 				<template #cell="{ rowData: row }">
-					<span>
-						{{ `${row.schuljahr}.${row.abschnitt} (${row.jahrgang})` }}
-					</span>
-					<svws-ui-tooltip v-if="row.wechselNr !== 0">
-						<span class="opacity-50 inline-block cursor-pointer top-0.5 relative">
-							(alt)
+					<div>
+						<span>
+							{{ `${row.schuljahr}.${row.abschnitt}` }}&nbsp;{{ row.jahrgang ? `(${row.jahrgang})` : '' }}
 						</span>
-						<template #content>
-							Daten vor dem {{ row.wechselNr }}. Wechsel
-						</template>
-					</svws-ui-tooltip>
+						<svws-ui-tooltip v-if="row.wechselNr !== 0">
+							<span class="opacity-50 inline-block cursor-pointer top-0.5 relative">
+								(alt)
+							</span>
+							<template #content>
+								Daten vor dem {{ row.wechselNr }}. Wechsel
+							</template>
+						</svws-ui-tooltip>
+					</div>
 				</template>
 			</svws-ui-table>
 		</div>
