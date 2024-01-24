@@ -70,13 +70,13 @@
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0)]" :key="schiene.id">
 							<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, 0, schiene.id).hashCode().toString()}`: ''">
-								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0 cursor-grab"
+								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 									:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id), $event)" @dragend="onDrag(undefined)">
 									{{ schiene.bezeichnung }}
 								</div>
 								<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, schiene.id)" :key="unterricht.id"
-									class="svws-ui-stundenplan--unterricht cursor-grab"
-									:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).size() === 1}"
+									class="svws-ui-stundenplan--unterricht"
+									:class="{'cursor-grab': isDraggable(), 'flex-grow': getUnterricht(wochentag, stunde, 0, -1).size() === 1}"
 									:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 									:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 									<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -109,13 +109,13 @@
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
 										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).hashCode().toString()}`: ''">
-											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0 cursor-grab"
+											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id), $event)" @dragend="onDrag(undefined)">
 												{{ schiene.bezeichnung }}
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id)" :key="unterricht.id"
-												class="svws-ui-stundenplan--unterricht svws-compact cursor-grab"
-												:class="{'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() === 1}"
+												class="svws-ui-stundenplan--unterricht svws-compact"
+												:class="{'cursor-grab': isDraggable(), 'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() === 1}"
 												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 												:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 												<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
