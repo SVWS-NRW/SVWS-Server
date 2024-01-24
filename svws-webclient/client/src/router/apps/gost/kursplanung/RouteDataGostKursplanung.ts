@@ -530,6 +530,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		await api.server.patchGostBlockungSchiene(data, api.schema, id);
 		const schiene = this.datenmanager.schieneGet(id);
 		Object.assign(schiene, data);
+		this.setPatchedState({datenmanager: this.datenmanager});
 	});
 
 	addSchiene = api.call(async (): Promise<GostBlockungSchiene | undefined> => {
