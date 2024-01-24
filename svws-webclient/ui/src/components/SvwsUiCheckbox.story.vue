@@ -1,7 +1,12 @@
 <template>
 	<Story title="Checkbox" id="svws-ui-checkbox" icon="ri:checkbox-line" auto-props-disabled responsive-disabled>
 		<Variant title="Default" id="Default" :source="source">
-			<svws-ui-checkbox v-model="modelValue1" :bw="state.bw" :statistics="state.statistics" :disabled="state.disabled" :headless="state.headless" :type="state.toggle ? 'toggle' : 'checkbox'">{{ state.label }}</svws-ui-checkbox>
+			<div class="flex flex-col items-start gap-2 mt-10">
+				<svws-ui-checkbox v-model="modelValue1" :bw="state.bw" :statistics="state.statistics" :disabled="state.disabled" :headless="state.headless" :type="state.toggle ? 'toggle' : 'checkbox'">{{ state.label }}</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue1" color="error">Error</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue1" color="success">Success</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue1" color="warning">Warning</svws-ui-checkbox>
+			</div>
 
 			<div class="flex flex-col items-start gap-2 mt-10">
 				<div :class="{'text-primary': modelValue2}">

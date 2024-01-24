@@ -1,7 +1,7 @@
 <template>
 	<div class="inline-flex">
 		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
-			<input type="checkbox" v-model="checked" :disabled="disabled" :readonly="readonly" :indeterminate="indeterminate" :class="{'svws-headless': headless && type !== 'toggle'}">
+			<input type="checkbox" v-model="checked" :disabled="disabled" :readonly="readonly" :indeterminate="indeterminate" :class="{'svws-headless': headless && type !== 'toggle'}" :color="color">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span class="svws-ui-checkbox--label" v-if="$slots.default">
 				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
@@ -32,6 +32,7 @@
 		headless?: boolean;
 		indeterminate?: boolean;
 		readonly?: boolean;
+		color?: 'success' | 'error' | 'warning';
 	}>(), {
 		statistics: false,
 		disabled: false,
@@ -41,6 +42,7 @@
 		headless: false,
 		indeterminate: false,
 		readonly: false,
+		color: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -60,6 +62,10 @@
 <style lang="postcss">
 	.svws-ui-checkbox {
 		@apply inline-flex items-start text-base leading-tight my-0.5;
+
+		input[color="success"] { @apply accent-success; }
+		input[color="error"] { @apply accent-error; }
+		input[color="warning"] { @apply accent-orange-400; }
 
 		&.svws-statistik {
 			@apply text-violet-500;
