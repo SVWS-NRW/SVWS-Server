@@ -336,9 +336,10 @@
       @apply text-svws;
     }
 
+	/* Das sieht gut aus, aber führt zu Problemen, wenn das Fenster verkleinert wird. Min/Max verwenden?
 	input {
 		@apply pl-8;
-	}
+	} */
 
 	.input-number--readonly .input-number--control {
 		@apply pointer-events-auto cursor-default select-none;
