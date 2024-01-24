@@ -1,5 +1,13 @@
 <template>
-	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled}" v-bind="$attrs" ref="inputElTags">
+	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
+		<div v-if="!headless && selectedItemList.size" class="svws-tags">
+			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
+				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
+				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
+					<i-ri-close-line />
+				</button>
+			</span>
+		</div>
 		<div class="flex-grow">
 			<svws-ui-text-input ref="inputEl"
 				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
@@ -28,18 +36,7 @@
 				@keydown.backspace="onBackspace"
 				@keydown.esc.prevent="toggleListBox"
 				@keydown.space.prevent="onSpace"
-				@keydown.tab="onTab">
-				<template #tags v-if="!headless">
-					<div class="svws-tags">
-						<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
-							<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
-							<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
-								<i-ri-close-line />
-							</button>
-						</span>
-					</div>
-				</template>
-			</svws-ui-text-input>
+				@keydown.tab="onTab"/>
 		</div>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
 			<i-ri-expand-up-down-line v-if="headless" />
@@ -305,20 +302,45 @@
 
 <style lang="postcss">
 .svws-ui-multi-select {
+	&:not(.svws-headless) {
+		@apply bg-white dark:bg-black;
+		@apply rounded-md border border-black/5 dark:border-white/5;
+
+		&:hover {
+			@apply border-black/25 dark:border-white/25;
+		}
+	}
+
+	.text-input--control {
+		@apply bg-transparent border-none;
+	}
+
   &.svws-ui-select .svws-dropdown-icon {
     height: calc(100% - 0.5rem);
+  }
+
+  &.svws-open.svws-autocomplete .svws-tags {
+	@apply mb-[2rem];
   }
 
   &:not(.svws-headless) {
     @apply min-h-[2.25rem];
 
     .text-input-component {
-      @apply absolute top-0 left-0 w-full h-full;
+      @apply absolute top-0 left-0 w-full h-full cursor-pointer;
     }
 
-    .text-input--control {
-      @apply h-full;
-    }
+	&.svws-open.svws-autocomplete {
+		.text-input--control {
+			@apply h-[2.25rem] mt-auto pl-3;
+		}
+	}
+
+	&:not(.svws-open) {
+		.text-input--control {
+			@apply hidden;
+		}
+	}
   }
 
   .svws-tags {

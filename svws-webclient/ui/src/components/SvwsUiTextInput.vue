@@ -13,9 +13,6 @@
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
-		<span class="absolute">
-			<slot name="tags" />
-		</span>
 		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
 		<i-ri-search-line v-if="type === 'search'" class="text-input--search-icon" />
 		<input ref="input"
