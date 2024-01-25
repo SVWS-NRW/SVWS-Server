@@ -1,12 +1,9 @@
 
 import type {
-	GostFaecherManager,
 	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurtermin,
 	GostKursklausurManager,
-	KursManager,
-	LehrerListeEintrag,
 	SchuelerListeEintrag,
 	StundenplanManager,
 } from "@core";

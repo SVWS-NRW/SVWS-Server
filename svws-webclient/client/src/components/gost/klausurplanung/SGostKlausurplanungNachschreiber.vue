@@ -149,7 +149,7 @@
 <script setup lang="ts">
 
 	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
-	import { computed, ref, onMounted, h } from 'vue';
+	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
 	import type { DataTableColumn } from "@ui";

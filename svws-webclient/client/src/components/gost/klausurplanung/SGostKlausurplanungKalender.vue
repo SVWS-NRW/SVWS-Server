@@ -134,7 +134,7 @@
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, HashSet, JavaMapEntry, JavaSet} from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
-	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ZulaessigesFach, ArrayList} from "@core";
+	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
 	import { computed, ref, onMounted } from "vue";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();

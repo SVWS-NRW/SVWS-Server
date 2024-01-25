@@ -49,10 +49,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostSchuelerklausur, GostFaecherManager, GostKursklausurManager, KursManager , GostKlausurenCollectionSkrsKrs, GostKlausurraum , LehrerListeEintrag} from '@core';
+	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostKursklausurManager, GostKlausurenCollectionSkrsKrs, GostKlausurraum } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
-	import { GostKursklausur, ZulaessigesFach } from '@core';
+	import { GostKursklausur } from '@core';
 	import { computed } from 'vue';
 	import { DateUtils} from "@core";
 

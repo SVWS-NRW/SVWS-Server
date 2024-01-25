@@ -2,12 +2,9 @@ import type {
 	GostHalbjahr,
 	GostKlausurenCollectionSkrsKrs,
 	GostKlausurtermin,
-	GostKlausurterminblockungDaten,
 	GostKursklausur,
 	GostKursklausurManager,
 	GostSchuelerklausurTermin,
-	KursManager,
-	LehrerListeEintrag,
 	List,
 	SchuelerListeEintrag,
 } from "@core";

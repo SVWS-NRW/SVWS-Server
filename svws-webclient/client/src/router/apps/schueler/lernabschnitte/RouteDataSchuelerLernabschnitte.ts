@@ -1,4 +1,4 @@
-import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausur, GostSchuelerklausurTermin} from "@core";
+import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
 import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
