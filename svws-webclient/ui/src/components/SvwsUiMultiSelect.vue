@@ -36,7 +36,7 @@
 				@keydown.backspace="onBackspace"
 				@keydown.esc.prevent="toggleListBox"
 				@keydown.space.prevent="onSpace"
-				@keydown.tab="onTab"/>
+				@keydown.tab="onTab" />
 		</div>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
 			<i-ri-expand-up-down-line v-if="headless" />

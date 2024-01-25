@@ -69,7 +69,7 @@
 							</div>
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0)]" :key="schiene.id">
-							<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, 0, schiene.id).hashCode().toString()}`: ''">
+							<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, 0, schiene.id).hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
 								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 									:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id), $event)" @dragend="onDrag(undefined)">
 									{{ schiene.bezeichnung }}
@@ -86,17 +86,17 @@
 							</div>
 						</template>
 						<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
-						<div v-if="zeitrasterHatUnterrichtMitWochentyp(wochentag.id, stunde)" class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
+						<div v-if="zeitrasterHatUnterrichtMitWochentyp(wochentag.id, stunde)" class="svws-multiple gap-1">
 							<template v-for="wt in getWochentyp" :key="wt">
-								<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
+								<div :class="{'border-r border-black/25 p-1 last:border-r-0 flex flex-col': wochentyp()}" :style="wochentyp() ? `grid-column-start: ${wt}`: ''">
 									<template v-if="mode !== 'klasse'">
 										<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
 										<template v-if="getUnterricht(wochentag, stunde, wt as unknown as number, 0).size() > 0">
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
 										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt as unknown as number, 0)" :key="unterricht.id"
-											class="svws-ui-stundenplan--unterricht svws-compact"
-											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, 0).size() === 1}"
+											class="svws-ui-stundenplan--unterricht"
+											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, 0).size() === 1, 'svws-compact': !wochentyp()}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -108,14 +108,14 @@
 										<template v-if="getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() > 0">
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
-										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).hashCode().toString()}`: ''">
+										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
 											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id), $event)" @dragend="onDrag(undefined)">
 												{{ schiene.bezeichnung }}
 											</div>
 											<div v-for="unterricht in getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id)" :key="unterricht.id"
-												class="svws-ui-stundenplan--unterricht svws-compact"
-												:class="{'cursor-grab': isDraggable(), 'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() === 1}"
+												class="svws-ui-stundenplan--unterricht"
+												:class="{'cursor-grab': isDraggable(), 'flex-grow': getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).size() === 1, 'svws-compact': !wochentyp()} "
 												:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 												:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 												<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -178,10 +178,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 	import type { Wochentag, StundenplanPausenzeit, List } from "@core";
 	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht, StundenplanSchiene } from "@core";
-	import { computed } from "vue";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
