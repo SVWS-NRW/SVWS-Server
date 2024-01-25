@@ -12,7 +12,6 @@ import java.util.function.Predicate;
 import java.util.Map.Entry;
 
 import de.svws_nrw.core.adt.Pair;
-import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -2778,10 +2777,12 @@ public class GostBlockungsergebnisManager {
 			final StringBuilder sbZeile = new StringBuilder();
 
 			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
-				final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
-				if (anzahl > 0) {
-					summe += anzahl;
-					sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + getOfKursName(kurs2.id) + "(" + anzahl + ")");
+				if (kurs2.id != kurs1.id) {
+					final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					if (anzahl > 0) {
+						summe += anzahl;
+						sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + getOfKursName(kurs2.id) + "(" + anzahl + ")");
+					}
 				}
 			}
 
@@ -2806,19 +2807,16 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>>> listOfLists = new ArrayList<>();
 
 		for (final GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
+			int summe = 0;
 			final @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>> listOfPairs = new ArrayList<>();
 
-			int summe = 0;
-
-			final LinkedCollection<Integer> temp = new LinkedCollection<>();
-			temp.addFirst(77);
-			temp.addFirst(88);
-
 			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
-				final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
-				if (anzahl > 0) {
-					listOfPairs.add(new Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>(kurs2, anzahl));
-					summe += anzahl;
+				if (kurs2.id != kurs1.id) {
+					final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					if (anzahl > 0) {
+						listOfPairs.add(new Pair<@NotNull GostBlockungsergebnisKurs, @NotNull Integer>(kurs2, anzahl));
+						summe += anzahl;
+					}
 				}
 			}
 

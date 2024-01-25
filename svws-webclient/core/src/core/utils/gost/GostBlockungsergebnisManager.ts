@@ -30,7 +30,6 @@ import { SchuelerblockungOutput } from '../../../core/data/kursblockung/Schueler
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
-import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
@@ -2613,10 +2612,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			let summe : number = 0;
 			const sbZeile : StringBuilder | null = new StringBuilder();
 			for (const kurs2 of this.getSchieneE(idSchiene).kurse) {
-				const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
-				if (anzahl > 0) {
-					summe += anzahl;
-					sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + this.getOfKursName(kurs2.id)! + "(" + anzahl + ")");
+				if (kurs2.id !== kurs1.id) {
+					const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					if (anzahl > 0) {
+						summe += anzahl;
+						sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + this.getOfKursName(kurs2.id)! + "(" + anzahl + ")");
+					}
 				}
 			}
 			if (summe > 0) {
@@ -2638,16 +2639,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchieneTooltipKurskollisionenAsData(idSchiene : number) : List<List<Pair<GostBlockungsergebnisKurs, number>>> {
 		const listOfLists : List<List<Pair<GostBlockungsergebnisKurs, number>>> = new ArrayList();
 		for (const kurs1 of this.getSchieneE(idSchiene).kurse) {
-			const listOfPairs : List<Pair<GostBlockungsergebnisKurs, number>> = new ArrayList();
 			let summe : number = 0;
-			const temp : LinkedCollection<number | null> | null = new LinkedCollection();
-			temp.addFirst(77);
-			temp.addFirst(88);
+			const listOfPairs : List<Pair<GostBlockungsergebnisKurs, number>> = new ArrayList();
 			for (const kurs2 of this.getSchieneE(idSchiene).kurse) {
-				const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
-				if (anzahl > 0) {
-					listOfPairs.add(new Pair<GostBlockungsergebnisKurs, number>(kurs2, anzahl));
-					summe += anzahl;
+				if (kurs2.id !== kurs1.id) {
+					const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					if (anzahl > 0) {
+						listOfPairs.add(new Pair<GostBlockungsergebnisKurs, number>(kurs2, anzahl));
+						summe += anzahl;
+					}
 				}
 			}
 			if (summe > 0) {
