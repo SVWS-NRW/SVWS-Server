@@ -14,7 +14,7 @@
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung="gotoKursblockung"
-			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus" :faecher-nicht-waehlbar-ausblenden="false"
+			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus" :faecher-anzeigen="'alle'"
 			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
