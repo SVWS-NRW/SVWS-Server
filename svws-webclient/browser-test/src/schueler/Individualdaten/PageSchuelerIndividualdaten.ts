@@ -32,10 +32,10 @@ const test_schueler : SchuelerStammdaten=  {
 	religionanmeldung: '2012-11-11',
 	hatMigrationshintergrund: true,
 	zuzugsjahr: null,
-	geburtsland: null,
-	verkehrspracheFamilie: null,
-	geburtslandVater: null,
-	geburtslandMutter: null,
+	geburtsland: 'XXC',
+	verkehrspracheFamilie: 'din',
+	geburtslandVater: 'XXC',
+	geburtslandMutter: 'XXC',
 	status: 2,
 	istDuplikat: false,
 	externeSchulNr: null,
@@ -44,10 +44,10 @@ const test_schueler : SchuelerStammdaten=  {
 	anmeldedatum: '2022-10-19',
 	aufnahmedatum: '2011-08-01',
 	istVolljaehrig: true,
-	istSchulpflichtErfuellt: true,
+	istSchulpflichtErfuellt: false,
 	istBerufsschulpflichtErfuellt: false,
 	hatMasernimpfnachweis: true,
-	keineAuskunftAnDritte: false,
+	keineAuskunftAnDritte: true,
 	erhaeltSchuelerBAFOEG: true,
 	erhaeltMeisterBAFOEG: false,
 	bemerkungen: 'Kapitel I \n Selam Millet',
@@ -77,8 +77,6 @@ const test_schueler : SchuelerStammdaten=  {
 	}
 }
 
-
-
 export class PageSchuelerIndividualdaten {
 
 	public schueler_before_test:SchuelerStammdaten|undefined ;
@@ -90,7 +88,6 @@ export class PageSchuelerIndividualdaten {
 	{
 		await this.page.waitForTimeout(1000);
 		const api_schueler = await api.server.getSchuelerStammdaten(api.schema,dataSchueler[0].id);
-
 		//Allgemein
 		expect(test_schueler.nachname).toBe(api_schueler.nachname);
 		expect(test_schueler.vorname).toBe(api_schueler.vorname);
@@ -129,8 +126,13 @@ export class PageSchuelerIndividualdaten {
 		expect(test_schueler.status).toBe(api_schueler.status);
 		expect(test_schueler.fahrschuelerArtID).toBe(api_schueler.fahrschuelerArtID)
 		expect(test_schueler.haltestelleID).toBe(api_schueler.haltestelleID);
+		expect(test_schueler.istVolljaehrig).toBe(api_schueler.istVolljaehrig);
+		// TODO Patch wird nicht angestoßen.
+		//expect(test_schueler.istSchulpflichtErfuellt).toBe(api_schueler.istSchulpflichtErfuellt);
 		expect(test_schueler.hatMasernimpfnachweis).toBe(api_schueler.hatMasernimpfnachweis);
 		expect(test_schueler.keineAuskunftAnDritte).toBe(api_schueler.keineAuskunftAnDritte);
+		expect(test_schueler.istBerufsschulpflichtErfuellt).toBe(api_schueler.istBerufsschulpflichtErfuellt);
+
 		expect(test_schueler.erhaeltSchuelerBAFOEG).toBe(api_schueler.erhaeltSchuelerBAFOEG);
 		expect(test_schueler.bemerkungen).toBe(api_schueler.bemerkungen);
 
@@ -144,7 +146,7 @@ export class PageSchuelerIndividualdaten {
 		// Speicher den Schüler vor der Bearbeitung
 		this.schueler_before_test = await api.server.getSchuelerStammdaten(api.schema,dataSchueler[0].id);
 
-
+		console.log(this.schueler_before_test);
 		// Bearbeite den Schüler
 		await this.fillContentCardAllgemein(test_schueler);
 		await this.fillContentCardWohnortundKontaktdaten(test_schueler);
@@ -157,9 +159,11 @@ export class PageSchuelerIndividualdaten {
 		//Überprüfung der Speicherung der Daten in DB
 		await this.testeAPI_SpeicherungSchueler();
 
-		await this.page.waitForTimeout(1000);
+		//await this.page.waitForTimeout(1000);
 
 		// Mache die Änderungen rückgängig.
+		await this.page.getByRole('row', { name: dataSchueler[1].name2click }).click();
+		await this.page.getByRole('row', { name: "09b Isak Büyük" }).click();
 		await this.fillContentCardAllgemein(this.schueler_before_test);
 		await this.fillContentCardWohnortundKontaktdaten(this.schueler_before_test);
 		await this.fillContentCardStaatsangehoerigkeitundNationalitaet(this.schueler_before_test);
@@ -173,30 +177,18 @@ export class PageSchuelerIndividualdaten {
 	//Anfagn ContentCard-ALLGEMEIN
 	async fillContentCardAllgemein(s:SchuelerStammdaten|undefined) {
 		if(s ){
-			await this.fillNachname(s.nachname);
-			await this.fillRufname(s.vorname);
-			await this.fillAlleVornamen(s.alleVornamen);
+			await this.fillTextfeld("Nachname",s.nachname);
+			await this.fillTextfeld("Rufname",s.vorname);
+			await this.fillTextfeld("Alle Vornamen",s.alleVornamen);
 			await this.fillGeschlecht(s.geschlecht);
-			await this.fillGeburtsdatum(s.geburtsdatum === null ? '' : s.geburtsdatum);
-			await this.fillGeburtsort(s.geburtsort === null ? '' : s.geburtsort);
-			await this.fillGeburtsname(s.geburtsname === null ? '' : s.geburtsname);
+			await this.fillTextfeld("Geburtsdatum", s.geburtsdatum === null ? '' : s.geburtsdatum);
+			await this.fillTextfeld("Geburtsort", s.geburtsort === null ? '' : s.geburtsort);
+			await this.fillTextfeld("Geburtsname", s.geburtsname === null ? '' : s.geburtsname);
 		}
 		else{
 			expect("Undefined darf").toBe("nicht sein");
 		}
 
-	}
-
-	async fillNachname(value: string ) {
-		await this.page.getByLabel('Nachname').fill(value);
-	}
-
-	async fillRufname(value: string) {
-		await this.page.getByLabel('Rufname').fill(value);
-	}
-
-	async fillAlleVornamen(value: string) {
-		await this.page.getByLabel('Alle Vornamen').fill(value);
 	}
 
 	async fillGeschlecht(value: number) {
@@ -212,17 +204,6 @@ export class PageSchuelerIndividualdaten {
 		await this.page.getByRole('option', { name: geschlecht.get(value) }).click();
 	}
 
-	async fillGeburtsdatum(value: string) {
-		await this.page.getByLabel('Geburtsdatum').fill(value);
-	}
-
-	async fillGeburtsort(value: string) {
-		await this.page.getByLabel('Geburtsort').fill(value);
-	}
-
-	async fillGeburtsname(value: string) {
-		await this.page.getByLabel('Geburtsname').fill(value);
-	}
 	//Ende Contentcard-Allgemein
 
 
@@ -230,22 +211,17 @@ export class PageSchuelerIndividualdaten {
 	async fillContentCardWohnortundKontaktdaten(s:SchuelerStammdaten|undefined) {
 		if(s ){
 			await this.page.getByRole('heading', { name: 'Wohnort und Kontaktdaten' }).click();
-			await this.fillStrasse(s.strassenname === null ? '' : s.strassenname);
+			await this.fillTextfeld("Straße", s.strassenname === null ? '' : s.strassenname);
 			await this.fillWohnort(s.wohnortID);
 			await this.fillOrtsteil(s.ortsteilID);
-			await this.fillTelefon(s.telefon === null ? '' : s.telefon);
-			await this.fillMobiloderFax(s.telefonMobil === null ? '' : s.telefonMobil);
-			await this.fillPrivatEMail(s.emailPrivat === null ? '' : s.emailPrivat);
-			await this.fillDienstEMail(s.emailSchule === null ? '' : s.emailSchule);
+			await this.fillTextfeld("Telefon", s.telefon === null ? '' : s.telefon);
+			await this.fillTextfeld("Mobil oder Fax", s.telefonMobil === null ? '' : s.telefonMobil);
+			await this.fillTextfeld("Private E-Mail-Adresse", s.emailPrivat === null ? '' : s.emailPrivat);
+			await this.fillTextfeld("Schulische E-Mail-Adresse", s.emailSchule === null ? '' : s.emailSchule);
 		}
 		else{
 			expect("Undefined darf").toBe("nicht sein");
 		}
-	}
-
-	async fillStrasse(value: string) {
-		await this.page.getByLabel('Straße').click();
-  		await this.page.getByLabel('Straße').fill(value);
 	}
 
 	/* Test nur mit den Orten : Kürten(630) und Langerwehe*/
@@ -266,41 +242,22 @@ export class PageSchuelerIndividualdaten {
 		await this.page.getByLabel('Ortsteil').click();
 		// TODO Implementierung des Clicks
 	}
-
-	async fillTelefon(value: string) {
-		await this.page.getByLabel('Telefon').click();
-  		await this.page.getByLabel('Telefon').fill(value);
-	}
-
-	async fillMobiloderFax(value: string) {
-		await this.page.getByLabel('Mobil oder Fax').click();
-		await this.page.getByLabel('Mobil oder Fax').fill(value);
-  	}
-
-	async fillPrivatEMail(value: string) {
-		await this.page.getByLabel('Private E-Mail-Adresse').click();
-		await this.page.getByLabel('Private E-Mail-Adresse').fill(value);
-	}
-
-	async fillDienstEMail(value: string) {
-		await this.page.getByLabel('Schulische E-Mail-Adresse').click();
-  		await this.page.getByLabel('Schulische E-Mail-Adresse').fill(value);
-	}
 	//Ende Contentcard-WohnortundKontaktdaten
 
 
 
 	//Anfang Contentcard-NationalitätundReligion
-
 	async fillContentCardStaatsangehoerigkeitundNationalitaet(s:SchuelerStammdaten|undefined) {
 		if(s ){
 			await this.page.getByRole('heading', { name: 'Staatsangehörigkeit und' }).click();
-			await this.clickKonfessionaufsZeugnis(s.druckeKonfessionAufZeugnisse);
+			await this.clickCheckBox("Konfession aufs Zeugnis", s.druckeKonfessionAufZeugnisse);
 			await this.click_1_staatsbuergerschaft(s.staatsangehoerigkeitID === null ? 'XXC' : s.staatsangehoerigkeitID);
 			await this.click_2_staatsbuergerschaft(s.staatsangehoerigkeit2ID === null ? 'XXC' : s.staatsangehoerigkeit2ID);
 			await this.click_Konfession(s.religionID);
-			await this.fillAbmeldungsDatumReligionsUnterricht(s.religionabmeldung);
-			await this.fillAnmeldungsDatumReligionsUnterricht(s.religionanmeldung);
+			//await this.fillAbmeldungsDatumReligionsUnterricht(s.religionabmeldung);
+
+			await this.fillTextfeld("Abmeldung vom", s.religionabmeldung === null ? '' : s.religionabmeldung);
+			await this.fillTextfeld("Wiederanmeldung", s.religionanmeldung === null ? '' : s.religionanmeldung);
 		}
 		else{
 			expect("Undefined darf").toBe("nicht sein");
@@ -334,23 +291,6 @@ export class PageSchuelerIndividualdaten {
 			expect("Konfession_ID").toBe("darf nicht null sein");
 		}
 	}
-
-	async fillAbmeldungsDatumReligionsUnterricht(value: string|null) {
-		if(value)
-			await this.page.getByLabel('Abmeldung vom').fill(value);
-		else
-			await this.page.getByLabel('Abmeldung vom').fill('');
-
-	}
-
-	async fillAnmeldungsDatumReligionsUnterricht(value: string|null) {
-		console.log(value);
-		if(value)
-			await this.page.getByLabel('Wiederanmeldung').fill(value);
-		else
-			await this.page.getByLabel('Wiederanmeldung').fill('');
-	}
-
 	//Ende Contentcard-NationalitätundReligion
 
 	//Anfang Contentcard-Migrationshintergrund
@@ -362,11 +302,7 @@ export class PageSchuelerIndividualdaten {
 				await this.fillGeburtsland(s.geburtsland === null ? 'XXC' : s.geburtsland);
 				await this.fillGeburtslandMutter(s.geburtslandMutter === null ? 'XXC' : s.geburtslandMutter);
 				await this.fillGeburtslandVater(s.geburtslandVater === null ? 'XXC' : s.geburtslandVater);
-				await this.fillVerkehrssprache(s.verkehrspracheFamilie === null ? 'DEU' : s.verkehrspracheFamilie)
-				// await this.fillGeschlecht(s.geschlecht);
-				// await this.fillGeburtsdatum(s.geburtsdatum === null ? '' : s.geburtsdatum);
-				// await this.fillGeburtsort(s.geburtsort === null ? '' : s.geburtsort);
-				// await this.fillGeburtsname(s.geburtsname === null ? '' : s.geburtsname);
+				await this.fillVerkehrssprache(s.verkehrspracheFamilie === null ? 'deu' : s.verkehrspracheFamilie)
 			}
 		}
 		else{
@@ -384,8 +320,9 @@ export class PageSchuelerIndividualdaten {
 
 	async fillVerkehrssprache(value: string) {
 		await expect(this.page.getByLabel('Verkehrssprache', { exact: true })).toBeVisible();
-		await this.page.getByLabel('Verkehrssprache', { exact: true }).click();
+		await this.page.getByLabel('Verkehrssprache').click();
 		await this.page.getByRole('option', { name: sprachen.get(value) }).click();
+		await this.page.waitForLoadState('networkidle');
 	}
 	async fillGeburtsland(value: string) {
 		await expect(this.page.getByLabel('Geburtsland', { exact: true })).toBeVisible();
@@ -410,31 +347,23 @@ export class PageSchuelerIndividualdaten {
 	async fillContentCardStatusdaten(s:SchuelerStammdaten|undefined) {
 		if(s ){
 			await this.page.getByRole('heading', { name: 'Statusdaten' }).click();
-			// await this.clickIstDuplikat(s.istDuplikat);
 			await this.selectStatus(s.status);
 			await this.selectFahrschuelerArtID(s.fahrschuelerArtID);
 			await this.selectHaltestelle(s.haltestelleID);
-			await this.fillAnmeldedatum(s.anmeldedatum === null ? '' : s.anmeldedatum);
-			await this.fillAufnahmedatum(s.aufnahmedatum === null ? '' : s.aufnahmedatum);
-			await this.clickMasernimpfnachweis(s.hatMasernimpfnachweis);
-			await this.clickAuskunftAnDritte(s.keineAuskunftAnDritte);
-			await this.clickBafoeg(s.erhaeltSchuelerBAFOEG);
-			await this.fillBemerkungen(s.bemerkungen === null ? '' : s.bemerkungen);
-			// await this.fillTelefon(s.telefon === null ? '' : s.telefon);
-			// await this.fillMobiloderFax(s.telefonMobil === null ? '' : s.telefonMobil);
-			// await this.fillPrivatEMail(s.emailPrivat === null ? '' : s.emailPrivat);
-			// await this.fillDienstEMail(s.emailSchule === null ? '' : s.emailSchule);
+			await this.fillTextfeld("Anmeldedatum", s.anmeldedatum === null ? '' : s.anmeldedatum);
+			await this.fillTextfeld("Aufnahmedatum", s.aufnahmedatum === null ? '' : s.aufnahmedatum);
+			await this.fillTextfeld("Bemerkungen", s.bemerkungen === null ? '' : s.bemerkungen)
+			await this.clickCheckBox("Volljährig",s.istVolljaehrig);
+			await this.clickCheckBox("Schulpflicht erfüllt",s.istSchulpflichtErfuellt);
+			await this.clickCheckBox("Masern Impfnachweis",s.hatMasernimpfnachweis);
+			await this.clickCheckBox("Keine Auskunft an Dritte",s.keineAuskunftAnDritte);
+			await this.clickCheckBox("Schulpflicht SII erfüllt",s.istBerufsschulpflichtErfuellt);
+			await this.clickCheckBox("BAFöG",s.erhaeltSchuelerBAFOEG);
 		}
 		else{
 			expect("Undefined darf").toBe("nicht sein");
 		}
 	}
-
-	// async clickIstDuplikat(value : boolean) {
-	// 	await expect(this.page.getByText('Ist Duplikat')).toBeVisible();
-	// 	value ? await this.page.getByLabel('Ist Duplikat').check()
-	// 		: await this.page.getByLabel('Ist Duplikat').uncheck();
-	// }
 
 	async selectStatus(value :  number){
 		for(const value of schueler_status.values()){
@@ -480,46 +409,17 @@ export class PageSchuelerIndividualdaten {
 		}
 
 	}
+	//Ende Contentcard-Statusdaten
 
-	async fillAnmeldedatum(value: string) {
-		await this.page.getByLabel('Anmeldedatum').fill(value);
+	//Hilfsmethoden
+	async fillTextfeld(name:string, value: string){
+		await this.page.getByLabel(name+"").click();
+  		await this.page.getByLabel(name+"").fill(value);
 	}
 
-	async fillAufnahmedatum(value: string) {
-		await this.page.getByLabel('Aufnahmedatum').fill(value);
+	async clickCheckBox(name: string, value: boolean){
+		await expect(this.page.getByText(name+"")).toBeVisible();
+		value ? await this.page.getByLabel(name+"").check()
+			: await this.page.getByLabel(name+"").uncheck();
 	}
-
-	async clickMasernimpfnachweis(value : boolean) {
-		await expect(this.page.getByText('Masern Impfnachweis')).toBeVisible();
-		value ? await this.page.getByLabel('Masern Impfnachweis').check()
-			: await this.page.getByLabel('Masern Impfnachweis').uncheck();
-	}
-
-	async clickAuskunftAnDritte(value : boolean) {
-		await expect(this.page.getByText('Keine Auskunft an Dritte')).toBeVisible();
-		value ? await this.page.getByLabel('Keine Auskunft an Dritte').check()
-			: await this.page.getByLabel('Keine Auskunft an Dritte').uncheck();
-	}
-
-	async clickBafoeg(value : boolean) {
-		await expect(this.page.getByText('BAFöG')).toBeVisible();
-		value ? await this.page.getByLabel('BAFöG').check()
-			: await this.page.getByLabel('BAFöG').uncheck();
-	}
-
-	// TODO Volljährig-Schlpflicht erfüllt-Schplficht SII erfült : warte auf #1413
-
-	async fillBemerkungen(value: string) {
-		await this.page.getByLabel('Bemerkungen').click();
-  		await this.page.getByLabel('Bemerkungen').fill(value);
-	}
-
-//   await page.getByText('BAFöG').click();
-//   await page.getByLabel('BAFöG').click();
-//   await page.getByLabel('Bemerkungen').click();
-//   await page.getByLabel('Bemerkungen').fill('bemerkungen');
-//   await page.locator('.page--content').click();
-//   await page.getByLabel('Bemerkungen').click();
-//   await page.getByLabel('Bemerkungen').fill('');
-//   await page.locator('.page--content').click();
 }

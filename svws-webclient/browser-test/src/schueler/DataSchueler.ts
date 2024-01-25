@@ -10,15 +10,26 @@ export type Schueler = {
 	jahrgang : number
 }
 
-export const dataSchueler : Schueler[] = [ {
-	id : 9228,
-	name : 'Bock Torsten',
-	name2click: '09b Bock Torsten',
-	import_lp_name: "Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
-	export_lp_name: "Export_Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
-	abiturjahr: 2022,
-	jahrgang: 5,
-} ];
+export const dataSchueler : Schueler[] = [
+	{
+		id : 9228,
+		name : 'Bock Torsten',
+		name2click: '09b Bock Torsten',
+		import_lp_name: "Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
+		export_lp_name: "Export_Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
+		abiturjahr: 2022,
+		jahrgang: 5,
+	},
+	{
+		id : 9186,
+		name : 'Steege Patrick',
+		name2click: '09a Steege Patrick',
+		import_lp_name: "Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
+		export_lp_name: "Export_Laufbahnplanung_2022_09_Bock_Torsten-9228.lp",
+		abiturjahr: 2022,
+		jahrgang: 5,
+
+	} ];
 
 export const dataSchueler_JG9_IDs: number[] = [9115,9296]
 

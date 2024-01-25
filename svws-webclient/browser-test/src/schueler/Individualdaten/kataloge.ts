@@ -37,7 +37,7 @@ export const land = new Map<string, string>([
 ])
 
 export const sprachen = new Map<string, string>([
-	["DEU"	,	"Deutsch (deu)"],
+	["deu"	,	"Deutsch (deu)"],
 	["din"	,	"Dinka (din)"]
 ])
 
