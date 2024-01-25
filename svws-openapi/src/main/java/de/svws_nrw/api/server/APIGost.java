@@ -142,6 +142,34 @@ public class APIGost {
 
 
     /**
+     * Die OpenAPI-Methode für das Löschen eines Abiturjahrgangs der gymnasialen Oberstufe,
+     * sofern er nicht abgeschlossen ist oder bereits Leistungsdaten bei Schülern eingetragen
+     * sind.
+     *
+     * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abiturjahr   das Abiturjahr
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Regel zur Fachkombination
+     */
+    @DELETE
+    @Path("/abiturjahrgang/{abiturjahr : \\d+}")
+    @Operation(summary = "Entfernt den Abiturjahrgang, sofern er nicht abgeschlossen ist oder bereits Leistungsdaten bei Schülern eingetragen sind.",
+               description = "Entfernt den Abiturjahrgang, sofern er nicht abgeschlossen ist oder bereits Leistungsdaten bei Schülern eingetragen sind. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Der Abiturjahrgang wurde wurde erfolgreich entfernt.")
+    @ApiResponse(responseCode = "400", description = "Es wurde versucht einen Abiturjahrgang, der abgeschlossen ist oder für den bereits Leistungsdaten bei Schülern eingetragen sind, zu entfernen.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Abiturjahrgang zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Der Abiturjahrgang wurde nicht gefunden.")
+    public Response deleteGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn).delete(abiturjahr),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs der gymnasialen Oberstufe.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

@@ -102,7 +102,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);
 		const jahrgangsdaten = await this.ladeJahrgangsdaten(undefined);
 		const faecherManager = await this.ladeFaecherManager(undefined);
-		return {
+		return <Partial<RouteStateGost>>{
 			idSchuljahresabschnitt,
 			auswahl,
 			mapAbiturjahrgaenge,
@@ -253,6 +253,14 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		if (abiturjahr === null)
 			throw new NullPointerException("Dem Jahrgang mit der ID " + idJahrgang + " konnte kein Abiturjahr zugeordnet werden.");
 		return abiturjahr;
+	}
+
+
+	removeAbiturjahrgang = async () => {
+		await api.server.deleteGostAbiturjahrgang(api.schema, this.jahrgangsdaten.abiturjahr);
+		let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
+		state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state);
+		this.setPatchedDefaultState(state);
 	}
 
 }

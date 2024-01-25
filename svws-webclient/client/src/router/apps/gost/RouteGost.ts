@@ -85,8 +85,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapAbiturjahrgaenge: this.data.mapAbiturjahrgaenge,
-			mapJahrgaengeOhneAbiJahrgang: this.data.mapJahrgaengeOhneAbiJahrgang,
+			jahrgangsdaten: () => this.data.auswahl === undefined ? undefined : this.data.jahrgangsdaten,
+			mapAbiturjahrgaenge: () => this.data.mapAbiturjahrgaenge,
+			mapJahrgaengeOhneAbiJahrgang: () => this.data.mapJahrgaengeOhneAbiJahrgang,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -94,7 +95,8 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			setAbschnitt: routeApp.data.setAbschnitt,
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
-			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang
+			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang,
+			removeAbiturjahrgang: this.data.removeAbiturjahrgang,
 		};
 	}
 

@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostJahrgang;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -34,6 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -341,5 +343,31 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			case VTF -> "M";
 		};
 	};
+
+
+	/**
+	 * Entfernt den angegebenen Abiturjahrgang aus der Datenbank, sofern dieser
+	 * nicht bereits persistierte Leistungsdaten hat oder bereits abgeschlossen ist.
+	 *
+	 * @param abiturjahrgang   der zu entfernende Abiturjahrgang
+	 *
+	 * @return die HTTP-Response im Erfolgsfall
+	 */
+	public Response delete(final int abiturjahrgang) {
+		// Prüfe, ob der Abiturjahrgang existiert und bereits persistierte Leistungsdaten hat...
+		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahrgang);
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			if (jahrgangsdaten.istBlockungFestgelegt[hj.id])
+				throw OperationError.BAD_REQUEST.exception("Ein Abiturjahrgang mit bereits vorhandenen Leistungsdaten kann nicht entfernt werden.");
+		if (jahrgangsdaten.istAbgeschlossen)
+			throw OperationError.BAD_REQUEST.exception("Ein abgeschlossener Abiturjahrgang kann nicht entfernt werden.");
+		// Entferne die Jahrgangsdaten des Abiturjahrgangs aus der Datenbank. Die zugehörigen Fachwahlen, etc. werden dann kaskadierend entfernt.
+		final DTOGostJahrgangsdaten dto = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahrgang);
+		if (dto == null)
+			return OperationError.NOT_FOUND.getResponse();
+		conn.transactionRemove(dto);
+		conn.transactionFlush();
+		return Response.status(Status.NO_CONTENT).build();
+	}
 
 }

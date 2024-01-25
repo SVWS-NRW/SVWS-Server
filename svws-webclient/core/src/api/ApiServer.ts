@@ -3065,6 +3065,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}
+	 *
+	 * Entfernt den Abiturjahrgang, sofern er nicht abgeschlossen ist oder bereits Leistungsdaten bei Schülern eingetragen sind. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Abiturjahrgang wurde wurde erfolgreich entfernt.
+	 *   Code 400: Es wurde versucht einen Abiturjahrgang, der abgeschlossen ist oder für den bereits Leistungsdaten bei Schülern eingetragen sind, zu entfernen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Abiturjahrgang zu entfernen.
+	 *   Code 404: Der Abiturjahrgang wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 */
+	public async deleteGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<void> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangBlockungsliste für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/{halbjahr : \d+}/blockungen
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Blockungen der gymnasialen Oberstufe, welche für den angegebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.

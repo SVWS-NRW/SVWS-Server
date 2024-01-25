@@ -1,5 +1,3 @@
-import { shallowRef } from "vue";
-
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
 import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, SimpleOperationResponse } from "@core";
 

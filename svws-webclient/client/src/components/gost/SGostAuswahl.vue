@@ -15,18 +15,29 @@
 					</span>
 					<svws-ui-spinner :spinning="(pending && value === auswahl?.abiturjahr)" />
 				</template>
-				<template #cell(jahrgang)="{ value }">
-					<span v-if="!value" class="opacity-25">
-						—
-					</span>
-					<span v-else>
-						{{ value }}
-					</span>
+				<template #cell(jahrgang)="{ value, rowData }">
+					<div class="flex justify-between w-full">
+						<div>
+							<span v-if="!value" class="opacity-25">
+								—
+							</span>
+							<span v-else>
+								{{ value }}
+							</span>
+						</div>
+						<div v-if="isRemovable(rowData)" class="-my-1 ml-auto inline-flex">
+							<s-gost-auswahl-abiturjahrgang-remove-modal :remove-abiturjahrgang="removeAbiturjahrgang" :gost-jahrgang="rowData" v-slot="{ openModal : openRemoveModal }">
+								<svws-ui-button type="icon" @click.stop="openRemoveModal()" title="Abiturjahrgang löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
+									<i-ri-delete-bin-line class="-mx-0.5" />
+								</svws-ui-button>
+							</s-gost-auswahl-abiturjahrgang-remove-modal>
+						</div>
+					</div>
 				</template>
 				<template #actions>
 					<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang"
 						:add-abiturjahrgang="addAbiturjahrgang" :get-abiturjahr-fuer-jahrgang="getAbiturjahrFuerJahrgang">
-						<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen" :disabled="!mapJahrgaengeOhneAbiJahrgang.size"> <i-ri-add-line /> </svws-ui-button>
+						<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen" :disabled="!mapJahrgaengeOhneAbiJahrgang().size"> <i-ri-add-line /> </svws-ui-button>
 					</s-gost-auswahl-abiturjahrgang-modal>
 				</template>
 			</svws-ui-table>
@@ -50,10 +61,19 @@
 		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
 	const rows: ComputedRef<GostJahrgang[]> = computed(() => {
-		const list = [...props.mapAbiturjahrgaenge.values()];
+		const list = [...props.mapAbiturjahrgaenge().values()];
 		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 
 	const pending: ComputedRef<boolean> = computed(() => props.apiStatus.pending);
+
+	function isRemovable(value : GostJahrgang) : boolean {
+		if ((value.abiturjahr < 0) || (value.istAbgeschlossen))
+			return false;
+		const jahrgangsdaten = props.jahrgangsdaten();
+		if ((jahrgangsdaten === undefined) || (jahrgangsdaten.abiturjahr !== value.abiturjahr) || (jahrgangsdaten.istBlockungFestgelegt[0]))
+			return false;
+		return true;
+	}
 
 </script>

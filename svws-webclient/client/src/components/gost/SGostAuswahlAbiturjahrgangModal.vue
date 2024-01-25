@@ -4,7 +4,7 @@
 		<template #modalTitle>Abiturjahr hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<template v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id">
+				<template v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang().values()" :key="jahrgang.id">
 					<svws-ui-checkbox :model-value="jahrgaenge.get(jahrgang.id) === true" @update:model-value="updateMap(jahrgang.id, $event)" :value="jahrgang.id">
 						Abitur {{ props.getAbiturjahrFuerJahrgang(jahrgang.id) }} (Jahrgang {{ jahrgang.kuerzel }})
 					</svws-ui-checkbox>
@@ -24,7 +24,7 @@
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
+		mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsListeEintrag>;
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
 		getAbiturjahrFuerJahrgang: (idJahrgang: number) => number;
 	}>();
