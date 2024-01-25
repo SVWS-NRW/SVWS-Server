@@ -528,9 +528,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	patchSchiene = api.call(async (data: Partial<GostBlockungSchiene>, id : number) => {
 		await api.server.patchGostBlockungSchiene(data, api.schema, id);
-		const schiene = this.datenmanager.schieneGet(id);
-		Object.assign(schiene, data);
-		this.setPatchedState({datenmanager: this.datenmanager});
+		const bezeichnung = data.bezeichnung;
+		if (bezeichnung === undefined)
+			return;
+		const datenmanager = this.datenmanager;
+		datenmanager.schienePatchBezeichnung(id, bezeichnung);
+		this.setPatchedState({datenmanager});
 	});
 
 	addSchiene = api.call(async (): Promise<GostBlockungSchiene | undefined> => {
