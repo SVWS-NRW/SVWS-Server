@@ -28,6 +28,7 @@ import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten 
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
@@ -849,8 +850,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (const lehrkraft of listOfLehrer) {
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === neueLehrkraft.id);
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === neueLehrkraft.reihenfolge);
+			DeveloperNotificationException.ifTrue("kursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === neueLehrkraft.id);
+			DeveloperNotificationException.ifTrue("kursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === neueLehrkraft.reihenfolge);
 		}
 		listOfLehrer.add(neueLehrkraft);
 		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
@@ -873,7 +874,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				listOfLehrer.remove(listOfLehrer.get(i));
 				return;
 			}
-		throw new DeveloperNotificationException("patchOfKursRemoveLehrkraft: Kurs (" + idKurs + ") hat keine Lehrkraft (" + idAlteLehrkraft + ")!")
+		throw new DeveloperNotificationException("kursRemoveLehrkraft: Kurs (" + idKurs + ") hat keine Lehrkraft (" + idAlteLehrkraft + ")!")
 	}
 
 	/**
@@ -935,8 +936,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
 	 */
 	public schieneAdd(schiene : GostBlockungSchiene) : void {
-		this.schieneAddOhneSortierung(schiene);
-		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
+		this.schieneAddListe(ListUtils.create1(schiene));
 	}
 
 	/**
@@ -996,6 +996,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schieneGetIsRemoveAllowed(idSchiene : number) : boolean {
 		return (this.schieneGet(idSchiene) !== null) && this.getIstBlockungsVorlage();
+	}
+
+	/**
+	 * Ändert das Attribut {@link GostBlockungSchiene#bezeichnung} der Schiene mit der jeweiligen ID.
+	 *
+	 * @param idSchiene    Die Datenbank-ID der Schiene.
+	 * @param bezeichnung  Die neue Bezeichnung.
+	 */
+	public schienePatchBezeichnung(idSchiene : number, bezeichnung : string) : void {
+		this.schieneGet(idSchiene).bezeichnung = bezeichnung;
+	}
+
+	/**
+	 * Ändert das Attribut {@link GostBlockungSchiene#wochenstunden} der Schiene mit der jeweiligen ID.
+	 *
+	 * @param idSchiene      Die Datenbank-ID der Schiene.
+	 * @param wochenstunden  Die neuen Wochenstunden.
+	 */
+	public schienePatchWochenstunden(idSchiene : number, wochenstunden : number) : void {
+		this.schieneGet(idSchiene).wochenstunden = wochenstunden;
 	}
 
 	/**

@@ -26,6 +26,7 @@ import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
@@ -832,8 +833,8 @@ public class GostBlockungsdatenManager {
 		final @NotNull GostBlockungKurs kurs = kursGet(idKurs);
 		final @NotNull List<@NotNull GostBlockungKursLehrer> listOfLehrer = kurs.lehrer;
 		for (final @NotNull GostBlockungKursLehrer lehrkraft : listOfLehrer) {
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id == neueLehrkraft.id);
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge == neueLehrkraft.reihenfolge);
+			DeveloperNotificationException.ifTrue("kursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id == neueLehrkraft.id);
+			DeveloperNotificationException.ifTrue("kursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge == neueLehrkraft.reihenfolge);
 		}
 
 		// Hinzufügen
@@ -858,7 +859,7 @@ public class GostBlockungsdatenManager {
 				listOfLehrer.remove(listOfLehrer.get(i));
 				return;
 			}
-		throw new DeveloperNotificationException("patchOfKursRemoveLehrkraft: Kurs (" + idKurs + ") hat keine Lehrkraft (" + idAlteLehrkraft + ")!");
+		throw new DeveloperNotificationException("kursRemoveLehrkraft: Kurs (" + idKurs + ") hat keine Lehrkraft (" + idAlteLehrkraft + ")!");
 	}
 
 	/**
@@ -927,11 +928,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
 	 */
 	public void schieneAdd(final @NotNull GostBlockungSchiene schiene) throws DeveloperNotificationException {
-		// Hinzufügen der Schiene.
-		schieneAddOhneSortierung(schiene);
-
-		// Sortieren der Schienenmenge.
-		_daten.schienen.sort(_compSchiene);
+		schieneAddListe(ListUtils.create1(schiene));
 	}
 
 	/**
@@ -994,6 +991,26 @@ public class GostBlockungsdatenManager {
 	 */
 	public boolean schieneGetIsRemoveAllowed(final long idSchiene) throws DeveloperNotificationException {
 		return (schieneGet(idSchiene) != null) && getIstBlockungsVorlage();
+	}
+
+	/**
+	 * Ändert das Attribut {@link GostBlockungSchiene#bezeichnung} der Schiene mit der jeweiligen ID.
+	 *
+	 * @param idSchiene    Die Datenbank-ID der Schiene.
+	 * @param bezeichnung  Die neue Bezeichnung.
+	 */
+	public void schienePatchBezeichnung(final long idSchiene, final @NotNull String bezeichnung) {
+		schieneGet(idSchiene).bezeichnung = bezeichnung;
+	}
+
+	/**
+	 * Ändert das Attribut {@link GostBlockungSchiene#wochenstunden} der Schiene mit der jeweiligen ID.
+	 *
+	 * @param idSchiene      Die Datenbank-ID der Schiene.
+	 * @param wochenstunden  Die neuen Wochenstunden.
+	 */
+	public void schienePatchWochenstunden(final long idSchiene, final int wochenstunden) {
+		schieneGet(idSchiene).wochenstunden = wochenstunden;
 	}
 
 	/**
