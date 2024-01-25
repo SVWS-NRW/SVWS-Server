@@ -15,7 +15,7 @@ export default defineConfig({
 	 // path to the global setup files.
 	//globalSetup: './global.d.ts',
 
-	timeout: 5 * 6 * 1000,
+	timeout: 5 * 7 * 1000,
 	expect: {
 		/**
 		 * Maximum time expect() should wait for the condition to be met.
@@ -33,7 +33,7 @@ export default defineConfig({
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 30 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: [	/*['dot'],*/['html'],['junit', { outputFile: 'build/testresults/results.xml' }]],
+	reporter: [	/*['dot'],['html'],*/['junit', { outputFile: 'build/testresults/results.xml' }]],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
@@ -42,7 +42,7 @@ export default defineConfig({
 		baseURL: (process.env.PLAYWRIGHT_svws_testing_api_host?? 'https://localhost') + (process.env.PLAYWRIGHT_svws_testing_api_port == null ? '' : (':' + process.env.PLAYWRIGHT_svws_testing_api_port)) + '/#/',
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'on-first-retry',
-		headless: !!process.env.CI,
+		headless: true, //!!process.env.CI,
 		screenshot: "only-on-failure",
     	video: "retain-on-failure", //https://playwright.dev/docs/videos
 		ignoreHTTPSErrors: true,

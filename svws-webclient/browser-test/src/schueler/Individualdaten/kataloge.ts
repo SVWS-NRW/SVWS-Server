@@ -22,10 +22,10 @@ export const schueler_status = new Map<number, string>([
 	[1	,	"Warteliste"],
 	[2	,	"Aktiv"],
 	[3	,	"Beurlaubt"],
-	[4	,	"Extern"],
-	[5	,	"Abschluss"],
-	[6	,	"Abgang"],
-	[7	,	"Ehemalige"]
+	[6	,	"Extern"],
+	[8	,	"Abschluss"],
+	[9	,	"Abgang"],
+	[10	,	"Ehemalige"]
 ])
 
 export const land = new Map<string, string>([

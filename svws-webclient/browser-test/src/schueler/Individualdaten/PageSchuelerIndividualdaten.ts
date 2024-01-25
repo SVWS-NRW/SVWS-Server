@@ -36,7 +36,7 @@ const test_schueler : SchuelerStammdaten=  {
 	verkehrspracheFamilie: 'din',
 	geburtslandVater: 'XXC',
 	geburtslandMutter: 'XXC',
-	status: 2,
+	status: 8,
 	istDuplikat: false,
 	externeSchulNr: null,
 	fahrschuelerArtID: 1,

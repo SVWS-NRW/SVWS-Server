@@ -13,7 +13,7 @@ test.beforeEach(async ({ baseURL, page, loginPage }) => {
 
 // TODO - Beim Zurücksetzen werden bei Eingabefeldern kein Patch angestoßen.
 // Gelöst : Schülerwechsel und wieder zurück
-test.only("Contentcard editieren", async ({ schuelerIndividualdatenPage, baseURL, page}) => {
+test("Contentcard editieren", async ({ schuelerIndividualdatenPage, baseURL, page}) => {
 	await page.getByRole('row', { name: dataSchueler[0].name2click }).click();
 	//Überprüfung der Testbedingungen : Torsten ist aus Rüthen(849)
 	await api.verbinde();
