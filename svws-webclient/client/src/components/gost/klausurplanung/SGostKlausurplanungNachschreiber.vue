@@ -6,6 +6,43 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 
+	<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="big">
+		<template #modalTitle>
+			Nachschreiber in folgenden Hauptterminen zulassen:
+		</template>
+		<template #modalContent>
+			<svws-ui-table :columns="cols">
+				<template #noData>
+					<slot name="noData">
+				&nbsp;
+					</slot>
+				</template>
+
+				<template #body>
+					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, true)"
+						:key="termin.id"
+						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-checkbox v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, {'nachschreiberZugelassen': termin.nachschreiberZugelassen} )" />
+						</div>
+						<div class="svws-ui-td" role="cell">
+							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
+						</div>
+						<div class="svws-ui-td" role="cell">
+							{{ kMan().schuelerklausurterminGetMengeByTerminid(termin.id).size() }}
+						</div>
+						<div class="svws-ui-td" role="cell">
+							{{ [...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
+						</div>
+					</div>
+				</template>
+			</svws-ui-table>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="primary" @click="_showModalTerminGrund = false"> OK </svws-ui-button>
+		</template>
+	</svws-ui-modal>
+
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
@@ -26,7 +63,8 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
+					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Termin</svws-ui-button>
+					<svws-ui-button @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -110,10 +148,14 @@
 
 <script setup lang="ts">
 
-	import {GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
-	import { computed, ref, onMounted } from 'vue';
+	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
+	import { computed, ref, onMounted, h } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
+	import type { DataTableColumn } from "@ui";
+
+	const _showModalTerminGrund = ref<boolean>(false);
+	const showModalTerminGrund = () => _showModalTerminGrund;
 
 	const props = defineProps<GostKlausurplanungNachschreiberProps>();
 
@@ -187,6 +229,19 @@
 	onMounted(() => {
 		isMounted.value = true;
 	});
+
+	function calculateColumns() {
+		const cols: DataTableColumn[] = [
+			{ key: "id", label: "", fixedWidth: 2 },
+			{ key: "datum", label: "Datum", fixedWidth: 8 },
+			{ key: "size", label: "#SuS", fixedWidth: 4 },
+			{ key: "faecher", label: "Kurse" },
+		];
+
+		return cols;
+	}
+
+	const cols = computed(() => calculateColumns());
 
 </script>
 

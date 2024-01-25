@@ -1156,12 +1156,19 @@ public class GostKursklausurManager {
 	 * @return die maximale Klausurdauer innerhalb des Termins
 	 */
 	public int maxKlausurdauerGetByTerminid(final long idTermin) {
-		final @NotNull List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
-		int maxDauer = -1;
-		for (final @NotNull GostKursklausur klausur : klausuren) {
-			@NotNull GostKlausurvorgabe vorgabe = _vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
-			maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
-		}
+		int maxDauer = 0;
+		final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren != null)
+			for (final @NotNull GostKursklausur klausur : klausuren) {
+				@NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
+				maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+			}
+		final List<@NotNull GostSchuelerklausurTermin> skts = schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if (skts != null)
+			for (final @NotNull GostSchuelerklausurTermin skt : skts) {
+				@NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
+				maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+			}
 		return maxDauer;
 	}
 
@@ -1602,6 +1609,21 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminGetMengeByTerminid(final @NotNull long idTermin) {
 		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		return list != null ? list : new ArrayList<>();
+	}
+
+	/**
+	 * Gibt die Liste von Folge-Schülerklausur-Terminen (Nachschreibtermine) zu einem Klausurtermin zurück.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Liste von Folge-Schülerklausur-Terminen
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminFolgeterminGetMengeByTerminid(final @NotNull long idTermin) {
+		final @NotNull List<@NotNull GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		for (@NotNull GostSchuelerklausurTermin skt : schuelerklausurterminGetMengeByTerminid(idTermin))
+			if (skt.folgeNr > 0)
+				ergebnis.add(skt);
+		return ergebnis;
 	}
 
 	/**

@@ -12,7 +12,7 @@
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ maximaleDauer }} Minuten</slot></span>
+							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -79,7 +79,7 @@
 						</svws-ui-table>
 					</slot>
 					<slot name="schuelerklausuren" v-if="showSchuelerklausuren && schuelerklausurtermine().size()">
-						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="kMan().schuelerklausurterminGetMengeByTerminid(termin.id)"
+						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="schuelerklausurtermine()"
 							:k-man="kMan"
 							:on-drag="onDrag"
 							:map-schueler="mapSchueler"
@@ -88,7 +88,7 @@
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size()}">
 							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
-							<span>bis {{ maximaleDauer }} Min</span>
+							<span>bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Min</span>
 						</div>
 						<slot name="loeschen" />
 					</span>
@@ -132,7 +132,7 @@
 	});
 
 	const kursklausuren = () => props.kMan().kursklausurGetMengeByTerminid(props.termin.id);
-	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminGetMengeByTerminid(props.termin.id);
+	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminFolgeterminGetMengeByTerminid(props.termin.id);
 
 	const datumVorklausur = (klausur: GostKursklausur) => {
 		const vorklausur = props.kMan().kursklausurVorterminByKursklausur(klausur);
@@ -166,15 +166,6 @@
 	}
 
 	const cols = computed(() => calculateColumns());
-
-	const maximaleDauer = computed(() => {
-		let dauer = 0;
-		for (const klausur of kursklausuren()) {
-			const vorgabe = props.kMan().vorgabeByKursklausur(klausur);
-			dauer < vorgabe.dauer ? dauer = vorgabe.dauer : dauer;
-		}
-		return dauer;
-	});
 
 </script>
 

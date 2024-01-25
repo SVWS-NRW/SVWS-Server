@@ -1093,12 +1093,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die maximale Klausurdauer innerhalb des Termins
 	 */
 	public maxKlausurdauerGetByTerminid(idTermin : number) : number {
-		const klausuren : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin);
-		let maxDauer : number = -1;
-		for (const klausur of klausuren) {
-			let vorgabe : GostKlausurvorgabe = this._vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
-			maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
-		}
+		let maxDauer : number = 0;
+		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren !== null)
+			for (const klausur of klausuren) {
+				let vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
+				maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+			}
+		const skts : List<GostSchuelerklausurTermin> | null = this.schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if (skts !== null)
+			for (const skt of skts) {
+				let vorgabe : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
+				maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+			}
 		return maxDauer;
 	}
 
@@ -1531,6 +1538,21 @@ export class GostKursklausurManager extends JavaObject {
 	public schuelerklausurterminGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
 		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		return list !== null ? list : new ArrayList();
+	}
+
+	/**
+	 * Gibt die Liste von Folge-Schülerklausur-Terminen (Nachschreibtermine) zu einem Klausurtermin zurück.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Liste von Folge-Schülerklausur-Terminen
+	 */
+	public schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		for (let skt of this.schuelerklausurterminGetMengeByTerminid(idTermin))
+			if (skt.folgeNr > 0)
+				ergebnis.add(skt);
+		return ergebnis;
 	}
 
 	/**
