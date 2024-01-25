@@ -550,10 +550,14 @@ export class GostKursklausurManager extends JavaObject {
 
 	private terminRemoveOhneUpdateById(idTermin : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._termin_by_id, idTermin);
-		const klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
-		if (klausurenZuTermin !== null)
-			for (const k of klausurenZuTermin)
+		const kursklausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
+		if (kursklausurenZuTermin !== null)
+			for (const k of kursklausurenZuTermin)
 				k.idTermin = null;
+		const schuelerklausurtermineZuTermin : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		if (schuelerklausurtermineZuTermin !== null)
+			for (const skt of schuelerklausurtermineZuTermin)
+				skt.idTermin = null;
 	}
 
 	/**

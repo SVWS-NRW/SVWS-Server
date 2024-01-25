@@ -571,10 +571,14 @@ public class GostKursklausurManager {
 
 	private void terminRemoveOhneUpdateById(final long idTermin) {
 		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, idTermin);
-		final List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(idTermin);
-		if (klausurenZuTermin != null)
-			for (final @NotNull GostKursklausur k : klausurenZuTermin)
+		final List<@NotNull GostKursklausur> kursklausurenZuTermin = _kursklausurmenge_by_idTermin.get(idTermin);
+		if (kursklausurenZuTermin != null)
+			for (final @NotNull GostKursklausur k : kursklausurenZuTermin)
 				k.idTermin = null;
+		final List<@NotNull GostSchuelerklausurTermin> schuelerklausurtermineZuTermin = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		if (schuelerklausurtermineZuTermin != null)
+			for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurtermineZuTermin)
+				skt.idTermin = null;
 	}
 
 	/**
