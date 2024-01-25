@@ -1,5 +1,5 @@
 import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
-	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile } from "@core";
+	GostLaufbahnplanungDaten, ApiFile } from "@core";
 
 export interface LaufbahnplanungOberstufeProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;

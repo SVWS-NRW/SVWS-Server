@@ -105,20 +105,20 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Modusart als Standardauswahl hinterlegt");
 	}
 
-	setModus = async (modus: 'manuell'|'normal'|'hochschreiben') => {
+	setModus = async (modus: 'manuell' | 'normal' | 'hochschreiben') => {
 		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
 	}
 
-	get faecherNichtWaehlbarAusblenden(): boolean {
-		const s = api.config.getValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen");
-		if (s === 'true' || s === 'false')
-			return s === 'false';
-		void api.config.setValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen", 'false');
+	get faecherAnzeigen(): 'alle' | 'nur_waehlbare' | 'nur_gewaehlt' {
+		const s = api.config.getValue("app.schueler.laufbahnplanung.faecher.anzeigen");
+		if (s === 'alle' || s === 'nur_waehlbare' || s === 'nur_gewaehlt')
+			return s;
+		void api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", 'alle');
 		throw new DeveloperNotificationException("Es wurde eine fehlerhafter Wert als Standardauswahl hinterlegt");
 	}
 
-	setFaecherNichtWaehlbarAusblenden = async (value: boolean) => {
-		await api.config.setValue("app.schueler.laufbahnplanung.faecher.alle_anzeigen", value ? "false" : "true");
+	setFaecherAnzeigen = async (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => {
+		await api.config.setValue("app.schueler.laufbahnplanung.faecher.anzeigen", value);
 		this.commit();
 	}
 

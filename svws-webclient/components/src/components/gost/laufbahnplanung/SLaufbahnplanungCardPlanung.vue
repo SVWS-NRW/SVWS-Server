@@ -61,10 +61,10 @@
 			</div>
 		</template>
 		<template #body>
-			<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
-				<template v-if="!(faecherNichtWaehlbarAusblenden && !(row.istMoeglichEF1 || row.istMoeglichEF2 || row.istMoeglichQ11 || row.istMoeglichQ12 || row.istMoeglichQ21 || row.istMoeglichQ22))">
+			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
+				<template v-if="fachanzeigen(fach)">
 					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
+						:fach="fach" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
 				</template>
 			</template>
 		</template>
@@ -200,7 +200,7 @@
 	import type { ComputedRef } from "vue";
 	import {computed } from "vue";
 
-	import { GostHalbjahr, type AbiturdatenManager, type GostSchuelerFachwahl, type GostJahrgangsdaten } from "@core";
+	import { GostHalbjahr, type AbiturdatenManager, type GostSchuelerFachwahl, type GostJahrgangsdaten, GostFach, AbiturFachbelegungHalbjahr } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = withDefaults(defineProps<{
@@ -210,13 +210,32 @@
 		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
-		faecherNichtWaehlbarAusblenden: boolean;
+		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 		title?: string | undefined;
 	}>(), {
 		title: undefined,
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
 	});
+
+	function fachanzeigen(fach : GostFach) : boolean {
+		switch (props.faecherAnzeigen) {
+			case 'alle':
+				return true;
+			case 'nur_waehlbare':
+				return fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22;
+			case 'nur_gewaehlt':
+				const fb = props.abiturdatenManager().getFachbelegungByID(fach.id);
+				if (fb === null)
+					return false;
+				for (const halbjahr of GostHalbjahr.values()) {
+					const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
+					if ((fbh !== null) && (fbh.kursartKuerzel !== null))
+						return true;
+				}
+				return false;
+		}
+	}
 
 	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
 		await props.setWahl(fachID, wahl);

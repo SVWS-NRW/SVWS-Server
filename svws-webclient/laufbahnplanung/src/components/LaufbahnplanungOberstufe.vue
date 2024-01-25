@@ -31,7 +31,7 @@
 		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
 				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="async (halbjahr: GostHalbjahr) => {}"
-				:faecher-nicht-waehlbar-ausblenden="true" />
+				:faecher-anzeigen="'alle'" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-16">

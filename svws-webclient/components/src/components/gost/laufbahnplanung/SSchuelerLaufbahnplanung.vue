@@ -12,8 +12,8 @@
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
-				<svws-ui-button v-if="hatFaecherNichtWaehlbar" type="transparent" title="Alle Fächer anzeigen" @click="setFaecherNichtWaehlbarAusblenden(!faecherNichtWaehlbarAusblenden)">
-					{{ faecherNichtWaehlbarAusblenden ? 'Alle Fächer anzeigen' : 'Nicht wählbare Fächer ausblenden' }}
+				<svws-ui-button type="transparent" title="Fächer anzeigen" @click="switchFaecherAnzeigen()">
+					{{ "Fächer anzeigen: " + textFaecherAnzeigen() }}
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
@@ -25,7 +25,7 @@
 		</Teleport>
 		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" :faecher-nicht-waehlbar-ausblenden="faecherNichtWaehlbarAusblenden" />
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" :faecher-anzeigen="faecherAnzeigen" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
@@ -55,6 +55,31 @@
 				return true;
 		return false;
 	});
+
+	async function switchFaecherAnzeigen() {
+		switch (props.faecherAnzeigen) {
+			case 'alle':
+				await props.setFaecherAnzeigen(hatFaecherNichtWaehlbar.value ? 'nur_waehlbare' : 'nur_gewaehlt')
+				break;
+			case 'nur_waehlbare':
+				await props.setFaecherAnzeigen('nur_gewaehlt')
+				break;
+			case 'nur_gewaehlt':
+				await props.setFaecherAnzeigen('alle')
+				break;
+		}
+	}
+
+	function textFaecherAnzeigen() {
+		switch (props.faecherAnzeigen) {
+			case 'alle': 
+				return "Alle";
+			case 'nur_waehlbare':
+				return "Nur wählbare"
+			case 'nur_gewaehlt':
+				return "Nur gewählte"
+		}
+	}
 
 	async function switchModus() {
 		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus

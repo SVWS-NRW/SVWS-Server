@@ -20,9 +20,9 @@ export interface SchuelerLaufbahnplanungProps {
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: () => Promise<void>;
-	modus: 'manuell'|'normal'|'hochschreiben';
-	setModus: (modus: 'manuell'|'normal'|'hochschreiben') => Promise<void>;
-	faecherNichtWaehlbarAusblenden: boolean;
-	setFaecherNichtWaehlbarAusblenden: (value: boolean) => Promise<void>;
+	modus: 'manuell' | 'normal' | 'hochschreiben';
+	setModus: (modus: 'manuell' | 'normal' | 'hochschreiben') => Promise<void>;
+	faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
+	setFaecherAnzeigen: (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => Promise<void>;
 	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
 }
