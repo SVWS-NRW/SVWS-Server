@@ -25,7 +25,7 @@ checkstyleTest.enabled = false
 
 task removeTranspiledCode(type: Delete) {
 	group "svws"
-	delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpiler/build/tmp/transpiler", includes: ["**/*.class"])
+	delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpile/build/tmp/transpiler", includes: ["**/*.class"])
 }
 
 task prepareTranspile {
@@ -45,7 +45,7 @@ task transpile(type: JavaExec) {
     dependsOn project(":svws-core").tasks.assemble
     dependsOn project(":svws-openapi").tasks.assemble
     doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpiler/build/tmp/transpiler", includes: ["**/*.class"])
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpile/build/tmp/transpiler", includes: ["**/*.class"])
 	}
     inputs.files "build/transpiler-java-files.txt", "build/transpiler-api-files.txt", sourceSets.main.resources.getSourceDirectories()
     outputs.dir "$rootDir/svws-webclient/core/src"
