@@ -24,9 +24,8 @@ export class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 	}
 
 	public berechne(pEndzeit : number) : void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
-		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
@@ -37,8 +36,8 @@ export class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 	}
 
 	/**
-	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
-	 * Veränderung rückgängig gemacht.
+	 * Kurslage wird ein wenig zufällig verändert und bewertet.
+	 * Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig gemacht.
 	 */
 	private veraendereDieKurslageZufaelligEinWenig() : void {
 		do {

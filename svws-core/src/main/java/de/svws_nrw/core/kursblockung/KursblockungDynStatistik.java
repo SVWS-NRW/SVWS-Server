@@ -308,37 +308,31 @@ public class KursblockungDynStatistik {
 		return 0;
 	}
 
-	//	/**
-	//	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat.
-	//	 *
-	//	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat.
-	//	 */
-	//	boolean gibBewertungFachartPaarSchlechter2() {
-	//		// FachartPaar schlechter?
-	//		if (bewertungFachartPaar > bewertungFachartPaarSaveS)
-	//			return true;
-	//		// FachartPaar besser?
-	//		if (bewertungFachartPaar < bewertungFachartPaarSaveS)
-	//			return false;
-	//		// Bewertungen identisch --> nicht schlechter
-	//		return false;
-	//	}
-	//
-	//	/**
-	//	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat.
-	//	 *
-	//	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat.
-	//	 */
-	//	boolean gibBewertungFachartPaarSchlechterK2() {
-	//		// FachartPaar schlechter?
-	//		if (bewertungFachartPaar > bewertungFachartPaarSaveK)
-	//			return true;
-	//		// FachartPaar besser?
-	//		if (bewertungFachartPaar < bewertungFachartPaarSaveK)
-	//			return false;
-	//		// Bewertungen identisch --> nicht schlechter
-	//		return false;
-	//	}
+	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	public boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynStatistik b) {
+		// Regelverletzungen
+		if (bewertungRegelverletzungen < b.bewertungRegelverletzungen) return true;
+		if (bewertungRegelverletzungen > b.bewertungRegelverletzungen) return false;
+
+		// Nichtwahlen
+		if (bewertungNichtwahlen < b.bewertungNichtwahlen) return true;
+		if (bewertungNichtwahlen > b.bewertungNichtwahlen) return false;
+
+		// Kursdifferenzen
+		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i]) return true;
+			if (bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i]) return false;
+		}
+
+		// FachartPaar
+		return (bewertungFachartPaar < b.bewertungFachartPaar);
+	}
 
 	/**
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.

@@ -323,6 +323,31 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	public gibIstBesser_NW_KD_FW_Als(b : KursblockungDynStatistik) : boolean {
+		if (this.bewertungRegelverletzungen < b.bewertungRegelverletzungen)
+			return true;
+		if (this.bewertungRegelverletzungen > b.bewertungRegelverletzungen)
+			return false;
+		if (this.bewertungNichtwahlen < b.bewertungNichtwahlen)
+			return true;
+		if (this.bewertungNichtwahlen > b.bewertungNichtwahlen)
+			return false;
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (this.bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i])
+				return true;
+			if (this.bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i])
+				return false;
+		}
+		return (this.bewertungFachartPaar < b.bewertungFachartPaar);
+	}
+
+	/**
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
 	 *
 	 * @return das Array bzw. das Histogramm der Kursdifferenzen.

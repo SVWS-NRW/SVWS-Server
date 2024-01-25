@@ -29,8 +29,7 @@ public abstract class KursblockungAlgorithmusK {
 	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
-	protected KursblockungAlgorithmusK(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDaten) {
+	protected KursblockungAlgorithmusK(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDaten) {
 		_random = pRandom;
 		logger = pLogger;
 		dynDaten = pDynDaten;

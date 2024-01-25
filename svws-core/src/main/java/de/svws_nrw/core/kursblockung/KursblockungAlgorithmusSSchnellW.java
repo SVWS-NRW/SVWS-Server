@@ -32,8 +32,7 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusSSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusSSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		schuelerArr = pDynDat.gibSchuelerArrayAlle();
 		perm = KursblockungStatic.gibPermutation(_random, schuelerArr.length);

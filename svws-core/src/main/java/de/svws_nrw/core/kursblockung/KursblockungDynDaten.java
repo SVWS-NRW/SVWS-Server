@@ -1200,4 +1200,23 @@ public class KursblockungDynDaten {
 		}
 	}
 
+	/**
+	 * Liefert das {@link Random}-Objekt.
+	 *
+	 * @return das {@link Random}-Objekt.
+	 */
+	public @NotNull Random gibRandom() {
+		return _random;
+	}
+
+	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	public boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynDaten b) {
+		return _statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
+	}
 }

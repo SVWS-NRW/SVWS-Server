@@ -82,7 +82,7 @@ public final class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorit
 	}
 
 	private boolean verteileEinenSchueler(final @NotNull KursblockungDynSchueler schueler) {
-		// Kurzuordnung des Schülers speichern.
+		// Kurszuordnung des Schülers speichern.
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 

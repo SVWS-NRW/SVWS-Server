@@ -9,18 +9,16 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import jakarta.validation.constraints.NotNull;
 
-/** Dieser Service wandelt die Eingabedaten {@link GostBlockungsdatenManager} in dynamische Blockungsdaten
+/**
+ * Dieser Service wandelt die Eingabedaten {@link GostBlockungsdatenManager} in dynamische Blockungsdaten
  * {@link KursblockungDynDaten} um, startet dann den Kursblockungsalgorithmus, welcher die Blockungsdaten manipuliert
  * und wandelt zuletzt {@link KursblockungDynDaten} in die Ausgabedaten {@link GostBlockungsergebnisManager} um. Der
  * Service überschreitet dabei nicht die Zeit, die in {@link GostBlockungsdatenManager#getMaxTimeMillis()} festgelegt
  * wurde.
  *
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch
+ */
 public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull ArrayList<@NotNull GostBlockungsergebnisManager>> {
-
-	// TODO KursblockungAlgorithmus void init(input)
-	// TODO KursblockungAlgorithmus boolean next(int topAmount, long millisec)
-	// TODO KursblockungAlgorithmus getTopErgebnisListe --> new Liste wegen Reaktivität
 
 	private static final @NotNull Random _random = new Random();
 
@@ -70,7 +68,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 				// Ggf. läuft ein AlgorithmusK auch erneut, falls er schneller als seine Maximalzeit war.
 				final long zeitEndeK = System.currentTimeMillis() + zeitProK;
 				do {
-					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK);
+					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK)
 					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
 
@@ -96,7 +94,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
-		// dynDaten.gibStatistik().debug("berechne:" );
+		// dynDaten.gibStatistik().debug("berechne:" )
 
 		// Verteilung der SuS (nur die beste Verteilung bleibt im Zustand K).
 		dynDaten.aktionZustandSpeichernK();
@@ -115,8 +113,8 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 
 		// Gibt es einen neuen besten globalen Zustand?
 		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0) {
-			// dynDaten.debug();
-			// dynDaten.gibStatistik().debug("*" + kursblockungAlgorithmusK);
+			// dynDaten.debug()
+			// dynDaten.gibStatistik().debug("*" + kursblockungAlgorithmusK)
 			dynDaten.aktionZustandSpeichernG();
 		}
 

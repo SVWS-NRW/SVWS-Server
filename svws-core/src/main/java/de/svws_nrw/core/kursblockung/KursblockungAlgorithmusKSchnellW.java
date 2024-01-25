@@ -6,8 +6,8 @@ import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Algorithmus des <b>Typs K</b> verteilt die Kurse zunächst zufällig auf ihre Schienen. Dann wird die Lage durch
- * gezieltes Tauschen versucht zu verbessern.
+ * Dieser Algorithmus des <b>Typs K</b> verteilt die Kurse zunächst zufällig auf ihre Schienen.
+ * Dann wird die Lage durch gezieltes Tauschen versucht zu verbessern.
  *
  * @author Benjamin A. Bartsch
  */
@@ -21,8 +21,7 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 
@@ -34,9 +33,8 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 	@Override
 	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
-		}
 
 		// Entferne SuS aus den Kursen.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -58,8 +56,8 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 	}
 
 	/**
-	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
-	 * Veränderung rückgängig gemacht.
+	 * Kurslage wird ein wenig zufällig verändert und bewertet.
+	 * Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig gemacht.
 	 */
 	private void veraendereDieKurslageZufaelligEinWenig() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.

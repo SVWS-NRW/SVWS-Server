@@ -1014,6 +1014,26 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
+	/**
+	 * Liefert das {@link Random}-Objekt.
+	 *
+	 * @return das {@link Random}-Objekt.
+	 */
+	public gibRandom() : Random {
+		return this._random;
+	}
+
+	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	public gibIstBesser_NW_KD_FW_Als(b : KursblockungDynDaten) : boolean {
+		return this._statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.kursblockung.KursblockungDynDaten';
 	}
