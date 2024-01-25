@@ -16,3 +16,6 @@ npm/test/resources/
 !npm/tsconfig.json
 !npm/vite.config.ts
 
+!package.json
+!tsconfig.json
+

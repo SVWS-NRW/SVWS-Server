@@ -1,0 +1,7 @@
+{
+  "scripts": {
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
+		"lint-tsc": "vue-tsc --noEmit"
+	}
+}
