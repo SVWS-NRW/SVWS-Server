@@ -61,7 +61,7 @@
 						<template v-if="schienSortierung === true">
 							<div v-for="schiene of stundenplanManager().schieneGetMengeByKlasseId(klasse.id)" :key="schiene.id" :id="schiene.id > -1 ? `schiene-${schiene.hashCode().toString()}`: ''">
 								<!-- Die Schienenzeile -->
-								<div role="row" class="svws-ui-tr" :draggable="isDraggable()" @dragstart="onDrag(schiene, $event)" @dragend="onDrag(undefined)">
+								<div role="row" class="svws-ui-tr bg-light" :draggable="isDraggable()" @dragstart="onDrag(schiene, $event)" @dragend="onDrag(undefined)">
 									<div role="cell" class="select-none svws-ui-td font-bold"> {{ schiene.bezeichnung }}</div>
 									<div role="cell" class="select-none svws-ui-td">
 										<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"

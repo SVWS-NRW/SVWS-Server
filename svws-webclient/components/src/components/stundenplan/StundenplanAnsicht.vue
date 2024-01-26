@@ -70,7 +70,7 @@
 						</template>
 						<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, 0)]" :key="schiene.id">
 							<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, 0, schiene.id).hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 mt-1': schiene.id > -1}">
-								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
+								<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 									:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.id), $event)" @dragend="onDrag(undefined)">
 									{{ schiene.bezeichnung }}
 								</div>
@@ -109,7 +109,7 @@
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt as unknown as number) }}</div>
 										</template>
 										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id).hashCode().toString()}`: ''" :class="{'bg-light rounded-md pl-1 pr-1 pb-1 pt-0': schiene.id > -1}">
-											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0" :class="{'cursor-grab': isDraggable()}"
+											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center pt-1 pb-2 print:mb-0" :class="{'cursor-grab': isDraggable()}"
 												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt as unknown as number, schiene.id), $event)" @dragend="onDrag(undefined)">
 												{{ schiene.bezeichnung }}
 											</div>
