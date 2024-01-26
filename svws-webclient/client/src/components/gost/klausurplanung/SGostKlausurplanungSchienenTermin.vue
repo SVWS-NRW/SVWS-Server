@@ -73,12 +73,13 @@
 	const terminQuartalsWechselMoeglich = () => !(props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1);
 
 	async function terminQuartalWechseln() {
+		const terminQuartal = props.kMan().quartalGetByTerminid(props.termin().id);
 		if (props.termin().quartal === 0)
-			if (props.kMan().quartalGetByTerminid(props.termin().id) > 0)
-				await props.patchKlausurtermin(props.termin().id, {quartal: props.kMan().quartalGetByTerminid(props.termin().id)});
+			if (terminQuartal > 0)
+				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
 			else
 				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && klausuren().size() > 0)
+		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTerminid(props.termin().id).size() > 0)
 			await props.patchKlausurtermin(props.termin().id, {quartal: 0});
 		else
 			await props.patchKlausurtermin(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});

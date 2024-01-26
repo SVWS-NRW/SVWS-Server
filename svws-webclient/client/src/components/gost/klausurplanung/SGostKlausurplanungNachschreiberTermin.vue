@@ -18,7 +18,7 @@
 			:show-schuelerklausuren="showSchuelerklausuren">
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
-					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
+					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
 					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 						<i-ri-alert-line />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
@@ -74,12 +74,13 @@
 	const terminQuartalsWechselMoeglich = () => !props.termin().istHaupttermin && !(props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1);
 
 	async function terminQuartalWechseln() {
+		const terminQuartal = props.kMan().quartalGetByTerminid(props.termin().id);
 		if (props.termin().quartal === 0)
-			if (props.kMan().quartalGetByTerminid(props.termin().id) > 0)
-				await props.patchKlausurtermin(props.termin().id, {quartal: props.kMan().quartalGetByTerminid(props.termin().id)});
+			if (terminQuartal > 0)
+				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
 			else
 				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && klausuren().size() > 0)
+		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTerminid(props.termin().id).size() > 0)
 			await props.patchKlausurtermin(props.termin().id, {quartal: 0});
 		else
 			await props.patchKlausurtermin(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});
@@ -103,7 +104,6 @@
 
 	const konflikteTerminDragKlausur = computed(() => {
 		if (props.dragData instanceof GostSchuelerklausurTermin) {
-			console.log(props.termin().id, props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(props.termin(), props.dragData));
 			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(props.termin(), props.dragData)
 		} else
 			return -1

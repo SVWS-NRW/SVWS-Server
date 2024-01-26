@@ -1001,12 +1001,17 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return das Quartal aller Klausuren, sofern identisch, sonst -1.
 	 */
 	public quartalGetByTerminid(idTermin : number) : number {
-		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
-		if (klausuren === null)
+		const klausuren : List<GostKursklausur> = this.kursklausurGetMengeByTerminid(idTermin);
+		const schuelertermine : List<GostSchuelerklausurTermin> = this.schuelerklausurterminNtByTerminid(idTermin);
+		if (klausuren.isEmpty() && schuelertermine.isEmpty())
 			return DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin).quartal;
+		const vorgaben : List<GostKlausurvorgabe> = new ArrayList();
+		for (const k of klausuren)
+			vorgaben.add(this.vorgabeByKursklausur(k));
+		for (const k of schuelertermine)
+			vorgaben.add(this.vorgabeBySchuelerklausurTermin(k));
 		let quartal : number = -1;
-		for (const k of klausuren) {
-			const v : GostKlausurvorgabe = this.vorgabeByKursklausur(k);
+		for (const v of vorgaben) {
 			if (quartal === -1)
 				quartal = v.quartal;
 			if (quartal !== v.quartal)
@@ -1690,8 +1695,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public schuelerklausurterminNtByTermin(termin : GostKlausurtermin) : List<GostSchuelerklausurTermin> {
+		return this.schuelerklausurterminNtByTerminid(termin.id);
+	}
+
+	/**
+	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zur übergebenen Klausurtermin-ID
+	 *
+	 * @param idTermin die ID des Gost-Klausurtermins
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
 		let ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
-		let listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(termin.id);
+		let listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(idTermin);
 		if (listSkts !== null)
 			for (let skt of listSkts)
 				if (skt.folgeNr > 0)

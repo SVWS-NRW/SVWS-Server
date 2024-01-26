@@ -1066,12 +1066,17 @@ public class GostKursklausurManager {
 	 * @return das Quartal aller Klausuren, sofern identisch, sonst -1.
 	 */
 	public int quartalGetByTerminid(final long idTermin) {
-		final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(idTermin);
-		if (klausuren == null)
+		final @NotNull List<@NotNull GostKursklausur> klausuren = kursklausurGetMengeByTerminid(idTermin);
+		final @NotNull List<@NotNull GostSchuelerklausurTermin> schuelertermine = schuelerklausurterminNtByTerminid(idTermin);
+		if (klausuren.isEmpty() && schuelertermine.isEmpty())
 			return DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin).quartal;
+		final @NotNull List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
+		for (final @NotNull GostKursklausur k : klausuren)
+			vorgaben.add(vorgabeByKursklausur(k));
+		for (final @NotNull GostSchuelerklausurTermin k : schuelertermine)
+			vorgaben.add(vorgabeBySchuelerklausurTermin(k));
 		int quartal = -1;
-		for (final @NotNull GostKursklausur k : klausuren) {
-			final @NotNull GostKlausurvorgabe v = vorgabeByKursklausur(k);
+		for (final @NotNull GostKlausurvorgabe v : vorgaben) {
 			if (quartal == -1)
 				quartal = v.quartal;
 			if (quartal != v.quartal)
@@ -1773,8 +1778,19 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminNtByTermin(final @NotNull GostKlausurtermin termin) {
+		return schuelerklausurterminNtByTerminid(termin.id);
+	}
+
+	/**
+	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zur übergebenen Klausurtermin-ID
+	 *
+	 * @param idTermin die ID des Gost-Klausurtermins
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminNtByTerminid(final long idTermin) {
 		@NotNull List<@NotNull GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
-		@NotNull List<@NotNull GostSchuelerklausurTermin> listSkts = schuelerklausurterminGetMengeByTerminid(termin.id);
+		@NotNull List<@NotNull GostSchuelerklausurTermin> listSkts = schuelerklausurterminGetMengeByTerminid(idTermin);
 		if (listSkts != null)
 			for (@NotNull GostSchuelerklausurTermin skt : listSkts)
 				if (skt.folgeNr > 0)
