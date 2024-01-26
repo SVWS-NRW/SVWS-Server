@@ -1036,22 +1036,37 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public minKursklausurstartzeitByTerminid(idTermin : number) : number {
 		let minStart : number = 1440;
-		const termin : GostKlausurtermin = DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin);
+		const termin : GostKlausurtermin = this.terminGetByIdOrException(idTermin);
 		const kks : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
-		if (kks === null || kks.isEmpty())
+		const skts : List<GostSchuelerklausurTermin> | null = this.schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if ((kks === null || kks.isEmpty()) && (skts === null || skts.isEmpty()))
 			return termin.startzeit!;
-		for (const kk of kks) {
-			let skStartzeit : number = -1;
-			if (kk.startzeit !== null)
-				skStartzeit = kk.startzeit.valueOf();
-			else
-				if (termin.startzeit !== null)
-					skStartzeit = termin.startzeit.valueOf();
+		if (kks !== null)
+			for (const kk of kks) {
+				let skStartzeit : number = -1;
+				if (kk.startzeit !== null)
+					skStartzeit = kk.startzeit.valueOf();
 				else
-					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
-			if (skStartzeit < minStart)
-				minStart = skStartzeit;
-		}
+					if (termin.startzeit !== null)
+						skStartzeit = termin.startzeit.valueOf();
+					else
+						throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+				if (skStartzeit < minStart)
+					minStart = skStartzeit;
+			}
+		if (skts !== null)
+			for (const skt of skts) {
+				let skStartzeit : number = -1;
+				if (skt.startzeit !== null)
+					skStartzeit = skt.startzeit.valueOf();
+				else
+					if (termin.startzeit !== null)
+						skStartzeit = termin.startzeit.valueOf();
+					else
+						throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+				if (skStartzeit < minStart)
+					minStart = skStartzeit;
+			}
 		return minStart;
 	}
 
@@ -1063,25 +1078,42 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die maximale Endzeit
 	 */
 	public maxKursklausurendzeitByTerminid(idTermin : number) : number {
-		let maxEnd : number = 1;
-		const termin : GostKlausurtermin | null = DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin);
+		let maxEnd : number = this.minKursklausurstartzeitByTerminid(idTermin) + 1;
+		const termin : GostKlausurtermin = this.terminGetByIdOrException(idTermin);
 		const kks : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
-		if (kks === null || kks.isEmpty())
+		const skts : List<GostSchuelerklausurTermin> | null = this.schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if ((kks === null || kks.isEmpty()) && (skts === null || skts.isEmpty()))
 			return maxEnd;
-		for (const kk of kks) {
-			const vorgabe : GostKlausurvorgabe = this._vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
-			let skStartzeit : number = -1;
-			if (kk.startzeit !== null)
-				skStartzeit = kk.startzeit.valueOf();
-			else
-				if (termin.startzeit !== null)
-					skStartzeit = termin.startzeit.valueOf();
+		if (kks !== null)
+			for (const kk of kks) {
+				const vorgabe : GostKlausurvorgabe = this._vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
+				let skStartzeit : number = -1;
+				if (kk.startzeit !== null)
+					skStartzeit = kk.startzeit.valueOf();
 				else
-					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
-			const endzeit : number = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
-			if (endzeit > maxEnd)
-				maxEnd = endzeit;
-		}
+					if (termin.startzeit !== null)
+						skStartzeit = termin.startzeit.valueOf();
+					else
+						throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+				const endzeit : number = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+				if (endzeit > maxEnd)
+					maxEnd = endzeit;
+			}
+		if (skts !== null)
+			for (const skt of skts) {
+				const vorgabe : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
+				let skStartzeit : number = -1;
+				if (skt.startzeit !== null)
+					skStartzeit = skt.startzeit.valueOf();
+				else
+					if (termin.startzeit !== null)
+						skStartzeit = termin.startzeit.valueOf();
+					else
+						throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+				const endzeit : number = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+				if (endzeit > maxEnd)
+					maxEnd = endzeit;
+			}
 		return maxEnd;
 	}
 

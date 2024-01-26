@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -185,6 +186,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		data.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, data.schuelerklausuren);
 		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, data.kursklausuren));
 		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuSchuelerklausurterminen(conn, data.schuelerklausurtermine));
+		HashSet<Long> seen = new HashSet<>();
+		data.termine.removeIf(e -> !seen.add(e.id));
 		return data;
 	}
 

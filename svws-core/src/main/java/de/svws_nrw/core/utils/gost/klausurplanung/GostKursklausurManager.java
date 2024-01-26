@@ -1101,21 +1101,35 @@ public class GostKursklausurManager {
 	 */
 	public int minKursklausurstartzeitByTerminid(final long idTermin) {
 		int minStart = 1440;
-		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
+		final @NotNull GostKlausurtermin termin = terminGetByIdOrException(idTermin);
 		final List<@NotNull GostKursklausur> kks = _kursklausurmenge_by_idTermin.get(idTermin);
-		if (kks == null || kks.isEmpty())
+		final List<@NotNull GostSchuelerklausurTermin> skts = schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if ((kks == null || kks.isEmpty()) && (skts == null || skts.isEmpty()))
 			return termin.startzeit;
-		for (final GostKursklausur kk : kks) {
-			int skStartzeit = -1;
-			if (kk.startzeit != null)
-				skStartzeit = kk.startzeit;
-			else if (termin.startzeit != null)
-				skStartzeit = termin.startzeit;
-			else
-				throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
-			if (skStartzeit < minStart)
-				minStart = skStartzeit;
-		}
+		if (kks != null)
+			for (final GostKursklausur kk : kks) {
+				int skStartzeit = -1;
+				if (kk.startzeit != null)
+					skStartzeit = kk.startzeit;
+				else if (termin.startzeit != null)
+					skStartzeit = termin.startzeit;
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+				if (skStartzeit < minStart)
+					minStart = skStartzeit;
+			}
+		if (skts != null)
+			for (final GostSchuelerklausurTermin skt : skts) {
+				int skStartzeit = -1;
+				if (skt.startzeit != null)
+					skStartzeit = skt.startzeit;
+				else if (termin.startzeit != null)
+					skStartzeit = termin.startzeit;
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+				if (skStartzeit < minStart)
+					minStart = skStartzeit;
+			}
 		return minStart;
 	}
 
@@ -1127,24 +1141,40 @@ public class GostKursklausurManager {
 	 * @return die maximale Endzeit
 	 */
 	public int maxKursklausurendzeitByTerminid(final long idTermin) {
-		int maxEnd = 1;
-		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
+		int maxEnd = minKursklausurstartzeitByTerminid(idTermin) + 1;
+		final @NotNull GostKlausurtermin termin = terminGetByIdOrException(idTermin);
 		final List<@NotNull GostKursklausur> kks = _kursklausurmenge_by_idTermin.get(idTermin);
-		if (kks == null || kks.isEmpty())
+		final List<@NotNull GostSchuelerklausurTermin> skts = schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin);
+		if ((kks == null || kks.isEmpty()) && (skts == null || skts.isEmpty()))
 			return maxEnd;
-		for (final GostKursklausur kk : kks) {
-			final @NotNull GostKlausurvorgabe vorgabe = _vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
-			int skStartzeit = -1;
-			if (kk.startzeit != null)
-				skStartzeit = kk.startzeit;
-			else if (termin.startzeit != null)
-				skStartzeit = termin.startzeit;
-			else
-				throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
-			final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
-			if (endzeit > maxEnd)
-				maxEnd = endzeit;
-		}
+		if (kks != null)
+			for (final GostKursklausur kk : kks) {
+				final @NotNull GostKlausurvorgabe vorgabe = _vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
+				int skStartzeit = -1;
+				if (kk.startzeit != null)
+					skStartzeit = kk.startzeit;
+				else if (termin.startzeit != null)
+					skStartzeit = termin.startzeit;
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+				final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+				if (endzeit > maxEnd)
+					maxEnd = endzeit;
+			}
+		if (skts != null)
+			for (final GostSchuelerklausurTermin skt : skts) {
+				final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
+				int skStartzeit = -1;
+				if (skt.startzeit != null)
+					skStartzeit = skt.startzeit;
+				else if (termin.startzeit != null)
+					skStartzeit = termin.startzeit;
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+				final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+				if (endzeit > maxEnd)
+					maxEnd = endzeit;
+			}
 		return maxEnd;
 	}
 
