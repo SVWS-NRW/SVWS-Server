@@ -219,6 +219,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			auswahlErgebnis: this.data.hatErgebnis ? this.data.auswahlErgebnis : undefined,
 			restoreBlockung: this.data.restoreBlockung,
 			aktAbschnitt: api.abschnitt,
+			mode: api.mode,
 		}
 	}
 

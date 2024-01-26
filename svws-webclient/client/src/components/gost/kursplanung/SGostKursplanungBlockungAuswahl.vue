@@ -25,6 +25,9 @@
 					</div>
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
+							<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung_lokal" :get-datenmanager="getDatenmanager" v-slot="{ openModal }">
+								<svws-ui-button type="transparent" @click="openModal()" title="Ergebnisse lokal im Browser berechnen" :disabled="apiStatus.pending" class="text-black dark:text-white"> Lokal Berechnen </svws-ui-button>
+							</s-gost-kursplanung-modal-blockung-lokal-berechnen>
 							<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> Berechnen </svws-ui-button>
 							<svws-ui-tooltip position="top" v-else>
 								<svws-ui-button type="transparent" disabled> Berechnen </svws-ui-button>
@@ -66,7 +69,8 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List } from "@core";
+	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List} from "@core";
+	import { ServerMode } from "@core";
 	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import { ArrayList, BlockungsUtils } from "@core";
@@ -90,6 +94,7 @@
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 		restoreBlockung: () => Promise<void>;
 		istBlockungPersistiert: boolean;
+		mode: ServerMode;
 	}>();
 
 	const edit_blockungsname: Ref<boolean> = ref(false);
@@ -99,6 +104,8 @@
 		&& props.getDatenmanager().getFaecherAnzahl() > 0
 		&& props.getDatenmanager().kursGetAnzahl() > 0
 	)
+
+	const allow_berechne_blockung_lokal = computed(()=> allow_berechne_blockung.value && props.mode === ServerMode.DEV);
 
 	const listBlockungen = computed(()=> {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
