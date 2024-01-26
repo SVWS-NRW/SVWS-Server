@@ -1202,35 +1202,49 @@ public class GostKursklausurManager {
 		return maxDauer;
 	}
 
-	private @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> berechneKonflikte(final @NotNull List<@NotNull GostKursklausur> klausuren1,
-			final @NotNull List<@NotNull GostKursklausur> klausuren2) {
-		final Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> result = new HashMap<>();
-		final List<@NotNull GostKursklausur> kursklausuren2Copy = new ArrayList<>(klausuren2);
-		for (final @NotNull GostKursklausur kk1 : klausuren1) {
-			kursklausuren2Copy.remove(kk1);
-			for (final @NotNull GostKursklausur kk2 : kursklausuren2Copy) {
-				final Set<@NotNull Long> konflikte = berechneKlausurKonflikte(kk1, kk2);
-				if (!konflikte.isEmpty()) {
-					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
-					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
-				}
-			}
+
+	// #####################################################################
+	// #################### Konfliktberechnung Start ################################
+	// #####################################################################
+
+
+	private @NotNull Map<@NotNull GostSchuelerklausurTermin, @NotNull GostSchuelerklausurTermin> berechneKonflikteSchuelerklausurtermine(final List<@NotNull GostSchuelerklausurTermin> menge1, final List<@NotNull GostSchuelerklausurTermin> menge2) {
+		final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausurTermin> map1 = new HashMap<>();
+		if (menge1 != null)
+			for (@NotNull GostSchuelerklausurTermin termin1 : menge1)
+				map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+		return berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
+	}
+
+	private @NotNull Map<@NotNull GostSchuelerklausurTermin, @NotNull GostSchuelerklausurTermin> berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(final Map<@NotNull Long, @NotNull GostSchuelerklausurTermin> menge1, final List<@NotNull GostSchuelerklausurTermin> menge2) {
+		@NotNull Map<@NotNull GostSchuelerklausurTermin, @NotNull GostSchuelerklausurTermin> ergebnis = new HashMap<>();
+		if (menge1 == null || menge2 == null)
+			return ergebnis;
+		for (@NotNull GostSchuelerklausurTermin skt2 : menge2) {
+			@NotNull GostSchuelerklausur sk = schuelerklausurGetByIdOrException(skt2.idSchuelerklausur);
+			GostSchuelerklausurTermin skt1 = menge1.get(sk.idSchueler);
+			if (skt1 != null)
+				ergebnis.put(skt1, skt2);
 		}
-		return result;
+		return ergebnis;
 	}
 
-	private @NotNull Set<@NotNull Long> berechneKlausurKonflikte(final @NotNull GostKursklausur kk1, final @NotNull GostKursklausur kk2) {
-		final @NotNull HashSet<@NotNull Long> konflikte = new HashSet<>(getSchuelerIDsFromKursklausur(kk1));
-		konflikte.retainAll(getSchuelerIDsFromKursklausur(kk2));
-		return konflikte;
+	/**
+	 * Prüft, ob ein Schülerklausurtermin konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann.
+	 *
+	 * @param termin  der zu prüfende Klausurtermin
+	 * @param skt der zu prüfende Schülerklausurtermin
+	 *
+	 * @return die Anzahl der Konflikte
+	 */
+	public int konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(final @NotNull GostKlausurtermin termin, final @NotNull GostSchuelerklausurTermin skt) {
+		return berechneKonflikteSchuelerklausurtermine(_schuelerklausurterminmenge_by_idTermin.get(termin.id), ListUtils.create1(skt)).size();
 	}
 
-	private static int countKonflikte(final @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> konflikte) {
-		final @NotNull HashSet<@NotNull Long> susIds = new HashSet<>();
-		for (final @NotNull Set<@NotNull Long> klausurSids : konflikte.values())
-			susIds.addAll(klausurSids);
-		return susIds.size();
-	}
+
+
+
 
 	/**
 	 * Liefert eine Map Kursklausur -> Schülerids, die die Konflikte in jeder
@@ -1307,6 +1321,40 @@ public class GostKursklausurManager {
 	public int konflikteAnzahlGetByTerminid(final long idTermin) {
 		return countKonflikte(konflikteMapKursklausurSchueleridsByTerminid(idTermin));
 	}
+
+	private @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> berechneKonflikte(final @NotNull List<@NotNull GostKursklausur> klausuren1,
+			final @NotNull List<@NotNull GostKursklausur> klausuren2) {
+		final Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> result = new HashMap<>();
+		final List<@NotNull GostKursklausur> kursklausuren2Copy = new ArrayList<>(klausuren2);
+		for (final @NotNull GostKursklausur kk1 : klausuren1) {
+			kursklausuren2Copy.remove(kk1);
+			for (final @NotNull GostKursklausur kk2 : kursklausuren2Copy) {
+				final Set<@NotNull Long> konflikte = berechneKlausurKonflikte(kk1, kk2);
+				if (!konflikte.isEmpty()) {
+					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
+					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
+				}
+			}
+		}
+		return result;
+	}
+
+	private @NotNull Set<@NotNull Long> berechneKlausurKonflikte(final @NotNull GostKursklausur kk1, final @NotNull GostKursklausur kk2) {
+		final @NotNull HashSet<@NotNull Long> konflikte = new HashSet<>(getSchuelerIDsFromKursklausur(kk1));
+		konflikte.retainAll(getSchuelerIDsFromKursklausur(kk2));
+		return konflikte;
+	}
+
+	private static int countKonflikte(final @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> konflikte) {
+		final @NotNull HashSet<@NotNull Long> susIds = new HashSet<>();
+		for (final @NotNull Set<@NotNull Long> klausurSids : konflikte.values())
+			susIds.addAll(klausurSids);
+		return susIds.size();
+	}
+
+	// #####################################################################
+	// #################### Konfliktberechnung Ende ################################
+	// #####################################################################
 
 	/**
 	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle

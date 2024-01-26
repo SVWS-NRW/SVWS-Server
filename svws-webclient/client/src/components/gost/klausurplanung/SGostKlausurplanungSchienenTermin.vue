@@ -25,7 +25,7 @@
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
+				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
 					<template v-if="termin().quartal > 0">
 						<i-ri-lock-line class="opacity-25 text-sm group-hover:opacity-75" />{{ termin().quartal }}. Quartal
 					</template>
@@ -70,7 +70,7 @@
 	const kurzBezeichnungen = [...klausuren()].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k));
 	const kurzBezeichnungenShort = kurzBezeichnungen.length > 3 ? kurzBezeichnungen.slice(0, 3).join(', ') + '...' : kurzBezeichnungen.join(', ');
 
-	const terminQuartalsWechselMoeglich = () => props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1;
+	const terminQuartalsWechselMoeglich = () => !(props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1);
 
 	async function terminQuartalWechseln() {
 		if (props.termin().quartal === 0)

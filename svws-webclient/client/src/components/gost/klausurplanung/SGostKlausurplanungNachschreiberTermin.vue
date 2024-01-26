@@ -1,10 +1,11 @@
 <template>
 	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())"
 		:class="{
-			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
-			'border-dashed border-error dark:border-error': (dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'shadow-lg shadow-black/5 dark:border-white/10': dragData === undefined,
+			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
+			'border-dashed border-error dark:border-error': (dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && konflikteTerminDragKlausur > 0,
 			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
+			'border-svws' : !termin().istHaupttermin,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:k-man="kMan"
@@ -18,14 +19,14 @@
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
-					<span v-if="(dragData !== undefined && dragData instanceof GostKursklausur && (termin().quartal === kMan().vorgabeByKursklausur(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
+					<span v-if="(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
 						<i-ri-alert-line />
-						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>
+						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
 					</span>
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
+				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
 					<template v-if="termin().quartal > 0">
 						<i-ri-lock-line class="opacity-25 text-sm group-hover:opacity-75" />{{ termin().quartal }}. Quartal
 					</template>
@@ -70,7 +71,7 @@
 	const kurzBezeichnungen = [...klausuren()].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k));
 	const kurzBezeichnungenShort = kurzBezeichnungen.length > 3 ? kurzBezeichnungen.slice(0, 3).join(', ') + '...' : kurzBezeichnungen.join(', ');
 
-	const terminQuartalsWechselMoeglich = () => props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1;
+	const terminQuartalsWechselMoeglich = () => !props.termin().istHaupttermin && !(props.termin().quartal === 0 && props.kMan().quartalGetByTerminid(props.termin().id) === -1);
 
 	async function terminQuartalWechseln() {
 		if (props.termin().quartal === 0)
@@ -101,12 +102,11 @@
 	}
 
 	const konflikteTerminDragKlausur = computed(() => {
-		if (props.dragData instanceof GostKursklausur)
-			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), props.dragData)
-		else
+		if (props.dragData instanceof GostSchuelerklausurTermin) {
+			console.log(props.termin().id, props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(props.termin(), props.dragData));
+			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(props.termin(), props.dragData)
+		} else
 			return -1
 	});
-
-	const konflikteTermin = () => props.kMan().konflikteAnzahlGetByTerminid(props.termin().id);
 
 </script>

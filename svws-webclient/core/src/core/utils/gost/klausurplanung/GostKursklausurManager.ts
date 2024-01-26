@@ -1141,33 +1141,38 @@ export class GostKursklausurManager extends JavaObject {
 		return maxDauer;
 	}
 
-	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
-		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap();
-		const kursklausuren2Copy : List<GostKursklausur> | null = new ArrayList(klausuren2);
-		for (const kk1 of klausuren1) {
-			kursklausuren2Copy.remove(kk1);
-			for (const kk2 of kursklausuren2Copy) {
-				const konflikte : JavaSet<number> | null = this.berechneKlausurKonflikte(kk1, kk2);
-				if (!konflikte.isEmpty()) {
-					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
-					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
-				}
-			}
+	private berechneKonflikteSchuelerklausurtermine(menge1 : List<GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
+		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
+		if (menge1 !== null)
+			for (let termin1 of menge1)
+				map1.put(this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+		return this.berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
+	}
+
+	private berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(menge1 : JavaMap<number, GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
+		let ergebnis : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> = new HashMap();
+		if (menge1 === null || menge2 === null)
+			return ergebnis;
+		for (let skt2 of menge2) {
+			let sk : GostSchuelerklausur = this.schuelerklausurGetByIdOrException(skt2.idSchuelerklausur);
+			let skt1 : GostSchuelerklausurTermin | null = menge1.get(sk.idSchueler);
+			if (skt1 !== null)
+				ergebnis.put(skt1, skt2);
 		}
-		return result;
+		return ergebnis;
 	}
 
-	private berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
-		const konflikte : HashSet<number> = new HashSet(this.getSchuelerIDsFromKursklausur(kk1));
-		konflikte.retainAll(this.getSchuelerIDsFromKursklausur(kk2));
-		return konflikte;
-	}
-
-	private static countKonflikte(konflikte : JavaMap<GostKursklausur, JavaSet<number>>) : number {
-		const susIds : HashSet<number> = new HashSet();
-		for (const klausurSids of konflikte.values())
-			susIds.addAll(klausurSids);
-		return susIds.size();
+	/**
+	 * Prüft, ob ein Schülerklausurtermin konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann.
+	 *
+	 * @param termin  der zu prüfende Klausurtermin
+	 * @param skt der zu prüfende Schülerklausurtermin
+	 *
+	 * @return die Anzahl der Konflikte
+	 */
+	public konflikteAnzahlZuTerminGetByTerminAndSchuelerklausurtermin(termin : GostKlausurtermin, skt : GostSchuelerklausurTermin) : number {
+		return this.berechneKonflikteSchuelerklausurtermine(this._schuelerklausurterminmenge_by_idTermin.get(termin.id), ListUtils.create1(skt)).size();
 	}
 
 	/**
@@ -1244,6 +1249,35 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public konflikteAnzahlGetByTerminid(idTermin : number) : number {
 		return GostKursklausurManager.countKonflikte(this.konflikteMapKursklausurSchueleridsByTerminid(idTermin));
+	}
+
+	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
+		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap();
+		const kursklausuren2Copy : List<GostKursklausur> | null = new ArrayList(klausuren2);
+		for (const kk1 of klausuren1) {
+			kursklausuren2Copy.remove(kk1);
+			for (const kk2 of kursklausuren2Copy) {
+				const konflikte : JavaSet<number> | null = this.berechneKlausurKonflikte(kk1, kk2);
+				if (!konflikte.isEmpty()) {
+					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
+					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
+				}
+			}
+		}
+		return result;
+	}
+
+	private berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
+		const konflikte : HashSet<number> = new HashSet(this.getSchuelerIDsFromKursklausur(kk1));
+		konflikte.retainAll(this.getSchuelerIDsFromKursklausur(kk2));
+		return konflikte;
+	}
+
+	private static countKonflikte(konflikte : JavaMap<GostKursklausur, JavaSet<number>>) : number {
+		const susIds : HashSet<number> = new HashSet();
+		for (const klausurSids of konflikte.values())
+			susIds.addAll(klausurSids);
+		return susIds.size();
 	}
 
 	/**

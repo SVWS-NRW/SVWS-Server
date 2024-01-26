@@ -63,8 +63,8 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Termin</svws-ui-button>
-					<svws-ui-button @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
+					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Nachschreibtermin</svws-ui-button>
+					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
