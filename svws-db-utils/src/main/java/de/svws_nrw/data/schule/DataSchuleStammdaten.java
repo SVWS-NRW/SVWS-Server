@@ -400,7 +400,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         int iDeutsch = 1;
         for (int i = 0; i < faecher.size(); i++) {
             final ZulaessigesFach fach = faecher.get(i);
-            final DTOFach dto = new DTOFach(i + 1L);
+            final DTOFach dto = new DTOFach(i + 1L, true);
             String kuerzel = fach.daten.kuerzel;
             String bezeichnung = fach.daten.bezeichnung;
             if ((eigeneSchule.Schulform == Schulform.G) && (fach == ZulaessigesFach.D)) {

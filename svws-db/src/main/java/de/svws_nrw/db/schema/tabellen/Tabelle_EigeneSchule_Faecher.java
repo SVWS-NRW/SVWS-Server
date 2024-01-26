@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.statkue.ZulaessigesFachKuerzelASDConverter;
@@ -131,6 +132,14 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 		.setDefault("+")
 		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob das Fach auf dem Zeugnis erscheinen soll");
+
+	/** Die Definition der Tabellenspalte IstPruefungsordnungsRelevant */
+	public SchemaTabelleSpalte col_IstPruefungsordnungsRelevant = add("IstPruefungsordnungsRelevant", SchemaDatentypen.SMALLINT, false)
+		.setNotNull()
+		.setDefault("1")
+		.setConverter(Boolean01Converter.class)
+		.setRevision(SchemaRevisionen.REV_10)
+		.setJavaComment("Gibt an, ob das Fach für die Prüfungsordnung relevant ist und bei Belegprüfungen genutzt werden soll");
 
 	/** Die Definition der Tabellenspalte Lernfelder */
 	public SchemaTabelleSpalte col_Lernfelder = add("Lernfelder", SchemaDatentypen.TEXT, false)
