@@ -1482,6 +1482,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die GostSchuelerklausur zu einem GostSchuelerklausurTermin.
+	 *
+	 * @param klausur die Schuelerklausur, zu der die GostKursklausur gesucht wird.
+	 *
+	 * @return die GostSchuelerklausur
+	 */
+	public schuelerklausurBySchuelerklausurtermin(klausur : GostSchuelerklausurTermin) : GostSchuelerklausur {
+		return this.schuelerklausurGetByIdOrException(klausur.idSchuelerklausur);
+	}
+
+	/**
 	 * Liefert die GostKursklausur zu einer Schuelerklausur.
 	 *
 	 * @param klausur die Schuelerklausur, zu der die GostKursklausur gesucht wird.
@@ -1604,6 +1615,23 @@ export class GostKursklausurManager extends JavaObject {
 	public schuelerklausurterminGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
 		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		return list !== null ? list : new ArrayList();
+	}
+
+	/**
+	 * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin zurück.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Liste von Schülerklausur-Terminen
+	 */
+	public schuelerklausurGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausur> {
+		const ergebnis : List<GostSchuelerklausur> | null = new ArrayList();
+		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		if (list === null)
+			return ergebnis;
+		for (let termin of list)
+			ergebnis.add(this.schuelerklausurBySchuelerklausurtermin(termin));
+		return ergebnis;
 	}
 
 	/**

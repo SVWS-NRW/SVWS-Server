@@ -1565,6 +1565,17 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert die GostSchuelerklausur zu einem GostSchuelerklausurTermin.
+	 *
+	 * @param klausur die Schuelerklausur, zu der die GostKursklausur gesucht wird.
+	 *
+	 * @return die GostSchuelerklausur
+	 */
+	public @NotNull GostSchuelerklausur schuelerklausurBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin klausur) {
+		return schuelerklausurGetByIdOrException(klausur.idSchuelerklausur);
+	}
+
+	/**
 	 * Liefert die GostKursklausur zu einer Schuelerklausur.
 	 *
 	 * @param klausur die Schuelerklausur, zu der die GostKursklausur gesucht wird.
@@ -1687,6 +1698,23 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminGetMengeByTerminid(final @NotNull long idTermin) {
 		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		return list != null ? list : new ArrayList<>();
+	}
+
+	/**
+	 * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin zurück.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Liste von Schülerklausur-Terminen
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByTerminid(final @NotNull long idTermin) {
+		final List<@NotNull GostSchuelerklausur> ergebnis = new ArrayList<>();
+		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		if (list == null)
+			return ergebnis;
+		for (@NotNull GostSchuelerklausurTermin termin : list)
+			ergebnis.add(schuelerklausurBySchuelerklausurtermin(termin));
+		return ergebnis;
 	}
 
 	/**
