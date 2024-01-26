@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -63,7 +64,12 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 			Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
 			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
 			Map.entry("istHaupttermin", (conn, dto, value, map) -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> dto.NachschreiberZugelassen = JSONMapper.convertToBoolean(value, false))
+			Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> {
+				boolean newValue = JSONMapper.convertToBoolean(value, false);
+				if (dto.NachschreiberZugelassen != null && dto.NachschreiberZugelassen.booleanValue() && !newValue && !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
+					throw OperationError.FORBIDDEN.exception("Klausurtermin enthält Nachschreibklausuren");
+				dto.NachschreiberZugelassen = newValue;
+			})
 		);
 
 	@Override

@@ -1766,6 +1766,23 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Klausurtermin
+	 *
+	 * @param termin der Gost-Klausurtermin
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminNtByTermin(final @NotNull GostKlausurtermin termin) {
+		@NotNull List<@NotNull GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		@NotNull List<@NotNull GostSchuelerklausurTermin> listSkts = schuelerklausurterminGetMengeByTerminid(termin.id);
+		if (listSkts != null)
+			for (@NotNull GostSchuelerklausurTermin skt : listSkts)
+				if (skt.folgeNr > 0)
+					ergebnis.add(skt);
+		return ergebnis;
+	}
+
+	/**
 	 * Liefert den GostSchuelerklausurTermin, sofern vorhanden, zu einer Klausurtermin-ID und einer Schüler-ID
 	 *
 	 * @param idTermin die ID des Klausurtermins

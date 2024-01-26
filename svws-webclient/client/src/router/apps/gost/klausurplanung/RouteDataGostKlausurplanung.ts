@@ -359,12 +359,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
 		api.status.start();
-		const oldTtermin = this.kursklausurmanager.terminGetByIdOrException(id);
-		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
-		Object.assign(oldTtermin, termin);
-		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
-		this.commit();
-		api.status.stop();
+		try {
+			const oldTtermin = this.kursklausurmanager.terminGetByIdOrException(id);
+			await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
+			Object.assign(oldTtermin, termin);
+			this.kursklausurmanager.terminPatchAttributes(oldTtermin);
+		} finally {
+			this.commit();
+			api.status.stop();
+		}
 	}
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {

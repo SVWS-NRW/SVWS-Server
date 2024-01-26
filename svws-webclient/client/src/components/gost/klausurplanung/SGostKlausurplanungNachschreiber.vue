@@ -23,7 +23,7 @@
 						:key="termin.id"
 						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-checkbox v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, {'nachschreiberZugelassen': termin.nachschreiberZugelassen} )" />
+							<svws-ui-checkbox :disabled="kMan().schuelerklausurterminNtByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}

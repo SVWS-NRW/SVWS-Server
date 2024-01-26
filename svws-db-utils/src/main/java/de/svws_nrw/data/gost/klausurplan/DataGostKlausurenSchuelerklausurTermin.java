@@ -153,6 +153,22 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	}
 
 	/**
+	 * Liefert die zu einer Liste von Klausurtermin-IDs gehörigen
+	 * GostSchuelerklausurtermin-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listTerminIds die Liste der GostSchuelerklausurtermin-IDs
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminids(final DBEntityManager conn, final List<Long> listTerminIds) {
+		if (listTerminIds.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.termin_id.multiple", listTerminIds, DTOGostKlausurenSchuelerklausurenTermine.class).stream()
+				.map(dtoMapper::apply).toList();
+	}
+
+	/**
 	 * Liefert die zu einer Liste von GostSchuelerklausurterminraumstunden gehörigen
 	 * GostSchuelerklausurtermin-Objekte zurück.
 	 *

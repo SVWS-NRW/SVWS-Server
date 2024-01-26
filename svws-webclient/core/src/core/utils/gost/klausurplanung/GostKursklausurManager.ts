@@ -1683,6 +1683,23 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste von  Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Klausurtermin
+	 *
+	 * @param termin der Gost-Klausurtermin
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtByTermin(termin : GostKlausurtermin) : List<GostSchuelerklausurTermin> {
+		let ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		let listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(termin.id);
+		if (listSkts !== null)
+			for (let skt of listSkts)
+				if (skt.folgeNr > 0)
+					ergebnis.add(skt);
+		return ergebnis;
+	}
+
+	/**
 	 * Liefert den GostSchuelerklausurTermin, sofern vorhanden, zu einer Klausurtermin-ID und einer Schüler-ID
 	 *
 	 * @param idTermin die ID des Klausurtermins
