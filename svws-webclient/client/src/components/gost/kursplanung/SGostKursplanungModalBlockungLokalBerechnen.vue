@@ -11,16 +11,16 @@
 		<template #modalActions>
 			<svws-ui-button v-if="!running" type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
 			<svws-ui-button v-if="!running" type="primary" @click="berechne">Berechnung starten</svws-ui-button>
-			<svws-ui-button v-else type="primary" @click="running = false">Berechnung beenden</svws-ui-button>
+			<svws-ui-button v-else type="primary" @click="beenden">Berechnung beenden</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, List } from "@core";
-	import { ArrayList, KursblockungAlgorithmusPermanent } from "@core";
-	import { ref, computed } from 'vue';
+	import { computed, ref } from 'vue';
+	import type { GostBlockungsdatenManager, List , GostBlockungsergebnisManager} from "@core";
+	import { ArrayList, GostBlockungsdaten, GostFach} from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -32,14 +32,36 @@
 	const running = ref(false);
 	const liste = ref<List<GostBlockungsergebnisManager>>(new ArrayList());
 
+	const worker = new Worker(new URL('./berechne_lokal_worker.ts', import.meta.url), {type: 'module'})
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const faecher = props.getDatenmanager().faecherManager().faecher();
+	const arr: string[] = [];
+	for (const f of faecher)
+		arr.push(GostFach.transpilerToJSON(f));
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const blockungsdaten = GostBlockungsdaten.transpilerToJSON(props.getDatenmanager().daten());
+
+	worker.postMessage({name: "init", faecher: arr, blockungsdaten});
+
+	worker.onmessage = (e) => {
+		const ergebnisse = e.data;
+		const newList: List<GostBlockungsergebnisManager> = new ArrayList();
+		// for (const e of ergebnisse)
+		// 	newList.add(new GostBlockungsergebnisManager(props.getDatenmanager(), GostBlockungsergebnis.transpilerFromJSON(e)));
+		// liste.value = newList;
+		console.log(ergebnisse.length, e);
+	};
+
 	async function berechne() {
 		running.value = true;
-		const algo = new KursblockungAlgorithmusPermanent(props.getDatenmanager());
-		while (running.value)
-			if (algo.next(100))
-				liste.value = algo.getBlockungsergebnisse();
+		worker.postMessage({name: "run"});
 	}
 
+	async function beenden() {
+		running.value = false;
+		worker.terminate();
+		// worker.postMessage({name: 'stop'});
+	}
 	const log = computed(()=>console.log(liste.value))
 
 	const openModal = () => {
