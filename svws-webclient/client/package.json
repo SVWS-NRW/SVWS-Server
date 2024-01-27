@@ -24,7 +24,6 @@
 	"dependencies": {
 		"@floating-ui/vue": "1.0.2",
 		"@headlessui/vue": "^1.7.7",
-		"comlink": "^4.4.1",
 		"vue": "^3.3",
 		"vue-router": "^4.1.5"
 	}

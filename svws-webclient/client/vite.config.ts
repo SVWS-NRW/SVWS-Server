@@ -5,13 +5,11 @@ import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
-import { comlink } from 'vite-plugin-comlink'
 
 export default defineConfig({
 	test: {},
 	server: { port: 3000 },
 	plugins: [
-		comlink(),
 		Vue({
 			include: [/\.vue$/, /\.md$/]
 		}),
@@ -28,9 +26,6 @@ export default defineConfig({
 		}),
 		Icons(),
 	],
-	worker: {
-		plugins: () => [ comlink() ]
-	},
 	resolve: {
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
