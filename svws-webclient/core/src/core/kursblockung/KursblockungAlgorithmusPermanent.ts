@@ -5,6 +5,7 @@ import { KursblockungAlgorithmusSSchnellW } from '../../core/kursblockung/Kursbl
 import { KursblockungAlgorithmusPermanentKFachwahlmatrix } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKFachwahlmatrix';
 import { KursblockungAlgorithmusPermanentK } from '../../core/kursblockung/KursblockungAlgorithmusPermanentK';
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
+import { KursblockungAlgorithmusPermanentKSchuelervorschlag } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKSchuelervorschlag';
 import { ArrayList } from '../../java/util/ArrayList';
 import { KursblockungAlgorithmusSMatching } from '../../core/kursblockung/KursblockungAlgorithmusSMatching';
 import { Logger } from '../../core/logger/Logger';
@@ -50,7 +51,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this._zeitRest = this._zeitBisNeustart;
 		this._top = new ArrayList();
 		this._logger = new Logger();
-		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input)];
+		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input)];
 	}
 
 	/**
@@ -80,6 +81,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.algorithmenK[0] = new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input);
 		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input);
 		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
+		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
 		this._zeitBisNeustart += 1000;
 		this._zeitRest = this._zeitBisNeustart;
 		console.log(JSON.stringify("    Berechnungszeit erhöht sich auf: " + this._zeitBisNeustart + " Millisekunden."));

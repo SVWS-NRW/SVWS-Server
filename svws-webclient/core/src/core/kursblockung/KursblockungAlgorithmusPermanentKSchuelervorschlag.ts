@@ -4,7 +4,7 @@ import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsda
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 
-export class KursblockungAlgorithmusPermanentKSchnellW extends KursblockungAlgorithmusPermanentK {
+export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends KursblockungAlgorithmusPermanentK {
 
 
 	/**
@@ -25,13 +25,30 @@ export class KursblockungAlgorithmusPermanentKSchnellW extends KursblockungAlgor
 	}
 
 	public toString() : string {
-		return "KursblockungAlgorithmusPermanentKSchnellW";
+		return "KursblockungAlgorithmusPermanentKSchuelervorschlag";
 	}
 
 	public next(zeitEnde : number) : void {
+		const current : number = System.currentTimeMillis();
+		const halbzeit : number = current + Math.trunc((zeitEnde - current) / 2);
+		do {
+			this.verteileKurseMitSchuelerwunsch();
+		} while (System.currentTimeMillis() < halbzeit);
 		do {
 			this.verteileKurseMitMatchingW();
 		} while (System.currentTimeMillis() < zeitEnde);
+	}
+
+	private verteileKurseMitSchuelerwunsch() : void {
+		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
+		this.dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
+		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+		const compare : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+		if (compare >= 0) {
+			this.dynDaten.aktionZustandSpeichernK();
+			return;
+		}
+		this.dynDaten.aktionZustandLadenK();
 	}
 
 	private verteileKurseMitMatchingW() : void {
@@ -48,15 +65,15 @@ export class KursblockungAlgorithmusPermanentKSchnellW extends KursblockungAlgor
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchnellW';
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchuelervorschlag';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchnellW'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchuelervorschlag', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusPermanentKSchnellW(obj : unknown) : KursblockungAlgorithmusPermanentKSchnellW {
-	return obj as KursblockungAlgorithmusPermanentKSchnellW;
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusPermanentKSchuelervorschlag(obj : unknown) : KursblockungAlgorithmusPermanentKSchuelervorschlag {
+	return obj as KursblockungAlgorithmusPermanentKSchuelervorschlag;
 }

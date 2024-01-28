@@ -8,8 +8,20 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Algorithmus arbeitet wie folgt:
- * <br> init: Die Kurse werden zufällig verteilt, die SuS mit "gewichteten bipartiten Matching".
- * <br> next: Die SuS werden mit zunächst mit "bipartiten Matching" dann mit "gewichteten bipartiten Matching" verteilt.
+ * <pre>
+ * init: (1) Alle Kurse zufällig verteilen
+ *       (2) SuS mit "gewichteten bipartiten Matching" verteilen.
+ *
+ * next: Die Hälfte der Zeit wird aufgeteilt:
+ *       (1a) Einige wenige Kurse werden verändert.
+ *       (2a) SuS mit "bipartiten Matching" verteilen.
+ *       (3a) Verschlechterung ggf. rückgängig machen.
+ *
+ *       (1b) Einige wenige Kurse werden verändert.
+ *       (2b) SuS mit "gewichteten bipartiten Matching" verteilen.
+ *       (3bc Verschlechterung ggf. rückgängig machen.
+ *
+ * </pre>
  *
  * @author Benjamin A. Bartsch
  */
@@ -29,17 +41,16 @@ public final class KursblockungAlgorithmusPermanentKMatching extends Kursblockun
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
 
-		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
+		// Erzeuge einen zufälligen Startzustand für Kurse und SuS.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
-
-		// Verteile die Kurse beim ersten Start zufällig.
 		dynDaten.aktionKurseFreieZufaelligVerteilen();
-
-		// Verteile SuS zufällig.
 		dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-
-		// Speicherung des Start-Zustandes.
 		dynDaten.aktionZustandSpeichernK();
+	}
+
+	@Override
+	public @NotNull String toString() {
+		return "KursblockungAlgorithmusPermanentKMatching";
 	}
 
 	@Override

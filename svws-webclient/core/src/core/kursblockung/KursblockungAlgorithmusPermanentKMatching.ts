@@ -24,6 +24,10 @@ export class KursblockungAlgorithmusPermanentKMatching extends KursblockungAlgor
 		this.dynDaten.aktionZustandSpeichernK();
 	}
 
+	public toString() : string {
+		return "KursblockungAlgorithmusPermanentKMatching";
+	}
+
 	public next(zeitEnde : number) : void {
 		const current : number = System.currentTimeMillis();
 		const halbzeit : number = current + Math.trunc((zeitEnde - current) / 2);

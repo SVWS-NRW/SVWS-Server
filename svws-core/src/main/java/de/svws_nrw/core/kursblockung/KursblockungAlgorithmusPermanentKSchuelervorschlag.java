@@ -9,18 +9,13 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Algorithmus arbeitet wie folgt:
  * <pre>
- * init: (1) Alle Kurse zufällig verteilen
- *       (2) SuS mit "gewichteten bipartiten Matching" verteilen.
- *
- * next: (1) Einige wenige Kurse werden verändert.
- *       (2) SuS mit "gewichteten bipartiten Matching" verteilen.
- *       (3) Verschlechterung ggf. rückgängig machen.
+ * ...
  *
  * </pre>
  *
  * @author Benjamin A. Bartsch
  */
-public final class KursblockungAlgorithmusPermanentKSchnellW extends KursblockungAlgorithmusPermanentK {
+public final class KursblockungAlgorithmusPermanentKSchuelervorschlag extends KursblockungAlgorithmusPermanentK {
 
 	/**
 	 * Im Konstruktor wird ein zufälliger Anfangszustand erzeugt.
@@ -29,7 +24,7 @@ public final class KursblockungAlgorithmusPermanentKSchnellW extends Kursblockun
 	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param input   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusPermanentKSchnellW(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
+	public KursblockungAlgorithmusPermanentKSchuelervorschlag(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
@@ -45,14 +40,44 @@ public final class KursblockungAlgorithmusPermanentKSchnellW extends Kursblockun
 
 	@Override
 	public @NotNull String toString() {
-		return "KursblockungAlgorithmusPermanentKSchnellW";
+		return "KursblockungAlgorithmusPermanentKSchuelervorschlag";
 	}
 
 	@Override
 	public void next(final long zeitEnde) {
+		final long current = System.currentTimeMillis();
+		final long halbzeit = current + (zeitEnde - current) / 2;
+
+		do {
+			verteileKurseMitSchuelerwunsch();
+		} while (System.currentTimeMillis() < halbzeit);
+
 		do {
 			verteileKurseMitMatchingW();
 		} while (System.currentTimeMillis() < zeitEnde);
+
+	}
+
+	private void verteileKurseMitSchuelerwunsch() {
+
+		// Entferne SuS, sonst dürfen Kurse nicht die Schiene wechseln.
+		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
+
+		// Verteile die Kurse nach dem Wunsch der SuS.
+		dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
+
+		// SuS verteilen
+		dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+
+		// Besser oder gleich? --> Speichern.
+		final int compare = dynDaten.gibCompareZustandK_NW_KD_FW();
+		if (compare >= 0) {
+			dynDaten.aktionZustandSpeichernK();
+			return;
+		}
+
+		// Verschlechterung rückgängig machen.
+		dynDaten.aktionZustandLadenK();
 	}
 
 	private void verteileKurseMitMatchingW() {
@@ -64,7 +89,7 @@ public final class KursblockungAlgorithmusPermanentKSchnellW extends Kursblockun
 			// Einen Kurs zufällig verteilen.
 			dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 
-			// Verteile SuS zufällig.
+			// SuS verteilen
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern.

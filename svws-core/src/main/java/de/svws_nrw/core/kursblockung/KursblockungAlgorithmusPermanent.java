@@ -48,6 +48,7 @@ public final class KursblockungAlgorithmusPermanent  {
 			new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input),
 			new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input),
 			new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input),
+			new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input),
 			// ... Ende der K-Algorithmen.
 		};
 	}
@@ -89,6 +90,7 @@ public final class KursblockungAlgorithmusPermanent  {
 		algorithmenK[0] = new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input);
 		algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input);
 		algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input);
+		algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input);
 
 		// Die Berechnungszeit steigt.
 		_zeitBisNeustart += 1000;
