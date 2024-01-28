@@ -165,6 +165,18 @@ public class KursblockungDynStatistik {
 	}
 
 	/**
+	 * Liefert Debug-Informationen in einer Zeile.
+	 *
+	 * @return Debug-Informationen in einer Zeile.
+	 */
+	@NotNull String debugRow() {
+		return " RV = " + bewertungRegelverletzungen
+			+ ", NW = " + bewertungNichtwahlen
+			+ ", FW = " + bewertungFachartPaar
+			+ ", KDs = " + bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen);
+	}
+
+	/**
 	 * Liefert die aktuelle Fachart-Paar-Bewertung.
 	 *
 	 * @return Die aktuelle Fachart-Paar-Bewertung.

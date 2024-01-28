@@ -15,6 +15,7 @@ import { KursblockungAlgorithmusPermanentKSchnellW } from '../../core/kursblocku
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusSZufaellig } from '../../core/kursblockung/KursblockungAlgorithmusSZufaellig';
 import type { List } from '../../java/util/List';
+import { KursblockungAlgorithmusPermanentKMatching } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKMatching';
 
 export class KursblockungAlgorithmusPermanent extends JavaObject {
 
@@ -45,11 +46,11 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		const seed : number = this._random.nextLong();
 		console.log(JSON.stringify("KursblockungAlgorithmusPermanent: seed = " + seed));
 		this._input = pInput;
-		this._zeitBisNeustart = 100;
+		this._zeitBisNeustart = 1000;
 		this._zeitRest = this._zeitBisNeustart;
 		this._top = new ArrayList();
 		this._logger = new Logger();
-		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input)];
+		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input)];
 	}
 
 	/**
@@ -60,26 +61,31 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 * @return TRUE, falls der Blockungsalgorithmus innerhalb der erlaubten Zeit seine Ergebnisse verbessern konnte.
 	 */
 	public next(zeitProAufruf : number) : boolean {
+		const zeitFuerBerechnung : number = Math.min(zeitProAufruf, this._zeitRest);
 		const zeitStart : number = System.currentTimeMillis();
-		const zeitEnde : number = zeitStart + zeitProAufruf;
+		const zeitEnde : number = zeitStart + zeitFuerBerechnung;
 		for (let iK : number = 0; (iK < this.algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
-			this.algorithmenK[iK].next(zeitStart + Math.trunc((zeitProAufruf * (iK + 1)) / this.algorithmenK.length));
+			this.algorithmenK[iK].next(zeitStart + Math.trunc((zeitFuerBerechnung * (iK + 1)) / this.algorithmenK.length));
 		this._zeitRest -= (System.currentTimeMillis() - zeitStart);
-		return (this._zeitRest <= 0) ? this._neustart() : false;
+		return (this._zeitRest <= 100) ? this._neustart() : false;
 	}
 
 	private _neustart() : boolean {
 		let verbesserung : boolean = false;
 		for (let iK : number = 0; iK < this.algorithmenK.length; iK++) {
 			this.verteileSuS(this.algorithmenK[iK]);
-			verbesserung = verbesserung || this._fuegeHinzuFallsBesser(this.algorithmenK[iK].gibDynDaten());
+			verbesserung = verbesserung || this._fuegeHinzuFallsBesser(this.algorithmenK[iK].gibDynDaten(), iK);
 		}
 		console.log(JSON.stringify("    Ende der Berechnungszeit. Verbesserung: " + verbesserung));
 		this.algorithmenK[0] = new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input);
 		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input);
-		this._zeitBisNeustart += 100;
+		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
+		this._zeitBisNeustart += 1000;
 		this._zeitRest = this._zeitBisNeustart;
 		console.log(JSON.stringify("    Berechnungszeit erhöht sich auf: " + this._zeitBisNeustart + " Millisekunden."));
+		for (let i : number = 0; i < this._top.size(); i++) {
+			console.log(JSON.stringify("TOP " + (i + 1) + ": " + this._top.get(i).gibStatistik().debugRow()!));
+		}
 		return verbesserung;
 	}
 
@@ -97,17 +103,18 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 			dynDaten.aktionZustandSpeichernG();
 	}
 
-	private _fuegeHinzuFallsBesser(neueDynDaten : KursblockungDynDaten) : boolean {
+	private _fuegeHinzuFallsBesser(neueDynDaten : KursblockungDynDaten, algNr : number) : boolean {
 		for (let i : number = 0; i < this._top.size(); i++)
 			if (neueDynDaten.gibIstBesser_NW_KD_FW_Als(this._top.get(i))) {
 				this._top.add(i, neueDynDaten);
-				console.log(JSON.stringify("    Index " + i + " verbessert!"));
+				console.log(JSON.stringify("    Index " + i + " verbessert! Algo = " + algNr));
 				if (this._top.size() > KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE)
-					this._top.remove(KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE);
+					this._top.removeLast();
+				console.log(JSON.stringify("    Liste hat Länge " + this._top.size() + "."));
 				return true;
 			}
 		if (this._top.size() < KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
-			console.log(JSON.stringify("    Index " + this._top.size() + " verbessert (hinten)!"));
+			console.log(JSON.stringify("    Index " + this._top.size() + " verbessert (hinten)! Algo = " + algNr));
 			this._top.add(neueDynDaten);
 			return true;
 		}

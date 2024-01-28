@@ -38,7 +38,7 @@ public final class KursblockungAlgorithmusPermanent  {
 		System.out.println("KursblockungAlgorithmusPermanent: seed = " + seed);
 
 		_input = pInput;
-		_zeitBisNeustart = 100;
+		_zeitBisNeustart = 1000;
 		_zeitRest = _zeitBisNeustart;
 		_top = new ArrayList<>();
 		_logger = new Logger();
@@ -47,6 +47,7 @@ public final class KursblockungAlgorithmusPermanent  {
 			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
 			new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input),
 			new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input),
+			new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input),
 			// ... Ende der K-Algorithmen.
 		};
 	}
@@ -59,18 +60,20 @@ public final class KursblockungAlgorithmusPermanent  {
 	 * @return TRUE, falls der Blockungsalgorithmus innerhalb der erlaubten Zeit seine Ergebnisse verbessern konnte.
 	 */
 	public boolean next(final long zeitProAufruf) {
+		final long zeitFuerBerechnung = Math.min(zeitProAufruf, _zeitRest);
+
 		final long zeitStart = System.currentTimeMillis();
-		final long zeitEnde = zeitStart + zeitProAufruf;
+		final long zeitEnde = zeitStart + zeitFuerBerechnung;
 
 		// Jeder Algorithmus optimiert innerhalb seiner Zeit sein eigenes "KursblockungDynDaten"-Objekt.
 		for (int iK = 0; (iK < algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
-			algorithmenK[iK].next(zeitStart + (zeitProAufruf * (iK + 1)) / algorithmenK.length); // Übermittle die individuelle Endzeit.
+			algorithmenK[iK].next(zeitStart + (zeitFuerBerechnung * (iK + 1)) / algorithmenK.length); // Übermittle die individuelle Endzeit.
 
 		// Die verwendete Zeit abziehen.
 		_zeitRest -= (System.currentTimeMillis() - zeitStart);
 
-		// Neustart der aller Algorithmen?
-		return (_zeitRest <= 0) ? _neustart() : false;
+		// Neustart aller Algorithmen, falls nur noch weniger als 100 Millisekunden zur Verfügung stehen.
+		return (_zeitRest <= 100) ? _neustart() : false;
 	}
 
 	private boolean _neustart() {
@@ -78,18 +81,23 @@ public final class KursblockungAlgorithmusPermanent  {
 		boolean verbesserung = false;
 		for (int iK = 0; iK < algorithmenK.length; iK++) {
 			verteileSuS(algorithmenK[iK]);
-			verbesserung |= _fuegeHinzuFallsBesser(algorithmenK[iK].gibDynDaten());
+			verbesserung |= _fuegeHinzuFallsBesser(algorithmenK[iK].gibDynDaten(), iK);
 		}
 		System.out.println("    Ende der Berechnungszeit. Verbesserung: " + verbesserung);
 
 		// Alle K-Algorithmen neu erzeugen, da jeweils ein neues "KursblockungDynDaten"-Objekt erzeugt werden muss.
 		algorithmenK[0] = new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input);
 		algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input);
+		algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input);
 
 		// Die Berechnungszeit steigt.
-		_zeitBisNeustart += 100;
+		_zeitBisNeustart += 1000;
 		_zeitRest = _zeitBisNeustart;
 		System.out.println("    Berechnungszeit erhöht sich auf: " + _zeitBisNeustart + " Millisekunden.");
+
+		for (int i = 0; i < _top.size(); i++) {
+			System.out.println("TOP " + (i + 1) + ": " + _top.get(i).gibStatistik().debugRow());
+		}
 
 		return verbesserung;
 	}
@@ -126,22 +134,23 @@ public final class KursblockungAlgorithmusPermanent  {
 			dynDaten.aktionZustandSpeichernG();
 	}
 
-	private boolean _fuegeHinzuFallsBesser(final @NotNull KursblockungDynDaten neueDynDaten) {
+	private boolean _fuegeHinzuFallsBesser(final @NotNull KursblockungDynDaten neueDynDaten, final int algNr) {
 		// Gibt es ein besseres Objekt als in der Liste?
 		for (int i = 0; i < _top.size(); i++)
 			if (neueDynDaten.gibIstBesser_NW_KD_FW_Als(_top.get(i))) {
 				// Besseres Element (sortiert) einfügen.
 				_top.add(i, neueDynDaten);
-				System.out.println("    Index " + i + " verbessert!");
+				System.out.println("    Index " + i + " verbessert! Algo = " + algNr);
 				// Letztes Element entfernen?
 				if (_top.size() > TOP_ERGEBNISSE)
-					_top.remove(TOP_ERGEBNISSE);
+					_top.removeLast();
+				System.out.println("    Liste hat Länge " + _top.size() + ".");
 				return true;
 			}
 
 		// Ist die Liste noch nicht voll?
 		if (_top.size() < TOP_ERGEBNISSE) {
-			System.out.println("    Index " + _top.size() + " verbessert (hinten)!");
+			System.out.println("    Index " + _top.size() + " verbessert (hinten)! Algo = " + algNr);
 			_top.add(neueDynDaten);
 			return true;
 		}

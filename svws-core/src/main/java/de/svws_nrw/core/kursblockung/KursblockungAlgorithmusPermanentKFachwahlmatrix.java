@@ -8,8 +8,16 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Algorithmus arbeitet wie folgt:
- * <br> init: ...
- * <br> next: ...
+ * <pre>
+ * init: (1) Alle Kurse zufällig verteilen. SuS werden nicht verteilt.
+ *
+ * next: (1) Einige wenige Kurse werden verändert. SuS werden nicht verteilt.
+ *       (2) Bei Verschlechterung der Fachwahl-Bewertung Veränderung rückgängig machen.
+ *
+ * </pre>
+ *
+ * <br> init: Die Kurse werden zufällig verteilt (ohne SuS).
+ * <br> next: Die Kurse werden weiterhin zufällig verteilt (ohne SuS). Bewertet wird nur die Fachwahl-Lage der Kurse.
  *
  * @author Benjamin A. Bartsch
  */
@@ -30,16 +38,10 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
 
-		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
+		// Erzeuge einen zufälligen Startzustand für Kurse. SuS werden bei diesem Algorithmus nicht verteilt.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
-
-		// Verteile die Kurse beim ersten Start zufällig.
 		dynDaten.aktionKurseFreieZufaelligVerteilen();
-
-		// Speicherung des Start-Zustandes.
 		dynDaten.aktionZustandSpeichernK();
-
-		// SuS werden bei diesem Algorithmus nicht verteilt.
 	}
 
 	@Override
@@ -54,9 +56,6 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 		} while (System.currentTimeMillis() < zeitEnde);
 	}
 
-	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig gemacht.
-	 */
 	private void optimiere() {
 		// Verteile einige wenige Kurse neu (mindestens einer) und prüfe, ob das Ergebnis besser wurde.
 		do {
@@ -72,6 +71,7 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 			}
 		} while (_random.nextBoolean());
 
+		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();
 	}
 

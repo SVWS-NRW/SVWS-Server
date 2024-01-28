@@ -33,9 +33,6 @@ export class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursblockun
 		} while (System.currentTimeMillis() < zeitEnde);
 	}
 
-	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig gemacht.
-	 */
 	private optimiere() : void {
 		do {
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();

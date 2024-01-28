@@ -27,8 +27,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchuelervorschlag(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKSchuelervorschlag(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 
@@ -47,7 +46,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 		final long current = System.currentTimeMillis();
 		final long halbzeit = current + (pEndzeit - current) / 2;
 
-		// Keine Kurverteilung, wenn es keine freien Kurse gibt.
+		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
 

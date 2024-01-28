@@ -22,26 +22,25 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 	/**
 	 * Array der SuS, deren Kurse verteilt werden sollen.
 	 */
-	private final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr;
+	private final @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr;
 
 	/**
 	 * Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
 	 */
-	private final @NotNull int[] perm;
+	private final @NotNull int[] _perm;
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusSZufaellig(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
-		schuelerArr = pDynDat.gibSchuelerArrayAlle();
-		perm = KursblockungStatic.gibPermutation(_random, schuelerArr.length);
+	public KursblockungAlgorithmusSZufaellig(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDat) {
+		super(random, logger, dynDat);
+		_schuelerArr = dynDat.gibSchuelerArrayAlle();
+		_perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
 	}
 
 	/**
@@ -73,10 +72,10 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 	private boolean verteileSchuelerAlle() {
 		boolean verbesserung = false;
 
-		KursblockungStatic.aktionPermutiere(_random, perm);
-		for (int p = 0; p < schuelerArr.length; p++) {
-			final int i = perm[p];
-			verbesserung |= verteileSchuelerEiner(schuelerArr[i]);
+		KursblockungStatic.aktionPermutiere(_random, _perm);
+		for (int p = 0; p < _schuelerArr.length; p++) {
+			final int i = _perm[p];
+			verbesserung |= verteileSchuelerEiner(_schuelerArr[i]);
 		}
 
 		return verbesserung;

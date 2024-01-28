@@ -386,6 +386,7 @@ export { KursblockungAlgorithmusKmitS } from './core/kursblockung/KursblockungAl
 export { KursblockungAlgorithmusPermanent } from './core/kursblockung/KursblockungAlgorithmusPermanent';
 export { KursblockungAlgorithmusPermanentK } from './core/kursblockung/KursblockungAlgorithmusPermanentK';
 export { KursblockungAlgorithmusPermanentKFachwahlmatrix } from './core/kursblockung/KursblockungAlgorithmusPermanentKFachwahlmatrix';
+export { KursblockungAlgorithmusPermanentKMatching } from './core/kursblockung/KursblockungAlgorithmusPermanentKMatching';
 export { KursblockungAlgorithmusPermanentKSchnellW } from './core/kursblockung/KursblockungAlgorithmusPermanentKSchnellW';
 export { KursblockungAlgorithmusS } from './core/kursblockung/KursblockungAlgorithmusS';
 export { KursblockungAlgorithmusSMatching } from './core/kursblockung/KursblockungAlgorithmusSMatching';

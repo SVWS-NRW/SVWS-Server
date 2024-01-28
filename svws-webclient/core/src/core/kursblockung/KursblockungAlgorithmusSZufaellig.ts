@@ -15,26 +15,26 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	/**
 	 *  Array der SuS, deren Kurse verteilt werden sollen.
 	 */
-	private readonly schuelerArr : Array<KursblockungDynSchueler>;
+	private readonly _schuelerArr : Array<KursblockungDynSchueler>;
 
 	/**
 	 *  Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
 	 */
-	private readonly perm : Array<number>;
+	private readonly _perm : Array<number>;
 
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDat Die dynamischen Blockungsdaten.
 	 */
-	public constructor(pRandom : Random, pLogger : Logger, pDynDat : KursblockungDynDaten) {
-		super(pRandom, pLogger, pDynDat);
-		this.schuelerArr = pDynDat.gibSchuelerArrayAlle();
-		this.perm = KursblockungStatic.gibPermutation(this._random, this.schuelerArr.length);
+	public constructor(random : Random, logger : Logger, dynDat : KursblockungDynDaten) {
+		super(random, logger, dynDat);
+		this._schuelerArr = dynDat.gibSchuelerArrayAlle();
+		this._perm = KursblockungStatic.gibPermutation(this._random, this._schuelerArr.length);
 	}
 
 	/**
@@ -58,10 +58,10 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	 */
 	private verteileSchuelerAlle() : boolean {
 		let verbesserung : boolean = false;
-		KursblockungStatic.aktionPermutiere(this._random, this.perm);
-		for (let p : number = 0; p < this.schuelerArr.length; p++) {
-			const i : number = this.perm[p];
-			verbesserung = verbesserung || this.verteileSchuelerEiner(this.schuelerArr[i]);
+		KursblockungStatic.aktionPermutiere(this._random, this._perm);
+		for (let p : number = 0; p < this._schuelerArr.length; p++) {
+			const i : number = this._perm[p];
+			verbesserung = verbesserung || this.verteileSchuelerEiner(this._schuelerArr[i]);
 		}
 		return verbesserung;
 	}

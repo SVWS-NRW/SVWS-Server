@@ -183,6 +183,15 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
+	 * Liefert Debug-Informationen in einer Zeile.
+	 *
+	 * @return Debug-Informationen in einer Zeile.
+	 */
+	debugRow() : string {
+		return " RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!;
+	}
+
+	/**
 	 * Liefert die aktuelle Fachart-Paar-Bewertung.
 	 *
 	 * @return Die aktuelle Fachart-Paar-Bewertung.
