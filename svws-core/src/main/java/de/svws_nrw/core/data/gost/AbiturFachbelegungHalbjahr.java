@@ -44,7 +44,7 @@ public class AbiturFachbelegungHalbjahr {
 	/** Die Anzahl der unentschuldigten Fehlstunden. */
 	public int fehlstundenUnentschuldigt;
 
-	/** Das Notenkürzel der erteilten Note */
+	/** Das Notenkürzel der erteilten Note. Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist. Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind. */
 	public String notenkuerzel = null;
 
 	/** Gibt an, ob die Belegung für den Block I gewertet wird oder nicht - nicht alle Kursbelegungen müssen laut Prüfungsordnung in die Abiturnote einfliessen */

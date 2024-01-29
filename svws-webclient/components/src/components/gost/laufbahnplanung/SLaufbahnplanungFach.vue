@@ -33,11 +33,14 @@
 				'cursor-not-allowed': !istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id],
 				'svws-disabled': !istMoeglich[halbjahr.id],
 				'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
-			}" @click.stop="stepper(halbjahr)" :title="istBewertet(halbjahr) ? 'Bewertet, keine Änderungen mehr möglich' : (!istMoeglich[halbjahr.id] ? 'Wahl nicht möglich' : '')">
-				<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
-					<div class="inline-flex items-center relative w-full">
-						<span class="w-full text-center">{{ wahlen[halbjahr.id] }}&#8203;</span>
-						<span class="absolute -right-1">
+			}" @click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)">
+				<div class="inline-flex items-center gap-1 relative w-full">
+					<span class="w-full text-center">
+						<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
+						<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
+					</span>
+					<span class="absolute -right-0 top-0">
+						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
 								<i-ri-error-warning-line :class="istBewertet(halbjahr) ? 'text-black/50' : 'text-error'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
@@ -50,43 +53,45 @@
 									Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
 								</template>
 							</svws-ui-tooltip>
-						</span>
-					</div>
-				</template>
-				<div class="inline-flex items-center gap-1 relative w-full" v-else-if="!istMoeglich[halbjahr.id] && wahlen[halbjahr.id]">
-					<span class="text-center w-full">{{ wahlen[halbjahr.id] }}</span>
-					<span class="absolute -right-1">
-						<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
-							<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
-								<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
-							</svws-ui-button>
-							<template #content>
-								<template v-if="istBewertet(halbjahr)">
-									Kurs nicht wählbar
+						</template>
+						<template v-else-if="!istMoeglich[halbjahr.id] && wahlen[halbjahr.id] !== ''">
+							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
+								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
+									<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
+								</svws-ui-button>
+								<template #content>
+									<template v-if="istBewertet(halbjahr)">
+										Kurs nicht wählbar
+									</template>
+									<template v-else>
+										Löschen (Kurs nicht wählbar)
+									</template>
 								</template>
-								<template v-else>
-									Löschen (Kurs nicht wählbar)
+							</svws-ui-tooltip>
+						</template>
+						<template v-else-if="wahlen[halbjahr.id] !== '' && istBewertet(halbjahr) && noten[halbjahr.id] === null">
+							<svws-ui-tooltip :color="'danger'">
+								<svws-ui-button type="icon" size="small">
+									<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
+								</svws-ui-button>
+								<template #content>
+									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
+									Entfernen Sie entweder die Fachwahl durch klicken oder korrigieren sie dies in den Leistungsdaten
 								</template>
-							</template>
-						</svws-ui-tooltip>
+							</svws-ui-tooltip>
+						</template>
+						<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
+							<svws-ui-tooltip color="danger" position="bottom">
+								<div class="inline-flex items-center">
+									<i-ri-error-warning-line class="text-error ml-0.5" />
+								</div>
+								<template #content>
+									Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
+								</template>
+							</svws-ui-tooltip>
+						</template>
 					</span>
 				</div>
-				<span v-else>
-					<template v-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] !== '6'">
-						{{ wahlen[halbjahr.id] }}
-					</template>
-					<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
-						<svws-ui-tooltip color="danger" position="bottom">
-							<div class="inline-flex items-center">
-								<span>0</span>
-								<i-ri-error-warning-line class="text-error ml-0.5" />
-							</div>
-							<template #content>
-								Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</span>
 			</div>
 		</template>
 		<div role="cell" class="svws-ui-td svws-align-center select-none font-medium" :class="{
@@ -112,11 +117,10 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
-	import type { AbiturFachbelegung, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, Sprachbelegung} from "@core";
-	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostAbiturFach, GostFachbereich, GostFachUtils, GostHalbjahr,
-		GostKursart, SprachendatenUtils, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
+	import { type AbiturFachbelegung, type GostFach, type GostJahrgangFachkombination, type GostJahrgangsdaten, type GostSchuelerFachwahl, Note, type Sprachbelegung,
+		AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostAbiturFach, GostFachbereich, GostFachUtils, GostHalbjahr,
+		GostKursart, SprachendatenUtils, ZulaessigesFach } from "@core";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
@@ -134,13 +138,13 @@
 	}>();
 
 
-	const istFremdsprache: ComputedRef<boolean> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
+	const istFremdsprache = computed<boolean>(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
 
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	const bgColor = computed<string>(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
+	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
-	const sprachbelegung: ComputedRef<Sprachbelegung | null> = computed(()=> {
+	const sprachbelegung = computed<Sprachbelegung | null>(()=> {
 		const sprach_kuerzel = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel;
 		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen) {
 			if (sprache.sprache === sprach_kuerzel)
@@ -150,7 +154,7 @@
 	})
 
 	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
-	const getFallsSpracheMoeglich: ComputedRef<boolean> = computed(()=> {
+	const getFallsSpracheMoeglich = computed<boolean>(()=> {
 		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
 			props.abiturdatenManager().getSprachendaten(), ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel
 		);
@@ -158,11 +162,11 @@
 		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
 	})
 
-	const sprachenfolgeNr: ComputedRef<number> = computed(() =>
+	const sprachenfolgeNr = computed<number>(() =>
 		getFallsSpracheMoeglich.value ? sprachbelegung.value?.reihenfolge ?? 0 : 0
 	);
 
-	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() =>
+	const sprachenfolgeJahrgang = computed<string>(() =>
 		getFallsSpracheMoeglich.value ? (sprachbelegung.value?.belegungVonJahrgang ?? "") : ""
 	);
 
@@ -175,7 +179,7 @@
 	}
 
 
-	const istMoeglichAbi: ComputedRef<boolean> = computed(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
+	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
 
 	/**
@@ -203,7 +207,7 @@
 	}
 
 
-	const istMoeglich: ComputedRef<boolean[]> = computed(() => {
+	const istMoeglich = computed<boolean[]>(() => {
 		if (props.fach.istFremdsprache && ((!props.ignoriereSprachenfolge) && !getFallsSpracheMoeglich.value))
 			return [ false, false, false, false, false, false ];
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
@@ -219,14 +223,25 @@
 	});
 
 
-	const abi_wahl: ComputedRef<string> = computed(() =>
+	function getTooltipHalbjahr(halbjahr: GostHalbjahr) : string {
+		if (istBewertet(halbjahr)) {
+			const note = noten.value[halbjahr.id];
+			if (note === null)
+				return 'Es liegen keine Leistungsdaten vor!';
+			return `Note ${note.kuerzel} (keine Änderungen mehr möglich)`;
+		}
+		return (!istMoeglich.value[halbjahr.id]) ? 'Wahl nicht möglich' : '';
+	}
+
+
+	const abi_wahl = computed<string>(() =>
 		fachbelegung.value?.abiturFach?.toString() || "");
 
-	const wahlen: ComputedRef<string[]> = computed(() => {
+	const wahlen = computed<string[]>(() => {
 		if (fachbelegung.value === null)
 			return ["", "", "", "", "", ""];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
-			b = b ? b : new AbiturFachbelegungHalbjahr();
+			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
 			if (b.halbjahrKuerzel === undefined)
 				return "";
 			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b))
@@ -240,6 +255,18 @@
 					return kursart.kuerzel;
 			}
 			return b.schriftlich ? "S" : "M";
+		});
+	});
+
+
+	const noten = computed<Array<Note | null>>(() => {
+		if (fachbelegung.value === null)
+			return [null, null, null, null, null, null];
+		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
+			b = b !== null ? b : new AbiturFachbelegungHalbjahr();
+			if (b.halbjahrKuerzel === undefined)
+				return null;
+			return b.notenkuerzel === null ? null : Note.fromKuerzel(b.notenkuerzel); // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
 		});
 	});
 
@@ -274,7 +301,7 @@
 		return false;
 	}
 
-	const istFachkombiErforderlich: ComputedRef<boolean[]> = computed(() => {
+	const istFachkombiErforderlich = computed<boolean[]>(() => {
 		const result = [];
 		for (const halbjahr of GostHalbjahr.values())
 			result.push(istFachkombiErforderlichHalbjahr(halbjahr));
@@ -310,20 +337,20 @@
 		return false;
 	}
 
-	const istFachkombiVerboten: ComputedRef<boolean[]> = computed(() => {
+	const istFachkombiVerboten = computed<boolean[]>(() => {
 		const result = [];
 		for (const halbjahr of GostHalbjahr.values())
 			result.push(istFachkombiVerbotenHalbjahr(halbjahr));
 		return result;
 	});
 
-	const ist_VTF: ComputedRef<boolean> = computed(() =>
+	const ist_VTF = computed<boolean>(() =>
 		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_VX);
 
-	const ist_PJK: ComputedRef<boolean> = computed(()=>
+	const ist_PJK = computed<boolean>(()=>
 		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX);
 
-	const getAndereFachwahl: ComputedRef<GostSchuelerFachwahl | undefined> = computed(()=> {
+	const getAndereFachwahl = computed<GostSchuelerFachwahl | undefined>(()=> {
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
 			return;
@@ -373,7 +400,9 @@
 	}
 
 	function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
-		if (halbjahr === undefined || wahlen.value[halbjahr.id] === null || istMoeglich.value[halbjahr.id])
+		if (halbjahr === undefined || wahlen.value[halbjahr.id] === null)
+			return;
+		if (istMoeglich.value[halbjahr.id] && (!istBewertet(halbjahr) || noten.value[halbjahr.id] !== null))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.halbjahre[halbjahr.id] = null;

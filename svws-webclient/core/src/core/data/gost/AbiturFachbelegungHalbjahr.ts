@@ -43,7 +43,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	public fehlstundenUnentschuldigt : number = 0;
 
 	/**
-	 * Das Notenkürzel der erteilten Note
+	 * Das Notenkürzel der erteilten Note. Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist. Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind.
 	 */
 	public notenkuerzel : string | null = null;
 

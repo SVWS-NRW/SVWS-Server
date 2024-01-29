@@ -168,7 +168,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
 			final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
-					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2",
+					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true",
 					DTOSchuelerLernabschnittsdaten.class,
 					schueler.ID, halbjahr.jahrgang);
 			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {

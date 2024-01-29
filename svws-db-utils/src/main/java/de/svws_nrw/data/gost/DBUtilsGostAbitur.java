@@ -258,6 +258,8 @@ public final class DBUtilsGostAbitur {
 				ef1.halbjahrKuerzel = GostHalbjahr.EF1.kuerzel;
 				ef1.notenkuerzel = dto.EF_HJ1_Notenpunkte.kuerzel;
 				ef1.schriftlich = (dto.EF_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
+				ef1.block1gewertet = false;
+				ef1.block1kursAufZeugnis = false;
 				fach.belegungen[GostHalbjahr.EF1.id] = ef1;
 			}
 			if (dto.EF_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
@@ -265,6 +267,8 @@ public final class DBUtilsGostAbitur {
 				ef2.halbjahrKuerzel = GostHalbjahr.EF2.kuerzel;
 				ef2.notenkuerzel = dto.EF_HJ2_Notenpunkte.kuerzel;
 				ef2.schriftlich = (dto.EF_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
+				ef2.block1gewertet = false;
+				ef2.block1kursAufZeugnis = false;
 				fach.belegungen[GostHalbjahr.EF2.id] = ef2;
 			}
 			if (dto.Q1_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
