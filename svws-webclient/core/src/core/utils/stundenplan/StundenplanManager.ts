@@ -205,6 +205,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList();
 
+	private readonly _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList();
+
 	private readonly _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
 	private readonly _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap();
@@ -1024,6 +1026,9 @@ export class StundenplanManager extends JavaObject {
 		this._klassenmenge_sortiert.clear();
 		this._klassenmenge_sortiert.addAll(this._klasse_by_id.values());
 		this._klassenmenge_sortiert.sort(StundenplanManager._compKlasse);
+		for (const kl of this._klassenmenge_sortiert)
+			if (kl.istSichtbar)
+				this._klassenmenge_sichtbar_sortiert.add(kl);
 	}
 
 	private update_klassenunterrichtmenge() : void {
@@ -1997,6 +2002,16 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public klasseGetMengeAsList() : List<StundenplanKlasse> {
 		return this._klassenmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
+	 */
+	public klasseGetMengeSichtbarAsList() : List<StundenplanKlasse> {
+		return this._klassenmenge_sichtbar_sortiert;
 	}
 
 	/**

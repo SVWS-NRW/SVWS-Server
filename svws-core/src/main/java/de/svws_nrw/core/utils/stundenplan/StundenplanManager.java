@@ -158,6 +158,7 @@ public class StundenplanManager {
 	// StundenplanKlasse
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _klasse_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sortiert = new ArrayList<>();
+	private final @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sichtbar_sortiert = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idKurs = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idJahrgang = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idSchueler = new HashMap<>();
@@ -991,6 +992,9 @@ public class StundenplanManager {
 		_klassenmenge_sortiert.clear();
 		_klassenmenge_sortiert.addAll(_klasse_by_id.values());
 		_klassenmenge_sortiert.sort(_compKlasse);
+		for (final StundenplanKlasse kl : _klassenmenge_sortiert)
+			if (kl.istSichtbar)
+				_klassenmenge_sichtbar_sortiert.add(kl);
 	}
 
 	private void update_klassenunterrichtmenge() {
@@ -2088,6 +2092,16 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeAsList() {
 		return _klassenmenge_sortiert;
+	}
+
+	/**
+	 * Liefert eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller sichtbaren {@link StundenplanKlasse}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeSichtbarAsList() {
+		return _klassenmenge_sichtbar_sortiert;
 	}
 
 	/**
