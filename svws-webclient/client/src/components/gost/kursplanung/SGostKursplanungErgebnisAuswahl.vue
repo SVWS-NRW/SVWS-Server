@@ -59,9 +59,9 @@
 
 <script setup lang="ts">
 
+	import { ref } from 'vue';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List } from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import { ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

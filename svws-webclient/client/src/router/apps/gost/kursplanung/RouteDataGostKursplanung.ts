@@ -1,8 +1,9 @@
 
 import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
+import type { GostBlockungsdaten } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -11,6 +12,7 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
+import { ErgebnisWorker } from "./ErgbnisWorker";
 
 interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -34,9 +36,11 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	// ... auch abhängig von dem ausgewählten Schüler
 	auswahlSchueler: SchuelerListeEintrag | undefined;
+	// WebWorker zum lokalen Berechnen von GostBlockungsergebnisListeneintrag
+	ergebnisWorker: ErgebnisWorker | undefined;
 }
 
-const defaultState = <RouteStateGostKursplanung> {
+const defaultState: RouteStateGostKursplanung = {
 	abiturjahr: undefined,
 	jahrgangsdaten: undefined,
 	mapSchueler: new Map(),
@@ -52,6 +56,7 @@ const defaultState = <RouteStateGostKursplanung> {
 	ergebnismanager: undefined,
 	schuelerFilter: undefined,
 	auswahlSchueler: undefined,
+	ergebnisWorker: undefined,
 };
 
 
@@ -74,7 +79,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get abiturjahr() : number {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es wurde noch kein Abiturjahrgang geladen.");
+			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen.");
 		return this._state.value.abiturjahr;
 	}
 
@@ -118,7 +123,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
 		if (this._state.value.jahrgangsdaten === undefined)
-			throw new Error("Es wurde noch kein Abiturjahrgang geladen, so dass keine Jahrgangsdaten zur Verfügung stehen.");
+			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen, so dass keine Jahrgangsdaten zur Verfügung stehen.");
 		return this._state.value.jahrgangsdaten;
 	}
 
@@ -140,6 +145,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get halbjahr() : GostHalbjahr {
 		return this._state.value.halbjahr;
+	}
+
+	public get ergebnisWorker() : ErgebnisWorker {
+		if (this._state.value.ergebnisWorker === undefined)
+			throw new DeveloperNotificationException("Der Ergebnisworker wurde noch nicht erstellt");
+		return this._state.value.ergebnisWorker;
 	}
 
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
@@ -196,13 +207,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get auswahlBlockung() : GostBlockungListeneintrag {
 		if (this._state.value.auswahlBlockung === undefined)
-			throw new Error("Es wurde noch keine gültige Blockung ausgewählt.");
+			throw new DeveloperNotificationException("Es wurde noch keine gültige Blockung ausgewählt.");
 		return this._state.value.auswahlBlockung;
 	}
 
 	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined, force?: boolean) => {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
@@ -246,11 +257,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				ergebnis = ergebnisse.get(0);
 		}
 		await this.setAuswahlErgebnis(ergebnis);
+		this.setBlockungWorker();
+	}
+
+	public setBlockungWorker =() => {
+		const ergebnisWorker = new ErgebnisWorker(this.faecherManager, this.datenmanager);
+		this.setPatchedState({ergebnisWorker});
 	}
 
 	public get datenmanager(): GostBlockungsdatenManager {
 		if (this._state.value.datenmanager === undefined)
-			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
 		return this._state.value.datenmanager;
 	}
 
@@ -260,7 +277,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
 		if (this._state.value.ergebnismanager === undefined)
-			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Ergebnismanager zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass kein Ergebnismanager zur Verfügung steht.");
 		return this._state.value.ergebnismanager;
 	}
 
@@ -274,13 +291,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get auswahlErgebnis() : GostBlockungsergebnisListeneintrag {
 		if (this._state.value.auswahlErgebnis === undefined)
-			throw new Error("Es wurde noch kein gültiges Ergebnis ausgewählt.");
+			throw new DeveloperNotificationException("Es wurde noch kein gültiges Ergebnis ausgewählt.");
 		return this._state.value.auswahlErgebnis;
 	}
 
 	public setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if ((this._state.value.auswahlErgebnis?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
 		if (value === undefined) {
@@ -292,7 +309,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		}
 		if (this._state.value.datenmanager === undefined)
-			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
@@ -307,7 +324,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get schuelerFilter(): GostKursplanungSchuelerFilter {
 		if (this._state.value.schuelerFilter === undefined)
-			throw new Error("Es wurde noch keine Ergebnis geladen, so dass kein Schüler-Filter zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Ergebnis geladen, so dass kein Schüler-Filter zur Verfügung steht.");
 		return this._state.value.schuelerFilter;
 	}
 
@@ -317,13 +334,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get auswahlSchueler() : SchuelerListeEintrag {
 		if (this._state.value.auswahlSchueler === undefined)
-			throw new Error("Es wurde noch kein Schüler ausgewählt.");
+			throw new DeveloperNotificationException("Es wurde noch kein Schüler ausgewählt.");
 		return this._state.value.auswahlSchueler;
 	}
 
 	public async setAuswahlSchueler(value: SchuelerListeEintrag | undefined) {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (value?.id === this._state.value.auswahlSchueler?.id)
 			return;
 		// Setze die neue Schülerauswahl im geklonten State
@@ -364,7 +381,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
 		if (this._state.value.datenmanager === undefined)
-			throw new Error("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
+			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
 		if (data.name)
@@ -388,7 +405,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	patchErgebnis = async (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number): Promise<boolean> => {
 		if (this._state.value.datenmanager === undefined)
-			throw new Error("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
+			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockungsergebnis(data, api.schema, idErgebnis);
 		if (data.istAktiv === true) {

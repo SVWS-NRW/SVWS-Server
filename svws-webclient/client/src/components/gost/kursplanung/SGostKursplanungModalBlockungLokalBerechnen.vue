@@ -6,6 +6,11 @@
 			Zum Start auf „Berechnung starten“ klicken, sobald die Bedingungen erfüllt sind, mit denen die Berechnung durchgeführt wird,
 			wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des „Berechnung beenden“ Knopfes beendet werden.
 			Die Ergebnisse gehen dabei nicht verloren und können anschließend auf Wunsch in die Datenbank übernommen werden.
+			<div class="flex flex-row gap-2">
+				<svws-ui-button v-if="!running" type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
+				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ running === undefined ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
+				<svws-ui-button v-else type="primary" @click="beenden">Berechnung unterbrechen</svws-ui-button>
+			</div>
 			<svws-ui-table clickable v-model="selected" :selectable="liste.length > 0 && !running" class="z-20 relative"
 				:columns="[{ key: 'bewertung', label: 'Ergebnis' }]" :items="liste" :count="liste.length > 1">
 				<template #header(bewertung)>
@@ -42,17 +47,11 @@
 				</template>
 			</svws-ui-table>
 		</template>
-		<template #modalActions>
-			<svws-ui-button v-if="!running" type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
-			<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ running === undefined ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
-			<svws-ui-button v-else type="primary" @click="beenden">Berechnung unterbrechen</svws-ui-button>
-		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	type Message = { cmd: string; faecher?: string[], blockungsdaten?: string, result?: boolean | string[] | Bewertung[]};
 	type Bewertung = {
 		wert1: number;
 		color1: string;
@@ -66,72 +65,30 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostBlockungsdatenManager } from "@core";
-	import { GostBlockungsdaten, GostFach } from "@core";
+	import type { ErgebnisWorker } from '~/router/apps/gost/kursplanung/ErgbnisWorker';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		ergebnisWorker: ErgebnisWorker;
 	}>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const running = ref<boolean|undefined>(undefined);
-	const ready = ref<boolean>(false);
-	const liste = ref<Bewertung[]>([]);
 	const selected = ref<Bewertung[]>([]);
 
-	const worker = new Worker(new URL('./berechne_lokal_worker.ts', import.meta.url), {type: 'module'});
-
-	const faecher = computed(()=> {
-		const arr = [];
-		for (const f of props.getDatenmanager().faecherManager().faecher())
-			arr.push(GostFach.transpilerToJSON(f));
-		return arr;
-	});
-
-	const blockungsdaten = computed(() => GostBlockungsdaten.transpilerToJSON(props.getDatenmanager().daten()));
-
-	const message: Message = {cmd: "init", faecher: faecher.value, blockungsdaten: blockungsdaten.value};
-	worker.postMessage(message);
-
-	worker.onmessage = (e) => {
-		const data: Message = e.data;
-
-		switch (data.cmd) {
-			case 'init':
-				if (data.result !== undefined && typeof data.result === 'boolean')
-					ready.value = data.result;
-				break;
-			case 'next':
-				if (running.value === true)
-					worker.postMessage({cmd: 'next'});
-				if (data.result === true)
-					worker.postMessage({cmd: 'getErgbnisBewertungen'});
-				break;
-			case 'getErgbnisBewertungen':
-				if (Array.isArray(data.result))
-					liste.value = data.result as Bewertung[];
-				break;
-			case 'getErgebnisse':
-				if (Array.isArray(data.result))
-					console.log(data.result);
-				break;
-			default:
-				break;
-		}
-	};
+	const liste = computed(()=> props.ergebnisWorker.liste.value);
+	const running = computed(()=> props.ergebnisWorker.running.value)
 
 	async function berechne() {
-		running.value = true;
-		worker.postMessage({cmd: "next"});
+		props.ergebnisWorker.running.value = true;
+		props.ergebnisWorker.next(100);
 	}
 
 	async function beenden() {
-		running.value = false;
-		// worker.terminate();
-		// worker.postMessage({name: 'stop'});
+		props.ergebnisWorker.running.value = false;
+		selected.value = liste.value;
 	}
-	const log = computed(()=>console.log(liste.value))
 
 	const openModal = () => {
 		showModal().value = true;

@@ -128,6 +128,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 					return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id, this.data.auswahlSchueler.id);
 				return this.getRouteErgebnis(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id);
 			}
+			// erzeuge einen neuen Blockungsworker
+			// this.data.setBlockungWorker();
 		}
 		// Prüfe das Blockungsergebnis und setzte dieses ggf.
 		if (idErgebnis === undefined) {
@@ -172,6 +174,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
 		await this.data.setAuswahlBlockung(undefined);
+		// entferne den Ergebnisworker, wenn die Route verlassen wird
+		this.data.ergebnisWorker?.terminate();
 	}
 
 	public getRoute() : RouteLocationRaw {
@@ -220,6 +224,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			restoreBlockung: this.data.restoreBlockung,
 			aktAbschnitt: api.abschnitt,
 			mode: api.mode,
+			ergebnisWorker: this.data.ergebnisWorker,
 		}
 	}
 

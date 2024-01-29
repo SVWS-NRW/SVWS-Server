@@ -53,7 +53,6 @@ type Message = { cmd: string; faecher?: string[], blockungsdaten?: string }
 
 onmessage = (e) => {
 	const data: Message = e.data;
-
 	switch (data.cmd) {
 		case 'init': {
 			const {faecher, blockungsdaten} = data;
