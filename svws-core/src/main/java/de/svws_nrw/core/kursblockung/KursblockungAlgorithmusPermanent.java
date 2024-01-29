@@ -17,10 +17,12 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public final class KursblockungAlgorithmusPermanent  {
+	private static final long MILLIS_START = 1000;
+	private static final long MILLIS_INCREMENT = 1000;
 	private static final int TOP_ERGEBNISSE = 10;
 
 	private final @NotNull Random _random = new Random();
-	private final @NotNull Logger _logger;
+	private final @NotNull Logger _logger = new Logger();
 	private final @NotNull ArrayList<@NotNull KursblockungDynDaten> _top;
 	private final @NotNull GostBlockungsdatenManager _input;
 	private final @NotNull KursblockungAlgorithmusPermanentK @NotNull [] algorithmenK;
@@ -35,13 +37,12 @@ public final class KursblockungAlgorithmusPermanent  {
 	public KursblockungAlgorithmusPermanent(final @NotNull GostBlockungsdatenManager pInput) {
 		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
 		final long seed =  _random.nextLong();
-		System.out.println("KursblockungAlgorithmusPermanent: seed = " + seed);
+		_logger.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
 
 		_input = pInput;
-		_zeitBisNeustart = 1000;
+		_zeitBisNeustart = MILLIS_START;
 		_zeitRest = _zeitBisNeustart;
 		_top = new ArrayList<>();
-		_logger = new Logger();
 
 		algorithmenK = new KursblockungAlgorithmusPermanentK @NotNull [] {
 			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
@@ -79,12 +80,13 @@ public final class KursblockungAlgorithmusPermanent  {
 
 	private boolean _neustart() {
 		// Überprüfe, ob einer der Algorithmen ein besseres Ergebnis gefunden hat. Verteile aber vorher die SuS.
-		boolean verbesserung = false;
+
+		int verbesserung = 0;
 		for (int iK = 0; iK < algorithmenK.length; iK++) {
 			verteileSuS(algorithmenK[iK]);
-			verbesserung |= _fuegeHinzuFallsBesser(algorithmenK[iK].gibDynDaten(), iK);
+			if (_fuegeHinzuFallsBesser(iK))
+				verbesserung++;
 		}
-		System.out.println("    Ende der Berechnungszeit. Verbesserung: " + verbesserung);
 
 		// Alle K-Algorithmen neu erzeugen, da jeweils ein neues "KursblockungDynDaten"-Objekt erzeugt werden muss.
 		algorithmenK[0] = new KursblockungAlgorithmusPermanentKSchnellW(_random, _logger, _input);
@@ -93,15 +95,33 @@ public final class KursblockungAlgorithmusPermanent  {
 		algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input);
 
 		// Die Berechnungszeit steigt.
-		_zeitBisNeustart += 1000;
+		_zeitBisNeustart += MILLIS_INCREMENT;
 		_zeitRest = _zeitBisNeustart;
-		System.out.println("    Berechnungszeit erhöht sich auf: " + _zeitBisNeustart + " Millisekunden.");
 
-		for (int i = 0; i < _top.size(); i++) {
-			System.out.println("TOP " + (i + 1) + ": " + _top.get(i).gibStatistik().debugRow());
+		return verbesserung > 0;
+	}
+
+	private boolean _fuegeHinzuFallsBesser(final int algNr) {
+		final @NotNull KursblockungDynDaten neueDynDaten = algorithmenK[algNr].gibDynDaten();
+
+		// Gibt es ein besseres Objekt als in der Liste?
+		for (int i = 0; i < _top.size(); i++)
+			if (neueDynDaten.gibIstBesser_NW_KD_FW_Als(_top.get(i))) {
+				// Besseres Element (sortiert) einfügen.
+				_top.add(i, neueDynDaten);
+				// Letztes Element entfernen?
+				if (_top.size() > TOP_ERGEBNISSE)
+					_top.removeLast();
+				return true;
+			}
+
+		// Ist die Liste noch nicht voll?
+		if (_top.size() < TOP_ERGEBNISSE) {
+			_top.add(neueDynDaten);
+			return true;
 		}
 
-		return verbesserung;
+		return false;
 	}
 
 	private void verteileSuS(final @NotNull KursblockungAlgorithmusPermanentK k) {
@@ -134,30 +154,6 @@ public final class KursblockungAlgorithmusPermanent  {
 		// Gibt es einen neuen besten globalen Zustand?
 		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0)
 			dynDaten.aktionZustandSpeichernG();
-	}
-
-	private boolean _fuegeHinzuFallsBesser(final @NotNull KursblockungDynDaten neueDynDaten, final int algNr) {
-		// Gibt es ein besseres Objekt als in der Liste?
-		for (int i = 0; i < _top.size(); i++)
-			if (neueDynDaten.gibIstBesser_NW_KD_FW_Als(_top.get(i))) {
-				// Besseres Element (sortiert) einfügen.
-				_top.add(i, neueDynDaten);
-				System.out.println("    Index " + i + " verbessert! Algo = " + algNr);
-				// Letztes Element entfernen?
-				if (_top.size() > TOP_ERGEBNISSE)
-					_top.removeLast();
-				System.out.println("    Liste hat Länge " + _top.size() + ".");
-				return true;
-			}
-
-		// Ist die Liste noch nicht voll?
-		if (_top.size() < TOP_ERGEBNISSE) {
-			System.out.println("    Index " + _top.size() + " verbessert (hinten)! Algo = " + algNr);
-			_top.add(neueDynDaten);
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
