@@ -26,24 +26,65 @@ class Berechnen {
 			arr.push(GostBlockungsergebnis.transpilerToJSON(m.getErgebnis()));
 		return arr;
 	}
+
+	public getBlockungsbewertungen() {
+		const manager = this.algo.getBlockungsergebnisse();
+		const arr = [];
+		for (const m of manager) {
+			const bewertung = {
+				wert1: m.getOfBewertung1Wert(),
+				color1: `hsl(${Math.round((1 - (m.getOfBewertung1Farbcode()||0)) * 120)},100%,75%)`,
+				wert2: m.getOfBewertung2Wert(),
+				color2: `hsl(${Math.round((1 - (m.getOfBewertung2Farbcode()||0)) * 120)},100%,75%)`,
+				wert3: m.getOfBewertung3Wert(),
+				color3: `hsl(${Math.round((1 - (m.getOfBewertung3Farbcode()||0)) * 120)},100%,75%)`,
+				wert4: m.getOfBewertung4Wert(),
+				color4: `hsl(${Math.round((1 - (m.getOfBewertung4Farbcode()||0)) * 120)},100%,75%)`,
+			};
+			arr.push(bewertung);
+		}
+		return arr;
+	}
 }
 
 let berechnen: Berechnen | undefined = undefined;
-let running: boolean = false;
+
+type Message = { cmd: string; faecher?: string[], blockungsdaten?: string }
 
 onmessage = (e) => {
-	if (e.data.name === 'init') {
-		const {faecher, blockungsdaten} = e.data;
-		berechnen = new Berechnen(faecher, blockungsdaten);
-	}
-	if (e.data.name === 'run' && berechnen !== undefined) {
-		running = true;
-		while (running)
-			if (berechnen.next(100))
-				postMessage(berechnen.getBlockungsergebnisse());
-	}
-	if (e.data.name === 'stop' && running === true) {
-		console.log("stopping");
-		running = false;
+	const data: Message = e.data;
+
+	switch (data.cmd) {
+		case 'init': {
+			const {faecher, blockungsdaten} = data;
+			if (faecher !== undefined && blockungsdaten !== undefined)
+				berechnen = new Berechnen(faecher, blockungsdaten);
+			postMessage({cmd: 'init', result: berechnen !== undefined});
+			break;
+		}
+	  case 'next': {
+			if (berechnen !== undefined) {
+				const result = berechnen.next(100);
+				postMessage({cmd: 'next', result });
+			}
+			break;
+		}
+		case 'getErgbnisBewertungen': {
+			 if (berechnen !== undefined) {
+				 const result = berechnen.getBlockungsbewertungen();
+				 console.log(result)
+				 postMessage({cmd: 'getErgbnisBewertungen', result});
+			 }
+			break;
+		}
+		case 'getErgebnisse': {
+			 if (berechnen !== undefined) {
+				 const result = berechnen.getBlockungsergebnisse();
+				 postMessage({cmd: 'getErgebnisse', result});
+			 }
+			break;
+		}
+		default:
+			break;
 	}
 };
