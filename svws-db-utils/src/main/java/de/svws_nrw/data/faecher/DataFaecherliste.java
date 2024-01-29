@@ -46,6 +46,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
 		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
 		daten.istOberstufenFach = f.IstOberstufenFach;
+		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
 		daten.sortierung = f.SortierungAllg;
 		daten.istSichtbar = f.Sichtbar;
 		return daten;

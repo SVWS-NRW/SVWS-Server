@@ -43,6 +43,7 @@ public final class DataFachdaten extends DataManager<Long> {
 		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
 		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
 		daten.istOberstufenFach = f.IstOberstufenFach;
+		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
 		daten.sortierung = f.SortierungAllg;
 		daten.istSichtbar = f.Sichtbar;
 		daten.aufgabenfeld = f.Aufgabenfeld;
@@ -94,6 +95,7 @@ public final class DataFachdaten extends DataManager<Long> {
 			dto.StatistikFach = f;
 		}),
 		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
+		Map.entry("istPruefungsordnungsRelevant", (conn, dto, value, map) -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("istOberstufenFach", (conn, dto, value, map) -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.SortierungAllg = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE)),
 		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),

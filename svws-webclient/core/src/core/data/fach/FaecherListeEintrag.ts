@@ -33,6 +33,11 @@ export class FaecherListeEintrag extends JavaObject {
 	public istOberstufenFach : boolean = false;
 
 	/**
+	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei Belegprüfungen).
+	 */
+	public istPruefungsordnungsRelevant : boolean = false;
+
+	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
@@ -71,6 +76,9 @@ export class FaecherListeEintrag extends JavaObject {
 		if (typeof obj.istOberstufenFach === "undefined")
 			 throw new Error('invalid json format, missing attribute istOberstufenFach');
 		result.istOberstufenFach = obj.istOberstufenFach;
+		if (typeof obj.istPruefungsordnungsRelevant === "undefined")
+			 throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
+		result.istPruefungsordnungsRelevant = obj.istPruefungsordnungsRelevant;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -85,6 +93,7 @@ export class FaecherListeEintrag extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istOberstufenFach" : ' + obj.istOberstufenFach + ',';
+		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -110,6 +119,9 @@ export class FaecherListeEintrag extends JavaObject {
 		}
 		if (typeof obj.istOberstufenFach !== "undefined") {
 			result += '"istOberstufenFach" : ' + obj.istOberstufenFach + ',';
+		}
+		if (typeof obj.istPruefungsordnungsRelevant !== "undefined") {
+			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

@@ -115,6 +115,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 		    			case "kuerzelAnzeige" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "sortierung" -> throw OperationError.BAD_REQUEST.exception();
+		    			case "istPruefungsordnungsRelevant" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "istFremdsprache" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "istFremdSpracheNeuEinsetzend" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "biliSprache" -> throw OperationError.BAD_REQUEST.exception();

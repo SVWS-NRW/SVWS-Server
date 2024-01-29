@@ -43,6 +43,7 @@ public final class DBUtilsFaecherGost {
 		eintrag.kuerzelAnzeige = fach.Kuerzel;
 		eintrag.bezeichnung = fach.Bezeichnung;
 		eintrag.sortierung = fach.SortierungAllg;
+		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache))) ? fach.Unterichtssprache.substring(0, 1) : null;
@@ -98,6 +99,7 @@ public final class DBUtilsFaecherGost {
 		eintrag.kuerzelAnzeige = fach.Kuerzel;
 		eintrag.bezeichnung = fach.Bezeichnung;
 		eintrag.sortierung = fach.SortierungAllg;
+		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache))) ? fach.Unterichtssprache.substring(0, 1) : null;

@@ -28,6 +28,11 @@ export class GostFach extends JavaObject {
 	public sortierung : number = 32000;
 
 	/**
+	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei der Belegprüfung).
+	 */
+	public istPruefungsordnungsRelevant : boolean = true;
+
+	/**
 	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
 	 */
 	public istFremdsprache : boolean = false;
@@ -134,6 +139,9 @@ export class GostFach extends JavaObject {
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (typeof obj.istPruefungsordnungsRelevant === "undefined")
+			 throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
+		result.istPruefungsordnungsRelevant = obj.istPruefungsordnungsRelevant;
 		if (typeof obj.istFremdsprache === "undefined")
 			 throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
@@ -182,6 +190,7 @@ export class GostFach extends JavaObject {
 		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
+		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
 		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
@@ -219,6 +228,9 @@ export class GostFach extends JavaObject {
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
+		}
+		if (typeof obj.istPruefungsordnungsRelevant !== "undefined") {
+			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
 		}
 		if (typeof obj.istFremdsprache !== "undefined") {
 			result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
