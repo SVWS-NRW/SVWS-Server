@@ -34,6 +34,9 @@
 				<svws-ui-checkbox v-if="schulform.daten.hatGymOb" :model-value="data().istOberstufenFach" @update:model-value="value => patch({ istOberstufenFach: value === true ? true : false })">
 					Fach der Oberstufe
 				</svws-ui-checkbox>
+				<svws-ui-checkbox v-if="schulform.daten.hatGymOb" :model-value="data().istPruefungsordnungsRelevant" @update:model-value="value => patch({ istPruefungsordnungsRelevant: value === true ? true : false })">
+					Ist Prüfungsordnungs-Relevant (z.B. bei Belegprüfungen)
+				</svws-ui-checkbox>
 				<svws-ui-checkbox v-if="schulform !== Schulform.G" :model-value="data().istNachpruefungErlaubt" @update:model-value="value => patch({ istNachpruefungErlaubt: value === true ? true : false })">
 					Nachprüfung erlaubt
 				</svws-ui-checkbox>

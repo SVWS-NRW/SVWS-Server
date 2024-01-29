@@ -27,14 +27,14 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
+		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
 			this.addFehler(GostBelegungsfehler.IGF_10);
 		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.IGF_10);
 	}
 
 	protected pruefeGesamt() : void {
-		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			if (!this.manager.istBelegtSeitEF(fachbelegung))
@@ -51,7 +51,7 @@ export class Allgemeines extends GostBelegpruefung {
 			}
 		}
 		for (const halbjahr of GostHalbjahr.values()) {
-			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
+			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
 				this.addFehler(GostBelegungsfehler.IGF_10);
 		}
 		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))

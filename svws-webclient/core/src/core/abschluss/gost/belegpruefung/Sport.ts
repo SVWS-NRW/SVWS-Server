@@ -24,7 +24,7 @@ export class Sport extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this._sport = this.manager.getFachbelegungen(GostFachbereich.SPORT);
+		this._sport = this.manager.getRelevanteFachbelegungen(GostFachbereich.SPORT);
 	}
 
 	protected pruefeEF1() : void {

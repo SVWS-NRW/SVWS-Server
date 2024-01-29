@@ -23,7 +23,7 @@ export class Mathematik extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this._mathematik = this.manager.getFachbelegung(GostFachbereich.MATHEMATIK);
+		this._mathematik = this.manager.getRelevanteFachbelegung(GostFachbereich.MATHEMATIK);
 	}
 
 	protected pruefeEF1() : void {

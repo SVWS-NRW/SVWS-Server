@@ -39,7 +39,7 @@ public final class Allgemeines extends GostBelegpruefung {
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob mehrere Religionsfächer belegt wurden.
-		if (manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
+		if (manager.zaehleBelegungInHalbjahren(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
 			addFehler(GostBelegungsfehler.IGF_10);
 
 		// Prüfe anhand des Statistikkürzels, ob inhaltsgleiche Fächer in der EF.1 mehrfach belegt wurden.
@@ -50,7 +50,7 @@ public final class Allgemeines extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeGesamt() {
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
@@ -73,7 +73,7 @@ public final class Allgemeines extends GostBelegpruefung {
 
 		// Prüfe, ob in einem Halbjahr mehrere Religionsfächer belegt wurden.
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-			if (manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
+			if (manager.zaehleBelegungInHalbjahren(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
 				addFehler(GostBelegungsfehler.IGF_10);
 		}
 

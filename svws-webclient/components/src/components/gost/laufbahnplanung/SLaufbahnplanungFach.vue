@@ -187,16 +187,19 @@
 	 *
 	 * @param {GostHalbjahr} hj Das GostHalbjahr
 	 *
-	 * @returns {boolean} ob doppel belegt wurde, z.B. bei Bili-Fächern
+	 * @returns {boolean} ob doppelt belegt wurde, z.B. bei Bili-Fächern
 	 */
 	function checkDoppelbelegung(hj: GostHalbjahr): boolean {
 		// TODO Prüfe, ob der AbiturdatenManager nicht schon eine solche Methode hat - wenn nicht, dann ergänze eine
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+		if ((!props.fach.istPruefungsordnungsRelevant) || (fach.getFachgruppe() === Fachgruppe.FG_VX))
 			return false;
 		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
 		if (fachbelegungen !== undefined) {
 			for (const fachbelegung of fachbelegungen) {
+				const fach2 = props.abiturdatenManager().faecher().get(fachbelegung.fachID);
+				if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
+					continue;
 				if (props.abiturdatenManager().pruefeBelegung(fachbelegung, hj)) {
 					if (fachbelegung.fachID !== props.fach.id)
 						return true;
@@ -461,7 +464,7 @@
 				wahl.halbjahre[hj] = "M";
 				break;
 			case "M":
-				if (ist_VTF.value || ist_PJK.value || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach)))
+				if (!props.fach.istPruefungsordnungsRelevant || ist_VTF.value || ist_PJK.value || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach)))
 					wahl.halbjahre[hj] = null;
 				else
 					wahl.halbjahre[hj] = "S";

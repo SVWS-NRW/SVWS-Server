@@ -23,7 +23,7 @@ export class Deutsch extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this._deutsch = this.manager.getFachbelegung(GostFachbereich.DEUTSCH);
+		this._deutsch = this.manager.getRelevanteFachbelegung(GostFachbereich.DEUTSCH);
 	}
 
 	protected pruefeEF1() : void {

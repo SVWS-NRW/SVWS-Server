@@ -39,7 +39,7 @@ export class Projektkurse extends GostBelegpruefung {
 		this.projektkurs = null;
 		this.projektkursBelegung = new ArrayList();
 		this.projektkursHalbjahre = new ArrayList();
-		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			if (this.manager.zaehleBelegung(fachbelegung) <= 0)

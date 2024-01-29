@@ -25,8 +25,8 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.kunst_musik = this.manager.getFachbelegungen(GostFachbereich.KUNST_MUSIK);
-		this.kunst_musik_ersatz = this.manager.getFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
+		this.kunst_musik = this.manager.getRelevanteFachbelegungen(GostFachbereich.KUNST_MUSIK);
+		this.kunst_musik_ersatz = this.manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
 	}
 
 	protected pruefeEF1() : void {

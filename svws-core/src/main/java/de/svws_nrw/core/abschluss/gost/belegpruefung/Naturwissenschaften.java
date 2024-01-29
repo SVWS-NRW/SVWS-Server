@@ -44,8 +44,8 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		_naturwissenschaften = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
-		_naturwissenschaftenKlassisch = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
+		_naturwissenschaften = manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
+		_naturwissenschaftenKlassisch = manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
 		_anzahlDurchgehend = 0;
 		_anzahlDurchgehendSchriftlich = 0;
 	}

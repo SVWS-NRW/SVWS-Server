@@ -62,12 +62,12 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 
 	@Override
 	protected void init() {
-		gesellschaftswissenschaften = manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
-		geschichte = manager.getFachbelegungen(GostFachbereich.GESCHICHTE);
-		sozialwissenschaften = manager.getFachbelegungen(GostFachbereich.SOZIALWISSENSCHAFTEN);
-		philosophie = manager.getFachbelegung(GostFachbereich.PHILOSOPHIE);
-		sonstige_gesellschaftswissenschaften = manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
-		religion = manager.getFachbelegungen(GostFachbereich.RELIGION);
+		gesellschaftswissenschaften = manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
+		geschichte = manager.getRelevanteFachbelegungen(GostFachbereich.GESCHICHTE);
+		sozialwissenschaften = manager.getRelevanteFachbelegungen(GostFachbereich.SOZIALWISSENSCHAFTEN);
+		philosophie = manager.getRelevanteFachbelegung(GostFachbereich.PHILOSOPHIE);
+		sonstige_gesellschaftswissenschaften = manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
+		religion = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 		zusatzkursFachbelegungen = new ArrayList<>();
 	}
 

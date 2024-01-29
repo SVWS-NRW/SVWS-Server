@@ -36,7 +36,7 @@ public final class Sport extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		_sport = manager.getFachbelegungen(GostFachbereich.SPORT);
+		_sport = manager.getRelevanteFachbelegungen(GostFachbereich.SPORT);
 	}
 
 

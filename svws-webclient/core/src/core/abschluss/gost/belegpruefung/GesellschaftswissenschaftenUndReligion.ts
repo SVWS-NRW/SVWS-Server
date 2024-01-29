@@ -42,12 +42,12 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.gesellschaftswissenschaften = this.manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
-		this.geschichte = this.manager.getFachbelegungen(GostFachbereich.GESCHICHTE);
-		this.sozialwissenschaften = this.manager.getFachbelegungen(GostFachbereich.SOZIALWISSENSCHAFTEN);
-		this.philosophie = this.manager.getFachbelegung(GostFachbereich.PHILOSOPHIE);
-		this.sonstige_gesellschaftswissenschaften = this.manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
-		this.religion = this.manager.getFachbelegungen(GostFachbereich.RELIGION);
+		this.gesellschaftswissenschaften = this.manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH);
+		this.geschichte = this.manager.getRelevanteFachbelegungen(GostFachbereich.GESCHICHTE);
+		this.sozialwissenschaften = this.manager.getRelevanteFachbelegungen(GostFachbereich.SOZIALWISSENSCHAFTEN);
+		this.philosophie = this.manager.getRelevanteFachbelegung(GostFachbereich.PHILOSOPHIE);
+		this.sonstige_gesellschaftswissenschaften = this.manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
+		this.religion = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 		this.zusatzkursFachbelegungen = new ArrayList();
 	}
 

@@ -56,7 +56,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		_fremdsprachen = manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
+		_fremdsprachen = manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE);
 		_fremdsprachenNeu = manager.filterFremdspracheNeuEinsetzend(_fremdsprachen);
 		_fremdsprachenFortgefuehrt = manager.filterFremdspracheFortgefuehrt(_fremdsprachen);
 		_biliSachfaecher = manager.getFachbelegungenBilingual();

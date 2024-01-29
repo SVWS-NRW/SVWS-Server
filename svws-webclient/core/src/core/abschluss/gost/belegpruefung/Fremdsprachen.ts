@@ -43,7 +43,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this._fremdsprachen = this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
+		this._fremdsprachen = this.manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE);
 		this._fremdsprachenNeu = this.manager.filterFremdspracheNeuEinsetzend(this._fremdsprachen);
 		this._fremdsprachenFortgefuehrt = this.manager.filterFremdspracheFortgefuehrt(this._fremdsprachen);
 		this._biliSachfaecher = this.manager.getFachbelegungenBilingual();

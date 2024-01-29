@@ -30,8 +30,8 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this._naturwissenschaften = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
-		this._naturwissenschaftenKlassisch = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
+		this._naturwissenschaften = this.manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
+		this._naturwissenschaftenKlassisch = this.manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
 		this._anzahlDurchgehend = 0;
 		this._anzahlDurchgehendSchriftlich = 0;
 	}

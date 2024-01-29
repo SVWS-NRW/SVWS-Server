@@ -70,7 +70,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 		hatAufgabenfeldIII = false;
 
 		// Bestimme die Abiturfächer aus den Belegungsdaten
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -171,7 +171,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 	 */
 	private void pruefeMehrfacheAbiturfaecher() {
 		final @NotNull HashSet<@NotNull GostAbiturFach> abiFaecher = new HashSet<>();
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -215,7 +215,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 				return true;
 			// Fall Kurs-Wechsel bei einem Religionskurs: Prüfe, ob in einer anderen Konfession ein Kurs belegt wurde
 			if (GostFachbereich.RELIGION.hat(fach)) {
-				belegungen = manager.getFachbelegungen(GostFachbereich.RELIGION);
+				belegungen = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 				if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
 						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
 						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))

@@ -54,7 +54,7 @@ public final class Projektkurse extends GostBelegpruefung {
 		projektkursHalbjahre = new ArrayList<>();
 
 		// Bestimme die belegten Projektfächer
-		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			if (manager.zaehleBelegung(fachbelegung) <= 0)

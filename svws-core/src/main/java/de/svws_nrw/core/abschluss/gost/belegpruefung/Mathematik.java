@@ -32,7 +32,7 @@ public final class Mathematik extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		_mathematik = manager.getFachbelegung(GostFachbereich.MATHEMATIK);
+		_mathematik = manager.getRelevanteFachbelegung(GostFachbereich.MATHEMATIK);
 	}
 
 

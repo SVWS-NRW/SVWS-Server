@@ -39,8 +39,8 @@ public final class LiterarischKuenstlerisch extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		kunst_musik = manager.getFachbelegungen(GostFachbereich.KUNST_MUSIK);
-		kunst_musik_ersatz = manager.getFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
+		kunst_musik = manager.getRelevanteFachbelegungen(GostFachbereich.KUNST_MUSIK);
+		kunst_musik_ersatz = manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
 	}
 
 

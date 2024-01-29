@@ -76,6 +76,11 @@ export class AbiturdatenManager extends JavaObject {
 	private readonly mapFachbereiche : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
 
 	/**
+	 * Eine HashMap, welche den schnellen Zugriff auf die Prüfungsordnungs-relevanten Fachbelegungen über den Fachbereich ermöglicht
+	 */
+	private readonly mapFachbereicheRelevant : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
+
+	/**
 	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung
 	 */
 	private belegpruefungen : List<GostBelegpruefung> = new ArrayList();
@@ -168,18 +173,23 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private initMapFachbereiche() : void {
 		this.mapFachbereiche.clear();
-		for (const fachbereich of GostFachbereich.values())
+		this.mapFachbereicheRelevant.clear();
+		for (const fachbereich of GostFachbereich.values()) {
 			this.mapFachbereiche.put(fachbereich, new ArrayList());
+			this.mapFachbereicheRelevant.put(fachbereich, new ArrayList());
+		}
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of fachbelegungen) {
 			if (this.zaehleBelegung(fachbelegung) > 0) {
 				const fach : GostFach | null = this.getFach(fachbelegung);
 				const fachbereiche : List<GostFachbereich> = GostFachbereich.getBereiche(fach);
 				for (const fachbereich of fachbereiche) {
-					const listFachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
-					if (listFachbelegungen === null)
-						continue;
-					listFachbelegungen.add(fachbelegung);
+					let listFachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
+					if (listFachbelegungen !== null)
+						listFachbelegungen.add(fachbelegung);
+					listFachbelegungen = this.mapFachbereicheRelevant.get(fachbereich);
+					if (listFachbelegungen !== null)
+						listFachbelegungen.add(fachbelegung);
 				}
 			}
 		}
@@ -1056,7 +1066,8 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft anhand des Statistik-Kürzels, ob in dem angegebenen Halbjahr eine doppelte Fachbelegung
 	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr
-	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.
+	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen. Fächer, die
+	 * als nicht Prüfungsordnungs-relevant markiert sind werden ignoriert
 	 *
 	 * @param halbjahr   das zu prüfende Halbjahr
 	 *
@@ -1067,7 +1078,7 @@ export class AbiturdatenManager extends JavaObject {
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
-			if (fach === null)
+			if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 				continue;
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = this.getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
 			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
@@ -1158,6 +1169,28 @@ export class AbiturdatenManager extends JavaObject {
 		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
 		for (const fachbereich of fachbereiche) {
 			const fachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
+			if (fachbelegungen === null)
+				continue;
+			result.addAll(fachbelegungen);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert alle Prüfungsordnungs-relevanten Fachbelegungen der Abiturdaten, welche den angegebenen Fachbereichen
+	 * zuzuordnen sind.
+	 * Wird kein Fachbereich angegeben, so werden alle Fachbelegungen der Abiturdaten zurückgegeben.
+	 *
+	 * @param fachbereiche   die Fachbereiche
+	 *
+	 * @return eine Liste der Fachbelegungen aus den Fachbereichen
+	 */
+	public getRelevanteFachbelegungen(...fachbereiche : Array<GostFachbereich>) : List<AbiturFachbelegung> {
+		if ((fachbereiche === null) || (fachbereiche.length === 0))
+			return this.abidaten.fachbelegungen;
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		for (const fachbereich of fachbereiche) {
+			const fachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereicheRelevant.get(fachbereich);
 			if (fachbelegungen === null)
 				continue;
 			result.addAll(fachbelegungen);
@@ -1405,6 +1438,20 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die erste Prüfungsordnungs-relevante Fachbelegung für den Fachbereich - sofern eine existiert
+	 *
+	 * @param fachbereich   der Fachbereich
+	 *
+	 * @return die Fachbelegung oder null
+	 */
+	public getRelevanteFachbelegung(fachbereich : GostFachbereich) : AbiturFachbelegung | null {
+		const faecher : ArrayList<AbiturFachbelegung> | null = this.mapFachbereicheRelevant.get(fachbereich);
+		if ((faecher === null) || (faecher.isEmpty()))
+			return null;
+		return faecher.get(0);
+	}
+
+	/**
 	 * Liefert alle Fachbelegungen mit dem angegebenen Statistk-Kürzel des Faches
 	 *
 	 * @param kuerzel   das Kürzel des Faches
@@ -1472,7 +1519,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getMoeglicheKursartAlsAbiturfach(id : number) : GostKursart | null {
 		const fach : GostFach | null = this.faecherManager.get(id);
-		if (fach === null)
+		if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 			return null;
 		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(id);
 		if ((belegung === null) || (belegung.letzteKursart === null))

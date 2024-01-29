@@ -32,7 +32,7 @@ public final class Deutsch extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		_deutsch = manager.getFachbelegung(GostFachbereich.DEUTSCH);
+		_deutsch = manager.getRelevanteFachbelegung(GostFachbereich.DEUTSCH);
 	}
 
 

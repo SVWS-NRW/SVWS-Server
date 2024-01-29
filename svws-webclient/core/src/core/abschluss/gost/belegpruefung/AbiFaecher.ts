@@ -50,7 +50,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		this.hatAufgabenfeldI = false;
 		this.hatAufgabenfeldII = false;
 		this.hatAufgabenfeldIII = false;
-		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -128,7 +128,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	 */
 	private pruefeMehrfacheAbiturfaecher() : void {
 		const abiFaecher : HashSet<GostAbiturFach> = new HashSet();
-		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
@@ -169,7 +169,7 @@ export class AbiFaecher extends GostBelegpruefung {
 			if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
 				return true;
 			if (GostFachbereich.RELIGION.hat(fach)) {
-				belegungen = this.manager.getFachbelegungen(GostFachbereich.RELIGION);
+				belegungen = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 				if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
 					return true;
 			}
