@@ -2,21 +2,33 @@ package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
@@ -184,6 +196,21 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	}
 
 	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * Datenbank-DTO-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listSkts die Liste der GostSchuelerklausurtermine
+	 *
+	 * @return die Liste der zugehörigen Datenbank-DTOs
+	 */
+	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> listSkts) {
+		if (listSkts.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listSkts.stream().map(skt -> skt.id).toList(), DTOGostKlausurenSchuelerklausurenTermine.class);
+	}
+
+	/**
 	 * Löscht den angegebenen Gost-Schuelerklausurtermin
 	 *
 	 * @param idSkt   die ID des zu löschenden Schülerklausurtermins
@@ -192,6 +219,57 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	 */
 	public Response delete(final long idSkt) {
 		return super.deleteBasic(idSkt, DTOGostKlausurenSchuelerklausurenTermine.class, dtoMapper);
+	}
+
+	/**
+	 * Startet den NachschreibterminblockungAlgorithmus mit den übergebenen
+	 * GostKlausurenDataCollection-Daten und persistiert die Blockung in der Datenbank.
+	 *
+	 * @param conn          Connection
+	 * @param blockungsDaten das GostKlausurenDataCollection-Objekt
+	 *
+	 * @return das GostKlausurenDataCollection mit der persistierten Blockung
+	 *
+	 */
+	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostKlausurenDataCollection blockungsDaten) {
+		List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, blockungsDaten.schuelerklausurtermine);
+		List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
+
+		GostKlausurvorgabenManager vMan = new GostKlausurvorgabenManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks), null);
+		GostKursklausurManager kMan = new GostKursklausurManager(vMan, listKks, blockungsDaten.termine, listSks, blockungsDaten.schuelerklausurtermine);
+
+		KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
+		blockAlgo.set_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen(true);
+
+		List<Pair<GostSchuelerklausurTermin, Long>> blockung = blockAlgo.berechne(blockungsDaten.schuelerklausurtermine, blockungsDaten.termine, kMan, 1000);
+
+		Map<Long, DTOGostKlausurenSchuelerklausurenTermine> mapNachschreiber = getSchuelerklausurterminDTOsZuSchuelerklausurterminen(conn, blockungsDaten.schuelerklausurtermine).stream().collect(Collectors.toMap(skt -> skt.ID, skt -> skt));
+		Map<Long, DTOGostKlausurenTermine> mapNeueTermine = new HashMap<>();
+
+		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
+		for (Pair<GostSchuelerklausurTermin, Long> zuordnung: blockung) {
+			DTOGostKlausurenSchuelerklausurenTermine dtoSkt = DeveloperNotificationException.ifMapGetIsNull(mapNachschreiber, zuordnung.a.id);
+			if (zuordnung.b >= 0) {
+				dtoSkt.Termin_ID = zuordnung.b;
+			} else {
+				GostKlausurvorgabe v = kMan.vorgabeBySchuelerklausurTermin(zuordnung.a);
+				DTOGostKlausurenTermine neuerTermin = mapNeueTermine.get(zuordnung.b);
+				if (neuerTermin == null) {
+					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, v.abiJahrgang, GostHalbjahr.fromIDorException(v.halbjahr), v.quartal, false, true);
+					conn.transactionPersist(neuerTermin);
+					conn.transactionFlush();
+					mapNeueTermine.put(zuordnung.b, neuerTermin);
+				}
+				if (neuerTermin.Quartal != v.quartal) // mehrer Klausurquartale im neuen Termin gemischt
+					neuerTermin.Quartal = 0;
+				dtoSkt.Termin_ID = neuerTermin.ID;
+			}
+
+		}
+		conn.transactionPersistAll(mapNachschreiber.values());
+		blockungsDaten.schuelerklausurtermine = mapNachschreiber.values().stream().map(dtoMapper::apply).toList();
+		blockungsDaten.termine = mapNeueTermine.values().stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+		return blockungsDaten;
 	}
 
 

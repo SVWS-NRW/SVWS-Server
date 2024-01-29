@@ -46,6 +46,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<unknown, Rou
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,
+			blockenNachschreibklausuren: routeGostKlausurplanung.data.blockenNachschreiber,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}

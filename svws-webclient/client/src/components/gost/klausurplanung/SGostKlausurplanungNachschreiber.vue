@@ -65,6 +65,7 @@
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Nachschreibtermin</svws-ui-button>
 					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="blocken"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -148,7 +149,7 @@
 
 <script setup lang="ts">
 
-	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
+	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenDataCollection } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
@@ -156,6 +157,8 @@
 
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
+
+	const loading = ref<boolean>(false);
 
 	const props = defineProps<GostKlausurplanungNachschreiberProps>();
 
@@ -166,6 +169,15 @@
 		terminSelected.value = undefined;
 		dragData.value = data;
 	};
+
+	async function blocken() {
+		loading.value = true;
+		const data = new GostKlausurenDataCollection();
+		data.termine.addAll(termine.value);
+		data.schuelerklausurtermine.addAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value));
+		await props.blockenNachschreibklausuren(data);
+		loading.value = false;
+	}
 
 	// const klausurKonflikte = () => {
 	// 	if (dragData.value !== undefined && terminSelected.value !== undefined) {
