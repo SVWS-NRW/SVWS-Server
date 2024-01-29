@@ -72,7 +72,6 @@ onmessage = (e) => {
 		case 'getErgbnisBewertungen': {
 			 if (berechnen !== undefined) {
 				 const result = berechnen.getBlockungsbewertungen();
-				 console.log(result)
 				 postMessage({cmd: 'getErgbnisBewertungen', result});
 			 }
 			break;
@@ -84,7 +83,5 @@ onmessage = (e) => {
 			 }
 			break;
 		}
-		default:
-			break;
 	}
 };

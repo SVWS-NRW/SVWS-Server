@@ -7,8 +7,7 @@
 			wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des „Berechnung beenden“ Knopfes beendet werden.
 			Die Ergebnisse gehen dabei nicht verloren und können anschließend auf Wunsch in die Datenbank übernommen werden.
 			<svws-ui-table clickable v-model="selected" :selectable="liste.length > 0 && !running" class="z-20 relative"
-				:columns="[{ key: 'bewertung', label: 'Ergebnis' }]"
-				:items="liste" :count="liste.length > 1">
+				:columns="[{ key: 'bewertung', label: 'Ergebnis' }]" :items="liste" :count="liste.length > 1">
 				<template #header(bewertung)>
 					<svws-ui-tooltip indicator="help">
 						<span class="my-0.5">Ergebnis</span>
@@ -53,6 +52,7 @@
 
 <script setup lang="ts">
 
+	type Message = { cmd: string; faecher?: string[], blockungsdaten?: string, result?: boolean | string[] | Bewertung[]};
 	type Bewertung = {
 		wert1: number;
 		color1: string;
@@ -80,17 +80,18 @@
 	const liste = ref<Bewertung[]>([]);
 	const selected = ref<Bewertung[]>([]);
 
-	const worker = new Worker(new URL('./berechne_lokal_worker.ts', import.meta.url), {type: 'module'})
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const faecher = props.getDatenmanager().faecherManager().faecher();
-	const arr: string[] = [];
-	for (const f of faecher)
-		arr.push(GostFach.transpilerToJSON(f));
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const blockungsdaten = GostBlockungsdaten.transpilerToJSON(props.getDatenmanager().daten());
+	const worker = new Worker(new URL('./berechne_lokal_worker.ts', import.meta.url), {type: 'module'});
 
-	type Message = { cmd: string; faecher?: string[], blockungsdaten?: string, result?: boolean | string[] | Bewertung[]};
-	const message: Message = {cmd: "init", faecher: arr, blockungsdaten};
+	const faecher = computed(()=> {
+		const arr = [];
+		for (const f of props.getDatenmanager().faecherManager().faecher())
+			arr.push(GostFach.transpilerToJSON(f));
+		return arr;
+	});
+
+	const blockungsdaten = computed(() => GostBlockungsdaten.transpilerToJSON(props.getDatenmanager().daten()));
+
+	const message: Message = {cmd: "init", faecher: faecher.value, blockungsdaten: blockungsdaten.value};
 	worker.postMessage(message);
 
 	worker.onmessage = (e) => {
