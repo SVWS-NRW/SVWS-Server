@@ -3,16 +3,13 @@
 	<svws-ui-modal :show="showModal" size="big" class="hidden">
 		<template #modalTitle>Blockung lokal berechnen</template>
 		<template #modalDescription>
-			Zum Start auf „Berechnung starten“ klicken, sobald die Bedingungen erfüllt sind, mit denen die Berechnung durchgeführt wird,
-			wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des „Berechnung beenden“ Knopfes beendet werden.
-			Die Ergebnisse gehen dabei nicht verloren und können anschließend auf Wunsch in die Datenbank übernommen werden.
-			<div class="flex flex-row gap-2">
-				<svws-ui-button v-if="!running" type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
-				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ running === undefined ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
-				<svws-ui-button v-else type="primary" @click="beenden">Berechnung unterbrechen</svws-ui-button>
+			<div class="text-left pb-4">
+				Zum Start auf „Berechnung starten“ klicken, sobald die Bedingungen erfüllt sind, mit denen die Berechnung durchgeführt wird,
+				wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des „Berechnung beenden“ Knopfes beendet werden.
+				Die Ergebnisse gehen dabei nicht verloren und können anschließend auf Wunsch in die Datenbank übernommen werden.
 			</div>
-			<svws-ui-table clickable v-model="selected" :selectable="liste.length > 0 && !running" class="z-20 relative"
-				:columns="[{ key: 'bewertung', label: 'Ergebnis' }]" :items="liste" :count="liste.length > 1">
+			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative"
+				:columns="[{ key: 'bewertung', label: 'Ergebnis' }]" :items="liste" :count="!liste.isEmpty()">
 				<template #header(bewertung)>
 					<svws-ui-tooltip indicator="help">
 						<span class="my-0.5">Ergebnis</span>
@@ -32,39 +29,35 @@
 				<template #cell(bewertung)="{ rowData: row }">
 					<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 						<span class="flex gap-1 items-center ml-0.5">
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${row.wert1} Regelverletzungen`" :style="{'background-color': row.color1}">{{ row.wert1 }}</span>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${row.wert2} Wahlkonflikte`" :style="{'background-color': row.color2}">{{ row.wert2 }}</span>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`Maximale Kursdifferenz: ${row.wert3}`" :style="{'background-color': row.color3}">{{ row.wert3 }}</span>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${row.wert4} Fächer parallel`" :style="{'background-color': row.color4}">{{ row.wert4 }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 1)} Regelverletzungen`"
+								:style="{'background-color': getBewertungColor(row, 1)}">{{ getBewertungWert(row, 1) }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 2)} Wahlkonflikte`"
+								:style="{'background-color': getBewertungColor(row, 2)}">{{ getBewertungWert(row, 2) }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`Maximale Kursdifferenz: ${getBewertungWert(row, 3)}`"
+								:style="{'background-color': getBewertungColor(row, 3)}">{{ getBewertungWert(row, 3) }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 4)} Fächer parallel`"
+								:style="{'background-color': getBewertungColor(row, 4)}">{{ getBewertungWert(row, 4) }}</span>
 						</span>
 					</div>
 				</template>
-				<template #actions v-if="selected.length">
-					<svws-ui-button @click="undefined" type="transparent" :disabled="selected.length === 0">
-						<i-ri-download-2-line />
-						<span>{{ selected.size() }} {{ selected.size() === 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren</span>
-					</svws-ui-button>
-				</template>
 			</svws-ui-table>
+			<div class="flex flex-row gap-2 pt-4">
+				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ liste.isEmpty() ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
+				<svws-ui-button v-else type="primary" @click="pause">Berechnung pausieren</svws-ui-button>
+				<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
+					<i-ri-download-2-line />
+					<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren</span>
+				</svws-ui-button>
+				<svws-ui-button type="danger" @click="showModal().value = false">Abbrechen</svws-ui-button>
+			</div>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	type Bewertung = {
-		wert1: number;
-		color1: string;
-		wert2: number;
-		color2: string;
-		wert3: number;
-		color3: string;
-		wert4: number;
-		color4: string;
-	};
-
 	import { computed, ref, shallowRef, watch } from 'vue';
-	import { ArrayList, GostBlockungsergebnis, type GostBlockungsdatenManager, type List } from "@core";
+	import { ArrayList, type GostBlockungsergebnis, type GostBlockungsdatenManager, GostBlockungsergebnisManager } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
 
 	const props = defineProps<{
@@ -89,19 +82,48 @@
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
 
+	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
+
 	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
-	const running = ref(false)
 
 	async function berechne() {
 		if (workerManager.value !== undefined) {
-			running.value = true;
 			workerManager.value.start(100);
 		}
 	}
 
-	async function beenden() {
-		running.value = false;
+	async function pause() {
+		workerManager.value?.pause();
 		selected.value = [...liste.value];
+	}
+
+	async function ergebnisseUebernehmen() {
+		// TODO patch-Methode aufrufen
+	}
+
+	function getBewertungWert(ergebnis: GostBlockungsergebnis, value: number) : number {
+		switch(value) {
+			case 1: return GostBlockungsergebnisManager.getOfBewertung1WertStatic(ergebnis.bewertung);
+			case 2: return GostBlockungsergebnisManager.getOfBewertung2WertStatic(ergebnis.bewertung);
+			case 3: return GostBlockungsergebnisManager.getOfBewertung3WertStatic(ergebnis.bewertung);
+			case 4: return GostBlockungsergebnisManager.getOfBewertung4WertStatic(ergebnis.bewertung);
+		}
+		return Number.MAX_SAFE_INTEGER;
+	}
+
+	function getBewertungColor(ergebnis: GostBlockungsergebnis, value: number) : string {
+		const h = Math.round((1 - (getBewertungCode(ergebnis, value)||0)) * 120);
+		return `hsl(${h},100%,75%)`;
+	}
+
+	function getBewertungCode(ergebnis: GostBlockungsergebnis, value: number) : number {
+		switch(value) {
+			case 1: return GostBlockungsergebnisManager.getOfBewertung1FarbcodeStatic(ergebnis.bewertung);
+			case 2: return GostBlockungsergebnisManager.getOfBewertung2FarbcodeStatic(ergebnis.bewertung);
+			case 3: return GostBlockungsergebnisManager.getOfBewertung3FarbcodeStatic(ergebnis.bewertung);
+			case 4: return GostBlockungsergebnisManager.getOfBewertung4FarbcodeStatic(ergebnis.bewertung);
+		}
+		return 1;
 	}
 
 	const openModal = () => {

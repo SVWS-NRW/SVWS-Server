@@ -884,15 +884,26 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert eine Güte eines Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @param value   der Wert des Bewertungskriteriums
+	 *
+	 * @return die Güte des Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static double getOfBewertungFarbcodeStatic(final int value) {
+		return 1 - 1 / (0.25 * value + 1);
+	}
+
+	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 * 
+	 *
 	 * @param bewertung   die Bewertung vom Ergebnis
 	 *
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
-	public static int getOfBewertung1WertStatic(final GostBlockungsergebnisBewertung bewertung) {
+	public static int getOfBewertung1WertStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
 		int summe = 0;
 		summe += bewertung.anzahlKurseNichtZugeordnet;
 		summe += bewertung.regelVerletzungen.size();
@@ -915,11 +926,39 @@ public class GostBlockungsergebnisManager {
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static double getOfBewertung1FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		return getOfBewertungFarbcodeStatic(getOfBewertung1WertStatic(bewertung));
+	}
+
+	/**
+	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung1Farbcode() {
-		final double summe = getOfBewertung1Wert();
-		return 1 - 1 / (0.25 * summe + 1);
+		return getOfBewertung1FarbcodeStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 2. Bewertungskriteriums.
+	 */
+	public static int getOfBewertung2WertStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		int summe = 0;
+		summe += bewertung.anzahlSchuelerNichtZugeordnet;
+		summe += bewertung.anzahlSchuelerKollisionen;
+		return summe;
 	}
 
 	/**
@@ -930,10 +969,20 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 2. Bewertungskriteriums.
 	 */
 	public int getOfBewertung2Wert() {
-		int summe = 0;
-		summe += _ergebnis.bewertung.anzahlSchuelerNichtZugeordnet;
-		summe += _ergebnis.bewertung.anzahlSchuelerKollisionen;
-		return summe;
+		return getOfBewertung2WertStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static double getOfBewertung2FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		return getOfBewertungFarbcodeStatic(getOfBewertung2WertStatic(bewertung));
 	}
 
 	/**
@@ -944,8 +993,20 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung2Farbcode() {
-		final double summe = getOfBewertung2Wert();
-		return 1 - 1 / (0.25 * summe + 1);
+		return getOfBewertung2FarbcodeStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 3. Bewertungskriteriums.
+	 */
+	public static int getOfBewertung3WertStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		return bewertung.kursdifferenzMax;
 	}
 
 	/**
@@ -956,7 +1017,23 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 3. Bewertungskriteriums.
 	 */
 	public int getOfBewertung3Wert() {
-		return _ergebnis.bewertung.kursdifferenzMax;
+		return getOfBewertung3WertStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static double getOfBewertung3FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		int wert = getOfBewertung3WertStatic(bewertung);
+		if (wert > 0)
+			wert--; // Jede Kursdifferenz wird um 1 reduziert, außer die 0.
+		return getOfBewertungFarbcodeStatic(wert);
 	}
 
 	/**
@@ -967,10 +1044,22 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung3Farbcode() {
-		int wert = getOfBewertung3Wert();
-		if (wert > 0)
-			wert--; // Jede Kursdifferenz wird um 1 reduziert, außer die 0.
-		return 1 - 1 / (0.25 * wert + 1);
+		return getOfBewertung3FarbcodeStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 4. Bewertungskriteriums.
+	 */
+	public static int getOfBewertung4WertStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		return bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
 	/**
@@ -983,7 +1072,22 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 4. Bewertungskriteriums.
 	 */
 	public int getOfBewertung4Wert() {
-		return _ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene;
+		return getOfBewertung4WertStatic(_ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static double getOfBewertung4FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
+		return getOfBewertungFarbcodeStatic(getOfBewertung4WertStatic(bewertung));
 	}
 
 	/**
@@ -996,8 +1100,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung4Farbcode() {
-		final int wert = getOfBewertung4Wert();
-		return 1 - 1 / (0.25 * wert + 1);
+		return getOfBewertung4FarbcodeStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -3243,6 +3346,5 @@ public class GostBlockungsergebnisManager {
 		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
 		logger.modifyIndent(-4);
 	}
-
 
 }

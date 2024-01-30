@@ -1,7 +1,7 @@
 import type { List } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach } from "@core";
 import { shallowRef } from "vue";
-import type { WorkerKursblockungMessageType, WorkerKursblockungReceiveErgebnisse, WorkerKursblockungReceiveInit, WorkerKursblockungReceiveNext, WorkerKursblockungSendErgebnisse, WorkerKursblockungSendInit, WorkerKursblockungSendNext } from "./WorkerKursblockungMessageTypes";
+import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 
 /**
@@ -23,13 +23,15 @@ export class WorkerManagerKursblockung {
 	/* Gibt an, ob der Worker bereits terminiert wurde und somit keine neuen Berechnungen mehr ausgeführt werden können. */
 	protected terminated = shallowRef<boolean>(false);
 
+	/* Gibt an, ob der Berechnungsalgorithmus aktuell am Laufen ist und automatisch neue Berechnungsintervalle startet */
+	protected running = shallowRef<boolean>(false);
+
 
 	/**
 	 * Erzeugt einen neuen nicht initialisierten Worker-Thread zur Berechnung von Kursblockungsalgorithmen.
 	 */
 	public constructor() {
 		this.worker = new Worker(new URL('./WorkerKursblockung.ts', import.meta.url), { type: 'module' });
-		this.initialized.value = false;
 		this.worker.addEventListener("message", this.messageHandler);
 	}
 
@@ -59,7 +61,7 @@ export class WorkerManagerKursblockung {
 	 * @returns true, falls der Worker aktuell am Laufen ist oder nicht.
 	 */
 	public isRunning() : boolean {
-		return (this.initialized.value === true) && (this.terminated.value === false);
+		return this.running.value;
 	}
 
 	/**
@@ -73,7 +75,7 @@ export class WorkerManagerKursblockung {
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits initialisiert.")
 		if (this.terminated.value === true)
 			throw new DeveloperNotificationException("Der Worker-Thread fpr den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
-		this.sendInit(faecherListe, blockung);
+		this.requestInit(faecherListe, blockung);
 	}
 
 	/**
@@ -82,8 +84,10 @@ export class WorkerManagerKursblockung {
 	 * @param interval   die Zeit in Millisekunden für ein Berechnungsintervall
 	 */
 	public start(interval : number = 100) {
-		if (this.terminated.value === false)
-			this.sendNext(interval);
+		if (this.terminated.value === false) {
+			this.running.value = true;
+			this.requestNext(interval);
+		}
 	}
 
 	/**
@@ -100,8 +104,7 @@ export class WorkerManagerKursblockung {
 	 * anschließend mit start fortgesetzt werden.
 	 */
 	public pause() {
-		// TODO
-		throw new DeveloperNotificationException("Die Funktion wird zur Zeit noch nicht unterstützt.");
+		this.running.value = false;
 	}
 
 	/**
@@ -111,57 +114,96 @@ export class WorkerManagerKursblockung {
 	 */
 	public terminate() {
 		this.terminated.value = true;
+		this.running.value = false;
 		this.initialized.value = false;
 		this.worker.removeEventListener('message', this.messageHandler);
 		this.worker.terminate();
 	}
 
 
-
-	protected sendInit(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
+	/**
+	 * Stellt eine Anfrage an den Worker zur Initialisierung mit den angegebenen Daten.
+	 *
+	 * @param faecherListe   die Liste der Fächer für den Abiturjahrgang der Blockung
+	 * @param blockung       die Daten der Blockung
+	 */
+	protected requestInit(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
 		const faecher = new Array<string>();
 		for (const f of faecherListe)
 			faecher.push(GostFach.transpilerToJSON(f));
 		const blockungsdaten = GostBlockungsdaten.transpilerToJSON(blockung);
-		this.worker.postMessage(<WorkerKursblockungSendInit>{ cmd: "init", faecher, blockungsdaten });
+		this.worker.postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten });
 	}
 
-	protected receiveInit(data: WorkerKursblockungReceiveInit) {
-		this.initialized.value = true;
+	/**
+	 * Reagiert auf die Antwort des Workers bezüglich der Anfrage zur Initialisierung.
+	 *
+	 * @param data   die Nachricht vom Worker
+	 */
+	protected handleInitReply(data: WorkerKursblockungReplyInit) {
+		this.initialized.value = data.initialized;
 	}
 
-	protected sendNext(interval : number = 100) {
-		this.worker.postMessage(<WorkerKursblockungSendNext>{ cmd: 'next', interval });
+	/**
+	 * Beauftragt den Worker damit, für den angebenen Zeitraum weitere Blockungsergebnisse
+	 * zu berechnen.
+	 *
+	 * @param interval   der Zeitraum, der dem Worker zur Verfügung gestellt wird.
+	 */
+	protected requestNext(interval : number = 100) {
+		this.worker.postMessage(<WorkerKursblockungRequestNext>{ cmd: 'next', interval });
 	}
 
-	protected receiveNext(data: WorkerKursblockungReceiveNext) {
+	/**
+	 * Reagiert auf die Nachricht des Workers, dass ein Berechnungszeitraum beendet ist
+	 * und die Information, ob neue Blockungsergebnisse vorhanden sind oder nicht.
+	 *
+	 * @param data   die Nachricht vom Worker
+	 */
+	protected handleNextReply(data: WorkerKursblockungReplyNext) {
 		// Starte das nächste Berechnungsintervall, solange nicht abgebrochen wurde
-		if (this.initialized.value === true)
-			this.sendNext();
+		if ((this.initialized.value === true) && (this.running.value === true))
+			this.requestNext();
 		// Wenn Daten vorliegen, dann frage die neuen Ergebnisse ab
-		if (data.result === true)
+		if (data.hasUpdate === true)
 			this.queryErgebnisse();
 	}
 
+	/**
+	 * Stellt an den Worker die Anfrage nach den aktuell besten Blockungsergebnissen.
+	 */
 	protected queryErgebnisse() {
-		this.worker.postMessage(<WorkerKursblockungSendErgebnisse>{cmd: 'getErgebnisse'});
+		this.worker.postMessage(<WorkerKursblockungRequestErgebnisse>{cmd: 'getErgebnisse'});
 	}
 
-	protected receiveErgebnisse(data: WorkerKursblockungReceiveErgebnisse) {
+	/**
+	 * Reagiert auf die Antwort des Workers bezüglich der Anfrage nach den aktuell
+	 * besten Blockungsergebnissen.
+	 *
+	 * @param data   die Nachricht vom Worker mit der Liste der aktuell
+	 *               besten Blockungsergebnisse
+	 */
+	protected handleErgebnisseReply(data: WorkerKursblockungReplyErgebnisse) {
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
-		for (const result of data.result) {
+		for (const result of data.ergebnisse) {
 			const ergebnis = GostBlockungsergebnis.transpilerFromJSON(result);
 			ergebnisse.add(ergebnis);
 		}
 		this.ergebnisse.value = ergebnisse;
 	}
 
+
+	/**
+	 * Der Handler für das Abarbeiten von eingehenden Nachrichten von dem Worker an diesen Manager
+	 *
+	 * @param e   das eingehende Message-Event
+	 */
 	protected messageHandler = (e: MessageEvent<any>) => {
 		const cmd: WorkerKursblockungMessageType = e.data.cmd;
 		switch (cmd) {
-			case 'init': this.receiveInit(e.data); break;
-			case 'next': this.receiveNext(e.data); break;
-			case 'getErgebnisse': this.receiveErgebnisse(e.data); break;
+			case 'init': this.handleInitReply(e.data); break;
+			case 'next': this.handleNextReply(e.data); break;
+			case 'getErgebnisse': this.handleErgebnisseReply(e.data); break;
 			default: throw new DeveloperNotificationException(`Mesage type ${e.data.cmd} not yet implemented`);
 		}
 	}

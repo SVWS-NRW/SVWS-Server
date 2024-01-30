@@ -824,6 +824,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Güte eines Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @param value   der Wert des Bewertungskriteriums
+	 *
+	 * @return die Güte des Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertungFarbcodeStatic(value : number) : number {
+		return 1 - 1 / (0.25 * value + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 1. Bewertungskriteriums.
+	 */
+	public static getOfBewertung1WertStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		let summe : number = 0;
+		summe += bewertung.anzahlKurseNichtZugeordnet;
+		summe += bewertung.regelVerletzungen.size();
+		return summe;
+	}
+
+	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
@@ -831,10 +858,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
 	public getOfBewertung1Wert() : number {
-		let summe : number = 0;
-		summe += this._ergebnis.bewertung.anzahlKurseNichtZugeordnet;
-		summe += this._ergebnis.bewertung.regelVerletzungen.size();
-		return summe;
+		return GostBlockungsergebnisManager.getOfBewertung1WertStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertung1FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung1WertStatic(bewertung));
 	}
 
 	/**
@@ -845,8 +882,23 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung1Farbcode() : number {
-		const summe : number = this.getOfBewertung1Wert();
-		return 1 - 1 / (0.25 * summe + 1);
+		return GostBlockungsergebnisManager.getOfBewertung1FarbcodeStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 2. Bewertungskriteriums.
+	 */
+	public static getOfBewertung2WertStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		let summe : number = 0;
+		summe += bewertung.anzahlSchuelerNichtZugeordnet;
+		summe += bewertung.anzahlSchuelerKollisionen;
+		return summe;
 	}
 
 	/**
@@ -857,10 +909,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Den Wert des 2. Bewertungskriteriums.
 	 */
 	public getOfBewertung2Wert() : number {
-		let summe : number = 0;
-		summe += this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet;
-		summe += this._ergebnis.bewertung.anzahlSchuelerKollisionen;
-		return summe;
+		return GostBlockungsergebnisManager.getOfBewertung2WertStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertung2FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung2WertStatic(bewertung));
 	}
 
 	/**
@@ -871,8 +933,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung2Farbcode() : number {
-		const summe : number = this.getOfBewertung2Wert();
-		return 1 - 1 / (0.25 * summe + 1);
+		return GostBlockungsergebnisManager.getOfBewertung2FarbcodeStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 3. Bewertungskriteriums.
+	 */
+	public static getOfBewertung3WertStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		return bewertung.kursdifferenzMax;
 	}
 
 	/**
@@ -883,7 +957,23 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Den Wert des 3. Bewertungskriteriums.
 	 */
 	public getOfBewertung3Wert() : number {
-		return this._ergebnis.bewertung.kursdifferenzMax;
+		return GostBlockungsergebnisManager.getOfBewertung3WertStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertung3FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		let wert : number = GostBlockungsergebnisManager.getOfBewertung3WertStatic(bewertung);
+		if (wert > 0)
+			wert--;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert);
 	}
 
 	/**
@@ -894,10 +984,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung3Farbcode() : number {
-		let wert : number = this.getOfBewertung3Wert();
-		if (wert > 0)
-			wert--;
-		return 1 - 1 / (0.25 * wert + 1);
+		return GostBlockungsergebnisManager.getOfBewertung3FarbcodeStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 4. Bewertungskriteriums.
+	 */
+	public static getOfBewertung4WertStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		return bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
 	/**
@@ -910,7 +1012,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Den Wert des 4. Bewertungskriteriums.
 	 */
 	public getOfBewertung4Wert() : number {
-		return this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene;
+		return GostBlockungsergebnisManager.getOfBewertung4WertStatic(this._ergebnis.bewertung);
+	}
+
+	/**
+	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertung4FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung4WertStatic(bewertung));
 	}
 
 	/**
@@ -923,8 +1040,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung4Farbcode() : number {
-		const wert : number = this.getOfBewertung4Wert();
-		return 1 - 1 / (0.25 * wert + 1);
+		return GostBlockungsergebnisManager.getOfBewertung4FarbcodeStatic(this._ergebnis.bewertung);
 	}
 
 	/**
