@@ -15,10 +15,10 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterStatus" title="Status" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterStatus" title="Status" :items="schuelerListeManager().schuelerstatus.list()" :item-text="status => status.bezeichnung" class="col-span-full" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<i-ri-filter-line />
@@ -61,8 +61,8 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung} from "@core";
-	import { SchuelerStatus } from "@core";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, Schulgliederung, KursListeEintrag} from "@core";
+	import { SchuelerStatus} from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
@@ -194,19 +194,33 @@
 			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)))
 	}
 
-	function text_status(status: SchuelerStatus): string {
-		if (status instanceof Array) return "";
-		return status.bezeichnung;
+	function textKurs(kurs: KursListeEintrag): string {
+		let jahrgaenge = "";
+		let index = 0;
+		for (const j of kurs.idJahrgaenge) {
+			const jg = props.schuelerListeManager().jahrgaenge.get(j);
+			if (jg === null)
+				continue;
+			jahrgaenge += jg.kuerzel;
+			if (index < kurs.idJahrgaenge.size()-1)
+				jahrgaenge += ', ';
+			index++;
+		}
+		return `${kurs.kuerzel} (${jahrgaenge || 'JU'})`;
 	}
 
-	function text(klasse: KlassenListeEintrag|KursListeEintrag|JahrgangsListeEintrag): string {
-		return klasse.kuerzel ?? "";
-	}
-
-	const find = (items: Iterable<KlassenListeEintrag|KursListeEintrag|JahrgangsListeEintrag>, search: string) => {
+	function find(items: Iterable<JahrgangsListeEintrag | KlassenListeEintrag>, search: string) {
 		const list = [];
 		for (const i of items)
 			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				list.push(i);
+		return list;
+	}
+
+	function findKurs(items: Iterable<KursListeEintrag>, search: string) {
+		const list = [];
+		for (const i of items)
+			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}
