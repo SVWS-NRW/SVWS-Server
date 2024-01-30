@@ -952,6 +952,41 @@ public class APIGostKursplanung {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer Ergebnisse zu einer
+     * Blockung der gymnasialen Oberstufe.
+     *
+     * @param schema          das Datenbankschema, in welchem die Regel der Blockung erstellt wird
+     * @param idBlockung      die ID der Blockung
+     * @param ergebnisse      die Ergebnisse mit Pseudo-IDs, welche ignoriert werden
+     * @param request         die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/{blockungsid : \\d+}/addergebnisse")
+    @Operation(summary = "Fügt mehrere Ergebnisse zu einer Blockung der Gymnasialen Oberstufe hinzu.",
+               description = "Fügt mehrere Ergebnisse zu einer Blockung der Gymnasialen Oberstufe hinzu."
+    		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Ergebnisse wurden erfolgreich der Blockung hinzugefügt",
+    		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnis.class))))
+    @ApiResponse(responseCode = "400", description = "Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID in der Ergebnissen). ")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addGostBlockungErgebnisse(
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+            @RequestBody(description = "Die Ergebnisse", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnis.class)))) final List<GostBlockungsergebnis> ergebnisse,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).addErgebnisse(idBlockung, ergebnisse),
+    		request, ServerMode.STABLE,
+    		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Anpassen der Daten eines Blockungsergebnisses der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll

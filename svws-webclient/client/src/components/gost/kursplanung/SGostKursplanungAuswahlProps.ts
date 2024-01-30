@@ -1,4 +1,4 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt, ServerMode } from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt, ServerMode, GostBlockungsergebnis } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {
@@ -12,6 +12,7 @@ export interface GostKursplanungAuswahlProps {
 	setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
 	mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
+	addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 	apiStatus: ApiStatus;
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;

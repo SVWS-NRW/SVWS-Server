@@ -57,11 +57,12 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from 'vue';
-	import { ArrayList, type GostBlockungsergebnis, type GostBlockungsdatenManager, GostBlockungsergebnisManager } from "@core";
+	import { ArrayList, type GostBlockungsergebnis, type GostBlockungsdatenManager, GostBlockungsergebnisManager, type List } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -98,7 +99,13 @@
 	}
 
 	async function ergebnisseUebernehmen() {
-		// TODO patch-Methode aufrufen
+		if (selected.value.length === 0)
+			return;
+		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
+		for (const ergebnis of selected.value)
+			ergebnisse.add(ergebnis);
+		await props.addErgebnisse(ergebnisse);
+		showModal().value = false;
 	}
 
 	function getBewertungWert(ergebnis: GostBlockungsergebnis, value: number) : number {

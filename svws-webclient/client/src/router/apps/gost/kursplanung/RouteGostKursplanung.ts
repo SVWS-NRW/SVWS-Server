@@ -208,6 +208,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			setAuswahlBlockung: this.data.gotoBlockung,
 			auswahlBlockung: this.data.hatBlockung ? this.data.auswahlBlockung : undefined,
 			mapBlockungen: () => this.data.mapBlockungen,
+			addErgebnisse: this.data.addErgebnisse,
 			apiStatus: api.status,
 			// ... und zusätzlich für die Ergebnisauswahl
 			getDatenmanager: () => this.data.datenmanager,

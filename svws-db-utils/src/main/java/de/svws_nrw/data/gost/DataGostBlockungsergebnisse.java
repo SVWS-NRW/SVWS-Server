@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -971,5 +973,53 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     	synchronisiere(ergebnisManager, abschnitt, halbjahr);
         return Response.status(Status.NO_CONTENT).build();
     }
+
+
+    /**
+     * Fügt die Ergebnisse aus der übergebenen Liste zu der Blockung mit der angegebenen ID hinzu.
+     *
+     * @param idBlockung   die ID der Blockung
+     * @param ergebnisse   die Ergebnisse, die hinzugefügt werden sollen.
+     *
+     * @return die HTTP-Response mit der Liste der hinzugefügten Ergebnisse, welche dann die Datenbank-IDs
+     *         der persistierten Ergebnisse beinhalten.
+     */
+	public Response addErgebnisse(final long idBlockung, final List<GostBlockungsergebnis> ergebnisse) {
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+        // Prüfe, Bestimme die Blockung
+        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+        if (blockung == null)
+        	throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d konnte nicht gefunden werden".formatted(idBlockung));
+		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Blockung_Zwischenergebnisse.name());
+		long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
+        for (final GostBlockungsergebnis ergebnis : ergebnisse) {
+        	if ((ergebnis.blockungID != idBlockung) || (ergebnis.gostHalbjahr != blockung.Halbjahr.id))
+        		throw OperationError.BAD_REQUEST.exception();
+			// Schreibe das Ergebnis in die Datenbank.
+			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, idBlockung, false);
+			conn.transactionPersist(erg);
+			conn.transactionFlush();
+			// Schreibe die Kurs-Schienen und die Kurs-Schüler-Zuprdnungen in die Datenbank
+			final Set<Long> kursIDs = new HashSet<>();
+			for (final GostBlockungsergebnisSchiene schiene : ergebnis.schienen) {
+				for (final GostBlockungsergebnisKurs kurs : schiene.kurse) {
+					// Ergänze die Kurs-Schienen-Zuordnung
+					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schiene.id));
+					// Ergänze die Schülerzuordnung, falls diese nicht bereits durch den Kurs zuvor ergänzt wurde
+					if (kursIDs.contains(kurs.id))
+						continue;
+					kursIDs.add(kurs.id);
+					for (final long idSchueler : kurs.schueler)
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, kurs.id, idSchueler));
+				}
+			}
+			conn.transactionFlush();
+			// Ergänze die ID bei den Ergebnissen
+			ergebnis.id = ergebnisID;
+			ergebnisID++;
+        }
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
+	}
 
 }

@@ -16,7 +16,7 @@
 		</svws-ui-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
-			:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
+			:get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
 			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :mode="mode">
 			<template #blockungAuswahlActions>

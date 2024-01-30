@@ -1,7 +1,7 @@
 
 import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnis } from "@core";
 import type { GostBlockungsdaten } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
 
@@ -642,6 +642,24 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 		const ergebnis = this.ergebnismanager.getErgebnis();
 		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
+		this.commit();
+	});
+
+	addErgebnisse = api.call(async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
+		if ((ergebnisse.isEmpty()) || (!this.hatBlockung))
+			return;
+		const idBlockung = this.datenmanager.daten().id;
+		const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
+		for (const ergebnis of ergebnisseMitIDs) {
+			const ergebnisListenEintrag = new GostBlockungsergebnisListeneintrag();
+			ergebnisListenEintrag.id = ergebnis.id;
+			ergebnisListenEintrag.blockungID = ergebnis.blockungID;
+			ergebnisListenEintrag.name = ergebnis.name;
+			ergebnisListenEintrag.gostHalbjahr = ergebnis.gostHalbjahr;
+			ergebnisListenEintrag.istAktiv = ergebnis.istAktiv;
+			ergebnisListenEintrag.bewertung = ergebnis.bewertung;
+			this.datenmanager.ergebnisAdd(ergebnisListenEintrag);
+		}
 		this.commit();
 	});
 
