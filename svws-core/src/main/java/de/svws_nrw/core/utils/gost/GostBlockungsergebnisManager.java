@@ -887,14 +887,27 @@ public class GostBlockungsergebnisManager {
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * 
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Den Wert des 1. Bewertungskriteriums.
+	 */
+	public static int getOfBewertung1WertStatic(final GostBlockungsergebnisBewertung bewertung) {
+		int summe = 0;
+		summe += bewertung.anzahlKurseNichtZugeordnet;
+		summe += bewertung.regelVerletzungen.size();
+		return summe;
+	}
+
+	/**
+	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
 	public int getOfBewertung1Wert() {
-		int summe = 0;
-		summe += _ergebnis.bewertung.anzahlKurseNichtZugeordnet;
-		summe += _ergebnis.bewertung.regelVerletzungen.size();
-		return summe;
+		return getOfBewertung1WertStatic(_ergebnis.bewertung);
 	}
 
 	/**

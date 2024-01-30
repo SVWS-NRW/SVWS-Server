@@ -42,7 +42,7 @@
 				<template #actions v-if="selected.length">
 					<svws-ui-button @click="undefined" type="transparent" :disabled="selected.length === 0">
 						<i-ri-download-2-line />
-						<span>{{ selected.length }} {{ selected.length > 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren</span>
+						<span>{{ selected.size() }} {{ selected.size() === 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren</span>
 					</svws-ui-button>
 				</template>
 			</svws-ui-table>
@@ -63,31 +63,45 @@
 		color4: string;
 	};
 
-	import { computed, ref } from 'vue';
-	import type { GostBlockungsdatenManager } from "@core";
-	import type { ErgebnisWorker } from '~/router/apps/gost/kursplanung/ErgbnisWorker';
+	import { computed, ref, shallowRef, watch } from 'vue';
+	import { ArrayList, GostBlockungsergebnis, type GostBlockungsdatenManager, type List } from "@core";
+	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		ergebnisWorker: ErgebnisWorker;
 	}>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const selected = ref<Bewertung[]>([]);
+	const workerManager = shallowRef<WorkerManagerKursblockung | undefined>(undefined);
 
-	const liste = computed(()=> props.ergebnisWorker.liste.value);
-	const running = computed(()=> props.ergebnisWorker.running.value)
+	watch(_showModal, neu => {
+		if (workerManager.value !== undefined) {
+			workerManager.value.terminate();
+			workerManager.value = undefined;
+		}
+		if (neu === true) {
+			workerManager.value = new WorkerManagerKursblockung();
+			workerManager.value.init(props.getDatenmanager().faecherManager().faecher(), props.getDatenmanager().daten());
+		}
+	});
+
+	const selected = ref<GostBlockungsergebnis[]>([]);
+
+	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
+	const running = ref(false)
 
 	async function berechne() {
-		props.ergebnisWorker.running.value = true;
-		props.ergebnisWorker.next(100);
+		if (workerManager.value !== undefined) {
+			running.value = true;
+			workerManager.value.start(100);
+		}
 	}
 
 	async function beenden() {
-		props.ergebnisWorker.running.value = false;
-		selected.value = liste.value;
+		running.value = false;
+		selected.value = [...liste.value];
 	}
 
 	const openModal = () => {

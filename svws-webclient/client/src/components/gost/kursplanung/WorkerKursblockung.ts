@@ -21,7 +21,7 @@ class Berechnen {
 
 	public getBlockungsergebnisse() {
 		const manager = this.algo.getBlockungsergebnisse();
-		const arr = [];
+		const arr = new Array<string>();
 		for (const m of manager)
 			arr.push(GostBlockungsergebnis.transpilerToJSON(m.getErgebnis()));
 		return arr;
@@ -68,10 +68,10 @@ onmessage = (e) => {
 			}
 			break;
 		}
-		case 'getErgbnisBewertungen': {
+		case 'getErgebnisBewertungen': {
 			 if (berechnen !== undefined) {
 				 const result = berechnen.getBlockungsbewertungen();
-				 postMessage({cmd: 'getErgbnisBewertungen', result});
+				 postMessage({cmd: 'getErgebnisBewertungen', result});
 			 }
 			break;
 		}

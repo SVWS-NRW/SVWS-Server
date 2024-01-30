@@ -12,7 +12,6 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import { ErgebnisWorker } from "./ErgbnisWorker";
 
 interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -36,8 +35,6 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	// ... auch abhängig von dem ausgewählten Schüler
 	auswahlSchueler: SchuelerListeEintrag | undefined;
-	// WebWorker zum lokalen Berechnen von GostBlockungsergebnisListeneintrag
-	ergebnisWorker: ErgebnisWorker | undefined;
 }
 
 const defaultState: RouteStateGostKursplanung = {
@@ -56,7 +53,6 @@ const defaultState: RouteStateGostKursplanung = {
 	ergebnismanager: undefined,
 	schuelerFilter: undefined,
 	auswahlSchueler: undefined,
-	ergebnisWorker: undefined,
 };
 
 
@@ -145,12 +141,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get halbjahr() : GostHalbjahr {
 		return this._state.value.halbjahr;
-	}
-
-	public get ergebnisWorker() : ErgebnisWorker {
-		if (this._state.value.ergebnisWorker === undefined)
-			throw new DeveloperNotificationException("Der Ergebnisworker wurde noch nicht erstellt");
-		return this._state.value.ergebnisWorker;
 	}
 
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
@@ -257,12 +247,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				ergebnis = ergebnisse.get(0);
 		}
 		await this.setAuswahlErgebnis(ergebnis);
-		this.setBlockungWorker();
-	}
-
-	public setBlockungWorker =() => {
-		const ergebnisWorker = new ErgebnisWorker(this.faecherManager, this.datenmanager);
-		this.setPatchedState({ergebnisWorker});
 	}
 
 	public get datenmanager(): GostBlockungsdatenManager {

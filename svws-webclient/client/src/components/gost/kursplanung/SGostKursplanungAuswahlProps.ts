@@ -1,6 +1,5 @@
 import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt, ServerMode } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { ErgebnisWorker } from "~/router/apps/gost/kursplanung/ErgbnisWorker";
 
 export interface GostKursplanungAuswahlProps {
 	setHalbjahr: (value: GostHalbjahr) => Promise<void>;
@@ -25,5 +24,4 @@ export interface GostKursplanungAuswahlProps {
 	restoreBlockung: () => Promise<void>;
 	aktAbschnitt: Schuljahresabschnitt;
 	mode: ServerMode;
-	ergebnisWorker: ErgebnisWorker;
 }

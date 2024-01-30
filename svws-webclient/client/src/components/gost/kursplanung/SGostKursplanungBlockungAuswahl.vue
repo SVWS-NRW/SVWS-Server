@@ -25,7 +25,7 @@
 					</div>
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
-							<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung_lokal" :get-datenmanager="getDatenmanager" v-slot="{ openModal }" :ergebnis-worker="ergebnisWorker">
+							<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung_lokal" :get-datenmanager="getDatenmanager" v-slot="{ openModal }">
 								<svws-ui-button type="transparent" @click="openModal()" title="Ergebnisse lokal im Browser berechnen" :disabled="apiStatus.pending" class="text-black dark:text-white"> Lokal Berechnen </svws-ui-button>
 							</s-gost-kursplanung-modal-blockung-lokal-berechnen>
 							<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> Berechnen </svws-ui-button>
@@ -71,7 +71,6 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List} from "@core";
-	import type { ErgebnisWorker } from "~/router/apps/gost/kursplanung/ErgbnisWorker";
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import { ServerMode } from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
@@ -95,7 +94,6 @@
 		restoreBlockung: () => Promise<void>;
 		istBlockungPersistiert: boolean;
 		mode: ServerMode;
-		ergebnisWorker: ErgebnisWorker;
 	}>();
 
 	const edit_blockungsname = ref<boolean>(false);
