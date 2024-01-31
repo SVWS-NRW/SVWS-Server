@@ -1,5 +1,5 @@
 import { shallowRef } from "vue";
-import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, Comparator, JavaInteger, GostBlockungsergebnisManager } from "@core";
+import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator } from "@core";
 import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
 	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
@@ -307,21 +307,7 @@ export class WorkerManagerKursblockung {
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
 		for (let i = 0; i < this.worker.length; i++)
 			ergebnisse.addAll(this.workerErgebnisse[i]);
-		ergebnisse.sort({ compare(a : GostBlockungsergebnis, b : GostBlockungsergebnis) : number {
-			let val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung1WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung1WertStatic(b.bewertung));
-			if (val !== 0)
-				return val;
-			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung2WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung2WertStatic(b.bewertung));
-			if (val !== 0)
-				return val;
-			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung3WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung3WertStatic(b.bewertung));
-			if (val !== 0)
-				return val;
-			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung4WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung4WertStatic(b.bewertung));
-			if (val !== 0)
-				return val;
-			return 0;
-		} });
+		ergebnisse.sort(new GostBlockungsergebnisComparator());
 		for (let i = ergebnisse.size() - 1; i >= this.maxErgebnisse.value; i--)
 			ergebnisse.removeElementAt(i);
 		this.ergebnisse.value = ergebnisse;
