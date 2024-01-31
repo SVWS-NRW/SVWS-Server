@@ -518,6 +518,7 @@ export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenMan
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
+export { GostBlockungsergebnisBewertungComparator } from './core/utils/gost/GostBlockungsergebnisBewertungComparator';
 export { GostBlockungsergebnisComparator } from './core/utils/gost/GostBlockungsergebnisComparator';
 export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungsergebnisManager';
 export { GostFachUtils } from './core/utils/gost/GostFachUtils';
