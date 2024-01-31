@@ -2,17 +2,17 @@ package de.svws_nrw.core.utils.gost;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Klasse dient dazu Objekte des Typs {@link GostBlockungsergebnis} zu sortieren.
+ * Dieser Klasse dient dazu Objekte des Typs {@link GostBlockungsergebnisListeneintrag} zu sortieren.
  */
-public final class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnis> {
+public final class GostBlockungsergebnisListeneintragComparator implements Comparator<@NotNull GostBlockungsergebnisListeneintrag> {
 
 	private final @NotNull GostBlockungsergebnisBewertungComparator bewertungComparator;
 	/**
-	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnis}.
+	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}.
 	 * Zwei Elemente werden nach folgender Priorität sortiert:
 	 * <br>(1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse
 	 * <br>(2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser)
@@ -20,12 +20,12 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 	 * <br>(4) Summe gleicher Facharten in der selben Schiene (weniger besser)
 	 * <br>(5) ID von GostBlockungsergebnisListeneintrag (weniger besser)
 	 */
-	public GostBlockungsergebnisComparator() {
+	public GostBlockungsergebnisListeneintragComparator() {
 		bewertungComparator = new GostBlockungsergebnisBewertungComparator();
 	}
 
 	@Override
-	public int compare(final @NotNull GostBlockungsergebnis o1, final @NotNull GostBlockungsergebnis o2) {
+	public int compare(final @NotNull GostBlockungsergebnisListeneintrag o1, final @NotNull GostBlockungsergebnisListeneintrag o2) {
 		// Bewertungskriterium 1-4:
 		final int cmp = bewertungComparator.compare(o1.bewertung, o2.bewertung);
 		if (cmp != 0)

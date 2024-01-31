@@ -1,15 +1,15 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisBewertungComparator } from '../../../core/utils/gost/GostBlockungsergebnisBewertungComparator';
+import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import type { Comparator } from '../../../java/util/Comparator';
 
-export class GostBlockungsergebnisComparator extends JavaObject implements Comparator<GostBlockungsergebnis> {
+export class GostBlockungsergebnisListeneintragComparator extends JavaObject implements Comparator<GostBlockungsergebnisListeneintrag> {
 
 	private readonly bewertungComparator : GostBlockungsergebnisBewertungComparator;
 
 
 	/**
-	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnis}.
+	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}.
 	 * Zwei Elemente werden nach folgender Priorität sortiert:
 	 * <br>(1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse
 	 * <br>(2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser)
@@ -22,7 +22,7 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 		this.bewertungComparator = new GostBlockungsergebnisBewertungComparator();
 	}
 
-	public compare(o1 : GostBlockungsergebnis, o2 : GostBlockungsergebnis) : number {
+	public compare(o1 : GostBlockungsergebnisListeneintrag, o2 : GostBlockungsergebnisListeneintrag) : number {
 		const cmp : number = this.bewertungComparator.compare(o1.bewertung, o2.bewertung);
 		if (cmp !== 0)
 			return cmp;
@@ -34,15 +34,15 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator';
+		return 'de.svws_nrw.core.utils.gost.GostBlockungsergebnisListeneintragComparator';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator', 'java.util.Comparator'].includes(name);
+		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisListeneintragComparator', 'java.util.Comparator'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_utils_gost_GostBlockungsergebnisComparator(obj : unknown) : GostBlockungsergebnisComparator {
-	return obj as GostBlockungsergebnisComparator;
+export function cast_de_svws_nrw_core_utils_gost_GostBlockungsergebnisListeneintragComparator(obj : unknown) : GostBlockungsergebnisListeneintragComparator {
+	return obj as GostBlockungsergebnisListeneintragComparator;
 }

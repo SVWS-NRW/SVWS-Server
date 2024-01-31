@@ -26,11 +26,11 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
+import { GostBlockungsergebnisListeneintragComparator } from '../../../core/utils/gost/GostBlockungsergebnisListeneintragComparator';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 
 export class GostBlockungsdatenManager extends JavaObject {
@@ -96,7 +96,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 */
-	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisComparator();
+	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisListeneintragComparator();
 
 	/**
 	 * Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER)
