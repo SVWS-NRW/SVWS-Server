@@ -22,8 +22,22 @@ public final class GostBlockungsergebnisBewertungComparator implements Comparato
 		// empty constructor
 	}
 
-	@Override
-	public int compare(final @NotNull GostBlockungsergebnisBewertung o1, final @NotNull GostBlockungsergebnisBewertung o2) {
+
+	/**
+	 * Vergleicht zwei Objekte des Typs {@link GostBlockungsergebnisBewertung}.
+	 *
+	 * Zwei Elemente werden nach folgender Priorität sortiert:
+	 * <br>(1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse
+	 * <br>(2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser)
+	 * <br>(3) Array an Kursdifferenzen-Histogramm (kleinste größte Kursdifferenz besser)
+	 * <br>(4) Summe gleicher Facharten in der selben Schiene (weniger besser) <br>
+	 *
+	 * @param o1   die erste Bewertung
+	 * @param o2   die zweite Bewertung
+	 *
+	 * @return negativ bei kleiner, 0 bei gleich und positiv bei größer
+	 */
+	public static int compareBewertungen(final @NotNull GostBlockungsergebnisBewertung o1, final @NotNull GostBlockungsergebnisBewertung o2) {
 
 		// Bewertungskriterium 1: Je weniger nicht erfüllter Regeln, desto besser.
 		final int o1Wert1 = o1.regelVerletzungen.size() + o1.anzahlKurseNichtZugeordnet;
@@ -59,4 +73,10 @@ public final class GostBlockungsergebnisBewertungComparator implements Comparato
 		// Identische Bewertung.
 		return 0;
 	}
+
+	@Override
+	public int compare(final @NotNull GostBlockungsergebnisBewertung o1, final @NotNull GostBlockungsergebnisBewertung o2) {
+		return compareBewertungen(o1, o2);
+	}
+
 }

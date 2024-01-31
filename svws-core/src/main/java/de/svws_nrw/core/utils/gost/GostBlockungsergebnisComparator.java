@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnis> {
 
-	private final @NotNull GostBlockungsergebnisBewertungComparator bewertungComparator;
 	/**
 	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnis}.
 	 * Zwei Elemente werden nach folgender Priorität sortiert:
@@ -21,13 +20,13 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 	 * <br>(5) ID von GostBlockungsergebnisListeneintrag (weniger besser)
 	 */
 	public GostBlockungsergebnisComparator() {
-		bewertungComparator = new GostBlockungsergebnisBewertungComparator();
+		// empty constructor
 	}
 
 	@Override
 	public int compare(final @NotNull GostBlockungsergebnis o1, final @NotNull GostBlockungsergebnis o2) {
 		// Bewertungskriterium 1-4:
-		final int cmp = bewertungComparator.compare(o1.bewertung, o2.bewertung);
+		final int cmp = GostBlockungsergebnisBewertungComparator.compareBewertungen(o1.bewertung, o2.bewertung);
 		if (cmp != 0)
 			return cmp;
 
@@ -37,4 +36,5 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 
 		return 0; // Sollte niemals, da die IDs niemals gleich sind.
 	}
+
 }
