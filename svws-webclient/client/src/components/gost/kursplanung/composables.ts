@@ -11,7 +11,7 @@ export function getKursFromId(kurse: Iterable<GostBlockungKurs>, kursId: number)
 }
 
 export function getKursbezeichnung(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>) {
-	const kuerzel = mapFaecher.get(kurs.fach_id)?.kuerzel;
+	const kuerzel = mapFaecher.get(kurs.fach_id)?.kuerzelAnzeige;
 	const kursart = kurs.kursart > 0 ? GostKursart.fromID(kurs.kursart) : 'kursart-fehlt';
 	const suffix = kurs.suffix ? "-" + kurs.suffix : "";
 	return `${kuerzel}-${kursart}${kurs.nummer}${suffix}`

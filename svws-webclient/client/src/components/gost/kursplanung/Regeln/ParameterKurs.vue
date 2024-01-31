@@ -22,7 +22,7 @@
 	});
 
 	function text(i: GostBlockungKurs) {
-		return `${props.mapFaecher.get(i.fach_id)?.kuerzel}-${i.kursart > 0 ? GostKursart.fromID(i.kursart) : 'kursart-fehlt' }${i.nummer}${i.suffix ? "-"+i.suffix:""}`
+		return `${props.mapFaecher.get(i.fach_id)?.kuerzelAnzeige}-${i.kursart > 0 ? GostKursart.fromID(i.kursart) : 'kursart-fehlt' }${i.nummer}${i.suffix ? "-"+i.suffix:""}`
 	}
 
 </script>
