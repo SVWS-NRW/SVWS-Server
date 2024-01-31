@@ -8,6 +8,13 @@
 				wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des Berechnung pausieren“ Knopfes unterbrochen werden.
 				Die Ergebnisse können anschließend auf Wunsch in die Datenbank importiert werden. Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
 			</div>
+			<div v-if="workerManager !== undefined" class="text-left pb-4 flex flex-row">
+				Anzahl der parallelen Berechnungen:
+				<div class="pl-4 pr-2"><svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1"> <i-ri-subtract-line /> </svws-ui-button></div>
+				{{ workerManager.threads }}
+				<div class="pl-2"><svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> <i-ri-add-line /> </svws-ui-button></div>
+				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
+			</div>
 			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative"
 				:columns="cols" :items="liste" :count="!liste.isEmpty()">
 				<template #header(bewertung)>
@@ -52,7 +59,7 @@
 				</template>
 			</svws-ui-table>
 			<div class="flex flex-row gap-2 pt-4">
-				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ liste.isEmpty() ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
+				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager === undefined || !workerManager?.isInitialized()) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
 				<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
 				<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
 					<i-ri-download-2-line />
@@ -93,10 +100,8 @@
 			workerManager.value = undefined;
 			selected.value = [];
 		}
-		if (neu === true) {
-			workerManager.value = new WorkerManagerKursblockung();
-			workerManager.value.init(props.getDatenmanager().faecherManager().faecher(), props.getDatenmanager().daten());
-		}
+		if (neu === true)
+			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager().faecherManager().faecher(), props.getDatenmanager().daten());
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
@@ -105,9 +110,30 @@
 
 	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
 
+	function addWorker() {
+		if ((workerManager.value === undefined) || (workerManager.value.threads === WorkerManagerKursblockung.MAX_WORKER))
+			return;
+		workerManager.value.threads = workerManager.value.threads + 1;
+	}
+
+	function removeWorker() {
+		if ((workerManager.value === undefined) || (workerManager.value.threads === 1))
+			return;
+		workerManager.value.threads = workerManager.value.threads - 1;
+	}
+
+	function setWorkerMaximum() {
+		if (workerManager.value === undefined)
+			return;
+		workerManager.value.threads = WorkerManagerKursblockung.MAX_WORKER;
+	}
+
 	async function berechne() {
 		if (workerManager.value !== undefined) {
-			workerManager.value.start(100);
+			if (!workerManager.value.isInitialized())
+				workerManager.value.init();
+			workerManager.value.interval = 100;
+			workerManager.value.start();
 		}
 	}
 

@@ -1,7 +1,7 @@
-import type { List } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach } from "@core";
 import { shallowRef } from "vue";
-import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
+import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, Comparator, JavaInteger, GostBlockungsergebnisManager } from "@core";
+import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
+	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 
 /**
@@ -11,14 +11,38 @@ import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, 
  */
 export class WorkerManagerKursblockung {
 
+	/** Die maximale Anzahl der Worker-Threads zurück, die von diesem Manager genutzt werden können. */
+	public static readonly MAX_WORKER = (navigator.hardwareConcurrency ?? 3) - 1; // reserviere einen Thread für die GUI
+
+	/** Die Liste der Fächer des Abiturjahrgangs */
+	protected faecherListe: List<GostFach>;
+
+	/** Die Daten der Kursblockung */
+	protected blockung: GostBlockungsdaten;
+
+	/** Die maximale Anzahl von Ergebnissen, die in der Liste der besten Ergebnisse gespeichert werden */
+	protected maxErgebnisse = shallowRef<number>(10);
+
 	/** Die aktuell besten Ergebnisse, die der Blockunsalgorithmus soweit berechnet hat */
 	protected ergebnisse = shallowRef<List<GostBlockungsergebnis>>(new ArrayList());
 
-	/* Die Refernz auf den Worker-Thread */
-	protected worker : Worker;
+	/* Die Referenz auf die Worker-Threads */
+	protected worker : Array<Worker> = new Array(WorkerManagerKursblockung.MAX_WORKER);
+
+	/** Die aktuell besten Ergebnisse der einzelnen Worker-Threads */
+	protected workerErgebnisse : Array<List<GostBlockungsergebnis>> = new Array(WorkerManagerKursblockung.MAX_WORKER).fill(new ArrayList<GostBlockungsergebnis>());
+
+	/** Gibt an, ob die einzelnen Worker initialisiert sind oder nicht */
+	protected workerInitialized : Array<boolean> = new Array(WorkerManagerKursblockung.MAX_WORKER).fill(false);
 
 	/* Gibt an, ob der Berechnungsalgorithmus bereits mit Daten initialisiert wurde */
 	protected initialized = shallowRef<boolean>(false);
+
+	/** Die Anzahl der genutzten Worker-Threads */
+	protected usedWorkerThreads = shallowRef<number>(0);
+
+	/** Das Intervall in Millisekunden, bei welchem die Threads kurzzeitig unterbrochen werden und mit dem Manager kommunizieren */
+	protected _interval = shallowRef<number>(100);
 
 	/* Gibt an, ob der Worker bereits terminiert wurde und somit keine neuen Berechnungen mehr ausgeführt werden können. */
 	protected terminated = shallowRef<boolean>(false);
@@ -28,11 +52,66 @@ export class WorkerManagerKursblockung {
 
 
 	/**
-	 * Erzeugt einen neuen nicht initialisierten Worker-Thread zur Berechnung von Kursblockungsalgorithmen.
+	 * Erzeugt einen neuen nicht initialisierten Worker-Manager zur Berechnung von Kursblockungsergebnissen.
+	 *
+	 * @param faecherListe   die Liste der Fächer des Abiturjahrgangs
+	 * @param blockung       die Daten der Kursblockung
 	 */
-	public constructor() {
-		this.worker = new Worker(new URL('./WorkerKursblockung.ts', import.meta.url), { type: 'module' });
-		this.worker.addEventListener("message", this.messageHandler);
+	public constructor(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
+		this.faecherListe = faecherListe;
+		this.blockung = blockung;
+		this.usedWorkerThreads.value = 1;
+	}
+
+	/**
+	 * Gibt das Intervall in Millisekunden zurück, bei welchem die Worker-Threads kurzzeitig unterbrochen werden
+	 * und mit dem Manager kommunizieren.
+	 */
+	public get interval() : number {
+		return this._interval.value;
+	}
+
+	/**
+	 * Setzt das Intervall in Millisekunden, bei welchem die Worker-Threads kurzzeitig unterbrochen werden
+	 * und mit dem Manager kommunizieren.
+	 */
+	public set interval(value : number) {
+		if (value < 100)
+			throw new DeveloperNotificationException("Das Intervall sollte mindestens 100 Millisekunden betragen.");
+		if (value > 5000)
+			throw new DeveloperNotificationException("Das Intervall sollte nicht zu groß gewählt werden (mehr als 5 Sekunden ist definitiv sehr groß und sorgt für eine kaum reagierendes UI.");
+		this._interval.value = value;
+	}
+
+	/**
+	 * Gibt die Anzahl der zu nutzenden Worker-Threads zurück.
+	 */
+	public get threads() : number {
+		return this.usedWorkerThreads.value;
+	}
+
+	/**
+	 * Setzt die Anzahl der zu nutzenden Worker-Threads.
+	 */
+	public set threads(value : number) {
+		if (value < 1)
+			throw new DeveloperNotificationException("Die Anzahl der genutzten Worker-Thread darf nicht kleiner als 1 sein.");
+		if (value > WorkerManagerKursblockung.MAX_WORKER)
+			throw new DeveloperNotificationException("Die Anzahl der genutzten Worker-Threads darf WorkerManagerKursblockung.MAX_WORKER nicht überschreiten.");
+		const oldValue = this.usedWorkerThreads.value;
+		if (oldValue === value)
+			return;
+		this.usedWorkerThreads.value = value;
+		// Prüfe zunächst, ob bereits ein Worker initialisiert wurde. Ist dies der Fall, so müssen ggf. neue Worker initialisiert und ggf. gestartet werden
+		if ((this.workerInitialized[0] === true) && (value > oldValue)) {
+			// Initialisiere oder starte zusätzlich genutzte Worker-Threads (nicht mehr genutzte Threads laufen automatisch aus)
+			for (let i = oldValue; i < value; i++) {
+				if (this.workerInitialized[i])
+					this.requestNext(i);
+				else
+					this.initWorker(i);
+			}
+		}
 	}
 
 	/**
@@ -47,7 +126,7 @@ export class WorkerManagerKursblockung {
 
 	/**
 	 * Gibt zurück, ob der Worker-Thread mit dem Kursblockungsalgorithmus terminiert wurde und
-	 * keine weiteren Berehcnungen mehr ausgeführt werden können.
+	 * keine weiteren Berechnungen mehr ausgeführt werden können.
 	 *
 	 * @returns true, falls er terminiert wurde und ansonsten false
 	 */
@@ -65,28 +144,36 @@ export class WorkerManagerKursblockung {
 	}
 
 	/**
-	 * initialisiert der Kursblockungsalgorithmus mit den übergebenen Blockungsdaten
+	 * Initialisiert den Worker mit dem angegebenen Index.
 	 *
-	 * @param faecherListe   die Lister der Fächer des Abiturjahrgangs
-	 * @param blockung       die Daten zur Berechnung der Kursblockung
+	 * @param index   der Index des Workers
 	 */
-	public init(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
+	protected initWorker(index : number) {
+		this.worker[index] = new Worker(new URL('./WorkerKursblockung.ts', import.meta.url), { type: 'module' });
+		this.worker[index].onmessage = (ev) => this.messageHandler(index, ev);
+		this.requestInit(index, this.faecherListe, this.blockung);
+	}
+
+	/**
+	 * Initialisiert den Kursblockungsalgorithmus mit den Blockungsdaten
+	 */
+	public init() {
 		if (this.initialized.value === true)
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits initialisiert.")
 		if (this.terminated.value === true)
 			throw new DeveloperNotificationException("Der Worker-Thread fpr den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
-		this.requestInit(faecherListe, blockung);
+		for (let i = 0; i < this.threads; i++)
+			this.initWorker(i);
 	}
 
 	/**
-	 * Startet die Berechnung mit dem angegebenen interval
-	 *
-	 * @param interval   die Zeit in Millisekunden für ein Berechnungsintervall
+	 * Startet die Berechnung.
 	 */
-	public start(interval : number = 100) {
+	public start() {
 		if (this.terminated.value === false) {
 			this.running.value = true;
-			this.requestNext(interval);
+			for (let i = 0; i < this.threads; i++)
+				this.requestNext(i);
 		}
 	}
 
@@ -116,79 +203,127 @@ export class WorkerManagerKursblockung {
 		this.terminated.value = true;
 		this.running.value = false;
 		this.initialized.value = false;
-		this.worker.removeEventListener('message', this.messageHandler);
-		this.worker.terminate();
+		for (let i = 0; i < this.worker.length; i++) {
+			if (this.worker[i] !== undefined) {
+				this.worker[i].onmessage = null;
+				this.worker[i].terminate();
+			}
+		}
+	}
+
+
+	/**
+	 * Prüft, ob alle genutzten Worker initialisiert wurden.
+	 *
+	 * @returns true, falls alle genutzten Worker initialisiert wurden, und ansonsten false
+	 */
+	protected checkAllUsedWorkerInitialized() : boolean {
+		for (let i = 0; i < this.threads; i++)
+			if (!this.workerInitialized[i])
+				return false;
+		return true;
 	}
 
 
 	/**
 	 * Stellt eine Anfrage an den Worker zur Initialisierung mit den angegebenen Daten.
 	 *
+	 * @param index          der Index des Workers
 	 * @param faecherListe   die Liste der Fächer für den Abiturjahrgang der Blockung
 	 * @param blockung       die Daten der Blockung
 	 */
-	protected requestInit(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
+	protected requestInit(index : number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
 		const faecher = new Array<string>();
 		for (const f of faecherListe)
 			faecher.push(GostFach.transpilerToJSON(f));
 		const blockungsdaten = GostBlockungsdaten.transpilerToJSON(blockung);
-		this.worker.postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten });
+		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten });
 	}
 
 	/**
 	 * Reagiert auf die Antwort des Workers bezüglich der Anfrage zur Initialisierung.
 	 *
-	 * @param data   die Nachricht vom Worker
+	 * @param index   der Index des Workers
+	 * @param data    die Nachricht vom Worker
 	 */
-	protected handleInitReply(data: WorkerKursblockungReplyInit) {
-		this.initialized.value = data.initialized;
+	protected handleInitReply(index : number, data: WorkerKursblockungReplyInit) {
+		this.workerInitialized[index] = data.initialized;
+		this.initialized.value = this.checkAllUsedWorkerInitialized();
+		// Starte ggf. den neuen Thread
+		if (this.isRunning())
+			this.requestNext(index);
 	}
 
 	/**
 	 * Beauftragt den Worker damit, für den angebenen Zeitraum weitere Blockungsergebnisse
 	 * zu berechnen.
 	 *
-	 * @param interval   der Zeitraum, der dem Worker zur Verfügung gestellt wird.
+	 * @param index      der Index des Workers
 	 */
-	protected requestNext(interval : number = 100) {
-		this.worker.postMessage(<WorkerKursblockungRequestNext>{ cmd: 'next', interval });
+	protected requestNext(index : number) {
+		this.worker[index].postMessage(<WorkerKursblockungRequestNext>{ cmd: 'next', interval: this._interval.value });
 	}
 
 	/**
 	 * Reagiert auf die Nachricht des Workers, dass ein Berechnungszeitraum beendet ist
 	 * und die Information, ob neue Blockungsergebnisse vorhanden sind oder nicht.
 	 *
+	 * @param index    der Index des Workers
 	 * @param data   die Nachricht vom Worker
 	 */
-	protected handleNextReply(data: WorkerKursblockungReplyNext) {
+	protected handleNextReply(index : number, data: WorkerKursblockungReplyNext) {
 		// Starte das nächste Berechnungsintervall, solange nicht abgebrochen wurde
-		if ((this.initialized.value === true) && (this.running.value === true))
-			this.requestNext();
+		if ((this.workerInitialized[index] === true) && (this.running.value === true) && (index < this.threads))
+			this.requestNext(index);
 		// Wenn Daten vorliegen, dann frage die neuen Ergebnisse ab
 		if (data.hasUpdate === true)
-			this.queryErgebnisse();
+			this.queryErgebnisse(index);
 	}
 
 	/**
 	 * Stellt an den Worker die Anfrage nach den aktuell besten Blockungsergebnissen.
+	 *
+	 * @param index   der Index des Workers
 	 */
-	protected queryErgebnisse() {
-		this.worker.postMessage(<WorkerKursblockungRequestErgebnisse>{cmd: 'getErgebnisse'});
+	protected queryErgebnisse(index : number) {
+		this.worker[index].postMessage(<WorkerKursblockungRequestErgebnisse>{cmd: 'getErgebnisse'});
 	}
 
 	/**
 	 * Reagiert auf die Antwort des Workers bezüglich der Anfrage nach den aktuell
 	 * besten Blockungsergebnissen.
 	 *
+	 * @param index    der Index des Workers
 	 * @param data   die Nachricht vom Worker mit der Liste der aktuell
 	 *               besten Blockungsergebnisse
 	 */
-	protected handleErgebnisseReply(data: WorkerKursblockungReplyErgebnisse) {
-		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
+	protected handleErgebnisseReply(index : number, data: WorkerKursblockungReplyErgebnisse) {
+		const workerErgebnisse = new ArrayList<GostBlockungsergebnis>();
 		for (const result of data.ergebnisse) {
 			const ergebnis = GostBlockungsergebnis.transpilerFromJSON(result);
-			ergebnisse.add(ergebnis);
+			workerErgebnisse.add(ergebnis);
 		}
+		this.workerErgebnisse[index] = workerErgebnisse;
+		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
+		for (let i = 0; i < this.worker.length; i++)
+			ergebnisse.addAll(this.workerErgebnisse[i]);
+		ergebnisse.sort({ compare(a : GostBlockungsergebnis, b : GostBlockungsergebnis) : number {
+			let val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung1WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung1WertStatic(b.bewertung));
+			if (val !== 0)
+				return val;
+			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung2WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung2WertStatic(b.bewertung));
+			if (val !== 0)
+				return val;
+			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung3WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung3WertStatic(b.bewertung));
+			if (val !== 0)
+				return val;
+			val = JavaInteger.compare(GostBlockungsergebnisManager.getOfBewertung4WertStatic(a.bewertung), GostBlockungsergebnisManager.getOfBewertung4WertStatic(b.bewertung));
+			if (val !== 0)
+				return val;
+			return 0;
+		} });
+		for (let i = ergebnisse.size() - 1; i >= this.maxErgebnisse.value; i--)
+			ergebnisse.removeElementAt(i);
 		this.ergebnisse.value = ergebnisse;
 	}
 
@@ -196,14 +331,15 @@ export class WorkerManagerKursblockung {
 	/**
 	 * Der Handler für das Abarbeiten von eingehenden Nachrichten von dem Worker an diesen Manager
 	 *
-	 * @param e   das eingehende Message-Event
+	 * @param index    der Index des Workers
+	 * @param e        das Ereignis für die eingehende Nachricht
 	 */
-	protected messageHandler = (e: MessageEvent<any>) => {
+	protected messageHandler = (index : number, e: MessageEvent<any>) => {
 		const cmd: WorkerKursblockungMessageType = e.data.cmd;
 		switch (cmd) {
-			case 'init': this.handleInitReply(e.data); break;
-			case 'next': this.handleNextReply(e.data); break;
-			case 'getErgebnisse': this.handleErgebnisseReply(e.data); break;
+			case 'init': this.handleInitReply(index, e.data); break;
+			case 'next': this.handleNextReply(index, e.data); break;
+			case 'getErgebnisse': this.handleErgebnisseReply(index, e.data); break;
 			default: throw new DeveloperNotificationException(`Mesage type ${e.data.cmd} not yet implemented`);
 		}
 	}
