@@ -5,8 +5,6 @@ import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostBlockungsergebnisListeneintragComparator extends JavaObject implements Comparator<GostBlockungsergebnisListeneintrag> {
 
-	private readonly bewertungComparator : GostBlockungsergebnisBewertungComparator;
-
 
 	/**
 	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}.
@@ -19,11 +17,10 @@ export class GostBlockungsergebnisListeneintragComparator extends JavaObject imp
 	 */
 	public constructor() {
 		super();
-		this.bewertungComparator = new GostBlockungsergebnisBewertungComparator();
 	}
 
 	public compare(o1 : GostBlockungsergebnisListeneintrag, o2 : GostBlockungsergebnisListeneintrag) : number {
-		const cmp : number = this.bewertungComparator.compare(o1.bewertung, o2.bewertung);
+		const cmp : number = GostBlockungsergebnisBewertungComparator.compareBewertungen(o1.bewertung, o2.bewertung);
 		if (cmp !== 0)
 			return cmp;
 		if (o1.id < o2.id)

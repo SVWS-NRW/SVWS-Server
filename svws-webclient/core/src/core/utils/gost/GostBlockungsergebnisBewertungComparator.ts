@@ -17,7 +17,21 @@ export class GostBlockungsergebnisBewertungComparator extends JavaObject impleme
 		super();
 	}
 
-	public compare(o1 : GostBlockungsergebnisBewertung, o2 : GostBlockungsergebnisBewertung) : number {
+	/**
+	 * Vergleicht zwei Objekte des Typs {@link GostBlockungsergebnisBewertung}.
+	 *
+	 * Zwei Elemente werden nach folgender Priorität sortiert:
+	 * <br>(1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse
+	 * <br>(2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser)
+	 * <br>(3) Array an Kursdifferenzen-Histogramm (kleinste größte Kursdifferenz besser)
+	 * <br>(4) Summe gleicher Facharten in der selben Schiene (weniger besser) <br>
+	 *
+	 * @param o1   die erste Bewertung
+	 * @param o2   die zweite Bewertung
+	 *
+	 * @return negativ bei kleiner, 0 bei gleich und positiv bei größer
+	 */
+	public static compareBewertungen(o1 : GostBlockungsergebnisBewertung, o2 : GostBlockungsergebnisBewertung) : number {
 		const o1Wert1 : number = o1.regelVerletzungen.size() + o1.anzahlKurseNichtZugeordnet;
 		const o2Wert1 : number = o2.regelVerletzungen.size() + o2.anzahlKurseNichtZugeordnet;
 		if (o1Wert1 < o2Wert1)
@@ -51,6 +65,10 @@ export class GostBlockungsergebnisBewertungComparator extends JavaObject impleme
 		if (o1Wert4 > o2Wert4)
 			return +1;
 		return 0;
+	}
+
+	public compare(o1 : GostBlockungsergebnisBewertung, o2 : GostBlockungsergebnisBewertung) : number {
+		return GostBlockungsergebnisBewertungComparator.compareBewertungen(o1, o2);
 	}
 
 	transpilerCanonicalName(): string {
