@@ -72,7 +72,7 @@
 
 	function textFaecherAnzeigen() {
 		switch (props.faecherAnzeigen) {
-			case 'alle': 
+			case 'alle':
 				return "Alle";
 			case 'nur_waehlbare':
 				return "Nur wählbare"

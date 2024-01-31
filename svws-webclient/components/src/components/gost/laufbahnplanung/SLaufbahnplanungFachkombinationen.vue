@@ -5,7 +5,7 @@
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">
 						<i-ri-checkbox-circle-fill v-if="fehler.size === 0" class="flex-shrink-0 text-success text-headline-md -my-1 -mx-0.5" />
-						<template v-if="fehler.size">
+						<template v-if="fehler.size !== 0">
 							{{ fehler.size }} Fehler bei Fachkombinationsregeln
 						</template>
 						<template v-else>
@@ -40,46 +40,47 @@
 
 <script setup lang="ts">
 
+	import { type ComputedRef, ref, computed } from "vue";
 	import type { GostJahrgangFachkombination, AbiturdatenManager} from "@core";
 	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@core";
-	import { ref } from "vue";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
 	}>();
 
 	const fehler = ref(new Set());
-	const show = ref(false);
 
-	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
-		const fach2 = props.abiturdatenManager().faecher().get(kombi.fachID2);
-		const f1 = (fach1 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach1.id);
-		const f2 = (fach2 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach2.id);
-		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
-		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
-		if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() && (f1 === null || f2 === null) || f1 === null)
-			return true;
-		for (const hj of GostHalbjahr.values()) {
-			if (kombi.gueltigInHalbjahr[hj.id]) {
-				const bel1 = kursart1 === null
-					? props.abiturdatenManager().pruefeBelegung(f1, hj)
-					: props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj);
-				const bel2 = kursart2 === null
-					? props.abiturdatenManager().pruefeBelegung(f2, hj)
-					: props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj);
-				if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
-					fehler.value.add(f1.fachID)
-					return false;
-				}
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 && !bel2) {
-					fehler.value.add(f1.fachID)
-					return false;
+	function regel_umgesetzt(kombi: GostJahrgangFachkombination): ComputedRef<boolean> {
+		return computed<boolean>(() => {
+			const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
+			const fach2 = props.abiturdatenManager().faecher().get(kombi.fachID2);
+			const f1 = (fach1 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach1.id);
+			const f2 = (fach2 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach2.id);
+			const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
+			const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
+			if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() && (f1 === null || f2 === null) || f1 === null)
+				return true;
+			for (const hj of GostHalbjahr.values()) {
+				if (kombi.gueltigInHalbjahr[hj.id]) {
+					const bel1 = kursart1 === null
+						? props.abiturdatenManager().pruefeBelegung(f1, hj)
+						: props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj);
+					const bel2 = kursart2 === null
+						? props.abiturdatenManager().pruefeBelegung(f2, hj)
+						: props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj);
+					if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
+						fehler.value.add(f1.fachID)
+						return false;
+					}
+					if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 && !bel2) {
+						fehler.value.add(f1.fachID)
+						return false;
+					}
 				}
 			}
-		}
-		fehler.value.delete(f1.fachID)
-		return true;
+			fehler.value.delete(f1.fachID)
+			return true;
+		});
 	}
 
 </script>
