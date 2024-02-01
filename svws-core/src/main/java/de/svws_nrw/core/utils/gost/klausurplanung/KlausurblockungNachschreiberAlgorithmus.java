@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.gost.klausurplanung;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -9,7 +11,6 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.kursblockung.KursblockungMatrix;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.ListUtils;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,10 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 	private boolean _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = false;
 
+	// Könntest du noch config-optionen rein nehmen,
+	// wie alle Klausuren derselben Kursart + Fachid am selben Termin
+	// an die Fach-ID und Kursart kommst du mit
+	// klausurManager.vorgabeBySchuelerklausurTermin(skt).idFach / kursart
 	/**
 	 * Der Konstruktor.
 	 */
@@ -81,7 +86,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 			// Überprüfe, ob "skt" in eine bereits vorhandene Gruppe darf.
 			boolean added = false;
 			for (final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe : nachschreiberGruppen)
-				if (istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
+				if (_istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
@@ -92,61 +97,12 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				nachschreiberGruppen.add(ListUtils.create1(skt));
 		}
 
-
-		// 2) Matrix für den Algorithmus erzeugen (Gruppe r wird Termin c zugeordnet).
-		final int rows = nachschreiberGruppen.size();
-		final int cols = termine.size();
-		final @NotNull KursblockungMatrix matrix = new KursblockungMatrix(_random, rows, cols);
-		final @NotNull long @NotNull [][] data = matrix.getMatrix();
-		for (int r = 0; r < nachschreiberGruppen.size(); r++)
-			for (int c = 0; c < termine.size(); c++)
-				data[r][c] = gibBewertung(nachschreiberGruppen.get(r), termine.get(c), klausurManager); // Darf Gruppe r dem Termin c zugeordnet werden?
-
-
-		// 3) Optimale Zuordnung berechnen.
-		final int[] r2c = matrix.gibMaximalesBipartitesMatching(true);
-
-
-		// 4) Ergebnis erzeugen.
-		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = new ArrayList<>();
-
-		long dummyTerminID = -1;
-		for (int r = 0; r < nachschreiberGruppen.size(); r++) {
-			// Bestimme, ob die ID von einem echten Termin kommt, oder eine Dummy-ID verwendet wird.
-			long idTermin = dummyTerminID;
-
-			final int c = r2c[r];
-			if (c >= 0) {
-				idTermin = termine.get(c).id;
-			} else {
-				dummyTerminID--;
-			}
-
-			// Verteile alle "GostSchuelerklausurTermin" der Gruppe auf den Termin.
-			for (final @NotNull GostSchuelerklausurTermin nachschreiberDerGruppe : nachschreiberGruppen.get(r))
-				ergebnis.add(new Pair<>(nachschreiberDerGruppe, idTermin));
-		}
-
+		// 2) Verwende derzeit nur Algorithmus1.
+		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = _algorithmusProTerminGruppenVerteilen(termine, nachschreiberGruppen, klausurManager);
 		return ergebnis;
 	}
 
-	private static long gibBewertung(
-					final @NotNull List<@NotNull GostSchuelerklausurTermin> nachschreiberGruppe,
-					final @NotNull GostKlausurtermin termin,
-					final @NotNull GostKursklausurManager klausurManager) {
-
-		for (final @NotNull GostSchuelerklausur sk1 : klausurManager.schuelerklausurGetMengeByTerminid(termin.id)) { // Alle Schüler des Termins...
-			for (final @NotNull GostSchuelerklausurTermin skt : nachschreiberGruppe) { // Alle Schüler der Gruppe ...
-				final GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
-				if (sk1.idSchueler == sk2.idSchueler)
-					return 0; // Die Gruppe darf nicht an dem Termin liegen.
-			}
-		}
-
-		return 1;  // Die Gruppe darf an dem Termin liegen.
-	}
-
-	private boolean istHinzufuegenErlaubt(
+	private boolean _istHinzufuegenErlaubt(
 					final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe,
 					final @NotNull GostSchuelerklausurTermin skt1,
 					final @NotNull GostKursklausurManager klausurManager) {
@@ -169,6 +125,70 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 		// Ein Hinzufügen zu dieser Gruppe ist nicht erlaubt.
 		return false;
+	}
+
+	private static @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> _algorithmusProTerminGruppenVerteilen(
+					final @NotNull List<@NotNull GostKlausurtermin> termine,
+					final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen,
+					final @NotNull GostKursklausurManager klausurManager) {
+
+		// Zum Sammeln der Ergebnisse.
+		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = new ArrayList<>();
+
+		// Kopiere Gruppen, da die Liste schrittweise zerstört wird.
+		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppen = new ArrayList<>(nachschreiberGruppen);
+
+		// Verteile pro Termin möglichst viele Gruppen.
+		for (final @NotNull GostKlausurtermin termin : termine)
+			_verteileMoeglichstVieleGruppenAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
+
+		// Verteile pro Fake-Termin möglichst viele Gruppen.
+		long fakeID = -1;
+		while (!gruppen.isEmpty()) {
+			_verteileMoeglichstVieleGruppenAufDenTermin(fakeID, klausurManager, gruppen, ergebnis);
+			fakeID--;
+		}
+
+		return ergebnis;
+	}
+
+	private static void _verteileMoeglichstVieleGruppenAufDenTermin(final long idTermin,
+			final @NotNull GostKursklausurManager klausurManager,
+			final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppen,
+			final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis) {
+
+		// Sammle Schüler_IDs des Termins.
+		final HashSet<@NotNull Long> schuelerIDsDesTermin = new HashSet<>();
+		if (idTermin >= 0) {
+			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
+				schuelerIDsDesTermin.add(sk.idSchueler);
+		}
+
+		// Verteile die jeweilige Gruppe auf den Termin, falls es keine Kollision gibt.
+		final Iterator<@NotNull List<@NotNull GostSchuelerklausurTermin>> i = gruppen.iterator();
+		while (i.hasNext()) {
+			final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe = i.next();
+			boolean kollision = false;
+
+			// SammleIDs
+			final @NotNull List<@NotNull Long> schuelerIDsDerGruppe = new ArrayList<>();
+			for (final @NotNull GostSchuelerklausurTermin skt : gruppe) {
+				final @NotNull GostSchuelerklausur sk = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
+				schuelerIDsDerGruppe.add(sk.idSchueler);
+				kollision |= schuelerIDsDesTermin.contains(sk.idSchueler);
+			}
+
+			// Füge die Gruppe hinzu, falls es keine Kollision gab.
+			if (!kollision) {
+				// GostSchuelerklausurTermin --> TerminID
+				for (final @NotNull GostSchuelerklausurTermin skt : gruppe)
+					ergebnis.add(new Pair<>(skt, idTermin));
+				// "schuelerIDsDerGruppe" der "schuelerIDsDesTermin" hinzufügen.
+				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
+				i.remove();
+			}
+		}
+
 	}
 
 }

@@ -5,12 +5,13 @@ import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../../core/lo
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { Random } from '../../../../java/util/Random';
-import { KursblockungMatrix } from '../../../../core/kursblockung/KursblockungMatrix';
 import { GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
+import type { JavaIterator } from '../../../../java/util/JavaIterator';
 import type { List } from '../../../../java/util/List';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { Pair } from '../../../../core/adt/Pair';
+import { HashSet } from '../../../../java/util/HashSet';
 
 export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 
@@ -76,7 +77,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			DeveloperNotificationException.ifTrue("Ungültige Kurs-ID = " + idKurs, idKurs < 0);
 			let added : boolean = false;
 			for (const gruppe of nachschreiberGruppen)
-				if (this.istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
+				if (this._istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
@@ -84,42 +85,11 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			if (!added)
 				nachschreiberGruppen.add(ListUtils.create1(skt));
 		}
-		const rows : number = nachschreiberGruppen.size();
-		const cols : number = termine.size();
-		const matrix : KursblockungMatrix = new KursblockungMatrix(KlausurblockungNachschreiberAlgorithmus._random, rows, cols);
-		const data : Array<Array<number>> = matrix.getMatrix();
-		for (let r : number = 0; r < nachschreiberGruppen.size(); r++)
-			for (let c : number = 0; c < termine.size(); c++)
-				data[r][c] = KlausurblockungNachschreiberAlgorithmus.gibBewertung(nachschreiberGruppen.get(r), termine.get(c), klausurManager);
-		const r2c : Array<number> | null = matrix.gibMaximalesBipartitesMatching(true);
-		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList();
-		let dummyTerminID : number = -1;
-		for (let r : number = 0; r < nachschreiberGruppen.size(); r++) {
-			let idTermin : number = dummyTerminID;
-			const c : number = r2c[r];
-			if (c >= 0) {
-				idTermin = termine.get(c).id;
-			} else {
-				dummyTerminID--;
-			}
-			for (const nachschreiberDerGruppe of nachschreiberGruppen.get(r))
-				ergebnis.add(new Pair(nachschreiberDerGruppe, idTermin));
-		}
+		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminGruppenVerteilen(termine, nachschreiberGruppen, klausurManager);
 		return ergebnis;
 	}
 
-	private static gibBewertung(nachschreiberGruppe : List<GostSchuelerklausurTermin>, termin : GostKlausurtermin, klausurManager : GostKursklausurManager) : number {
-		for (const sk1 of klausurManager.schuelerklausurGetMengeByTerminid(termin.id)) {
-			for (const skt of nachschreiberGruppe) {
-				const sk2 : GostSchuelerklausur | null = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
-				if (sk1.idSchueler === sk2.idSchueler)
-					return 0;
-			}
-		}
-		return 1;
-	}
-
-	private istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, klausurManager : GostKursklausurManager) : boolean {
+	private _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, klausurManager : GostKursklausurManager) : boolean {
 		const sk1 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt1);
 		for (const skt2 of gruppe) {
 			const sk2 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt2);
@@ -132,6 +102,44 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			return (sk1.idKursklausur === sk2.idKursklausur);
 		}
 		return false;
+	}
+
+	private static _algorithmusProTerminGruppenVerteilen(termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
+		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList();
+		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList(nachschreiberGruppen);
+		for (const termin of termine)
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
+		let fakeID : number = -1;
+		while (!gruppen.isEmpty()) {
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenAufDenTermin(fakeID, klausurManager, gruppen, ergebnis);
+			fakeID--;
+		}
+		return ergebnis;
+	}
+
+	private static _verteileMoeglichstVieleGruppenAufDenTermin(idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
+		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet();
+		if (idTermin >= 0) {
+			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
+				schuelerIDsDesTermin.add(sk.idSchueler);
+		}
+		const i : JavaIterator<List<GostSchuelerklausurTermin>> | null = gruppen.iterator();
+		while (i.hasNext()) {
+			const gruppe : List<GostSchuelerklausurTermin> = i.next();
+			let kollision : boolean = false;
+			const schuelerIDsDerGruppe : List<number> = new ArrayList();
+			for (const skt of gruppe) {
+				const sk : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
+				schuelerIDsDerGruppe.add(sk.idSchueler);
+				kollision = kollision || schuelerIDsDesTermin.contains(sk.idSchueler);
+			}
+			if (!kollision) {
+				for (const skt of gruppe)
+					ergebnis.add(new Pair(skt, idTermin));
+				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
+				i.remove();
+			}
+		}
 	}
 
 	transpilerCanonicalName(): string {
