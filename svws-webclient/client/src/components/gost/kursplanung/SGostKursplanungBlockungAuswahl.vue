@@ -72,9 +72,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostHalbjahr, List} from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import { ServerMode } from "@core";
+	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostHalbjahr, List} from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
 
 	const props = defineProps<{

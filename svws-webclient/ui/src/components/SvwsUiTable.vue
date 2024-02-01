@@ -793,7 +793,7 @@
 }
 
 .svws-ui-td {
-	@apply flex h-full items-start gap-1 overflow-hidden border-b border-black/25 leading-none dark:border-white/25;
+	@apply flex items-start gap-1 overflow-hidden border-b border-black/25 leading-none dark:border-white/25;
 	padding: 0.3rem 0.25rem;
 
 	&.svws-no-padding {
