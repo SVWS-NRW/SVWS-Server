@@ -1,9 +1,11 @@
 import type { BenutzerKennwort, SchemaListeEintrag, SimpleOperationResponse } from "@core";
+import type { SchemaMigrationQuelle } from "./SchemaMigrationQuelle";
 
 export interface SchemaAuswahlProps {
 	hasRootPrivileges: boolean;
 	auswahl: SchemaListeEintrag | undefined;
 	auswahlGruppe: SchemaListeEintrag[];
+	migrationQuellinformationen: () => SchemaMigrationQuelle;
 	mapSchema: () => Map<string, SchemaListeEintrag>;
 	gotoSchema: (value: SchemaListeEintrag | undefined) => Promise<void>;
 	setAuswahlGruppe: (value: SchemaListeEintrag[]) => void;

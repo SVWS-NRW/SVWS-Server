@@ -1,4 +1,5 @@
 import type { ApiFile, BenutzerListeEintrag, SchemaListeEintrag, SimpleOperationResponse, List, SchuleInfo, SchuleStammdaten, SchulenKatalogEintrag } from "@core";
+import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 
 export interface SchemaUebersichtProps {
 	data: () => SchemaListeEintrag | undefined;
@@ -11,4 +12,5 @@ export interface SchemaUebersichtProps {
 	revision: number | null;
 	schuleInfo: () => SchuleInfo | undefined;
 	schulen: () => List<SchulenKatalogEintrag>;
+	migrationQuellinformationen: () => SchemaMigrationQuelle;
 }

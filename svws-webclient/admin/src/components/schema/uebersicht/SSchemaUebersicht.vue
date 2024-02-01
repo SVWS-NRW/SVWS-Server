@@ -11,7 +11,7 @@
 				<template v-if="eintrag.isInConfig === false">
 					<svws-ui-button type="secondary" @click="inConfig">In Config setzen</svws-ui-button>
 				</template>
-				<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :target-schema="eintrag.name">
+				<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen">
 					<svws-ui-button type="secondary" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line /> Schild2-Schema hierher migrieren </svws-ui-button>
 				</s-schema-migrate-modal>
 				<svws-ui-button type="secondary" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen"> <i-ri-upload-2-line /> Backup erstellen </svws-ui-button>

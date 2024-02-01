@@ -21,7 +21,7 @@
 				</template>
 				<template v-if="hasRootPrivileges" #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" />
-					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema">
+					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen">
 						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line />  </svws-ui-button>
 					</s-schema-migrate-modal>
 					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">

@@ -5,17 +5,17 @@
 		<template #modalContent>
 			<div class="flex items-start gap-3">
 				<div class="flex flex-col gap-3">
-					<svws-ui-select v-model="db" :items="items.keys()" :item-text="i => items.get(i) || ''" />
-					<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
-						<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
-						<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
-						<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
-						<svws-ui-text-input v-model="schema" placeholder="Datenbank-Schema" />
-						<svws-ui-text-input v-model="user" placeholder="Datenbankbenutzer" />
-						<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
+					<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" />
+					<div class="flex flex-col gap-3" v-if="migrationQuellinformationen().dbms !== 'mdb'">
+						<svws-ui-checkbox v-model="migrationQuellinformationen().schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
+						<svws-ui-text-input v-if="migrationQuellinformationen().schildzentral" v-model="migrationQuellinformationen().schulnummer" placeholder="Schulnummer" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().location" placeholder="Datenbank-Host" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().schema" placeholder="Datenbank-Schema" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().user" placeholder="Datenbankbenutzer" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().password" placeholder="Passwort Datenbankbenutzer" />
 					</div>
 					<div class="flex flex-col gap-3" v-else>
-						<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().password" placeholder="Datenbank-Passwort" />
 						Access-Datei auswählen (Endung .mdb):
 						<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
 					</div>
@@ -47,10 +47,12 @@
 
 	import type { List, SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
+	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 
 	const props = defineProps<{
 		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
+		migrationQuellinformationen: () => SchemaMigrationQuelle;
 	}>();
 
 	const items = new Map<string, string>();
@@ -60,14 +62,6 @@
 	items.set('mssql', 'MSSQL');
 	items.set('mdb', 'Access (MDB)');
 
-	const db = ref<string>('mdb');
-	const schildzentral = ref(false);
-	const schulnummer = ref("");
-	const location = ref("");
-	const schema = ref("");
-	const user = ref("");
-	const password = ref("");
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const zielSchema = ref("");
 	const zielUsername = ref("");
 	const zielUserPassword = ref("");
@@ -80,15 +74,15 @@
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
-			formData.append('databasePassword', password.value);
+			formData.append('databasePassword', props.migrationQuellinformationen().password);
 		}
 		formData.append('schema', props.targetSchema || zielSchema.value);
-		formData.append('db', db.value);
-		formData.append('srcUsername', user.value);
-		formData.append('srcPassword', password.value);
-		formData.append('srcSchema', schema.value);
-		formData.append('srcLocation', location.value);
-		formData.append('schulnummer', schulnummer.value);
+		formData.append('db', props.migrationQuellinformationen().dbms);
+		formData.append('srcUsername', props.migrationQuellinformationen().user);
+		formData.append('srcPassword', props.migrationQuellinformationen().password);
+		formData.append('srcSchema', props.migrationQuellinformationen().schema);
+		formData.append('srcLocation', props.migrationQuellinformationen().location);
+		formData.append('schulnummer', props.migrationQuellinformationen().schulnummer);
 		formData.append('schemaUsername', zielUsername.value);
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
@@ -100,11 +94,6 @@
 			status.value = false;
 		}
 		loading.value = false;
-		schema.value = '';
-		user.value = '';
-		password.value = '';
-		location.value = '';
-		schulnummer.value = '';
 		zielSchema.value = '';
 		zielUserPassword.value = '';
 		zielUsername.value = '';
@@ -131,13 +120,9 @@
 		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
-		schema.value = '';
-		user.value = '';
-		password.value = '';
-		location.value = '';
-		schulnummer.value = '';
 		zielSchema.value = '';
 		zielUserPassword.value = '';
 		zielUsername.value = '';
 	}
+
 </script>

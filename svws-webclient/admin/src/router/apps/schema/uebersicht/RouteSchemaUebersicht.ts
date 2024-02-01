@@ -35,6 +35,7 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 			schuleInfo: () => routeSchema.data.schuleInfo,
 			schulen: () => routeSchema.data.schulen,
 			revision: routeSchema.data.revision,
+			migrationQuellinformationen: () => routeSchema.data.migrationQuellinformationen.value,
 		};
 	}
 

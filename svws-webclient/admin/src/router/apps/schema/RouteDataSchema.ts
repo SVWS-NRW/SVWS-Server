@@ -1,4 +1,4 @@
-import { shallowRef } from "vue";
+import { type Ref, ref, shallowRef } from "vue";
 
 import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo, SchulenKatalogEintrag } from "@core";
 import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
@@ -9,6 +9,8 @@ import type { RouteNode } from "~/router/RouteNode";
 
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
+import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
+
 
 interface RouteStateSchema {
 	auswahl: SchemaListeEintrag | undefined;
@@ -36,6 +38,16 @@ export class RouteDataSchema {
 
 	private _state = shallowRef(RouteDataSchema._defaultState);
 
+	private _migrationQuellinformationen = ref<SchemaMigrationQuelle>({
+		dbms: 'mdb',
+		schildzentral: false,
+		schulnummer: "",
+		location: "",
+		schema: "",
+		user: "",
+		password: "",
+	});
+
 	private setPatchedDefaultState(patch: Partial<RouteStateSchema>) {
 		this._state.value = Object.assign({ ... RouteDataSchema._defaultState }, patch);
 	}
@@ -46,6 +58,20 @@ export class RouteDataSchema {
 
 	private commit(): void {
 		this._state.value = { ... this._state.value };
+	}
+
+	public get migrationQuellinformationen() : Ref<SchemaMigrationQuelle> {
+		return this._migrationQuellinformationen;
+	}
+
+	public resetMigrationQuellinformationen() {
+		this._migrationQuellinformationen.value.dbms = 'mdb';
+		this._migrationQuellinformationen.value.schildzentral = false;
+		this._migrationQuellinformationen.value.schulnummer = "";
+		this._migrationQuellinformationen.value.location = "";
+		this._migrationQuellinformationen.value.schema = "";
+		this._migrationQuellinformationen.value.user = "";
+		this._migrationQuellinformationen.value.password = "";
 	}
 
 	public get view(): RouteNode<any,any> {
