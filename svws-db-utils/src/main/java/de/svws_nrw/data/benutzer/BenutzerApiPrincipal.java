@@ -147,6 +147,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			// Erstelle eine DB-Konfiguration für den Datenbank-Root-Zugriff mit den angegebenen Benutzerdaten
 			// An dieser Stelle kann nicht vorausgesetzt werden, dass ein anderes SVWS-Schema bereits generiert wurde.
 			DBConfig rootConfig = SVWSKonfiguration.get().getRootDBConfig(username, password);
+			if ((username == null) || (username.isBlank()))
+				return null;
 			if (!schema.isBlank())
 				rootConfig = rootConfig.switchSchema(schema);
 			try {
