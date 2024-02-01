@@ -25,12 +25,14 @@
 					</div>
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
-							<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung_lokal" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
-								<svws-ui-button type="transparent" @click="openModal()" title="Ergebnisse lokal im Browser berechnen" :disabled="apiStatus.pending" class="text-black dark:text-white"> Lokal Berechnen </svws-ui-button>
-							</s-gost-kursplanung-modal-blockung-lokal-berechnen>
-							<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> Berechnen </svws-ui-button>
+							<template v-if="allow_berechne_blockung">
+								<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
+									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Ausführlich </svws-ui-button>
+								</s-gost-kursplanung-modal-blockung-lokal-berechnen>
+								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Schnell </svws-ui-button>
+							</template>
 							<svws-ui-tooltip position="top" v-else>
-								<svws-ui-button type="transparent" disabled> Berechnen </svws-ui-button>
+								<svws-ui-button type="transparent" disabled> <i-ri-calculator-line class="-mx-0.5" /> <s>Berechnen</s> </svws-ui-button>
 								<template #content>
 									<div class="normal-case text-base rich-text">
 										Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
@@ -105,7 +107,7 @@
 		&& props.getDatenmanager().kursGetAnzahl() > 0
 	)
 
-	const allow_berechne_blockung_lokal = computed(()=> allow_berechne_blockung.value && props.mode === ServerMode.DEV);
+	const allow_berechne_blockung_lokal = computed(() => allow_berechne_blockung.value);
 
 	const listBlockungen = computed(()=> {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
