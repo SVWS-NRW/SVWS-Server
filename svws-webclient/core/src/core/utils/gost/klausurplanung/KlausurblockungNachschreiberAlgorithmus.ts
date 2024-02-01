@@ -4,6 +4,8 @@ import { DeveloperNotificationException } from '../../../../core/exceptions/Deve
 import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../../core/logger/Logger';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
+import { KlausurblockungNachschreiberAlgorithmusBewertung } from '../../../../core/utils/gost/klausurplanung/KlausurblockungNachschreiberAlgorithmusBewertung';
+import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import { GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
 import type { JavaIterator } from '../../../../java/util/JavaIterator';
@@ -66,7 +68,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			DeveloperNotificationException.ifTrue("Ungültige Kurs-ID = " + idKurs, idKurs < 0);
 			let added : boolean = false;
 			for (const gruppe of nachschreiberGruppen)
-				if (this._istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
+				if (KlausurblockungNachschreiberAlgorithmus._istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
@@ -74,11 +76,26 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			if (!added)
 				nachschreiberGruppen.add(ListUtils.create1(skt));
 		}
-		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminGruppenVerteilen(config.termine, nachschreiberGruppen, klausurManager);
-		return ergebnis;
+		const zeitEnde : number = System.currentTimeMillis() + config.maxTimeMillis;
+		let bestBewertung : KlausurblockungNachschreiberAlgorithmusBewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
+		let bestErgebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bestBewertung, config.termine, nachschreiberGruppen, klausurManager);
+		let c : number = 1;
+		while (System.currentTimeMillis() < zeitEnde) {
+			const bewertung : KlausurblockungNachschreiberAlgorithmusBewertung | null = new KlausurblockungNachschreiberAlgorithmusBewertung();
+			const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung, config.termine, nachschreiberGruppen, klausurManager);
+			if (bewertung.compare(bestBewertung) < 0) {
+				bestBewertung = bewertung;
+				bestErgebnis = ergebnis;
+			}
+			c++;
+		}
+		console.log(JSON.stringify("In " + config.maxTimeMillis + " wurden " + c + " Blockungen ausprobiert."));
+		console.log(JSON.stringify("bestBewertung.anzahl_termine = " + bestBewertung.anzahl_termine));
+		console.log(JSON.stringify("bestBewertung.anzahl_zusatztermine = " + bestBewertung.anzahl_zusatztermine));
+		return bestErgebnis;
 	}
 
-	private _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : boolean {
+	private static _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : boolean {
 		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
 		const sk1 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt1);
 		const idFach : number = klausurManager.vorgabeBySchuelerklausurTermin(skt1).idFach;
@@ -102,26 +119,27 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return false;
 	}
 
-	private static _algorithmusProTerminGruppenVerteilen(termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
+	private static _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList();
 		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList(nachschreiberGruppen);
-		for (const termin of termine)
-			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
+		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random))
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, termin.id, klausurManager, gruppen, ergebnis);
 		let fakeID : number = -1;
 		while (!gruppen.isEmpty()) {
-			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenAufDenTermin(fakeID, klausurManager, gruppen, ergebnis);
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, fakeID, klausurManager, gruppen, ergebnis);
 			fakeID--;
 		}
 		return ergebnis;
 	}
 
-	private static _verteileMoeglichstVieleGruppenAufDenTermin(idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
+	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
 		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet();
 		if (idTermin >= 0) {
 			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
-		const i : JavaIterator<List<GostSchuelerklausurTermin>> | null = gruppen.iterator();
+		const gruppenPermutiert : List<List<GostSchuelerklausurTermin>> = ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random);
+		const i : JavaIterator<List<GostSchuelerklausurTermin>> | null = gruppenPermutiert.iterator();
 		while (i.hasNext()) {
 			const gruppe : List<GostSchuelerklausurTermin> = i.next();
 			let kollision : boolean = false;
@@ -132,6 +150,10 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 				kollision = kollision || schuelerIDsDesTermin.contains(sk.idSchueler);
 			}
 			if (!kollision) {
+				if (idTermin >= 0)
+					bewertung.anzahl_termine++;
+				else
+					bewertung.anzahl_zusatztermine++;
 				for (const skt of gruppe)
 					ergebnis.add(new Pair(skt, idTermin));
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);

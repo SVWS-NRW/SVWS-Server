@@ -83,7 +83,39 @@ public final class ListUtils {
 		return list;
 	}
 
-    /**
+	/**
+	 * Liefert eine permutierte Kopie der Liste.
+	 *
+     * @param <T>      Der Inhaltstyp der Liste.
+     * @param original Die Liste mit allen Elementen vom Typ T.
+	 * @param random   Ein {@link Random}-Objekt zum Permutieren der Elemente des Arrays.
+     *
+     * @return eine permutierte Kopie der Liste.
+	 */
+    public static <@NotNull T> @NotNull List<@NotNull T> getCopyPermuted(final @NotNull List<@NotNull T> original, final @NotNull Random random) {
+		final int n = original.size();
+
+		// Erstelle permutierte Indices.
+		final int[] perm = new int[n];
+		for (int i = 0; i < n; i++)
+			perm[i] = i;
+		for (int i1 = 0; i1 < n; i1++) {
+			final int i2 = random.nextInt(perm.length);
+			final int save1 = perm[i1];
+			final int save2 = perm[i2];
+			perm[i1] = save2;
+			perm[i2] = save1;
+		}
+
+		// Füge in zufälliger Reihenfolge hinzu.
+		final @NotNull List<@NotNull T> list = new ArrayList<>();
+		for (int i = 0; i < n; i++)
+			list.add(original.get(perm[i]));
+
+		return list;
+	}
+
+	/**
      * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
      *
      * @param <E>    Der Inhaltstyp der Liste.

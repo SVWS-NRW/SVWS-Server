@@ -53,7 +53,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> berechne(
-			final @NotNull GostNachschreibterminblockungKonfiguration config,
+					final @NotNull GostNachschreibterminblockungKonfiguration config,
 					final @NotNull GostKursklausurManager klausurManager,
 					final long maxTimeMillis) {
 
@@ -81,12 +81,36 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				nachschreiberGruppen.add(ListUtils.create1(skt));
 		}
 
-		// 2) Verwende derzeit nur Algorithmus1.
-		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = _algorithmusProTerminGruppenVerteilen(config.termine, nachschreiberGruppen, klausurManager);
-		return ergebnis;
+		final long zeitEnde = System.currentTimeMillis() + config.maxTimeMillis;
+
+		// 2) Berechne das erste Ergebnis und speichere seine Bewertung.
+		@NotNull KlausurblockungNachschreiberAlgorithmusBewertung bestBewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
+		@NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> bestErgebnis =
+				_algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bestBewertung, config.termine, nachschreiberGruppen, klausurManager);
+
+		// 3) Solange noch Zeit ist, berechne weitere Ergebnisse.
+		int c = 1;
+		while (System.currentTimeMillis() < zeitEnde) {
+			final KlausurblockungNachschreiberAlgorithmusBewertung bewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
+			final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis =
+					_algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung, config.termine, nachschreiberGruppen, klausurManager);
+
+			if (bewertung.compare(bestBewertung) < 0) {
+				bestBewertung = bewertung;
+				bestErgebnis = ergebnis;
+			}
+
+			c++;
+		}
+
+		System.out.println("In " + config.maxTimeMillis + " wurden " + c + " Blockungen ausprobiert.");
+		System.out.println("bestBewertung.anzahl_termine = " + bestBewertung.anzahl_termine);
+		System.out.println("bestBewertung.anzahl_zusatztermine = " + bestBewertung.anzahl_zusatztermine);
+
+		return bestErgebnis;
 	}
 
-	private boolean _istHinzufuegenErlaubt(
+	private static boolean _istHinzufuegenErlaubt(
 					final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe,
 					final @NotNull GostSchuelerklausurTermin skt1, final @NotNull GostNachschreibterminblockungKonfiguration config,
 					final @NotNull GostKursklausurManager klausurManager) {
@@ -124,7 +148,8 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		return false;
 	}
 
-	private static @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> _algorithmusProTerminGruppenVerteilen(
+	private static @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(
+					final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung bewertung,
 					final @NotNull List<@NotNull GostKlausurtermin> termine,
 					final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen,
 					final @NotNull GostKursklausurManager klausurManager) {
@@ -136,20 +161,22 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppen = new ArrayList<>(nachschreiberGruppen);
 
 		// Verteile pro Termin möglichst viele Gruppen.
-		for (final @NotNull GostKlausurtermin termin : termine)
-			_verteileMoeglichstVieleGruppenAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
+		for (final @NotNull GostKlausurtermin termin : ListUtils.getCopyPermuted(termine, _random))
+			_verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, termin.id, klausurManager, gruppen, ergebnis);
 
 		// Verteile pro Fake-Termin möglichst viele Gruppen.
 		long fakeID = -1;
 		while (!gruppen.isEmpty()) {
-			_verteileMoeglichstVieleGruppenAufDenTermin(fakeID, klausurManager, gruppen, ergebnis);
+			_verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, fakeID, klausurManager, gruppen, ergebnis);
 			fakeID--;
 		}
 
 		return ergebnis;
 	}
 
-	private static void _verteileMoeglichstVieleGruppenAufDenTermin(final long idTermin,
+	private static void _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(
+			final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung bewertung,
+			final long idTermin,
 			final @NotNull GostKursklausurManager klausurManager,
 			final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppen,
 			final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis) {
@@ -162,7 +189,8 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		}
 
 		// Verteile die jeweilige Gruppe auf den Termin, falls es keine Kollision gibt.
-		final Iterator<@NotNull List<@NotNull GostSchuelerklausurTermin>> i = gruppen.iterator();
+		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppenPermutiert = ListUtils.getCopyPermuted(gruppen, _random);
+		final Iterator<@NotNull List<@NotNull GostSchuelerklausurTermin>> i = gruppenPermutiert.iterator();
 		while (i.hasNext()) {
 			final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe = i.next();
 			boolean kollision = false;
@@ -177,6 +205,10 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 			// Füge die Gruppe hinzu, falls es keine Kollision gab.
 			if (!kollision) {
+				if (idTermin >= 0)
+					bewertung.anzahl_termine++;
+				else
+					bewertung.anzahl_zusatztermine++;
 				// GostSchuelerklausurTermin --> TerminID
 				for (final @NotNull GostSchuelerklausurTermin skt : gruppe)
 					ergebnis.add(new Pair<>(skt, idTermin));

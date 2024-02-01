@@ -73,6 +73,33 @@ export class ListUtils extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine permutierte Kopie der Liste.
+	 *
+	 * @param <T>      Der Inhaltstyp der Liste.
+	 * @param original Die Liste mit allen Elementen vom Typ T.
+	 * @param random   Ein {@link Random}-Objekt zum Permutieren der Elemente des Arrays.
+	 *
+	 * @return eine permutierte Kopie der Liste.
+	 */
+	public static getCopyPermuted<T>(original : List<T>, random : Random) : List<T> {
+		const n : number = original.size();
+		const perm : Array<number> | null = Array(n).fill(0);
+		for (let i : number = 0; i < n; i++)
+			perm[i] = i;
+		for (let i1 : number = 0; i1 < n; i1++) {
+			const i2 : number = random.nextInt(perm.length);
+			const save1 : number = perm[i1];
+			const save2 : number = perm[i2];
+			perm[i1] = save2;
+			perm[i2] = save1;
+		}
+		const list : List<T> = new ArrayList();
+		for (let i : number = 0; i < n; i++)
+			list.add(original.get(perm[i]));
+		return list;
+	}
+
+	/**
 	 * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
 	 *
 	 * @param <E>    Der Inhaltstyp der Liste.

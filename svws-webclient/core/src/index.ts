@@ -532,6 +532,7 @@ export { GostKlausurraumManager } from './core/utils/gost/klausurplanung/GostKla
 export { GostKlausurvorgabenManager } from './core/utils/gost/klausurplanung/GostKlausurvorgabenManager';
 export { GostKursklausurManager } from './core/utils/gost/klausurplanung/GostKursklausurManager';
 export { KlausurblockungNachschreiberAlgorithmus } from './core/utils/gost/klausurplanung/KlausurblockungNachschreiberAlgorithmus';
+export { KlausurblockungNachschreiberAlgorithmusBewertung } from './core/utils/gost/klausurplanung/KlausurblockungNachschreiberAlgorithmusBewertung';
 export { KlausurblockungSchienenAlgorithmus } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmus';
 export { KlausurblockungSchienenAlgorithmusAbstract } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusAbstract';
 export { KlausurblockungSchienenAlgorithmusGreedy1 } from './core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy1';
