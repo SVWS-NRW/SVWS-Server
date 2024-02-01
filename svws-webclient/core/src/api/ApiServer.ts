@@ -64,6 +64,7 @@ import { GostKursklausur } from '../core/data/gost/klausurplanung/GostKursklausu
 import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
 import { GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
 import { GostLeistungen } from '../core/data/gost/GostLeistungen';
+import { GostNachschreibterminblockungKonfiguration } from '../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostSchuelerklausur } from '../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
@@ -4546,15 +4547,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {GostKlausurenDataCollection} data - der Request-Body für die HTTP-Methode
+	 * @param {GostNachschreibterminblockungKonfiguration} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockenGostSchuelerklausurtermine(data : GostKlausurenDataCollection, schema : string) : Promise<GostKlausurenDataCollection> {
+	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/blocken/schuelerklausurtermine"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = GostKlausurenDataCollection.transpilerToJSON(data);
+		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenDataCollection.transpilerFromJSON(text);

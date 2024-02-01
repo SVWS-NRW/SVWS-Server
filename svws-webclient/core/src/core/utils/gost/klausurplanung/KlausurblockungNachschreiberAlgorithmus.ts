@@ -8,6 +8,7 @@ import { Random } from '../../../../java/util/Random';
 import { GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
 import type { JavaIterator } from '../../../../java/util/JavaIterator';
 import type { List } from '../../../../java/util/List';
+import { GostNachschreibterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { Pair } from '../../../../core/adt/Pair';
@@ -71,16 +72,15 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	}
 
 	/**
-	 * @param nachschreiber   Alle "GostSchuelerklausurTermin", die auf die "GostKlausurtermin" verteilt werden sollen.
-	 * @param termine         Alle "GostKlausurtermin", auf die potentiell Nachschreiber verteilt werden.
+	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
 	 * @param maxTimeMillis   Die maximal erlaubte Berechnungszeit (in Millisekunden).
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
-	public berechne(nachschreiber : List<GostSchuelerklausurTermin>, termine : List<GostKlausurtermin>, klausurManager : GostKursklausurManager, maxTimeMillis : number) : List<Pair<GostSchuelerklausurTermin, number>> {
+	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager, maxTimeMillis : number) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const nachschreiberGruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList();
-		for (const skt of nachschreiber) {
+		for (const skt of config.schuelerklausurtermine) {
 			const sk : GostSchuelerklausur | null = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
 			const idSchueler : number = sk.idSchueler;
 			const idKurs : number = sk.idKursklausur;
@@ -96,7 +96,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			if (!added)
 				nachschreiberGruppen.add(ListUtils.create1(skt));
 		}
-		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminGruppenVerteilen(termine, nachschreiberGruppen, klausurManager);
+		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminGruppenVerteilen(config.termine, nachschreiberGruppen, klausurManager);
 		return ergebnis;
 	}
 

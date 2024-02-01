@@ -193,6 +193,7 @@ export { GostKlausurterminblockungKonfiguration } from './core/data/gost/klausur
 export { GostKlausurvorgabe } from './core/data/gost/klausurplanung/GostKlausurvorgabe';
 export { GostKursklausur } from './core/data/gost/klausurplanung/GostKursklausur';
 export { GostKursklausurRich } from './core/data/gost/klausurplanung/GostKursklausurRich';
+export { GostNachschreibterminblockungKonfiguration } from './core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 export { GostSchuelerklausur } from './core/data/gost/klausurplanung/GostSchuelerklausur';
 export { GostSchuelerklausurTermin } from './core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';

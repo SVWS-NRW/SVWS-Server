@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.ServerMode;
@@ -942,7 +943,7 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema     das Datenbankschema
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param blockungDaten         die Ids der GostSchuelerklausuren
+	 * @param config     das GostNachschreibterminblockungKonfiguration-Objekt
 	 * @return die HTTP-Antwort
 	 */
 	@POST
@@ -954,9 +955,9 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response blockenGostSchuelerklausurtermine(
 			@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenDataCollection.class))) final GostKlausurenDataCollection blockungDaten,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostNachschreibterminblockungKonfiguration.class))) final GostNachschreibterminblockungKonfiguration config,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenSchuelerklausurTermin.blocken(conn, blockungDaten)).build(),
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenSchuelerklausurTermin.blocken(conn, config)).build(),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);

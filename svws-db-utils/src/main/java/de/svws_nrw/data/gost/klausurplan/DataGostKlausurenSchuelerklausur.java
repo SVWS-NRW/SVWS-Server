@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -44,22 +45,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		return this.getList();
-	}
-
-	private List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTermin(final long terminId) {
-		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, terminId) == null)
-			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(terminId));
-		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminid(conn, terminId);
-		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
-		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0)";
-		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID = :tid" + skFilter,
-						DTOGostKlausurenSchuelerklausurenTermine.class);
-		if (!kkSkIds.isEmpty())
-			query.setParameter("skIds", kkSkIds);
-		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tid", terminId).getResultList();
-
-		return skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 	}
 
 	/**
@@ -154,7 +139,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerKlausurenZuTermin(id)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getSchuelerKlausurenZuTerminIds(conn, ListUtils.create1(id))).build();
 	}
 
 	/**
@@ -205,6 +190,31 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * GostSchuelerklausur-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param terminIds die Liste der GostSchuelerklausurterminen
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
+	 */
+	public static List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final DBEntityManager conn, final List<Long> terminIds) {
+		if (terminIds.isEmpty())
+			return new ArrayList<>();
+		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
+		final List<GostSchuelerklausur> schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, kursklausuren);
+		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
+		final String skFilter = kkSkIds.isEmpty() ? "" : " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0)";
+		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query = conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
+						DTOGostKlausurenSchuelerklausurenTermine.class);
+		if (!kkSkIds.isEmpty())
+			query.setParameter("skIds", kkSkIds);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
+
+		return skts.stream().map(DataGostKlausurenSchuelerklausurTermin.dtoMapper::apply).toList();
 	}
 
 }

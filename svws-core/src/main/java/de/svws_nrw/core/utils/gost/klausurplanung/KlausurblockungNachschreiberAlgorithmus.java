@@ -8,6 +8,7 @@ import java.util.Random;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -28,10 +29,6 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	/** Ein Logger für Debug-Zwecke. */
 	private final @NotNull Logger _logger;
 
-	private boolean _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = false;
-
-	private boolean _regel_gleiche_fachart_auf_selbe_termine_verteilen = false;
-
 	/**
 	 * Der Konstruktor.
 	 */
@@ -49,41 +46,21 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	}
 
 	/**
-	 * Aktiviert/Deaktiviert die Regel. Falls TRUE, werden NachschreiberInnen der selben Klausur auf den selben Termin geblockt.
-	 *
-	 * @param b falls TRUE, wird die Regel angewandt.
-	 */
-	public void set_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen(final boolean b) {
-		this._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = b;
-	}
-
-	/**
-	 * Aktiviert/Deaktiviert die Regel. Falls TRUE, werden NachschreiberInnen mit der selben Fachart (Fach + Kursart) auf den selben Termin geblockt.
-	 *
-	 * @param b falls TRUE, wird die Regel angewandt.
-	 */
-	public void set_regel_gleiche_fachart_auf_selbe_termine_verteilen(final boolean b) {
-		this._regel_gleiche_fachart_auf_selbe_termine_verteilen = b;
-	}
-
-	/**
-	 * @param nachschreiber   Alle "GostSchuelerklausurTermin", die auf die "GostKlausurtermin" verteilt werden sollen.
-	 * @param termine         Alle "GostKlausurtermin", auf die potentiell Nachschreiber verteilt werden.
+	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
 	 * @param maxTimeMillis   Die maximal erlaubte Berechnungszeit (in Millisekunden).
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> berechne(
-					final @NotNull List<@NotNull GostSchuelerklausurTermin> nachschreiber,
-					final @NotNull List<@NotNull GostKlausurtermin> termine,
+			final @NotNull GostNachschreibterminblockungKonfiguration config,
 					final @NotNull GostKursklausurManager klausurManager,
 					final long maxTimeMillis) {
 
 		// 1) Bilde Gruppen von Nachschreibern, falls dies bestimmte Kriterien/Regeln erfordern.
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen = new ArrayList<>(); // Liste der Gruppen.
 
-		for (final @NotNull GostSchuelerklausurTermin skt : nachschreiber) {
+		for (final @NotNull GostSchuelerklausurTermin skt : config.schuelerklausurtermine) {
 			final GostSchuelerklausur sk = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
 			final long idSchueler = sk.idSchueler; // die ID des Schülers, die innerhalb jedes Klausurtermins / Schiene einzigartig sein muss
 			final long idKurs = sk.idKursklausur; // die ID der Kursklausur als Gütekriterium, möglichst alle mit gleicher Kursklausur innerhalb eines Termins
@@ -93,7 +70,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 			// Überprüfe, ob "skt" in eine bereits vorhandene Gruppe darf.
 			boolean added = false;
 			for (final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe : nachschreiberGruppen)
-				if (_istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
+				if (_istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
@@ -105,13 +82,13 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		}
 
 		// 2) Verwende derzeit nur Algorithmus1.
-		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = _algorithmusProTerminGruppenVerteilen(termine, nachschreiberGruppen, klausurManager);
+		final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis = _algorithmusProTerminGruppenVerteilen(config.termine, nachschreiberGruppen, klausurManager);
 		return ergebnis;
 	}
 
 	private boolean _istHinzufuegenErlaubt(
 					final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe,
-					final @NotNull GostSchuelerklausurTermin skt1,
+					final @NotNull GostSchuelerklausurTermin skt1, final @NotNull GostNachschreibterminblockungKonfiguration config,
 					final @NotNull GostKursklausurManager klausurManager) {
 
 		// Integrität überprüfen.
@@ -129,14 +106,14 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		}
 
 		// Sollen Schüler-Nachschreibklausuren der selben Kurs-Klausur in der selben Gruppe landen?
-		if (_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
+		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
 			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
 			return (sk1.idKursklausur == sk2.idKursklausur);
 		}
 
 		// Sollen Schüler-Nachschreibklausuren der selben Fachart in der selben Gruppe landen?
-		if (_regel_gleiche_fachart_auf_selbe_termine_verteilen) {
+		if (config._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
 			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			final boolean fachGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).idFach == idFach;
 			final boolean kursartGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).kursart.equals(kursart);

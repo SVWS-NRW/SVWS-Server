@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
@@ -226,24 +227,27 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	 * GostKlausurenDataCollection-Daten und persistiert die Blockung in der Datenbank.
 	 *
 	 * @param conn          Connection
-	 * @param blockungsDaten das GostKlausurenDataCollection-Objekt
+	 * @param config das GostNachschreibterminblockungKonfiguration-Objekt
 	 *
 	 * @return das GostKlausurenDataCollection mit der persistierten Blockung
 	 *
 	 */
-	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostKlausurenDataCollection blockungsDaten) {
-		List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, blockungsDaten.schuelerklausurtermine);
+	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostNachschreibterminblockungKonfiguration config) {
+		List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
+		listSktsManager.addAll(config.schuelerklausurtermine);
+		listSktsManager.addAll(DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuTerminIds(conn, config.termine.stream().map(t -> t.id).toList()));
+
+		List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSktsManager);
 		List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
 
 		GostKlausurvorgabenManager vMan = new GostKlausurvorgabenManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks), null);
-		GostKursklausurManager kMan = new GostKursklausurManager(vMan, listKks, blockungsDaten.termine, listSks, blockungsDaten.schuelerklausurtermine);
+		GostKursklausurManager kMan = new GostKursklausurManager(vMan, listKks, config.termine, listSks, listSktsManager);
 
 		KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
-		blockAlgo.set_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen(true);
 
-		List<Pair<GostSchuelerklausurTermin, Long>> blockung = blockAlgo.berechne(blockungsDaten.schuelerklausurtermine, blockungsDaten.termine, kMan, 1000);
+		List<Pair<GostSchuelerklausurTermin, Long>> blockung = blockAlgo.berechne(config, kMan, 1000);
 
-		Map<Long, DTOGostKlausurenSchuelerklausurenTermine> mapNachschreiber = getSchuelerklausurterminDTOsZuSchuelerklausurterminen(conn, blockungsDaten.schuelerklausurtermine).stream().collect(Collectors.toMap(skt -> skt.ID, skt -> skt));
+		Map<Long, DTOGostKlausurenSchuelerklausurenTermine> mapNachschreiber = getSchuelerklausurterminDTOsZuSchuelerklausurterminen(conn, config.schuelerklausurtermine).stream().collect(Collectors.toMap(skt -> skt.ID, skt -> skt));
 		Map<Long, DTOGostKlausurenTermine> mapNeueTermine = new HashMap<>();
 
 		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
@@ -267,6 +271,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 
 		}
 		conn.transactionPersistAll(mapNachschreiber.values());
+
+		GostKlausurenDataCollection blockungsDaten = new GostKlausurenDataCollection();
 		blockungsDaten.schuelerklausurtermine = mapNachschreiber.values().stream().map(dtoMapper::apply).toList();
 		blockungsDaten.termine = mapNeueTermine.values().stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
 		return blockungsDaten;

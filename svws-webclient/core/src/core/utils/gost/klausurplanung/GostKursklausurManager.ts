@@ -45,14 +45,12 @@ export class GostKursklausurManager extends JavaObject {
 	private _lehrerMap : JavaMap<number, LehrerListeEintrag> | null = null;
 
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
-		if (a.datum === null && b.datum !== null)
-			return +1;
-		if (b.datum === null && a.datum !== null)
-			return -1;
 		if (a.datum !== null && b.datum !== null)
 			return JavaString.compareTo(a.datum, b.datum);
-		if (a.quartal !== b.quartal)
-			return a.quartal - b.quartal;
+		if (b.datum !== null)
+			return +1;
+		if (a.datum !== null)
+			return -1;
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -151,7 +149,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
 
-	private readonly _schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal : HashMap3D<number, number, number, List<GostSchuelerklausurTermin>> = new HashMap3D();
+	private readonly _schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin : HashMap3D<number, number, number, List<GostSchuelerklausurTermin>> = new HashMap3D();
 
 
 	/**
@@ -358,12 +356,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
-		this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.clear();
+		this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.clear();
 		for (const sktList of this._schuelerklausurterminmenge_by_idSchuelerklausur.values()) {
 			let sktLast : GostSchuelerklausurTermin = sktList.get(sktList.size() - 1);
 			let v : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(sktLast);
 			if (sktLast.folgeNr > 0)
-				Map3DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, sktLast.idTermin !== null ? sktLast.idTermin : -1, v.quartal).add(sktLast);
+				Map3DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
 		}
 	}
 
@@ -936,6 +934,7 @@ export class GostKursklausurManager extends JavaObject {
 		for (const t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
 			if (!t.istHaupttermin || t.nachschreiberZugelassen)
 				termine.add(t);
+		termine.sort(GostKursklausurManager._compTermin);
 		return termine;
 	}
 
@@ -954,6 +953,7 @@ export class GostKursklausurManager extends JavaObject {
 		for (const t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
 			if (t.istHaupttermin)
 				termine.add(t);
+		termine.sort(GostKursklausurManager._compTermin);
 		return termine;
 	}
 
@@ -1146,6 +1146,14 @@ export class GostKursklausurManager extends JavaObject {
 		return maxDauer;
 	}
 
+	/**
+	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt bewertet.
+	 *
+	 * @param menge1 f
+	 * @param menge2 f
+	 *
+	 * @return d
+	 */
 	private berechneKonflikteSchuelerklausurtermine(menge1 : List<GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
 		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
 		if (menge1 !== null)
@@ -1154,6 +1162,14 @@ export class GostKursklausurManager extends JavaObject {
 		return this.berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
 	}
 
+	/**
+	 * Prüft, ob Schülerklausurtermine aus der Menge menge2 konfliktfrei in die Menge menge1 hinzugefügt werden können. Falls ein Schülerklausurtermin aus menge1 bereits in menge2 enthalten ist, wird dies nicht als Konflikt bewertet.
+	 *
+	 * @param menge1 f
+	 * @param menge2 f
+	 *
+	 * @return d
+	 */
 	private berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(menge1 : JavaMap<number, GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
 		let ergebnis : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> = new HashMap();
 		if (menge1 === null || menge2 === null)
@@ -1161,7 +1177,7 @@ export class GostKursklausurManager extends JavaObject {
 		for (let skt2 of menge2) {
 			let sk : GostSchuelerklausur = this.schuelerklausurGetByIdOrException(skt2.idSchuelerklausur);
 			let skt1 : GostSchuelerklausurTermin | null = menge1.get(sk.idSchueler);
-			if (skt1 !== null)
+			if (skt1 !== null && skt1.id !== skt2.id)
 				ergebnis.put(skt1, skt2);
 		}
 		return ergebnis;
@@ -1169,7 +1185,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Prüft, ob ein Schülerklausurtermin konfliktfrei zu einem bestehenden Klausurtermin
-	 * hinzugefügt werden kann.
+	 * hinzugefügt werden kann. Falls der Schülerklausurtermin bereits dem Termin zugewiesen war, wird dies nicht als Konflikt bewertet.
 	 *
 	 * @param termin  der zu prüfende Klausurtermin
 	 * @param skt der zu prüfende Schülerklausurtermin
@@ -1668,6 +1684,53 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * die ein Termin gesetzt wurde
+	 *
+	 * @param halbjahr das Gosthalbjahr
+	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		if (quartal > 0) {
+			const skts : JavaMap<number, List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap3OrNull(halbjahr.id, quartal);
+			if (skts !== null)
+				for (let entry of skts.entrySet())
+					if (entry.getKey() !== -1)
+						ergebnis.addAll(entry.getValue());
+		} else {
+			const skts : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap2OrNull(halbjahr.id);
+			if (skts !== null)
+				for (let entry of skts.entrySet())
+					for (let entry2 of entry.getValue().entrySet())
+						if (entry2.getKey() !== -1)
+							ergebnis.addAll(entry2.getValue());
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
+	 * die ein Termin gesetzt wurde
+	 *
+	 * @param halbjahr das Gosthalbjahr
+	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von GostSchuelerklausurTermin-Objekten
+	 */
+	public schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		for (let termin of this.schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(halbjahr, quartal)) {
+			let t : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(termin);
+			if (t !== null && t.datum !== null)
+				ergebnis.add(termin);
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin gesetzt wurde
 	 *
 	 * @param halbjahr das Gosthalbjahr
@@ -1677,13 +1740,17 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		if (quartal > 0) {
-			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getOrNull(halbjahr.id, -1, quartal);
+			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getOrNull(halbjahr.id, quartal, -1);
 			return skts !== null ? skts : new ArrayList();
 		}
-		const skts : List<GostSchuelerklausurTermin> | null = new ArrayList();
-		for (const sktList of this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap3AsList(halbjahr.id, -1)) {
-			skts.addAll(sktList);
-		}
+		const skts : List<GostSchuelerklausurTermin> = new ArrayList();
+		const mapHalbjahr : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap2OrNull(halbjahr.id);
+		if (mapHalbjahr !== null)
+			for (const sktList of mapHalbjahr.values()) {
+				let listTermine : List<GostSchuelerklausurTermin> | null = sktList.get(-1);
+				if (listTermine !== null)
+					skts.addAll(listTermine);
+			}
 		return skts;
 	}
 
@@ -1706,8 +1773,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public schuelerklausurterminNtByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
-		let ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
-		let listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(idTermin);
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		const listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(idTermin);
 		if (listSkts !== null)
 			for (let skt of listSkts)
 				if (skt.folgeNr > 0)

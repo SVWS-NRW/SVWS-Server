@@ -115,9 +115,22 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * @return die Liste der Kursklausuren
 	 */
 	public static List<GostKursklausur> getKursklausurenZuTerminid(final DBEntityManager conn, final long idTermin) {
-		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
-			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
-		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.termin_id", idTermin, DTOGostKlausurenKursklausuren.class);
+		return getKursklausurenZuTerminids(conn, ListUtils.create1(idTermin));
+	}
+
+	/**
+	 * Gibt die Liste der Kursklausuren zur übergeben Termin-ID zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idsTermin 	 die ID des Klausurtermins
+	 *
+	 * @return die Liste der Kursklausuren
+	 */
+	public static List<GostKursklausur> getKursklausurenZuTerminids(final DBEntityManager conn, final List<Long> idsTermin) {
+		for (long idTermin : idsTermin)
+			if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
+				throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
+		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryNamed("DTOGostKlausurenKursklausuren.termin_id.multiple", idsTermin, DTOGostKlausurenKursklausuren.class);
 		return kursKlausurDTOs.stream().map(dtoMapper::apply).toList();
 	}
 

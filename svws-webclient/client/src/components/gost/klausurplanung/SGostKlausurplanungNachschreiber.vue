@@ -93,57 +93,6 @@
 				</template>
 			</div>
 		</svws-ui-content-card>
-		<svws-ui-content-card class="-ml-4">
-			<!--<template #title>
-				<span class="text-headline-md leading-none inline-flex gap-1">
-					<template v-if="klausurKonflikte().size() > 0">
-						<i-ri-alert-fill class="text-error -my-0.5" />
-						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
-					</template>
-					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
-						<i-ri-alert-fill class="text-error -my-0.5" />
-						<span> Konflikte</span>
-					</template>
-					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
-						<i-ri-checkbox-circle-fill class="text-success -my-1" />
-						<span>Keine Konflikte</span>
-					</template>
-					<template v-else>
-						<span class="opacity-50">Konflikte</span>
-					</template>
-				</span>
-			</template>
-			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(3).size() > 0}">
-				<ul class="flex flex-col gap-3">
-					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
-						<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.getKey().kursKurzbezeichnung.split('-')[0])};`">{{ klausur.getKey().kursKurzbezeichnung }}</span>
-						<div class="leading-tight">
-							{{ [...klausur.getValue()].map(sid => mapSchueler.get(sid)?.vorname + ' ' + mapSchueler.get(sid)?.nachname).join(", ") }}
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-5">
-				<div class="text-headline-md leading-tight mb-3">
-					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler:innen</div>
-					<div class="opacity-50">Drei oder mehr Klausuren in einer KW</div>
-				</div>
-				<ul class="flex flex-col gap-4">
-					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
-						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
-						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
-								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur).datum !== null ? kMan().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
-							</span>
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div v-else-if="terminSelected === undefined" class="mt-5 opacity-50 flex flex-col gap-2">
-				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
-			</div>-->
-		</svws-ui-content-card>
 	</div>
 </template>
 

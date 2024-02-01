@@ -4,16 +4,16 @@ import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, Server
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
-import type { GostKlausurplanungDetailAnsichtProps } from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsichtProps";
-import SGostKlausurplanungDetailAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsicht.vue";
+import type { GostKlausurplanungNachschreibAnsichtProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreibAnsichtProps";
+import SGostKlausurplanungNachschreibAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreibAnsicht.vue";
 
-export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.detailansicht", "detailansicht", SGostKlausurplanungDetailAnsichtVue);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.nachschreibansicht", "nachschreibansicht", SGostKlausurplanungNachschreibAnsichtVue);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Detailplan";
+		super.text = "Nachschreibplan";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -25,7 +25,7 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, Rou
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungDetailAnsichtProps {
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreibAnsichtProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
@@ -39,5 +39,5 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, Rou
 
 }
 
-export const routeGostKlausurplanungDetailAnsicht = new RouteGostKlausurplanungDetailAnsicht();
+export const routeGostKlausurplanungNachschreibAnsicht = new RouteGostKlausurplanungNachschreibAnsicht();
 
