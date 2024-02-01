@@ -26,6 +26,11 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	 */
 	public _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen : boolean = false;
 
+	/**
+	 * True, falls NachschreiberInnen mit der selben Fachart (Fach + Kursart) auf den selben Termin geblockt werden sollen.
+	 */
+	public _regel_gleiche_fachart_auf_selbe_termine_verteilen : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -58,6 +63,9 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 		if (typeof obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen === "undefined")
 			 throw new Error('invalid json format, missing attribute _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen');
 		result._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen;
+		if (typeof obj._regel_gleiche_fachart_auf_selbe_termine_verteilen === "undefined")
+			 throw new Error('invalid json format, missing attribute _regel_gleiche_fachart_auf_selbe_termine_verteilen');
+		result._regel_gleiche_fachart_auf_selbe_termine_verteilen = obj._regel_gleiche_fachart_auf_selbe_termine_verteilen;
 		return result;
 	}
 
@@ -89,6 +97,7 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen + ',';
+		result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -129,6 +138,9 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 		}
 		if (typeof obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen !== "undefined") {
 			result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen + ',';
+		}
+		if (typeof obj._regel_gleiche_fachart_auf_selbe_termine_verteilen !== "undefined") {
+			result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

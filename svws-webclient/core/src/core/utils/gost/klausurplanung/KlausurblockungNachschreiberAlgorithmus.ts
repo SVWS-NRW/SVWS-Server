@@ -23,10 +23,6 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	 */
 	private readonly _logger : Logger;
 
-	private _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen : boolean = false;
-
-	private _regel_gleiche_fachart_auf_selbe_termine_verteilen : boolean = false;
-
 
 	/**
 	 * Der Konstruktor.
@@ -54,24 +50,6 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	}
 
 	/**
-	 * Aktiviert/Deaktiviert die Regel. Falls TRUE, werden NachschreiberInnen der selben Klausur auf den selben Termin geblockt.
-	 *
-	 * @param b falls TRUE, wird die Regel angewandt.
-	 */
-	public set_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen(b : boolean) : void {
-		this._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = b;
-	}
-
-	/**
-	 * Aktiviert/Deaktiviert die Regel. Falls TRUE, werden NachschreiberInnen mit der selben Fachart (Fach + Kursart) auf den selben Termin geblockt.
-	 *
-	 * @param b falls TRUE, wird die Regel angewandt.
-	 */
-	public set_regel_gleiche_fachart_auf_selbe_termine_verteilen(b : boolean) : void {
-		this._regel_gleiche_fachart_auf_selbe_termine_verteilen = b;
-	}
-
-	/**
 	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
 	 * @param maxTimeMillis   Die maximal erlaubte Berechnungszeit (in Millisekunden).
@@ -88,7 +66,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			DeveloperNotificationException.ifTrue("Ungültige Kurs-ID = " + idKurs, idKurs < 0);
 			let added : boolean = false;
 			for (const gruppe of nachschreiberGruppen)
-				if (this._istHinzufuegenErlaubt(gruppe, skt, klausurManager)) {
+				if (this._istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
@@ -100,7 +78,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return ergebnis;
 	}
 
-	private _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, klausurManager : GostKursklausurManager) : boolean {
+	private _istHinzufuegenErlaubt(gruppe : List<GostSchuelerklausurTermin>, skt1 : GostSchuelerklausurTermin, config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : boolean {
 		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
 		const sk1 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt1);
 		const idFach : number = klausurManager.vorgabeBySchuelerklausurTermin(skt1).idFach;
@@ -110,12 +88,12 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			if (sk1.idSchueler === sk2.idSchueler)
 				return false;
 		}
-		if (this._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
+		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
 			const first : GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			const sk2 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
 			return (sk1.idKursklausur === sk2.idKursklausur);
 		}
-		if (this._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
+		if (config._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
 			const first : GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			const fachGleich : boolean = klausurManager.vorgabeBySchuelerklausurTermin(first).idFach === idFach;
 			const kursartGleich : boolean = JavaObject.equalsTranspiler(klausurManager.vorgabeBySchuelerklausurTermin(first).kursart, (kursart));

@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 
-	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenDataCollection } from "@core";
+	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
@@ -121,10 +121,10 @@
 
 	async function blocken() {
 		loading.value = true;
-		const data = new GostKlausurenDataCollection();
-		data.termine.addAll(termine.value);
-		data.schuelerklausurtermine.addAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value));
-		await props.blockenNachschreibklausuren(data);
+		const config = new GostNachschreibterminblockungKonfiguration();
+		config.termine = termine.value;
+		config.schuelerklausurtermine = props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value);
+		await props.blockenNachschreibklausuren(config);
 		loading.value = false;
 	}
 

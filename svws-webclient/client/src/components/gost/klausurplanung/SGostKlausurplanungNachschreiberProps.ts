@@ -1,11 +1,11 @@
 import type {
 	GostHalbjahr,
 	GostKlausurenCollectionSkrsKrs,
-	GostKlausurenDataCollection,
 	GostKlausurtermin,
 	GostKursklausur,
 	GostKursklausurManager,
 	GostSchuelerklausurTermin,
+	GostNachschreibterminblockungKonfiguration,
 	List,
 	SchuelerListeEintrag,
 } from "@core";
@@ -20,5 +20,5 @@ export interface GostKlausurplanungNachschreiberProps {
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	blockenNachschreibklausuren: (blockungDaten: GostKlausurenDataCollection) => Promise<void>;
+	blockenNachschreibklausuren: (config: GostNachschreibterminblockungKonfiguration) => Promise<void>;
 }
