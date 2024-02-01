@@ -245,6 +245,8 @@ public class DBBackupManager {
 				logger.logLn("[OK]");
 			}
 		}
+		// Falls das Schema deaktiviert wurde, dann hebe die Deaktivierung wieder auf
+		SVWSKonfiguration.get().activateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 	}
 
 

@@ -118,7 +118,7 @@ public final class DataSQLite {
 			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
 			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
 			final boolean hatSchemaConfig = (tgtConfig != null);
-			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
 

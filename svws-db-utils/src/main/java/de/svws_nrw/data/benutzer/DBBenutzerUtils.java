@@ -110,7 +110,11 @@ public final class DBBenutzerUtils {
 			final DBConfig config = user.connectionManager.getConfig();
 			if ((config == null) || (config.getDBSchema() == null))
 				return user;
-			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
+			final String path = request.getRequestURI();
+			if (path == null)
+				throw OperationError.SERVICE_UNAVAILABLE.exception("Der Dienst ist noch nicht verfügbar, da kein gültiger Pfad angegeben wurde.");
+			final boolean allowDeactivatedSchema = path.matches("/api/schema/import/.*") || path.matches("/api/schema/migrate/.*");
+			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()) && !allowDeactivatedSchema)
 				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
 				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");

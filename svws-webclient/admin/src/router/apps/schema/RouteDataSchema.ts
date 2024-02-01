@@ -215,15 +215,9 @@ export class RouteDataSchema {
 	importSchema = async (data: FormData, schema: string) => {
 		api.status.start();
 		const result = await api.privileged.importSQLite2Schema(data, schema);
-		const list = await api.privileged.getSVWSSchemaListe();
-		for (const item of list)
-			if (item.name === schema) {
-				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
-				this.setPatchedState({mapSchema: this.mapSchema});
-				await this.gotoSchema(item);
-				break;
-			}
 		api.status.stop();
+		await this.init(schema);
+		await this.setSchema(this.auswahl);
 		return result;
 	}
 
@@ -243,6 +237,8 @@ export class RouteDataSchema {
 		try {
 			const result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
 			api.status.stop();
+			await this.init(this.auswahl.name);
+			await this.setSchema(this.auswahl);
 			return result;
 		} catch (error) {
 			api.status.stop();
@@ -348,6 +344,7 @@ export class RouteDataSchema {
 					throw new DeveloperNotificationException("Es ist ein Fehler aufgetreten bei der Migration");
 			}
 			await this.init(schema);
+			await this.setSchema(this.auswahl);
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 		}

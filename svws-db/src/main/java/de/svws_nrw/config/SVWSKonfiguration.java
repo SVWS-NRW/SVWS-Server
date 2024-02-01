@@ -664,8 +664,24 @@ public final class SVWSKonfiguration {
 
 
 	/**
+	 * Aktviert das angegebene Schema, so dass es im Anschluss nach aussen hin
+	 * wieder zur Verfügung steht.
+	 *
+	 * @param schemaName   der Name des zu entsperrenden Schemas
+	 *
+	 * @return true, fall das Schema entgesperrt werden konnte
+	 */
+	public synchronized boolean activateSchema(final String schemaName) {
+		if (!schemataDeactivated.contains(schemaName))
+			return false;
+		schemataDeactivated.remove(schemaName);
+		return true;
+	}
+
+
+	/**
 	 * Deaktviert das angegebene Schema, so dass es im Anschluss nach aussen hin
-	 * nicht mehr zur Verfpgung steht.
+	 * nicht mehr zur Verfügung steht.
 	 *
 	 * @param schemaName   der Name des zu sperrenden Schemas
 	 *

@@ -178,9 +178,9 @@
 
 	@keyframes bg {
 		0%, 100% { background-color: #2285d5; }
-	25% { background-color: #8a5cf6; }
-	50% { background-color: #84cc16; }
-	75% { background-color: #fff693; }
+		25% { background-color: #8a5cf6; }
+		50% { background-color: #84cc16; }
+		75% { background-color: #fff693; }
 	}
 
 	.modal {
@@ -200,11 +200,12 @@
 
 	.v-enter-active,
 	.v-leave-active {
-	transition: opacity 0.5s ease;
+		transition: opacity 0.5s ease;
 	}
 
 	.v-enter-from,
 	.v-leave-to {
-	opacity: 0;
+		opacity: 0;
 	}
+
 </style>
