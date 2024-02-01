@@ -30,10 +30,8 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 	private boolean _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = false;
 
-	// Könntest du noch config-optionen rein nehmen,
-	// wie alle Klausuren derselben Kursart + Fachid am selben Termin
-	// an die Fach-ID und Kursart kommst du mit
-	// klausurManager.vorgabeBySchuelerklausurTermin(skt).idFach / kursart
+	private boolean _regel_gleiche_fachart_auf_selbe_termine_verteilen = false;
+
 	/**
 	 * Der Konstruktor.
 	 */
@@ -57,6 +55,15 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	 */
 	public void set_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen(final boolean b) {
 		this._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = b;
+	}
+
+	/**
+	 * Aktiviert/Deaktiviert die Regel. Falls TRUE, werden NachschreiberInnen mit der selben Fachart (Fach + Kursart) auf den selben Termin geblockt.
+	 *
+	 * @param b falls TRUE, wird die Regel angewandt.
+	 */
+	public void set_regel_gleiche_fachart_auf_selbe_termine_verteilen(final boolean b) {
+		this._regel_gleiche_fachart_auf_selbe_termine_verteilen = b;
 	}
 
 	/**
@@ -107,7 +114,12 @@ public class KlausurblockungNachschreiberAlgorithmus {
 					final @NotNull GostSchuelerklausurTermin skt1,
 					final @NotNull GostKursklausurManager klausurManager) {
 
+		// Integrität überprüfen.
+		DeveloperNotificationException.ifTrue("Die Gruppe muss mindestens ein Element enthalten!", gruppe.isEmpty());
+
 		final @NotNull GostSchuelerklausur sk1 = klausurManager.schuelerklausurBySchuelerklausurtermin(skt1);
+		final long idFach = klausurManager.vorgabeBySchuelerklausurTermin(skt1).idFach;
+		final @NotNull String kursart = klausurManager.vorgabeBySchuelerklausurTermin(skt1).kursart;
 
 		// Verbiete, dass ein Schüler doppelt in einer Gruppe ist.
 		for (final @NotNull GostSchuelerklausurTermin skt2 : gruppe) {
@@ -116,11 +128,19 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				return false;
 		}
 
-		// Sollen Schüler der selben Kurs-Klausur in der selben Gruppe landen?
+		// Sollen Schüler-Nachschreibklausuren der selben Kurs-Klausur in der selben Gruppe landen?
 		if (_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
-			final @NotNull GostSchuelerklausurTermin skt2 = ListUtils.getNonNullElementAtOrException(gruppe, 0);
-			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(skt2);
+			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
+			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
 			return (sk1.idKursklausur == sk2.idKursklausur);
+		}
+
+		// Sollen Schüler-Nachschreibklausuren der selben Fachart in der selben Gruppe landen?
+		if (_regel_gleiche_fachart_auf_selbe_termine_verteilen) {
+			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
+			final boolean fachGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).idFach == idFach;
+			final boolean kursartGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).kursart.equals(kursart);
+			return fachGleich && kursartGleich;
 		}
 
 		// Ein Hinzufügen zu dieser Gruppe ist nicht erlaubt.
@@ -157,7 +177,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 			final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppen,
 			final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis) {
 
-		// Sammle Schüler_IDs des Termins.
+		// Sammle Schüler-IDs des Termins.
 		final HashSet<@NotNull Long> schuelerIDsDesTermin = new HashSet<>();
 		if (idTermin >= 0) {
 			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
@@ -170,7 +190,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 			final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe = i.next();
 			boolean kollision = false;
 
-			// SammleIDs
+			// Sammle Schüler-IDs der Gruppe.
 			final @NotNull List<@NotNull Long> schuelerIDsDerGruppe = new ArrayList<>();
 			for (final @NotNull GostSchuelerklausurTermin skt : gruppe) {
 				final @NotNull GostSchuelerklausur sk = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
