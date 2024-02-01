@@ -372,7 +372,23 @@ export class RouteDataSchema {
 			await this.init(schema);
 			await this.setSchema(this.auswahl);
 		} catch(error) {
-			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
+			if (error instanceof OpenApiError) {
+				if (error.response instanceof Response) {
+					try {
+						const json = await error.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch(e) {
+						const res = new SimpleOperationResponse();
+						res.success = false;
+						res.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
+						return res;
+					}
+				}
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + error);
+			return res;
 		}
 		api.status.stop();
 		return result;

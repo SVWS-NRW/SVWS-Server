@@ -46,7 +46,7 @@
 <script setup lang="ts">
 
 	import type { List, SimpleOperationResponse } from "@core";
-	import { ref } from "vue";
+	import { shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 
 	const props = defineProps<{
@@ -62,12 +62,12 @@
 	items.set('mssql', 'MSSQL');
 	items.set('mdb', 'Access (MDB)');
 
-	const zielSchema = ref("");
-	const zielUsername = ref("");
-	const zielUserPassword = ref("");
-	const loading = ref<boolean>(false);
-	const logs = ref<List<string|null>>();
-	const status = ref<boolean>();
+	const zielSchema = shallowRef("");
+	const zielUsername = shallowRef("");
+	const zielUserPassword = shallowRef("");
+	const loading = shallowRef<boolean>(false);
+	const logs = shallowRef<List<string|null>>();
+	const status = shallowRef<boolean>();
 
 	async function migrate() {
 		loading.value = true;
@@ -99,9 +99,9 @@
 		zielUsername.value = '';
 	}
 
-	const file = ref<File | null>(null);
+	const file = shallowRef<File | null>(null);
 
-	const _showModal = ref<boolean>(false);
+	const _showModal = shallowRef<boolean>(false);
 	const showModal = () => _showModal;
 
 	const openModal = () => {

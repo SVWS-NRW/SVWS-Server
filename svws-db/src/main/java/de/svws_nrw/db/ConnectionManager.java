@@ -218,7 +218,15 @@ public final class ConnectionManager {
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
 					man.close();
-					throw new DBException(ae);
+					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie Benutzername und Kennwort.");
+				}
+				if (pe.getCause() instanceof DatabaseException) {
+					man.close();
+					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie die Verbindungsparameter.");
+				}
+				if (pe.getMessage().startsWith("java.lang.IllegalStateException: Could not determine FileFormat")) {
+					man.close();
+					throw new DBException("Fehlerhaftes oder zu altes MDB-Datei-Format.");
 				}
 				throw pe;
 			}

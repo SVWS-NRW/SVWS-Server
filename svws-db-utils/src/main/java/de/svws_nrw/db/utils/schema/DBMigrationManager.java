@@ -359,14 +359,26 @@ public final class DBMigrationManager {
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
 			try {
 				srcManager = getSchemaManager(srcConfig, Benutzer.create(srcConfig), true);
-			} catch (final PersistenceException e) {
-				if (e.getMessage().startsWith("java.lang.IllegalStateException: Could not determine FileFormat"))
-					throw new DBException("Fehlerhaftes oder zu altes MDB-Datei-Format.");
-				throw e;
+			} catch (@SuppressWarnings("unused") final PersistenceException pe) {
+				logger.logLn(" " + strFehler);
+				throw new DBException("Unbekannter Fehler beim Aufbau der Verbindung.");
+			} catch (final DBException de) {
+				logger.logLn(" " + strFehler);
+				throw de;
 			}
+			logger.logLn(strOK);
 
 			logger.log("-> Verbinde zum Ziel-Schema...");
-			tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false);
+			try {
+				tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false);
+			} catch (@SuppressWarnings("unused") final PersistenceException pe) {
+				logger.logLn(" " + strFehler);
+				throw new DBException("Unbekannter Fehler beim Aufbau der Verbindung.");
+			} catch (final DBException de) {
+				logger.logLn(" " + strFehler);
+				throw de;
+			}
+			logger.logLn(strOK);
 
 			try {
 				tgtManager.createSVWSSchema(tgtManager.getUser(), 0, false, true);
