@@ -17,22 +17,6 @@
 			</div>
 			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative"
 				:columns="cols" :items="liste" :count="!liste.isEmpty()">
-				<template #header(bewertung)>
-					<svws-ui-tooltip indicator="help">
-						<span class="my-0.5">Ergebnis</span>
-						<template #content>
-							<div class="normal-case text-base rich-text">
-								<div class="my-1">Bewertung durch:</div>
-								<ul class="mb-1 list-disc pl-4">
-									<li>Regelverletzungen</li>
-									<li>Wahlkonflikte</li>
-									<li>max. Kursdifferenz</li>
-									<li>Fächerparallelität</li>
-								</ul>
-							</div>
-						</template>
-					</svws-ui-tooltip>
-				</template>
 				<template #cell(wert1)="{ rowData: row }">
 					<div class="table-cell">
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 1)} Regelverletzungen`"
