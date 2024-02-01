@@ -325,8 +325,8 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getFaecherSchriftlichMoeglich() : List<GostFach> {
 		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList();
-		for (let f of this._faecher) {
-			let zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
+		for (const f of this._faecher) {
+			const zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 			if (zf as unknown === ZulaessigesFach.PX as unknown || zf as unknown === ZulaessigesFach.VX as unknown || zf as unknown === ZulaessigesFach.VO as unknown || zf as unknown === ZulaessigesFach.IN as unknown)
 				continue;
 			faecherSchriftlichMoeglich.add(f);

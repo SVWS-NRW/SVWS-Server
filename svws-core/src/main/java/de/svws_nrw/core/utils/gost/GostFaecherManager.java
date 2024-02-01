@@ -310,8 +310,8 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<@NotNull GostFach> getFaecherSchriftlichMoeglich() {
 		final @NotNull List<@NotNull GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
-		for (@NotNull GostFach f : _faecher) {
-			ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
+		for (final @NotNull GostFach f : _faecher) {
+			final ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 			if (zf == ZulaessigesFach.PX || zf == ZulaessigesFach.VX || zf == ZulaessigesFach.VO || zf == ZulaessigesFach.IN)
 				continue;
 			faecherSchriftlichMoeglich.add(f);
