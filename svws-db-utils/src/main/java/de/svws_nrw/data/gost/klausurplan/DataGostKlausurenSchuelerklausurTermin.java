@@ -245,7 +245,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 
 		KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
 
-		List<Pair<GostSchuelerklausurTermin, Long>> blockung = blockAlgo.berechne(config, kMan, 1000);
+		List<Pair<GostSchuelerklausurTermin, Long>> blockung = blockAlgo.berechne(config, kMan);
 
 		Map<Long, DTOGostKlausurenSchuelerklausurenTermine> mapNachschreiber = getSchuelerklausurterminDTOsZuSchuelerklausurterminen(conn, config.schuelerklausurtermine).stream().collect(Collectors.toMap(skt -> skt.ID, skt -> skt));
 		Map<Long, DTOGostKlausurenTermine> mapNeueTermine = new HashMap<>();

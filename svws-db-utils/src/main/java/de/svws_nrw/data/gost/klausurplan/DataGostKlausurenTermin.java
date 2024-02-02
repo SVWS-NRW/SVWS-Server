@@ -18,7 +18,6 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
@@ -30,20 +29,14 @@ import jakarta.ws.rs.core.Response;
  */
 public final class DataGostKlausurenTermin extends DataManager<Long> {
 
-	private final int _abiturjahr;
-
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link GostKlausurtermin}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 */
-	public DataGostKlausurenTermin(final DBEntityManager conn, final int abiturjahr) {
+	public DataGostKlausurenTermin(final DBEntityManager conn) {
 		super(conn);
-		_abiturjahr = abiturjahr;
-		if (abiturjahr != -1 && conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)
-			throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + abiturjahr);
 	}
 
 	private static final Set<String> requiredCreateAttributes = Set.of("abijahr", "halbjahr", "quartal");

@@ -1158,7 +1158,7 @@ export class GostKursklausurManager extends JavaObject {
 		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
 		if (menge1 !== null)
 			for (let termin1 of menge1)
-				map1.put(this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+				DeveloperNotificationException.ifMapPutOverwrites(map1, this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 		return this.berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(map1, menge2);
 	}
 
@@ -1175,7 +1175,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (menge1 === null || menge2 === null)
 			return ergebnis;
 		for (let skt2 of menge2) {
-			let sk : GostSchuelerklausur = this.schuelerklausurGetByIdOrException(skt2.idSchuelerklausur);
+			let sk : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(skt2);
 			let skt1 : GostSchuelerklausurTermin | null = menge1.get(sk.idSchueler);
 			if (skt1 !== null && skt1.id !== skt2.id)
 				ergebnis.put(skt1, skt2);

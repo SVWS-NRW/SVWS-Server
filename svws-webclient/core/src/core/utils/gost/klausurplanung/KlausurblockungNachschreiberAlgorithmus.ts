@@ -53,11 +53,10 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	/**
 	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
-	 * @param maxTimeMillis   Die maximal erlaubte Berechnungszeit (in Millisekunden).
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
-	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager, maxTimeMillis : number) : List<Pair<GostSchuelerklausurTermin, number>> {
+	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const nachschreiberGruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList();
 		for (const skt of config.schuelerklausurtermine) {
 			const sk : GostSchuelerklausur | null = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
@@ -78,7 +77,6 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		const zeitEnde : number = System.currentTimeMillis() + config.maxTimeMillis;
 		let bestBewertung : KlausurblockungNachschreiberAlgorithmusBewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
 		let bestErgebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bestBewertung, config.termine, nachschreiberGruppen, klausurManager);
-		let c : number = 1;
 		while (System.currentTimeMillis() < zeitEnde) {
 			const bewertung : KlausurblockungNachschreiberAlgorithmusBewertung | null = new KlausurblockungNachschreiberAlgorithmusBewertung();
 			const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = KlausurblockungNachschreiberAlgorithmus._algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung, config.termine, nachschreiberGruppen, klausurManager);
@@ -86,11 +84,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 				bestBewertung = bewertung;
 				bestErgebnis = ergebnis;
 			}
-			c++;
 		}
-		console.log(JSON.stringify("In " + config.maxTimeMillis + " wurden " + c + " Blockungen ausprobiert."));
-		console.log(JSON.stringify("bestBewertung.anzahl_termine = " + bestBewertung.anzahl_termine));
-		console.log(JSON.stringify("bestBewertung.anzahl_zusatztermine = " + bestBewertung.anzahl_zusatztermine));
 		return bestErgebnis;
 	}
 

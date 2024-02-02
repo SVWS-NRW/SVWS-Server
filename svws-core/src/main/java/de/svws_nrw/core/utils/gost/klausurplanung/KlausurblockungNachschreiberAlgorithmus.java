@@ -47,14 +47,12 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	/**
 	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
-	 * @param maxTimeMillis   Die maximal erlaubte Berechnungszeit (in Millisekunden).
 	 *
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> berechne(
 					final @NotNull GostNachschreibterminblockungKonfiguration config,
-					final @NotNull GostKursklausurManager klausurManager,
-					final long maxTimeMillis) {
+					final @NotNull GostKursklausurManager klausurManager) {
 
 		// 1) Bilde Gruppen von Nachschreibern, falls dies bestimmte Kriterien/Regeln erfordern.
 		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> nachschreiberGruppen = new ArrayList<>(); // Liste der Gruppen.
@@ -88,7 +86,6 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				_algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bestBewertung, config.termine, nachschreiberGruppen, klausurManager);
 
 		// 3) Solange noch Zeit ist, berechne weitere Ergebnisse.
-		int c = 1;
 		while (System.currentTimeMillis() < zeitEnde) {
 			final KlausurblockungNachschreiberAlgorithmusBewertung bewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
 			final @NotNull List<@NotNull Pair<@NotNull GostSchuelerklausurTermin, @NotNull Long>> ergebnis =
@@ -99,13 +96,7 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				bestErgebnis = ergebnis;
 			}
 
-			c++;
 		}
-
-		System.out.println("In " + config.maxTimeMillis + " wurden " + c + " Blockungen ausprobiert.");
-		System.out.println("bestBewertung.anzahl_termine = " + bestBewertung.anzahl_termine);
-		System.out.println("bestBewertung.anzahl_zusatztermine = " + bestBewertung.anzahl_zusatztermine);
-
 		return bestErgebnis;
 	}
 
