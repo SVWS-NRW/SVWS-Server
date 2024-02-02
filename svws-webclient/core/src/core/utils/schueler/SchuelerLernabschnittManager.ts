@@ -116,9 +116,8 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	private initLeistungsdaten(leistungsdaten : List<SchuelerLeistungsdaten>) : void {
-		for (const leistung of leistungsdaten) {
-			this.leistungAdd(leistung);
-		}
+		for (const leistung of leistungsdaten)
+			this.leistungAddInternal(leistung);
 	}
 
 	private initFaecher(faecher : List<FaecherListeEintrag>) : void {
@@ -184,13 +183,32 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		return this._lernabschnittsdaten;
 	}
 
+	private leistungAddInternal(leistungsdaten : SchuelerLeistungsdaten) : void {
+		this._mapLeistungById.put(leistungsdaten.id, leistungsdaten);
+	}
+
 	/**
 	 * Fügt die übergebenen Leistungsdaten zu dem Lernabschnitt hinzu
 	 *
 	 * @param leistungsdaten   die hinzuzufügenden Leistungsdaten
 	 */
 	public leistungAdd(leistungsdaten : SchuelerLeistungsdaten) : void {
-		this._mapLeistungById.put(leistungsdaten.id, leistungsdaten);
+		this._lernabschnittsdaten.leistungsdaten.add(leistungsdaten);
+		this.leistungAddInternal(leistungsdaten);
+	}
+
+	/**
+	 * Entfernt die übergebenen Leistungsdaten anhand der ID aus dem Lernabschnitt
+	 *
+	 * @param idLeistungsdaten   die ID der zu entfernenden Leistungsdaten
+	 */
+	public leistungRemoveByID(idLeistungsdaten : number) : void {
+		for (let i : number = this._lernabschnittsdaten.leistungsdaten.size() - 1; i >= 0; i--) {
+			const leistung : SchuelerLeistungsdaten = this._lernabschnittsdaten.leistungsdaten.get(i);
+			if (leistung.id === idLeistungsdaten)
+				this._lernabschnittsdaten.leistungsdaten.remove(leistung);
+		}
+		this._mapLeistungById.remove(idLeistungsdaten);
 	}
 
 	/**

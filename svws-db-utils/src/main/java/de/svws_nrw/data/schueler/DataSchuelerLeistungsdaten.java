@@ -74,8 +74,8 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.zusatzkraftID = dto.Zusatzkraft_ID;
 		daten.zusatzkraftWochenstunden = dto.WochenstdZusatzkraft == null ? 0 : dto.WochenstdZusatzkraft;
 		daten.aufZeugnis = dto.AufZeugnis == null || dto.AufZeugnis;
-		daten.note = dto.NotenKrz.kuerzel;
-		daten.noteQuartal = dto.NotenKrzQuartal.kuerzel;
+		daten.note = dto.NotenKrz == null ? Note.KEINE.kuerzel : dto.NotenKrz.kuerzel;
+		daten.noteQuartal = dto.NotenKrzQuartal == null ? Note.KEINE.kuerzel : dto.NotenKrzQuartal.kuerzel;
 		daten.istGemahnt = dto.Warnung != null && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
 		daten.mahndatum = dto.Warndatum;
 		daten.istEpochal = dto.VorherAbgeschl != null && dto.VorherAbgeschl;

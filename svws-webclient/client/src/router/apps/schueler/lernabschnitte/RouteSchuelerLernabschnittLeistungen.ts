@@ -31,7 +31,9 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, Rou
 		return {
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
-			patchLeistung: routeSchuelerLernabschnitte.data.patchLeistung
+			patchLeistung: routeSchuelerLernabschnitte.data.patchLeistung,
+			addLeistung: routeSchuelerLernabschnitte.data.addLeistung,
+			deleteLeistungen: routeSchuelerLernabschnitte.data.deleteLeistungen,
 		};
 	}
 

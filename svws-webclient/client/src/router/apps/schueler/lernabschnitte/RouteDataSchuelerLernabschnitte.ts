@@ -184,6 +184,20 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		this.commit();
 	}
 
+	addLeistung = async (fachID : number) => {
+		const data : Partial<SchuelerLeistungsdaten> = { lernabschnittID: this.daten.id, fachID };
+		const result = await api.server.addSchuelerLeistungsdaten(data, api.schema);
+		this.manager.leistungAdd(result);
+		this.commit();
+	}
+
+	deleteLeistungen = async (leistungenIDs: List<number>) => {
+		const leistungen = await api.server.deleteSchuelerLeistungsdatenMultiple(leistungenIDs, api.schema);
+		for (const id of leistungenIDs)
+			this.manager.leistungRemoveByID(id);
+		this.commit();
+	}
+
 	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) : Promise<void> => {
 		await api.server.patchSchuelerLernabschnittsdatenBemerkungen(data, api.schema, this.daten.id);
 		Object.assign(this.daten.bemerkungen, data);
