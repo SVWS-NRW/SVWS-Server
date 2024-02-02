@@ -42,6 +42,23 @@
 			<svws-ui-button type="primary" @click="_showModalTerminGrund = false"> OK </svws-ui-button>
 		</template>
 	</svws-ui-modal>
+	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
+		<template #modalTitle>
+			Automatisch blocken
+		</template>
+		<template #modalContent>
+			<svws-ui-checkbox type="toggle" v-model="nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
+				Gleicher Termin falls gleicher Kurs
+			</svws-ui-checkbox>
+			<svws-ui-checkbox type="toggle" v-model="gleiche_fachart_auf_selbe_termine" class="text-left">
+				Gleicher Termin falls gleiches Fach und gleiche Kursart
+			</svws-ui-checkbox>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
+		</template>
+	</svws-ui-modal>
 
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
@@ -65,7 +82,7 @@
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Nachschreibtermin</svws-ui-button>
 					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
-					<svws-ui-button type="secondary" @click="blocken"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = true"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -106,6 +123,10 @@
 
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
+	const _showModalAutomatischBlocken = ref<boolean>(false);
+	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
+	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
+	const gleiche_fachart_auf_selbe_termine = ref(false);
 
 	const loading = ref<boolean>(false);
 
@@ -120,10 +141,13 @@
 	};
 
 	async function blocken() {
+		showModalAutomatischBlocken().value = false
 		loading.value = true;
 		const config = new GostNachschreibterminblockungKonfiguration();
 		config.termine = termine.value;
 		config.schuelerklausurtermine = props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value);
+		config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
+		config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
 		await props.blockenNachschreibklausuren(config);
 		loading.value = false;
 	}
