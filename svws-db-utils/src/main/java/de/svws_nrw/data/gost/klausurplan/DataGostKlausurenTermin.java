@@ -130,23 +130,25 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param abiturjahr 	das Abiturjahr
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param ganzesSchuljahr true, um Termine für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
 	 *
 	 * @return die Liste der Kursklausuren
 	 */
-	public List<GostKlausurtermin> getKlausurtermine(final int halbjahr, final boolean ganzesSchuljahr) {
+	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) {
 		final GostHalbjahr ghj = DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 		List<GostKlausurtermin> termine = null;
 		if (halbjahr <= 0)
 			termine = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
-				.setParameter("jgid", _abiturjahr)
+				.setParameter("jgid", abiturjahr)
 				.getResultList().stream()
 				.map(dtoMapper::apply)
 				.toList();
 		else {
 			termine = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr IN :hj", DTOGostKlausurenTermine.class)
-			.setParameter("jgid", _abiturjahr)
+			.setParameter("jgid", abiturjahr)
 			.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[]{ghj}))
 			.getResultList().stream()
 			.map(dtoMapper::apply)
