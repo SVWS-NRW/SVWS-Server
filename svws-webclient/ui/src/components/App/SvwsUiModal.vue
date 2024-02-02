@@ -8,7 +8,7 @@
 					leave="ease-in duration-100" leave-from="opacity-100" leave-to="opacity-0">
 					<div class="modal--overlay" @click="closeModal" />
 				</TransitionChild>
-				<TransitionChild as="div"
+				<TransitionChild as="div" v-bind="$attrs"
 					enter="ease-out duration-200" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100"
 					leave="ease-in duration-100" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95"
 					class="modal"
@@ -62,10 +62,12 @@
 	const props = withDefaults(defineProps<{
 		show: () => Ref<boolean>;
 		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
+		minHeight?: string | undefined;
 		type?: 'default' | 'danger';
 	}>(), {
 		size: 'small',
-		type: 'default'
+		type: 'default',
+		minHeight: undefined,
 	});
 
 	function closeModal() {
