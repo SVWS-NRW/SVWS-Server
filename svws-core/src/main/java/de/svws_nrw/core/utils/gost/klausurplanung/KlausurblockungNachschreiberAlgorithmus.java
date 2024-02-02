@@ -2,7 +2,6 @@ package de.svws_nrw.core.utils.gost.klausurplanung;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -192,14 +191,10 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
 
-		// Verteile die jeweilige Gruppe auf den Termin, falls es keine Kollision gibt.
-		final @NotNull List<@NotNull List<@NotNull GostSchuelerklausurTermin>> gruppenPermutiert = ListUtils.getCopyPermuted(gruppen, _random);
-		final Iterator<@NotNull List<@NotNull GostSchuelerklausurTermin>> i = gruppenPermutiert.iterator();
-		while (i.hasNext()) {
-			final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe = i.next();
-			boolean kollision = false;
-
+		// Gehe die Gruppen in zufälliger Reihenfolge durch und versuche die Gruppe auf den den Termin zu verteilen.
+		for (final @NotNull List<@NotNull GostSchuelerklausurTermin> gruppe : ListUtils.getCopyPermuted(gruppen, _random)) {
 			// Sammle Schüler-IDs der Gruppe.
+			boolean kollision = false;
 			final @NotNull List<@NotNull Long> schuelerIDsDerGruppe = new ArrayList<>();
 			for (final @NotNull GostSchuelerklausurTermin skt : gruppe) {
 				final @NotNull GostSchuelerklausur sk = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
@@ -209,12 +204,15 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 			// Füge die Gruppe hinzu, falls es keine Kollision gab.
 			if (!kollision) {
-				// GostSchuelerklausurTermin --> TerminID
+				// Ergebnis erzeugen
 				for (final @NotNull GostSchuelerklausurTermin skt : gruppe)
 					ergebnis.add(new Pair<>(skt, idTermin));
-				// "schuelerIDsDerGruppe" der "schuelerIDsDesTermin" hinzufügen.
+
+				// Schüler-IDs des Termins ergänzen
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
-				i.remove();
+
+				// Gruppe aus Gruppen entfernen.
+				gruppen.remove(gruppe);
 			}
 		}
 

@@ -502,6 +502,7 @@ export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
+export { ArrayUtils } from './core/utils/ArrayUtils';
 export { AttributMitAuswahl } from './core/utils/AttributMitAuswahl';
 export { AuswahlManager } from './core/utils/AuswahlManager';
 export { BlockungsUtils } from './core/utils/BlockungsUtils';

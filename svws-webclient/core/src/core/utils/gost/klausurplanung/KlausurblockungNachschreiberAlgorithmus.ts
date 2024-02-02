@@ -8,7 +8,6 @@ import { KlausurblockungNachschreiberAlgorithmusBewertung } from '../../../../co
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import { GostKursklausurManager } from '../../../../core/utils/gost/klausurplanung/GostKursklausurManager';
-import type { JavaIterator } from '../../../../java/util/JavaIterator';
 import type { List } from '../../../../java/util/List';
 import { GostNachschreibterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { ListUtils } from '../../../../core/utils/ListUtils';
@@ -143,10 +142,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
-		const gruppenPermutiert : List<List<GostSchuelerklausurTermin>> = ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random);
-		const i : JavaIterator<List<GostSchuelerklausurTermin>> | null = gruppenPermutiert.iterator();
-		while (i.hasNext()) {
-			const gruppe : List<GostSchuelerklausurTermin> = i.next();
+		for (const gruppe of ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random)) {
 			let kollision : boolean = false;
 			const schuelerIDsDerGruppe : List<number> = new ArrayList();
 			for (const skt of gruppe) {
@@ -158,7 +154,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 				for (const skt of gruppe)
 					ergebnis.add(new Pair(skt, idTermin));
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
-				i.remove();
+				gruppen.remove(gruppe);
 			}
 		}
 	}
