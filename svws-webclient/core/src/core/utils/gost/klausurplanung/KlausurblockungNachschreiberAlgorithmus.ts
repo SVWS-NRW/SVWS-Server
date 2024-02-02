@@ -122,17 +122,22 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	private static _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
 		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList();
 		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList(nachschreiberGruppen);
-		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random))
-			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, termin.id, klausurManager, gruppen, ergebnis);
+		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random)) {
+			const gruppenanzahl : number = gruppen.size();
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
+			if (gruppen.size() < gruppenanzahl)
+				bewertung.anzahl_termine++;
+		}
 		let fakeID : number = -1;
 		while (!gruppen.isEmpty()) {
-			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung, fakeID, klausurManager, gruppen, ergebnis);
+			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(fakeID, klausurManager, gruppen, ergebnis);
 			fakeID--;
+			bewertung.anzahl_zusatztermine++;
 		}
 		return ergebnis;
 	}
 
-	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
+	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
 		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet();
 		if (idTermin >= 0) {
 			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
@@ -150,10 +155,6 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 				kollision = kollision || schuelerIDsDesTermin.contains(sk.idSchueler);
 			}
 			if (!kollision) {
-				if (idTermin >= 0)
-					bewertung.anzahl_termine++;
-				else
-					bewertung.anzahl_zusatztermine++;
 				for (const skt of gruppe)
 					ergebnis.add(new Pair(skt, idTermin));
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
