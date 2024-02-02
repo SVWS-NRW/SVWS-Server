@@ -3,7 +3,9 @@ package de.svws_nrw.data.schueler;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.types.Note;
@@ -135,9 +137,11 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		}),
 		Map.entry("fachID", (conn, dto, value, map) -> {
 			final long idFach = JSONMapper.convertToLong(value, false);
-			if (conn.queryByKey(DTOFach.class, idFach) == null)
+			final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+			if (fach == null)
 				throw OperationError.CONFLICT.exception();
 			dto.Fach_ID = idFach;
+			dto.Sortierung = fach.SortierungAllg;
 			dto.Kurs_ID = null;
 		}),
 		Map.entry("kursID", (conn, dto, value, map) -> {
@@ -211,6 +215,60 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		return super.patchBasic(id, is, DTOSchuelerLeistungsdaten.class, patchMappings);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("lernabschnittID", "fachID");
+
+	private final ObjLongConsumer<DTOSchuelerLeistungsdaten> initDTO = (dto, id) -> dto.ID = id;
+
+	/**
+	 * Fügt die Leistungsdaten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		return super.addBasic(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Leistungsdaten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		return super.addBasicMultiple(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Löscht die Leistungsdaten mit der angegebenen ID
+	 *
+	 * @param id   die ID der Leistungsdaten
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOSchuelerLeistungsdaten.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht die Leistungsdaten mit den angegebenen IDs
+	 *
+	 * @param ids   die IDs der Leistungsdaten
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOSchuelerLeistungsdaten.class, dtoMapper);
 	}
 
 }

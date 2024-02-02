@@ -8786,6 +8786,124 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/{id : \d+}
+	 *
+	 * Entfernt Leistungsdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leistungsdaten wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerLeistungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.
+	 *   Code 404: Die Leistungsdaten sind nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Leistungsdaten wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuelerLeistungsdaten(schema : string, id : number) : Promise<SchuelerLeistungsdaten> {
+		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SchuelerLeistungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/create
+	 *
+	 * Erstellt neue Leistungsdaten und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen von Leistungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Leistungsdaten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerLeistungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.
+	 *   Code 404: Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerLeistungsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leistungsdaten wurden erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerLeistungsdaten(data : Partial<SchuelerLeistungsdaten>, schema : string) : Promise<SchuelerLeistungsdaten> {
+		const path = "/db/{schema}/schueler/leistungsdaten/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerLeistungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerLeistungsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/create/multiple
+	 *
+	 * Erstellt mehrere Leistungsdaten und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum zum Hinzufügen von Leistungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Leistungsdaten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerLeistungsdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.
+	 *   Code 404: Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<SchuelerLeistungsdaten>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leistungsdaten wurden erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerLeistungsdatenMultiple(data : List<Partial<SchuelerLeistungsdaten>>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
+		const path = "/db/{schema}/schueler/leistungsdaten/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<SchuelerLeistungsdaten>).map(d => SchuelerLeistungsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerLeistungsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerLeistungsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/delete/multiple
+	 *
+	 * Entfernt mehrere Leistungsdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leistungsdaten wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerLeistungsdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.
+	 *   Code 404: Die Leistungsdaten sind zumindest nicht alle vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Leistungsdaten wurden erfolgreich entfernt.
+	 */
+	public async deleteSchuelerLeistungsdatenMultiple(data : List<number>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
+		const path = "/db/{schema}/schueler/leistungsdaten/delete/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerLeistungsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerLernabschnittsdatenByID für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}
 	 *
 	 * Liest die Schüler-Lernabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
