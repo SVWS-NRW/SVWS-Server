@@ -3,25 +3,22 @@
 	<svws-ui-modal :show="showModal" size="big">
 		<template #modalTitle>Schema wiederherstellen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-input-wrapper :grid="2">
-					Achtung, bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.
-					<div class="flex gap-3">
-						SQLite-Datei auswählen:
-						<input type="file" accept=".sqlite" @change="onFileChanged" :disabled="loading">
+			<div class="flex flex-col items-center gap-3">
+				<div class="flex flex-row"> <i-ri-alert-line class="text-red-500 mr-1" /> Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
+				<svws-ui-spacing />
+				<div class="flex flex-col gap-3 w-128 text-left">
+					<div class="flex flex-col gap-3 w-128 text-left">
+						<div><b>Quell-Datenbank: </b> SQLite-Datei auswählen (Endung .sqlite)</div>
+						<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 					</div>
-					<template v-if="loading">
-						<div class="flex">
-							<svws-ui-spinner :spinning="true" /> Das Schema wird importiert…
-						</div>
-					</template>
-				</svws-ui-input-wrapper>
+				</div>
+				<svws-ui-spacing />
 			</div>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
 				<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-				<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> Wiederherstellen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> <svws-ui-spinner :spinning="loading" /> Wiederherstellen </svws-ui-button>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

@@ -6,11 +6,6 @@
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" :disabled="loading" />
-					<template v-if="loading">
-						<div class="flex">
-							<svws-ui-spinner :spinning="true" /> Das Schema wird angelegt…
-						</div>
-					</template>
 					<svws-ui-spacing />
 					<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
 					<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" />
@@ -19,8 +14,11 @@
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
+				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading">
+					<svws-ui-spinner :spinning="loading" />
+					Schema anlegen
+				</svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
-				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

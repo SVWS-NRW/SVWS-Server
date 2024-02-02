@@ -4,23 +4,18 @@
 		<template #modalTitle>Schema Duplizieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-input-wrapper :grid="2">
+				<div class="flex flex-col gap-3 w-128 text-left">
 					<svws-ui-text-input v-model="schema" placeholder="Name des neuen Schemas" />
-					<template v-if="loading">
-						<div class="flex">
-							<svws-ui-spinner :spinning="true" /> Das Schema wird dupliziert …
-						</div>
-					</template>
 					<svws-ui-spacing />
 					<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
 					<svws-ui-text-input v-model="password" required placeholder="Passwort" />
-				</svws-ui-input-wrapper>
+				</div>
 			</div>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
+				<svws-ui-button type="secondary" @click="duplicate" :disabled="loading"> <svws-ui-spinner :spinning="loading" /> Duplizieren </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
-				<svws-ui-button type="secondary" @click="duplicate" :disabled="loading"> Duplizieren </svws-ui-button>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

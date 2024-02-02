@@ -30,13 +30,12 @@
 						<svws-ui-text-input v-model="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" />
 					</div>
 				</div>
-				<svws-ui-spinner :spinning="loading" />
 			</div>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
+				<svws-ui-button type="secondary" @click="migrate" :disabled="loading"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
-				<svws-ui-button type="secondary" @click="migrate" :disabled="loading"> Migrieren </svws-ui-button>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

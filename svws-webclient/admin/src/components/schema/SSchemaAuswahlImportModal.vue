@@ -3,28 +3,30 @@
 	<svws-ui-modal :show="showModal" size="big">
 		<template #modalTitle>Schema importieren</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
-					<div class="flex gap-3">
-						SQLite-Datei auswählen:
-						<input type="file" accept=".sqlite" @change="onFileChanged" :disabled="loading">
+			<div class="flex flex-col items-start gap-3">
+				<div class="flex flex-row gap-16">
+					<div class="flex flex-col gap-3 w-128 text-left">
+						<div><b>Quell-Datenbank: </b> SQLite-Datei auswählen (Endung .sqlite)</div>
+						<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 					</div>
-					<template v-if="loading">
-						<div class="flex">
-							<svws-ui-spinner :spinning="true" /> Das Schema wird importiert…
-						</div>
-					</template>
-					<svws-ui-spacing />
-					<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-					<svws-ui-text-input v-model="password" required placeholder="Passwort" />
-				</svws-ui-input-wrapper>
+					<div class="flex flex-col gap-3 w-128 text-left">
+						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
+						<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
+						<svws-ui-spacing />
+						<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
+						<svws-ui-text-input v-model="password" required placeholder="Passwort" />
+					</div>
+				</div>
+				<svws-ui-spacing />
 			</div>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
+				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading">
+					<svws-ui-spinner :spinning="loading" />
+					Schema anlegen
+				</svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
-				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
