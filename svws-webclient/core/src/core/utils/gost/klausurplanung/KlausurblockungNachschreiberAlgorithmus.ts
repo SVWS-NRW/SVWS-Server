@@ -98,16 +98,16 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			if (sk1.idSchueler === sk2.idSchueler)
 				return false;
 		}
-		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
-			const first : GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
-			const sk2 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
-			return (sk1.idKursklausur === sk2.idKursklausur);
-		}
 		if (config._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
 			const first : GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			const fachGleich : boolean = klausurManager.vorgabeBySchuelerklausurTermin(first).idFach === idFach;
 			const kursartGleich : boolean = JavaObject.equalsTranspiler(klausurManager.vorgabeBySchuelerklausurTermin(first).kursart, (kursart));
 			return fachGleich && kursartGleich;
+		}
+		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
+			const first : GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
+			const sk2 : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
+			return (sk1.idKursklausur === sk2.idKursklausur);
 		}
 		return false;
 	}

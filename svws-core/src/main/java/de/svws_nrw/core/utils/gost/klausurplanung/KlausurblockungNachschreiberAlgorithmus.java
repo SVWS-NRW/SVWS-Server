@@ -119,19 +119,19 @@ public class KlausurblockungNachschreiberAlgorithmus {
 				return false;
 		}
 
-		// Sollen Schüler-Nachschreibklausuren der selben Kurs-Klausur in der selben Gruppe landen?
-		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
-			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
-			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
-			return (sk1.idKursklausur == sk2.idKursklausur);
-		}
-
 		// Sollen Schüler-Nachschreibklausuren der selben Fachart in der selben Gruppe landen?
 		if (config._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
 			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
 			final boolean fachGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).idFach == idFach;
 			final boolean kursartGleich = klausurManager.vorgabeBySchuelerklausurTermin(first).kursart.equals(kursart);
 			return fachGleich && kursartGleich;
+		}
+
+		// Sollen Schüler-Nachschreibklausuren der selben Kurs-Klausur in der selben Gruppe landen?
+		if (config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen) {
+			final @NotNull GostSchuelerklausurTermin first = ListUtils.getNonNullElementAtOrException(gruppe, 0);
+			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(first);
+			return (sk1.idKursklausur == sk2.idKursklausur);
 		}
 
 		// Ein Hinzufügen zu dieser Gruppe ist nicht erlaubt.
