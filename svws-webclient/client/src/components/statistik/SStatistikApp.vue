@@ -91,49 +91,49 @@
 					<svws-ui-dashboard-tile color="dark" number="512" number-label="Fehler zu korrigieren" />
 					<svws-ui-dashboard-tile span="full" color="transparent">
 						<svws-ui-spacing :size="2" />
-						<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
+						<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 							<template #body>
-								<svws-ui-table-row>
-									<svws-ui-table-cell>22</svws-ui-table-cell>
-									<svws-ui-table-cell>ZUR</svws-ui-table-cell>
-									<svws-ui-table-cell>LBA02</svws-ui-table-cell>
-									<svws-ui-table-cell>
+								<div role="row" class="svws-ui-tr">
+									<div role="cell" class="svws-ui-td">22</div>
+									<div role="cell" class="svws-ui-td">ZUR</div>
+									<div role="cell" class="svws-ui-td">LBA02</div>
+									<div role="cell" class="svws-ui-td">
 										<span class="line-clamp-1">Lehrkräfte/Basisdaten: Nachname muss linksbündig stehen, 1. Stelle muss ein Großbuchstabe sein.</span>
-									</svws-ui-table-cell>
-									<svws-ui-table-cell align="center">
+									</div>
+									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip>
 											<i-ri-alert-line />
 											<template #content>
 												Muss-Fehler
 											</template>
 										</svws-ui-tooltip>
-									</svws-ui-table-cell>
-								</svws-ui-table-row>
-								<svws-ui-table-row>
-									<svws-ui-table-cell>254</svws-ui-table-cell>
-									<svws-ui-table-cell>VAN</svws-ui-table-cell>
-									<svws-ui-table-cell>LBA02</svws-ui-table-cell>
-									<svws-ui-table-cell>
+									</div>
+								</div>
+								<div role="row" class="svws-ui-tr">
+									<div role="cell" class="svws-ui-td">254</div>
+									<div role="cell" class="svws-ui-td">VAN</div>
+									<div role="cell" class="svws-ui-td">LBA02</div>
+									<div role="cell" class="svws-ui-td">
 										<span class="line-clamp-1">Lehrkräfte/Basisdaten: Nachname muss linksbündig stehen, 1. Stelle muss ein Großbuchstabe sein.</span>
-									</svws-ui-table-cell>
-									<svws-ui-table-cell align="center">
+									</div>
+									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip>
 											<i-ri-alert-fill />
 											<template #content>
 												Harter Fehler
 											</template>
 										</svws-ui-tooltip>
-									</svws-ui-table-cell>
-								</svws-ui-table-row>
-								<svws-ui-table-row v-for="index in 40" :key="index">
-									<svws-ui-table-cell>{{ Math.floor(Math.random() * 9999) }}</svws-ui-table-cell>
-									<svws-ui-table-cell><span class="opacity-25">—</span></svws-ui-table-cell>
-									<svws-ui-table-cell>XYZ{{ Math.floor(Math.random() * 16) + 10 }}</svws-ui-table-cell>
-									<svws-ui-table-cell>
+									</div>
+								</div>
+								<div role="row" class="svws-ui-tr" v-for="index in 40" :key="index">
+									<div role="cell" class="svws-ui-td">{{ Math.floor(Math.random() * 9999) }}</div>
+									<div role="cell" class="svws-ui-td"><span class="opacity-25">—</span></div>
+									<div role="cell" class="svws-ui-td">XYZ{{ Math.floor(Math.random() * 16) + 10 }}</div>
+									<div role="cell" class="svws-ui-td">
 										<span v-if="Math.floor(Math.random() * 16) % 2 === 1" class="line-clamp-1">Individualdaten l: Konfession fehlt/fehlerhaft.</span>
 										<span v-else class="line-clamp-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab corporis cupiditate deleniti, eum ipsa iste molestiae nam nostrum praesentium quas qui quisquam soluta tempore, ullam vel veniam vitae voluptatem voluptatum!</span>
-									</svws-ui-table-cell>
-									<svws-ui-table-cell align="center">
+									</div>
+									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip v-if="Math.floor(Math.random() * 8) % 2 === 1">
 											<i-ri-information-line />
 											<template #content>
@@ -146,13 +146,13 @@
 												Harter Fehler
 											</template>
 										</svws-ui-tooltip>
-									</svws-ui-table-cell>
-								</svws-ui-table-row>
-								<!--<svws-ui-table-row>
-									<svws-ui-table-cell span="full"><span class="opacity-50">+ 7 weitere Fehler</span></svws-ui-table-cell>
-								</svws-ui-table-row>-->
+									</div>
+								</div>
+								<!--<div role="row" class="svws-ui-tr">
+									<div role="cell" class="svws-ui-td" span="full"><span class="opacity-50">+ 7 weitere Fehler</span></div>
+								</div>-->
 							</template>
-						</svws-ui-data-table>
+						</svws-ui-table>
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
@@ -223,7 +223,7 @@
 		{ key: "kuerzel", label: "Kürzel", span: 0.25 },
 		{ key: "fehler", label: "Fehler", span: 0.25 },
 		{ key: "fehlertext", label: "Erläuterung", span: 2 },
-		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4, align: "center" },
+		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4 },
 	];
 
 	const routes = [
