@@ -2,6 +2,8 @@ import type { GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebni
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostUmwahlansichtProps {
+	hatBlockung: boolean,
+	hatErgebnis: boolean,
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;

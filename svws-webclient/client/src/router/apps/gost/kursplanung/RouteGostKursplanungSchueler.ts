@@ -113,6 +113,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public getAuswahlProps(to: RouteLocationNormalized): KursplanungSchuelerAuswahlProps {
 		return {
+			hatBlockung: routeGostKursplanung.data.hatBlockung,
+			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			setSchueler: routeGostKursplanung.data.gotoSchueler,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
@@ -125,6 +127,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public getProps(to: RouteLocationNormalized): GostUmwahlansichtProps {
 		return {
+			hatBlockung: routeGostKursplanung.data.hatBlockung,
+			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			addRegel: routeGostKursplanung.data.addRegel,
 			removeRegel: routeGostKursplanung.data.removeRegel,
 			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,

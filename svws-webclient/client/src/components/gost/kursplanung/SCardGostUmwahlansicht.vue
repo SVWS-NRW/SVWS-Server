@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="schueler !== undefined" class="min-w-[42rem] w-fit" overflow-scroll>
+	<svws-ui-content-card v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit" overflow-scroll>
 		<template #title>
 			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="-ml-3 mr-0.5"><i-ri-link /></svws-ui-button>
 			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>

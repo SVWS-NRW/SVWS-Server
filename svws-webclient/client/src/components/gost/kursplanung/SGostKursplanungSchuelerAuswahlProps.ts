@@ -3,6 +3,8 @@ import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFil
 import type { Config } from "~/components/Config";
 
 export interface KursplanungSchuelerAuswahlProps {
+	hatBlockung: boolean,
+	hatErgebnis: boolean,
 	setSchueler: (schueler: SchuelerListeEintrag) => Promise<void>;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	getDatenmanager: () => GostBlockungsdatenManager;
