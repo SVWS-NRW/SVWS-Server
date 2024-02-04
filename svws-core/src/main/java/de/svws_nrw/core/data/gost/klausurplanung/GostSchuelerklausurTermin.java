@@ -38,23 +38,25 @@ public class GostSchuelerklausurTermin {
 	public String bemerkung = null;
 
 	/**
-	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 * Vergleicht, ob ein GostSchuelerklausurTermin-Objekt dasselbe Objekt, wie ein anderes GostSchuelerklausurTermin-Objekt ist.
 	 *
-	 * @param another     das Datenbankschema
-	 * @return die HTTP-Antwort
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
+		// return another != null && another instanceof GostSchuelerklausurTermin skt && this.id == skt.id; (Syntax von Transpiler nicht unterstützt)
 		return another != null && another instanceof GostSchuelerklausurTermin && this.id == ((GostSchuelerklausurTermin) another).id;
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 * Erzeugt den Hashcode zum GostSchuelerklausurTermin-Objekt auf Basis der id.
 	 *
-	 * @return die HTTP-Antwort
+	 * @return den HashCode
 	 */
 	@Override
 	public int hashCode() {
+		// return Long.hashCode(id); (vom Transpiler nicht unterstützt)
 		return (int) id;
 	}
 

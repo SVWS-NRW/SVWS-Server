@@ -38,19 +38,19 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 * Vergleicht, ob ein GostSchuelerklausurTermin-Objekt dasselbe Objekt, wie ein anderes GostSchuelerklausurTermin-Objekt ist.
 	 *
-	 * @param another     das Datenbankschema
-	 * @return die HTTP-Antwort
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
 		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'))) && this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin(another)).id;
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 * Erzeugt den Hashcode zum GostSchuelerklausurTermin-Objekt auf Basis der id.
 	 *
-	 * @return die HTTP-Antwort
+	 * @return den HashCode
 	 */
 	public hashCode() : number {
 		return this.id as number;
