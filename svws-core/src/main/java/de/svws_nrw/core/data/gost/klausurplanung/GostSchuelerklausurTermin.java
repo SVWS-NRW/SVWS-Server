@@ -37,4 +37,25 @@ public class GostSchuelerklausurTermin {
 	@Schema(description = "die textuelle Bemerkung zum Schülerklausurtermin, sofern vorhanden", example = "Krankheit (Attest)")
 	public String bemerkung = null;
 
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param another     das Datenbankschema
+	 * @return die HTTP-Antwort
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return another != null && another instanceof GostSchuelerklausurTermin && this.id == ((GostSchuelerklausurTermin) another).id;
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@Override
+	public int hashCode() {
+		return (int) id;
+	}
+
 }

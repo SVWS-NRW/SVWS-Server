@@ -47,10 +47,10 @@
 			Automatisch blocken
 		</template>
 		<template #modalContent>
-			<svws-ui-checkbox type="toggle" v-model="nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
+			<svws-ui-checkbox type="toggle" :disabled="gleiche_fachart_auf_selbe_termine" v-model="nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
 				Gleicher Termin falls gleicher Kurs
 			</svws-ui-checkbox>
-			<svws-ui-checkbox type="toggle" v-model="gleiche_fachart_auf_selbe_termine" class="text-left">
+			<svws-ui-checkbox type="toggle" v-model="gleiche_fachart_auf_selbe_termine" @update:model-value="value => nachschreiber_der_selben_klausur_auf_selbe_termine = value ? false : nachschreiber_der_selben_klausur_auf_selbe_termine" class="text-left">
 				Gleicher Termin falls gleiches Fach und gleiche Kursart
 			</svws-ui-checkbox>
 		</template>
@@ -67,7 +67,8 @@
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)"
 					:map-schueler="mapSchueler"
 					:on-drag="onDrag"
-					:draggable="() => true">
+					:draggable="() => true"
+					:selected-items="selectedNachschreiber">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
 							<span>Aktuell keine Nachschreibklausuren zu planen.</span>
@@ -115,7 +116,8 @@
 
 <script setup lang="ts">
 
-	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration } from "@core";
+	import type { List, JavaSet} from "@core";
+	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
@@ -127,6 +129,8 @@
 	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
 	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
 	const gleiche_fachart_auf_selbe_termine = ref(false);
+
+	const selectedNachschreiber = ref<JavaSet<GostSchuelerklausurTermin>>(new HashSet<GostSchuelerklausurTermin>());
 
 	const loading = ref<boolean>(false);
 
@@ -145,30 +149,14 @@
 		loading.value = true;
 		const config = new GostNachschreibterminblockungKonfiguration();
 		config.termine = termine.value;
-		config.schuelerklausurtermine = props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value);
+		selectedNachschreiber.value.retainAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value));
+		config.schuelerklausurtermine = new ArrayList<GostSchuelerklausurTermin>(selectedNachschreiber.value);
 		config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
 		config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
 		await props.blockenNachschreibklausuren(config);
+		selectedNachschreiber.value.clear();
 		loading.value = false;
 	}
-
-	// const klausurKonflikte = () => {
-	// 	if (dragData.value !== undefined && terminSelected.value !== undefined) {
-	// 		if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-	// 			return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(terminSelected.value.id, dragData.value.id).entrySet();
-	// 	} else if (terminSelected.value !== undefined)
-	// 		return props.kMan().konflikteMapKursklausurSchueleridsByTerminid(terminSelected.value.id).entrySet();
-	// 	return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
-	// }
-
-	// const anzahlProKwKonflikte = (threshold: number) => {
-	// 	if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-	// 		if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-	// 			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
-	// 	} else if (terminSelected.value !== undefined)
-	// 		return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold);
-	// 	return new HashSet<number>();
-	// }
 
 	function draggable(data: GostKlausurplanungDragData) {
 		return data instanceof GostSchuelerklausurTermin;
@@ -187,22 +175,11 @@
 		}
 	};
 
-	// const dropOverCssClasses = (termin: GostKlausurtermin) => ({
-	// 	"bg-success": dragData.value !== undefined && (dragData.value.quartal === termin.quartal || termin.quartal === 0),
-	// 	"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (dragData.value.quartal !== termin.quartal && termin.quartal !== 0),
-	// });
-
 	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true));
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;
-		// for (const oTermin of termine.value) {
-		// 	if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal || oTermin.quartal === 0)
-		// 		konfliktfreiZuFremdtermin = props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
-		// 	if (konfliktfreiZuFremdtermin)
-		// 		break;
-		// }
-		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : true;//props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
+		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : true;
 		return {
 			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			"svws-warning": !konfliktfreiZuFremdtermin,

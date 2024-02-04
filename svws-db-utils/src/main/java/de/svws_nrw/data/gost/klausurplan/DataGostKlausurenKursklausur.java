@@ -197,10 +197,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		data.schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, data.kursklausuren);
 		data.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, data.schuelerklausuren);
 		data.termine = DataGostKlausurenTermin.getKlausurtermine(conn, abiturjahr, halbjahr, ganzesSchuljahr);
-//		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, data.kursklausuren));
-//		data.termine.addAll(DataGostKlausurenTermin.getKlausurtermineZuSchuelerklausurterminen(conn, data.schuelerklausurtermine));
-//		HashSet<Long> seen = new HashSet<>();
-//		data.termine.removeIf(e -> !seen.add(e.id));
 		return data;
 	}
 

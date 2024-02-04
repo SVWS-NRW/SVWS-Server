@@ -1,4 +1,5 @@
 <template>
+	<svws-ui-checkbox class="mb-5" v-if="selectedItems !== undefined" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
 	<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle">
 		<template #noData>
 			<slot name="noData">
@@ -16,6 +17,7 @@
 				class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
 				<div class="svws-ui-td" role="cell">
 					<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
+					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
 					{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
 				<div class="svws-ui-td" role="cell">{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
@@ -29,11 +31,10 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostSchuelerklausurTermin, List, LehrerListeEintrag, KursManager, SchuelerListeEintrag} from "@core";
+	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, SchuelerListeEintrag} from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
-	import {computed} from "vue";
-	import {ZulaessigesFach, DateUtils } from "@core";
+	import { computed} from "vue";
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKursklausurManager;
@@ -42,16 +43,18 @@
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
+		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
 	}>(), {
 		onDrag: undefined,
 		draggable: () => false,
 		onDrop: undefined,
+		selectedItems: undefined,
 	});
 
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 8.25 },
+			{ key: "nachname", label: "Nachame", minWidth: 10.25 },
 			{ key: "vorname", label: "Vorname", minWidth: 8 },
 			{ key: "kurs", label: "Kurs", span: 1.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },

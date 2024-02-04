@@ -118,7 +118,6 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 						idNextKursklausur++;
 						kursklausuren.add(kursklausur);
 						schuelerklausuren.addAll(listSk);
-//						retKlausuren.kursklausuren.add(DataGostKlausurenKursklausur.dtoMapper2.apply(kursklausur));
 					}
 				}
 			}
