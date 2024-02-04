@@ -961,6 +961,34 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
+	 * <br>Darin enthalten sind:
+	 * <br>- Das Histogramm der ersten 10 Kursdifferenzen (Kursdifferenz 0 bis Kursdifferenz 9).
+	 * <br>- Das Histogramm hat eine garantierte Länge von 10.
+	 *
+	 * @param bewertung  Die Bewertung vom Ergebnis.
+	 *
+	 * @return den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
+	 */
+	public static getOfBewertung3HistogrammStatic(bewertung : GostBlockungsergebnisBewertung) : Array<number> {
+		const histo : Array<number> = Array(10).fill(0);
+		for (let i : number = 0; i < histo.length; i++)
+			histo[i] = bewertung.kursdifferenzHistogramm.length >= histo.length ? bewertung.kursdifferenzHistogramm[i] : 0;
+		return histo;
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
+	 * <br>- Das Histogramm der ersten 10 Kursdifferenzen (Kursdifferenz 0 bis Kursdifferenz 9).
+	 * <br>- Das Histogramm hat eine garantierte Länge von 10.
+	 *
+	 * @return den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
+	 */
+	public getOfBewertung3Histogramm() : Array<number> {
+		return GostBlockungsergebnisManager.getOfBewertung3HistogrammStatic(this._ergebnis.bewertung);
+	}
+
+	/**
 	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
