@@ -31,8 +31,7 @@ stages:
     - build
     - integration-tests
     - analyze
-    - build_linux
-    - build_windows
+    - build_installer
     - publish
 
 publish_sona:
@@ -101,7 +100,7 @@ publish_github:
         - ./gradlew :deployment:githubRelease
 
 build_linux:
-    stage: build_linux
+    stage: build_installer
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
@@ -118,7 +117,7 @@ build_linux:
     when: on_success
 
 build_windows:
-    stage: build_windows
+    stage: build_installer
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
