@@ -83,7 +83,7 @@
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><i-ri-add-line class="-ml-1" />Neuer Nachschreibtermin</svws-ui-button>
 					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><i-ri-checkbox-circle-line class="-ml-1" />Haupttermin zulassen</svws-ui-button>
-					<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = true"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="secondary" :disabled="selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken().value = true"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -210,6 +210,7 @@
 <style lang="postcss" scoped>
 .page--content {
   @apply grid;
-  grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
+  grid-template-columns: minmax(40rem, 1fr) 1fr;
 }
+
 </style>

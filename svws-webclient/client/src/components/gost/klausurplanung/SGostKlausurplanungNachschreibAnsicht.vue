@@ -4,8 +4,7 @@
 	</Teleport>
 	<div class="page--content page--content--full relative flex-col">
 		<div class="text-headline">Nachschreibplan {{ jahrgangsdaten.jahrgang }}, {{ halbjahr.halbjahr }}. Halbjahr{{ quartalsauswahl.value === 0 ? "" : ", " + quartalsauswahl.value + ". Quartal" }}</div>
-
-		<svws-ui-table :columns="cols" :items="kMan().schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value)">
+		<svws-ui-table v-model:sort-by-and-order="sortByAndOrder" :columns="cols" :items="itemsSorted">
 			<template #noData>
 				<slot name="noData">
 					Keine Nachschreibklausuren geplant
@@ -33,7 +32,7 @@
 			<template #cell(dauer)="{ rowData }">
 				{{ kMan().vorgabeBySchuelerklausurTermin(rowData).dauer }}
 			</template>
-			<template #cell(raum)="{ rowData }">
+			<template #cell(raum)>
 				d
 			</template>
 		</svws-ui-table>
@@ -43,8 +42,8 @@
 <script setup lang="ts">
 	import { computed, onMounted, ref } from 'vue';
 	import type { GostKlausurplanungNachschreibAnsichtProps } from './SGostKlausurplanungNachschreibAnsichtProps';
-	import type { DataTableColumn } from '@ui';
-	import { DateUtils } from '@core';
+	import type { DataTableColumn, SortByAndOrder } from '@ui';
+	import { DateUtils, GostSchuelerklausurTermin } from '@core';
 
 	const props = defineProps<GostKlausurplanungNachschreibAnsichtProps>();
 
@@ -54,18 +53,40 @@
 		isMounted.value = true;
 	});
 
+	const sortByAndOrder = ref<SortByAndOrder | undefined>()
+
+	const itemsSorted = computed(() => {
+		console.log(sortByAndOrder.value);
+		const arr = props.kMan().schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value).toArray() as GostSchuelerklausurTermin[];
+		let temp = sortByAndOrder.value;
+		if (temp === undefined || temp.order === null)
+			temp = {key: 'nachname', order: true};
+		arr.sort((a, b) => {
+			switch (temp!.key) {
+				case 'nachname':
+					return props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.nachname.localeCompare(props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.nachname, "de-DE",);
+				case 'vorname':
+					return props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.vorname.localeCompare(props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.vorname, "de-DE",);
+				case 'kurs':
+					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE",);
+				default:
+					return 0;
+			}
+		})
+		return temp.order === true ? arr : arr.reverse();
+	})
+
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 8.25 },
-			{ key: "vorname", label: "Vorname", minWidth: 8 },
-			{ key: "kurs", label: "Kurs", span: 1.25 },
+			{ key: "nachname", label: "Nachame", minWidth: 8.25, sortable: true },
+			{ key: "vorname", label: "Vorname", minWidth: 8, sortable: true },
+			{ key: "kurs", label: "Kurs", span: 1.25, sortable: true },
 			{ key: "kuerzel", label: "Lehrkraft" },
 			{ key: "datum", label: "Datum" },
 			{ key: "startzeit", label: "Startzeit" },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "raum", label: "Raum" },
 		];
-
 		return cols;
 	}
 

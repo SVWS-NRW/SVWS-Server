@@ -1946,6 +1946,21 @@ export class GostKursklausurManager extends JavaObject {
 		return ZulaessigesFach.getByKuerzelASD(this.fachKuerzelByKursklausur(k)).getHMTLFarbeRGBA(1.0);
 	}
 
+	/**
+	 * Liefert den Vorgänger-Schülerklausurtermin zu einer Schülerklausur, also den versäumte Schülerklausurtermin
+	 *
+	 * @param skt der Schülerklausurtermin, dessen Vorgänger gesucht wird
+	 *
+	 * @return den Vorgänger-Schülerklausurtermin
+	 */
+	public schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : GostSchuelerklausurTermin | null {
+		let alleTermine : List<GostSchuelerklausurTermin> = DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idSchuelerklausur, skt.idSchuelerklausur);
+		for (let skAktuell of alleTermine)
+			if (skAktuell.folgeNr === skt.folgeNr - 1)
+				return skAktuell;
+		return null;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager';
 	}

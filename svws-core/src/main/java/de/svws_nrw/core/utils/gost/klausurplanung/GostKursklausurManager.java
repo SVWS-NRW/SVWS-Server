@@ -2031,4 +2031,19 @@ public class GostKursklausurManager {
 		return ZulaessigesFach.getByKuerzelASD(fachKuerzelByKursklausur(k)).getHMTLFarbeRGBA(1.0);
 	}
 
+	/**
+	 * Liefert den Vorgänger-Schülerklausurtermin zu einer Schülerklausur, also den versäumte Schülerklausurtermin
+	 *
+	 * @param skt der Schülerklausurtermin, dessen Vorgänger gesucht wird
+	 *
+	 * @return den Vorgänger-Schülerklausurtermin
+	 */
+	public GostSchuelerklausurTermin schuelerklausurterminVorgaengerBySchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
+		@NotNull List<@NotNull GostSchuelerklausurTermin> alleTermine = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idSchuelerklausur, skt.idSchuelerklausur);
+		for (@NotNull GostSchuelerklausurTermin skAktuell : alleTermine)
+			if (skAktuell.folgeNr == skt.folgeNr - 1)
+				return skAktuell;
+		return null;
+	}
+
 }
