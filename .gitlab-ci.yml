@@ -33,13 +33,10 @@ stages:
     - analyze
     - build_linux
     - build_windows
-    - publish_sona
-    - publish_maven
-    - publish_dockerhub
-    - publish_github
+    - publish
 
 publish_sona:
-        stage: publish_sona
+        stage: publish
         rules:
             -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
                 when: manual
@@ -56,7 +53,7 @@ publish_sona:
             - ./gradlew signJar publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 
 publish_maven:
-    stage: publish_maven
+    stage: publish
     rules:
         -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
             when: manual
@@ -73,7 +70,7 @@ publish_maven:
         - ./gradlew signJar publishReleaseAll
 
 publish_dockerhub:
-    stage: publish_dockerhub
+    stage: publish
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
           when: manual
@@ -91,7 +88,7 @@ publish_dockerhub:
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
 
 publish_github:
-    stage: publish_github
+    stage: publish
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
           when: manual
