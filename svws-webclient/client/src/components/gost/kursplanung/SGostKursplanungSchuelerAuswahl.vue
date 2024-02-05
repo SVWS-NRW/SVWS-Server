@@ -8,11 +8,11 @@
 			</template>
 			<template #filterAdvanced>
 				<svws-ui-radio-group class="radio--row col-span-full">
-					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="">
+					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="&ZeroWidthSpace;">
 						<i-ri-filter-off-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter().fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
+					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter().kurs_toggle.value === 'kurs'">
 					<svws-ui-select v-model="schuelerFilter().kurs" :items="schuelerFilter().getKurse()"
@@ -113,10 +113,23 @@
 							</svws-ui-tooltip>
 						</div>
 					</div>
-					<div role="cell" class="svws-ui-td svws-align-center" @click.stop="fixieren_regel_toggle(fach?.id, s.id)">
-						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id) && !(fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value || fixierRegelFach(fach?.id, s.id).value)" class="w-5 -my-0.5" />
-						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id) === undefined && fach !== undefined" class="w-5 -my-0.5 opacity-0 hover:opacity-50" />
-						<i-ri-pushpin-fill v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value || fixierRegelFach(fach?.id, s.id).value" class="w-5 -my-0.5" />
+					<div role="cell" class="svws-ui-td svws-align-center" @click.stop="fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id)">
+						<template v-if="fixierRegeln.get(s.id) === undefined">
+							<i-ri-pushpin-line v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+						</template>
+						<template v-else>
+							<template v-if="fach !== undefined">
+								<i-ri-pushpin-fill v-if="fixierRegelFach(fach?.id, s.id).value" class="w-5 -my-0.5 hover:opacity-75" />
+								<i-ri-pushpin-line v-else class="w-5 -my-0.5 opacity-50 hover:opacity-75" />
+							</template>
+							<template v-else-if="schuelerFilter().kurs !== undefined">
+								<i-ri-pushpin-fill v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value" class="w-5 -my-0.5 hover:opacity-75" />
+								<i-ri-pushpin-line v-else class="w-5 -my-0.5 opacity-50 hover:opacity-75" />
+							</template>
+							<template v-else>
+								<i-ri-pushpin-line class="w-5 -my-0.5 opacity-50" />
+							</template>
+						</template>
 					</div>
 					<div role="cell" class="svws-ui-td">
 						<div class="flex flex-col">
