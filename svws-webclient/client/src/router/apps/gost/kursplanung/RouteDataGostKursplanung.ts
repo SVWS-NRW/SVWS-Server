@@ -214,6 +214,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
+				auswahlSchueler: undefined,
 			});
 			return;
 		}
@@ -289,6 +290,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
+				auswahlSchueler: undefined,
 			});
 			return;
 		}
