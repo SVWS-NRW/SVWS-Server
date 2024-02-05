@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager, GostBlockungsdatenManager } from "@core";
+import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager, GostBlockungsdatenManager, GostBlockungRegel } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
 
@@ -12,4 +12,6 @@ export interface KursplanungSchuelerAuswahlProps {
 	schuelerFilter: () => GostKursplanungSchuelerFilter;
 	faecherManager: GostFaecherManager;
 	config: Config;
+	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 }

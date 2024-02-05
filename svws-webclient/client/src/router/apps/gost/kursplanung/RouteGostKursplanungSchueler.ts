@@ -1,6 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
+import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { ConfigElement } from "~/components/Config";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -9,10 +12,6 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-
-import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
-import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
-import { ConfigElement } from "~/components/Config";
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -122,6 +121,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			schuelerFilter: () => routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager,
 			config: api.config,
+			addRegel: routeGostKursplanung.data.addRegel,
+			removeRegel: routeGostKursplanung.data.removeRegel,
 		}
 	}
 

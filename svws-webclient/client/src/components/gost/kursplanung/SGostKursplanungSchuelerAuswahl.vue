@@ -113,10 +113,9 @@
 							</svws-ui-tooltip>
 						</div>
 					</div>
-					<div v-if="fach === undefined && schuelerFilter().kurs === undefined" role="cell" class="svws-ui-td svws-align-center">
-						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id)" class="w-5 -my-0.5" />
-					</div>
-					<div v-else role="cell" class="svws-ui-td svws-align-center">
+					<div role="cell" class="svws-ui-td svws-align-center" @click.stop="fixieren_regel_toggle(fach?.id, s.id)">
+						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id) && !(fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value || fixierRegelFach(fach?.id, s.id).value)" class="w-5 -my-0.5" />
+						<i-ri-pushpin-line v-if="fixierRegeln.get(s.id) === undefined && fach !== undefined" class="w-5 -my-0.5 opacity-0 hover:opacity-50" />
 						<i-ri-pushpin-fill v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value || fixierRegelFach(fach?.id, s.id).value" class="w-5 -my-0.5" />
 					</div>
 					<div role="cell" class="svws-ui-td">
@@ -172,7 +171,7 @@
 	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
-	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus } from "@core";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -270,5 +269,43 @@
 	});
 
 	const cols = computed(() => calculateColumns());
+
+
+	const fixier_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
+			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
+		return undefined;
+	});
+
+	async function regel_speichern(regel: GostBlockungRegel, idKurs: number, idSchueler: number) {
+		regel.parameter.add(idSchueler);
+		regel.parameter.add(idKurs);
+		await props.addRegel(regel);
+	}
+
+	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		await regel_speichern(regel, idKurs, idSchueler);
+	}
+
+	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
+		const idRegel = fixier_regel(idKurs, idSchueler).value;
+		if (idRegel === undefined)
+			return;
+		await props.removeRegel(idRegel);
+	}
+
+	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number) {
+		if (fachID === undefined)
+			return;
+		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID);
+		if (kurs === null)
+			return;
+		const idKurs = kurs.id;
+		fixier_regel(idKurs, idSchueler).value
+			? await fixieren_regel_entfernen(idKurs, idSchueler)
+			: await fixieren_regel_hinzufuegen(idKurs, idSchueler)
+	}
 
 </script>

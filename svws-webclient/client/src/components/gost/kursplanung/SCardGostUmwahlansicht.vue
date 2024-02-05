@@ -140,27 +140,24 @@
 
 	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List } from "@core";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
-	import type { ComputedRef, Ref} from "vue";
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel, GostBlockungsergebnisKursSchuelerZuordnung, KursDaten } from "@core";
+	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
 	import { computed, ref } from "vue";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostUmwahlansichtProps>();
 
-	const is_dragging: Ref<boolean> = ref(false);
+	const dragAndDropData = ref<DndData | undefined>(undefined);
 
-	const dragAndDropData: Ref<DndData | undefined> = ref(undefined);
-
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
+	const allow_regeln = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 
 	async function auto_verteilen() {
 		if (props.schueler !== undefined)
 			await props.autoKursSchuelerZuordnung(props.schueler.id);
 	}
 
-	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
+	const fachbelegungen = computed<List<GostFachwahl>>(() => {
 		if (props.schueler === undefined)
 			return new ArrayList<GostFachwahl>();
 		try {
@@ -175,7 +172,7 @@
 			void props.gotoLaufbahnplanung(props.schueler.id);
 	}
 
-	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
+	const maxKurseInSchienen = computed<number>(() => {
 		return props.getErgebnismanager().getOfSchieneMaxKursanzahl();
 	});
 
@@ -188,18 +185,18 @@
 
 	const cols = computed(() => calculateColumns());
 
-	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) : ComputedRef<boolean> => computed(() =>
+	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)
 	);
 
 
-	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
+	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
 			return false;
 		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	});
 
-	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) : ComputedRef<boolean> => computed(() => {
+	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() => {
 		if (dragAndDropData.value === undefined)
 			return false
 		const { id, fachID, kursart } = dragAndDropData.value;
@@ -251,68 +248,75 @@
 		return "";
 	}
 
-	const fach_gewaehlt = (idSchueler: number, kurs: GostBlockungsergebnisKurs): ComputedRef<boolean> => computed(() =>
+	const fach_gewaehlt = (idSchueler: number, kurs: GostBlockungsergebnisKurs) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler, kurs.fachID, kurs.kursart)
 	);
 
-	const fixier_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
+	const fixier_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
 			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 
-	const verbieten_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
+	const verbieten_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
 		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler, idKurs))
 			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 
-	const fixieren_regel_toggle = (idKurs: number, idSchueler: number) => fixier_regel(idKurs, idSchueler).value ? fixieren_regel_entfernen(idKurs, idSchueler) : fixieren_regel_hinzufuegen(idKurs, idSchueler);
+	function fixieren_regel_toggle(idKurs: number, idSchueler: number) {
+		return fixier_regel(idKurs, idSchueler).value
+			? fixieren_regel_entfernen(idKurs, idSchueler)
+			: fixieren_regel_hinzufuegen(idKurs, idSchueler);
+	}
 
-	const verbieten_regel_toggle = (idKurs: number, idSchueler: number) => verbieten_regel(idKurs, idSchueler).value ? verbieten_regel_entfernen(idKurs, idSchueler) : verbieten_regel_hinzufuegen(idKurs, idSchueler);
+	function verbieten_regel_toggle(idKurs: number, idSchueler: number) {
+		return verbieten_regel(idKurs, idSchueler).value
+			? verbieten_regel_entfernen(idKurs, idSchueler)
+			: verbieten_regel_hinzufuegen(idKurs, idSchueler);
+	}
 
-	const regel_speichern = async (regel: GostBlockungRegel, idKurs: number, idSchueler: number) => {
+	async function regel_speichern(regel: GostBlockungRegel, idKurs: number, idSchueler: number) {
 		regel.parameter.add(idSchueler);
 		regel.parameter.add(idKurs);
 		await props.addRegel(regel);
 	}
 
-	const fixieren_regel_hinzufuegen = async (idKurs: number, idSchueler: number) => {
+	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 		await regel_speichern(regel, idKurs, idSchueler);
 	}
 
-	const fixieren_regel_entfernen = async (idKurs: number, idSchueler: number) => {
+	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
 		const idRegel = fixier_regel(idKurs, idSchueler).value;
 		if (idRegel === undefined)
-			return
+			return;
 		await props.removeRegel(idRegel);
 	}
 
-	const verbieten_regel_hinzufuegen = async (idKurs: number, idSchueler: number) => {
+	async function verbieten_regel_hinzufuegen(idKurs: number, idSchueler: number) {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
 		await regel_speichern(regel, idKurs, idSchueler);
 	}
 
-	const verbieten_regel_entfernen = async (idKurs: number, idSchueler: number) => {
+	async function verbieten_regel_entfernen(idKurs: number, idSchueler: number) {
 		const idRegel = verbieten_regel(idKurs, idSchueler).value;
 		if (idRegel === undefined)
-			return
+			return;
 		await props.removeRegel(idRegel);
 	}
 
-
-	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) : ComputedRef<GostBlockungsergebnisKurs | undefined> => computed(() =>
+	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) => computed<GostBlockungsergebnisKurs | undefined>(() =>
 		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach) || undefined
 	);
 
-	const fachwahlKursart = (idFach: number, idSchueler: number) : ComputedRef<GostKursart> => computed(() =>
+	const fachwahlKursart = (idFach: number, idSchueler: number) => computed<GostKursart>(() =>
 		props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler, idFach)
 	);
 
-	const bgColorFachwahl = (idFach: number, idSchueler: number) : ComputedRef<string> =>  computed(() => {
+	const bgColorFachwahl = (idFach: number, idSchueler: number) =>  computed<string>(() => {
 		const fwKurszuordnung = fachwahlKurszuordnung(idFach, idSchueler).value;
 		if (fwKurszuordnung !== undefined)
 			return "white";
