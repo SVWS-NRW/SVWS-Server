@@ -97,6 +97,10 @@ publish_github:
         - job: build_linux
         - job: build_windows
     script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:githubRelease
 
 build_linux:
