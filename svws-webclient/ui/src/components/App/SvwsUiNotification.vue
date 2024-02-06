@@ -33,6 +33,11 @@
 						<i-ri-arrow-up-s-line v-if="stackOpen" class="-ml-1" />
 						<i-ri-arrow-down-s-line v-else class="-ml-1" />
 					</svws-ui-button>
+					<svws-ui-button type="transparent" @click="copyToClipboard" v-if="toCopy !== undefined">
+						<span>Meldung Kopieren</span>
+						<i-ri-clipboard-line v-if="copied === false" />
+						<i-ri-check-line v-else class="text-success" />
+					</svws-ui-button>
 				</div>
 				<div class="notification--stack" v-if="$slots.stack && stackOpen">
 					<slot name="stack" />
@@ -49,31 +54,41 @@
 
 <script setup lang='ts'>
 
-	import {ref} from "vue";
+	import { ref } from "vue";
 
 	const props = withDefaults(defineProps<{
 		type?: 'info' | 'error' | 'success' | 'warning' | 'bug';
 		icon?: 'error' | 'login' | 'success' | 'warning' | 'info' | 'bug';
 		id?: number;
+		toCopy?: string;
 	}>(), {
 		type: 'info',
 		icon: undefined,
 		id: 0,
+		toCopy: undefined,
 	});
 
 	const emit = defineEmits<{
-		click: [id: number]
+		click: [id: number];
 	}>()
 
-	const isOpen = ref(true)
-	const stackOpen = ref(false)
+	const isOpen = ref(true);
+	const stackOpen = ref(false);
+	const copied = ref(false);
 
 	function setIsOpen(value: boolean) {
-		isOpen.value = value
+		isOpen.value = value;
 	}
 
-	function toggleStackOpen () {
-		stackOpen.value = !stackOpen.value
+	function toggleStackOpen() {
+		stackOpen.value = !stackOpen.value;
+	}
+
+	async function copyToClipboard() {
+		if (props.toCopy === undefined)
+			return;
+		await navigator.clipboard.writeText(props.toCopy);
+		copied.value = true;
 	}
 
 	function close() {

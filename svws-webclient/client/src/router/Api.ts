@@ -1,14 +1,14 @@
 import type { ComputedRef} from "vue";
 import { computed } from "vue";
 
+import type { Config } from "~/components/Config";
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
 	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
-import { SimpleOperationResponse } from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError } from "@core";
+import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";
-import type { Config } from "~/components/Config";
+import { version } from '../../version';
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
@@ -52,6 +52,11 @@ class Api {
 	/** Gibt den Benutzernamen für die Verbindung zum SVWS-Server zurück **/
 	get username() : string {
 		return this.conn.username;
+	}
+
+	/** Gibt die Version des SVWS-Servers zurück */
+	get version(): string {
+		return version
 	}
 
 	/**

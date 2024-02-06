@@ -6,7 +6,7 @@
 			<div class="min-h-[1.85rem]" />
 		</template>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
-			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)">
+			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="JSON.stringify({ env: { mode: api.mode.text, version: api.version }, error }, null, 2)">
 				<template #header>
 					{{ error.name }}
 				</template>
