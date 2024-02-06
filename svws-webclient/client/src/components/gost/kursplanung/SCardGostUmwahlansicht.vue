@@ -14,19 +14,16 @@
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-table :items="[]" :no-data="false" :disable-header="true" type="navigation" has-background class="mt-1">
 							<template #body>
-								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
-									<div role="cell" :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id"
-										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)"
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === null) }">
+									<div role="cell"
+										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === null)"
 										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
 										@dragend="drag_ended()"
 										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
-										:class="{
-											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined),
-											'opacity-50' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined)
-										}"
+										:class="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null ? 'cursor-grab' : 'opacity-50'"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
-											<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined">
+											<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null">
 												<span class="rounded-sm w-3 -my-0.5 group-hover:bg-white/50">
 													<i-ri-draggable class="w-4 -ml-0.5 -mr-1 text-black opacity-50 group-hover:opacity-100" />
 												</span>
@@ -160,11 +157,7 @@
 	const fachbelegungen = computed<List<GostFachwahl>>(() => {
 		if (props.schueler === undefined)
 			return new ArrayList<GostFachwahl>();
-		try {
-			return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
-		} catch (e) {
-			return new ArrayList<GostFachwahl>();
-		}
+		return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
 	});
 
 	function routeLaufbahnplanung() {
@@ -176,19 +169,16 @@
 		return props.getErgebnismanager().getOfSchieneMaxKursanzahl();
 	});
 
-	function calculateColumns() {
+	const cols = computed(() => {
 		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1, align: 'left' }];
 		for (let i = 0; i < maxKurseInSchienen?.value; i++)
 			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6, span: 1 });
 		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	})
 
 	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)
 	);
-
 
 	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
@@ -209,8 +199,8 @@
 		return true;
 	});
 
-	function drag_started(idKurs : number | undefined, idFach: number, kursart: number) {
-		dragAndDropData.value = { id: idKurs, fachID: idFach, kursart: kursart };
+	function drag_started(id : number | undefined, fachID: number, kursart: number) {
+		dragAndDropData.value = { id, fachID, kursart };
 	}
 
 	function drag_ended() {
@@ -219,12 +209,9 @@
 
 	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs, idSchueler : number) {
 		const kurs_alt = dragAndDropData.value;
-		if (kurs_alt === undefined)
-			return;
-		if (!is_drop_zone(kurs_neu).value)
+		if ((kurs_alt === undefined) || (!is_drop_zone(kurs_neu).value))
 			return;
 		await props.updateKursSchuelerZuordnung(idSchueler, kurs_neu.id, kurs_alt.id);
-		drag_ended();
 	}
 
 	async function drop_entferne_kurszuordnung(e: DragEvent) {
@@ -308,8 +295,8 @@
 		await props.removeRegel(idRegel);
 	}
 
-	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) => computed<GostBlockungsergebnisKurs | undefined>(() =>
-		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach) || undefined
+	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() =>
+		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach)
 	);
 
 	const fachwahlKursart = (idFach: number, idSchueler: number) => computed<GostKursart>(() =>
@@ -318,7 +305,7 @@
 
 	const bgColorFachwahl = (idFach: number, idSchueler: number) =>  computed<string>(() => {
 		const fwKurszuordnung = fachwahlKurszuordnung(idFach, idSchueler).value;
-		if (fwKurszuordnung !== undefined)
+		if (fwKurszuordnung !== null)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
 		const zulfach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
@@ -329,10 +316,10 @@
 
 	function getFachwahlKursname(idFach: number, idSchueler: number): string {
 		const fw = fachwahlKurszuordnung(idFach, idSchueler).value;
-		if (fw === undefined) {
+		if (fw === null) {
 			const f = props.getErgebnismanager().getFach(idFach);
 			const fwKursart = fachwahlKursart(idFach, idSchueler).value;
-			return f.kuerzelAnzeige + "-" + fwKursart.kuerzel || "?";
+			return `${f.kuerzelAnzeige}-${fwKursart.kuerzel}`;
 		}
 		return props.getErgebnismanager().getOfKursName(fw.id);
 	}
