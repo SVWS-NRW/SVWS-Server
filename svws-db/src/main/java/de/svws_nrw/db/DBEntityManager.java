@@ -889,6 +889,35 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Führt eine SQL-Aktualisierungs-Anfrage durch. Die zugehörige Transaktion wird durch diese
+	 * Methode gehandhabt.
+	 *
+	 * @param query   die SQL-Anfrage
+	 *
+	 * @return die Anzahl der aktualisierten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	protected int internalExecuteNativeUpdateConnectionUnprepared(final String query) {
+		try {
+			this.lock();
+			this.transactionBegin();
+			final Connection conn = em.unwrap(Connection.class);
+			try (Statement statement = conn.createStatement()) {
+				final int count = statement.executeUpdate(query);
+				if (this.transactionCommit())
+					return count;
+				this.transactionRollback();
+				return Integer.MIN_VALUE;
+			}
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException | SQLException e) {
+			this.transactionRollback();
+			return Integer.MIN_VALUE;
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
 	 * Diese Methode fügt die Entities aus dem angegebenen Bereich der übergebenen Liste in die angebene
 	 * Tabelle mit den übergebenen Spalten ein. Die entsprechende native SQL-INSERT-Anfrage wird aus den übergebenen
 	 * Daten generiert und im Rahmen einer Transaktion ausgeführt.
@@ -941,7 +970,7 @@ public final class DBEntityManager implements AutoCloseable {
 		}
 		if ((maxSQLStrLen > 0) && (sb.length() > maxSQLStrLen))
 			return false;
-		return executeNativeUpdate(sb.toString()) != Integer.MIN_VALUE;
+		return internalExecuteNativeUpdateConnectionUnprepared(sb.toString()) != Integer.MIN_VALUE;
 	}
 
 
