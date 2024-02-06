@@ -256,8 +256,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	public get datenmanager(): GostBlockungsdatenManager {
-		if (this._state.value.datenmanager === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
+		// Wurde bereits eine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht?
+		if (this._state.value.datenmanager === undefined) {
+			// Wenn nicht, dann übergebe einen leeren Daten-Manager.
+			return new GostBlockungsdatenManager();
+		}
 		return this._state.value.datenmanager;
 	}
 
@@ -266,8 +269,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
-		if (this._state.value.ergebnismanager === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass kein Ergebnismanager zur Verfügung steht.");
+		// Prüfe, ob bereits ein Ergebnis ausgewählt wurde
+		if (this._state.value.ergebnismanager === undefined) {
+			// Wenn nicht, dann erstelle einen leeren Ergebnis-Manager
+			return new GostBlockungsergebnisManager(this.datenmanager, -1);
+		}
 		return this._state.value.ergebnismanager;
 	}
 
