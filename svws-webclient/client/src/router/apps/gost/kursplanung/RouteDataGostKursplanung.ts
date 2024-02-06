@@ -187,6 +187,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.existiertSchuljahresabschnitt;
 	}
 
+	/**
+	 * Gibt zurück, ob eine Blockung, also ein Datenmanager existiert. Es wird
+	 * direkt auf dem State geprüft, da der Getter für den Datenmanager bei
+	 * undefined einen Fehler erzeugen würde.
+	 */
 	public get hatBlockung(): boolean {
 		return this._state.value.datenmanager !== undefined;
 	}
@@ -266,6 +271,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.ergebnismanager;
 	}
 
+	/**
+	 * Gibt zurück, ob ein Blockungsergebnis, also ein Ergebnismanager existiert. Es wird
+	 * direkt auf dem State geprüft, da der Getter für den Ergebnismanager bei
+	 * undefined einen Fehler erzeugen würde.
+	 */
 	public get hatErgebnis(): boolean {
 		return this._state.value.ergebnismanager !== undefined;
 	}
