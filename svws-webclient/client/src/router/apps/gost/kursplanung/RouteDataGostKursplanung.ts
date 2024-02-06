@@ -28,7 +28,7 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	existiertSchuljahresabschnitt: boolean;
 	// ...auch abhängig von der ausgewählten Blockung
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
-	datenmanager: GostBlockungsdatenManager;
+	datenmanager: GostBlockungsdatenManager | undefined;
 	// ...auch abhängig von dem ausgewählten Blockungsergebnis
 	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	ergebnismanager: GostBlockungsergebnisManager | undefined;
@@ -48,7 +48,7 @@ const defaultState: RouteStateGostKursplanung = {
 	mapBlockungen: new Map(),
 	existiertSchuljahresabschnitt: false,
 	auswahlBlockung: undefined,
-	datenmanager: new GostBlockungsdatenManager(),
+	datenmanager: undefined,
 	auswahlErgebnis: undefined,
 	ergebnismanager: undefined,
 	schuelerFilter: undefined,
@@ -175,7 +175,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			mapBlockungen,
 			existiertSchuljahresabschnitt,
 			auswahlBlockung,
-			datenmanager: new GostBlockungsdatenManager(),
+			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
@@ -188,10 +188,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	/**
-	 * Gibt zurück, ob eine Blockung ausgewählt wurde.
+	 * Gibt zurück, ob eine Blockung, also ein Datenmanager existiert. Es wird
+	 * direkt auf dem State geprüft, da der Getter für den Datenmanager bei
+	 * undefined einen Fehler erzeugen würde.
 	 */
 	public get hatBlockung(): boolean {
-		return this._state.value.auswahlBlockung !== undefined;
+		return this._state.value.datenmanager !== undefined;
 	}
 
 	public get mapBlockungen(): Map<number, GostBlockungListeneintrag> {
@@ -207,13 +209,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined, force?: boolean) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.auswahlBlockung !== undefined))
+		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
 			this._kursauswahl.value.clear();
 			this.setPatchedState({
 				auswahlBlockung: undefined,
-				datenmanager: new GostBlockungsdatenManager(),
+				datenmanager: undefined,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
@@ -254,6 +256,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	public get datenmanager(): GostBlockungsdatenManager {
+		if (this._state.value.datenmanager === undefined)
+			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
 		return this._state.value.datenmanager;
 	}
 
@@ -300,7 +304,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			});
 			return;
 		}
-		if (this._state.value.auswahlBlockung === undefined)
+		if (this._state.value.datenmanager === undefined)
 			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
@@ -372,7 +376,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	});
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
-		if (this._state.value.auswahlBlockung === undefined)
+		if (this._state.value.datenmanager === undefined)
 			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
@@ -396,7 +400,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 
 	patchErgebnis = async (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number): Promise<boolean> => {
-		if (this._state.value.auswahlBlockung === undefined)
+		if (this._state.value.datenmanager === undefined)
 			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockungsergebnis(data, api.schema, idErgebnis);
