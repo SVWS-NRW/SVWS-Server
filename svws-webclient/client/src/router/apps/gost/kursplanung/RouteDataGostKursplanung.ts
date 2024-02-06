@@ -470,16 +470,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return kurs;
 	});
 
-	removeKurs = api.call(async (fach_id : number, kursart_id : number): Promise<GostBlockungKurs | undefined> => {
+	removeKurse = api.call(async (ids: Iterable<number>) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		const kurs = await api.server.deleteGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
-		if (kurs === undefined)
-			return;
-		this.datenmanager.kursRemove(kurs);
-		this.ergebnismanager.setRemoveKursByID(kurs.id);
+		for (const id of ids) {
+			const kurs = await api.server.deleteGostBlockungKursByID(api.schema, id);
+			if (kurs === undefined)
+				return;
+			this.datenmanager.kursRemove(kurs);
+			this.ergebnismanager.setRemoveKursByID(kurs.id);
+		}
 		this.commit();
-		return kurs;
 	});
 
 	combineKurs = api.call(async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {

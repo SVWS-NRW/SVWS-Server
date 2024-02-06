@@ -46,15 +46,20 @@
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 					</div>
-					<div class="flex gap-0.5 items-center leading-none">
+					<div v-if="allowRegeln" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
-						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen"
-							:disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
-							<i-ri-settings3-line />
-							Regeln anzeigen
-							<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+						<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
+							<i-ri-delete-bin-line /> Entfernen
 						</svws-ui-button>
-						<svws-ui-button-select v-if="allowRegeln" type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+					</div>
+					<div v-if="(regelzahl > 1) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
+						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl > 0}">
+							<i-ri-settings3-line /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+						</svws-ui-button>
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
@@ -62,7 +67,7 @@
 				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
 				:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
 				:ergebnis-hochschreiben="ergebnisHochschreiben"

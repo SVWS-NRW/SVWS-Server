@@ -47,7 +47,7 @@
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
-		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		removeKurse: (ids: Iterable<number>) => Promise<void>;
 		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => Promise<void>;
 		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
@@ -76,7 +76,7 @@
 	}
 
 	async function del_kurs() {
-		await props.removeKurs(props.kurs.fach_id, props.kurs.kursart);
+		await props.removeKurse([props.kurs.id]);
 	}
 
 	async function add_schiene() {
