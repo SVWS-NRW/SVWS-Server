@@ -95,7 +95,7 @@
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
 						@drop="drop({kurs, schiene, fachId: fachwahlen.id}, index)">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
-						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
+						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
 							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black p-px cursor-grab"
 							:class="{
 								'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
