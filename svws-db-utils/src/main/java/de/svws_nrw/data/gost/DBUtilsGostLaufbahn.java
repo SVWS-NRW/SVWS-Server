@@ -564,6 +564,16 @@ public final class DBUtilsGostLaufbahn {
 						&& (belegungPlanung.Q21_Kursart == null) && (belegungPlanung.Q22_Kursart == null))
 					continue;
 
+				// Korrigiere ggf. falsche Werte bei Markiert_Q1, Markiert_Q2, Markiert_Q3 und Markiert_Q4
+				if (belegungPlanung.Markiert_Q1 == null)
+					belegungPlanung.Markiert_Q1 = false;
+				if (belegungPlanung.Markiert_Q2 == null)
+					belegungPlanung.Markiert_Q2 = false;
+				if (belegungPlanung.Markiert_Q3 == null)
+					belegungPlanung.Markiert_Q3 = false;
+				if (belegungPlanung.Markiert_Q4 == null)
+					belegungPlanung.Markiert_Q4 = false;
+
 				// Prüfe, ob die Fachbelegung aufgrund von Leistungsdaten schon vorhanden ist
 				AbiturFachbelegung fach = null;
 				for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
