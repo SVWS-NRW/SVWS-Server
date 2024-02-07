@@ -207,9 +207,9 @@
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.VTF.daten.kuerzel }, leistung.id);
 		} else if (f === ZulaessigesFach.PX) {   // Speziallfall Gymnasiale Oberstufe - Projektkursfach
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.PJK.daten.kuerzel }, leistung.id);
-		} else { // Allgemeiner Fall: Entfernen des Kurses und Setzen einer speziellen Kursart, welche für Klassenunterricht geeignet ist
+		} else { // Allgemeiner Fall: Entfernen des Kurses und setzen einer speziellen Kursart, wenn die kursart der Leistung null ist
 			let kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
-			if ((kursart === null) || ((kursart !== ZulaessigeKursart.G) && (kursart !== ZulaessigeKursart.E)))
+			if (kursart === null)
 				kursart = ZulaessigeKursart.PUK;
 			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten.kuerzel }, leistung.id);
 		}
