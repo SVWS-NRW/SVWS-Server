@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -1156,6 +1157,8 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return doe Liste mit den Datensätzen
 	 */
 	public <T> List<T> queryByKeyList(final Class<T> cl, final List<?> ids) {
+		if (ids.isEmpty())
+			return new ArrayList<>();
 		return queryNamed(cl.getSimpleName() + ".primaryKeyQuery.multiple", ids, cl);
 	}
 
