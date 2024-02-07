@@ -33,7 +33,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
 								:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="value => patchLeistung(((value === null) || (value === undefined)) ? { kursID: null } : { kursID: value.id, lehrerID: value.lehrer }, leistung.id)"
+								@update:model-value="(value : KursListeEintrag) => void patchKurs(value, leistung)"
 								class="w-full" headless removable />
 						</div>
 						<div class="svws-ui-td" role="cell">
@@ -113,7 +113,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList } from "@core";
+	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
@@ -194,6 +194,51 @@
 		},
 		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
 	});
+
+	async function patchKurs(kurs: KursListeEintrag, leistung: SchuelerLeistungsdaten) {
+		if ((kurs === null) || (kurs === undefined)) {
+			await props.patchLeistung({ kursID: null }, leistung.id);
+			return;
+		}
+		const kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
+		if ((kurs.kursartAllg !== null) && (kurs.kursartAllg !== kursart?.daten.kuerzelAllg)) {
+			const kursarten : List<ZulaessigeKursart> = ZulaessigeKursart.getByAllgemeinerKursart(kurs.kursartAllg);
+			let neueKursart : ZulaessigeKursart | null = kursart;
+			let neuesAbifach : number | null = leistung.abifach;
+			if (kurs.kursartAllg === ZulaessigeKursart.E.daten.kuerzel) { // Speziallfall Gesamtschule E-Kurs
+				neueKursart = ZulaessigeKursart.E;
+			} else if (kurs.kursartAllg === ZulaessigeKursart.G.daten.kuerzel) { // Speziallfall Gesamtschule G-Kurs
+				neueKursart = ZulaessigeKursart.G;
+			} else if (kurs.kursartAllg === ZulaessigeKursart.E.daten.kuerzelAllg) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+				neueKursart = ZulaessigeKursart.G;
+			} else if (kurs.kursartAllg === ZulaessigeKursart.GKM.daten.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+				neueKursart = ZulaessigeKursart.GKM;
+				if ((leistung.abifach === 1) || (leistung.abifach === 2))
+					neuesAbifach = null;
+				if (leistung.abifach === 3)
+					neueKursart = ZulaessigeKursart.AB3;
+				else if (leistung.abifach === 4)
+					neueKursart = ZulaessigeKursart.AB4;
+			} else if (kurs.kursartAllg === ZulaessigeKursart.LK1.daten.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+				// TODO Prüfen, ob das Fach für LK1 zulässig ist -> wenn nicht immer LK2, ansonsten prüfen, ob LK1 bereits bei den Lernabschnittsdaten zugeordnet ist und LK2 nicht. Ist dies der Fall -> LK2, sonst LK1
+				neueKursart = ZulaessigeKursart.LK1;
+				if (leistung.abifach === 2)
+					neueKursart = ZulaessigeKursart.LK2;
+				if (leistung.abifach === null)
+					neuesAbifach = 1;
+			} else {
+				neueKursart = kursarten.isEmpty() ? null : kursarten.get(0);
+			}
+			await props.patchLeistung({
+				kursID: kurs.id,
+				lehrerID: kurs.lehrer,
+				kursart: neueKursart?.daten.kuerzel ?? null,
+				abifach: neuesAbifach,
+			}, leistung.id);
+		} else {
+			await props.patchLeistung({ kursID: kurs.id, lehrerID: kurs.lehrer }, leistung.id);
+		}
+	}
 
 </script>
 

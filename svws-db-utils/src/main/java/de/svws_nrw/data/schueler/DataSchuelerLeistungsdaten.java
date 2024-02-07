@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -147,10 +148,41 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		Map.entry("kursID", (conn, dto, value, map) -> {
 			final Long idKurs = JSONMapper.convertToLong(value, true);
 			if (idKurs != null)	{
+				/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
 				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
 				if (kurs == null)
 					throw OperationError.CONFLICT.exception();
+				// Setze Fachlehrer
 				dto.Fachlehrer_ID = kurs.Lehrer_ID;
+				// Passe ggf. die Kursart an, wenn sie sich geändert hat
+				if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
+					final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
+					dto.KursartAllg = kurs.KursartAllg;
+					if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
+						dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
+					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
+						dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+						dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+						ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
+						if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
+							dto.AbiFach = null;
+						if ("3".equals(dto.AbiFach))
+							kursart = ZulaessigeKursart.AB3;
+						else if ("4".equals(dto.AbiFach))
+							kursart = ZulaessigeKursart.AB4;
+						dto.Kursart = kursart.daten.kuerzel;
+					} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+						dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
+						if ("2".equals(dto.AbiFach))
+							dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
+						if (dto.AbiFach == null)
+							dto.AbiFach = "1";
+					} else {
+						dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
+					}
+				}
 			}
 			dto.Kurs_ID = idKurs;
 		}),
@@ -166,7 +198,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			final Integer abiFach = JSONMapper.convertToInteger(value, true);
 			if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
 				throw OperationError.CONFLICT.exception();
-			dto.AbiFach = "" + abiFach;
+			dto.AbiFach = (abiFach == null) ? null : "" + abiFach;
 		}),
 		Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("koopSchule", (conn, dto, value, map) -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000)),
