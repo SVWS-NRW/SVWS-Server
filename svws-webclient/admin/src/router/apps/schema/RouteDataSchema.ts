@@ -243,7 +243,9 @@ export class RouteDataSchema {
 		const result = await api.privileged.importSQLite2Schema(data, schema);
 		api.status.stop();
 		await this.init(schema);
+		api.status.start();
 		await this.setSchema(this.auswahl);
+		api.status.stop();
 		return result;
 	}
 
@@ -260,32 +262,31 @@ export class RouteDataSchema {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
+		let result = new SimpleOperationResponse();
 		try {
-			const result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
-			api.status.stop();
-			await this.init(this.auswahl.name);
-			await this.setSchema(this.auswahl);
-			return result;
+			result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
 		} catch (error) {
-			api.status.stop();
-			if (error instanceof OpenApiError) {
-				if (error.response instanceof Response) {
-					try {
-						const json = await error.response.text();
-						return SimpleOperationResponse.transpilerFromJSON(json);
-					} catch(e) {
-						const res = new SimpleOperationResponse();
-						res.success = false;
-						res.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
-						return res;
-					}
+			if ((error instanceof OpenApiError) && (error.response instanceof Response)) {
+				try {
+					const json = await error.response.text();
+					result = SimpleOperationResponse.transpilerFromJSON(json);
+				} catch(e) {
+					result = new SimpleOperationResponse();
+					result.success = false;
+					result.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
 				}
+			} else {
+				result = new SimpleOperationResponse();
+				result.success = false;
+				result.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unterwarteten Fehler: " + error);
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unterwarteten Fehler: " + error);
-			return res;
 		}
+		api.status.stop();
+		await this.init(this.auswahl.name);
+		api.status.start();
+		await this.setSchema(this.auswahl);
+		api.status.stop();
+		return result;
 	}
 
 	duplicateSchema = async (formData: FormData, duplikat: string) => {
@@ -305,7 +306,7 @@ export class RouteDataSchema {
 		const datenbankVerbindungsdaten = new DatenbankVerbindungsdaten();
 		const db = formData.get('db')?.toString() || null;
 		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
-		const schema = formData.get('schema')?.toString() || null;
+		let schema = formData.get('schema')?.toString() || null;
 		if (schema === currSchema) {
 			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() || null;
 			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() || null;
@@ -369,27 +370,25 @@ export class RouteDataSchema {
 				default:
 					throw new DeveloperNotificationException("Es ist ein Fehler aufgetreten bei der Migration");
 			}
-			await this.init(schema);
-			await this.setSchema(this.auswahl);
 		} catch(error) {
-			if (error instanceof OpenApiError) {
-				if (error.response instanceof Response) {
-					try {
-						const json = await error.response.text();
-						return SimpleOperationResponse.transpilerFromJSON(json);
-					} catch(e) {
-						const res = new SimpleOperationResponse();
-						res.success = false;
-						res.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
-						return res;
-					}
+			schema = currSchema ?? null;
+			if ((error instanceof OpenApiError) && (error.response instanceof Response)) {
+				try {
+					const json = await error.response.text();
+					result = SimpleOperationResponse.transpilerFromJSON(json);
+				} catch(e) {
+					result = new SimpleOperationResponse();
+					result.success = false;
+					result.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
 				}
+			} else {
+				result = new SimpleOperationResponse();
+				result.success = false;
+				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + error);
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + error);
-			return res;
 		}
+		await this.init(schema ?? undefined);
+		await this.setSchema(this.auswahl);
 		api.status.stop();
 		return result;
 	}
@@ -399,8 +398,7 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		const result = await api.privileged.initSchemaMitSchule(this.auswahl.name, schulnummer);
-		const schuleInfo = await api.privileged.getSchuleInfo(this.auswahl.name);
-		this.setPatchedState({ schuleInfo });
+		await this.setSchema(this.auswahl);
 		api.status.stop();
 		return result;
 	}
