@@ -3,7 +3,7 @@
 		<svws-ui-button type="secondary" @click="print"><i-ri-printer-line />Drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<div class="page--content page--content--flex">
+	<div class="page--content page--content--flex h-full">
 		<template v-if="stundenplan === undefined">
 			<div class="svws-ui-empty">
 				<i-ri-calendar-event-line />
