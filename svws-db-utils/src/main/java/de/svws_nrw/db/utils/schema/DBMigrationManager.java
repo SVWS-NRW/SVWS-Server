@@ -100,7 +100,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DBMigrationManager {
 
-	private final DBConfig srcConfig;
 	private final DBConfig tgtConfig;
 	private final int maxUpdateRevision;
 	private final boolean devMode;
@@ -193,15 +192,15 @@ public final class DBMigrationManager {
 	/**
 	 * Erzuegt eine neue Instanz des DBMigrationManager mit den übergebenen Attributen.
 	 *
-	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
+	 * @param srcManager           der Manager für den Zugriff auf die Schild2-Datenbank
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
 	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param schulNr              die Schulnummer, für welche die Daten migriert werden sollen (null, wenn alle Daten gelesen werden sollen).
 	 * @param logger               ein Logger, welcher die Migration loggt.
 	 */
-	private DBMigrationManager(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
-		this.srcConfig = srcConfig;
+	private DBMigrationManager(final DBSchemaManager srcManager, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+		this.srcManager = srcManager;
 		this.tgtConfig = tgtConfig;
 		this.maxUpdateRevision = maxUpdateRevision;
 		this.devMode = devMode;
@@ -220,7 +219,7 @@ public final class DBMigrationManager {
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	public static boolean createNewTargetSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final Logger logger) {
+	protected static boolean createNewTargetSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final Logger logger) {
 		boolean success = true;
 		final String tgtSchema = tgtConfig.getDBSchema();
 		logger.logLn("Erstelle Ziel-Schema für " + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtSchema + ")");
@@ -256,6 +255,29 @@ public final class DBMigrationManager {
 
 
 	/**
+	 * Erstellt die Verbindung zur Quell-Datenbank.
+	 *
+	 * @param srcConfig   die Konfiguration für den Zugriff auf die Quell-Datenbank
+	 * @param logger      der Logger
+	 *
+	 * @return die Manager für den Zugriff auf die Quell-Datenbank
+	 *
+	 * @throws DBException   falls ein Fehler beim Verbindungsaufbau auftritt
+	 */
+	protected static DBSchemaManager getSourceManager(final DBConfig srcConfig, final Logger logger) throws DBException {
+		logger.log("-> Verbinde zur Quell-Datenbank... ");
+		try {
+			return getSchemaManager(srcConfig, Benutzer.create(srcConfig), true, logger);
+		} catch (final Exception e) {
+			final DBException result = (e instanceof final DBException de) ? de : new DBException("Unbekannter Fehler beim Aufbau der Verbindung zur Quelldatenbank.");
+			logger.logLn(0, " " + strFehler);
+			logger.logLn(result.getMessage());
+			throw result;
+		}
+	}
+
+
+	/**
 	 * Diese Methode führt eine Migration von der durch srcConfig beschriebene Schild2-Datenbank in die durch tgtConfig beschriebene
 	 * SVWS-Server-Datenbank durch. Das Ziel-Schema muss dabei bereits exitistieren.
 	 *
@@ -269,6 +291,17 @@ public final class DBMigrationManager {
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
 	public static boolean migrateInto(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+		logger.logLn("Migriere von " + srcConfig.getDBDriver() + " (" + srcConfig.getDBLocation() + "/" + srcConfig.getDBSchema() + ") nach "
+                + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
+		logger.modifyIndent(2);
+		// Baue die Verbindung zur Quell-Datenbank auf
+		final DBSchemaManager srcManager;
+		try {
+			srcManager = getSourceManager(srcConfig, logger);
+		} catch (@SuppressWarnings("unused") final DBException e) {
+			return false;
+		}
+		// Leere das bestehende Schema der Zieldatenbank
 		final Benutzer tgtUser;
 		try {
 			tgtUser = Benutzer.create(tgtConfig);
@@ -278,8 +311,10 @@ public final class DBMigrationManager {
 		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 		if (!tgtManager.dropSVWSSchema())
 			return false;
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
-		return migrationManager.doMigrate();
+		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+		final boolean success = migrationManager.doMigrate();
+		logger.modifyIndent(-2);
+		return success;
 	}
 
 
@@ -299,10 +334,23 @@ public final class DBMigrationManager {
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
 	public static boolean migrate(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+		logger.logLn("Migriere von " + srcConfig.getDBDriver() + " (" + srcConfig.getDBLocation() + "/" + srcConfig.getDBSchema() + ") nach "
+                + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
+		logger.modifyIndent(2);
+		// Baue die Verbindung zur Quell-Datenbank auf
+		final DBSchemaManager srcManager;
+		try {
+			srcManager = getSourceManager(srcConfig, logger);
+		} catch (@SuppressWarnings("unused") final DBException e) {
+			return false;
+		}
+		// Erstelle das Ziel-Schema
 		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
 			return false;
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
-		return migrationManager.doMigrate();
+		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+		final boolean success = migrationManager.doMigrate();
+		logger.modifyIndent(-2);
+		return success;
 	}
 
 
@@ -312,12 +360,13 @@ public final class DBMigrationManager {
 	 * @param cfg     die Datenbank-Konfiguration
 	 * @param user    der Datenbank-Benutzer
 	 * @param isSrc   gibt für evtl. Fehlermeldungen an, ob es sich um die Verbidung zur Quell- oder Zieldatenbank handelt.
+	 * @param logger  der Logger
 	 *
 	 * @return der Schema-Manager
 	 *
 	 * @throws DBException falls ein Fehler beim Erstellen des Schema-Managers auftritt
 	 */
-	private DBSchemaManager getSchemaManager(final DBConfig cfg, final Benutzer user, final boolean isSrc) throws DBException {
+	private static DBSchemaManager getSchemaManager(final DBConfig cfg, final Benutzer user, final boolean isSrc, final Logger logger) throws DBException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn == null) {
 				logger.logLn(0, " " + strFehler);
@@ -339,38 +388,20 @@ public final class DBMigrationManager {
 	private boolean doMigrate() {
 		boolean success = true;
 		final long timeStart = System.currentTimeMillis();
-		logger.logLn("Migriere von " + srcConfig.getDBDriver() + " (" + srcConfig.getDBLocation() + "/" + srcConfig.getDBSchema() + ") nach "
-	                                 + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtConfig.getDBSchema() + ")");
-		logger.modifyIndent(2);
-
 		final String tgtSchema = tgtConfig.getDBSchema();
 		if ((tgtSchema == null) || "".equals(tgtSchema.trim())) {
 			logger.logLn("-> Migration fehlgeschlagen! (Ziel-Schemaname darf nicht null oder leer sein)");
-			logger.modifyIndent(-2);
 			return false;
 		}
 		if (!SVWSKonfiguration.get().lockSchema(tgtSchema)) {
 			logger.logLn("-> Migration fehlgeschlagen! (Ziel-Schema ist aktuell gesperrt und daher kann nicht migriert werden)");
-			logger.modifyIndent(-2);
 			return false;
 		}
 
 		try {
-			logger.log("-> Verbinde zur Quell-Datenbank... ");
-			try {
-				srcManager = getSchemaManager(srcConfig, Benutzer.create(srcConfig), true);
-			} catch (@SuppressWarnings("unused") final PersistenceException pe) {
-				logger.logLn(" " + strFehler);
-				throw new DBException("Unbekannter Fehler beim Aufbau der Verbindung.");
-			} catch (final DBException de) {
-				logger.logLn(" " + strFehler);
-				throw de;
-			}
-			logger.logLn(strOK);
-
 			logger.log("-> Verbinde zum Ziel-Schema...");
 			try {
-				tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false);
+				tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false, logger);
 			} catch (@SuppressWarnings("unused") final PersistenceException pe) {
 				logger.logLn(" " + strFehler);
 				throw new DBException("Unbekannter Fehler beim Aufbau der Verbindung.");
@@ -461,7 +492,6 @@ public final class DBMigrationManager {
 				success = false;
 			}
 		}
-		logger.modifyIndent(-2);
 		return success;
 	}
 
