@@ -244,6 +244,10 @@ public class DBBackupManager {
 				}
 				logger.logLn("[OK]");
 			}
+		} catch (final Exception e) {
+			final DBException result = (e instanceof final DBException de) ? de : new DBException("Unbekannter Fehler aufgetreten.");
+			SVWSKonfiguration.get().deactivateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
+			throw result;
 		}
 		// Falls das Schema deaktiviert wurde, dann hebe die Deaktivierung wieder auf
 		SVWSKonfiguration.get().activateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
