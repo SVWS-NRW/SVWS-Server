@@ -1,7 +1,7 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big" class="hidden">
-		<template #modalTitle>Blockung lokal berechnen</template>
+	<svws-ui-modal :show="showModal" size="big" class="hidden" :auto-close="false" :close-in-title="false">
+		<template #modalTitle>Ausführliche Berechnung lokal im Browser</template>
 		<template #modalDescription>
 			<div class="text-left pb-4">
 				Zum Start auf „Berechnung starten“ klicken, sobald die Bedingungen erfüllt sind, mit denen die Berechnung durchgeführt wird,

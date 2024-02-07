@@ -1,12 +1,12 @@
 <template>
 	<TransitionRoot appear :show="show().value">
-		<Dialog class="modal--wrapper" @close="closeModal" @keyup.esc="closeModal">
+		<Dialog class="modal--wrapper" @close="autoCloseModal" @keyup.esc="autoCloseModal">
 			<div class="modal--pageWrapper"
 				:class="{ 'modal--pageWrapper--help': size === 'help', }">
 				<TransitionChild v-if="size !== 'help'" as="div"
 					enter="ease-out duration-200" enter-from="opacity-0" enter-to="opacity-100"
 					leave="ease-in duration-100" leave-from="opacity-100" leave-to="opacity-0">
-					<div class="modal--overlay" @click="closeModal" />
+					<div class="modal--overlay" @click="autoCloseModal" />
 				</TransitionChild>
 				<TransitionChild as="div"
 					enter="ease-out duration-200" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100"
@@ -24,10 +24,8 @@
 							<i-ri-alert-fill v-if="type === 'danger'" class="text-error" />
 							<slot name="modalTitle" />
 						</DialogTitle>
-						<svws-ui-button type="icon" @click="closeModal">
-							<span class="icon modal--closeIcon">
-								<i-ri-close-line />
-							</span>
+						<svws-ui-button v-if="closeInTitle" type="icon" @click="closeModal">
+							<span class="icon modal--closeIcon"> <i-ri-close-line /> </span>
 						</svws-ui-button>
 					</div>
 					<div class="modal--content-wrapper">
@@ -63,10 +61,19 @@
 		show: () => Ref<boolean>;
 		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
 		type?: 'default' | 'danger';
+		autoClose?: boolean;
+		closeInTitle?: boolean;
 	}>(), {
 		size: 'small',
-		type: 'default'
+		type: 'default',
+		autoClose: true,
+		closeInTitle: true,
 	});
+
+	function autoCloseModal() {
+		if (props.autoClose)
+			closeModal();
+	}
 
 	function closeModal() {
 		props.show().value = false;
