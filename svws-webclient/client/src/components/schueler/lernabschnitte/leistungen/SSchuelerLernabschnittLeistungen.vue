@@ -27,7 +27,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
 								:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-								@update:model-value="value => patchLeistung({ fachID: ((value === null) || (value === undefined)) ? -1 : value.id, kursID: null }, leistung.id)"
+								@update:model-value="(value : FaecherListeEintrag) => void patchFach(value, leistung)"
 								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
@@ -113,7 +113,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag } from "@core";
+	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag, type FaecherListeEintrag, ZulaessigesFach } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
@@ -194,6 +194,26 @@
 		},
 		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
 	});
+
+	async function patchFach(fach: FaecherListeEintrag, leistung: SchuelerLeistungsdaten) {
+		// Fach-Eintrag bei den Leistungsdaten wird entfernt
+		if ((fach === null) || (fach === undefined)) {
+			await props.patchLeistung({ fachID: -1, kursID: null }, leistung.id);
+			return;
+		}
+		// Spezialfälle
+		const f : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzelStatistik);
+		if (f === ZulaessigesFach.VX) {   // Speziallfall Gymnasiale Oberstufe - Vertiefungsfach
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.VTF.daten.kuerzel }, leistung.id);
+		} else if (f === ZulaessigesFach.PX) {   // Speziallfall Gymnasiale Oberstufe - Projektkursfach
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.PJK.daten.kuerzel }, leistung.id);
+		} else { // Allgemeiner Fall: Entfernen des Kurses und Setzen einer speziellen Kursart, welche für Klassenunterricht geeignet ist
+			let kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
+			if ((kursart === null) || ((kursart !== ZulaessigeKursart.G) && (kursart !== ZulaessigeKursart.E)))
+				kursart = ZulaessigeKursart.PUK;
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten.kuerzel }, leistung.id);
+		}
+	}
 
 	async function patchKurs(kurs: KursListeEintrag, leistung: SchuelerLeistungsdaten) {
 		if ((kurs === null) || (kurs === undefined)) {
