@@ -482,6 +482,7 @@ public final class DBMigrationManager {
 			SVWSKonfiguration.get().activateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 		} catch (final DBException e) {
 			logger.logLn("-> Migration fehlgeschlagen! (" + e.getMessage() + ")");
+			SVWSKonfiguration.get().deactivateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 			success = false;
 		} finally {
 			tgtManager = null;
