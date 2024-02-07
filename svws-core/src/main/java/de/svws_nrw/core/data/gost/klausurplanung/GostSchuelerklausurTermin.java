@@ -56,8 +56,7 @@ public class GostSchuelerklausurTermin {
 	 */
 	@Override
 	public int hashCode() {
-		// return Long.hashCode(id); (vom Transpiler nicht unterstützt)
-		return (int) id;
+		return Long.hashCode(id);
 	}
 
 }

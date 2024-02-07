@@ -1,3 +1,4 @@
+import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class GostSchuelerklausurTermin extends JavaObject {
@@ -53,7 +54,7 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	 * @return den HashCode
 	 */
 	public hashCode() : number {
-		return this.id as number;
+		return JavaLong.hashCode((this.id));
 	}
 
 	transpilerCanonicalName(): string {

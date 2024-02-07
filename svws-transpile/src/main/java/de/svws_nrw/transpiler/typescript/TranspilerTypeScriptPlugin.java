@@ -1503,6 +1503,15 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final String expression = convertExpression(ms.getExpression());
 				if (strSuper.equals(expression))
 					return "super.hashCode()";
+				if ((ms.getExpression() instanceof final IdentifierTree idt) && !node.getArguments().isEmpty()) {
+					final ExpressionType idtType = transpiler.getExpressionType(idt);
+					if (idtType == null)
+						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + idt.getName().toString());
+					if (idtType instanceof final ExpressionClassType ect) {
+						final String importName = getImportName(ect.toString(), ect.getPackageName());
+						return importName + ".hashCode(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
+					}
+				}
 				return "JavaObject.getTranspilerHashCode(" + expression + ")";
 			}
 			// replace all equals invocations

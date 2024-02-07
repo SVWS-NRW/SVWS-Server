@@ -22,6 +22,10 @@ export class JavaLong extends JavaObject {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 
+	public static hashCode(value : number) : number {
+		return value;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'java.lang.Long';
 	}
