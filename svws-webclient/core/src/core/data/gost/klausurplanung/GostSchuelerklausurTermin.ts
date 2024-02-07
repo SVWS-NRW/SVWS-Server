@@ -39,7 +39,7 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	}
 
 	/**
-	 * Vergleicht, ob ein GostSchuelerklausurTermin-Objekt dasselbe Objekt, wie ein anderes GostSchuelerklausurTermin-Objekt ist.
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
 	 * @return true, falls die Objekte indentisch sind, sonst false
@@ -49,7 +49,7 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zum GostSchuelerklausurTermin-Objekt auf Basis der id.
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
 	 *
 	 * @return den HashCode
 	 */

@@ -1,3 +1,4 @@
+import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class GostKlausurvorgabe extends JavaObject {
@@ -65,6 +66,25 @@ export class GostKlausurvorgabe extends JavaObject {
 
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	public equals(another : unknown | null) : boolean {
+		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe'))) && this.idVorgabe === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurvorgabe(another)).idVorgabe;
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+	 *
+	 * @return den HashCode
+	 */
+	public hashCode() : number {
+		return JavaLong.hashCode((this.idVorgabe));
 	}
 
 	transpilerCanonicalName(): string {

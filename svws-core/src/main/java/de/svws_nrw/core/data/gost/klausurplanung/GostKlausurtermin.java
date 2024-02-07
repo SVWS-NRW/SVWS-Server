@@ -53,4 +53,25 @@ public class GostKlausurtermin {
 	@Schema(description = "die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht", example = "false")
 	public boolean nachschreiberZugelassen = false;
 
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return another != null && another instanceof GostKlausurtermin && this.id == ((GostKlausurtermin) another).id;
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return Long.hashCode(id);
+	}
+
 }

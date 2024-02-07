@@ -29,4 +29,25 @@ public class GostKlausurraum {
 	@Schema(description = "die textuelle Bemerkung zum Klausurraum, sofern vorhanden", example = "Bemerkung")
 	public String bemerkung = null;
 
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return another != null && another instanceof GostKlausurraum && this.id == ((GostKlausurraum) another).id;
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return Long.hashCode(id);
+	}
+
 }

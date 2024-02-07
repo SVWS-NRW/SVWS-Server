@@ -1,6 +1,7 @@
-import { JavaObject } from '../../../../java/lang/JavaObject';
+import { JavaLong } from '../../../../java/lang/JavaLong';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class GostKursklausurRich extends JavaObject {
 
@@ -82,6 +83,25 @@ export class GostKursklausurRich extends JavaObject {
 
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	public equals(another : unknown | null) : boolean {
+		return another !== null && ((another instanceof JavaObject) && ((another as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich'))) && this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostKursklausurRich(another)).id;
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	public hashCode() : number {
+		return JavaLong.hashCode((this.id));
 	}
 
 	transpilerCanonicalName(): string {

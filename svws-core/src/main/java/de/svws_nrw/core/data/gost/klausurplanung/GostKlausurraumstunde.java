@@ -25,4 +25,25 @@ public class GostKlausurraumstunde {
 	@Schema(description = "die ID des Zeitrasters", example = "221")
 	public long idZeitraster = -1;
 
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return another != null && another instanceof GostKlausurraumstunde && this.id == ((GostKlausurraumstunde) another).id;
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return Long.hashCode(id);
+	}
+
 }
