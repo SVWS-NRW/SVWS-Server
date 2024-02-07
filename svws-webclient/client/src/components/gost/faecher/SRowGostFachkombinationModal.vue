@@ -21,7 +21,7 @@
 	const props = defineProps<{
 		hinweistext: string;
 		kombination: GostJahrgangFachkombination;
-		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);

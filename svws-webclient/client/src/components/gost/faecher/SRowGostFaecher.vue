@@ -61,7 +61,7 @@
 	import { ArrayList, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
-		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
+		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 		fachId: number;
 		faecherManager: () => GostFaecherManager;

@@ -300,7 +300,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste der Fächer
 	 */
 	public @NotNull List<@NotNull GostFach> faecher() {
-		return _faecher;
+		return new ArrayList<>(_faecher);
 	}
 
 	/**

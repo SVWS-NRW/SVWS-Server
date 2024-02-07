@@ -47,44 +47,42 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, List} from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
-	import { GostKursart, GostHalbjahr } from "@core";
+	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, List} from "@core";
+	import { GostLaufbahnplanungFachkombinationTyp, GostKursart, GostHalbjahr } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
-		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		kombination: GostJahrgangFachkombination;
 	}>();
 
-	const faecher: ComputedRef<List<GostFach>> = computed(() => props.faecherManager().faecher());
-	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
+	const faecher = computed<List<GostFach>>(() => props.faecherManager().faecher());
+	const kursarten = computed<GostKursart[]>(() => GostKursart.values());
 
-	const fach1: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.faecherManager().get(props.kombination.fachID1) || undefined,
+	const fach1 = computed<GostFach | null>({
+		get: () => props.faecherManager().get(props.kombination.fachID1),
 		set: (value) => void props.patchFachkombination({ fachID1: value?.id }, props.kombination.id)
 	});
 
-	const kursart1: WritableComputedRef<GostKursart | undefined> = computed({
-		get: () => GostKursart.fromKuerzel(props.kombination.kursart1) || undefined,
+	const kursart1 = computed<GostKursart | null>({
+		get: () => GostKursart.fromKuerzel(props.kombination.kursart1),
 		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel || null }, props.kombination.id)
 	});
 
-	const fach2: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.faecherManager().get(props.kombination.fachID2) || undefined,
+	const fach2 = computed<GostFach | null>({
+		get: () => props.faecherManager().get(props.kombination.fachID2),
 		set: (value) => void props.patchFachkombination({ fachID2: value?.id }, props.kombination.id)
 	});
 
-	const kursart2: WritableComputedRef<GostKursart | undefined> = computed({
-		get: () => GostKursart.fromKuerzel(props.kombination.kursart2) || undefined,
+	const kursart2 = computed<GostKursart | null>({
+		get: () => GostKursart.fromKuerzel(props.kombination.kursart2),
 		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel || null }, props.kombination.id)
 	});
 
-	const gueltigEF1: WritableComputedRef<boolean> = computed({
+	const gueltigEF1 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.EF1.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -93,7 +91,7 @@
 		}
 	});
 
-	const gueltigEF2: WritableComputedRef<boolean> = computed({
+	const gueltigEF2 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.EF2.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -102,7 +100,7 @@
 		}
 	});
 
-	const gueltigQ11: WritableComputedRef<boolean> = computed({
+	const gueltigQ11 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.Q11.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -111,7 +109,7 @@
 		}
 	});
 
-	const gueltigQ12: WritableComputedRef<boolean> = computed({
+	const gueltigQ12 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.Q12.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -120,7 +118,7 @@
 		}
 	});
 
-	const gueltigQ21: WritableComputedRef<boolean> = computed({
+	const gueltigQ21 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.Q21.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -129,7 +127,7 @@
 		}
 	});
 
-	const gueltigQ22: WritableComputedRef<boolean> = computed({
+	const gueltigQ22 = computed<boolean>({
 		get: () => props.kombination.gueltigInHalbjahr[GostHalbjahr.Q22.id],
 		set: (value) => {
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
@@ -138,7 +136,7 @@
 		}
 	});
 
-	const hinweistext: ComputedRef<string> = computed(() => {
+	const hinweistext = computed<string>(() => {
 		const typ = (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === props.kombination.typ)
 			? 'erfordert' : 'erlaubt kein'
 		return `${fach1.value?.kuerzel || ''} ${kursart1.value || ''} ${typ} ${fach2.value?.kuerzel || ''} ${kursart2.value || ''}`;

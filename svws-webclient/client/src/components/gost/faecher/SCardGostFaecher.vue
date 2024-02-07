@@ -67,7 +67,7 @@
 				</div>
 			</template>
 			<template #body>
-				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
+				<s-row-gost-faecher v-for="fach in faecherManager().faecher()" :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -75,20 +75,14 @@
 
 <script setup lang="ts">
 
-	import type { GostFach, GostFaecherManager, List } from "@core";
+	import type { GostFach, GostFaecherManager } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import type { ComputedRef } from "vue";
-	import {computed } from "vue";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
-		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
+		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 	}>();
-
-	const faecher: ComputedRef<List<GostFach>> = computed(() => {
-		return props.faecherManager().faecher();
-	});
 
 	const cols: DataTableColumn[] = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },

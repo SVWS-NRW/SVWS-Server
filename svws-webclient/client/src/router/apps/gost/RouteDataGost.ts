@@ -184,15 +184,13 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
 		if (this.jahrgangsdaten === undefined)
-			return false;
+			return;
 		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this.jahrgangsdaten.abiturjahr, fach_id);
 		const fach = this.faecherManager.get(fach_id);
 		if (fach !== null)
 			Object.assign(fach, data);
-		this.setPatchedState({
-			faecherManager: Object.assign(this.faecherManager, this.faecherManager)
-		})
-		return true;
+		this.setPatchedState({ faecherManager: this.faecherManager })
+		return;
 	}
 
 	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>) : Promise<Partial<RouteDataGost>> {

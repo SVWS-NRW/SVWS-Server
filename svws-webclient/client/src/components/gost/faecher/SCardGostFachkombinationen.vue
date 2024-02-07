@@ -23,22 +23,21 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@core";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
-		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		mapFachkombinationen: () => Map<number, GostJahrgangFachkombination>;
 	}>();
 
-	const title: ComputedRef<string> = computed(() => {
+	const title = computed<string>(() => {
 		switch(props.typ) {
 			case GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH:
 				return "Geforderte Kombinationen";
@@ -49,7 +48,7 @@
 		}
 	});
 
-	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
+	const rows = computed<List<GostJahrgangFachkombination>>(() => {
 		const result = new ArrayList<GostJahrgangFachkombination>();
 		for (const kombi of props.mapFachkombinationen().values())
 			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)

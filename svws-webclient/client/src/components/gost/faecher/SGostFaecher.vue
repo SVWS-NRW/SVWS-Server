@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 
-	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<GostFaecherProps>();
 

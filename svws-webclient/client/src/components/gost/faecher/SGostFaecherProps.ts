@@ -2,8 +2,8 @@ import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLau
 
 export interface GostFaecherProps {
 	faecherManager: () => GostFaecherManager;
-	patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
-	patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+	patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
+	patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;
 	addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 	removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;

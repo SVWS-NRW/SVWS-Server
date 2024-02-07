@@ -56,7 +56,7 @@ export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
 		Object.assign(kombi, data);
 		mapFachkombinationen.set(kombi.id, kombi);
 		this.setPatchedState({mapFachkombinationen});
-		return true;
+		return;
 	}
 
 	addFachkombination = async (typ: GostLaufbahnplanungFachkombinationTyp) => {
