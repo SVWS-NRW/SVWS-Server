@@ -3,20 +3,11 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel" :model-value="data().kuerzel" @change="patchKuerzel" type="text" />
-				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.get(schulform)" :item-text="text_schulgliederung" />
 				<svws-ui-text-input placeholder="Bezeichnung" :model-value="data().bezeichnung" @change="bezeichnung=>patch({bezeichnung})" type="text" />
+				<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="Schulgliederung.get(schulform)" :item-text="text_schulgliederung" />
+				<svws-ui-select title="Statistik-Jahrgang" v-model="statistikjahrgang" :items="Jahrgaenge.get(schulform)" :item-text="textStatistikJahrgang" statistics />
 				<svws-ui-select title="Folgejahrgang" v-model="inputIdFolgejahrgang" :items="inputJahrgaenge" :item-text="e => `${e?.kuerzel ? e.kuerzel + ' : ' : ''}${e?.bezeichnung || ''}`" />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<svws-ui-content-card>
-			<template #title>
-				<div class="content-card--header content-card--headline text-headline-sm">
-					<i-ri-bar-chart-2-line class="mr-1 opacity-50" />
-					<span>Statistik</span>
-				</div>
-			</template>
-			<svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Bezeichnung in Statistik" :model-value="data().kuerzelStatistik" @change="kuerzelStatistik=>patch({kuerzelStatistik})" type="text" />
+				<svws-ui-input-number placeholder="Anzahl der Restabschnitte" :model-value="data().anzahlRestabschnitte" @change="patchRestabschnitte" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -25,7 +16,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { UserNotificationException, type JahrgangsListeEintrag, Schulgliederung } from "@core";
+	import { UserNotificationException, type JahrgangsListeEintrag, Schulgliederung, Jahrgaenge, DeveloperNotificationException } from "@core";
 	import type { JahrgangDatenProps } from "./SJahrgangDatenProps";
 
 	const props = defineProps<JahrgangDatenProps>();
@@ -63,6 +54,40 @@
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
 		return schulgliederung.daten.kuerzel;
+	}
+
+	const statistikjahrgang = computed<Jahrgaenge | null>({
+		get: () => {
+			const kuerzel = props.data().kuerzelStatistik;
+			if (kuerzel === null)
+				return null;
+			return Jahrgaenge.getByKuerzel(kuerzel);
+		},
+		set: (value) => {
+			const kuerzel = value?.daten.kuerzel ?? "";
+			void props.patch({ kuerzelStatistik : kuerzel });
+		}
+	});
+
+	function textStatistikJahrgang(jahrgang: Jahrgaenge | null | undefined) {
+		if ((jahrgang === null) || (jahrgang === undefined))
+			return "---";
+		let bezeichnung = "";
+		for (const bez of jahrgang.daten.bezeichnungen) {
+			if (bez.schulform === props.schulform.daten.kuerzel) {
+				bezeichnung = bez.bezeichnung;
+				break;
+			}
+		}
+		return jahrgang.daten.kuerzel + ": " + bezeichnung;
+	}
+
+	async function patchRestabschnitte(value: number | null) {
+		if (value === null)
+			throw new DeveloperNotificationException("Die Anzahl der Restabschnitte darf nicht auf null zurückgesetzt werden.");
+		if ((value < 0) || (value > 40))
+			throw new UserNotificationException("Die Anzahl der Restabschnitte muss in dem Bereich [0; 40] liegen.");
+		await props.patch({ anzahlRestabschnitte: value });
 	}
 
 </script>
