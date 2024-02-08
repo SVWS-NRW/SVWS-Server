@@ -135,7 +135,7 @@
 						<div class="flex flex-col">
 							{{ `${s.nachname}, ${s.vorname}` }}
 							<template v-if="s.status !== 2">
-								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }})</span>
+								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 							</template>
 						</div>
 					</div>
