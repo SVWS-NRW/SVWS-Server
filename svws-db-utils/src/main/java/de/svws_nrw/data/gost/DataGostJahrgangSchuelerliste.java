@@ -12,6 +12,8 @@ import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.WebApplicationException;
@@ -57,7 +59,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
@@ -76,9 +78,12 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 				.setParameter("value", schuelerIDs)
 				.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 
+		// Bestimme die Jahrgänge der Schule
+		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+
 		// Erstelle die Schülerliste
     	final List<SchuelerListeEintrag> daten = schuelerListe.stream()
-        		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID)))
+        		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
         		.sorted(DataSchuelerliste.dataComparator)
     	    	.toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
