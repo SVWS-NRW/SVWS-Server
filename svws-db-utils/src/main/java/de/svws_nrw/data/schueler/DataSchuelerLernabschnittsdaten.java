@@ -34,6 +34,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -135,9 +136,11 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
 	 */
 	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitWechseln) throws WebApplicationException {
-		// Prüfe, ob der Schüler mit der ID existiert
+		// Prüfe, ob die Liste der Schüler-IDs existiert
 		if (schueler_ids == null)
 			throw OperationError.NOT_FOUND.exception("Es sind keine Schueler-ID angegeben worden.");
+		if (schueler_ids.isEmpty())
+			return new ArrayList<>();
 
 		final Map<Long, DTOSchueler> mapSchueler = conn.queryNamed("DTOSchueler.id.multiple", schueler_ids, DTOSchueler.class)
 			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
@@ -149,9 +152,9 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", schueler_ids, DTOSchuelerLernabschnittsdaten.class).stream()
 			.filter(a -> (mitWechseln ? a.WechselNr >= 0 : a.WechselNr == 0))
 			.sorted(Comparator
-				.comparing((DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
-				.thenComparing((DTOSchuelerLernabschnittsdaten a) -> a.Schuljahresabschnitts_ID)
-				.thenComparing((DTOSchuelerLernabschnittsdaten a) -> a.WechselNr))
+				.comparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schueler_ID)
+				.thenComparing((final DTOSchuelerLernabschnittsdaten a) -> a.Schuljahresabschnitts_ID)
+				.thenComparing((final DTOSchuelerLernabschnittsdaten a) -> a.WechselNr))
 			.toList();
 
 		return dtoLernabschnitte.stream().map(a -> getFromID(a.ID)).toList();

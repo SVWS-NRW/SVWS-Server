@@ -13,12 +13,14 @@ import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
 import de.svws_nrw.data.schule.SchulUtils;
@@ -32,8 +34,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
@@ -434,16 +436,12 @@ public final class DBUtilsGostLaufbahn {
     	// Bestimme die Fächer des Abiturjahrgangs und die Schuljahresabschnitte
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahrgang);
     	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-    	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs und deren DTOs
-		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
-	        return result;
-		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
-    	if (schuelerIDs.isEmpty())
-    		throw OperationError.NOT_FOUND.exception("Die Liste der Schüler-IDs darf nicht leer sein.");
-    	final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-    	if (schuelerIDs.size() != mapSchueler.size())
-    		throw OperationError.NOT_FOUND.exception("Für mindestens eine der übergebenen Schüler-IDs konnte kein Schüler in der Datenbank gefunden werden.");
+    	// Bestimme alle Schüler des angegebenen Abiturjahrgangs
+    	final List<DTOSchueler> listSchueler = getSchuelerOfAbiturjahrgang(conn, abijahrgang);
+    	if (listSchueler.isEmpty())
+    		return new HashMap<>();
+		final List<Long> schuelerIDs = listSchueler.stream().map(s -> s.ID).toList();
+    	final Map<Long, DTOSchueler> mapSchueler = listSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
     	// Bestimme die aktuellen Lernabschnitte der Schüler
     	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class);
     	final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryAktAbschnitte.setParameter("ids", schuelerIDs).getResultList();
@@ -620,6 +618,52 @@ public final class DBUtilsGostLaufbahn {
     	}
 		// und gib die Abiturdaten zurück...
 		return result;
+    }
+
+
+    /**
+     * Bestimmt alle Schüler des angebebenen Abiturjahrgangs als Set Schüler-IDs.
+     *
+     * @param conn          die Datenbankverbindung
+     * @param abijahrgang   der Abiturjahrgang
+     *
+     * @return die Menge der Schüler-IDs
+     */
+    public static List<DTOSchueler> getSchuelerOfAbiturjahrgang(final DBEntityManager conn, final int abijahrgang) {
+    	// Bestimme die Schule, die Schuljahresabschnitte und alle Jahrgänge der Schule
+    	final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+    	final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+    	final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+    	// Bestimme alle Jahrgänge der Schule, welche als ASD-Jahrgang 'EF', 'Q1', 'Q2' haben
+    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryNamed("DTOJahrgang.asdjahrgang.multiple", List.of("EF", "Q1", "Q2"), DTOJahrgang.class);
+    	final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
+    	// Bestimme alle Schüler mit Geloescht <> '+' und (Schueler.Status <> 8 oder Schueler.Entlassjahrgang_ID.ASDJahrgang in ('EF', 'Q1', 'Q2')
+    	final List<DTOSchueler> alleSchueler = conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Geloescht <> true AND (e.Status <> ?1 OR e.Entlassjahrgang_ID IN ?2)", DTOSchueler.class, SchuelerStatus.ABSCHLUSS, listJahrgaengeGostIDs);
+    	final List<Long> alleSchuelerIDs = alleSchueler.stream().map(s -> s.ID).toList();
+    	// Bestimme die aktuellen SchuelerLernabschnitte der Schüler
+    	final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(
+			"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s WHERE s.ID IN ?1 AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND sla.WechselNr = 0",
+			DTOSchuelerLernabschnittsdaten.class, alleSchuelerIDs);
+    	final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = schuelerLernabschnittsdaten.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+    	// Filtere die Schüler auf die Schüler des Abiturjahrgangs
+    	final List<DTOSchueler> result = new ArrayList<>();
+    	for (final DTOSchueler schueler : alleSchueler) {
+    		final DTOSchuljahresabschnitte schuljahresabschnitt = mapAbschnitte.get(schueler.Schuljahresabschnitts_ID);
+    		if (schuljahresabschnitt == null)
+    			continue;
+    		final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(schueler.ID);
+    		if (lernabschnitt == null)
+    			continue;
+    		final DTOJahrgang jahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
+    		if (jahrgang == null)
+    			continue;
+    		// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
+    		final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;
+    		final Integer restjahreNachJahrgang = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+			if ((restjahreNachJahrgang != null) && (restjahreNachAbiturjahr == restjahreNachJahrgang))
+				result.add(schueler);
+    	}
+    	return result;
     }
 
 

@@ -12,7 +12,6 @@ import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.WebApplicationException;
@@ -52,18 +51,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	List<DTOSchueler> getSchuelerDTOs() throws WebApplicationException {
 		if (abijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
-		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-		if (schuelerAbijahrgang == null)
-			throw OperationError.NOT_FOUND.exception();
-		if (schuelerAbijahrgang.isEmpty())
-			return new ArrayList<>();
-		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
-		if (schuelerIDs.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
-		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
-			throw OperationError.NOT_FOUND.exception();
-		return schuelerListe;
+		return DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abijahrgang);
 	}
 
 
