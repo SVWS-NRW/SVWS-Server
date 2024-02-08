@@ -1780,7 +1780,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
 		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
 		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > _stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("kwz.wochentyp <=0", kwz.wochentyp <= 0);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0);
 	}
 
 	/**
@@ -4131,10 +4131,10 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
 	}
 
-	// TODO
-	private void unterrichtCheckDuplicateInCell(final @NotNull List<@NotNull StundenplanUnterricht> list) {
+	// TODO unterrichtCheckDuplicateInCell
+	private void unterrichtCheckDuplicateInCell(@SuppressWarnings("unused") final @NotNull List<@NotNull StundenplanUnterricht> list) {
 		// Simuliere die neue Lage für Kursunterricht (idKurs, tag, stunde) -->
-		final @NotNull HashSet<@NotNull String> _menge_by_idKurs = new HashSet<>();
+		// final @NotNull HashSet<@NotNull String> _menge_by_idKurs = new HashSet<>()
 	}
 
 	private @NotNull Comparator<@NotNull StundenplanUnterricht> unterrichtCreateComparator() {

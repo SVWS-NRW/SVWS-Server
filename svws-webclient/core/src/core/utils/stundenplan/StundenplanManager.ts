@@ -1724,7 +1724,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
 		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
 		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > this._stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("kwz.wochentyp <=0", kwz.wochentyp <= 0);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0);
 	}
 
 	/**
@@ -3870,7 +3870,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private unterrichtCheckDuplicateInCell(list : List<StundenplanUnterricht>) : void {
-		const _menge_by_idKurs : HashSet<string> = new HashSet();
+		// empty block
 	}
 
 	private unterrichtCreateComparator() : Comparator<StundenplanUnterricht> {
