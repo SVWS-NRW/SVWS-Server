@@ -795,16 +795,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public void kursRemoveByID(final long idKurs) throws DeveloperNotificationException {
-		// Datenkonsistenz überprüfen.
-		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
-
-		// Entfernen des Kurses.
-		final @NotNull GostBlockungKurs kurs = this.kursGet(idKurs);
-		_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
-		_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
-		Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-		DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, idKurs);
-		_daten.kurse.remove(kurs);
+		kurseRemoveByID(ListUtils.create1(idKurs));
 	}
 
 	/**
@@ -817,6 +808,53 @@ public class GostBlockungsdatenManager {
 	 */
 	public void kursRemove(final @NotNull GostBlockungKurs kurs) throws DeveloperNotificationException {
 		kursRemoveByID(kurs.id);
+	}
+
+	/**
+	 * Entfernt alleKurse mit den übergebenen IDs aus der Blockung.
+	 *
+	 * @param idKurse  Die Datenbank-IDs der zu entfernenden Kurse.
+	 *
+	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
+	 */
+	public void kurseRemoveByID(final @NotNull List<@NotNull Long> idKurse) throws DeveloperNotificationException {
+		// (1) Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
+		for (final long idKurs : idKurse)
+			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", _map_idKurs_kurs, idKurs);
+
+		// (2) Entfernen des Kurses.
+		for (final long idKurs : idKurse) {
+			final @NotNull GostBlockungKurs kurs = this.kursGet(idKurs);
+			_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
+			_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
+			Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
+			DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, idKurs);
+			_daten.kurse.remove(kurs);
+		}
+	}
+
+	/**
+	 * Entfernt alleKurse mit den übergebenen IDs aus der Blockung.
+	 *
+	 * @param kurse Die zu entfernenden {{@link GostBlockungKurs} GostBlockungKurs-Objekte.
+	 *
+	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
+	 */
+	public void kurseRemove(final @NotNull List<@NotNull GostBlockungKurs> kurse) throws DeveloperNotificationException {
+		// (1) Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
+		for (final @NotNull GostBlockungKurs kurs : kurse)
+			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", _map_idKurs_kurs, kurs.id);
+
+		// (2) Entfernen des Kurses.
+		for (final @NotNull GostBlockungKurs kurs : kurse) {
+			_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
+			_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
+			Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
+			DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, kurs.id);
+			_daten.kurse.remove(kurs);
+		}
 	}
 
 	/**

@@ -3033,10 +3033,40 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveKursByID(idKurs : number) : void {
-		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		for (const schienenID of kurs.schienen)
-			this.getSchieneE(schienenID!).kurse.remove(kurs);
+		this.setRemoveKurseByID(ListUtils.create1(idKurs));
+	}
+
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
+	 *
+	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public setRemoveKurseByID(idKurse : List<number>) : void {
+		for (const idKurs of idKurse)
+			DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
+		for (const idKurs of idKurse) {
+			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+			for (const schienenID of kurs.schienen)
+				this.getSchieneE(schienenID!).kurse.remove(kurs);
+		}
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
+	 *
+	 * @param kurse  Die Liste der {@link GostBlockungsergebnisKurs}-Objekte.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public setRemoveKurse(kurse : List<GostBlockungsergebnisKurs>) : void {
+		for (const kurs of kurse)
+			DeveloperNotificationException.ifTrue("Der Kurs " + kurs.id + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(kurs.id));
+		for (const kurs of kurse)
+			for (const schienenID of kurs.schienen)
+				this.getSchieneE(schienenID!).kurse.remove(kurs);
 		this.stateRevalidateEverything();
 	}
 

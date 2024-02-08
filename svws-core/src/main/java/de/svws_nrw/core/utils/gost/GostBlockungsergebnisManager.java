@@ -3237,15 +3237,51 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public void setRemoveKursByID(final long idKurs) throws DeveloperNotificationException {
-		// Datenkonsistenz überprüfen.
-		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(idKurs));
+		setRemoveKurseByID(ListUtils.create1(idKurs));
+	}
 
-		// Lösche den Kurs aus der DTO-Datenstruktur (löscht dadurch auch SuS).
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
-		for (final @NotNull Long schienenID : kurs.schienen)
-			getSchieneE(schienenID).kurse.remove(kurs);
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
 
-		// Bewertungen aktualisieren
+	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public void setRemoveKurseByID(final @NotNull List<@NotNull Long> idKurse) throws DeveloperNotificationException {
+		// (1) Datenkonsistenz überprüfen
+		for (final long idKurs : idKurse)
+			DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(idKurs));
+
+
+		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch SuS).
+		for (final long idKurs : idKurse) {
+			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+			for (final @NotNull Long schienenID : kurs.schienen)
+				getSchieneE(schienenID).kurse.remove(kurs);
+		}
+
+		// (3) Bewertungen aktualisieren
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
+
+	 * @param kurse  Die Liste der {@link GostBlockungsergebnisKurs}-Objekte.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public void setRemoveKurse(final @NotNull List<@NotNull GostBlockungsergebnisKurs> kurse) throws DeveloperNotificationException {
+		// (1) Datenkonsistenz überprüfen
+		for (final @NotNull GostBlockungsergebnisKurs kurs : kurse)
+			DeveloperNotificationException.ifTrue("Der Kurs " + kurs.id + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(kurs.id));
+
+		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch SuS).
+		for (final @NotNull GostBlockungsergebnisKurs kurs : kurse)
+			for (final @NotNull Long schienenID : kurs.schienen)
+				getSchieneE(schienenID).kurse.remove(kurs);
+
+		// (3) Bewertungen aktualisieren
 		stateRevalidateEverything();
 	}
 
