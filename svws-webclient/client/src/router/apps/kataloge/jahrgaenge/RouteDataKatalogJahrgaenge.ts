@@ -3,7 +3,6 @@ import type { JahrgangsDaten, JahrgangsListeEintrag } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeKatalogJahrgaenge } from "./RouteKatalogJahrgaenge";
 import { routeKatalogJahrgaengeDaten } from "./RouteKatalogJahrgaengeDaten";
@@ -61,9 +60,17 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 	}
 
 	patch = async (data : Partial<JahrgangsDaten>) => {
-		if (this.auswahl === undefined)
+		if ((this.auswahl === undefined) || (this.daten === undefined))
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patchJahrgangDaten", data);
-		//await api.server.patchJahrgangDaten(data, api.schema, this.item.id);
+		await api.server.patchJahrgang(data, api.schema, this.daten.id);
+		Object.assign(this.daten, data);
+		if (data.kuerzel !== undefined)
+			this.auswahl.kuerzel = data.kuerzel;
+		if (data.bezeichnung !== undefined)
+			this.auswahl.bezeichnung = data.bezeichnung;
+		if (data.anzahlRestabschnitte !== undefined)
+			this.auswahl.anzahlRestabschnitte = data.anzahlRestabschnitte;
+		this.setPatchedState({ auswahl: this.auswahl, daten: this.daten });
 	}
+
 }

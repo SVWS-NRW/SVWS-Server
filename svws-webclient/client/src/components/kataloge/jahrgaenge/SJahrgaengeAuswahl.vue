@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
+				<svws-ui-table :clicked="auswahl()" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols">
 					<template #cell(bezeichnung)="{ value, rowData }">
 						<div class="flex flex-row w-full">
 							<div class="flex-grow text-ellipsis overflow-hidden whitespace-nowrap">

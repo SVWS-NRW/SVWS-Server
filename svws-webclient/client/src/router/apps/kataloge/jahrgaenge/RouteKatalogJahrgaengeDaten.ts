@@ -30,8 +30,8 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<unknown, RouteKatalog
 	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {
 		return {
 			patch: routeKatalogJahrgaenge.data.patch,
-			data: routeKatalogJahrgaenge.data.daten,
-			mapKatalogeintraege: routeKatalogJahrgaenge.data.mapKatalogeintraege
+			data: () => routeKatalogJahrgaenge.data.daten,
+			mapJahrgaenge: routeKatalogJahrgaenge.data.mapKatalogeintraege
 		};
 	}
 

@@ -66,8 +66,8 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 
 	public getAuswahlProps(to: RouteLocationNormalized): JahrgaengeAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			auswahl: () => this.data.auswahl,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -79,7 +79,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 
 	public getProps(to: RouteLocationNormalized): JahrgaengeAppProps {
 		return {
-			auswahl: this.data.auswahl,
+			auswahl: () => this.data.auswahl,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
