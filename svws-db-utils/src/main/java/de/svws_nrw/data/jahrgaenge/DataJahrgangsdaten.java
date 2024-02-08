@@ -118,7 +118,11 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)),
 		Map.entry("kuerzelSchulgliederung", (conn, dto, value, map) -> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
-			dto.Gliederung = Schulgliederung.getByKuerzel(str);
+			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+			final Schulgliederung sgl = Schulgliederung.getBySchulformAndKuerzel(schule.Schulform, str);
+			if ((sgl == null) && (str != null))
+				throw OperationError.CONFLICT.exception();
+			dto.Gliederung = sgl;
 		}),
 		Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
 			final Long idFolgejahrgang = JSONMapper.convertToLong(value, true);
