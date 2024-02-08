@@ -94,6 +94,12 @@
 
 	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
 
+	async function getWaiting() {
+		const p = workerManager.value?.waiting;
+		if (p !== undefined)
+			await Promise.allSettled(p);
+	}
+
 	function addWorker() {
 		if ((workerManager.value === undefined) || (workerManager.value.threads === WorkerManagerKursblockung.MAX_WORKER))
 			return;
@@ -123,6 +129,7 @@
 
 	async function pause() {
 		workerManager.value?.pause();
+		await getWaiting();
 		selected.value = [...liste.value];
 	}
 
@@ -142,8 +149,8 @@
 			case 2: return GostBlockungsergebnisManager.getOfBewertung2WertStatic(ergebnis.bewertung);
 			case 3: return GostBlockungsergebnisManager.getOfBewertung3WertStatic(ergebnis.bewertung);
 			case 4: return GostBlockungsergebnisManager.getOfBewertung4WertStatic(ergebnis.bewertung);
+			default: return Number.MAX_SAFE_INTEGER;
 		}
-		return Number.MAX_SAFE_INTEGER;
 	}
 
 	function getBewertungColor(ergebnis: GostBlockungsergebnis, value: number) : string {
@@ -157,12 +164,10 @@
 			case 2: return GostBlockungsergebnisManager.getOfBewertung2FarbcodeStatic(ergebnis.bewertung);
 			case 3: return GostBlockungsergebnisManager.getOfBewertung3FarbcodeStatic(ergebnis.bewertung);
 			case 4: return GostBlockungsergebnisManager.getOfBewertung4FarbcodeStatic(ergebnis.bewertung);
+			default: return 1;
 		}
-		return 1;
 	}
 
-	const openModal = () => {
-		showModal().value = true;
-	}
+	const openModal = () => showModal().value = true;
 
 </script>

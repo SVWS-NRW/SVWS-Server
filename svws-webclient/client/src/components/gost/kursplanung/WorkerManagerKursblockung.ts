@@ -50,6 +50,12 @@ export class WorkerManagerKursblockung {
 	/* Gibt an, ob der Berechnungsalgorithmus aktuell am Laufen ist und automatisch neue Berechnungsintervalle startet */
 	protected running = shallowRef<boolean>(false);
 
+	/** Array mit Promises zum Zustand der eingehenden Ergebnisse */
+	protected ergebnisWaiting = shallowRef<Promise<unknown>[]>([]);
+
+	/** Ein Array mit den Resolvern für die ergebnisWaiting-Liste */
+	protected ergebnisResolvers: ((value: unknown) => void)[] = [];
+
 
 	/**
 	 * Erzeugt einen neuen nicht initialisierten Worker-Manager zur Berechnung von Kursblockungsergebnissen.
@@ -141,6 +147,14 @@ export class WorkerManagerKursblockung {
 	 */
 	public isRunning() : boolean {
 		return this.running.value;
+	}
+
+	/** Gibt an, ob noch auf Ergebnisse gewartet wird, die angefordert wurden
+	 *
+	 * @returns Promise<true>, wenn alle Promises aufgelöst sind
+	 */
+	public get waiting(): Promise<unknown>[] {
+		return this.ergebnisWaiting.value
 	}
 
 	/**
@@ -276,7 +290,7 @@ export class WorkerManagerKursblockung {
 		if ((this.workerInitialized[index] === true) && (this.running.value === true) && (index < this.threads))
 			this.requestNext(index);
 		// Wenn Daten vorliegen, dann frage die neuen Ergebnisse ab
-		if (data.hasUpdate === true)
+		if ((data.hasUpdate === true) && (this.running.value === true))
 			this.queryErgebnisse(index);
 	}
 
@@ -287,6 +301,9 @@ export class WorkerManagerKursblockung {
 	 */
 	protected queryErgebnisse(index : number) {
 		this.worker[index].postMessage(<WorkerKursblockungRequestErgebnisse>{cmd: 'getErgebnisse'});
+		// erstelle ein leeres Promise mit Resolver und lege sie in den Arrays ab
+		const promise = new Promise((res) => this.ergebnisResolvers[index] = res);
+		this.ergebnisWaiting.value[index] = promise;
 	}
 
 	/**
@@ -311,6 +328,9 @@ export class WorkerManagerKursblockung {
 		for (let i = ergebnisse.size() - 1; i >= this.maxErgebnisse.value; i--)
 			ergebnisse.removeElementAt(i);
 		this.ergebnisse.value = ergebnisse;
+		// löse das Promise auf, nachdem das Ergebnis in die Liste eingearbeitet wurde
+		// Beim Eingang des letzten Ergebnis kann das Listen-Promise mit allSettled aufgelöst werden
+		this.ergebnisResolvers[index](true);
 	}
 
 
