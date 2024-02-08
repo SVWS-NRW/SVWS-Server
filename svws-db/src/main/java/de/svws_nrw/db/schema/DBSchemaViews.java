@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 import de.svws_nrw.db.converter.current.BenutzerTypConverter;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
-import de.svws_nrw.db.converter.current.SchuelerStatusConverter;
-import de.svws_nrw.db.converter.current.statkue.SchulformKuerzelConverter;
-import de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -37,7 +34,6 @@ public final class DBSchemaViews {
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
 		add_V_BenutzerDetails();
-		add_V_Gost_Schueler_Abiturjahrgang();
 	}
 
 
@@ -198,29 +194,6 @@ public final class DBSchemaViews {
 		 .add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
 		 .add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
 		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", Boolean01Converter.class, false);
-		addView(view);
-	}
-
-	private void add_V_Gost_Schueler_Abiturjahrgang() {
-		final View view = new View(
-				"V_Gost_Schueler_Abiturjahrgang", "views.gost", "DTOViewGostSchuelerAbiturjahrgang",
-				"Eine Schülerliste mit der Zuordnung Abiturjahrgängen für die gymnasiale Oberstufe. Die View sollte nur bei Schulformen mit gymnasialer Oberstufe genutzt werden",
-				6, null,
-                """
-                Schueler
-                JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schueler.Geloescht <> '+'
-                JOIN SchuelerLernabschnittsdaten ON Schueler.Schuljahresabschnitts_ID = SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID
-                  AND Schueler.ID = SchuelerLernabschnittsdaten.Schueler_ID AND SchuelerLernabschnittsdaten.WechselNr = 0
-                JOIN EigeneSchule_Jahrgaenge ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID
-                JOIN EigeneSchule
-                LEFT JOIN EigeneSchule_Jahrgaenge jg_abgang ON Schueler.Entlassjahrgang_ID = jg_abgang.ID
-                WHERE Schueler.Status <> 8 OR jg_abgang.ASDJahrgang IN ('EF', 'Q1', 'Q2')
-                """
-		).add("ID", "Die ID des Schülers", "Long", "Schueler.ID", null, true)
-		 .add("Status", "Der Status des Schülers", "SchuelerStatus", "Schueler.Status", SchuelerStatusConverter.class, false)
-		 .add("Schulform", "Die Schulform des Schülers", "Schulform", "EigeneSchule.SchulformKrz", SchulformKuerzelConverter.class, false)
-		 .add("Schulgliederung", "Die Schulgliederung des Schülers", "Schulgliederung", "SchuelerLernabschnittsdaten.ASDSchulgliederung", SchulgliederungKuerzelConverter.class, false)
-		 .add("Abiturjahr", "Das Abiturjahr des Schülers", "Long", "(EigeneSchule_Jahrgaenge.Restabschnitte / EigeneSchule.AnzahlAbschnitte) + Schuljahresabschnitte.Jahr", null, false);
 		addView(view);
 	}
 

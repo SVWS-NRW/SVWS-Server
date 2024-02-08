@@ -226,7 +226,6 @@ import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
-import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 
 /**
  * Diese Klasse dient als Verzeichnis aller Datenbank-DTO-Klassen.
@@ -474,7 +473,6 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOViewBenutzer.class.getSimpleName(), DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerKompetenz.class.getSimpleName(), DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerdetails.class.getSimpleName(), DTOViewBenutzerdetails.class);
-             mapDTOName2DTOClass.put(DTOViewGostSchuelerAbiturjahrgang.class.getSimpleName(), DTOViewGostSchuelerAbiturjahrgang.class);
          }
          return mapDTOName2DTOClass;
      }
@@ -725,7 +723,6 @@ public final class DTOs {
              mapTablename2DTOClass.put("V_Benutzer", DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen", DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails", DTOViewBenutzerdetails.class);
-             mapTablename2DTOClass.put("V_Gost_Schueler_Abiturjahrgang", DTOViewGostSchuelerAbiturjahrgang.class);
          }
          return mapTablename2DTOClass;
      }

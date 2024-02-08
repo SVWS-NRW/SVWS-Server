@@ -415,7 +415,6 @@
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>
-        <class>de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang</class>
          <exclude-unlisted-classes>false</exclude-unlisted-classes>
      </persistence-unit>
 </persistence>
