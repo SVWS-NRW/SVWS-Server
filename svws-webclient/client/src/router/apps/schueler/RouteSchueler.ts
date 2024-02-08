@@ -61,7 +61,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.liste.get(id) : null;
 		await this.data.setSchueler(eintrag);
 		if (!this.data.schuelerListeManager.hasDaten()) {
-			if (to.name === this.name) {
+			if ((to.name === this.name) || (id === undefined)) {
 				const listFiltered = this.data.schuelerListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;
