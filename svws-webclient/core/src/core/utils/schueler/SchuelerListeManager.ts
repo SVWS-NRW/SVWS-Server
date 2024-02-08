@@ -166,6 +166,10 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 			eintrag.nachname = daten.nachname;
 			updateEintrag = true;
 		}
+		if (daten.status !== eintrag.status) {
+			eintrag.status = daten.status;
+			updateEintrag = true;
+		}
 		return updateEintrag;
 	}
 
