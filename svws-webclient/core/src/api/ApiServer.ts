@@ -3791,6 +3791,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungKurse für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/delete/multiple
+	 *
+	 * Entfernt mehrere Kurse einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Kurse wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBlockungKurs>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kurse zu löschen.
+	 *   Code 404: Einer oder mehrere der Kurse sind nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Kurse wurde erfolgreich entfernt.
+	 */
+	public async deleteGostBlockungKurse(data : List<number>, schema : string) : Promise<List<GostBlockungKurs>> {
+		const path = "/db/{schema}/gost/blockungen/kurse/delete/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBlockungKurs>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungKurs.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode pdfGostKursplanungKurseMitKursschuelern für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.

@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.gost.DataGostBlockungKurs;
 import de.svws_nrw.data.gost.DataGostBlockungKursLehrer;
@@ -461,6 +462,37 @@ public class APIGostKursplanung {
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Kurse einer Blockung.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Kurse
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Kursen
+     */
+    @DELETE
+    @Path("/blockungen/kurse/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Kurse einer Blockung.",
+    description = "Entfernt mehrere Kurse einer Blockung."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Kurse wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungKurs.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurse zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Einer oder mehrere der Kurse sind nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteGostBlockungKurse(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Kurse", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungKurs(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE,
+    		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 

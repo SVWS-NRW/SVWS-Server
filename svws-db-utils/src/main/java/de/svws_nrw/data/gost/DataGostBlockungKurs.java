@@ -495,4 +495,38 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	/**
+	 * Löscht mehrere Kurse einer Blockung der Gymnasialen Oberstufe
+	 *
+	 * @param ids   die ID der Kurse
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		// Bestimme die Kurse der Blockung
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final List<DTOGostBlockungKurs> kurse = conn.queryByKeyList(DTOGostBlockungKurs.class, ids);
+		final List<GostBlockungKurs> daten = new ArrayList<>();
+		if (!kurse.isEmpty()) {
+			// Prüfe, ob alle Kurs zur gleichen Blockung gehören
+			final long idBlockung = kurse.get(0).Blockung_ID;
+			for (final DTOGostBlockungKurs kurs : kurse)
+				if (kurs.Blockung_ID != idBlockung)
+					throw OperationError.CONFLICT.exception("Die zu löschenden Kurse gehören nicht zur gleichen Blockung. Dies ist nicht zulässig");
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Die Kurse können nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+			// Entferne die Kurse
+			for (final DTOGostBlockungKurs kurs : kurse) {
+				daten.add(dtoMapper.apply(kurs));
+				if (!conn.transactionRemove(kurs))
+					throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			}
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
 }
