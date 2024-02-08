@@ -12,7 +12,22 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" />
+				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
+					<template #cell(bezeichnung)="{ value, rowData }">
+						<div class="flex flex-row w-full">
+							<div class="flex-grow text-ellipsis overflow-hidden whitespace-nowrap">
+								<svws-ui-tooltip :title="value">
+									{{ value }}
+								</svws-ui-tooltip>
+							</div>
+							<div v-if="rowData.anzahlRestabschnitte === null" class="flex-none text-error">
+								<svws-ui-tooltip title="Der Jahrgang hat keine Anzahl für die Restabschnitte definiert.">
+									<i-ri-alert-line />
+								</svws-ui-tooltip>
+							</div>
+						</div>
+					</template>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
