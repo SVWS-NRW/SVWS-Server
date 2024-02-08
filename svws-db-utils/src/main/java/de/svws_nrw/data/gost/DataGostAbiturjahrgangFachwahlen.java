@@ -155,15 +155,9 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
      */
 	public Response getSchuelerFachwahlenResponse() {
         final GostJahrgangFachwahlen daten = this.getSchuelerFachwahlen();
-        boolean noDataExists = daten.abitur.fachwahlen.isEmpty();
-        for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-        	if ((daten.halbjahr[halbjahr.id] != null) && (!daten.halbjahr[halbjahr.id].fachwahlen.isEmpty())) {
-        		noDataExists = false;
-        		break;
-        	}
-        }
-        if (noDataExists)
-            return OperationError.NOT_FOUND.getResponse();
+        for (final GostHalbjahr halbjahr : GostHalbjahr.values())
+        	if (daten.halbjahr[halbjahr.id] == null)
+        		daten.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
