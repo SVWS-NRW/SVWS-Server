@@ -12,7 +12,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="close()"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="clickAddAbiturjahrgang()" :disabled="![...jahrgaenge.values()].includes(true)"> Abiturjahrgänge anlegen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -48,6 +48,11 @@
 		}
 		jahrgaenge.value.clear();
 		_showModal.value = false;
+	}
+
+	function close() {
+		jahrgaenge.value.clear();
+		showModal().value = false;
 	}
 
 	const openModal = () => {

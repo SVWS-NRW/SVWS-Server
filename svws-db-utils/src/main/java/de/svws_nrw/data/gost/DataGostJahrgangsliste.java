@@ -17,6 +17,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.DataManager;
@@ -83,11 +84,12 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
 				final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 				for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-					final Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+					if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+						jahrgangRestjahre += 3;
 					if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
 						eintrag.jahrgang = jahrgang.ASDJahrgang;
-						if (Jahrgaenge.JG_EF.daten.kuerzel.equals(jahrgang.ASDJahrgang) || Jahrgaenge.JG_Q1.daten.kuerzel.equals(jahrgang.ASDJahrgang)
-								|| Jahrgaenge.JG_Q2.daten.kuerzel.equals(jahrgang.ASDJahrgang))
+						if (JahrgangsUtils.istGymOb(jahrgang.ASDJahrgang))
 							break;
 					}
 				}

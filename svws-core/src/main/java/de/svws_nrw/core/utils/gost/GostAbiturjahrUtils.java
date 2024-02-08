@@ -48,8 +48,12 @@ public final class GostAbiturjahrUtils {
 	public static Integer getGostAbiturjahr(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final int aktuellesSchuljahr, final @NotNull String jahrgang) {
 		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
 			return null;
-		final Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
-		return restjahre == null ? null : aktuellesSchuljahr + restjahre;
+		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		if (restjahre == null)
+			return null;
+		if (schulform != Schulform.GY)
+			restjahre += 3;
+		return aktuellesSchuljahr + restjahre;
 	}
 
 

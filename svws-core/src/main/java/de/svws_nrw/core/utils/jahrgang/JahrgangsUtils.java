@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.jahrgang;
 import java.util.Comparator;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
@@ -96,6 +97,37 @@ public final class JahrgangsUtils {
 			case "13": return 1;
 			default: return null;
 		}
+	}
+
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Statistik-Jahrgang um einen Jahrgang der Sekundarstufe I handelt oder nicht.
+	 *
+	 * @param jahrgang   der Statistik-Jahrgang
+	 *
+	 * @return true, falls es sich um einen Sek I-Jahrgang handelt, und ansonsten false
+	 */
+	public static boolean istSekI(final @NotNull String jahrgang) {
+		return Jahrgaenge.JG_05.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_06.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_07.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_08.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_09.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_10.daten.kuerzel.equals(jahrgang);
+	}
+
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Statistik-Jahrgang um einen Jahrgang der Gymnasialen Oberstufe handelt oder nicht.
+	 *
+	 * @param jahrgang   der Statistik-Jahrgang
+	 *
+	 * @return true, falls es sich um einen Jahrgang der Gymnasialen Oberstufe handelt, und ansonsten false
+	 */
+	public static boolean istGymOb(final @NotNull String jahrgang) {
+		return Jahrgaenge.JG_EF.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_Q1.daten.kuerzel.equals(jahrgang)
+			|| Jahrgaenge.JG_Q2.daten.kuerzel.equals(jahrgang);
 	}
 
 }

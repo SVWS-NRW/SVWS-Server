@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
+import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { JavaLong } from '../../../java/lang/JavaLong';
@@ -146,6 +147,28 @@ export class JahrgangsUtils extends JavaObject {
 				return null;
 			}
 		}
+	}
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Statistik-Jahrgang um einen Jahrgang der Sekundarstufe I handelt oder nicht.
+	 *
+	 * @param jahrgang   der Statistik-Jahrgang
+	 *
+	 * @return true, falls es sich um einen Sek I-Jahrgang handelt, und ansonsten false
+	 */
+	public static istSekI(jahrgang : string) : boolean {
+		return JavaObject.equalsTranspiler(Jahrgaenge.JG_05.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_06.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_07.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_08.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_09.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_10.daten.kuerzel, (jahrgang));
+	}
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Statistik-Jahrgang um einen Jahrgang der Gymnasialen Oberstufe handelt oder nicht.
+	 *
+	 * @param jahrgang   der Statistik-Jahrgang
+	 *
+	 * @return true, falls es sich um einen Jahrgang der Gymnasialen Oberstufe handelt, und ansonsten false
+	 */
+	public static istGymOb(jahrgang : string) : boolean {
+		return JavaObject.equalsTranspiler(Jahrgaenge.JG_EF.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_Q1.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_Q2.daten.kuerzel, (jahrgang));
 	}
 
 	transpilerCanonicalName(): string {

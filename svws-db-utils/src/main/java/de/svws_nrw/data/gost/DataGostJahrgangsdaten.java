@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -106,7 +107,9 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		if (daten.abiturjahr >= 0) {
 			final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-				final Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+				Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+				if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+					jahrgangRestjahre += 3;
 				if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
 					daten.jahrgang = jahrgang.ASDJahrgang;
 					break;
