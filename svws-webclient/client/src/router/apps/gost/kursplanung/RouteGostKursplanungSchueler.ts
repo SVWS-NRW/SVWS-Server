@@ -28,7 +28,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.kursplanung.schueler.auswahl.geschlecht", "user", "true")
+			new ConfigElement("gost.kursplanung.schueler.auswahl.geschlecht", "user", "true"),
+			new ConfigElement("gost.kursplanung.schueler.auswahl.filterOpen", "user", "true")
 		]);
 	}
 

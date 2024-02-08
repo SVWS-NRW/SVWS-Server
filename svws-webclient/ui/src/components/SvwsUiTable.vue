@@ -275,6 +275,7 @@
 		"update:modelValue": [items: any[]];
 		"update:sortByAndOrder": [obj: SortByAndOrder];
 		"update:clicked": [items: any | null];
+		"update:filterOpen": [open: boolean];
 	}>();
 
 	const attrs = useAttrs();
@@ -386,6 +387,7 @@
 
 	const toggleFilterOpen = () => {
 		isFilterOpen.value = !isFilterOpen.value;
+		emit('update:filterOpen', isFilterOpen.value);
 	}
 
 	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))

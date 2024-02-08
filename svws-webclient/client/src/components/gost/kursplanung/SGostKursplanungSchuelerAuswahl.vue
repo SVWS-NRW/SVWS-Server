@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl" overflow-scroll>
-		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined"
+		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined" v-model:filter-open="isFilterOpen"
 			:filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'"
 			:columns="cols" :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
@@ -189,14 +189,24 @@
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
+	const isFilterOpen = computed<boolean>({
+		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true',
+		set: (value) => {
+			if (value === undefined)
+				value = true
+			void props.config.setValue("gost.kursplanung.schueler.auswahl.filterOpen", value ? 'true' : 'false');
+		}
+	});
+
 	const showGeschlecht = computed<boolean>({
 		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true',
 		set: (value) => {
 			if (value === undefined)
 				value = true
-			void props.config.setValue("gost.kursplanung.schueler.auswahl.geschlecht", value ? 'true':'false');
+			void props.config.setValue("gost.kursplanung.schueler.auswahl.geschlecht", value ? 'true' : 'false');
 		}
 	});
+
 	const fach = computed<GostFach|undefined>({
 		get: () => {
 			for (const fach of props.faecherManager.faecher())
