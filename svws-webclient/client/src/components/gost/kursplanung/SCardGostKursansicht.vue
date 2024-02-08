@@ -21,6 +21,7 @@
 									<div class="py-2">
 										<svws-ui-text-input :model-value="s.bezeichnung" focus headless
 											@change="name => patch_schiene(s, name)"
+											@blur="name => patch_schiene(s, name)"
 											@keyup.escape="edit_schienenname=undefined" class="text-center" />
 									</div>
 								</template>
