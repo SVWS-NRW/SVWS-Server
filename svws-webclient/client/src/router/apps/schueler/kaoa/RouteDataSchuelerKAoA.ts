@@ -1,6 +1,8 @@
-import type { SchuelerListeEintrag, SchuelerKAoADaten } from "@core";
-
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+
+import type { SchuelerListeEintrag} from "@core";
+import { SchuelerKAoADaten } from "@core";
+
 
 interface RouteStateSchuelerKAoA extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
@@ -8,6 +10,7 @@ interface RouteStateSchuelerKAoA extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateSchuelerKAoA> {
+	data: new SchuelerKAoADaten(),
 };
 
 export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
