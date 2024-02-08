@@ -38,6 +38,11 @@ export class JahrgangsDaten extends JavaObject {
 	public idFolgejahrgang : number | null = null;
 
 	/**
+	 * Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an
+	 */
+	public anzahlRestabschnitte : number | null = null;
+
+	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
@@ -81,6 +86,7 @@ export class JahrgangsDaten extends JavaObject {
 		result.sortierung = obj.sortierung;
 		result.kuerzelSchulgliederung = typeof obj.kuerzelSchulgliederung === "undefined" ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
 		result.idFolgejahrgang = typeof obj.idFolgejahrgang === "undefined" ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
+		result.anzahlRestabschnitte = typeof obj.anzahlRestabschnitte === "undefined" ? null : obj.anzahlRestabschnitte === null ? null : obj.anzahlRestabschnitte;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -98,6 +104,7 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"kuerzelSchulgliederung" : ' + ((!obj.kuerzelSchulgliederung) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
 		result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
+		result += '"anzahlRestabschnitte" : ' + ((!obj.anzahlRestabschnitte) ? 'null' : obj.anzahlRestabschnitte) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
@@ -128,6 +135,9 @@ export class JahrgangsDaten extends JavaObject {
 		}
 		if (typeof obj.idFolgejahrgang !== "undefined") {
 			result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
+		}
+		if (typeof obj.anzahlRestabschnitte !== "undefined") {
+			result += '"anzahlRestabschnitte" : ' + ((!obj.anzahlRestabschnitte) ? 'null' : obj.anzahlRestabschnitte) + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

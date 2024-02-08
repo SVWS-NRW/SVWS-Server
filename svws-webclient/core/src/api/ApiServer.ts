@@ -6205,6 +6205,61 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/{id : \d+}
+	 *
+	 * Passt den Jahrgang mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Jahrgangsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<JahrgangsDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchJahrgang(data : Partial<JahrgangsDaten>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/{id : \d+}
+	 *
+	 * Entfernt einen Jahrgang.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgänge hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Jahrgang wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: JahrgangsDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang zu bearbeiten.
+	 *   Code 404: Kein Jahrgang vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Jahrgang wurde erfolgreich entfernt.
+	 */
+	public async deleteJahrgang(schema : string, id : number) : Promise<JahrgangsDaten> {
+		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return JahrgangsDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogJahrgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/allgemein/jahrgaenge
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden in den einzelnen Schulformen gültigen Jahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -6227,6 +6282,65 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgangsKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/create
+	 *
+	 * Erstellt einen neuen Jahrgang und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten der Jahrgänge besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Jahrgang wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Raum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang für die Schule anzulegen.
+	 *   Code 404: Die Jahrgangsdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<JahrgangsDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Jahrgang wurde erfolgreich hinzugefügt.
+	 */
+	public async addJahrgang(data : Partial<JahrgangsDaten>, schema : string) : Promise<Raum> {
+		const path = "/db/{schema}/jahrgaenge/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Raum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteJahrgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/delete/multiple
+	 *
+	 * Entfernt mehrere Jahrgänge.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgängen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Jahrgänge wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<JahrgangsDaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang zu bearbeiten.
+	 *   Code 404: Ein Jahrgang oder mehrere Jahrgänge nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Jahrgänge wurde erfolgreich entfernt.
+	 */
+	public async deleteJahrgaenge(data : List<number>, schema : string) : Promise<List<JahrgangsDaten>> {
+		const path = "/db/{schema}/jahrgaenge/delete/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<JahrgangsDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 

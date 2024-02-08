@@ -35,10 +35,11 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		final JahrgangsListeEintrag eintrag = new JahrgangsListeEintrag();
 		eintrag.id = j.ID;
 		eintrag.kuerzel = j.InternKrz;
-		eintrag.kuerzelStatistik = j.ASDJahrgang; // TODO Anpassung beim DTO, so dass ein Konverter zu dem Statistik-Jahrgangs-Objekt genutzt wird - hierbei auch die Bezeichnung miteinbeziehen
+		eintrag.kuerzelStatistik = j.ASDJahrgang;
 		eintrag.bezeichnung = j.ASDBezeichnung;
 		eintrag.kuerzelSchulgliederung = j.Gliederung.daten.kuerzel;
 		eintrag.idFolgejahrgang = j.Folgejahrgang_ID;
+		eintrag.anzahlRestabschnitte = j.AnzahlRestabschnitte;
 		eintrag.sortierung = j.Sortierung;
 		eintrag.istSichtbar = j.Sichtbar;
 		eintrag.gueltigVon = j.GueltigVon;

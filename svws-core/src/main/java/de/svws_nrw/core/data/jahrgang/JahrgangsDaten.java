@@ -42,6 +42,10 @@ public class JahrgangsDaten {
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")
 	public Long idFolgejahrgang;
 
+	/** Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an */
+	@Schema(description = "Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an", example = "null")
+	public Integer anzahlRestabschnitte;
+
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
