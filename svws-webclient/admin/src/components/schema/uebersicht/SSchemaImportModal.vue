@@ -21,6 +21,7 @@
 				<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> <svws-ui-spinner :spinning="loading" /> Wiederherstellen </svws-ui-button>
 			</template>
 			<template v-else>
+				<svws-ui-button type="secondary" @click="clear" title="Verwerfe das Ergebnis des letzten Importversuchs"> Log verwerfen </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
 			</template>
 		</template>
@@ -57,6 +58,7 @@
 		if (target && target.files) {
 			file.value = target.files[0];
 		}
+		clear();
 	}
 
 	async function add() {
@@ -72,9 +74,15 @@
 		loading.value = false;
 	}
 
-	function close() {
-		showModal().value = false;
+	function clear() {
+		loading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
 	}
+
+	function close() {
+		showModal().value = false;
+		clear();
+	}
+
 </script>

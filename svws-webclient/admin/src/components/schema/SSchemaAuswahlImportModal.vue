@@ -29,6 +29,7 @@
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
 			<template v-else>
+				<svws-ui-button type="secondary" @click="clear" title="Verwerfe das Ergebnis des letzten Importversuchs"> Log verwerfen </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
 			</template>
 		</template>
@@ -69,6 +70,7 @@
 		if (target && target.files) {
 			file.value = target.files[0];
 		}
+		clear();
 	}
 
 	async function add(event: Event) {
@@ -82,15 +84,28 @@
 		const result = await props.importSchema(formData, schema.value);
 		logs.value = result.log;
 		status.value = result.success;
+		loading.value = false;
 		schema.value = '';
 		user.value = '';
 		password.value = '';
+	}
+
+	function clear() {
 		loading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
+	}
+
+	function reset() {
+		clear();
+		schema.value = '';
+		user.value = '';
+		password.value = '';
 	}
 
 	function close() {
 		showModal().value = false;
-		logs.value = undefined;
-		status.value = undefined;
+		reset();
 	}
+
 </script>

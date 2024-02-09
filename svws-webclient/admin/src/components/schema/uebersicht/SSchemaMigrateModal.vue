@@ -38,6 +38,7 @@
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
 			<template v-else>
+				<svws-ui-button type="secondary" @click="clear" title="Verwerfe das Ergebnis des letzten Migrationsversuchs"> Log verwerfen </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
 			</template>
 		</template>
@@ -117,16 +118,25 @@
 		if (target && target.files) {
 			file.value = target.files[0];
 		}
+		clear();
+	}
+
+	function clear() {
+		loading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
+	}
+
+	function reset() {
+		clear();
+		zielSchema.value = '';
+		zielUserPassword.value = '';
+		zielUsername.value = '';
 	}
 
 	function close() {
 		showModal().value = false;
-		loading.value = false;
-		logs.value = undefined;
-		status.value = undefined;
-		zielSchema.value = '';
-		zielUserPassword.value = '';
-		zielUsername.value = '';
+		reset();
 	}
 
 </script>
