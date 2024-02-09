@@ -5,12 +5,20 @@
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						<div class="flex items-center justify-between w-full -my-2">
-							<span>Schiene</span>
-							<template v-if="allow_regeln">
-								<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
-									<i-ri-add-line />
+							<div class="flex flex-row gap-2">
+								<span>Schiene</span>
+							</div>
+							<div class="flex flex-row gap-2">
+								<svws-ui-button type="transparent" size="small" class="-my-1" @click="zeigeSchienenbezeichnungen = !zeigeSchienenbezeichnungen" title="Schiene hinzufügen">
+									<i-ri-text v-if="zeigeSchienenbezeichnungen" />
+									<i-ri-number-1 v-else />
 								</svws-ui-button>
-							</template>
+								<template v-if="allow_regeln">
+									<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
+										<i-ri-add-line />
+									</svws-ui-button>
+								</template>
+							</div>
 						</div>
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !overflow-visible !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
@@ -26,6 +34,14 @@
 									</div>
 								</template>
 							</svws-ui-tooltip>
+							<template v-else-if="zeigeSchienenbezeichnungen">
+								<div>
+									<span style="writing-mode: vertical-lr;" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex items-center justify-center border-l border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">
+										{{ s.bezeichnung }}
+									</span>
+									<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
+								</div>
+							</template>
 							<template v-else>
 								<span class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center border-b border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
 								<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
@@ -424,5 +440,14 @@
 		dropDataKursSchiene.value = undefined;
 		return regeln;
 	}
+
+	const zeigeSchienenbezeichnungen = computed<boolean>({
+		get: () => props.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true',
+		set: (value) => {
+			if (value === undefined)
+				value = true
+			void props.config.setValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", value ? 'true' : 'false');
+		}
+	});
 
 </script>
