@@ -1,24 +1,26 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden">
+	<svws-ui-modal :show="showModal" size="medium" class="hidden h-full overflow-none" no-scroll>
 		<template #modalTitle>Kurs-Schüler-Zuordnung</template>
-		<template #modalDescription>
-			<div class="flex flex-row gap-8">
+		<template #modalContent>
+			<div class="flex flex-row gap-8 h-full overflow-y-hidden">
 				<!-- Die Tabelle mit den Kursschülern -->
-				<div class="w-96">
-					im Kurs {{ kursname }}
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'name', label: 'Name'}]" :no-data="schuelerFilter().filtered.value.length <= 0">
+				<div class="flex flex-col w-96 overflow-y-hidden">
+					<span class="text-headline-sm pb-2">im Kurs {{ kursname }}</span>
+					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'name', label: 'Name'}]"
+						:no-data="schuelerFilter().filtered.value.length <= 0">
 						<template #cell(name)="{ rowData }">
-							<div @click="remove(rowData.id)" class="cursor-pointer">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="remove(rowData.id)" class="w-full cursor-pointer text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
 					</svws-ui-table>
 				</div>
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
-				<div class="w-128">
-					mit Fachwahl {{ fachname }} {{ kursart }}
-					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]" :no-data="fachwahlschueler.length <= 0">
+				<div class="flex flex-col w-128 overflow-y-hidden">
+					<span class="text-headline-sm pb-2">mit Fachwahl {{ fachname }} {{ kursart }}</span>
+					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
+						:no-data="fachwahlschueler.length <= 0" scroll>
 						<template #cell(name)="{ rowData }">
-							<div @click="move(rowData.id)" class="cursor-pointer">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="move(rowData.id)" class="w-full cursor-pointer text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
 							<svws-ui-select title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"

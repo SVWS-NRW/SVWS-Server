@@ -28,12 +28,12 @@
 							<span class="icon modal--closeIcon"> <i-ri-close-line /> </span>
 						</svws-ui-button>
 					</div>
-					<div class="modal--content-wrapper">
+					<div class="modal--content-wrapper" :class="{ 'modal--content-noscroll': noScroll }">
 						<DialogDescription v-if="$slots.modalDescription" class="modal--description">
 							<slot name="modalDescription" />
 						</DialogDescription>
 
-						<div v-if="$slots.modalContent" class="modal--content">
+						<div v-if="$slots.modalContent" class="modal--content" :class="{ 'modal--content-noscroll': noScroll }">
 							<slot name="modalContent" />
 						</div>
 
@@ -63,11 +63,13 @@
 		type?: 'default' | 'danger';
 		autoClose?: boolean;
 		closeInTitle?: boolean;
+		noScroll?: boolean;
 	}>(), {
 		size: 'small',
 		type: 'default',
 		autoClose: true,
 		closeInTitle: true,
+		noScroll: false,
 	});
 
 	function autoCloseModal() {
@@ -156,17 +158,25 @@
 			@apply text-headline-sm;
 		}
 
-		&--content-wrapper {
+		&--content-wrapper:not(&--content-noscroll) {
 			@apply h-full overflow-y-auto w-full;
 			-webkit-overflow-scrolling: touch;
+		}
+
+		&--content-wrapper {
+			@apply h-full overflow-hidden w-full flex flex-col;
 		}
 
 		&--description {
 			@apply px-4 py-5 text-headline-sm text-center;
 		}
 
-		&--content {
+		&--content:not(&--content-noscroll) {
 			@apply w-full text-base px-4 py-5 text-center;
+		}
+
+		&--content {
+			@apply h-full w-full text-base px-4 py-5 text-center overflow-hidden flex flex-col;
 		}
 
 		&--wrapper {
