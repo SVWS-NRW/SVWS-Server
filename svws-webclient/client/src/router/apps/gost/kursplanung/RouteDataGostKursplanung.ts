@@ -487,10 +487,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		for (const id of ids)
 			list.add(id);
 		const kurse = await api.server.deleteGostBlockungKurse(list, api.schema);
-		for (const kurs of kurse) {
-			this.datenmanager.kursRemove(kurs);
-			this.ergebnismanager.setRemoveKursByID(kurs.id);
-		}
+		this.datenmanager.kurseRemoveByID(list);
+		this.ergebnismanager.setRemoveKurseByID(list);
 		this.commit();
 	});
 
