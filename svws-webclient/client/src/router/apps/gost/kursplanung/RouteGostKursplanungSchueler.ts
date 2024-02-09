@@ -124,6 +124,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			config: api.config,
 			addRegel: routeGostKursplanung.data.addRegel,
 			removeRegel: routeGostKursplanung.data.removeRegel,
+			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
+			removeKursSchuelerZuordnung: routeGostKursplanung.data.removeKursSchuelerZuordnung,
 		}
 	}
 
