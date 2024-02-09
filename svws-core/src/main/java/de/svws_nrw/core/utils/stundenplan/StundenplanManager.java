@@ -220,6 +220,10 @@ public class StundenplanManager {
 	private Integer _pausenzeitMinutenMinOhneLeere = null;
 	private Integer _pausenzeitMinutenMaxOhneLeere = null;
 
+	private int _pausenzeitWochentagMin = Wochentag.MONTAG.id;
+	private int _pausenzeitWochentagMax = Wochentag.MONTAG.id;
+	private @NotNull Wochentag @NotNull [] _pausenzeitWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
+
 	// StundenplanRaum
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _raum_by_id = new HashMap<>();
 	private final @NotNull HashMap<@NotNull String, @NotNull StundenplanRaum> _raum_by_kuerzel = new HashMap<>();
@@ -833,10 +837,21 @@ public class StundenplanManager {
 
 		_pausenzeitMinutenMin = null;
 		_pausenzeitMinutenMax = null;
+		_pausenzeitWochentagMin = Wochentag.SONNTAG.id + 1;
+		_pausenzeitWochentagMax = Wochentag.MONTAG.id - 1;
 		for (final @NotNull StundenplanPausenzeit p : _pausenzeitmenge_sortiert) {
 			_pausenzeitMinutenMin = BlockungsUtils.minII(_pausenzeitMinutenMin, p.beginn);
 			_pausenzeitMinutenMax = BlockungsUtils.maxII(_pausenzeitMinutenMax, p.ende);
+			_pausenzeitWochentagMin = BlockungsUtils.minVI(_pausenzeitWochentagMin, p.wochentag);
+			_pausenzeitWochentagMax = BlockungsUtils.maxVI(_pausenzeitWochentagMax, p.wochentag);
 		}
+		_pausenzeitWochentagMin = (_pausenzeitWochentagMin == Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : _pausenzeitWochentagMin;
+		_pausenzeitWochentagMax = (_pausenzeitWochentagMax == Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : _pausenzeitWochentagMax;
+
+		// _pausenzeitWochentageAlsEnumRange
+		_pausenzeitWochentageAlsEnumRange = new Wochentag[_pausenzeitWochentagMax - _pausenzeitWochentagMin + 1];
+		for (int i = 0; i < _pausenzeitWochentageAlsEnumRange.length; i++)
+			_pausenzeitWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_pausenzeitWochentagMin + i);
 	}
 
 	private void update_pausenzeitmengeOhnePausenaufsicht() {
@@ -3399,6 +3414,57 @@ public class StundenplanManager {
 	 */
 	public int pausenzeitGetMinutenMax() {
 		return _pausenzeitMinutenMax == null ? 480 : _pausenzeitMinutenMax;
+	}
+
+	/**
+	 * Liefert die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public int pausenzeitGetWochentagMin() {
+		return _pausenzeitWochentagMin;
+	}
+
+	/**
+	 * Liefert den kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public @NotNull Wochentag pausenzeitGetWochentagMinEnum() {
+		return Wochentag.fromIDorException(_pausenzeitWochentagMin);
+	}
+
+	/**
+	 * Liefert die ID des größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public int pausenzeitGetWochentagMax() {
+		return _pausenzeitWochentagMax;
+	}
+
+	/**
+	 * Liefert den größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public @NotNull Wochentag pausenzeitGetWochentagMaxEnum() {
+		return Wochentag.fromIDorException(_pausenzeitWochentagMax);
+	}
+
+	/**
+	 * Liefert alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
+ 	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #pausenzeitGetWochentagMin} bis {@link #pausenzeitGetWochentagMax()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
+	 */
+	public @NotNull Wochentag @NotNull [] pausenzeitGetWochentageAlsEnumRange() {
+		return _pausenzeitWochentageAlsEnumRange;
 	}
 
 	/**

@@ -307,6 +307,12 @@ export class StundenplanManager extends JavaObject {
 
 	private _pausenzeitMinutenMaxOhneLeere : number | null = null;
 
+	private _pausenzeitWochentagMin : number = Wochentag.MONTAG.id;
+
+	private _pausenzeitWochentagMax : number = Wochentag.MONTAG.id;
+
+	private _pausenzeitWochentageAlsEnumRange : Array<Wochentag> = [Wochentag.MONTAG];
+
 	private readonly _raum_by_id : HashMap<number, StundenplanRaum> = new HashMap();
 
 	private readonly _raum_by_kuerzel : HashMap<string, StundenplanRaum> = new HashMap();
@@ -877,10 +883,19 @@ export class StundenplanManager extends JavaObject {
 		this._pausenzeitmenge_sortiert.sort(StundenplanManager._compPausenzeit);
 		this._pausenzeitMinutenMin = null;
 		this._pausenzeitMinutenMax = null;
+		this._pausenzeitWochentagMin = Wochentag.SONNTAG.id + 1;
+		this._pausenzeitWochentagMax = Wochentag.MONTAG.id - 1;
 		for (const p of this._pausenzeitmenge_sortiert) {
 			this._pausenzeitMinutenMin = BlockungsUtils.minII(this._pausenzeitMinutenMin, p.beginn);
 			this._pausenzeitMinutenMax = BlockungsUtils.maxII(this._pausenzeitMinutenMax, p.ende);
+			this._pausenzeitWochentagMin = BlockungsUtils.minVI(this._pausenzeitWochentagMin, p.wochentag);
+			this._pausenzeitWochentagMax = BlockungsUtils.maxVI(this._pausenzeitWochentagMax, p.wochentag);
 		}
+		this._pausenzeitWochentagMin = (this._pausenzeitWochentagMin === Wochentag.SONNTAG.id + 1) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMin;
+		this._pausenzeitWochentagMax = (this._pausenzeitWochentagMax === Wochentag.MONTAG.id - 1) ? Wochentag.MONTAG.id : this._pausenzeitWochentagMax;
+		this._pausenzeitWochentageAlsEnumRange = Array(this._pausenzeitWochentagMax - this._pausenzeitWochentagMin + 1).fill(null);
+		for (let i : number = 0; i < this._pausenzeitWochentageAlsEnumRange.length; i++)
+			this._pausenzeitWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._pausenzeitWochentagMin + i);
 	}
 
 	private update_pausenzeitmengeOhnePausenaufsicht() : void {
@@ -3216,6 +3231,57 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitGetMinutenMax() : number {
 		return this._pausenzeitMinutenMax === null ? 480 : this._pausenzeitMinutenMax;
+	}
+
+	/**
+	 * Liefert die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public pausenzeitGetWochentagMin() : number {
+		return this._pausenzeitWochentagMin;
+	}
+
+	/**
+	 * Liefert den kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den kleinsten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public pausenzeitGetWochentagMinEnum() : Wochentag {
+		return Wochentag.fromIDorException(this._pausenzeitWochentagMin);
+	}
+
+	/**
+	 * Liefert die ID des größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public pausenzeitGetWochentagMax() : number {
+		return this._pausenzeitWochentagMax;
+	}
+
+	/**
+	 * Liefert den größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den größten {@link Wochentag} oder den Montag falls es keine Pausenzeiten gibt.
+	 */
+	public pausenzeitGetWochentagMaxEnum() : Wochentag {
+		return Wochentag.fromIDorException(this._pausenzeitWochentagMax);
+	}
+
+	/**
+	 * Liefert alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
+	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #pausenzeitGetWochentagMin} bis {@link #pausenzeitGetWochentagMax()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanPausenzeit}.
+	 */
+	public pausenzeitGetWochentageAlsEnumRange() : Array<Wochentag> {
+		return this._pausenzeitWochentageAlsEnumRange;
 	}
 
 	/**
