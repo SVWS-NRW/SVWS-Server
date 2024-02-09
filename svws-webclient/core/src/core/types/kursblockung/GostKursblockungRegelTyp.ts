@@ -1,5 +1,4 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { HashMap } from '../../../java/util/HashMap';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
@@ -254,16 +253,6 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		const param : List<number> = pRegel.parameter;
 		switch (typ) {
-			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
-				return [];
-			}
-			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
-			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:
-			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:
-			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:
-			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
-				return [param.get(0), param.get(1)];
-			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
 				if (pSchienenNr > param.get(1))
@@ -283,7 +272,10 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 				return null;
 			}
 			default: {
-				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
+				const temp : Array<number> | null = Array(param.size()).fill(0)
+				for (let i : number = 0; i < temp.length; i++)
+					temp[i] = param.get(i).valueOf();
+				return temp;
 			}
 		}
 	}

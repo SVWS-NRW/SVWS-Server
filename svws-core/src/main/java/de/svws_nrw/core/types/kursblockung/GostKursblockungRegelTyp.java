@@ -7,11 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
+import de.svws_nrw.core.kursblockung.KursblockungDynDaten;
+import de.svws_nrw.core.kursblockung.KursblockungDynStatistik;
+import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen
- * der Kursblockung eingesetzt werden.
+ * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen der Kursblockung eingesetzt werden.
+ *
+ * <br> Um eine neue Regel zu definieren, geht man wie folgt vor:
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren
+ * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen
+ * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen
+ * <br> {@link KursblockungDynDaten}: schrittXXFehlerBeiRegelXXX() --> check einfügen
+ * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen reagieren und in die Bewertung einfließen lassen.
+ * <br> {@link GostBlockungsergebnisManager}: "stateRegelvalidierung" aktualisieren.
  */
 public enum GostKursblockungRegelTyp {
 
@@ -286,17 +296,7 @@ public enum GostKursblockungRegelTyp {
 		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		final @NotNull List<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
-			// Keine Veränderung bei 0 Parametern.
-			case LEHRKRAEFTE_BEACHTEN: // 10
-				return new long[] {};
-
-			// Keine Veränderung bei 1 Parameter.
-			// leer
-
-			// Keine Veränderung bei 2 Parametern.
-			case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS, KURS_MIT_DUMMY_SUS_AUFFUELLEN: // 4, 5, 7, 8, 9
-				return new long[] { param.get(0), param.get(1) };
-
+			// Fälle, bei denen es zu einer Veränderung kommt.
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
 				if (pSchienenNr > param.get(1))
 					return new long[] { param.get(0), param.get(1) }; // Keine Veränderung.
@@ -313,8 +313,12 @@ public enum GostKursblockungRegelTyp {
 					return new long[] { param.get(0), von, bis };
 				return null;
 
+			// Keine Veränderung: Kopiere die Parameter.
 			default:
-				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
+				final long[] temp = new long[param.size()];
+				for (int i = 0; i < temp.length; i++)
+					temp[i] = param.get(i);
+				return temp;
 		}
 	}
 
