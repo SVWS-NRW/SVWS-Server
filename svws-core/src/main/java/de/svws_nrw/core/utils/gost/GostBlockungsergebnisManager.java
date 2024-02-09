@@ -123,6 +123,12 @@ public class GostBlockungsergebnisManager {
 	/** Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER). */
 	private final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> _kursComparator_fach_kursart_kursnummer;
 
+	/** Regeltyp --> Liste aller Regelverletzungen. */
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _map_regelID_verletzungen = new HashMap<>();
+
+	/** Liste aller Regeltypen, die mindestens eine Regelverletzung haben. */
+	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _list_verletzte_regeltypen_sortiert = new ArrayList<>();
+
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
 	 * Ergebnisses ist -1 und muss noch gesetzt werden.
@@ -364,37 +370,45 @@ public class GostBlockungsergebnisManager {
 		// Clear
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
-		_map_kursID_dummySuS.clear();
+		_map_kursID_dummySuS.clear(); // Wird mit Regel 9 gefüllt.
+		_map_regelID_verletzungen.clear();
+		_list_verletzte_regeltypen_sortiert.clear();
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
+			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
+			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
+			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
+			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
+			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
+			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
+			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
+			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r);
+			stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r); // keine Regel, die verletzt werden kann.
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
-			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
+			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen, _map_regelID_verletzungen);
+
+		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
+		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10};
+		for (final int regeltyp : regeltypSortierung)
+			if (_map_regelID_verletzungen.containsKey(regeltyp))
+				_list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 
 		// Die Bewertung im DatenManager aktualisieren.
 		_parent.ergebnisUpdateBewertung(_ergebnis);
@@ -402,87 +416,121 @@ public class GostBlockungsergebnisManager {
 		updateAll();
 	}
 
-	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		for (int schienenNr = r.parameter.get(1).intValue(); schienenNr <= r.parameter.get(2).intValue(); schienenNr++)
 			for (final GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse)
-				if (eKurs.kursart == r.parameter.get(0).intValue())
+				if (eKurs.kursart == r.parameter.get(0).intValue()) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 1, "Die Kursart von " + getOfKursName(eKurs.id) + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+				}
 	}
 
-	private void stateRegelvalidierung2_kurs_fixieren_in_schiene(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		if (!getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
+	private void stateRegelvalidierung2_kurs_fixieren_in_schiene(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idKurs = r.parameter.get(0);
+		final int schienenNr = r.parameter.get(1).intValue();
+		if (!getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 2, "Der Kurs " + getOfKursName(idKurs) + " sollte fixiert sein in Schiene " + schienenNr + ".");
+		}
 	}
 
-	private void stateRegelvalidierung3_kurs_sperren_in_schiene(final @NotNull GostBlockungRegel r, final  @NotNull List<@NotNull Long> regelVerletzungen) {
-		if (getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
+	private void stateRegelvalidierung3_kurs_sperren_in_schiene(final @NotNull GostBlockungRegel r, final  @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idKurs = r.parameter.get(0);
+		final int schienenNr = r.parameter.get(1).intValue();
+		if (getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 3, "Der Kurs " + getOfKursName(idKurs) + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+		}
 	}
 
-	private void stateRegelvalidierung4_schueler_fixieren_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		if (!getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
+	private void stateRegelvalidierung4_schueler_fixieren_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idSchueler = r.parameter.get(0);
+		final long idKurs = r.parameter.get(1);
+		if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 4, "Der Schüler " + getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".");
+		}
 	}
 
-	private void stateRegelvalidierung5_schueler_verbieten_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		if (getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
+	private void stateRegelvalidierung5_schueler_verbieten_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idSchueler = r.parameter.get(0);
+		final long idKurs = r.parameter.get(1);
+		if (getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 5, "Der Schüler " + getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".");
+		}
 	}
 
-	private void stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+	private void stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		for (final GostBlockungsergebnisKurs eKurs : _map_kursID_kurs.values())
 			for (final @NotNull Long eSchieneID : eKurs.schienen) {
 				final int nr  = getSchieneG(eSchieneID).nummer;
-				final boolean b1 = eKurs.kursart == r.parameter.get(0).intValue();
-				final boolean b2 = (r.parameter.get(1).intValue() <= nr) && (nr <= r.parameter.get(2).intValue());
-				if (b1 != b2)
+				final int kursart = r.parameter.get(0).intValue();
+				final int schienenNrVon  = r.parameter.get(1).intValue();
+				final int schienenNrBis  = r.parameter.get(2).intValue();
+
+				final boolean b1 = eKurs.kursart == kursart;
+				final boolean b2 = (schienenNrVon <= nr) && (nr <= schienenNrBis);
+				if (b1 != b2) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 6, "Die Kursart des Kurses " + getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " +  schienenNrVon + " bis " + schienenNrBis + " sein.");
+				}
 			}
 	}
 
-	private void stateRegelvalidierung7_kurs_verbieten_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+	private void stateRegelvalidierung7_kurs_verbieten_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		final long idKurs1 = r.parameter.get(0);
 		final long idKurs2 = r.parameter.get(1);
 		for (final @NotNull GostBlockungsergebnisSchiene schiene1 : getOfKursSchienenmenge(idKurs1))
 			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : getOfKursSchienenmenge(idKurs2))
-				if (schiene1 == schiene2)
+				if (schiene1 == schiene2) {
 					regelVerletzungen.add(r.id);
+					final int nr  = getSchieneG(schiene1.id).nummer;
+					MapUtils.addToList(mapRegelVerletzungen, 7, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene(" + nr + ") sein.");
+				}
 	}
 
-	private void stateRegelvalidierung8_kurs_zusammen_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+	private void stateRegelvalidierung8_kurs_zusammen_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		final long idKurs1 = r.parameter.get(0);
 		final long idKurs2 = r.parameter.get(1);
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
 		if (set1.size() < set2.size()) {
-			// "set1" muss in "set2" enthalten sein.
+			// "set1" muss in "set2" enthalten sein (da es dass kleinere ist).
 			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
-				if (!set2.contains(schiene1))
+				if (!set2.contains(schiene1)) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
+				}
 		} else {
-			// "set2" muss in "set1" enthalten sein.
+			// "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
 			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
-				if (!set1.contains(schiene2))
+				if (!set1.contains(schiene2)) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
+				}
 		}
 	}
 
 	private void stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(final @NotNull GostBlockungRegel r) {
 		final long idKurs = r.parameter.get(0);
 		final int anzahl = r.parameter.get(1).intValue();
-		DeveloperNotificationException.ifTrue("Regel 9 DummySuS Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
+		DeveloperNotificationException.ifTrue("Regel 9 DummySuS-Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
 		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_dummySuS, idKurs, anzahl);
 	}
 
-	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
 			for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
 				for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
 					if (eKurs1.id < eKurs2.id)
 						for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
 							for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
-								if (gLehr1.id == gLehr2.id)
+								if (gLehr1.id == gLehr2.id) {
 									regelVerletzungen.add(r.id);
+									final int nr  = getSchieneG(eSchiene.id).nummer;
+									MapUtils.addToList(mapRegelVerletzungen, 10, "Die Lehrkraft " + gLehr1.kuerzel + " und die Lehrkraft " +  gLehr2.kuerzel + " sollten gemeinsam in einer Schiene(" + nr + ") sein.");
+								}
 	}
 
 	/**
@@ -2748,6 +2796,26 @@ public class GostBlockungsergebnisManager {
 			}
 
 		return regeln;
+	}
+
+	/**
+	 * Liefert zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 *
+	 * @param regeltyp  Das {@link GostKursblockungRegelTyp}-Objekt.
+	 *
+	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 */
+	public @NotNull List<@NotNull String> regelGetMengeAnVerletzungen(final @NotNull GostKursblockungRegelTyp regeltyp) {
+		return MapUtils.getOrCreateArrayList(_map_regelID_verletzungen, regeltyp.typ);
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 *
+	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 */
+	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
+		return _list_verletzte_regeltypen_sortiert;
 	}
 
 	// #########################################################################

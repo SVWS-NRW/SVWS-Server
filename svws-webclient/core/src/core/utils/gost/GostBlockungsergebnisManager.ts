@@ -8,8 +8,8 @@ import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager'
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungsergebnisBewertung, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
@@ -167,6 +167,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER).
 	 */
 	private readonly _kursComparator_fach_kursart_kursnummer : Comparator<GostBlockungsergebnisKurs>;
+
+	/**
+	 * Regeltyp --> Liste aller Regelverletzungen.
+	 */
+	private readonly _map_regelID_verletzungen : JavaMap<number, List<string>> = new HashMap();
+
+	/**
+	 * Liste aller Regeltypen, die mindestens eine Regelverletzung haben.
+	 */
+	private readonly _list_verletzte_regeltypen_sortiert : List<GostKursblockungRegelTyp> = new ArrayList();
 
 
 	/**
@@ -379,109 +389,148 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		this._map_kursID_dummySuS.clear();
+		this._map_regelID_verletzungen.clear();
+		this._list_verletzte_regeltypen_sortiert.clear();
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
+			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
+			this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
+			this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-			this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
+			this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-			this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
+			this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
+			this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-			this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
+			this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-			this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
+			this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
 			this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
-			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
+			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen, this._map_regelID_verletzungen);
+		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10];
+		for (const regeltyp of regeltypSortierung)
+			if (this._map_regelID_verletzungen.containsKey(regeltyp))
+				this._list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 		this._parent.ergebnisUpdateBewertung(this._ergebnis);
 		this.updateAll();
 	}
 
-	private stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+	private stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		for (let schienenNr : number = r.parameter.get(1)!; schienenNr <= r.parameter.get(2)!; schienenNr++)
 			for (const eKurs of this.getSchieneEmitNr(schienenNr).kurse)
-				if (eKurs.kursart === r.parameter.get(0)!)
+				if (eKurs.kursart === r.parameter.get(0)!) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 1, "Die Kursart von " + this.getOfKursName(eKurs.id)! + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+				}
 	}
 
-	private stateRegelvalidierung2_kurs_fixieren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		if (!this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
+	private stateRegelvalidierung2_kurs_fixieren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idKurs : number = r.parameter.get(0).valueOf();
+		const schienenNr : number = r.parameter.get(1)!;
+		if (!this.getOfKursSchienenmenge(idKurs).contains(this.getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 2, "Der Kurs " + this.getOfKursName(idKurs)! + " sollte fixiert sein in Schiene " + schienenNr + ".");
+		}
 	}
 
-	private stateRegelvalidierung3_kurs_sperren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		if (this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
+	private stateRegelvalidierung3_kurs_sperren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idKurs : number = r.parameter.get(0).valueOf();
+		const schienenNr : number = r.parameter.get(1)!;
+		if (this.getOfKursSchienenmenge(idKurs).contains(this.getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 3, "Der Kurs " + this.getOfKursName(idKurs)! + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+		}
 	}
 
-	private stateRegelvalidierung4_schueler_fixieren_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		if (!this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
+	private stateRegelvalidierung4_schueler_fixieren_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idSchueler : number = r.parameter.get(0).valueOf();
+		const idKurs : number = r.parameter.get(1).valueOf();
+		if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 4, "Der Schüler " + this.getOfSchuelerNameVorname(idSchueler)! + " sollte fixiert sein in Kurs " + this.getOfKursName(idKurs)! + ".");
+		}
 	}
 
-	private stateRegelvalidierung5_schueler_verbieten_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		if (this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
+	private stateRegelvalidierung5_schueler_verbieten_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idSchueler : number = r.parameter.get(0).valueOf();
+		const idKurs : number = r.parameter.get(1).valueOf();
+		if (this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 5, "Der Schüler " + this.getOfSchuelerNameVorname(idSchueler)! + " sollte verboten sein in Kurs " + this.getOfKursName(idKurs)! + ".");
+		}
 	}
 
-	private stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+	private stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		for (const eKurs of this._map_kursID_kurs.values())
 			for (const eSchieneID of eKurs.schienen) {
 				const nr : number = this.getSchieneG(eSchieneID!).nummer;
-				const b1 : boolean = eKurs.kursart === r.parameter.get(0)!;
-				const b2 : boolean = (r.parameter.get(1)! <= nr) && (nr <= r.parameter.get(2)!);
-				if (b1 !== b2)
+				const kursart : number = r.parameter.get(0)!;
+				const schienenNrVon : number = r.parameter.get(1)!;
+				const schienenNrBis : number = r.parameter.get(2)!;
+				const b1 : boolean = eKurs.kursart === kursart;
+				const b2 : boolean = (schienenNrVon <= nr) && (nr <= schienenNrBis);
+				if (b1 !== b2) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 6, "Die Kursart des Kurses " + this.getOfKursName(eKurs.id)! + " sollte innerhalb der Schienen " + schienenNrVon + " bis " + schienenNrBis + " sein.");
+				}
 			}
 	}
 
-	private stateRegelvalidierung7_kurs_verbieten_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+	private stateRegelvalidierung7_kurs_verbieten_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		const idKurs1 : number = r.parameter.get(0).valueOf();
 		const idKurs2 : number = r.parameter.get(1).valueOf();
 		for (const schiene1 of this.getOfKursSchienenmenge(idKurs1))
 			for (const schiene2 of this.getOfKursSchienenmenge(idKurs2))
-				if (schiene1 as unknown === schiene2 as unknown)
+				if (schiene1 as unknown === schiene2 as unknown) {
 					regelVerletzungen.add(r.id);
+					const nr : number = this.getSchieneG(schiene1.id).nummer;
+					MapUtils.addToList(mapRegelVerletzungen, 7, "Der Kurs " + this.getOfKursName(idKurs1)! + " und der Kurs " + this.getOfKursName(idKurs2)! + " sollten nicht gemeinsam in einer Schiene(" + nr + ") sein.");
+				}
 	}
 
-	private stateRegelvalidierung8_kurs_zusammen_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+	private stateRegelvalidierung8_kurs_zusammen_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		const idKurs1 : number = r.parameter.get(0).valueOf();
 		const idKurs2 : number = r.parameter.get(1).valueOf();
 		const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs1);
 		const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs2);
 		if (set1.size() < set2.size()) {
 			for (const schiene1 of set1)
-				if (!set2.contains(schiene1))
+				if (!set2.contains(schiene1)) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + this.getOfKursName(idKurs1)! + " und der Kurs " + this.getOfKursName(idKurs2)! + " sollten gemeinsam in einer Schiene sein.");
+				}
 		} else {
 			for (const schiene2 of set2)
-				if (!set1.contains(schiene2))
+				if (!set1.contains(schiene2)) {
 					regelVerletzungen.add(r.id);
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + this.getOfKursName(idKurs1)! + " und der Kurs " + this.getOfKursName(idKurs2)! + " sollten gemeinsam in einer Schiene sein.");
+				}
 		}
 	}
 
 	private stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r : GostBlockungRegel) : void {
 		const idKurs : number = r.parameter.get(0).valueOf();
 		const anzahl : number = r.parameter.get(1)!;
-		DeveloperNotificationException.ifTrue("Regel 9 DummySuS Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
+		DeveloperNotificationException.ifTrue("Regel 9 DummySuS-Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_dummySuS, idKurs, anzahl);
 	}
 
-	private stateRegelvalidierung10_lehrkraefte_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+	private stateRegelvalidierung10_lehrkraefte_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		for (const eSchiene of this._map_schienenID_schiene.values())
 			for (const eKurs1 of eSchiene.kurse)
 				for (const eKurs2 of eSchiene.kurse)
 					if (eKurs1.id < eKurs2.id)
 						for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
 							for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
-								if (gLehr1.id === gLehr2.id)
+								if (gLehr1.id === gLehr2.id) {
 									regelVerletzungen.add(r.id);
+									const nr : number = this.getSchieneG(eSchiene.id).nummer;
+									MapUtils.addToList(mapRegelVerletzungen, 10, "Die Lehrkraft " + gLehr1.kuerzel + " und die Lehrkraft " + gLehr2.kuerzel + " sollten gemeinsam in einer Schiene(" + nr + ") sein.");
+								}
 	}
 
 	/**
@@ -2587,6 +2636,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				}
 			}
 		return regeln;
+	}
+
+	/**
+	 * Liefert zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 *
+	 * @param regeltyp  Das {@link GostKursblockungRegelTyp}-Objekt.
+	 *
+	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 */
+	public regelGetMengeAnVerletzungen(regeltyp : GostKursblockungRegelTyp) : List<string> {
+		return MapUtils.getOrCreateArrayList(this._map_regelID_verletzungen, regeltyp.typ);
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 *
+	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 */
+	regelGetMengeVerletzterTypen() : List<GostKursblockungRegelTyp> {
+		return this._list_verletzte_regeltypen_sortiert;
 	}
 
 	/**
