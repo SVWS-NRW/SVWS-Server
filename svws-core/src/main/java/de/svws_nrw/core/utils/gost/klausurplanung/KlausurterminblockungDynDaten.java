@@ -12,7 +12,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebn
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungKonfiguration;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.exceptions.UserNotificationException;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
 import de.svws_nrw.core.utils.ArrayUtils;
@@ -90,27 +90,50 @@ public class KlausurterminblockungDynDaten {
 		initialisiereMatrixVerboten(pInput);
 
 		initialisiereKlausurgruppen(pInput, pConfig);
-		checkKlausurgruppenOrException();
+
+		teileKlausurgruppenAufBeiKollision();
 
 		initialisiereKlausurgruppenGrad();
 
 		aktionClear();
 	}
 
-	private void checkKlausurgruppenOrException() {
-		for (final @NotNull List<@NotNull Integer> gruppe : _klausurGruppen) {
-			DeveloperNotificationException.ifTrue("Es wurde eine leere Gruppe gefunden!", gruppe.isEmpty());
-			for (final int klausurNr1 : gruppe)
-				for (final int klausurNr2 : gruppe)
-					if (_verboten[klausurNr1][klausurNr2]) {
-						// Analysiere das Problem genauer, warum es hier zum Fehler kommt.
-						final @NotNull GostKursklausurRich klausur1 = gibKlausurOrException(klausurNr1);
-						final @NotNull GostKursklausurRich klausur2 = gibKlausurOrException(klausurNr2);
-						final @NotNull List<@NotNull Long> schnittmenge = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
-						DeveloperNotificationException.ifTrue("Die Schüler-Schnittmenge der Klausuren darf hier nicht leer sein!", schnittmenge.isEmpty());
-						throw new UserNotificationException("Klausur " + klausur1.kursKurzbezeichnung + " und " + klausur2.kursKurzbezeichnung + " sind in einer Gruppe. Schüler-ID-Schnittmenge: " + schnittmenge);
+	private void teileKlausurgruppenAufBeiKollision() {
+		final @NotNull List<@NotNull List<@NotNull Integer>> kopie = new ArrayList<>(_klausurGruppen);
+
+		_klausurGruppen.clear();
+		for (@NotNull final List<@NotNull Integer> gruppe : kopie) {
+			if (gruppe.isEmpty())
+				_logger.log(LogLevel.ERROR, "Es wurde eine leere Klausurgruppe gefunden!");
+
+			while (!gruppe.isEmpty()) {
+				_klausurGruppen.addLast(new ArrayList<>());
+
+				final int size = gruppe.size();
+				for (int i = 0; i < size; i++) {
+					final int klausurNr = ListUtils.pollNonNullFirst(gruppe);
+					if (gibIstKlausurgruppeKollisionsfreiZurKlausur(ListUtils.getNonNullLast(_klausurGruppen), klausurNr)) {
+						ListUtils.getNonNullLast(_klausurGruppen).add(klausurNr); // verschieben
+					} else {
+						gruppe.addLast(klausurNr); // rotieren
+						_logger.log(LogLevel.WARNING, "Es wurde eine Klausurgruppe mit einer Schülerkollision gefunden!");
 					}
+				}
+
+			}
+
 		}
+	}
+
+	private boolean gibIstKlausurgruppeKollisionsfreiZurKlausur(final @NotNull List<@NotNull Integer> klausurgruppe, final int klausurNr2) {
+		for (final int klausurNr1 : klausurgruppe) {
+			final @NotNull GostKursklausurRich klausur1 = gibKlausurOrException(klausurNr1);
+			final @NotNull GostKursklausurRich klausur2 = gibKlausurOrException(klausurNr2);
+			final @NotNull List<@NotNull Long> schnittmenge = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
+			if (!schnittmenge.isEmpty())
+				return false;
+		}
+		return true;
 	}
 
 	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausurRich pGostKursklausurRich) {

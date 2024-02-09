@@ -7,6 +7,7 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../../../core/logger/Logger';
 import { MapUtils } from '../../../../core/utils/MapUtils';
+import { LogLevel } from '../../../../core/logger/LogLevel';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungAlgorithmen } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
@@ -15,7 +16,6 @@ import type { List } from '../../../../java/util/List';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { Arrays } from '../../../../java/util/Arrays';
-import { UserNotificationException } from '../../../../core/exceptions/UserNotificationException';
 
 export class KlausurterminblockungDynDaten extends JavaObject {
 
@@ -105,24 +105,42 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._verboten = [...Array(this._klausurenAnzahl)].map(e => Array(this._klausurenAnzahl).fill(false));
 		this.initialisiereMatrixVerboten(pInput);
 		this.initialisiereKlausurgruppen(pInput, pConfig);
-		this.checkKlausurgruppenOrException();
+		this.teileKlausurgruppenAufBeiKollision();
 		this.initialisiereKlausurgruppenGrad();
 		this.aktionClear();
 	}
 
-	private checkKlausurgruppenOrException() : void {
-		for (const gruppe of this._klausurGruppen) {
-			DeveloperNotificationException.ifTrue("Es wurde eine leere Gruppe gefunden!", gruppe.isEmpty());
-			for (const klausurNr1 of gruppe)
-				for (const klausurNr2 of gruppe)
-					if (this._verboten[klausurNr1][klausurNr2]) {
-						const klausur1 : GostKursklausurRich = this.gibKlausurOrException(klausurNr1);
-						const klausur2 : GostKursklausurRich = this.gibKlausurOrException(klausurNr2);
-						const schnittmenge : List<number> = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
-						DeveloperNotificationException.ifTrue("Die Schüler-Schnittmenge der Klausuren darf hier nicht leer sein!", schnittmenge.isEmpty());
-						throw new UserNotificationException("Klausur " + klausur1.kursKurzbezeichnung + " und " + klausur2.kursKurzbezeichnung + " sind in einer Gruppe. Schüler-ID-Schnittmenge: " + schnittmenge)
+	private teileKlausurgruppenAufBeiKollision() : void {
+		const kopie : List<List<number>> = new ArrayList(this._klausurGruppen);
+		this._klausurGruppen.clear();
+		for (const gruppe of kopie) {
+			if (gruppe.isEmpty())
+				this._logger.log(LogLevel.ERROR, "Es wurde eine leere Klausurgruppe gefunden!");
+			while (!gruppe.isEmpty()) {
+				this._klausurGruppen.addLast(new ArrayList());
+				const size : number = gruppe.size();
+				for (let i : number = 0; i < size; i++) {
+					const klausurNr : number = ListUtils.pollNonNullFirst(gruppe).valueOf();
+					if (this.gibIstKlausurgruppeKollisionsfreiZurKlausur(ListUtils.getNonNullLast(this._klausurGruppen), klausurNr)) {
+						ListUtils.getNonNullLast(this._klausurGruppen).add(klausurNr);
+					} else {
+						gruppe.addLast(klausurNr);
+						this._logger.log(LogLevel.WARNING, "Es wurde eine Klausurgruppe mit einer Schülerkollision gefunden!");
 					}
+				}
+			}
 		}
+	}
+
+	private gibIstKlausurgruppeKollisionsfreiZurKlausur(klausurgruppe : List<number>, klausurNr2 : number) : boolean {
+		for (const klausurNr1 of klausurgruppe) {
+			const klausur1 : GostKursklausurRich = this.gibKlausurOrException(klausurNr1);
+			const klausur2 : GostKursklausurRich = this.gibKlausurOrException(klausurNr2);
+			const schnittmenge : List<number> = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
+			if (!schnittmenge.isEmpty())
+				return false;
+		}
+		return true;
 	}
 
 	private gibKlausurNrOrException(pGostKursklausurRich : GostKursklausurRich) : number {

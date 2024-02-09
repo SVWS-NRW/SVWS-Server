@@ -68,7 +68,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	/**
-	 * Berechnet eine Liste von Terminen, denen die IDs der übergebenen Kurs-Klausuren zugeordnetet sind.
+	 * Berechnet eine Liste von Terminen, denen die IDs der übergebenen Kurs-Klausuren zugeordnet sind.
 	 *
 	 * @param daten   die Kurs-Klausuren mit Schülern und die Konfiguration als Eingabe für den Blockungs-Algorithmus
 	 *

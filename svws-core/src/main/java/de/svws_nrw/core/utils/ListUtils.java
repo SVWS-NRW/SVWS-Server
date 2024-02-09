@@ -158,6 +158,21 @@ public final class ListUtils {
     }
 
     /**
+     * Liefert das letzte NON NULL Element der Liste, oder eine Exception.
+     *
+     * @param <E>   Der Inhaltstyp der Liste.
+     * @param list  Die Liste.
+     *
+     * @return das letzte NON NULL Element der Liste, oder eine Exception.
+     */
+    public static <@NotNull E> @NotNull E getNonNullLast(final @NotNull List<@NotNull E> list) {
+    	final E element = list.get(list.size() - 1);
+    	if (element == null)
+    		throw new DeveloperNotificationException("Kein letztes Element in der Liste vorhanden!");
+    	return element;
+    }
+
+    /**
      * Liefert eine Liste, welche mit einem Element gefüllt wurde.
      *
      * @param <E>      Der Inhaltstyp der Liste.
@@ -184,6 +199,19 @@ public final class ListUtils {
 		final @NotNull List<@NotNull E> list3 = new ArrayList<>(list1);
 		list3.retainAll(list2);
 		return list3;
+	}
+
+	/**
+	 * Liefert das erste Element der Liste (und entfernt es). Falls keines existiert wird eine Exception geworfen.
+	 * @param <E>   Der Inhaltstyp der Liste.
+	 * @param list  Die Liste.
+	 *
+	 * @return das erste Element der Liste (und entfernt es). Falls keines existiert wird eine Exception geworfen.
+	 */
+	public static <@NotNull E> @NotNull E pollNonNullFirst(final @NotNull List<@NotNull E> list) {
+		final @NotNull E first = getNonNullElementAtOrException(list, 0);
+		list.removeFirst();
+		return first;
 	}
 
 }
