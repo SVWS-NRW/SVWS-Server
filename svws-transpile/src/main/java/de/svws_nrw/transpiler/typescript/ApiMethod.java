@@ -385,7 +385,7 @@ public final class ApiMethod {
 				String replaceParam = pathParam.getKey();
 				if ("number".equals(pathParam.getValue()))
 					replaceParam += ".toString()";
-				sb.append("\t\t\t.replace(/{" + pathParam.getKey() + "\\s*(:[^}]+)?}/g, " + replaceParam + ")");
+				sb.append("\t\t\t.replace(/{" + pathParam.getKey() + "\\s*(:[^{}]+({[^{}]+})*)?}/g, " + replaceParam + ")");
 				if (i == this.pathParams.params.size() - 1)
 					sb.append(";");
 				sb.append(System.lineSeparator());

@@ -307,7 +307,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogOrte(schema : string) : Promise<List<KatalogEintragOrte>> {
 		const path = "/db/{schema}/allgemein/orte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintragOrte>();
@@ -334,7 +334,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogOrtsteile(schema : string) : Promise<List<KatalogEintragOrtsteile>> {
 		const path = "/db/{schema}/allgemein/ortsteile"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintragOrtsteile>();
@@ -361,7 +361,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogStrassen(schema : string) : Promise<List<KatalogEintragStrassen>> {
 		const path = "/db/{schema}/allgemein/strassen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintragStrassen>();
@@ -388,7 +388,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzerliste(schema : string) : Promise<List<BenutzerListeEintrag>> {
 		const path = "/db/{schema}/benutzer/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerListeEintrag>();
@@ -416,8 +416,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzerDaten(schema : string, id : number) : Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
@@ -441,8 +441,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addBenutzerAdmin(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/addAdmin"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -466,8 +466,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setBenutzername(data : string | null, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/anmeldename"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
@@ -492,8 +492,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setAnzeigename(data : string | null, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/anzeigename"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
@@ -518,8 +518,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addBenutzerKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/kompetenz/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
@@ -544,8 +544,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzerKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/kompetenz/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -570,8 +570,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setPassword(data : string | null, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/password"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
@@ -595,8 +595,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzerAdmin(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/removeAdmin"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -619,7 +619,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBenutzerkompetenzen(schema : string) : Promise<List<BenutzerKompetenzKatalogEintrag>> {
 		const path = "/db/{schema}/benutzer/allgemein/kompetenzen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerKompetenzKatalogEintrag>();
@@ -645,7 +645,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBenutzerkompetenzgruppen(schema : string) : Promise<List<BenutzerKompetenzGruppenKatalogEintrag>> {
 		const path = "/db/{schema}/benutzer/allgemein/kompetenzgruppen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerKompetenzGruppenKatalogEintrag>();
@@ -672,7 +672,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzerDatenEigene(schema : string) : Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/angemeldet/daten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
@@ -699,7 +699,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBenutzergruppe(data : BenutzergruppeDaten, schema : string) : Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/benutzergruppe/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = BenutzergruppeDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -725,7 +725,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzergruppenliste(schema : string) : Promise<List<BenutzergruppeListeEintrag>> {
 		const path = "/db/{schema}/benutzer/gruppe"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzergruppeListeEintrag>();
@@ -753,8 +753,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzergruppeDaten(schema : string, id : number) : Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BenutzergruppeDaten.transpilerFromJSON(text);
@@ -778,8 +778,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/addAdmin"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -804,8 +804,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBenutzerMitGruppenID(schema : string, id : number) : Promise<List<BenutzerListeEintrag>> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerListeEintrag>();
@@ -836,8 +836,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addBenutzergruppeBenutzer(data : List<number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -867,8 +867,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzergruppeBenutzer(data : List<number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const text = result;
@@ -894,8 +894,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setBenutzergruppeBezeichnung(data : string | null, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/bezeichnung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
@@ -920,8 +920,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addBenutzergruppeKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/kompetenz/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
@@ -946,8 +946,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzergruppeKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/kompetenz/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -971,8 +971,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/removeAdmin"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -995,7 +995,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzerGruppe(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/benutzer/guppe/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -1022,7 +1022,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBenutzerAllgemein(data : BenutzerAllgemeinCredentials, schema : string) : Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = BenutzerAllgemeinCredentials.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1047,7 +1047,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBenutzerMenge(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/benutzer/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -1072,7 +1072,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBetriebe(schema : string) : Promise<List<BetriebListeEintrag>> {
 		const path = "/db/{schema}/betriebe/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebListeEintrag>();
@@ -1103,8 +1103,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBetriebansprechpartner(data : BetriebAnsprechpartner, schema : string, betrieb_id : number) : Promise<BetriebAnsprechpartner> {
 		const path = "/db/{schema}/betriebe/{betrieb_id : \\d+}/ansprechpartner/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{betrieb_id\s*(:[^}]+)?}/g, betrieb_id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{betrieb_id\s*(:[^{}]+({[^{}]+})*)?}/g, betrieb_id.toString());
 		const body : string = BetriebAnsprechpartner.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1131,8 +1131,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerBetriebsdaten(data : Partial<SchuelerBetriebsdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerBetriebsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1157,8 +1157,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<SchuelerBetriebsdaten> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerBetriebsdaten.transpilerFromJSON(text);
@@ -1184,8 +1184,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBetriebAnsprechpartnerdaten(schema : string, id : number) : Promise<List<BetriebAnsprechpartner>> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betriebansprechpartner"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebAnsprechpartner>();
@@ -1213,8 +1213,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchBetriebanpsrechpartnerdaten(data : Partial<BetriebAnsprechpartner>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betriebansprechpartner"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = BetriebAnsprechpartner.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1239,8 +1239,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBetriebStammdaten(schema : string, id : number) : Promise<BetriebStammdaten> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BetriebStammdaten.transpilerFromJSON(text);
@@ -1266,8 +1266,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchBetriebStammdaten(data : Partial<BetriebStammdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = BetriebStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1292,8 +1292,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBetriebAnsprechpartner(schema : string, id : number) : Promise<List<BetriebAnsprechpartner>> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}betriebansprechpartnerliste"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebAnsprechpartner>();
@@ -1320,7 +1320,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBeschaeftigungsart(schema : string) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -1348,8 +1348,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBeschaeftigungsartmitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -1377,8 +1377,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchBeschaeftigungsart(data : Partial<KatalogEintrag>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KatalogEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1403,8 +1403,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBetriebsartmitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -1433,7 +1433,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBeschaeftigungsArt(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = KatalogEintrag.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1459,7 +1459,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBetriebeAnsprechpartner(schema : string) : Promise<List<BetriebAnsprechpartner>> {
 		const path = "/db/{schema}/betriebe/betriebansprechpartner"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebAnsprechpartner>();
@@ -1485,7 +1485,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBetriebansprechpartner(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/betriebe/betriebansprechpartner/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -1510,7 +1510,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBetriebsart(schema : string) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/betriebe/betriebsart"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -1538,8 +1538,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchBetriebsart(data : Partial<KatalogEintrag>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KatalogEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1566,7 +1566,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBetriebsart(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
 		const path = "/db/{schema}/betriebe/betriebsart/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = KatalogEintrag.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1595,7 +1595,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createBetrieb(data : BetriebStammdaten, schema : string) : Promise<BetriebStammdaten> {
 		const path = "/db/{schema}/betriebe/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = BetriebStammdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1620,7 +1620,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeBetrieb(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/betriebe/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -1650,9 +1650,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createSchuelerbetrieb(data : SchuelerBetriebsdaten, schema : string, schueler_id : number, betrieb_id : number) : Promise<SchuelerBetriebsdaten> {
 		const path = "/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \\d+}/betrieb/{betrieb_id: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schueler_id\s*(:[^}]+)?}/g, schueler_id.toString())
-			.replace(/{betrieb_id\s*(:[^}]+)?}/g, betrieb_id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schueler_id\s*(:[^{}]+({[^{}]+})*)?}/g, schueler_id.toString())
+			.replace(/{betrieb_id\s*(:[^{}]+({[^{}]+})*)?}/g, betrieb_id.toString());
 		const body : string = SchuelerBetriebsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -1677,8 +1677,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getClientConfig(schema : string, app : string) : Promise<BenutzerConfig> {
 		const path = "/db/{schema}/client/config/{app}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{app\s*(:[^}]+)?}/g, app);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BenutzerConfig.transpilerFromJSON(text);
@@ -1700,9 +1700,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setClientConfigGlobalKey(data : string | null, schema : string, app : string, key : string) : Promise<void> {
 		const path = "/db/{schema}/client/config/{app}/global/{key}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{app\s*(:[^}]+)?}/g, app)
-			.replace(/{key\s*(:[^}]+)?}/g, key);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
+			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
@@ -1726,9 +1726,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getClientConfigUserKey(schema : string, app : string, key : string) : Promise<string | null> {
 		const path = "/db/{schema}/client/config/{app}/user/{key}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{app\s*(:[^}]+)?}/g, app)
-			.replace(/{key\s*(:[^}]+)?}/g, key);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
+			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
@@ -1750,9 +1750,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setClientConfigUserKey(data : string | null, schema : string, app : string, key : string) : Promise<void> {
 		const path = "/db/{schema}/client/config/{app}/user/{key}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{app\s*(:[^}]+)?}/g, app)
-			.replace(/{key\s*(:[^}]+)?}/g, key);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
+			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
@@ -1776,7 +1776,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getENMDaten(schema : string) : Promise<ENMDaten> {
 		const path = "/db/{schema}/enm/alle"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ENMDaten.transpilerFromJSON(text);
@@ -1801,7 +1801,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getENMDatenGZip(schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/enm/alle/gzip"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
@@ -1826,8 +1826,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerENMDaten(schema : string, id : number) : Promise<ENMDaten> {
 		const path = "/db/{schema}/enm/lehrer/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ENMDaten.transpilerFromJSON(text);
@@ -1852,7 +1852,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getErzieher(schema : string) : Promise<List<ErzieherListeEintrag>> {
 		const path = "/db/{schema}/erzieher/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ErzieherListeEintrag>();
@@ -1880,8 +1880,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getErzieherStammdaten(schema : string, id : number) : Promise<ErzieherStammdaten> {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ErzieherStammdaten.transpilerFromJSON(text);
@@ -1907,8 +1907,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchErzieherStammdaten(data : Partial<ErzieherStammdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -1932,7 +1932,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getErzieherArten(schema : string) : Promise<List<Erzieherart>> {
 		const path = "/db/{schema}/erzieher/arten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Erzieherart>();
@@ -1958,7 +1958,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async exportSQLite(schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/export/sqlite"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const data : ApiFile = await super.getSQLite(path);
 		return data;
 	}
@@ -1982,7 +1982,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getFaecher(schema : string) : Promise<List<FaecherListeEintrag>> {
 		const path = "/db/{schema}/faecher/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FaecherListeEintrag>();
@@ -2010,8 +2010,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getFach(schema : string, id : number) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return FachDaten.transpilerFromJSON(text);
@@ -2037,8 +2037,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = FachDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -2065,8 +2065,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteFach(schema : string, id : number) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return FachDaten.transpilerFromJSON(text);
@@ -2092,8 +2092,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppenKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppe/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return FachgruppenKatalogEintrag.transpilerFromJSON(text);
@@ -2118,7 +2118,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachgruppenKatalogEintrag>();
@@ -2145,7 +2145,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogFaecher(schema : string) : Promise<List<FachKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/faecher"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachKatalogEintrag>();
@@ -2172,7 +2172,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBilingualeSprachen(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
@@ -2200,8 +2200,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBilingualeSprachenEintrag(schema : string, id : number) : Promise<BilingualeSpracheKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BilingualeSpracheKatalogEintrag.transpilerFromJSON(text);
@@ -2226,7 +2226,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogBilingualeSprachenAlle(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual/alle"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
@@ -2253,7 +2253,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSprachpruefungsniveaus(schema : string) : Promise<List<SprachpruefungsniveauKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/pruefungsniveaus"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SprachpruefungsniveauKatalogEintrag>();
@@ -2280,7 +2280,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSprachreferenzniveaus(schema : string) : Promise<List<SprachreferenzniveauKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/referenzniveaus"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SprachreferenzniveauKatalogEintrag>();
@@ -2309,8 +2309,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = FachDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -2336,7 +2336,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/fachgruppen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachgruppenKatalogEintrag>();
@@ -2359,7 +2359,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setFaecherSortierungSekII(schema : string) : Promise<void> {
 		const path = "/db/{schema}/faecher/sortierung/setSekII"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
 		return;
 	}
@@ -2384,8 +2384,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGesamtschuleSchuelerPrognoseLeistungsdaten(schema : string, id : number) : Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
@@ -2412,9 +2412,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(schema : string, id : number, abschnittID : number) : Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/abschnitt/{abschnittID : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{abschnittID\s*(:[^}]+)?}/g, abschnittID.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnittID\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittID.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
@@ -2440,7 +2440,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturBelegpruefungEF1(data : Abiturdaten, schema : string) : Promise<GostBelegpruefungErgebnis> {
 		const path = "/db/{schema}/gost/abitur/belegpruefung/EF1"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Abiturdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -2467,7 +2467,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturBelegpruefungGesamt(data : Abiturdaten, schema : string) : Promise<GostBelegpruefungErgebnis> {
 		const path = "/db/{schema}/gost/abitur/belegpruefung/gesamt"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Abiturdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -2493,7 +2493,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgaenge(schema : string) : Promise<List<GostJahrgang>> {
 		const path = "/db/{schema}/gost/abiturjahrgaenge"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgang>();
@@ -2521,8 +2521,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<GostJahrgangsdaten> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangsdaten.transpilerFromJSON(text);
@@ -2548,8 +2548,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostAbiturjahrgang(data : Partial<GostJahrgangsdaten>, schema : string, abiturjahr : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const body : string = GostJahrgangsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -2574,8 +2574,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangBelegpruefungsergebnisseEF1(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
@@ -2603,8 +2603,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
@@ -2635,8 +2635,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const body : string = JSON.stringify(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -2666,8 +2666,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async removeGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/remove"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const body : string = JSON.stringify(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -2695,9 +2695,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFach(schema : string, abiturjahr : number, id : number) : Promise<GostFach> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostFach.transpilerFromJSON(text);
@@ -2724,9 +2724,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostAbiturjahrgangFach(data : Partial<GostFach>, schema : string, abiturjahr : number, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostFach.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -2751,8 +2751,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFachkombinationen(schema : string, abiturjahr : number) : Promise<List<GostJahrgangFachkombination>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgangFachkombination>();
@@ -2783,9 +2783,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostAbiturjahrgangFachkombination(schema : string, abiturjahr : number, typ : number) : Promise<GostJahrgangFachkombination> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen/add/{typ : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{typ\s*(:[^{}]+({[^{}]+})*)?}/g, typ.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostJahrgangFachkombination.transpilerFromJSON(text);
@@ -2812,9 +2812,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFachwahl(schema : string, abiturjahr : number, fachid : number) : Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostSchuelerFachwahl.transpilerFromJSON(text);
@@ -2841,9 +2841,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostAbiturjahrgangFachwahl(data : Partial<GostSchuelerFachwahl>, schema : string, abiturjahr : number, fachid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
 		const body : string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -2865,8 +2865,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async resetGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/reset"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -2888,8 +2888,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async resetGostAbiturjahrgangSchuelerFachwahlen(schema : string, abiturjahr : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/schueler/reset"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -2914,8 +2914,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<GostJahrgangFachwahlen> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangFachwahlen.transpilerFromJSON(text);
@@ -2941,8 +2941,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFachwahlstatistik(schema : string, abiturjahr : number) : Promise<List<GostStatistikFachwahl>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlstatistik"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostStatistikFachwahl>();
@@ -2970,8 +2970,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangFaecher(schema : string, abiturjahr : number) : Promise<List<GostFach>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/faecher"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostFach>();
@@ -3000,9 +3000,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangHalbjahrFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostJahrgangFachwahlenHalbjahr> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(text);
@@ -3028,8 +3028,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangLaufbahnplanung(schema : string, abiturjahr : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahnplanung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
@@ -3055,8 +3055,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangSchueler(schema : string, abiturjahr : number) : Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/schueler"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
@@ -3081,8 +3081,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -3108,9 +3108,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostAbiturjahrgangBlockungsliste(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostBlockungListeneintrag>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungListeneintrag>();
@@ -3141,9 +3141,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostAbiturjahrgangBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
@@ -3171,8 +3171,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostAbiturjahrgang(schema : string, jahrgangid : number) : Promise<number | null> {
 		const path = "/db/{schema}/gost/abiturjahrgang/new/{jahrgangid}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{jahrgangid\s*(:[^}]+)?}/g, jahrgangid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{jahrgangid\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgangid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return parseInt(JSON.parse(text));
@@ -3199,9 +3199,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
@@ -3227,8 +3227,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockung(schema : string, blockungsid : number) : Promise<number | null> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return parseFloat(JSON.parse(text));
@@ -3254,8 +3254,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockung(schema : string, blockungsid : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
@@ -3281,8 +3281,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockung(data : Partial<GostBlockungsdaten>, schema : string, blockungsid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const body : string = GostBlockungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -3311,8 +3311,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungErgebnisse(data : List<GostBlockungsergebnis>, schema : string, blockungsid : number) : Promise<List<GostBlockungsergebnis>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addergebnisse"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnis>).map(d => GostBlockungsergebnis.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -3345,9 +3345,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungRegel(data : List<number>, schema : string, blockungsid : number, regeltyp : number) : Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregel/{regeltyp : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString())
-			.replace(/{regeltyp\s*(:[^}]+)?}/g, regeltyp.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
+			.replace(/{regeltyp\s*(:[^{}]+({[^{}]+})*)?}/g, regeltyp.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -3377,8 +3377,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungRegeln(data : List<GostBlockungRegel>, schema : string, blockungsid : number) : Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregeln"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungRegel>).map(d => GostBlockungRegel.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -3409,8 +3409,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungSchiene(schema : string, blockungsid : number) : Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addschiene"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
@@ -3438,8 +3438,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungSchiene(schema : string, blockungsid : number) : Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/deleteschiene"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
@@ -3469,10 +3469,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungKurs(schema : string, blockungsid : number, fachid : number, kursartid : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/fach/{fachid : \\d+}/kursart/{kursartid : \\d+}/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString())
-			.replace(/{kursartid\s*(:[^}]+)?}/g, kursartid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString())
+			.replace(/{kursartid\s*(:[^{}]+({[^{}]+})*)?}/g, kursartid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
@@ -3502,10 +3502,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungKurs(schema : string, blockungsid : number, fachid : number, kursartid : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/fach/{fachid : \\d+}/kursart/{kursartid : \\d+}/delete"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString())
-			.replace(/{kursartid\s*(:[^}]+)?}/g, kursartid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString())
+			.replace(/{kursartid\s*(:[^{}]+({[^{}]+})*)?}/g, kursartid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
@@ -3532,9 +3532,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async rechneGostBlockung(schema : string, blockungsid : number, zeit : number) : Promise<List<number>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/rechne/{zeit : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString())
-			.replace(/{zeit\s*(:[^}]+)?}/g, zeit.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
+			.replace(/{zeit\s*(:[^{}]+({[^{}]+})*)?}/g, zeit.toString());
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
@@ -3562,8 +3562,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
@@ -3589,8 +3589,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockungKurs(data : Partial<GostBlockungKurs>, schema : string, kursid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		const body : string = GostBlockungKurs.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -3615,8 +3615,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungKursByID(schema : string, kursid : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
@@ -3643,9 +3643,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungKursLehrer.transpilerFromJSON(text);
@@ -3669,9 +3669,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockungKurslehrer(data : Partial<GostBlockungKursLehrer>, schema : string, kursid : number, lehrerid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
 		const body : string = GostBlockungKursLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -3693,9 +3693,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -3721,9 +3721,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}/add"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKursLehrer.transpilerFromJSON(text);
@@ -3751,8 +3751,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async splitGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKursAufteilung> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/split"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKursAufteilung.transpilerFromJSON(text);
@@ -3781,9 +3781,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async combineGostBlockungKurs(schema : string, kursid1 : number, kursid2 : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid1 : \\d+}/combine/{kursid2 : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{kursid1\s*(:[^}]+)?}/g, kursid1.toString())
-			.replace(/{kursid2\s*(:[^}]+)?}/g, kursid2.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{kursid1\s*(:[^{}]+({[^{}]+})*)?}/g, kursid1.toString())
+			.replace(/{kursid2\s*(:[^{}]+({[^{}]+})*)?}/g, kursid2.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
@@ -3811,7 +3811,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungKurse(data : List<number>, schema : string) : Promise<List<GostBlockungKurs>> {
 		const path = "/db/{schema}/gost/blockungen/kurse/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -3841,8 +3841,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostKursplanungKurseMitKursschuelern(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -3869,8 +3869,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostKursplanungKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -3897,8 +3897,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostKursplanungSchuelerMitKursen(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -3920,7 +3920,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungRegelnByID(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/regeln"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -3946,8 +3946,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockungRegel(schema : string, regelid : number) : Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{regelid\s*(:[^}]+)?}/g, regelid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
@@ -3973,8 +3973,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockungRegel(data : Partial<GostBlockungRegel>, schema : string, regelid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{regelid\s*(:[^}]+)?}/g, regelid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
 		const body : string = GostBlockungRegel.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -3999,8 +3999,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungRegelByID(schema : string, regelid : number) : Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{regelid\s*(:[^}]+)?}/g, regelid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
@@ -4026,8 +4026,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockungSchiene(schema : string, schienenid : number) : Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
@@ -4053,8 +4053,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockungSchiene(data : Partial<GostBlockungSchiene>, schema : string, schienenid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
 		const body : string = GostBlockungSchiene.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4079,8 +4079,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungSchieneByID(schema : string, schienenid : number) : Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
@@ -4106,8 +4106,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsergebnis> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsergebnis.transpilerFromJSON(text);
@@ -4133,8 +4133,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostBlockungsergebnis(data : Partial<GostBlockungsergebnisListeneintrag>, schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const body : string = GostBlockungsergebnisListeneintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4159,8 +4159,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<number | null> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return parseFloat(JSON.parse(text));
@@ -4184,8 +4184,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async activateGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/activate"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4210,8 +4210,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
@@ -4237,8 +4237,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async schreibeGostBlockungsErgebnisHoch(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/hochschreiben"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
@@ -4261,8 +4261,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungsergebnisKursSchieneZuordnungen(data : List<GostBlockungsergebnisKursSchienenZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchienenZuordnungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchienenZuordnung>).map(d => GostBlockungsergebnisKursSchienenZuordnung.transpilerToJSON(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -4285,8 +4285,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungsergebnisKursSchuelerZuordnungen(data : List<GostBlockungsergebnisKursSchuelerZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchuelerZuordnungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchuelerZuordnung>).map(d => GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
@@ -4312,10 +4312,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4338,10 +4338,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -4367,11 +4367,11 @@ export class ApiServer extends BaseApi {
 	 */
 	public async updateGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number, schienenidneu : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid: \\d+}/kurs/{kursid: \\d+}/zu/{schienenidneu: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{schienenidneu\s*(:[^}]+)?}/g, schienenidneu.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{schienenidneu\s*(:[^{}]+({[^{}]+})*)?}/g, schienenidneu.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4396,10 +4396,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4422,10 +4422,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -4451,11 +4451,11 @@ export class ApiServer extends BaseApi {
 	 */
 	public async updateGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number, kursidneu : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}/zu/{kursidneu: \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
-			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
-			.replace(/{kursidneu\s*(:[^}]+)?}/g, kursidneu.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
+			.replace(/{kursidneu\s*(:[^{}]+({[^{}]+})*)?}/g, kursidneu.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4479,8 +4479,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async syncGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/synchronize"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -4505,8 +4505,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostFachkombination(data : Partial<GostJahrgangFachkombination>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/fachkombination/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostJahrgangFachkombination.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4531,8 +4531,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostFachkombination(schema : string, id : number) : Promise<GostJahrgangFachkombination> {
 		const path = "/db/{schema}/gost/fachkombination/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostJahrgangFachkombination.transpilerFromJSON(text);
@@ -4558,7 +4558,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/blocken/kursklausuren"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -4585,7 +4585,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/blocken/schuelerklausurtermine"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -4614,9 +4614,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenCollection(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/collection/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenDataCollection.transpilerFromJSON(text);
@@ -4647,9 +4647,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -4678,9 +4678,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKursklausurenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKursklausur>();
@@ -4710,9 +4710,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKursklausurenJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKursklausur>();
@@ -4743,10 +4743,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
-			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
+			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenDataCollection.transpilerFromJSON(text);
@@ -4772,8 +4772,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4799,8 +4799,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenRaeumeTermin(schema : string, termin : number) : Promise<List<GostKlausurraum>> {
 		const path = "/db/{schema}/gost/klausuren/raeume/{termin : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{termin\s*(:[^}]+)?}/g, termin.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurraum>();
@@ -4828,8 +4828,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostKlausurenRaum(schema : string, id : number) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/raeume/delete/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return (text === "true");
@@ -4856,7 +4856,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string) : Promise<GostKlausurraum> {
 		const path = "/db/{schema}/gost/klausuren/raeume/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -4884,8 +4884,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{termin\s*(:[^}]+)?}/g, termin.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
@@ -4914,10 +4914,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{sid\s*(:[^}]+)?}/g, sid.toString())
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{sid\s*(:[^{}]+({[^{}]+})*)?}/g, sid.toString())
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenDataCollection.transpilerFromJSON(text);
@@ -4943,8 +4943,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenSchuelerklausur(data : Partial<GostSchuelerklausur>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostSchuelerklausur.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4971,9 +4971,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenSchuelerklausurenNachschreiber(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkSkt> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/nachschreiber/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionSkSkt.transpilerFromJSON(text);
@@ -5000,8 +5000,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenSchuelerklausurenTermine(schema : string, id : number) : Promise<List<GostSchuelerklausurTermin>> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostSchuelerklausurTermin>();
@@ -5029,8 +5029,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -5055,8 +5055,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/delete/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return (text === "true");
@@ -5083,8 +5083,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<GostSchuelerklausurTermin> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostSchuelerklausurTermin.transpilerFromJSON(text);
@@ -5112,9 +5112,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setzeGostSchuelerklausurenZuRaum(data : List<number>, schema : string, raumid : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\\d+}/abschnitt/{abschnittid : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{raumid\s*(:[^}]+)?}/g, raumid.toString())
-			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{raumid\s*(:[^{}]+({[^{}]+})*)?}/g, raumid.toString())
+			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5141,8 +5141,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -5169,9 +5169,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKlausurtermineJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
 		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurtermin>();
@@ -5201,9 +5201,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKlausurtermineJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
 		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurtermin>();
@@ -5231,7 +5231,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostKlausurenKlausurtermine(data : List<number>, schema : string) : Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/termine/delete"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -5261,7 +5261,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string) : Promise<GostKlausurtermin> {
 		const path = "/db/{schema}/gost/klausuren/termine/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5288,8 +5288,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -5315,8 +5315,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenVorgabenJahrgang(schema : string, abiturjahr : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
@@ -5346,9 +5346,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenVorgabenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
@@ -5378,9 +5378,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenVorgabenJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
@@ -5411,10 +5411,10 @@ export class ApiServer extends BaseApi {
 	 */
 	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
-			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
+			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
@@ -5444,9 +5444,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createDefaultGostKlausurenVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
-			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
+			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
@@ -5471,8 +5471,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteGostKlausurenVorgabe(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/delete/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -5499,7 +5499,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string) : Promise<GostKlausurvorgabe> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5537,7 +5537,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importKurs42Blockung(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/kurs42/import/zip"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -5563,7 +5563,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async exportGostSchuelerLaufbahnplanungen(data : List<number>, schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/laufbahnplanung/export"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoZIP(path, body);
 		return result;
@@ -5591,7 +5591,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importGostSchuelerLaufbahnplanungen(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/laufbahnplanung/import"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -5617,8 +5617,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/lupo/export/mdb/jahrgang/{jahrgang}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{jahrgang\s*(:[^}]+)?}/g, jahrgang);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{jahrgang\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgang);
 		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
@@ -5649,8 +5649,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setGostLupoImportMDBFuerJahrgang(data : FormData, schema : string, mode : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{mode\s*(:[^}]+)?}/g, mode);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{mode\s*(:[^{}]+({[^{}]+})*)?}/g, mode);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -5676,8 +5676,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerAbiturdaten(schema : string, id : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
@@ -5703,8 +5703,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdatenAusLeistungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
@@ -5730,8 +5730,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
@@ -5757,8 +5757,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerLaufbahnplanungBeratungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungBeratungsdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostLaufbahnplanungBeratungsdaten.transpilerFromJSON(text);
@@ -5784,8 +5784,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungDaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostLaufbahnplanungDaten.transpilerFromJSON(text);
@@ -5814,8 +5814,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importGostSchuelerLaufbahnplanungsdaten(data : GostLaufbahnplanungDaten, schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostLaufbahnplanungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5842,8 +5842,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/export"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
@@ -5871,8 +5871,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importGostSchuelerLaufbahnplanung(data : FormData, schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/import"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -5898,8 +5898,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerLeistungsdaten(schema : string, id : number) : Promise<GostLeistungen> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/leistungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostLeistungen.transpilerFromJSON(text);
@@ -5926,9 +5926,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostSchuelerFachwahl(schema : string, schuelerid : number, fachid : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
@@ -5955,9 +5955,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostSchuelerFachwahl(data : Partial<GostSchuelerFachwahl>, schema : string, schuelerid : number, fachid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
-			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
 		const body : string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -5979,8 +5979,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async resetGostSchuelerFachwahlen(schema : string, schuelerid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/reset"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -6005,8 +6005,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data : Partial<GostLaufbahnplanungBeratungsdaten>, schema : string, schuelerid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/laufbahnplanung/beratungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
 		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -6032,8 +6032,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(data : List<number>, schema : string, detaillevel : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{detaillevel\s*(:[^}]+)?}/g, detaillevel.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{detaillevel\s*(:[^{}]+({[^{}]+})*)?}/g, detaillevel.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -6059,7 +6059,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -6085,7 +6085,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(data : List<number>, schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogennurbelegung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -6119,7 +6119,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importStundenplanUntisGPU001(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/untis/import/gpu001"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -6144,7 +6144,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getHaltestellen(schema : string) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/haltestellen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -6174,7 +6174,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async importSQLite(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/import/sqlite"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -6199,7 +6199,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getJahrgaenge(schema : string) : Promise<List<JahrgangsListeEintrag>> {
 		const path = "/db/{schema}/jahrgaenge/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgangsListeEintrag>();
@@ -6227,8 +6227,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getJahrgang(schema : string, id : number) : Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return JahrgangsDaten.transpilerFromJSON(text);
@@ -6254,8 +6254,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchJahrgang(data : Partial<JahrgangsDaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -6282,8 +6282,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteJahrgang(schema : string, id : number) : Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return JahrgangsDaten.transpilerFromJSON(text);
@@ -6308,7 +6308,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgangsKatalogEintrag>> {
 		const path = "/db/{schema}/jahrgaenge/allgemein/jahrgaenge"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgangsKatalogEintrag>();
@@ -6337,7 +6337,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addJahrgang(data : Partial<JahrgangsDaten>, schema : string) : Promise<Raum> {
 		const path = "/db/{schema}/jahrgaenge/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -6366,7 +6366,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteJahrgaenge(data : List<number>, schema : string) : Promise<List<JahrgangsDaten>> {
 		const path = "/db/{schema}/jahrgaenge/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -6394,7 +6394,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/anschlussoptionen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAAnschlussoptionEintrag>();
@@ -6421,7 +6421,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/berufsfelder"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOABerufsfeldEintrag>();
@@ -6448,7 +6448,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4Eintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/ebene4"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAEbene4Eintrag>();
@@ -6475,7 +6475,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/kategorien"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAKategorieEintrag>();
@@ -6502,7 +6502,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/merkmale"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAMerkmalEintrag>();
@@ -6529,7 +6529,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/zusatzmerkmale"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAZusatzmerkmalEintrag>();
@@ -6557,8 +6557,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKlasse(schema : string, id : number) : Promise<KlassenDaten> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return KlassenDaten.transpilerFromJSON(text);
@@ -6584,8 +6584,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchKlasse(data : Partial<KlassenDaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KlassenDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -6608,8 +6608,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteKlasse(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -6634,8 +6634,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKlassenFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KlassenListeEintrag>> {
 		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenListeEintrag>();
@@ -6659,8 +6659,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async setKlassenSortierungFuerAbschnitt(schema : string, abschnitt : number) : Promise<void> {
 		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}/sortierung/setdefault"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		await super.postJSON(path, null);
 		return;
 	}
@@ -6684,7 +6684,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKlassenarten(schema : string) : Promise<List<KlassenartKatalogEintrag>> {
 		const path = "/db/{schema}/klassen/allgemein/klassenarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenartKatalogEintrag>();
@@ -6713,7 +6713,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addKlasse(data : Partial<KlassenDaten>, schema : string) : Promise<KlassenDaten> {
 		const path = "/db/{schema}/klassen/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = KlassenDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -6739,7 +6739,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKurse(schema : string) : Promise<List<KursListeEintrag>> {
 		const path = "/db/{schema}/kurse/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursListeEintrag>();
@@ -6767,8 +6767,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKurs(schema : string, id : number) : Promise<KursDaten> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return KursDaten.transpilerFromJSON(text);
@@ -6794,8 +6794,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchKurs(data : Partial<KursDaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = KursDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -6818,8 +6818,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteKurs(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -6844,8 +6844,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKurseFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KursListeEintrag>> {
 		const path = "/db/{schema}/kurse/abschnitt/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursListeEintrag>();
@@ -6872,7 +6872,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKursarten(schema : string) : Promise<List<KursartKatalogEintrag>> {
 		const path = "/db/{schema}/kurse/allgemein/kursarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursartKatalogEintrag>();
@@ -6901,7 +6901,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addKurs(data : Partial<KursDaten>, schema : string) : Promise<KursDaten> {
 		const path = "/db/{schema}/kurse/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = KursDaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -6927,7 +6927,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrer(schema : string) : Promise<List<LehrerListeEintrag>> {
 		const path = "/db/{schema}/lehrer/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerListeEintrag>();
@@ -6955,8 +6955,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerPersonaldaten(schema : string, id : number) : Promise<LehrerPersonaldaten> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonaldaten.transpilerFromJSON(text);
@@ -6982,8 +6982,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchLehrerPersonaldaten(data : Partial<LehrerPersonaldaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonaldaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -7008,8 +7008,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerStammdaten(schema : string, id : number) : Promise<LehrerStammdaten> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return LehrerStammdaten.transpilerFromJSON(text);
@@ -7035,8 +7035,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchLehrerStammdaten(data : Partial<LehrerStammdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -7060,7 +7060,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerKatalogAbgangsgrundEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/abgangsgruende"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogAbgangsgrundEintrag>();
@@ -7087,7 +7087,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerKatalogAnrechnungsgrundEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/anrechnungsgruende"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogAnrechnungsgrundEintrag>();
@@ -7114,7 +7114,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerKatalogBeschaeftigungsartEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/beschaeftigungsarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogBeschaeftigungsartEintrag>();
@@ -7141,7 +7141,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerKatalogEinsatzstatusEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/einsatzstatus"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogEinsatzstatusEintrag>();
@@ -7168,7 +7168,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerKatalogFachrichtungEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogFachrichtungEintrag>();
@@ -7195,7 +7195,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerKatalogFachrichtungAnerkennungEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag>();
@@ -7222,7 +7222,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerKatalogLehramtEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogLehramtEintrag>();
@@ -7249,7 +7249,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehramtAnerkennungEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogLehramtAnerkennungEintrag>();
@@ -7276,7 +7276,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogLehrbefaehigungEintrag>();
@@ -7303,7 +7303,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungAnerkennungEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogLehrbefaehigungAnerkennungEintrag>();
@@ -7330,7 +7330,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerKatalogMehrleistungsartEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/mehrleistungsarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogMehrleistungsartEintrag>();
@@ -7357,7 +7357,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerKatalogMinderleistungsartEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/minderleistungsarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogMinderleistungsartEintrag>();
@@ -7384,7 +7384,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerKatalogRechtsverhaeltnisEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogRechtsverhaeltnisEintrag>();
@@ -7411,7 +7411,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerKatalogZugangsgrundEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/zugangsgruende"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogZugangsgrundEintrag>();
@@ -7438,7 +7438,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerKatalogLeitungsfunktionenEintrag>> {
 		const path = "/db/{schema}/lehrer/leitungsfunktionen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
@@ -7466,8 +7466,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
@@ -7493,8 +7493,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -7521,7 +7521,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMariaDB(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mariadb"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7551,8 +7551,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMariaDBSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mariadb/{schulnummer:\\d{6}}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7581,7 +7581,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMDB(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mdb"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -7609,7 +7609,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMsSqlServer(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mssql"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7639,8 +7639,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMsSqlServerSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mssql/{schulnummer:\\d{6}}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7669,7 +7669,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMySql(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mysql"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7699,8 +7699,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async migrateMySqlSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mysql/{schulnummer:\\d{6}}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
 		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -7726,7 +7726,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getOrte(schema : string) : Promise<List<OrtKatalogEintrag>> {
 		const path = "/db/{schema}/orte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtKatalogEintrag>();
@@ -7753,7 +7753,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
 		const path = "/db/{schema}/ortsteile"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtsteilKatalogEintrag>();
@@ -7780,7 +7780,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3AbiturInfos(schema : string) : Promise<List<Schild3KatalogEintragAbiturInfos>> {
 		const path = "/db/{schema}/schild3/abiturinfos"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragAbiturInfos>();
@@ -7807,7 +7807,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3Datenarten(schema : string) : Promise<List<Schild3KatalogEintragDatenart>> {
 		const path = "/db/{schema}/schild3/datenarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragDatenart>();
@@ -7834,7 +7834,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3DQRNiveaus(schema : string) : Promise<List<Schild3KatalogEintragDQRNiveaus>> {
 		const path = "/db/{schema}/schild3/dqr_niveaus"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragDQRNiveaus>();
@@ -7861,7 +7861,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3ExportCSV(schema : string) : Promise<List<Schild3KatalogEintragExportCSV>> {
 		const path = "/db/{schema}/schild3/export/csv"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragExportCSV>();
@@ -7888,7 +7888,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3FilterFehlendeEintraege(schema : string) : Promise<List<Schild3KatalogEintragFilterFehlendeEintraege>> {
 		const path = "/db/{schema}/schild3/filter/fehlende_eintraege"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragFilterFehlendeEintraege>();
@@ -7915,7 +7915,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3Laender(schema : string) : Promise<List<Schild3KatalogEintragLaender>> {
 		const path = "/db/{schema}/schild3/laender"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragLaender>();
@@ -7942,7 +7942,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3Pruefungsordnungen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnung>> {
 		const path = "/db/{schema}/schild3/pruefungsordnungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnung>();
@@ -7969,7 +7969,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3PruefungsordnungOptionen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnungOption>> {
 		const path = "/db/{schema}/schild3/pruefungsordnungen/optionen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnungOption>();
@@ -7996,7 +7996,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchild3ReportingDatenquellen(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
 		const path = "/db/{schema}/schild3/reporting/"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
@@ -8026,7 +8026,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3UnicodeUmwandlung(schema : string) : Promise<List<Schild3KatalogEintragUnicodeUmwandlung>> {
 		const path = "/db/{schema}/schild3/unicode/umwandlung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragUnicodeUmwandlung>();
@@ -8053,7 +8053,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchild3Versetzungsvermerke(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
 		const path = "/db/{schema}/schild3/versetzungsvermerke"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
@@ -8082,9 +8082,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerLernabschnittsdaten(schema : string, id : number, abschnitt : number) : Promise<SchuelerLernabschnittsdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/abschnitt/{abschnitt : \\d+}/lernabschnittsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
@@ -8110,8 +8110,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerBetriebe(schema : string, id : number) : Promise<List<SchuelerBetriebsdaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/betriebe"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerBetriebsdaten>();
@@ -8139,8 +8139,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerBetriebsstammdaten(schema : string, id : number) : Promise<List<BetriebStammdaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/betriebsstammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebStammdaten>();
@@ -8168,8 +8168,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerErzieher(schema : string, id : number) : Promise<List<ErzieherStammdaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/erzieher"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ErzieherStammdaten>();
@@ -8197,8 +8197,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKAOAdaten(schema : string, id : number) : Promise<SchuelerKAoADaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerKAoADaten.transpilerFromJSON(text);
@@ -8225,8 +8225,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number) : Promise<SchuelerKAoADaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -8252,9 +8252,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async putKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{skid\s*(:[^}]+)?}/g, skid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
 		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
 		return super.putJSON(path, body);
 	}
@@ -8276,9 +8276,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteKAOAdaten(schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{skid\s*(:[^}]+)?}/g, skid.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -8303,8 +8303,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerLernabschnittsliste(schema : string, id : number) : Promise<List<SchuelerLernabschnittListeEintrag>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/lernabschnitte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLernabschnittListeEintrag>();
@@ -8332,8 +8332,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerSchulbesuch(schema : string, id : number) : Promise<SchuelerSchulbesuchsdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/schulbesuch"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerSchulbesuchsdaten.transpilerFromJSON(text);
@@ -8359,8 +8359,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerSchulbesuch(data : Partial<SchuelerSchulbesuchsdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/schulbesuch"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerSchulbesuchsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -8386,9 +8386,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
@@ -8415,9 +8415,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number, sprache : string) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -8445,9 +8445,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
@@ -8474,9 +8474,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
@@ -8503,9 +8503,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number, sprache : string) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -8533,9 +8533,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
@@ -8561,8 +8561,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerSprachbelegungen(schema : string, id : number) : Promise<List<Sprachbelegung>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Sprachbelegung>();
@@ -8592,8 +8592,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number) : Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -8620,8 +8620,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerSprachpruefungen(schema : string, id : number) : Promise<List<Sprachpruefung>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Sprachpruefung>();
@@ -8651,8 +8651,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number) : Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -8679,8 +8679,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerStammdaten(schema : string, id : number) : Promise<SchuelerStammdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerStammdaten.transpilerFromJSON(text);
@@ -8706,8 +8706,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerStammdaten(data : Partial<SchuelerStammdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -8732,8 +8732,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
@@ -8760,7 +8760,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerAktuell(schema : string) : Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/schueler/aktuell"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
@@ -8787,7 +8787,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogHerkuenfte(schema : string) : Promise<List<HerkunftKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/herkuenfte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<HerkunftKatalogEintrag>();
@@ -8814,7 +8814,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogHerkunftsarten(schema : string) : Promise<List<HerkunftsartKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/herkunftsarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<HerkunftsartKatalogEintrag>();
@@ -8841,7 +8841,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogUebergangsempfehlung(schema : string) : Promise<List<UebergangsempfehlungKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/uebergangsempfehlung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<UebergangsempfehlungKatalogEintrag>();
@@ -8868,7 +8868,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerFahrschuelerarten(schema : string) : Promise<List<KatalogEintrag>> {
 		const path = "/db/{schema}/schueler/fahrschuelerarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintrag>();
@@ -8896,8 +8896,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerLeistungsdatenByID(schema : string, id : number) : Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
@@ -8923,8 +8923,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerLeistungsdaten(data : Partial<SchuelerLeistungsdaten>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -8951,8 +8951,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchuelerLeistungsdaten(schema : string, id : number) : Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
@@ -8979,7 +8979,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addSchuelerLeistungsdaten(data : Partial<SchuelerLeistungsdaten>, schema : string) : Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -9007,7 +9007,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addSchuelerLeistungsdatenMultiple(data : List<Partial<SchuelerLeistungsdaten>>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
 		const path = "/db/{schema}/schueler/leistungsdaten/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<SchuelerLeistungsdaten>).map(d => SchuelerLeistungsdaten.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -9038,7 +9038,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchuelerLeistungsdatenMultiple(data : List<number>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
 		const path = "/db/{schema}/schueler/leistungsdaten/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -9067,8 +9067,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerLernabschnittsdatenByID(schema : string, abschnitt : number) : Promise<SchuelerLernabschnittsdaten> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
@@ -9094,8 +9094,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerLernabschnittsdaten(data : Partial<SchuelerLernabschnittsdaten>, schema : string, abschnitt : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const body : string = SchuelerLernabschnittsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -9120,8 +9120,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuelerLernabschnittsdatenBemerkungen(data : Partial<SchuelerLernabschnittBemerkungen>, schema : string, abschnitt : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}/bemerkungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const body : string = SchuelerLernabschnittBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -9145,7 +9145,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogAbgangsartenAllgemeinbildend(schema : string) : Promise<AbgangsartKatalog> {
 		const path = "/db/{schema}/schule/allgemein/abgangsarten/allgemeinbildend"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return AbgangsartKatalog.transpilerFromJSON(text);
@@ -9170,7 +9170,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogAbgangsartenBerufsbildend(schema : string) : Promise<AbgangsartKatalog> {
 		const path = "/db/{schema}/schule/allgemein/abgangsarten/berufsbildend"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return AbgangsartKatalog.transpilerFromJSON(text);
@@ -9195,7 +9195,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getAllgemeineMerkmale(schema : string) : Promise<List<AllgemeineMerkmaleKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/allgemeine_merkmale"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AllgemeineMerkmaleKatalogEintrag>();
@@ -9222,7 +9222,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBerufskollegAnlagen(schema : string) : Promise<List<BerufskollegAnlageKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/anlagen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BerufskollegAnlageKatalogEintrag>();
@@ -9249,7 +9249,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBerufskollegBerufsebenen(schema : string) : Promise<List<BerufskollegBerufsebeneKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/berufsebenen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BerufskollegBerufsebeneKatalogEintrag>();
@@ -9276,7 +9276,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getBerufskollegFachklassen(schema : string) : Promise<BerufskollegFachklassenKatalog> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/fachklassen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BerufskollegFachklassenKatalog.transpilerFromJSON(text);
@@ -9301,7 +9301,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getEinschulungsarten(schema : string) : Promise<List<EinschulungsartKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/einschulungsarten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<EinschulungsartKatalogEintrag>();
@@ -9328,7 +9328,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/foerderschwerpunkte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FoerderschwerpunktKatalogEintrag>();
@@ -9355,7 +9355,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogHerkunftsschulnummern(schema : string) : Promise<List<HerkunftsschulnummerKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/herkunftsschulnummern"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<HerkunftsschulnummerKatalogEintrag>();
@@ -9382,7 +9382,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogKindergartenbesuchsdauer(schema : string) : Promise<List<KindergartenbesuchKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/kindergartenbesuch"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KindergartenbesuchKatalogEintrag>();
@@ -9409,7 +9409,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getNationaelitaeten(schema : string) : Promise<List<NationalitaetenKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/nationalitaeten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<NationalitaetenKatalogEintrag>();
@@ -9436,7 +9436,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogNoten(schema : string) : Promise<List<NotenKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/noten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<NotenKatalogEintrag>();
@@ -9463,7 +9463,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogOrganisationsformen(schema : string) : Promise<List<OrganisationsformKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/organisationsformen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrganisationsformKatalogEintrag>();
@@ -9490,7 +9490,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getPruefungsordnungen(schema : string) : Promise<List<PruefungsordnungKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/pruefungsordnungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<PruefungsordnungKatalogEintrag>();
@@ -9517,7 +9517,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogReformpaedagogik(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/reformpaedagogik"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
@@ -9545,8 +9545,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogReformpaedagogikEintrag(schema : string, id : number) : Promise<ReformpaedagogikKatalogEintrag> {
 		const path = "/db/{schema}/schule/allgemein/reformpaedagogik/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ReformpaedagogikKatalogEintrag.transpilerFromJSON(text);
@@ -9571,7 +9571,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogReformpaedagogikAlle(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/reformpaedagogik/alle"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
@@ -9598,7 +9598,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogReligionen(schema : string) : Promise<List<ReligionKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/religionen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ReligionKatalogEintrag>();
@@ -9625,7 +9625,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulabschluesseAllgemeinbildend(schema : string) : Promise<List<SchulabschlussAllgemeinbildendKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulabschluesse/allgemeinbildend"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulabschlussAllgemeinbildendKatalogEintrag>();
@@ -9652,7 +9652,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulabschluesseBerufsbildend(schema : string) : Promise<List<SchulabschlussBerufsbildendKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulabschluesse/berufsbildend"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulabschlussBerufsbildendKatalogEintrag>();
@@ -9679,7 +9679,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchulen(schema : string) : Promise<List<SchulenKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulenKatalogEintrag>();
@@ -9706,7 +9706,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulformen(schema : string) : Promise<List<SchulformKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulformen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulformKatalogEintrag>();
@@ -9733,7 +9733,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulgliederungen(schema : string) : Promise<List<SchulgliederungKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulgliederungen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulgliederungKatalogEintrag>();
@@ -9760,7 +9760,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulstufen(schema : string) : Promise<List<SchulstufeKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulstufen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulstufeKatalogEintrag>();
@@ -9787,7 +9787,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchultraeger(schema : string) : Promise<List<SchultraegerKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schultraeger"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchultraegerKatalogEintrag>();
@@ -9814,7 +9814,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getVerkehrssprachen(schema : string) : Promise<List<VerkehrsspracheKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/verkehrssprachen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<VerkehrsspracheKatalogEintrag>();
@@ -9841,7 +9841,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getAufsichtsbereiche(schema : string) : Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
@@ -9869,8 +9869,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Aufsichtsbereich.transpilerFromJSON(text);
@@ -9896,8 +9896,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -9924,8 +9924,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Aufsichtsbereich.transpilerFromJSON(text);
@@ -9952,7 +9952,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string) : Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -9980,7 +9980,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addAufsichtsbereiche(data : List<Partial<Aufsichtsbereich>>, schema : string) : Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10011,7 +10011,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteAufsichtsbereiche(data : List<number>, schema : string) : Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10040,8 +10040,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerFoerderschwerpunkt(schema : string, id : number) : Promise<FoerderschwerpunktEintrag> {
 		const path = "/db/{schema}/schule/foerderschwerpunkt/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return FoerderschwerpunktEintrag.transpilerFromJSON(text);
@@ -10066,7 +10066,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktEintrag>> {
 		const path = "/db/{schema}/schule/foerderschwerpunkte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FoerderschwerpunktEintrag>();
@@ -10096,8 +10096,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async initSchule(schema : string, schulnummer : number) : Promise<SchuleStammdaten> {
 		const path = "/db/{schema}/schule/init/{schulnummer : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
@@ -10122,7 +10122,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchullogo(schema : string) : Promise<string | null> {
 		const path = "/db/{schema}/schule/logo"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
@@ -10144,7 +10144,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async putSchullogo(data : string | null, schema : string) : Promise<void> {
 		const path = "/db/{schema}/schule/logo"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
@@ -10168,7 +10168,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuleNummer(schema : string) : Promise<number | null> {
 		const path = "/db/{schema}/schule/nummer"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return parseInt(JSON.parse(text));
@@ -10193,7 +10193,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getPausenzeiten(schema : string) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
@@ -10221,8 +10221,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
@@ -10248,8 +10248,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -10276,8 +10276,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deletePausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
@@ -10304,7 +10304,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -10332,7 +10332,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10363,7 +10363,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deletePausenzeiten(data : List<number>, schema : string) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10391,7 +10391,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getRaeume(schema : string) : Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Raum>();
@@ -10419,8 +10419,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getRaum(schema : string, id : number) : Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
@@ -10446,8 +10446,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchRaum(data : Partial<Raum>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Raum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -10474,8 +10474,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteRaum(schema : string, id : number) : Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
@@ -10502,7 +10502,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addRaum(data : Partial<Raum>, schema : string) : Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Raum.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -10530,7 +10530,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addRaeume(data : List<Partial<Raum>>, schema : string) : Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10561,7 +10561,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteRaeume(data : List<number>, schema : string) : Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10589,7 +10589,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getReligionen(schema : string) : Promise<List<ReligionEintrag>> {
 		const path = "/db/{schema}/schule/religionen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ReligionEintrag>();
@@ -10617,8 +10617,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getReligion(schema : string, id : number) : Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);
@@ -10644,8 +10644,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchReligion(data : Partial<ReligionEintrag>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = ReligionEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -10672,8 +10672,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteReligionEintrag(schema : string, id : number) : Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);
@@ -10701,7 +10701,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteReligionEintraege(data : List<number>, schema : string) : Promise<List<ReligionEintrag>> {
 		const path = "/db/{schema}/schule/religionen/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10732,7 +10732,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async createReligion(data : ReligionEintrag, schema : string) : Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ReligionEintrag.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -10758,7 +10758,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerstatusKatalogEintrag>> {
 		const path = "/db/{schema}/schule/schueler/status"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerstatusKatalogEintrag>();
@@ -10785,7 +10785,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulen(schema : string) : Promise<List<SchulEintrag>> {
 		const path = "/db/{schema}/schule/schulen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulEintrag>();
@@ -10813,8 +10813,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuleAusKatalog(schema : string, id : number) : Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchulEintrag.transpilerFromJSON(text);
@@ -10840,8 +10840,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuleAusKatalog(data : Partial<SchulEintrag>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = SchulEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -10868,8 +10868,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchuleVonKatalog(schema : string, id : number) : Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return SchulEintrag.transpilerFromJSON(text);
@@ -10896,7 +10896,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addSchuleZuKatalog(data : Partial<SchulEintrag>, schema : string) : Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchulEintrag.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -10925,7 +10925,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SchulEintrag>> {
 		const path = "/db/{schema}/schule/schulen/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -10953,7 +10953,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchulenMitKuerzel(schema : string) : Promise<List<SchulEintrag>> {
 		const path = "/db/{schema}/schule/schulen/kuerzel"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulEintrag>();
@@ -10980,7 +10980,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuleStammdaten(schema : string) : Promise<SchuleStammdaten> {
 		const path = "/db/{schema}/schule/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
@@ -11005,7 +11005,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchSchuleStammdaten(data : Partial<SchuleStammdaten>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/schule/stammdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -11029,7 +11029,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getZeitraster(schema : string) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
@@ -11057,8 +11057,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
@@ -11084,8 +11084,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -11112,8 +11112,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
@@ -11140,7 +11140,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -11168,7 +11168,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11199,7 +11199,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteZeitrasterEintraege(data : List<number>, schema : string) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11227,7 +11227,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/schule/zeitraster/patch/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
@@ -11252,8 +11252,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplan(schema : string, id : number) : Promise<Stundenplan> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Stundenplan.transpilerFromJSON(text);
@@ -11279,8 +11279,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplan(data : Partial<Stundenplan>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Stundenplan.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -11303,8 +11303,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplan(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
 	}
@@ -11331,8 +11331,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -11361,8 +11361,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanAufsichtsbereiche(data : List<Partial<StundenplanAufsichtsbereich>>, schema : string, id : number) : Promise<List<StundenplanAufsichtsbereich>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11394,8 +11394,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanAufsichtsbereiche(data : List<number>, schema : string, id : number) : Promise<List<StundenplanAufsichtsbereich>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11427,8 +11427,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanPausenaufsichten(data : List<number>, schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsicht/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11457,8 +11457,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanPausenaufsichten(schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
@@ -11488,8 +11488,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -11518,8 +11518,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string, id : number) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11551,8 +11551,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanPausenzeiten(data : List<number>, schema : string, id : number) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11583,8 +11583,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -11613,8 +11613,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanRaeume(data : List<Partial<StundenplanRaum>>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11646,8 +11646,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanRaeume(data : List<number>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11679,8 +11679,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanUnterrichte(data : List<number>, schema : string, id : number) : Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterricht/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11709,8 +11709,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanUnterrichte(schema : string, id : number) : Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterrichte"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
@@ -11738,8 +11738,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanUnterrichtsverteilung(schema : string, id : number) : Promise<StundenplanUnterrichtsverteilung> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterrichtsverteilung"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanUnterrichtsverteilung.transpilerFromJSON(text);
@@ -11765,8 +11765,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanZeitraster(schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
@@ -11796,8 +11796,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -11826,8 +11826,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11859,8 +11859,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanZeitrasterEintraege(data : List<number>, schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/delete/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
@@ -11890,9 +11890,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanLehrer(schema : string, idStundenplan : number, id : number) : Promise<StundenplanLehrer> {
 		const path = "/db/{schema}/stundenplan/{idStundenplan : \\d+}/lehrer/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{idStundenplan\s*(:[^}]+)?}/g, idStundenplan.toString())
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idStundenplan\s*(:[^{}]+({[^{}]+})*)?}/g, idStundenplan.toString())
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanLehrer.transpilerFromJSON(text);
@@ -11918,8 +11918,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
@@ -11945,8 +11945,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -11973,8 +11973,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereiche/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
@@ -12001,8 +12001,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplan(schema : string, idSchuljahresabschnitt : number) : Promise<StundenplanListeEintrag> {
 		const path = "/db/{schema}/stundenplan/create/{idSchuljahresabschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{idSchuljahresabschnitt\s*(:[^}]+)?}/g, idSchuljahresabschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return StundenplanListeEintrag.transpilerFromJSON(text);
@@ -12028,8 +12028,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanKalenderwochenzuordnung(schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
 		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
@@ -12055,8 +12055,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanKalenderwochenzuordnung(data : Partial<StundenplanKalenderwochenzuordnung>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12082,7 +12082,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanliste(schema : string) : Promise<List<StundenplanListeEintrag>> {
 		const path = "/db/{schema}/stundenplan/liste"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanListeEintrag>();
@@ -12110,8 +12110,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanlisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<StundenplanListeEintrag>> {
 		const path = "/db/{schema}/stundenplan/liste/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanListeEintrag>();
@@ -12139,8 +12139,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
@@ -12166,8 +12166,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12194,8 +12194,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
@@ -12222,7 +12222,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string) : Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -12250,7 +12250,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanPausenaufsichten(data : List<Partial<StundenplanPausenaufsicht>>, schema : string) : Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -12279,8 +12279,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
@@ -12306,8 +12306,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12334,8 +12334,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
@@ -12362,9 +12362,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getKlassenStundenplan(schema : string, id : number, klasse_id : number) : Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/klasse/{klasse_id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{klasse_id\s*(:[^}]+)?}/g, klasse_id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{klasse_id\s*(:[^{}]+({[^{}]+})*)?}/g, klasse_id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
@@ -12391,9 +12391,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getLehrerStundenplan(schema : string, id : number, lehrer_id : number) : Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{lehrer_id\s*(:[^}]+)?}/g, lehrer_id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{lehrer_id\s*(:[^{}]+({[^{}]+})*)?}/g, lehrer_id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
@@ -12420,9 +12420,9 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{schueler_id\s*(:[^}]+)?}/g, schueler_id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{schueler_id\s*(:[^{}]+({[^{}]+})*)?}/g, schueler_id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
@@ -12448,8 +12448,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
@@ -12475,8 +12475,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12503,8 +12503,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
@@ -12530,8 +12530,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanSchiene(schema : string, id : number) : Promise<StundenplanSchiene> {
 		const path = "/db/{schema}/stundenplan/schienen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanSchiene.transpilerFromJSON(text);
@@ -12557,8 +12557,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanSchiene(data : Partial<StundenplanSchiene>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/schienen/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanSchiene.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12583,8 +12583,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanUnterricht(schema : string, id : number) : Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
@@ -12610,8 +12610,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanUnterricht(data : Partial<StundenplanUnterricht>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12638,8 +12638,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanUnterricht(schema : string, id : number) : Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
@@ -12666,7 +12666,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanUnterricht(data : Partial<StundenplanUnterricht>, schema : string) : Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/create"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -12694,7 +12694,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async addStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/unterricht/create/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
@@ -12722,7 +12722,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/unterricht/patch/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
@@ -12747,8 +12747,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
@@ -12774,8 +12774,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -12802,8 +12802,8 @@ export class ApiServer extends BaseApi {
 	 */
 	public async deleteStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
@@ -12828,7 +12828,7 @@ export class ApiServer extends BaseApi {
 	 */
 	public async patchStundenplanZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/stundenplan/zeitraster/patch/multiple"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}

@@ -33,7 +33,7 @@ export class ApiSchema extends BaseApi {
 	 */
 	public async isTainted(schema : string) : Promise<boolean | null> {
 		const path = "/db/{schema}/api/isTainted"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
@@ -57,7 +57,7 @@ export class ApiSchema extends BaseApi {
 	 */
 	public async revision(schema : string) : Promise<number | null> {
 		const path = "/db/{schema}/api/revision"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return parseFloat(JSON.parse(text));
@@ -82,7 +82,7 @@ export class ApiSchema extends BaseApi {
 	 */
 	public async updateSchemaToCurrent(schema : string) : Promise<List<string>> {
 		const path = "/db/{schema}/api/update"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
@@ -110,8 +110,8 @@ export class ApiSchema extends BaseApi {
 	 */
 	public async updateSchema(schema : string, revision : number) : Promise<List<string>> {
 		const path = "/db/{schema}/api/update/{revision : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{revision\s*(:[^{}]+({[^{}]+})*)?}/g, revision.toString());
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
