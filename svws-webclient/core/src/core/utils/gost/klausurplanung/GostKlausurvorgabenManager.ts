@@ -29,9 +29,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			return +1;
 		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
 			return -1;
-		if (this._faecherManager !== null) {
-			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
-			const bFach : GostFach | null = this._faecherManager.get(b.idFach);
+		if (this.getFaecherManagerOrNull() !== null) {
+			const aFach : GostFach | null = this.getFaecherManager().get(a.idFach);
+			const bFach : GostFach | null = this.getFaecherManager().get(b.idFach);
 			if (aFach !== null && bFach !== null) {
 				if (aFach.sortierung > bFach.sortierung)
 					return +1;
@@ -61,11 +61,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
-	 * @param faecherManager   der Fächermanager
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager | null) {
+	public constructor(listVorgaben : List<GostKlausurvorgabe>) {
 		super();
-		this._faecherManager = faecherManager;
 		this.initAll(listVorgaben);
 	}
 
@@ -75,11 +73,31 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Fächermanager
+	 * Setzt den GostFaecherManager
 	 *
-	 * @return den Fächermanager
+	 * @param faecherManager der GostFaecherManager
 	 */
-	public getFaecherManager() : GostFaecherManager | null {
+	public setFaecherManager(faecherManager : GostFaecherManager) : void {
+		this._faecherManager = faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public getFaecherManager() : GostFaecherManager {
+		if (this._faecherManager === null)
+			throw new DeveloperNotificationException("GostFaecherManager not set.")
+		return this._faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst null.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public getFaecherManagerOrNull() : GostFaecherManager | null {
 		return this._faecherManager;
 	}
 

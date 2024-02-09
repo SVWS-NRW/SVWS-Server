@@ -82,7 +82,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (vorgaben.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
-		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben, null);
+		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
 		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
 		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
@@ -449,7 +449,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 		final EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (GostHalbjahr hj : GostHalbjahr.values())
-			manager.put(hj, new GostKlausurvorgabenManager(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).map(dtoMapper::apply).toList(), null));
+			manager.put(hj, new GostKlausurvorgabenManager(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).map(dtoMapper::apply).toList()));
 		final List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../../core/adt/map/HashMap2D';
+import { SchuelerListeEintrag } from '../../../../core/data/schueler/SchuelerListeEintrag';
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import type { JavaSet } from '../../../../java/util/JavaSet';
 import { GostFaecherManager } from '../../../../core/utils/gost/GostFaecherManager';
@@ -40,9 +41,9 @@ export class GostKursklausurManager extends JavaObject {
 
 	private _kursManager : KursManager | null = null;
 
-	private _faecherManager : GostFaecherManager | null = null;
-
 	private _lehrerMap : JavaMap<number, LehrerListeEintrag> | null = null;
+
+	private _schuelerMap : JavaMap<number, SchuelerListeEintrag> | null = null;
 
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
 		if (a.datum !== null && b.datum !== null)
@@ -55,7 +56,7 @@ export class GostKursklausurManager extends JavaObject {
 	} };
 
 	private readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
-		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
+		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManagerOrNull();
 		let va : GostKlausurvorgabe = this.vorgabeByKursklausur(a);
 		let vb : GostKlausurvorgabe = this.vorgabeByKursklausur(b);
 		if (JavaString.compareTo(va.kursart, vb.kursart) < 0)
@@ -200,23 +201,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Setzt den GostFaecherManager
-	 *
-	 * @param faecherManager der GostFaecherManager
-	 */
-	public setFaecherManager(faecherManager : GostFaecherManager) : void {
-		this._faecherManager = faecherManager;
-	}
-
-	/**
 	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @return den GostFaecherManager
 	 */
 	public getFaecherManager() : GostFaecherManager {
-		if (this._faecherManager === null)
-			throw new DeveloperNotificationException("GostFaecherManager not set.")
-		return this._faecherManager;
+		return this._vorgabenManager.getFaecherManager();
 	}
 
 	/**
@@ -237,6 +227,26 @@ export class GostKursklausurManager extends JavaObject {
 		if (this._lehrerMap === null)
 			throw new DeveloperNotificationException("LehrerMap not set.")
 		return this._lehrerMap;
+	}
+
+	/**
+	 * Liefert die SchuelerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return die SchuelerMap
+	 */
+	public getSchuelerMap() : JavaMap<number, SchuelerListeEintrag> {
+		if (this._schuelerMap === null)
+			throw new DeveloperNotificationException("SchuelerMap not set.")
+		return this._schuelerMap;
+	}
+
+	/**
+	 * Setzt die SchuelerMap
+	 *
+	 * @param schuelerMap die SchuelerMap
+	 */
+	public setSchuelerMap(schuelerMap : JavaMap<number, SchuelerListeEintrag>) : void {
+		this._schuelerMap = schuelerMap;
 	}
 
 	private update_all() : void {
@@ -1959,6 +1969,37 @@ export class GostKursklausurManager extends JavaObject {
 			if (skAktuell.folgeNr === skt.folgeNr - 1)
 				return skAktuell;
 		return null;
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur externe Schüler enthält
+	 *
+	 * @param k die zu prüfende Kursklausur
+	 *
+	 * @return true, falls externe Schüler enthalten sind, sonst false
+	 */
+	public kursklausurMitExternenS(k : GostKursklausur) : boolean {
+		const listSks : List<GostSchuelerklausur> | null = this._schuelerklausurmenge_by_idKursklausur.get(k.id);
+		if (listSks !== null)
+			for (let sk of listSks)
+				if (DeveloperNotificationException.ifMapGetIsNull(this.getSchuelerMap(), sk.idSchueler).externeSchulNr !== null)
+					return true;
+		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Vorgängertermins zum Übergebenen Schülerklausurtermin zurück.
+	 *
+	 * @param skt der Schülerklausurtermin
+	 *
+	 * @return das Datum als String oder null
+	 */
+	public datumSchuelerklausurVorgaenger(skt : GostSchuelerklausurTermin) : string | null {
+		const vorgaengerSkt : GostSchuelerklausurTermin | null = this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
+		if (vorgaengerSkt === null)
+			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.")
+		const termin : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(vorgaengerSkt);
+		return termin === null ? null : termin.datum;
 	}
 
 	transpilerCanonicalName(): string {

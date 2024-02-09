@@ -20,6 +20,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
@@ -125,7 +126,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 	private final Map<String, DataBasicMapper<DTOGostKlausurenSchuelerklausuren>> patchMappings = Map.ofEntries(
 			Map.entry("idSchuelerklausur", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("idKursklausur", (conn, dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
-			Map.entry("idSchueler", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)));
+			Map.entry("idSchueler", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
+			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge())));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {

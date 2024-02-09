@@ -19,7 +19,6 @@ export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKursklausurManager;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
 	stundenplanmanager: StundenplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;

@@ -12,10 +12,10 @@
 			</template>
 
 			<template #cell(nachname)="{ rowData }">
-				{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.nachname }}
+				{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.nachname }}
 			</template>
 			<template #cell(vorname)="{ rowData }">
-				{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
+				{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
 			</template>
 			<template #cell(kurs)="{ rowData }">
 				<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}</span>
@@ -43,7 +43,8 @@
 	import { computed, onMounted, ref } from 'vue';
 	import type { GostKlausurplanungNachschreibAnsichtProps } from './SGostKlausurplanungNachschreibAnsichtProps';
 	import type { DataTableColumn, SortByAndOrder } from '@ui';
-	import { DateUtils, GostSchuelerklausurTermin } from '@core';
+	import type { GostSchuelerklausurTermin } from '@core';
+	import { DateUtils } from '@core';
 
 	const props = defineProps<GostKlausurplanungNachschreibAnsichtProps>();
 
@@ -56,7 +57,6 @@
 	const sortByAndOrder = ref<SortByAndOrder | undefined>()
 
 	const itemsSorted = computed(() => {
-		console.log(sortByAndOrder.value);
 		const arr = props.kMan().schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value).toArray() as GostSchuelerklausurTermin[];
 		let temp = sortByAndOrder.value;
 		if (temp === undefined || temp.order === null)
@@ -64,9 +64,9 @@
 		arr.sort((a, b) => {
 			switch (temp!.key) {
 				case 'nachname':
-					return props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.nachname.localeCompare(props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.nachname, "de-DE",);
+					return props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.nachname.localeCompare(props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.nachname, "de-DE",);
 				case 'vorname':
-					return props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.vorname.localeCompare(props.mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.vorname, "de-DE",);
+					return props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.vorname.localeCompare(props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.vorname, "de-DE",);
 				case 'kurs':
 					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE",);
 				default:

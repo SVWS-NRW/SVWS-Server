@@ -18,12 +18,13 @@
 				<div class="svws-ui-td" role="cell">
 					<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
-					{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
+					{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
-				<div class="svws-ui-td" role="cell">{{ mapSchueler.get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
+				<div class="svws-ui-td" role="cell">{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
 				<div class="svws-ui-td svws-align-left" role="cell"><span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</span></div>
 				<div class="svws-ui-td svws-align-left" role="cell">
-					{{ DateUtils.gibDatumGermanFormat(kMan().terminBySchuelerklausurTermin(kMan().schuelerklausurterminVorgaengerBySchuelerklausurtermin(schuelertermin)!).datum!) }}
+					{{ kMan().datumSchuelerklausurVorgaenger(schuelertermin) !== null ? DateUtils.gibDatumGermanFormat(kMan().datumSchuelerklausurVorgaenger(schuelertermin)!) : "N.N." }}
+
 					<svws-ui-tooltip v-if="kMan().schuelerklausurterminVorgaengerBySchuelerklausurtermin(schuelertermin)!.bemerkung !== null && (kMan().schuelerklausurterminVorgaengerBySchuelerklausurtermin(schuelertermin)!.bemerkung as string).trim().length > 0">
 						<template #content>
 							{{ kMan().schuelerklausurterminVorgaengerBySchuelerklausurtermin(schuelertermin)!.bemerkung }}
@@ -41,7 +42,7 @@
 <script setup lang="ts">
 
 	import { DateUtils } from "@core";
-	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, SchuelerListeEintrag } from "@core";
+	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import { computed} from "vue";
@@ -49,7 +50,6 @@
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKursklausurManager;
 		schuelerklausuren: List<GostSchuelerklausurTermin>;
-		mapSchueler: Map<number, SchuelerListeEintrag>;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;

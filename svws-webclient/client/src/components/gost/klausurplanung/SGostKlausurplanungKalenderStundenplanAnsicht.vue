@@ -84,8 +84,7 @@
 								<template #content>
 									<div class="-mx-3">
 										<s-gost-klausurplanung-termin :termin="termin"
-											:k-man="kMan"
-											:map-schueler="mapSchueler">
+											:k-man="kMan">
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
 									</div>

@@ -27,7 +27,6 @@
 					}">
 					<s-gost-klausurplanung-termin :termin="termin"
 						:k-man="kMan"
-						:map-schueler="mapSchueler"
 						:on-drag="onDrag"
 						:draggable="isDraggable"
 						drag-icon

@@ -31,7 +31,6 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(routeGostKlausurplanung.data.klausurvorgabenmanager, new Vector(), null, null, null)},
-			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
 			loescheKlausurraum: routeGostKlausurplanung.data.loescheKlausurraum,

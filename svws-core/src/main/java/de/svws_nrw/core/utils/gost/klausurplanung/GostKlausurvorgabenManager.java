@@ -28,16 +28,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurvorgabenManager {
 
-	private GostFaecherManager _faecherManager;
+	private GostFaecherManager _faecherManager = null;
 
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
 		if (a.kursart.compareTo(b.kursart) < 0)
 			return +1;
 		if (a.kursart.compareTo(b.kursart) > 0)
 			return -1;
-		if (_faecherManager != null) {
-			final GostFach aFach = _faecherManager.get(a.idFach);
-			final GostFach bFach = _faecherManager.get(b.idFach);
+		if (getFaecherManagerOrNull() != null) {
+			final GostFach aFach = getFaecherManager().get(a.idFach);
+			final GostFach bFach = getFaecherManager().get(b.idFach);
 			if (aFach != null && bFach != null) {
 				if (aFach.sortierung > bFach.sortierung)
 					return +1;
@@ -64,10 +64,8 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
-	 * @param faecherManager   der Fächermanager
 	 */
-	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben, final GostFaecherManager faecherManager) {
-		_faecherManager = faecherManager;
+	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
 		initAll(listVorgaben);
 	}
 
@@ -80,11 +78,31 @@ public class GostKlausurvorgabenManager {
 	}
 
 	/**
-	 * Liefert den Fächermanager
+	 * Setzt den GostFaecherManager
 	 *
-	 * @return den Fächermanager
+	 * @param faecherManager der GostFaecherManager
 	 */
-	public GostFaecherManager getFaecherManager() {
+	public void setFaecherManager(final @NotNull GostFaecherManager faecherManager) {
+		_faecherManager = faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public @NotNull GostFaecherManager getFaecherManager() {
+		if (_faecherManager == null)
+			throw new DeveloperNotificationException("GostFaecherManager not set.");
+		return _faecherManager;
+	}
+
+	/**
+	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst null.
+	 *
+	 * @return den GostFaecherManager
+	 */
+	public GostFaecherManager getFaecherManagerOrNull() {
 		return _faecherManager;
 	}
 

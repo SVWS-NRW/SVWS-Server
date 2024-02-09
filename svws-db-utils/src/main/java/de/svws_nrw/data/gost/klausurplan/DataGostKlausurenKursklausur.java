@@ -229,7 +229,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		DTOGostKlausurenTermine termin = null;
 		final List<DTOGostKlausurenKursklausuren> listKlausuren = getKursklausurenDTOsZuIds(conn, ergebnisTermin.kursklausuren);
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausurDTOs(conn, listKlausuren);
-		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
+		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 		for (final DTOGostKlausurenKursklausuren klausur : listKlausuren) {
 			GostKlausurvorgabe vorgabe = vorgabenManager.vorgabeGetByIdOrException(klausur.Vorgabe_ID);
 			if (termin == null) {
@@ -362,7 +362,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		if (listVorgaben.isEmpty())
 			return new ArrayList<>();
 
-		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
+		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
 				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.id).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()

@@ -8,7 +8,6 @@
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:k-man="kMan"
-			:map-schueler="mapSchueler"
 			:termin-selected="terminSelected || false"
 			:draggable="draggable"
 			:on-drag="onDrag"
@@ -43,14 +42,12 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostFaecherManager, SchuelerListeEintrag} from "@core";
-	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type LehrerListeEintrag, type List, type KursManager, Arrays, GostSchuelerklausurTermin} from "@core";
+	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		termin: () => GostKlausurtermin;
 		kMan: () => GostKursklausurManager;
-		mapSchueler: Map<number, SchuelerListeEintrag>;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 		klausurCssClasses: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;

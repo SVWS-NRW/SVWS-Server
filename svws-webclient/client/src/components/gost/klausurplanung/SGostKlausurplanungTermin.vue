@@ -69,7 +69,7 @@
 										<span class="svws-ui-badge" :class="{'!ml-2': draggable !== undefined && !draggable(klausur)}" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) || 0 }}</div>
+									<div class="svws-ui-td svws-align-right" role="cell"><SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge> {{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) || 0 }}</div>
 									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 									<div v-if="kMan().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
@@ -82,7 +82,6 @@
 						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="schuelerklausurtermine()"
 							:k-man="kMan"
 							:on-drag="onDrag"
-							:map-schueler="mapSchueler"
 							:draggable="draggable" />
 					</slot>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
@@ -100,16 +99,15 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, SchuelerListeEintrag, KursManager, GostFaecherManager} from "@core";
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin} from "@core";
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
-	import {ZulaessigesFach, DateUtils } from "@core";
+	import {DateUtils } from "@core";
 
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;
 		kMan: () => GostKursklausurManager;
-		mapSchueler: Map<number, SchuelerListeEintrag>;
 		klausurCssClasses?: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
@@ -146,7 +144,7 @@
 		const cols: DataTableColumn[] = [
 			{ key: "kurs", label: "Kurs", span: 1.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 4.5 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 		];
 

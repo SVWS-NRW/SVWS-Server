@@ -17,6 +17,5 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster) => void;
 }

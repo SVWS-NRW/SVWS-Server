@@ -19,6 +19,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
@@ -43,8 +44,8 @@ public class GostKursklausurManager {
 
 	private @NotNull GostKlausurvorgabenManager _vorgabenManager;
 	private KursManager _kursManager = null;
-	private GostFaecherManager _faecherManager = null;
 	private Map<@NotNull Long, @NotNull LehrerListeEintrag> _lehrerMap = null;
+	private Map<@NotNull Long, @NotNull SchuelerListeEintrag> _schuelerMap = null;
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum != null && b.datum != null)
@@ -59,7 +60,7 @@ public class GostKursklausurManager {
 	};
 
 	private final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
-		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManagerOrNull();
 		@NotNull GostKlausurvorgabe va = vorgabeByKursklausur(a);
 		@NotNull GostKlausurvorgabe vb = vorgabeByKursklausur(b);
 		if (va.kursart.compareTo(vb.kursart) < 0)
@@ -192,23 +193,12 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Setzt den GostFaecherManager
-	 *
-	 * @param faecherManager der GostFaecherManager
-	 */
-	public void setFaecherManager(final @NotNull GostFaecherManager faecherManager) {
-		_faecherManager = faecherManager;
-	}
-
-	/**
 	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @return den GostFaecherManager
 	 */
 	public @NotNull GostFaecherManager getFaecherManager() {
-		if (_faecherManager == null)
-			throw new DeveloperNotificationException("GostFaecherManager not set.");
-		return _faecherManager;
+		return _vorgabenManager.getFaecherManager();
 	}
 
 	/**
@@ -230,6 +220,27 @@ public class GostKursklausurManager {
 			throw new DeveloperNotificationException("LehrerMap not set.");
 		return _lehrerMap;
 	}
+
+	/**
+	 * Liefert die SchuelerMap, falls diese gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @return die SchuelerMap
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull SchuelerListeEintrag> getSchuelerMap() {
+		if (_schuelerMap == null)
+			throw new DeveloperNotificationException("SchuelerMap not set.");
+		return _schuelerMap;
+	}
+
+	/**
+	 * Setzt die SchuelerMap
+	 *
+	 * @param schuelerMap die SchuelerMap
+	 */
+	public void setSchuelerMap(final @NotNull Map<@NotNull Long, @NotNull SchuelerListeEintrag> schuelerMap) {
+		_schuelerMap = schuelerMap;
+	}
+
 
 	private void update_all() {
 
@@ -2044,6 +2055,37 @@ public class GostKursklausurManager {
 			if (skAktuell.folgeNr == skt.folgeNr - 1)
 				return skAktuell;
 		return null;
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur externe Schüler enthält
+	 *
+	 * @param k die zu prüfende Kursklausur
+	 *
+	 * @return true, falls externe Schüler enthalten sind, sonst false
+	 */
+	public boolean kursklausurMitExternenS(final @NotNull GostKursklausur k) {
+		final List<@NotNull GostSchuelerklausur> listSks = _schuelerklausurmenge_by_idKursklausur.get(k.id);
+		if (listSks != null)
+			for (@NotNull GostSchuelerklausur sk : listSks)
+				if (DeveloperNotificationException.ifMapGetIsNull(getSchuelerMap(), sk.idSchueler).externeSchulNr != null)
+					return true;
+		return false;
+	}
+
+	/**
+	 * Gibt das Datum des Vorgängertermins zum Übergebenen Schülerklausurtermin zurück.
+	 *
+	 * @param skt der Schülerklausurtermin
+	 *
+	 * @return das Datum als String oder null
+	 */
+	public String datumSchuelerklausurVorgaenger(final @NotNull GostSchuelerklausurTermin skt) {
+		final GostSchuelerklausurTermin vorgaengerSkt = schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
+		if (vorgaengerSkt == null)
+			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.");
+		final GostKlausurtermin termin = terminBySchuelerklausurTermin(vorgaengerSkt);
+		return termin == null ? null : termin.datum;
 	}
 
 }

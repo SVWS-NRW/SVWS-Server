@@ -32,7 +32,6 @@
 							}">
 							<s-gost-klausurplanung-termin :termin="termin"
 								:k-man="kMan"
-								:map-schueler="mapSchueler"
 								:compact="dragData?.id !== termin.id"
 								:quartalsauswahl="quartalsauswahl"
 								:show-last-klausurtermin="true"
@@ -46,7 +45,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card>
 			<template v-if="kwAuswahl">
-				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl" :map-schueler="mapSchueler"
+				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
 					:manager="() => stundenplanmanager" :k-man="kMan" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
 					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
 					<template #kwAuswahl>
@@ -84,7 +83,7 @@
 					</div>
 					<ul class="flex flex-col gap-5">
 						<li v-for="(konflikt, no) in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()" :class="showMoreKonflikte ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
-							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+							<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
 									<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
@@ -115,7 +114,7 @@
 					</div>
 					<ul class="flex flex-col gap-5">
 						<li v-for="(konflikt, no) in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()" :class="showMoreWarnungen ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
-							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+							<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
 									<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>

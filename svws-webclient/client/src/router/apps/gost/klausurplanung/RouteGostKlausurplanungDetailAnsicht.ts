@@ -29,9 +29,8 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, Rou
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList(), null), new ArrayList(), null, null, null)},
+			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList()), new ArrayList(), null, null, null)},
 			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
-			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}

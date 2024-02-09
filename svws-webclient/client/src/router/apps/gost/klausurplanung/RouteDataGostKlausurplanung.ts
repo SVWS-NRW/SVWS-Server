@@ -103,7 +103,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					view = routeGostKlausurplanungVorgaben;
 			}
 			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, abiturjahr);
-			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, faecherManager);
+			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
+			klausurvorgabenmanager.setFaecherManager(faecherManager);
 
 			// Setze den State neu
 			this.setPatchedDefaultState({
@@ -205,12 +206,17 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		const klausurCollection = await api.server.getGostKlausurenCollection(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		const manager = new GostKursklausurManager(vorgabenmanager, klausurCollection.kursklausuren, klausurCollection.termine, klausurCollection.schuelerklausuren, klausurCollection.schuelerklausurtermine);
 		manager.setKursManager(this._state.value.kursmanager);
-		manager.setFaecherManager(this._state.value.faecherManager);
 		const mapLehrer = new HashMap<number, LehrerListeEintrag>();
 		for (const k of this._state.value.mapLehrer.entries()) {
 			mapLehrer.put(k[0], k[1]);
 		}
 		manager.setLehrerMap(mapLehrer);
+		const mapSchueler = new HashMap<number, SchuelerListeEintrag>();
+		for (const s of this._state.value.mapSchueler.entries()) {
+			mapSchueler.put(s[0], s[1]);
+		}
+		manager.setSchuelerMap(mapSchueler);
+
 		return manager;
 	}
 

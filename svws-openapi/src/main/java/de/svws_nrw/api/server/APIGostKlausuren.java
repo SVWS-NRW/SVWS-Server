@@ -460,7 +460,6 @@ public class APIGostKlausuren {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	// TODO
 	@Path("/schuelerklausuren/{id : \\d+}")
 	@Operation(summary = "Patcht einen Gost-Schuelerklausur.", description = "Patcht einen Gost-Schuelerklausur."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Schuelerklausur besitzt.")
@@ -646,108 +645,6 @@ public class APIGostKlausuren {
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
-
-//	/**
-//	 * Die OpenAPI-Methode für die Abfrage der Kalenderinformationen für die Gost-Klausurplanung
-//	 *
-//	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
-//	 *                   werden soll
-//	 * @param request    die Informationen zur HTTP-Anfrage
-//	 *
-//	 * @return die Liste der Gost-KlausurenKalenderinformationen
-//	 */
-//	@GET
-//	@Path("/kalenderinformationen")
-//	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
-//			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-//	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurenKalenderinformation.class))))
-//	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
-//	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
-//	public Response getGostKlausurenKalenderinformationen(@PathParam("schema") final String schema,
-//			@Context final HttpServletRequest request) {
-//		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKalenderinformation(conn).getList(),
-//			request,
-//			ServerMode.STABLE,
-//			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-//			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
-//	}
-//
-//	/**
-//	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurvorgabe.
-//	 *
-//	 * @param schema     das Datenbankschema, in welchem die Klausurvorgabe erstellt
-//	 *                   wird
-//	 * @param request    die Informationen zur HTTP-Anfrage
-//	 * @param is         JSON-Objekt mit den Daten
-//	 * @return die HTTP-Antwort mit der neuen Blockung
-//	 */
-//	@POST
-//	@Path("/kalenderinformationen/new")
-//	@Operation(summary = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.", description = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück."
-//			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe " + "besitzt.")
-//	@ApiResponse(responseCode = "200", description = "Gost-Klausurvorgabe wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class)))
-//	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.")
-//	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-//	public Response createGostKlausurenKalenderinformation(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenKalenderinformation.class))) final InputStream is,
-//			@Context final HttpServletRequest request) {
-//		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKalenderinformation(conn).create(is),
-//				request,
-//				ServerMode.STABLE,
-//				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
-//	}
-//
-//	/**
-//	 * Die OpenAPI-Methode für das Patchen der Daten einer Gost-KlausurenKalenderinformation.
-//	 *
-//	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt
-//	 *                   werden soll
-//	 * @param request    die Informationen zur HTTP-Anfrage
-//	 * @param id		 die ID der KlausurenKalenderinformation
-//	 * @param is         JSON-Objekt mit den Daten
-//	 *
-//	 * @return das Ergebnis der Patch-Operation
-//	 */
-//	@PATCH
-//	@Path("/kalenderinformationen/{id : \\d+}")
-//	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
-//			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
-//	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in den Klausurtermin integriert.")
-//	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-//	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.")
-//	@ApiResponse(responseCode = "404", description = "Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden")
-//	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
-//	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-//	public Response patchGostKlausurenKalenderinformation(@PathParam("schema") final String schema, @PathParam("id") final long id,
-//			@RequestBody(description = "Der Patch für die KlausurenKalenderinformation-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenKalenderinformation.class))) final InputStream is,
-//			@Context final HttpServletRequest request) {
-//		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKalenderinformation(conn).patch(id, is),
-//			request,
-//			ServerMode.STABLE,
-//			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
-//	}
-//
-//	/**
-//	 * Die OpenAPI-Methode für das Löschen eines Klausurtermins.
-//	 *
-//	 * @param schema     das Datenbankschema, in welchem der Klausurtermin gelöscht wird
-//	 * @param request    die Informationen zur HTTP-Anfrage
-//	 * @param id	 die ID des zu löschenden Termins
-//	 * @return die HTTP-Antwort mit der neuen Blockung
-//	 */
-//	@DELETE
-//	@Path("/kalenderinformationen/delete/{id : \\d+}")
-//	@Operation(summary = "Löscht einen Gost-Klausurtermin.", description = "Löscht einen Gost-Klausurtermin."
-//			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
-//    @ApiResponse(responseCode = "200", description = "Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.",
-//    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Long.class)))
-//	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
-//	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-//	public Response deleteGostKlausurenKalenderinformation(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-//		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKalenderinformation(conn).delete(id),
-//			request,
-//			ServerMode.STABLE,
-//			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
-//	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Klausurräume eines Klausurtermins.

@@ -236,7 +236,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 		// Manager erzeugen
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKursklausuren);
-		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
+		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, null, listSchuelerklausuren, listSchuelerklausurtermine);
 		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausurtermine, kursklausurManager, termin);
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);

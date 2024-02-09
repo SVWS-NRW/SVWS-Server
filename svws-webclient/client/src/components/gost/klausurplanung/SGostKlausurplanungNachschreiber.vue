@@ -65,7 +65,6 @@
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man="kMan"
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)"
-					:map-schueler="mapSchueler"
 					:on-drag="onDrag"
 					:draggable="() => true"
 					:selected-items="selectedNachschreiber">
@@ -92,7 +91,6 @@
 						:termin="() => termin"
 						:class="undefined"
 						:k-man="kMan"
-						:map-schueler="mapSchueler"
 						:drag-data="dragData"
 						:on-drag="onDrag"
 						:on-drop="onDrop"

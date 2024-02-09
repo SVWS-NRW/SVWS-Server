@@ -240,7 +240,7 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 		List<GostSchuelerklausur> listSks = DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSktsManager);
 		List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
 
-		GostKlausurvorgabenManager vMan = new GostKlausurvorgabenManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks), null);
+		GostKlausurvorgabenManager vMan = new GostKlausurvorgabenManager(DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks));
 		GostKursklausurManager kMan = new GostKursklausurManager(vMan, listKks, config.termine, listSks, listSktsManager);
 
 		KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
