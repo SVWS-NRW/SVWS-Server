@@ -129,8 +129,51 @@ public enum GostKursblockungRegelTyp {
 	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
 	 */
-	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList());
+	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList()),
 
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Schüler mit einem anderen Schüler in einem Fach zusammen ist.
+	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 * <br>- Parameter C: Datenbank-ID des Faches
+	 */
+	SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(11, "Schüler: Zusammen mit Schüler in Fach", Arrays.asList(
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.FACH_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Schüler nicht mit einem anderen Schüler in einem Fach zusammen ist.
+	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 * <br>- Parameter C: Datenbank-ID des Faches
+	 */
+	SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(12, "Schüler: Verbieten mit Schüler in Fach", Arrays.asList(
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.FACH_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Schüler immer (falls möglich) mit einem anderen Schüler zusammen ist.
+	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 */
+	SCHUELER_ZUSAMMEN_MIT_SCHUELER(13, "Schüler: Zusammen mit Schüler", Arrays.asList(
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.SCHUELER_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Schüler niemals (falls möglich) mit einem anderen Schüler zusammen ist.
+	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 */
+	SCHUELER_VERBIETEN_MIT_SCHUELER(14, "Schüler: Verbieten mit Schüler", Arrays.asList(
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.SCHUELER_ID
+	));
 
 	/** Die ID des Regel-Typs */
 	public final int typ;

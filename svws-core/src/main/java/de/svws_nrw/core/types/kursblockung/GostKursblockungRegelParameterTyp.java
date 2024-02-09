@@ -24,6 +24,9 @@ public enum GostKursblockungRegelParameterTyp {
 	BOOLEAN,
 
 	/** Der Parameter Typ für eine ganze Zahl. */
-	GANZZAHL;
+	GANZZAHL,
+
+	/** Der Parameter Typ Fach-ID. */
+	FACH_ID;
 
 }

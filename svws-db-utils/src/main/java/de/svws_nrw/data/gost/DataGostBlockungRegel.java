@@ -156,6 +156,9 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 							case GANZZAHL -> {
 								break; // immer gültig
 							}
+							case FACH_ID -> {
+								break; // TODO BACHRAN
+							}
 							default -> throw OperationError.BAD_REQUEST.exception();
     					}
     					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
@@ -252,6 +255,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					}
 					case BOOLEAN -> 0L;
 					case GANZZAHL -> 0L;
+					case FACH_ID -> 0L; // TODO BACHRAN
 	    		};
     		} else {
 				paramValue = regelParameter.get(i);
@@ -292,6 +296,9 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			}
 			case GANZZAHL -> {
 				break; // immer gültig
+			}
+			case FACH_ID -> {
+				break; // TODO BACHRAN
 			}
 		}
 	}

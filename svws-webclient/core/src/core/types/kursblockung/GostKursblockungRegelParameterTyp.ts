@@ -38,6 +38,11 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 	 */
 	public static readonly GANZZAHL : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("GANZZAHL", 5, );
 
+	/**
+	 * Der Parameter Typ Fach-ID.
+	 */
+	public static readonly FACH_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("FACH_ID", 6, );
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		GostKursblockungRegelParameterTyp.all_values_by_ordinal.push(this);
