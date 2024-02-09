@@ -23,8 +23,8 @@
 		"rootDir": ".",
 		"types": ["unplugin-icons/types/vue", "vite/client"]
 	},
-	"include": [
+	"exclude": [
 		".eslintrc.cjs",
-		"svws-webclient/tailwind.preset.cjs"
+		"svws-webclient/tailwind.preset.js"
 	]
 }

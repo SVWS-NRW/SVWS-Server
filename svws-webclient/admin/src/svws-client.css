@@ -1,4 +1,4 @@
-@import 'print.css' print;
+@import 'print.css';
 
 @page {
 	size: A4;

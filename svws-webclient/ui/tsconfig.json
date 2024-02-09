@@ -14,6 +14,10 @@
 		"vite.config.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
-		"components.d.ts"
+		"components.d.ts",
+	],
+	"exclude": [
+		"tailwind.config.js",
+		"postcss.config.js",
 	]
 }

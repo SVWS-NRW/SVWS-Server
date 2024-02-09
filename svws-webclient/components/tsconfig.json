@@ -4,12 +4,10 @@
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"@core": ["../core/src/index.ts"],
-			"@ui": ["../ui/src/index.ts"]
+			"@core": [ "../core/src/index.ts" ],
+			"@ui": [ "../ui/src/index.ts" ]
 		},
-		"types": [
-			"vite/client"
-		]
+		"types": [ "vite/client" ]
 	},
 	"include": [
 		"env.d.ts",
@@ -17,5 +15,9 @@
 		"src/**/*",
 		"src/**/*.vue",
 		"components.d.ts"
+	],
+	"exclude": [
+		"tailwind.config.js",
+		"postcss.config.js",
 	]
 }

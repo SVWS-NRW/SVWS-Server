@@ -1,8 +1,6 @@
-// Das mit dem Preset funktioniert nicht...
-//
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-	presets: [ require("../tailwind.preset.cjs") ],
+import preset from "../tailwind.preset.js"
+export default {
+	presets: [ preset ],
 	content: [
 		// UI-Framework
 		"../ui/src/**/*.{vue,js,ts,jsx,tsx}",

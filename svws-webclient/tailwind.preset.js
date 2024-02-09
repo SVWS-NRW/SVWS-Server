@@ -1,3 +1,5 @@
+import typography from '@tailwindcss/typography'
+
 /**
  * @param {string} cssVar
  * @returns {({opacityValue}: {opacityValue: string}) => string}
@@ -11,8 +13,7 @@ function withOpacity(cssVar) {
 	};
 }
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
 	layers: ["components", "utilities"],
 	safelist: ["theme-dark"],
 	darkMode: 'class',
@@ -148,6 +149,6 @@ module.exports = {
 		extend: {}
 	},
 	plugins: [
-		require('@tailwindcss/typography'),
+		typography,
 	],
 };

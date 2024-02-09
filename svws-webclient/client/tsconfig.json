@@ -12,13 +12,16 @@
 	},
 	"include": [
 		"*.ts",
-		"tailwind.config.cjs",
-		"postcss.config.cjs",
 		"src/**/*",
 		"src/**/*.vue",
 		"components.d.ts",
 		"../ui/src/",
 		"../components/src/"
 	],
-	"exclude": ["**/*.story.vue", "**/histoire.setup.ts"]
+	"exclude": [
+		"**/*.story.vue",
+		"**/histoire.setup.ts",
+		"tailwind.config.js",
+		"postcss.config.js",
+	]
 }
