@@ -860,16 +860,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public kurseRemove(kurse : List<GostBlockungKurs>) : void {
-		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		for (const kurs of kurse)
-			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", this._map_idKurs_kurs, kurs.id);
-		for (const kurs of kurse) {
-			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
-			this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
-			Map2DUtils.removeFromListAndTrimOrException(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-			DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_kurs, kurs.id);
-			this._daten.kurse.remove(kurs);
-		}
+		const idKurse : List<number> = new ArrayList();
+		for (const kursExtern of kurse)
+			idKurse.add(kursExtern.id);
+		this.kurseRemoveByID(idKurse);
 	}
 
 	/**

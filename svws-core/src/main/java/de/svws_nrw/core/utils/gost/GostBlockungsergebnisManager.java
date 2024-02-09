@@ -3340,17 +3340,13 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public void setRemoveKurse(final @NotNull List<@NotNull GostBlockungsergebnisKurs> kurse) throws DeveloperNotificationException {
-		// (1) Datenkonsistenz überprüfen
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kurse)
-			DeveloperNotificationException.ifTrue("Der Kurs " + kurs.id + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(kurs.id));
+		// Kopieren der IDs.
+		final @NotNull List<@NotNull Long> idKurse = new ArrayList<>();
+		for (final @NotNull GostBlockungsergebnisKurs kursExtern : kurse)
+			idKurse.add(kursExtern.id);
 
-		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch SuS).
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kurse)
-			for (final @NotNull Long schienenID : kurs.schienen)
-				getSchieneE(schienenID).kurse.remove(kurs);
-
-		// (3) Bewertungen aktualisieren
-		stateRevalidateEverything();
+		// Delegieren an die andere Methode.
+		setRemoveKurseByID(idKurse);
 	}
 
 	/**

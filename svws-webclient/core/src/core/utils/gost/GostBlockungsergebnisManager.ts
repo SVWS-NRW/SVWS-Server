@@ -3131,12 +3131,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveKurse(kurse : List<GostBlockungsergebnisKurs>) : void {
-		for (const kurs of kurse)
-			DeveloperNotificationException.ifTrue("Der Kurs " + kurs.id + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(kurs.id));
-		for (const kurs of kurse)
-			for (const schienenID of kurs.schienen)
-				this.getSchieneE(schienenID!).kurse.remove(kurs);
-		this.stateRevalidateEverything();
+		const idKurse : List<number> = new ArrayList();
+		for (const kursExtern of kurse)
+			idKurse.add(kursExtern.id);
+		this.setRemoveKurseByID(idKurse);
 	}
 
 	/**

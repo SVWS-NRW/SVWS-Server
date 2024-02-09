@@ -842,19 +842,13 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public void kurseRemove(final @NotNull List<@NotNull GostBlockungKurs> kurse) throws DeveloperNotificationException {
-		// (1) Datenkonsistenz überprüfen.
-		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
-		for (final @NotNull GostBlockungKurs kurs : kurse)
-			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", _map_idKurs_kurs, kurs.id);
+		// Kopieren der IDs.
+		final @NotNull List<@NotNull Long> idKurse = new ArrayList<>();
+		for (final @NotNull GostBlockungKurs kursExtern : kurse)
+			idKurse.add(kursExtern.id);
 
-		// (2) Entfernen des Kurses.
-		for (final @NotNull GostBlockungKurs kurs : kurse) {
-			_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
-			_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
-			Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-			DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, kurs.id);
-			_daten.kurse.remove(kurs);
-		}
+		// Delegieren an die andere Methode.
+		kurseRemoveByID(idKurse);
 	}
 
 	/**
