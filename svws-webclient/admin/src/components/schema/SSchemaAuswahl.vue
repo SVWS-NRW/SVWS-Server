@@ -20,7 +20,7 @@
 					<i-ri-alert-fill v-if="rowData.isDeactivated === true" class="text-error" />
 				</template>
 				<template v-if="hasRootPrivileges" #actions>
-					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" />
+					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" title="Entfernt die ausgewählten SVWS-Schemata. Die jeweiligen Datenbank-Benutzer verlieren ihre Rechte auf das Schema, bleiben allerdings in der Datenbank angelegt." />
 					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen">
 						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line />  </svws-ui-button>
 					</s-schema-migrate-modal>
