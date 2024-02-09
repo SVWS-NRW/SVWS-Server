@@ -10,6 +10,7 @@ import { MapUtils } from '../../../../core/utils/MapUtils';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungAlgorithmen } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
+import { ArrayUtils } from '../../../../core/utils/ArrayUtils';
 import type { List } from '../../../../java/util/List';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { ListUtils } from '../../../../core/utils/ListUtils';
@@ -110,7 +111,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private checkKlausurgruppenOrException() : void {
-		for (const gruppe of this._klausurGruppen)
+		for (const gruppe of this._klausurGruppen) {
+			DeveloperNotificationException.ifTrue("Es wurde eine leere Gruppe gefunden!", gruppe.isEmpty());
 			for (const klausurNr1 of gruppe)
 				for (const klausurNr2 of gruppe)
 					if (this._verboten[klausurNr1][klausurNr2]) {
@@ -120,6 +122,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 						DeveloperNotificationException.ifTrue("Die Schüler-Schnittmenge der Klausuren darf hier nicht leer sein!", schnittmenge.isEmpty());
 						throw new UserNotificationException("Klausur " + klausur1.kursKurzbezeichnung + " und " + klausur2.kursKurzbezeichnung + " sind in einer Gruppe. Schüler-ID-Schnittmenge: " + schnittmenge)
 					}
+		}
 	}
 
 	private gibKlausurNrOrException(pGostKursklausurRich : GostKursklausurRich) : number {
@@ -168,6 +171,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				MapUtils.addToList(mapFachZuKlausurGruppe, fachID, klausurNr);
 			}
 		}
+		this._klausurGruppen.addAll(mapFachZuKlausurGruppe.values());
 	}
 
 	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausurRich>) : void {
@@ -181,6 +185,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				MapUtils.addToList(mapSchieneZuKlausurGruppe, schienenID, klausurNr);
 			}
 		}
+		this._klausurGruppen.addAll(mapSchieneZuKlausurGruppe.values());
 	}
 
 	private initialisiereKlausurgruppenGrad() : void {
@@ -316,14 +321,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	private gibKlausurgruppenInZufaelligerReihenfolge() : List<List<number>> {
 		const temp : List<List<number>> = new ArrayList();
-		temp.addAll(this._klausurGruppen);
-		for (let i1 : number = 0; i1 < temp.size(); i1++) {
-			const i2 : number = this._random.nextInt(temp.size());
-			const save1 : List<number> = temp.get(i1);
-			const save2 : List<number> = temp.get(i2);
-			temp.set(i1, save2);
-			temp.set(i2, save1);
-		}
+		const perm : Array<number> = ArrayUtils.getIndexPermutation(this._klausurGruppen.size(), this._random);
+		for (let i : number = 0; i < perm.length; i++)
+			temp.add(this._klausurGruppen.get(perm[i]));
 		return temp;
 	}
 

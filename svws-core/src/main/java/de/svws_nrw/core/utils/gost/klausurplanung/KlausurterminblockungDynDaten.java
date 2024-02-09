@@ -15,6 +15,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
+import de.svws_nrw.core.utils.ArrayUtils;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
@@ -97,7 +98,8 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void checkKlausurgruppenOrException() {
-		for (final @NotNull List<@NotNull Integer> gruppe : _klausurGruppen)
+		for (final @NotNull List<@NotNull Integer> gruppe : _klausurGruppen) {
+			DeveloperNotificationException.ifTrue("Es wurde eine leere Gruppe gefunden!", gruppe.isEmpty());
 			for (final int klausurNr1 : gruppe)
 				for (final int klausurNr2 : gruppe)
 					if (_verboten[klausurNr1][klausurNr2]) {
@@ -108,6 +110,7 @@ public class KlausurterminblockungDynDaten {
 						DeveloperNotificationException.ifTrue("Die Schüler-Schnittmenge der Klausuren darf hier nicht leer sein!", schnittmenge.isEmpty());
 						throw new UserNotificationException("Klausur " + klausur1.kursKurzbezeichnung + " und " + klausur2.kursKurzbezeichnung + " sind in einer Gruppe. Schüler-ID-Schnittmenge: " + schnittmenge);
 					}
+		}
 	}
 
 	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausurRich pGostKursklausurRich) {
@@ -154,13 +157,16 @@ public class KlausurterminblockungDynDaten {
 
 			final long fachID = gostKursklausur.idFach;
 			if (fachID < 0) {
-				// Ohne FachID --> Erzeuge eigene Gruppe mit genau einer Klausur.
+				// Ohne FachID --> Erzeuge eine Einzelgruppe.
 				_klausurGruppen.add(ListUtils.create1(klausurNr));
 			} else {
 				// Mit FachID --> Suche zugehörige Gruppe.
 				MapUtils.addToList(mapFachZuKlausurGruppe, fachID, klausurNr);
 			}
 		}
+
+		// Alle Gruppen der Map hinzufügen.
+		_klausurGruppen.addAll(mapFachZuKlausurGruppe.values());
 	}
 
 	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
@@ -171,13 +177,16 @@ public class KlausurterminblockungDynDaten {
 
 			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR Wie wählt man bei Multi-Schienen?
 			if (schienenID < 0) {
-				// Ohne schienenID --> Erzeuge eigene Gruppe mit genau einer Klausur.
+				// Ohne schienenID --> Erzeuge eine Einzelgruppe.
 				_klausurGruppen.add(ListUtils.create1(klausurNr));
 			} else {
 				// Mit schienenID --> Suche zugehörige Gruppe
 				MapUtils.addToList(mapSchieneZuKlausurGruppe, schienenID, klausurNr);
 			}
 		}
+
+		// Alle Gruppen der Map hinzufügen.
+		_klausurGruppen.addAll(mapSchieneZuKlausurGruppe.values());
 	}
 
 	private void initialisiereKlausurgruppenGrad() {
@@ -321,18 +330,11 @@ public class KlausurterminblockungDynDaten {
 	 * @return die Klausur-Gruppen in zufälliger Reihenfolge.
 	 */
 	private @NotNull List<@NotNull List<@NotNull Integer>> gibKlausurgruppenInZufaelligerReihenfolge() {
-		// Kopieren
 		final @NotNull List<@NotNull List<@NotNull Integer>> temp = new ArrayList<>();
-		temp.addAll(_klausurGruppen);
 
-		// Permutieren
-		for (int i1 = 0; i1 < temp.size(); i1++) {
-			final int i2 = _random.nextInt(temp.size());
-			final @NotNull List<@NotNull Integer> save1 = temp.get(i1);
-			final @NotNull List<@NotNull Integer> save2 = temp.get(i2);
-			temp.set(i1, save2);
-			temp.set(i2, save1);
-		}
+		final @NotNull int[] perm = ArrayUtils.getIndexPermutation(_klausurGruppen.size(), _random);
+		for (int i = 0; i < perm.length; i++)
+			temp.add(_klausurGruppen.get(perm[i]));
 
 		return temp;
 	}

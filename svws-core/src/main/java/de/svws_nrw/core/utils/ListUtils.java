@@ -176,7 +176,7 @@ public final class ListUtils {
 	 *
 	 * @param <E>    Der Inhaltstyp der Listen.
 	 * @param list1  Die 1. Liste mit allen Elementen vom Typ E.
-	 * @param list2  Die 1. Liste mit allen Elementen vom Typ E.
+	 * @param list2  Die 2. Liste mit allen Elementen vom Typ E.
 	 *
 	 * @return die Schnittmenge der beiden Listen ohne diese zu modifizieren.
 	 */
