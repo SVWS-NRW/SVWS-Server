@@ -1926,6 +1926,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Menge der {@link GostBlockungsergebnisKurs} zurück.
+	 *
+	 * @return die Menge der {@link GostBlockungsergebnisKurs}
+	 */
+	public getKursmenge() : List<GostBlockungsergebnisKurs> {
+		const result : List<GostBlockungsergebnisKurs> = new ArrayList();
+		result.addAll(this._map_kursID_kurs.values());
+		return result;
+	}
+
+	/**
 	 * Liefert den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.

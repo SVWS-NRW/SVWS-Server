@@ -3,7 +3,7 @@
 	<svws-ui-modal :show="showModal" size="medium" class="hidden">
 		<template #modalTitle>Kurs-Schüler-Zuordnung</template>
 		<template #modalDescription>
-			<div class="flex gap-8">
+			<div class="flex flex-row gap-8">
 				<!-- Die Tabelle mit den Kursschülern -->
 				<div class="w-96">
 					im Kurs {{ kursname }}
@@ -26,6 +26,19 @@
 								class="w-full" headless removable />
 						</template>
 					</svws-ui-table>
+				</div>
+			</div>
+			<div class="flex flex-col items-center border-t mt-4 pt-4 border-b pb-4 mb-4">
+				<div class="text-left">
+					Übertragen der Kurs-Schüler-Zuordnung des aktuellen Kurses auf andere Kurse. Dabei werden die Schüler nur
+					übertragen, wenn sie auch die entsprechende Fachwahl des jeweiligen Ziel-Kurses haben.
+				</div>
+				<div class="mt-4 min-w-72 mb-4">
+					<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung"
+						v-model="_kurseZurUebertragung" class="w-full" removable />
+				</div>
+				<div class="text-center">
+					<svws-ui-button type="secondary" @click="uebertragen()">Schülermenge übertragen</svws-ui-button>
 				</div>
 			</div>
 		</template>
@@ -52,6 +65,8 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
+	const _kurseZurUebertragung = ref<GostBlockungsergebnisKurs[]>([]);
+
 	const kursname = computed(() => {
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
@@ -73,6 +88,28 @@
 			return new ArrayList<GostBlockungsergebnisKurs>();
 		const fachart = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
+	});
+
+	const listeKurseZurUbertragung = computed<List<GostBlockungsergebnisKurs>>(() => {
+		const result = new ArrayList<GostBlockungsergebnisKurs>();
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return result;
+		// Erstelle einen Filter für das Fach, welches im Modal angezeigt wird und aller Fächer, von denen bereits Kurse für die Übertragung ausgewöhlt wurden
+		const setFachFilter = new Set<number>();
+		const ausgewaehlteKurse = new Set<number>();
+		setFachFilter.add(kurs.fach_id);
+		for (const k of _kurseZurUebertragung.value) {
+			setFachFilter.add(k.fachID);
+			ausgewaehlteKurse.add(k.id);
+		}
+		// Erstelle die Liste aller Kurse, auf die noch übertragen werden kann, dass heißt Kurse aller Fächer, die nicht im zuvor erstellten Set sind
+		const alleKurse = props.getErgebnismanager().getKursmenge();
+		for (const k of alleKurse) {
+			if (!setFachFilter.has(k.fachID) || ausgewaehlteKurse.has(k.id))
+				result.add(k);
+		}
+		return result;
 	});
 
 	const fachname = computed(() => {
@@ -158,6 +195,23 @@
 
 	const openModal = () => {
 		showModal().value = true;
+	}
+
+	async function uebertragen() {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return;
+		const kursSchueler = props.getErgebnismanager().getOfSchuelerMengeGefiltert(kurs.id, -1, -1, 0, "");
+		for (const s of kursSchueler) {
+			for (const k of _kurseZurUebertragung.value) {
+				if (!props.getErgebnismanager().getOfSchuelerHatFachwahl(s.id, k.fachID, k.kursart))
+					continue;
+				const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(s.id, k.fachID);
+				if (alter_kurs?.id === k.id)
+					continue;
+				await props.updateKursSchuelerZuordnung(s.id, k.id, alter_kurs?.id ?? undefined);
+			}
+		}
 	}
 
 </script>

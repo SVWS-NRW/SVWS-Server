@@ -170,15 +170,17 @@
 								<span v-if="schuelerFilter().statistics.value.w">{{ schuelerFilter().statistics.value.w }} w<span v-if="schuelerFilter().statistics.value.d || schuelerFilter().statistics.value.x">, </span></span>
 								<span v-if="schuelerFilter().statistics.value.d">{{ schuelerFilter().statistics.value.d }} d<span v-if="schuelerFilter().statistics.value.x">, </span></span>
 								<span v-if="schuelerFilter().statistics.value.x">{{ schuelerFilter().statistics.value.x }} x</span>
-								<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-if="schuelerFilter().kurs !== undefined" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :schueler-filter="schuelerFilter" v-slot="{ openModal }">
-									<svws-ui-button type="secondary" @click="openModal"><i-ri-group-line /> </svws-ui-button>
-								</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 							</div>
 						</div>
 					</div>
 				</div>
 			</template>
 		</svws-ui-table>
+		<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-if="schuelerFilter().kurs !== undefined" :get-ergebnismanager="getErgebnismanager"
+			:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
+			:schueler-filter="schuelerFilter" v-slot="{ openModal }">
+			<svws-ui-button type="secondary" @click="openModal" class="mt-2"><i-ri-group-line /> Kurs-Schüler-Zuordnung ändern </svws-ui-button>
+		</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 	</svws-ui-content-card>
 </template>
 

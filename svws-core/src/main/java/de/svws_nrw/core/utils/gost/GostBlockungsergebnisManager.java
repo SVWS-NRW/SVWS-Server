@@ -2041,6 +2041,17 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Gibt die Menge der {@link GostBlockungsergebnisKurs} zurück.
+	 *
+	 * @return die Menge der {@link GostBlockungsergebnisKurs}
+	 */
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getKursmenge() {
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> result = new ArrayList<>();
+		result.addAll(_map_kursID_kurs.values());
+		return result;
+	}
+
+	/**
 	 * Liefert den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.
