@@ -154,6 +154,21 @@ export class ListUtils extends JavaObject {
 		return list;
 	}
 
+	/**
+	 * Liefert die Schnittmenge der beiden Listen ohne diese zu modifizieren.
+	 *
+	 * @param <E>    Der Inhaltstyp der Listen.
+	 * @param list1  Die 1. Liste mit allen Elementen vom Typ E.
+	 * @param list2  Die 1. Liste mit allen Elementen vom Typ E.
+	 *
+	 * @return die Schnittmenge der beiden Listen ohne diese zu modifizieren.
+	 */
+	public static getIntersection<E>(list1 : List<E>, list2 : List<E>) : List<E> {
+		const list3 : List<E> = new ArrayList(list1);
+		list3.retainAll(list2);
+		return list3;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.ListUtils';
 	}

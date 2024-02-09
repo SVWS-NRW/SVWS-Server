@@ -1,13 +1,12 @@
 package de.svws_nrw.core.utils.gost.klausurplanung;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.ArrayList;
 
-import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -16,6 +15,8 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
+import de.svws_nrw.core.utils.ListUtils;
+import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -60,10 +61,10 @@ public class KlausurterminblockungDynDaten {
 	private final @NotNull boolean @NotNull [] @NotNull [] _verboten;
 
 	/** Alle Klausurgruppen. */
-	private final @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> _klausurGruppen = new ArrayList<>();
+	private final @NotNull List<@NotNull List<@NotNull Integer>> _klausurGruppen = new ArrayList<>();
 
 	/** Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). */
-	private final @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> _klausurGruppenGrad = new ArrayList<>();
+	private final @NotNull List<@NotNull List<@NotNull Integer>> _klausurGruppenGrad = new ArrayList<>();
 
 	/**
 	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur,
@@ -96,74 +97,25 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void checkKlausurgruppenOrException() {
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : _klausurGruppen)
-			for (final int nr1 : gruppe)
-				for (final int nr2 : gruppe)
-					if (_verboten[nr1][nr2])
-						throw new UserNotificationException("Die aktuelle Konfiguration führt zu einer Klausurgruppe, in der mindestens ein S. doppelt ist!");
+		for (final @NotNull List<@NotNull Integer> gruppe : _klausurGruppen)
+			for (final int klausurNr1 : gruppe)
+				for (final int klausurNr2 : gruppe)
+					if (_verboten[klausurNr1][klausurNr2]) {
+						// Analysiere das Problem genauer, warum es hier zum Fehler kommt.
+						final @NotNull GostKursklausurRich klausur1 = gibKlausurOrException(klausurNr1);
+						final @NotNull GostKursklausurRich klausur2 = gibKlausurOrException(klausurNr2);
+						final @NotNull List<@NotNull Long> schnittmenge = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
+						DeveloperNotificationException.ifTrue("Die Schüler-Schnittmenge der Klausuren darf hier nicht leer sein!", schnittmenge.isEmpty());
+						throw new UserNotificationException("Klausur " + klausur1.kursKurzbezeichnung + " und " + klausur2.kursKurzbezeichnung + " sind in einer Gruppe. Schüler-ID-Schnittmenge: " + schnittmenge);
+					}
 	}
 
 	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausurRich pGostKursklausurRich) {
 		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausurRich.id + ")", _mapKlausurZuNummer.get(pGostKursklausurRich.id));
 	}
 
-	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
-		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
-			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
-			final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();
-			gruppe.add(klausurNr);
-			_klausurGruppen.add(gruppe);
-		}
-	}
-
-	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
-		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
-
-		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
-			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
-
-			final long fachID = gostKursklausur.idFach;
-			if (fachID < 0) {
-				// Ohne FachID --> Erzeuge eigene Gruppe
-				final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();
-				gruppe.add(klausurNr);
-				_klausurGruppen.add(gruppe);
-			} else {
-				// Mit FachID --> Suche zugehörige Gruppe
-				ArrayList<@NotNull Integer> gruppe = mapFachZuKlausurGruppe.get(fachID);
-				if (gruppe == null) {
-					gruppe = new ArrayList<>();
-					mapFachZuKlausurGruppe.put(fachID, gruppe);
-					_klausurGruppen.add(gruppe);
-				}
-				gruppe.add(klausurNr);
-			}
-		}
-	}
-
-	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
-		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
-
-		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
-			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
-
-			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR Wie wählt man bei Multi-Schienen?
-			if (schienenID < 0) {
-				// Ohne schienenID --> Erzeuge eigene Gruppe
-				final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();
-				gruppe.add(klausurNr);
-				_klausurGruppen.add(gruppe);
-			} else {
-				// Mit schienenID --> Suche zugehörige Gruppe
-				ArrayList<@NotNull Integer> gruppe = mapSchieneZuKlausurGruppe.get(schienenID);
-				if (gruppe == null) {
-					gruppe = new ArrayList<>();
-					mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
-					_klausurGruppen.add(gruppe);
-				}
-				gruppe.add(klausurNr);
-			}
-		}
+	private @NotNull GostKursklausurRich gibKlausurOrException(final int klausurNr) {
+		return DeveloperNotificationException.ifNull("Kein Mapping zur Klausur Nr. " + klausurNr, _mapNummerZuKlausur.get(klausurNr));
 	}
 
 	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausurRich> pInput, final @NotNull GostKlausurterminblockungKonfiguration pConfig) {
@@ -185,6 +137,49 @@ public class KlausurterminblockungDynDaten {
 
 	}
 
+	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
+			final @NotNull List<@NotNull Integer> gruppe = new ArrayList<>();
+			gruppe.add(klausurNr); // Jede Gruppe besteht aus genau einer Klausur.
+			_klausurGruppen.add(gruppe);
+		}
+	}
+
+	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
+
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
+
+			final long fachID = gostKursklausur.idFach;
+			if (fachID < 0) {
+				// Ohne FachID --> Erzeuge eigene Gruppe mit genau einer Klausur.
+				_klausurGruppen.add(ListUtils.create1(klausurNr));
+			} else {
+				// Mit FachID --> Suche zugehörige Gruppe.
+				MapUtils.addToList(mapFachZuKlausurGruppe, fachID, klausurNr);
+			}
+		}
+	}
+
+	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
+		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
+
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
+
+			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR Wie wählt man bei Multi-Schienen?
+			if (schienenID < 0) {
+				// Ohne schienenID --> Erzeuge eigene Gruppe mit genau einer Klausur.
+				_klausurGruppen.add(ListUtils.create1(klausurNr));
+			} else {
+				// Mit schienenID --> Suche zugehörige Gruppe
+				MapUtils.addToList(mapSchieneZuKlausurGruppe, schienenID, klausurNr);
+			}
+		}
+	}
+
 	private void initialisiereKlausurgruppenGrad() {
 		// Kopieren
 		_klausurGruppenGrad.addAll(_klausurGruppen);
@@ -192,8 +187,8 @@ public class KlausurterminblockungDynDaten {
 		// InsertionSort von '_klausurenSortiertGrad'.
 		for (int i = 1; i < _klausurGruppenGrad.size(); i++)
 			for (int j = i; j >= 1; j--) {
-				final @NotNull ArrayList<@NotNull Integer> gruppeR = _klausurGruppenGrad.get(j);
-				final @NotNull ArrayList<@NotNull Integer> gruppeL = _klausurGruppenGrad.get(j - 1);
+				final @NotNull List<@NotNull Integer> gruppeR = _klausurGruppenGrad.get(j);
+				final @NotNull List<@NotNull Integer> gruppeL = _klausurGruppenGrad.get(j - 1);
 				final int gradR = gibKnotengrad(gruppeR);
 				final int gradL = gibKnotengrad(gruppeL);
 				if (gradL >= gradR) break; // bereits richtig einsortiert.
@@ -202,15 +197,15 @@ public class KlausurterminblockungDynDaten {
 			}
 	}
 
-	private int gibKnotengrad(final @NotNull ArrayList<@NotNull Integer> pGruppe) {
+	private int gibKnotengrad(final @NotNull List<@NotNull Integer> pGruppe) {
 		int grad = 0;
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : _klausurGruppen)
+		for (final @NotNull List<@NotNull Integer> gruppe : _klausurGruppen)
 			if (gibIstVerboten(pGruppe, gruppe))
 				grad++;
 		return grad;
 	}
 
-	private boolean gibIstVerboten(final @NotNull ArrayList<@NotNull Integer> pGruppe1, final @NotNull ArrayList<@NotNull Integer> pGruppe2) {
+	private boolean gibIstVerboten(final @NotNull List<@NotNull Integer> pGruppe1, final @NotNull List<@NotNull Integer> pGruppe2) {
 		for (final int klausurNr1 : pGruppe1)
 			for (final int klausurNr2 : pGruppe2)
 				if (_verboten[klausurNr1][klausurNr2])
@@ -232,25 +227,16 @@ public class KlausurterminblockungDynDaten {
 	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausurRich> pInput) {
 
 		// Erzeuge eine Map: SchülerID --> Liste seiner KlausurNummern
-		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
-		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
+		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
+		for (final @NotNull GostKursklausurRich gostKursklausur : pInput)
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
-				// Liste des Schülers holen
-				LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
-				if (list == null) {
-					list = new LinkedCollection<>();
-					mapSchuelerKlausuren.put(schuelerID, list);
-				}
-				// Liste des Schülers füllen
-				final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-				if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
-				list.addLast(klausurNr);
+				final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
+				MapUtils.addToList(mapSchuelerKlausuren, schuelerID, klausurNr);
 			}
-		}
 
 		// Verbiete Klausur-Paare
-		for (final @NotNull Entry<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> e : mapSchuelerKlausuren.entrySet()) {
-			final @NotNull LinkedCollection<@NotNull Integer> list = e.getValue();
+		for (final @NotNull Entry<@NotNull Long, @NotNull List<@NotNull Integer>> e : mapSchuelerKlausuren.entrySet()) {
+			final @NotNull List<@NotNull Integer> list = e.getValue();
 			for (final int klausurNr1 : list)
 				for (final int klausurNr2 : list)
 					if (klausurNr1 != klausurNr2)
@@ -334,16 +320,16 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return die Klausur-Gruppen in zufälliger Reihenfolge.
 	 */
-	private @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> gibKlausurgruppenInZufaelligerReihenfolge() {
+	private @NotNull List<@NotNull List<@NotNull Integer>> gibKlausurgruppenInZufaelligerReihenfolge() {
 		// Kopieren
-		final @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> temp = new ArrayList<>();
+		final @NotNull List<@NotNull List<@NotNull Integer>> temp = new ArrayList<>();
 		temp.addAll(_klausurGruppen);
 
 		// Permutieren
 		for (int i1 = 0; i1 < temp.size(); i1++) {
 			final int i2 = _random.nextInt(temp.size());
-			final @NotNull ArrayList<@NotNull Integer> save1 = temp.get(i1);
-			final @NotNull ArrayList<@NotNull Integer> save2 = temp.get(i2);
+			final @NotNull List<@NotNull Integer> save1 = temp.get(i1);
+			final @NotNull List<@NotNull Integer> save2 = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -356,9 +342,9 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
 	 */
-	@NotNull @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
+	@NotNull @NotNull List<@NotNull List<@NotNull Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
 		// Kopieren
-		final @NotNull ArrayList<@NotNull ArrayList<@NotNull Integer>> temp = new ArrayList<>();
+		final @NotNull List<@NotNull List<@NotNull Integer>> temp = new ArrayList<>();
 		temp.addAll(_klausurGruppenGrad);
 
 		// Permutiere nahe beieinander liegende Indizes.
@@ -367,8 +353,8 @@ public class KlausurterminblockungDynDaten {
 			final int i2 = _random.nextInt(size);
 			if ((i1 - i2) * (i1 - i2) >= size) continue;
 			// Tausche nur dann, wenn Abstand der Indizes kleiner als Wurzel(size) ist.
-			final @NotNull ArrayList<@NotNull Integer> save1 = temp.get(i1);
-			final @NotNull ArrayList<@NotNull Integer> save2 = temp.get(i2);
+			final @NotNull List<@NotNull Integer> save1 = temp.get(i1);
+			final @NotNull List<@NotNull Integer> save2 = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -382,11 +368,11 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
 	 */
-	@NotNull ArrayList<@NotNull Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
+	@NotNull List<@NotNull Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
 		int min = _klausurenAnzahl;
-		ArrayList<@NotNull Integer> gruppeMin = null;
+		List<@NotNull Integer> gruppeMin = null;
 
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+		for (final @NotNull List<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			if (gibIstKlausurgruppeUnverteilt(gruppe)) {
 				final int terminmoeglichekeiten = gibTerminmoeglichkeiten(gruppe);
 				if (terminmoeglichekeiten < min) {
@@ -399,7 +385,7 @@ public class KlausurterminblockungDynDaten {
 		return gruppeMin;
 	}
 
-	private int gibTerminmoeglichkeiten(final @NotNull ArrayList<@NotNull Integer> gruppe) {
+	private int gibTerminmoeglichkeiten(final @NotNull List<@NotNull Integer> gruppe) {
 		int summe = 0;
 		for (int terminNr = 0; terminNr < _terminAnzahl; terminNr++)
 			if (aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
@@ -440,7 +426,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param pGruppe die Gruppe aller Klausuren.
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
 	 */
-	private boolean gibIstKlausurgruppeUnverteilt(final @NotNull ArrayList<@NotNull Integer> pGruppe) {
+	private boolean gibIstKlausurgruppeUnverteilt(final @NotNull List<@NotNull Integer> pGruppe) {
 		for (final int klausurNr : pGruppe)
 			if (_klausurZuTermin[klausurNr] >= 0)
 				return false;
@@ -454,7 +440,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param  pTermin der Termin
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
 	 */
-	boolean aktionSetzeKlausurgruppeInTermin(final @NotNull ArrayList<@NotNull Integer> pGruppe, final int pTermin) {
+	boolean aktionSetzeKlausurgruppeInTermin(final @NotNull List<@NotNull Integer> pGruppe, final int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!");
 
@@ -477,7 +463,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param  pGruppe die Gruppe aller Klausuren.
 	 * @param  pTermin der Termin
 	 */
-	void aktionEntferneKlausurgruppeAusTermin(final @NotNull ArrayList<@NotNull Integer> pGruppe, final int pTermin) {
+	void aktionEntferneKlausurgruppeAusTermin(final @NotNull List<@NotNull Integer> pGruppe, final int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!");
 		for (final int nr : pGruppe) {
@@ -491,7 +477,7 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
-	void aktionSetzeKlausurgruppeInNeuenTermin(final @NotNull ArrayList<@NotNull Integer> pGruppe) {
+	void aktionSetzeKlausurgruppeInNeuenTermin(final @NotNull List<@NotNull Integer> pGruppe) {
 		for (final int klausurNr : pGruppe)
 			if (_klausurZuTermin[klausurNr] >= 0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!");
 
@@ -507,7 +493,7 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen.
 	 */
-	private void aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(final @NotNull ArrayList<@NotNull Integer> pGruppe) {
+	private void aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(final @NotNull List<@NotNull Integer> pGruppe) {
 		for (final int terminNr : gibTermineInZufaelligerReihenfolge())
 			if (aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
 				return; // Alle Klausuren wurden erfolgreich in den Termin gesetzt.
@@ -609,7 +595,7 @@ public class KlausurterminblockungDynDaten {
 	void aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() {
 		aktionClear();
 
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+		for (final @NotNull List<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -623,7 +609,7 @@ public class KlausurterminblockungDynDaten {
 		while (gibExistierenNichtverteilteKlausuren()) {
 			final int terminNr = gibErzeugeNeuenTermin();
 
-			for (final @NotNull ArrayList<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+			for (final @NotNull List<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
 				if (gibIstKlausurgruppeUnverteilt(gruppe))
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
@@ -638,7 +624,7 @@ public class KlausurterminblockungDynDaten {
 	void aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() {
 		aktionClear();
 
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+		for (final @NotNull List<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -652,7 +638,7 @@ public class KlausurterminblockungDynDaten {
 		while (gibExistierenNichtverteilteKlausuren()) {
 			final int terminNr = gibErzeugeNeuenTermin();
 
-			for (final @NotNull ArrayList<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+			for (final @NotNull List<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 				if (gibIstKlausurgruppeUnverteilt(gruppe))
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}

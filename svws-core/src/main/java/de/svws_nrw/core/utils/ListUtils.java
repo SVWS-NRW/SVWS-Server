@@ -171,4 +171,19 @@ public final class ListUtils {
         return list;
     }
 
+	/**
+	 * Liefert die Schnittmenge der beiden Listen ohne diese zu modifizieren.
+	 *
+	 * @param <E>    Der Inhaltstyp der Listen.
+	 * @param list1  Die 1. Liste mit allen Elementen vom Typ E.
+	 * @param list2  Die 1. Liste mit allen Elementen vom Typ E.
+	 *
+	 * @return die Schnittmenge der beiden Listen ohne diese zu modifizieren.
+	 */
+	public static <@NotNull E> @NotNull List<@NotNull E> getIntersection(final @NotNull List<@NotNull E> list1, final @NotNull List<@NotNull E> list2) {
+		final @NotNull List<@NotNull E> list3 = new ArrayList<>(list1);
+		list3.retainAll(list2);
+		return list3;
+	}
+
 }

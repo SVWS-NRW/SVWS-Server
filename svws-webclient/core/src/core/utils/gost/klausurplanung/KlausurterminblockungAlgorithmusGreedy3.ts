@@ -1,7 +1,7 @@
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
-import { ArrayList } from '../../../../java/util/ArrayList';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
+import type { List } from '../../../../java/util/List';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { System } from '../../../../java/lang/System';
 
@@ -56,7 +56,7 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 			}
 			return;
 		}
-		const gruppe : ArrayList<number> = this._dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
+		const gruppe : List<number> = this._dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
 		for (let terminNr : number = 0; terminNr < this._dynDaten.gibTerminAnzahl(); terminNr++) {
 			if (this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
 				this.berechneRekursiv();
