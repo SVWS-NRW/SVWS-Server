@@ -18,12 +18,6 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}
-
-	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
-	}
-
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)

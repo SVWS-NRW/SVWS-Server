@@ -15,11 +15,15 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
+		this.isHidden = (params?: RouteParams) => {
+			return this.checkHidden(params);
+		}
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
+		if (!routeGostKlausurplanung.data.hatStundenplanManager)
+			return { name: routeGostKlausurplanung.defaultChild!.name, params };
+		return false;
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {

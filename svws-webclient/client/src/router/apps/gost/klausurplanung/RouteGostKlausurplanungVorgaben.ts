@@ -17,11 +17,6 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<unknown, RouteGos
 		super.text = "Vorgaben";
 	}
 
-	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined);
-	}
-
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
