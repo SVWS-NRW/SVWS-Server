@@ -1,12 +1,5 @@
 <template>
-	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())"
-		:class="{
-			'shadow-lg shadow-black/5 dark:border-white/10': dragData === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
-			'border-dashed border-error dark:border-error': (dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && (termin().quartal === kMan().vorgabeBySchuelerklausurTermin(dragData).quartal) || termin().quartal === 0) && konflikteTerminDragKlausur > 0,
-			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
-			'border-svws' : !termin().istHaupttermin,
-		}">
+	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:k-man="kMan"
 			:termin-selected="terminSelected || false"

@@ -32,9 +32,9 @@
 			<template #cell(dauer)="{ rowData }">
 				{{ kMan().vorgabeBySchuelerklausurTermin(rowData).dauer }}
 			</template>
-			<template #cell(raum)>
+			<!--<template #cell(raum)>
 				d
-			</template>
+			</template>-->
 		</svws-ui-table>
 	</div>
 </template>

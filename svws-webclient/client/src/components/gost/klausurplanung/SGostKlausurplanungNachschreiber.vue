@@ -85,7 +85,7 @@
 					<svws-ui-button type="secondary" :disabled="selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken().value = true"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
-			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
+			<div class="grid grid-cols-[repeat(auto-fill,minmax(45rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
@@ -192,7 +192,7 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "id", label: "", fixedWidth: 2 },
+			{ key: "id", label: "", minWidth: 2 },
 			{ key: "datum", label: "Datum", fixedWidth: 8 },
 			{ key: "size", label: "#SuS", fixedWidth: 4 },
 			{ key: "faecher", label: "Kurse" },
@@ -208,7 +208,7 @@
 <style lang="postcss" scoped>
 .page--content {
   @apply grid;
-  grid-template-columns: minmax(40rem, 1fr) 1fr;
+  grid-template-columns: minmax(44rem, .3fr) 1fr;
 }
 
 </style>

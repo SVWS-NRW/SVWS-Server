@@ -1,5 +1,10 @@
 <template>
-	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group">
+	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group border bg-white dark:bg-black rounded"
+		:class="{
+			'shadow-lg shadow-black/5 dark:border-white/10': true,
+			'ring-svws/25': termin.istHaupttermin,
+			'border-svws' : !termin.istHaupttermin,
+		}">
 		<slot name="header">
 			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle, 'text-svws': terminSelected}">
 				<template v-if="!$slots.tableTitle">
@@ -8,11 +13,11 @@
 							<span v-if="dragIcon && !compact" class="group-hover:bg-black/10 dark:group-hover:bg-white/10 -ml-1 mr-0.5 rounded">
 								<i-ri-draggable :class="{'text-sm': compact, '-mx-0.5': !compact}" />
 							</span>
-							<span class="line-clamp-1 break-all">{{ termin.bezeichnung === null ? (kursklausuren().size() ? [...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") : 'Neuer Termin') : termin.bezeichnung || 'Klausurtermin' }}</span>
+							<span class="line-clamp-1 break-all">{{ terminBezeichnung() }}</span>
 						</span>
 						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
-							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
+							<span>{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler:innen<slot name="compactMaximaleDauer">, bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
 						</div>
 					</slot>
@@ -38,7 +43,7 @@
 		<slot name="main" v-if="!compact">
 			<section class="px-3 flex flex-col flex-grow" :class="{'mt-2': !$slots.tableTitle}">
 				<slot name="klausuren">
-					<div v-if="kursklausuren().size() === 0 && (!showSchuelerklausuren || schuelerklausurtermine().size() === 0)">
+					<div v-if="kursklausuren().size() === 0 && (schuelerklausurtermine().size() === 0)">
 						Keine Klausuren
 					</div>
 					<slot name="kursklausuren" v-if="kursklausuren().size()">
@@ -84,6 +89,9 @@
 							:on-drag="onDrag"
 							:draggable="draggable" />
 					</slot>
+					<div v-else-if="schuelerklausurtermine().size()">
+						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
+					</div>
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size()}">
 							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
@@ -139,6 +147,16 @@
 		const termin = props.kMan().terminByKursklausur(vorklausur);
 		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0,6);
 	};
+
+	const terminBezeichnung = () => {
+		if (props.termin.bezeichnung !== null && props.termin.bezeichnung.length > 0)
+			return props.termin.bezeichnung;
+		if (!props.termin.istHaupttermin)
+			return "Nachschreibtermin";
+		if (kursklausuren().size())
+			return [...props.kMan().kursklausurGetMengeByTerminid(props.termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
+		return "Klausurtermin";
+	}
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [

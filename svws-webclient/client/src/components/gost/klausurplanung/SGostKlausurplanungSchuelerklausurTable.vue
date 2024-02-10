@@ -64,12 +64,12 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 10.25 },
-			{ key: "vorname", label: "Vorname", minWidth: 8 },
-			{ key: "kurs", label: "Kurs", span: 1.25 },
-			{ key: "datum", label: "Datum", span: 1.25 },
-			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "nachname", label: "Nachame", minWidth: 15 },
+			{ key: "vorname", label: "Vorname", minWidth: 10 },
+			{ key: "kurs", label: "Kurs", fixedWidth: 6 },
+			{ key: "datum", label: "Datum", fixedWidth: 8 },
+			{ key: "kuerzel", label: "Lehrkraft", fixedWidth: 4},
+			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", fixedWidth: 3},
 		];
 
 		return cols;

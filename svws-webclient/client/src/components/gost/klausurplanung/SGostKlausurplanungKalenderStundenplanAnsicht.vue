@@ -80,7 +80,7 @@
 							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
 							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
-								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
+								<span class="z-10 relative p-2 leading-tight font-medium">{{ terminBezeichnung(termin) }}</span>
 								<template #content>
 									<div class="-mx-3">
 										<s-gost-klausurplanung-termin :termin="termin"
@@ -113,6 +113,17 @@
 		useDragAndDrop: false,
 		dragData: () => undefined,
 	});
+
+
+	const terminBezeichnung = (termin: GostKlausurtermin) => {
+		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)
+			return termin.bezeichnung;
+		if (!termin.istHaupttermin)
+			return "Nachschreibtermin";
+		if (props.kMan().kursklausurGetMengeByTerminid(termin.id).size())
+			return [...props.kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
+		return "Klausurtermin";
+	}
 
 	const kursInfos = (idKurs: number) => {
 		return props.kMan().getKursManager().get(idKurs)?.kuerzel;
