@@ -1244,9 +1244,9 @@ public class APIGost {
 			    		throw OperationError.NOT_FOUND.exception();
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 			    	if (faecherManager.isEmpty())
-			    		faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
+			    		faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, null);
 			    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 					final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 					return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
@@ -1286,9 +1286,9 @@ public class APIGost {
 			    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 			    	if (faecherManager.isEmpty())
-			    		faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
+			    		faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, null);
 			    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 					final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 					return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();

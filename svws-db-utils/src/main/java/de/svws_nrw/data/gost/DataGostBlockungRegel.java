@@ -15,6 +15,7 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -24,6 +25,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungRegel;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParameter;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
@@ -149,15 +151,17 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 								if (schueler == null)
 									throw OperationError.BAD_REQUEST.exception();
 							}
+							case FACH_ID -> {
+								final DTOFach fach = conn.queryByKey(DTOFach.class, pvalue);
+								if ((fach == null) || ((fach.IstOberstufenFach != null) && (!fach.IstOberstufenFach)))
+									throw OperationError.BAD_REQUEST.exception();
+							}
 							case BOOLEAN -> {
 								if ((pvalue < 0) || (pvalue > 1))
 									throw OperationError.BAD_REQUEST.exception();
 							}
 							case GANZZAHL -> {
 								break; // immer gültig
-							}
-							case FACH_ID -> {
-								break; // TODO BACHRAN
 							}
 							default -> throw OperationError.BAD_REQUEST.exception();
     					}
@@ -229,6 +233,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
     	daten.typ = regelTyp.typ;
     	// Füge Default-Parameter zu der Regel hinzu.
     	final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
+    	final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
     	final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
     	for (int i = 0; i < regelTyp.getParamCount(); i++) {
     		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
@@ -253,13 +258,17 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 							throw OperationError.NOT_FOUND.exception();
 						yield schueler.get(0).ID;
 					}
+					case FACH_ID -> {
+						if (faecher.faecher().isEmpty())
+							throw OperationError.NOT_FOUND.exception();
+						yield faecher.faecher().get(0).id;
+					}
 					case BOOLEAN -> 0L;
 					case GANZZAHL -> 0L;
-					case FACH_ID -> 0L; // TODO BACHRAN
 	    		};
     		} else {
 				paramValue = regelParameter.get(i);
-				validateRegelParameter(blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, paramType, paramValue);
+				validateRegelParameter(blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
     		}
     		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
     		conn.transactionPersist(param);
@@ -269,7 +278,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private void validateRegelParameter(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostKursblockungRegelParameterTyp paramType, final long paramValue) {
+	private void validateRegelParameter(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostKursblockungRegelParameterTyp paramType, final long paramValue) {
 		switch (paramType) {
 			case KURSART -> {
 				if (GostKursart.fromIDorNull((int) paramValue) == null)
@@ -290,6 +299,10 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 				if (!setSchuelerIDs.contains(paramValue))
 					throw OperationError.NOT_FOUND.exception();
 			}
+			case FACH_ID -> {
+				if (faecher.get(paramValue) == null)
+					throw OperationError.NOT_FOUND.exception();
+			}
 			case BOOLEAN -> {
 				if ((paramValue < 0) || (paramValue > 1))
 					throw OperationError.NOT_FOUND.exception();
@@ -297,14 +310,11 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			case GANZZAHL -> {
 				break; // immer gültig
 			}
-			case FACH_ID -> {
-				break; // TODO BACHRAN
-			}
 		}
 	}
 
 
-	private void validateRegel(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) {
+	private void validateRegel(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) {
 		// Prüfe ob der Regel-Typ korrekt ist
 		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
@@ -332,7 +342,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
     	for (int i = 0; i < regelTyp.getParamCount(); i++) {
     		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
 			final long paramValue = regel.parameter.get(i);
-    		validateRegelParameter(abijahrgang, idBlockung, setSchuelerIDs, paramType, paramValue);
+    		validateRegelParameter(abijahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
     	}
 	}
 
@@ -363,10 +373,11 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			// Bestimme die Schüler des Abiturjahrgangs, falls Regeln einen Schüler-Bezug haben
 	    	final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
 	    	final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
+	    	final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 	        // Durchwandere die Regeln und füge sie nacheinander hinzu
 			for (final GostBlockungRegel regel : regeln) {
 				// validiere die Regel
-				validateRegel(blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, regel, mapVorhanden);
+				validateRegel(blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, faecher, regel, mapVorhanden);
 				final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 				// Füge die Regel hinzu
 				regel.id = idRegel++;

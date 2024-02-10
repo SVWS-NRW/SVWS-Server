@@ -189,7 +189,7 @@ public final class DBUtilsGost {
     	final DTOJahrgang dtoAktJahrgang = mapJahrgaenge.get(aktLernabschnitt.Jahrgang_ID);
     	final Jahrgaenge aktJahrgang = (dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null) ? null : Jahrgaenge.getByKuerzel(dtoAktJahrgang.ASDJahrgang);
 		final Integer abiturjahr = getAbiturjahr(schule.Schulform, schulgliederung, abschnittSchueler.Jahr, aktJahrgang);
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
 
 		// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 		final GostLeistungen daten = new GostLeistungen();
@@ -297,7 +297,7 @@ public final class DBUtilsGost {
 	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, null);
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 

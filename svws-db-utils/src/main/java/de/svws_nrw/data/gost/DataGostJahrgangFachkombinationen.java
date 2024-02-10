@@ -214,7 +214,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Jahrgang_Fachkombinationen.name());
 		final long id = dbID == null ? 1 : dbID.MaxID + 1;
 		// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
-		final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahrgang);
+		final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
 		final List<GostFach> faecher = fachmanager.faecher();
 		if (faecher.size() < 2)
 			throw OperationError.NOT_FOUND.exception("Nicht genügend Fächer für den Abiturjahrgang definiert.");

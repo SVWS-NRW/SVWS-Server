@@ -136,8 +136,8 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
-	public static @NotNull GostFaecherManager getFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
-		return getListeGOStFaecher(conn, abiJahrgang, false);
+	public static @NotNull GostFaecherManager getFaecherManager(final DBEntityManager conn, final Integer abiJahrgang) {
+		return getGostFaecherManager(conn, abiJahrgang, false);
     }
 
 	/**
@@ -149,7 +149,7 @@ public final class DBUtilsFaecherGost {
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe die in mindestens einem Halbjahr des Abiturjahrgangs wählbar sind.
 	 */
 	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
-		return getListeGOStFaecher(conn, abiJahrgang, true);
+		return getGostFaecherManager(conn, abiJahrgang, true);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
-	private static @NotNull GostFaecherManager getListeGOStFaecher(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) {
+	private static @NotNull GostFaecherManager getGostFaecherManager(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();

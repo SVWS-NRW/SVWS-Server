@@ -198,7 +198,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
 	public static void transactionResetJahrgangVorlage(final DBEntityManager conn) throws WebApplicationException {
-		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, -1);
+		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, -1);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = -1");
 		// Setze Default-Einträge für die Fächer Deutsch, Mathematik und Sport und für die Sprachenfolge bei Englisch
 		final @NotNull List<@NotNull GostFach> d = faecherManager.getByKuerzel(ZulaessigesFach.D.daten.kuerzelASD);

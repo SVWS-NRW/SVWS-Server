@@ -141,7 +141,7 @@ public class GenerateTestdatenLaufbahn {
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
 					try {
 				    	final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
-						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
+						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, jahrgang.Abi_Jahrgang);
 						if (gostFaecher.isEmpty())
 							continue; // Lasse Jahrgänge ohne Fächerdaten aus
 				    	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, jahrgang.Abi_Jahrgang);

@@ -173,7 +173,7 @@ public final class DBUtilsGostAbitur {
 			abiturjahr = abidatenVergleich.abiturjahr;
 
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
 
 		// Kopiere die DTOs in die Abiturdaten-Klasse
 		final Abiturdaten abidaten = new Abiturdaten();

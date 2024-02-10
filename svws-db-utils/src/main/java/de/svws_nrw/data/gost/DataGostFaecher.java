@@ -48,13 +48,16 @@ public final class DataGostFaecher extends DataManager<Long> {
 	 * Bestimmt die Liste der Fächer der gymnasialen Oberstufe für den
 	 * spezifizierten Abiturjahrgang.
 	 *
+	 * @param conn      die Datenbankverbindung
+	 * @param abijahr   der Abiturjahrgang
+	 *
 	 * @return der Manager für die Liste der Fächer der gymnasialen Oberstufe
 	 */
-	public @NotNull GostFaecherManager getListInternal() {
+	public static GostFaecherManager getFaecherManager(final DBEntityManager conn, final int abijahr) {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
     	if ((schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
     		return null;
-    	return DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
+    	return DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		final Collection<GostFach> daten = getListInternal().faecher();
+		final Collection<GostFach> daten = getFaecherManager(conn, abijahr).faecher();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

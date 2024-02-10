@@ -140,7 +140,7 @@ public final class DBUtilsGostLaufbahn {
     	final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
     	final Jahrgaenge jahrgang = (dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null) ? null : Jahrgaenge.getByKuerzel(dtoJahrgang.ASDJahrgang);
     	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, schulgliederung, dtoAbschnitt.Jahr, jahrgang);
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
     	getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
     	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen =
     			conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", id, DTOGostSchuelerFachbelegungen.class)
@@ -297,7 +297,7 @@ public final class DBUtilsGostLaufbahn {
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
     	final Map<Long, DTOGostJahrgangFachbelegungen> dtoFachwahlen =
     			conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class)
     			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
@@ -446,7 +446,7 @@ public final class DBUtilsGostLaufbahn {
     	// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
     	// Bestimme die Fächer des Abiturjahrgangs und die Schuljahresabschnitte
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahrgang);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
     	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Bestimme alle Schüler des angegebenen Abiturjahrgangs
     	final List<DTOSchueler> listSchueler = getSchuelerOfAbiturjahrgang(conn, abijahrgang);

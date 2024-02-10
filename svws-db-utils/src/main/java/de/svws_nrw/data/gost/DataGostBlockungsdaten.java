@@ -155,7 +155,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
 
 		// Fächer hinzufügen.
-		final GostFaecherManager faecherManager = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
+		final GostFaecherManager faecherManager = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 		if (faecherManager == null)
 			throw OperationError.NOT_FOUND.exception();
 		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(dtoMapper.apply(blockung), faecherManager);
@@ -361,7 +361,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			nameIndex++;
 		name += nameIndex;
 		// Lese die Fächer der gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
-		final GostFaecherManager faecherManager = (new DataGostFaecher(conn, abiturjahr)).getListInternal();
+		final GostFaecherManager faecherManager = DataGostFaecher.getFaecherManager(conn, abiturjahr);
 		if (faecherManager == null)
 			return OperationError.NOT_FOUND.getResponse();
 		// Lege ein "leeres" Ergebnis für manuelles Blocken an

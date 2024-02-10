@@ -323,7 +323,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) {
 		// Lese die Daten aus der Datenbank
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
 		if (kombis == null)
@@ -491,7 +491,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
 			logger.logLn("Fehler: Das Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
@@ -867,7 +867,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
     	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
 
 		// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
-    	final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
 
 		// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
     	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
