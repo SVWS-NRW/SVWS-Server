@@ -113,7 +113,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
-				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben, null);
+				const vorgabenManager = new GostKlausurvorgabenManager(gostKlausurCollection.vorgaben);
 				klausurManager = new GostKursklausurManager(vorgabenManager, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 				klausurManager.setKursManager(new KursManager(listKurse));
 				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
