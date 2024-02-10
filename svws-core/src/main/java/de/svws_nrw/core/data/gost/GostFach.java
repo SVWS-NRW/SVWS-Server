@@ -41,7 +41,7 @@ public class GostFach {
 	/** Die Nummer, welche die Sortierung der Fächer angibt. */
 	public int sortierung = 32000;
 
-	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei der Belegprüfung). */
+	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei der Belegprüfung). */
 	public boolean istPruefungsordnungsRelevant = true;
 
 	/** Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht */

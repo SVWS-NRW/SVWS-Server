@@ -3,9 +3,9 @@ import { AVLSet } from '../../core/adt/set/AVLSet';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
 import { LogLevel } from '../../core/logger/LogLevel';
-import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
 export class KursblockungDynSchiene extends JavaObject {
 
@@ -64,7 +64,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		if (this.kursMap.containsKey(kursID)) {
 			const fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll in Schiene " + this.nr + ", ist aber bereits drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
-			throw new UserNotificationException(fehler)
+			throw new DeveloperNotificationException(fehler)
 		}
 		for (const kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
@@ -81,7 +81,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		if (!this.kursMap.containsKey(kursID)) {
 			const fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
-			throw new UserNotificationException(fehler)
+			throw new DeveloperNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
 		for (const kurs2 of this.kursMap.values())

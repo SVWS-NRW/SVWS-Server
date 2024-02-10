@@ -131,9 +131,8 @@ export class KursblockungDynKurs extends JavaObject {
 			this.schienenFreiSaveK[i] = this.schienenFrei[i];
 			this.schienenFreiSaveG[i] = this.schienenFrei[i];
 		}
-		for (let i : number = 0; i < this.schienenLage.length; i++) {
+		for (let i : number = 0; i < this.schienenLage.length; i++)
 			this.schienenLage[i].aktionKursHinzufuegen(this);
-		}
 	}
 
 	/**
@@ -278,11 +277,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf.
 	 */
 	public gibIstSchieneFrei(pSchiene : number) : boolean {
-		for (let i : number = 0; i < this.schienenFrei.length; i++) {
-			if (this.schienenFrei[i].gibNr() === pSchiene) {
+		for (let i : number = 0; i < this.schienenFrei.length; i++)
+			if (this.schienenFrei[i].gibNr() === pSchiene)
 				return true;
-			}
-		}
 		return false;
 	}
 
@@ -381,9 +378,8 @@ export class KursblockungDynKurs extends JavaObject {
 	public aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<number>) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++) {
 			const schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
-			if (pSchienenWahl.contains(schieneL.gibNr())) {
+			if (pSchienenWahl.contains(schieneL.gibNr()))
 				continue;
-			}
 			for (let iFrei : number = 0; iFrei < this.schienenFrei.length; iFrei++) {
 				const schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
 				if (pSchienenWahl.contains(schieneF.gibNr())) {
@@ -405,9 +401,8 @@ export class KursblockungDynKurs extends JavaObject {
 	aktionSetzeInSchiene(pSchiene : number) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++) {
 			const schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
-			if (schieneL.gibNr() === pSchiene) {
+			if (schieneL.gibNr() === pSchiene)
 				return;
-			}
 			for (let iFrei : number = 0; iFrei < this.schienenFrei.length; iFrei++) {
 				const schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
 				if (pSchiene === schieneF.gibNr()) {
@@ -452,15 +447,13 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	private aktionSchienenLageHinzufuegen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++) {
+		for (let i : number = 0; i < this.schienenLage.length; i++)
 			this.schienenLage[i].aktionKursHinzufuegen(this);
-		}
 	}
 
 	private aktionSchienenLageEntfernen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++) {
+		for (let i : number = 0; i < this.schienenLage.length; i++)
 			this.schienenLage[i].aktionKursEntfernen(this);
-		}
 	}
 
 	/**

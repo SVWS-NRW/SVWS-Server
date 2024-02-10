@@ -843,6 +843,8 @@ public class KursblockungDynDaten {
 			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
 			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
 		}
+
+		// TODO Regel 11 bis 14 in den dynamischen Daten persistieren.
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {

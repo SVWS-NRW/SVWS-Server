@@ -28,7 +28,7 @@ export class GostFach extends JavaObject {
 	public sortierung : number = 32000;
 
 	/**
-	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Pürfungsordnung ist oder nicht (z.B. bei der Belegprüfung).
+	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei der Belegprüfung).
 	 */
 	public istPruefungsordnungsRelevant : boolean = true;
 

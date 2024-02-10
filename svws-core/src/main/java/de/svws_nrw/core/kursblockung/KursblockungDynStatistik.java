@@ -470,7 +470,6 @@ public class KursblockungDynStatistik {
 		final int nr2 = kurs2.gibInternalID();
 		regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		regelVerletzungKursMitKurs[nr2][nr1] += 1;
-		// System.out.println("DEBUG: regelHinzufuegenKursVerbieteMitKurs ["+nr1+"/"+kurs1.gibDatenbankID()+"]["+nr2+"/"+kurs2.gibDatenbankID()+"]");
 	}
 
 	/**
@@ -488,7 +487,6 @@ public class KursblockungDynStatistik {
 		regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
-		// System.out.println("DEBUG: regelHinzufuegenKursZusammenMitKurs ["+nr1+"/"+kurs1.gibDatenbankID()+"]["+nr2+"/"+kurs2.gibDatenbankID()+"]");
 	}
 
 }

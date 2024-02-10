@@ -411,6 +411,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
 			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen, this._map_regelID_verletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			this.stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen, this._map_regelID_verletzungen);
 		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10];
 		for (const regeltyp of regeltypSortierung)
 			if (this._map_regelID_verletzungen.containsKey(regeltyp))
@@ -531,6 +533,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 									const nr : number = this.getSchieneG(eSchiene.id).nummer;
 									MapUtils.addToList(mapRegelVerletzungen, 10, "Die Lehrkraft " + gLehr1.kuerzel + " und die Lehrkraft " + gLehr2.kuerzel + " sollten gemeinsam in einer Schiene(" + nr + ") sein.");
 								}
+	}
+
+	private stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idSchueler1 : number = r.parameter.get(0).valueOf();
+		const idSchueler2 : number = r.parameter.get(1).valueOf();
+		const idFach : number = r.parameter.get(2).valueOf();
+		const fach : GostFach = this.getFach(idFach);
+		if (!this._parent.schuelerGetHatFach(idSchueler1, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			return;
+		}
+		if (!this._parent.schuelerGetHatFach(idSchueler2, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler2)! + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			return;
+		}
+		if (this.getOfSchuelerOfSchuelerIstZusammenInFach(idSchueler1, idSchueler2, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+		}
 	}
 
 	/**
@@ -1896,6 +1919,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this.getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene!).size() > 1)
 				return true;
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls beide Schüler im bezogen auf das Fach gemeinsam im selben Kurs sind.
+	 *
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches
+	 *
+	 * @return TRUE, falls beide Schüler im bezogen auf das Fach gemeinsam im selben Kurs sind.
+	 */
+	public getOfSchuelerOfSchuelerIstZusammenInFach(idSchueler1 : number, idSchueler2 : number, idFach : number) : boolean {
+		const kurs1 : GostBlockungsergebnisKurs | null = this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler1, idFach);
+		const kurs2 : GostBlockungsergebnisKurs | null = this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler2, idFach);
+		return (kurs1 === null) || (kurs2 === null) ? false : kurs1.id === kurs2.id;
 	}
 
 	/**

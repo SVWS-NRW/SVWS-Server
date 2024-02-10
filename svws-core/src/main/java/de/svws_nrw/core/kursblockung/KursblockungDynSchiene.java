@@ -3,7 +3,7 @@ package de.svws_nrw.core.kursblockung;
 import java.util.HashMap;
 
 import de.svws_nrw.core.adt.set.AVLSet;
-import de.svws_nrw.core.exceptions.UserNotificationException;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
@@ -62,11 +62,13 @@ public class KursblockungDynSchiene {
 		if (kursMap.containsKey(kursID)) {
 			final String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
-			throw new UserNotificationException(fehler);
+			throw new DeveloperNotificationException(fehler);
 		}
+
 		// Zuerst Kurs-Paarungen hinzufügen.
 		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
+
 		// Dann der Datenstruktur hinzufügen.
 		kursMap.put(kursID, kurs1);
 	}
@@ -83,10 +85,12 @@ public class KursblockungDynSchiene {
 			final String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
 					+ " entfernt werden, ist aber nicht drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
-			throw new UserNotificationException(fehler);
+			throw new DeveloperNotificationException(fehler);
 		}
+
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);
+
 		// Dann Kurs-Paarungen entfernen.
 		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
