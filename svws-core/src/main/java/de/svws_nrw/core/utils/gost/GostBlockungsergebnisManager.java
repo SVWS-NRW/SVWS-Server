@@ -407,8 +407,11 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
 			stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen, _map_regelID_verletzungen);
 
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen, _map_regelID_verletzungen);
+
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10};
+		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14};
 		for (final int regeltyp : regeltypSortierung)
 			if (_map_regelID_verletzungen.containsKey(regeltyp))
 				_list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
@@ -554,9 +557,34 @@ public class GostBlockungsergebnisManager {
 			return;
 		}
 
-		if (getOfSchuelerOfSchuelerIstZusammenInFach(idSchueler1, idSchueler2, idFach)) {
+		if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+		}
+
+	}
+
+	private void stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idSchueler1 = r.parameter.get(0);
+		final long idSchueler2 = r.parameter.get(1);
+		final long idFach = r.parameter.get(2);
+		final @NotNull GostFach fach = getFach(idFach);
+
+		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			return;
+		}
+
+		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			return;
+		}
+
+		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 		}
 
 	}
@@ -2048,7 +2076,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return TRUE, falls beide Schüler im bezogen auf das Fach gemeinsam im selben Kurs sind.
 	 */
-	public boolean getOfSchuelerOfSchuelerIstZusammenInFach(final long idSchueler1, final long idSchueler2, final long idFach) {
+	public boolean getOfSchuelerIstZusammenMitSchuelerInFach(final long idSchueler1, final long idSchueler2, final long idFach) {
 		final GostBlockungsergebnisKurs kurs1 = _map2D_schuelerID_fachID_kurs.getOrNull(idSchueler1, idFach);
 		final GostBlockungsergebnisKurs kurs2 = _map2D_schuelerID_fachID_kurs.getOrNull(idSchueler2, idFach);
 		return (kurs1 == null) || (kurs2 == null) ? false : kurs1.id == kurs2.id;
