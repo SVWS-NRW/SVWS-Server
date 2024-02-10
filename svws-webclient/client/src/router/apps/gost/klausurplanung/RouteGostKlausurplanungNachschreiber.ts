@@ -14,7 +14,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<unknown, Rou
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.nachschreiber", "nachschreiber", SGostKlausurplanungNachschreiber);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Nachschreiber";
 	}

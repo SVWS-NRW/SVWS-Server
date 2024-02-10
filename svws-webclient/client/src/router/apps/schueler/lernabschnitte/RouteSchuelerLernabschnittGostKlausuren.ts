@@ -14,7 +14,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.gostKlausuren", "gostKlausuren", SSchuelerLernabschnittGostKlausuren);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gost-Klausuren";
 		super.children = [
