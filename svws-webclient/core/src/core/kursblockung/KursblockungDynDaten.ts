@@ -132,6 +132,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt12FehlerBeiRegel_7_oder_8();
 		this.schritt13FehlerBeiRegel_9();
 		this.schritt14FehlerBeiRegel_10(input);
+		this.schritt14FehlerBeiRegel_11_und_12_und_13_und_14();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -249,6 +250,22 @@ export class KursblockungDynDaten extends JavaObject {
 					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp10(daten);
 					break;
 				}
+				case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp11(daten, setSchueler, setFaecher);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp12(daten, setSchueler, setFaecher);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp13(daten, setSchueler);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp14(daten, setSchueler);
+					break;
+				}
 				default: {
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!")
 				}
@@ -345,6 +362,46 @@ export class KursblockungDynDaten extends JavaObject {
 	private static schritt01FehlerBeiReferenzen_Regeltyp10(daten : Array<number>) : void {
 		const length : number = daten.length;
 		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length !== 0);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp11(daten : Array<number>, setSchueler : HashSet<number>, setFaecher : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length !== 3);
+		const schuelerID1 : number = daten[0].valueOf();
+		const schuelerID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+		const fachID : number = daten[2].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp12(daten : Array<number>, setSchueler : HashSet<number>, setFaecher : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length !== 3);
+		const schuelerID1 : number = daten[0].valueOf();
+		const schuelerID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+		const fachID : number = daten[2].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp13(daten : Array<number>, setSchueler : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length !== 2);
+		const schuelerID1 : number = daten[0].valueOf();
+		const schuelerID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp14(daten : Array<number>, setSchueler : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length !== 2);
+		const schuelerID1 : number = daten[0].valueOf();
+		const schuelerID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 	}
 
 	private schritt02FehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
@@ -624,6 +681,34 @@ export class KursblockungDynDaten extends JavaObject {
 								const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
 								this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 							}
+	}
+
+	private schritt14FehlerBeiRegel_11_und_12_und_13_und_14() : void {
+		const setSchuelerPaar : HashSet<string | null> = new HashSet();
+		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
+			const schuelerID1 : number = regel11.parameter.get(0).valueOf();
+			const schuelerID2 : number = regel11.parameter.get(1).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (const regel12 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
+			const schuelerID1 : number = regel12.parameter.get(0).valueOf();
+			const schuelerID2 : number = regel12.parameter.get(1).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (const regel13 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
+			const schuelerID1 : number = regel13.parameter.get(0).valueOf();
+			const schuelerID2 : number = regel13.parameter.get(1).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (const regel14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
+			const schuelerID1 : number = regel14.parameter.get(0).valueOf();
+			const schuelerID2 : number = regel14.parameter.get(1).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
 	}
 
 	private gibFachart(fachID : number, kursart : number) : KursblockungDynFachart {

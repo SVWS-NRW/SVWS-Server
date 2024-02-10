@@ -143,6 +143,8 @@ public class KursblockungDynDaten {
 
 		schritt14FehlerBeiRegel_10(input);
 
+		schritt14FehlerBeiRegel_11_und_12_und_13_und_14();
+
 		// Zustände Speichern
 		aktionZustandSpeichernS();
 		aktionZustandSpeichernK();
@@ -275,6 +277,18 @@ public class KursblockungDynDaten {
 				case LEHRKRAEFTE_BEACHTEN:
 					schritt01FehlerBeiReferenzen_Regeltyp10(daten);
 					break;
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH:
+					schritt01FehlerBeiReferenzen_Regeltyp11(daten, setSchueler, setFaecher);
+					break;
+				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH:
+					schritt01FehlerBeiReferenzen_Regeltyp12(daten, setSchueler, setFaecher);
+					break;
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER:
+					schritt01FehlerBeiReferenzen_Regeltyp13(daten, setSchueler);
+					break;
+				case SCHUELER_VERBIETEN_MIT_SCHUELER:
+					schritt01FehlerBeiReferenzen_Regeltyp14(daten, setSchueler);
+					break;
 				default:
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
 			}
@@ -282,6 +296,7 @@ public class KursblockungDynDaten {
 		}
 
 	}
+
 
 	private static void schritt01FehlerBeiReferenzen_Regeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Integer> setKursarten, final int schienenAnzahl) {
 		final int length = daten.length;
@@ -392,6 +407,52 @@ public class KursblockungDynDaten {
 	private static void schritt01FehlerBeiReferenzen_Regeltyp10(@NotNull final Long @NotNull [] daten) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length != 0);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,  final @NotNull HashSet<@NotNull Long> setFaecher) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length != 3);
+
+		final long schuelerID1 = daten[0];
+		final long schuelerID2 = daten[1];
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+
+		final long fachID = daten[2];
+		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler,  final @NotNull HashSet<@NotNull Long> setFaecher) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length != 3);
+
+		final long schuelerID1 = daten[0];
+		final long schuelerID2 = daten[1];
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+
+		final long fachID = daten[2];
+		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length != 2);
+
+		final long schuelerID1 = daten[0];
+		final long schuelerID2 = daten[1];
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setSchueler) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length != 2);
+
+		final long schuelerID1 = daten[0];
+		final long schuelerID2 = daten[1];
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 	}
 
 	private void schritt02FehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {
@@ -743,16 +804,45 @@ public class KursblockungDynDaten {
 				vKurseMitLehrkraft.add(gKurs);
 
 		// Finde Kurse mit der selben Lehrkraft
-			for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
-				for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
-					if (gKurs1.id < gKurs2.id)
-						for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-							for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
-								if (gLehr1.id == gLehr2.id) {
-									final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
-									final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
-									_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-								}
+		for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
+			for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
+				if (gKurs1.id < gKurs2.id)
+					for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
+						for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
+							if (gLehr1.id == gLehr2.id) {
+								final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
+								final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
+								_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+							}
+	}
+
+	private void schritt14FehlerBeiRegel_11_und_12_und_13_und_14() {
+		// Überprüfen, ob die Regeln 11 bis 14 sich widersprechen.
+		final @NotNull HashSet<String> setSchuelerPaar = new HashSet<>();
+		for (final @NotNull GostBlockungRegel regel11 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
+			final long schuelerID1 = regel11.parameter.get(0);
+			final long schuelerID2 = regel11.parameter.get(1);
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (final @NotNull GostBlockungRegel regel12 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
+			final long schuelerID1 = regel12.parameter.get(0);
+			final long schuelerID2 = regel12.parameter.get(1);
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (final @NotNull GostBlockungRegel regel13 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
+			final long schuelerID1 = regel13.parameter.get(0);
+			final long schuelerID2 = regel13.parameter.get(1);
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
+		for (final @NotNull GostBlockungRegel regel14 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
+			final long schuelerID1 = regel14.parameter.get(0);
+			final long schuelerID2 = regel14.parameter.get(1);
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
+			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+		}
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {

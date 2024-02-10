@@ -18,9 +18,9 @@ import jakarta.validation.constraints.NotNull;
  * <br> Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br> {@link GostKursblockungRegelTyp}: Enum definieren
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen
- * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen
- * <br> {@link KursblockungDynDaten}: schrittXXFehlerBeiRegelXXX() --> check einfügen
- * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen reagieren und in die Bewertung einfließen lassen.
+ * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)
+ * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() im Konstruktor einfügen
+ * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen reagieren und in die Bewertung einfließen lassen
  * <br> {@link GostBlockungsergebnisManager}: "stateRegelvalidierung" aktualisieren.
  */
 public enum GostKursblockungRegelTyp {
