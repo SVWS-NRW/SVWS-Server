@@ -596,29 +596,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung13_schueler_zusammen_mit_schueler(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		const idSchueler1 : number = r.parameter.get(0).valueOf();
 		const idSchueler2 : number = r.parameter.get(1).valueOf();
-		for (const fachwahl1 of this._parent.schuelerGetListeOfFachwahlen(idSchueler1)) {
-			if (!this._parent.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
-				continue;
-			if (!this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fachwahl1.fachID)) {
-				const fach : GostFach = this.getFach(fachwahl1.fachID);
+		for (const fach of this._parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
+			if (!this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
 				MapUtils.addToList(mapRegelVerletzungen, 13, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
-		}
 	}
 
 	private stateRegelvalidierung14_schueler_verbieten_mit_schueler(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		const idSchueler1 : number = r.parameter.get(0).valueOf();
 		const idSchueler2 : number = r.parameter.get(1).valueOf();
-		for (const fachwahl1 of this._parent.schuelerGetListeOfFachwahlen(idSchueler1)) {
-			if (!this._parent.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
-				continue;
-			if (this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fachwahl1.fachID)) {
-				const fach : GostFach = this.getFach(fachwahl1.fachID);
+		for (const fach of this._parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
+			if (this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
 				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
-		}
 	}
 
 	/**

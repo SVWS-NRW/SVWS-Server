@@ -132,7 +132,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt12FehlerBeiRegel_7_oder_8();
 		this.schritt13FehlerBeiRegel_9();
 		this.schritt14FehlerBeiRegel_10(input);
-		this.schritt14FehlerBeiRegel_11_und_12_und_13_und_14();
+		this.schritt14FehlerBeiRegel_11_und_12_und_13_und_14(input);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -683,31 +683,37 @@ export class KursblockungDynDaten extends JavaObject {
 							}
 	}
 
-	private schritt14FehlerBeiRegel_11_und_12_und_13_und_14() : void {
-		const setSchuelerPaar : HashSet<string | null> = new HashSet();
+	private schritt14FehlerBeiRegel_11_und_12_und_13_und_14(input : GostBlockungsdatenManager) : void {
+		const setSSF : HashSet<string | null> = new HashSet();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
-			const schuelerID1 : number = regel11.parameter.get(0).valueOf();
-			const schuelerID2 : number = regel11.parameter.get(1).valueOf();
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+			const idS1 : number = regel11.parameter.get(0).valueOf();
+			const idS2 : number = regel11.parameter.get(1).valueOf();
+			const idF : number = regel11.parameter.get(2).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
+			DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
 		}
 		for (const regel12 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
-			const schuelerID1 : number = regel12.parameter.get(0).valueOf();
-			const schuelerID2 : number = regel12.parameter.get(1).valueOf();
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+			const idS1 : number = regel12.parameter.get(0).valueOf();
+			const idS2 : number = regel12.parameter.get(1).valueOf();
+			const idF : number = regel12.parameter.get(2).valueOf();
+			DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
+			DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
 		}
 		for (const regel13 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
-			const schuelerID1 : number = regel13.parameter.get(0).valueOf();
-			const schuelerID2 : number = regel13.parameter.get(1).valueOf();
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+			const idS1 : number = regel13.parameter.get(0).valueOf();
+			const idS2 : number = regel13.parameter.get(1).valueOf();
+			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
+				DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
+				DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+			}
 		}
 		for (const regel14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			const schuelerID1 : number = regel14.parameter.get(0).valueOf();
-			const schuelerID2 : number = regel14.parameter.get(1).valueOf();
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID1 + ";" + schuelerID2));
-			DeveloperNotificationException.ifTrue("Widerspruch bei den Regeln 11 bis 14!", !setSchuelerPaar.add(schuelerID2 + ";" + schuelerID1));
+			const idS1 : number = regel14.parameter.get(0).valueOf();
+			const idS2 : number = regel14.parameter.get(1).valueOf();
+			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
+				DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
+				DeveloperNotificationException.ifTrue("Widerspruch bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+			}
 		}
 	}
 

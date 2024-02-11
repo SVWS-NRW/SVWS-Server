@@ -1609,7 +1609,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
-	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
 	 * @param idKursart   Die Datenbank-ID der Kursart der Fachwahl des Schülers.
 	 *
@@ -1631,6 +1631,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetListeOfFachwahlen(pSchuelerID : number) : List<GostFachwahl> {
 		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_idSchueler_fachwahlen.get(pSchuelerID));
+	}
+
+	/**
+	 * Liefert eine Liste der gemeinsamen Fächer (auch in der Kursart übereinstimmend) beider Schüler.
+	 *
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 *
+	 * @return eine Liste der gemeinsamen Fächer (auch in der Kursart übereinstimmend) beider Schüler.
+	 */
+	public schuelerGetFachListeGemeinsamerFacharten(idSchueler1 : number, idSchueler2 : number) : List<GostFach> {
+		const temp : List<GostFach> = new ArrayList();
+		for (const fachwahl1 of this.schuelerGetListeOfFachwahlen(idSchueler1))
+			if (this.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
+				temp.add(this._faecherManager.getOrException(fachwahl1.fachID));
+		return temp;
 	}
 
 	/**
