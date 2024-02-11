@@ -36,7 +36,8 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList()), new ArrayList(), null, null, null)},
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
-			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
+			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
+			hatStundenplanManager: routeGostKlausurplanung.data.hatStundenplanManager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
 	}

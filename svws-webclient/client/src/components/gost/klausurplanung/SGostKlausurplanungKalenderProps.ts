@@ -14,6 +14,7 @@ export interface GostKlausurplanungKalenderProps {
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKursklausurManager;
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
-	stundenplanmanager: StundenplanManager;
+	stundenplanmanager: () => StundenplanManager;
+	hatStundenplanManager: boolean,
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

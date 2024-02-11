@@ -12,7 +12,7 @@
 				:termin="termin"
 				:k-man="kMan"
 				:erzeuge-klausurraummanager="erzeugeKlausurraummanager"
-				:stundenplanmanager="stundenplanmanager" />
+				:stundenplanmanager="stundenplanmanager()" />
 		</div>
 		<div v-else>
 			Es wurden noch keine Klausurtermine geplant.

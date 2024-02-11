@@ -15,6 +15,6 @@ export interface GostKlausurplanungDetailAnsichtProps {
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKursklausurManager;
 	erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
-	stundenplanmanager: StundenplanManager;
+	stundenplanmanager: () => StundenplanManager;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }
