@@ -159,7 +159,7 @@ public enum DBDriver {
 			case MDB:
 				return "jdbc:ucanaccess://" + location + ";memory=false;immediatelyReleaseResources=true";
 			case MSSQL:
-				return "jdbc:sqlserver://" + location + ";databaseName=" + schema;
+				return "jdbc:sqlserver://" + location + ";databaseName=" + schema + ";encrypt=true;trustServerCertificate=true";
 			case MYSQL:
 				return "jdbc:mysql://" + location + "/" + schema;
 			case MARIA_DB:
