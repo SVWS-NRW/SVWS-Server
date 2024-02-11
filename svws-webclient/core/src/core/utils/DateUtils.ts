@@ -16,6 +16,11 @@ export class DateUtils extends JavaObject {
 	public static readonly MAX_GUELTIGES_JAHR : number = 2900;
 
 	/**
+	 * Ein Mapping für den Monat als Zahl zu seiner textuellen Beschreibung.
+	 */
+	public static readonly MONAT_ZU_TEXT : Array<string | null> = ["", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+
+	/**
 	 *  Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
 	 *  [0][3] bedeutet, dass im März bereits 59 Tage vergangen sind (kein Schaltjahr).<br>
 	 *  [1][3] bedeutet, dass im März bereits 60 Tage vergangen sind (Schaltjahr).
@@ -226,6 +231,21 @@ export class DateUtils extends JavaObject {
 	}
 
 	/**
+	 * Liefert das vom Format "2006-08-31" ins Format "31. August 2006" konvertierte Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2023-02-28).
+	 *
+	 * @return das vom Format "2006-08-31" ins Format "31. August 2006" konvertierte Datum.
+	 */
+	public static gibDatumGermanFormatAusgeschrieben(datumISO8601 : string) : string {
+		const info : Array<number> = DateUtils.extractFromDateISO8601(datumISO8601);
+		const jahr : number = info[0];
+		const monat : number = info[1];
+		const tagImMonat : number = info[2];
+		return tagImMonat + ". " + DateUtils.MONAT_ZU_TEXT[monat] + " " + StringUtils.padZahl(jahr, 4)!;
+	}
+
+	/**
 	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
 	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
 	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
@@ -313,7 +333,7 @@ export class DateUtils extends JavaObject {
 	/**
 	 * Liefert das Schuljahr zu einem bestimmten Datum. Dabei wird von dem Stichtag des
 	 * 1.8. für den Beginn des neuen Schuljahres ausgegangen. Da das Schuljahr immer in
-	 * zwei Kalendejahren liegt, wird immer das erste Kalenderjahr als Schuljahr angegeben.
+	 * zwei Kalenderjahren liegt, wird immer das erste Kalenderjahr als Schuljahr angegeben.
 	 *
 	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
