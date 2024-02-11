@@ -309,6 +309,7 @@ export class RouteDataSchema {
 		let schema = formData.get('schema')?.toString() || null;
 		if (schema === currSchema) {
 			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() || null;
+			datenbankVerbindungsdaten.schema = formData.get('srcSchema')?.toString() || null;
 			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() || null;
 			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() || null;
 		} else {
