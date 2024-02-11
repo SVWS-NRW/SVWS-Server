@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="text-headline-md">{{ stundenplanmanager.zeitrasterGetWochentageAlsEnumRange().at(DateUtils.gibWochentagDesDatumsISO8601(termin.datum!))?.beschreibung }}, {{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</div>
+		<div class="text-headline-md">{{ stundenplanmanager.zeitrasterGetWochentageAlsEnumRange().at(DateUtils.gibWochentagDesDatumsISO8601(termin.datum!) - 1)?.beschreibung }}, {{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</div>
 		<div class="mb-2">ab {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</div>
 		<table class="table-auto w-full border" v-if="raummanager !== null && raummanager.raumGetMengeAsList().size() > 0">
 			<thead class="bg-light border-b">

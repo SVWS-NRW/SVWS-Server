@@ -1003,6 +1003,26 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste von HT-GostKlausurtermin-Objekten des Quartals, bei denen ein
+	 * Datum gesetzt ist
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal             die Nummer des Quartals
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
+	 *
+	 * @return die Liste von HT-GostKlausurtermin-Objekten
+	 */
+	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+			if (termin.datum !== null)
+				termineMitDatum.add(termin);
+		termineMitDatum.sort(GostKursklausurManager._compTermin);
+		return termineMitDatum;
+	}
+
+	/**
 	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern
 	 * alle identisch sind, sonst -1.
 	 *

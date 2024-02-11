@@ -5,9 +5,9 @@
 	<div class="page--content page--content--full relative flex-col">
 		<div class="text-headline">Klausurplan {{ jahrgangsdaten.jahrgang }}, {{ halbjahr.halbjahr }}. Halbjahr{{ quartalsauswahl.value === 0 ? "" : ", " + quartalsauswahl.value + ". Quartal" }}</div>
 
-		<div v-if="kMan().terminMitDatumGetMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, false).size() > 0">
+		<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, false).size() > 0">
 			<s-gost-klausurplanung-detail-ansicht-termin class="mb-10"
-				v-for="termin in kMan().terminMitDatumGetMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, false)"
+				v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, false)"
 				:key="termin.id"
 				:termin="termin"
 				:k-man="kMan"
