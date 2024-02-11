@@ -60,7 +60,7 @@ public final class PdfGostLaufbahnplanungSchuelerWahlbogen {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
 		final ReportingRepository reportingRepository = new ReportingRepository(conn);
-		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, true);
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, true, false);
 		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();

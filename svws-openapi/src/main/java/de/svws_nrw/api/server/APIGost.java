@@ -41,6 +41,7 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.module.reporting.pdf.gost.anlagen.PdfGostAnlage12;
 import de.svws_nrw.module.reporting.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerErgebnisuebersicht;
 import de.svws_nrw.module.reporting.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
@@ -881,10 +882,51 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
+	 * Die OpenAPI-Methode für die Abfrage der Anlage 12 APO-GOSt (Abiturzeugnis) als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param schuelerids           Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param request     			die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
+	 */
+	@POST
+	@Produces("application/pdf")
+	@Path("/schueler/pdf/gostanlage12")
+	@Operation(
+		summary = "Erstellt die Anlage 12 (Abiturzeugnis) zu den Schülern mit den angegebenen IDs.",
+		description = "Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+		responseCode = "200",
+		description = "Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.",
+		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Anlage 12 - Abiturzeugnis")))
+	@ApiResponse(
+		responseCode = "403",
+		description = "Der SVWS-Benutzer hat keine Rechte, um die Anlage 12 (Abiturzeugnis) für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
+	@ApiResponse(
+		responseCode = "404",
+		description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostAnlage12(
+		@PathParam("schema") final String schema,
+		@RequestBody(
+			description = "Schüler-IDs, für die die Anlage 12 erstellt werden soll.",
+			required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+		final List<Long> schuelerids,
+		@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostAnlage12.query(conn, schuelerids),
+			request, ServerMode.DEV,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
+	 *
+	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schuelerids           Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
 	 * @param request     			die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
@@ -927,7 +969,7 @@ public class APIGost {
 	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param schuelerids           Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param schuelerids           Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
 	 * @param request     			die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen (in reduzierter Form) zur Laufbahnplanung der gymnasialen Oberstufe

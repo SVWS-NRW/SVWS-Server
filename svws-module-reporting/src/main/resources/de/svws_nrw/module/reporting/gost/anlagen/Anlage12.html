@@ -1,0 +1,124 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>NRW - Anlage 12 - Zeugnis der allgemeinen Hochschulreife</title>
+		<link rel="stylesheet" href="Anlage12.css" />
+	</head>
+
+	<body>
+		<th:block th:each="schueler,iterStatSchueler : ${Schueler}">
+			<table class="fixed-layout-100 no-space pad-0 start-new-page">
+				<tr>
+					<td style="height: 6mm; "></td>
+				</tr>
+				<tr>
+					<td class="bo-black pad-4">
+						<table  class="fixed-layout-100 no-space pad-0">
+							<tr>
+								<td style="width: 100%; height: 55mm"></td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 32mm" class="ta-cm pad-4l pad-4r">
+									<img style="height: 32mm" th:src="@{'data:image/jpeg;base64,'+${Schule.schullogo()}}"  alt="Schullogo"/>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 20mm; font-size: 24pt; " class="f-bold ta-cb">Z E U G N I S</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 13mm; font-size: 20pt; " class="f-bold ta-cb">DER ALLGEMEINEN HOCHSCHULREIFE</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 16mm; font-size: 16pt; " class="f-bold ta-cb" th:text="${schueler.vornamen() + ' ' + schueler.nachname()}">Anna Mustermann</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 5mm" class="ta-ct pad-4l pad-4r" th:text="${'(' + schueler.religion().textZeugnis + ')'}">(Konfession)</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 15mm; font-size: 12pt; " class="ta-cb" th:text="${'geboren am ' + #svwsDate.toDELang(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 13mm; font-size: 12pt; " class="ta-cb" th:text="${'wohnhaft in ' + schueler.geburtsort()}">wohnhaft in Musterstadt am Rhein</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 13mm; font-size: 12pt; " class="ta-cb">hat sich nach dem Besuch der gymnasialen Oberstufe der Abiturprüfung unterzogen.</td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 36mm"></td>
+							</tr>
+							<tr>
+								<td style="width: 100%; height: 42mm" class="ta-ct">
+									<p style="margin-bottom: 1em" class="small">Dem Zeugnis liegen zugrunde:</p>
+									<p style="margin-bottom: 1em" class="small">Vereinbarung zur Gestaltung der gymnasialen Oberstufe und der Abiturprüfung<br/>
+										(Beschluss der Kultusministerkonferenz vom 7. Juli 1972 in der jeweils geltenden Fassung)</p>
+									<p style="margin-bottom: 1em" class="small">Bildungsstandards für die Allgemeine Hochschulreife und Vereinbarungen über die Einheitlichen Prüfungsanforderungen in der
+										Abiturprüfung</p>
+									<p class="small">Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe - APO-GOSt - vom 5. Oktober 1998 in der jeweils
+										geltenden Fassung (BASS 13-32 Nr. 3.1)</p>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<table class="fixed-layout-100 no-space pad-0 start-new-page">
+				<tr>
+					<td style="width: 100%; height: 6mm">
+						<span class="small" th:text="${'2. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamen() + ' ' + schueler.nachname()}">2. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="bo-black pad-4">
+						<table  class="fixed-layout-100 no-space pad-0">
+							<tr>
+								<td style="width: 100%; height: 227mm" class="ta-ct">
+									Hier stehen später die Ergebnisse von Block 1.
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<table class="fixed-layout-100 no-space pad-0 start-new-page">
+				<tr>
+					<td style="width: 100%; height: 6mm">
+						<span class="small" th:text="${'3. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamen() + ' ' + schueler.nachname()}">3. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="bo-black pad-4">
+						<table  class="fixed-layout-100 no-space pad-0">
+							<tr>
+								<td style="width: 100%; height: 268mm" class="ta-ct">
+									Hier stehen später die Ergebnisse der Abiturprüfung!
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<table class="fixed-layout-100 no-space pad-0 start-new-page">
+				<tr>
+					<td style="width: 100%; height: 6mm">
+						<span class="small" th:text="${'4. Seite des Zeugnisses der allgemeinen Hochschulreife für ' + schueler.vornamen() + ' ' + schueler.nachname()}">4. Seite des Zeugnisses der allgemeinen Hochschulreife für Anna Mustermann</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="bo-black pad-4">
+						<table  class="fixed-layout-100 no-space pad-0">
+							<tr>
+								<td style="width: 100%; height: 268mm" class="ta-ct">
+									Hier stehen später die Sprachen und Unterschriften!
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</th:block>
+	</body>
+</html>

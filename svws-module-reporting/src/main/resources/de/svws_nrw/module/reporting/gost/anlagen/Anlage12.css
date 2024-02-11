@@ -1,9 +1,9 @@
 @Page {
 	size: A4 portrait;
-	margin-top: 17mm;
-	margin-left: 15mm;
+	margin-top: 4mm;
+	margin-left: 10mm;
 	margin-right: 10mm;
-	margin-bottom: 12mm;
+	margin-bottom: 10mm;
 
 	/*noinspection CssNoGenericFontName*/
 	font-family: "liberation";
@@ -83,7 +83,7 @@
 
 /* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
 span.counter-print { padding: 0; margin: 0; }
-span.counter-print:after { content: counter(page) " von " counter(pages); }
+span.counter-print:after { content: ''; }
 
 
 /* Seitenumbrüche: Wenn Style angewendet wird, wird davor ein Seitenumbruch eingefügt.
@@ -91,7 +91,6 @@ span.counter-print:after { content: counter(page) " von " counter(pages); }
 ############################################################################################################### */
 .start-new-page { page-break-before: always; }
 .start-new-page:first-child { page-break-before: avoid; }
-
 
 /* Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
 ############################################################################################################### */
@@ -109,8 +108,8 @@ h1 { font-size: 14pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.1em;}
 h2 { font-size: 13pt; font-weight: bold; margin-top: 0.8em; margin-bottom: 0.1em;}
 h3 { font-size: 12pt; font-weight: bold; margin-top: 0.6em; margin-bottom: 0.1em;}
 h4 { font-size: 11pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.1em;}
-p	{ margin-top: 0.4em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
-ul 	{ margin-top: 0.4em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
+p	{ margin-top: 0em; margin-bottom: 0.4em; margin-left: 0; margin-right: 0; padding: 0;	}
+ul 	{ margin-top: 0em; margin-bottom: 0.4em; margin-left: 1em; margin-right: 0; padding: 0;	}
 
 .no-mt { margin-top: 0 }
 
@@ -121,12 +120,11 @@ ul 	{ margin-top: 0.4em; margin-bottom: 0; margin-left: 1em; margin-right: 0; pa
 .tiny { font-size: 0.8em; }
 .very-tiny { font-size: 0.7em; }
 
-.tc-grey { color: grey }
-
-.ta-l { text-align: left; }
-.ta-c { text-align: center; }
-.ta-r { text-align: right; }
-
+.ta-ct { text-align: center; vertical-align: top; }
+.ta-lm { text-align: left; vertical-align: middle; }
+.ta-cm { text-align: center; vertical-align: middle; }
+.ta-rm { text-align: right; vertical-align: middle; }
+.ta-cb { text-align: center; vertical-align: bottom; }
 
 /* Definitionen für Tabellen
 ############################################################################################################### */
@@ -143,50 +141,33 @@ tr {
 	page-break-inside: avoid;
 }
 
-td.kompakt {
-	padding-top: 0;
-	padding-bottom: 0;
-	margin-top: 0;
-	margin-bottom: 0;
-}
-
-td.kopffachbezeichnung {
-	text-align: left;
-	font-weight: bold;
-	border-bottom: 1px black solid;
-}
-
-td.kopffachdetails {
-	text-align: center;
-	font-weight: bold;
-	border-bottom: 1px black solid;
-}
-
-td.fachbezeichnung {
-	text-align: left;
-	font-weight: bold;
-	border-bottom: 0.5px solid grey;
-}
-
-td.fachdetails {
-	text-align: center;
-	border-bottom: 0.5px solid grey;
-}
-
 .fixed-layout-100 { width: 100%; table-layout:fixed; }
-.no-space-pad { border-spacing: 0; padding: 0; border-collapse: collapse; }
+.no-space { border-spacing: 0; border-collapse: collapse; }
 .zero-height { height: 0; }
 
-.bo-grey { border: 0.5px solid grey; }
-.bot-grey { border-top: 0.5px solid grey; }
-.bob-grey { border-bottom: 0.5px solid grey; }
-.bol-grey { border-left: 0.5px solid grey; }
-.bor-grey { border-right: 0.5px solid grey; }
+.bo-black { border: 0.5px solid black; }
+.bo-t-black { border-top: 0.5px solid black; }
+.bo-b-black { border-bottom: 0.5px solid black; }
+.bo-tb-black { border-top: 0.5px solid black; border-bottom: 0.5px solid black; }
+.bo-l-black { border-left: 0.5px solid black; }
+.bo-r-black { border-right: 0.5px solid black; }
+.bo-lr-black { border-left: 0.5px solid black; border-right: 0.5px solid black; }
 
-.bo-t-black { border-top: 1px solid black; }
 
 .bg-lightgrey { background-color: #DADADA; }
 .bg-lightyellow { background-color: #FFFDAF; }
 
-.pad-top { padding-top: 1.25em; }
-.pad-bot { padding-bottom: 1.25em; }
+.pad-0 { padding: 0; }
+
+.pad-2 { padding: 2mm; }
+.pad-2t { padding-top: 2mm; }
+.pad-2l { padding-left: 2mm; }
+.pad-2r { padding-right: 2mm; }
+.pad-2b { padding-bottom: 2mm; }
+
+.pad-4 { padding: 4mm; }
+.pad-4t { padding-top: 4mm; }
+.pad-4l { padding-left: 4mm; }
+.pad-4r { padding-right: 4mm; }
+.pad-4b { padding-bottom: 4mm; }
+

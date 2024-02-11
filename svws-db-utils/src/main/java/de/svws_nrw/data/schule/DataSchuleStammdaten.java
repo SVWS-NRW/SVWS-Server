@@ -1,14 +1,5 @@
 package de.svws_nrw.data.schule;
 
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.schule.SchuleStammdaten;
@@ -52,6 +43,15 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
 
 
 /**
@@ -268,6 +268,17 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+	/**
+	 * Ermittelt das Schullogo im Base64-Format.
+	 *
+	 * @return Schullogo im Base64-Format
+	 */
+	public String getSchullogoBase64() {
+		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
+		if (logo == null)
+			return "";
+		return logo.LogoBase64;
+	}
 
 	/**
 	 * Ersetzt das Schullogo.

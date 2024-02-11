@@ -41,11 +41,11 @@
 				<tbody>
 					<tr><td colspan="15" class="pad-top"></td></tr>
 					<tr>
-						<td class="fb" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
+						<td class="f-bold" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
 						<td></td>
-						<td class="fb" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
+						<td class="f-bold" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
 						<td></td>
-						<td class="fb" th:text="${Kurs.kursart()}">GK</td>
+						<td class="f-bold" th:text="${Kurs.kursart()}">GK</td>
 						<td></td>
 						<td class="small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ext. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
 						<td></td>

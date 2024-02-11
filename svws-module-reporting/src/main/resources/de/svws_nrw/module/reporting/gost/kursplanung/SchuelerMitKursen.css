@@ -129,8 +129,8 @@ ul 	{ margin-top: 0.25em; margin-bottom: 0; margin-left: 1em; margin-right: 0; p
 
 .no-mt { margin-top: 0 }
 
-.fb { font-weight: bold; }
-.fi { font-style: italic; }
+.f-bold { font-weight: bold; }
+.f-ital { font-style: italic; }
 
 .small { font-size: 0.9em; }
 .tiny { font-size: 0.8em; }
@@ -176,7 +176,7 @@ td.kompakt {
 .bol-grey { border-left: 0.5px solid grey; }
 .bor-grey { border-right: 0.5px solid grey; }
 
-.bot-black { border-top: 1px solid black; }
+.bo-t-black { border-top: 1px solid black; }
 
 .bg-lightgrey { background-color: #DADADA; }
 .bg-lightyellow { background-color: #FFFDAF; }

@@ -1,8 +1,10 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.gost.DBUtilsGost;
+import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
@@ -39,10 +41,11 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 *
 	 * @param reportingRepository	Das Repository zur Schuldatenbank.
 	 * @param schuelerIDs			Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
+	 * @param mitGostDaten 			Legt fest, ob die Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
+	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten) {
-		erzeugeContext(reportingRepository, schuelerIDs, mitGostDaten);
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten, final boolean mitAbiturDaten) {
+		erzeugeContext(reportingRepository, schuelerIDs, mitGostDaten, mitAbiturDaten);
 	}
 
 	/**
@@ -61,8 +64,9 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * @param reportingRepository	Das Repository zur Schuldatenbank.
 	 * @param schuelerIDs   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
+	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 */
-	private void erzeugeContext(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten) throws WebApplicationException {
+	private void erzeugeContext(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten, final boolean mitAbiturDaten) throws WebApplicationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 		final DBEntityManager conn = reportingRepository.conn();
@@ -96,6 +100,28 @@ public final class HtmlContextSchueler extends HtmlContext {
 					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 
 			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
+		}
+
+		// Nur, wenn Daten zum Abitur in der gymnasialen Oberstufe mit angefordert werden.
+		if (mitAbiturDaten) {
+			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
+			try {
+				DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			} catch (WebApplicationException ex) {
+				throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+			}
+
+			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
+
+			for (final Long sID : schuelerIDs) {
+				try {
+					mapGostSchuelerAbiturdaten.put(sID, DBUtilsGostAbitur.getAbiturdaten(conn, sID));
+				} catch (WebApplicationException ex) {
+					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				}
+			}
+
+			reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
 		}
 
 		// ####### Daten sind valide. Bereite nun Daten vor, um den Daten-Context später erzeugen zu können. #################################################################

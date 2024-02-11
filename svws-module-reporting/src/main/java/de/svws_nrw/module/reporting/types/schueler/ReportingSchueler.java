@@ -3,11 +3,11 @@ package de.svws_nrw.module.reporting.types.schueler;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
+import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schule.Religion;
-import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbiturdaten;
+import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
@@ -81,7 +81,7 @@ public class ReportingSchueler {
 	private Geschlecht geschlecht;
 
 	/** Daten der Abiturdaten der GOSt. */
-	private ReportingSchuelerGostAbiturdaten gostAbiturdaten = null;
+	private ReportingSchuelerGostAbitur gostAbitur = null;
 
 	/** Daten der GOSt-Laufbahnplanung. */
 	private ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
@@ -135,7 +135,7 @@ public class ReportingSchueler {
 	private String religionanmeldung;
 
 	/** Die Religion des Schülers. */
-	private Religion religion;
+	private ReligionEintrag religion;
 
 	/** Die erste Staatsangehörigkeit des Schülers. */
 	private Nationalitaeten staatsangehoerigkeit1;
@@ -201,7 +201,7 @@ public class ReportingSchueler {
 	 * @param geburtsname Der Geburtsname des Schülers.
 	 * @param geburtsort Der Geburtsort des Schülers.
 	 * @param geschlecht Das Geschlecht des Schülers.
-	 * @param gostAbiturdaten Daten der Abiturdaten der GOSt.
+	 * @param gostAbitur Daten der Abiturdaten der GOSt.
 	 * @param gostKursplanungKursbelegungen Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
 	 * @param gostLaufbahnplanung Daten der GOSt-Laufbahnplanung.
 	 * @param haltestelleID Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers.
@@ -235,7 +235,7 @@ public class ReportingSchueler {
 	 * @param wohnortsteilname Der Name des Ortsteils des Wohnorts des Schülers.
 	 * @param zuzugsjahr Das Zuzugsjahr des Schülers.
 	 */
-	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final String bemerkungen, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbiturdaten gostAbiturdaten, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final Religion religion, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
+	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum, final String aufnahmedatum, final String bemerkungen, final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen, final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis, final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id, final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig, final boolean keineAuskunftAnDritte, final List<ReportingSchuelerLernabschnitt> lernabschnitte, final String nachname, final String religionabmeldung, final String religionanmeldung, final ReligionEintrag religion, final Nationalitaeten staatsangehoerigkeit1, final Nationalitaeten staatsangehoerigkeit2, final SchuelerStatus status, final String strassenname, final String telefon, final String telefonMobil, final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final String wohnortname, final OrtsteilKatalogEintrag wohnortsteil, final String wohnortsteilname, final Integer zuzugsjahr) {
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;
@@ -255,7 +255,7 @@ public class ReportingSchueler {
 		this.geburtsname = geburtsname;
 		this.geburtsort = geburtsort;
 		this.geschlecht = geschlecht;
-		this.gostAbiturdaten = gostAbiturdaten;
+		this.gostAbitur = gostAbitur;
 		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
 		this.gostLaufbahnplanung = gostLaufbahnplanung;
 		this.haltestelleID = haltestelleID;
@@ -602,16 +602,16 @@ public class ReportingSchueler {
 	 * Daten der Abiturdaten der GOSt.
 	 * @return Inhalt des Feldes gostAbiturdaten
 	 */
-	public ReportingSchuelerGostAbiturdaten gostAbiturdaten() {
-		return gostAbiturdaten;
+	public ReportingSchuelerGostAbitur gostAbiturdaten() {
+		return gostAbitur;
 	}
 
 	/**
 	 * Daten der Abiturdaten der GOSt wird gesetzt.
-	 * @param gostAbiturdaten Neuer Wert für das Feld gostAbiturdaten
+	 * @param gostAbitur Neuer Wert für das Feld gostAbiturdaten
 	 */
-	public void setGostAbiturdaten(final ReportingSchuelerGostAbiturdaten gostAbiturdaten) {
-		this.gostAbiturdaten = gostAbiturdaten;
+	public void setGostAbitur(final ReportingSchuelerGostAbitur gostAbitur) {
+		this.gostAbitur = gostAbitur;
 	}
 
 	/**
@@ -900,7 +900,7 @@ public class ReportingSchueler {
 	 * Die Religion des Schülers.
 	 * @return Inhalt des Feldes religion
 	 */
-	public Religion religion() {
+	public ReligionEintrag religion() {
 		return religion;
 	}
 
@@ -908,7 +908,7 @@ public class ReportingSchueler {
 	 * Die Religion des Schülers wird gesetzt.
 	 * @param religion Neuer Wert für das Feld religion
 	 */
-	public void setReligion(final Religion religion) {
+	public void setReligion(final ReligionEintrag religion) {
 		this.religion = religion;
 	}
 

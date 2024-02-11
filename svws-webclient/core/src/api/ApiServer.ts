@@ -6013,6 +6013,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode pdfGostAnlage12 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/gostanlage12
+	 *
+	 * Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Anlage 12 (Abiturzeugnis) für die Gymnasialen Oberstufe eines Schülers zu erstellen.
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
+	 */
+	public async pdfGostAnlage12(data : List<number>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/gostanlage12"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerErgebnisuebersicht für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \d+}
 	 *
 	 * Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.

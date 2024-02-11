@@ -62,6 +62,9 @@ public class ReportingSchule {
 	/** Die Schulform der Schule */
 	private String schulform;
 
+	/** Das Logo der Schule im Base64-Format. */
+	private String schullogo;
+
 	/** Die eindeutige Schulnummer der Schule */
 	private long schulnummer;
 
@@ -95,12 +98,13 @@ public class ReportingSchule {
 	 * @param plz Die Postleitzahl des Gebietes in dem die Schule liegt.
 	 * @param schuljahresabschnitte Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 * @param schulform Die Schulform der Schule
+	 * @param schullogo Das Logo der Schule im Base64-Format
 	 * @param schulnummer Die eindeutige Schulnummer der Schule
 	 * @param strassenname Der Straßenname der Straße in der die Schule liegt.
 	 * @param telefon Die Telefonnummer der Schule.
 	 * @param webAdresse Die Adresse der Homepage der Schule (Domain-Name)
 	 */
-	public ReportingSchule(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt, final long anzahlJahrgangsstufenProJahr, final long anzahlSchuljahresabschnitteProJahr, final String bezeichnung1, final String bezeichnung2, final String bezeichnung3, final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit, final String email, final String fax, final String hausnummer, final String hausnummerZusatz, final String ort, final String plz, final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final String schulform, final long schulnummer, final String strassenname, final String telefon, final String webAdresse) {
+	public ReportingSchule(final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt, final long anzahlJahrgangsstufenProJahr, final long anzahlSchuljahresabschnitteProJahr, final String bezeichnung1, final String bezeichnung2, final String bezeichnung3, final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit, final String email, final String fax, final String hausnummer, final String hausnummerZusatz, final String ort, final String plz, final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final String schulform, final String schullogo, final long schulnummer, final String strassenname, final String telefon, final String webAdresse) {
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.anzahlJahrgangsstufenProJahr = anzahlJahrgangsstufenProJahr;
 		this.anzahlSchuljahresabschnitteProJahr = anzahlSchuljahresabschnitteProJahr;
@@ -118,6 +122,7 @@ public class ReportingSchule {
 		this.plz = plz;
 		this.schuljahresabschnitte = schuljahresabschnitte;
 		this.schulform = schulform;
+		this.schullogo = schullogo;
 		this.schulnummer = schulnummer;
 		this.strassenname = strassenname;
 		this.telefon = telefon;
@@ -440,6 +445,22 @@ public class ReportingSchule {
 	 */
 	public void setSchulform(final String schulform) {
 		this.schulform = schulform;
+	}
+
+	/**
+	 * Das Schullogo der Schule im Base64-Format
+	 * @return Inhalt des Feldes schullogo
+	 */
+	public String schullogo() {
+		return schullogo;
+	}
+
+	/**
+	 *  Das Schullogo der Schule im Base64-Format wird gesetzt.
+	 * @param schullogo Neuer Wert für das Feld schullogo
+	 */
+	public void setSchullogo(final String schullogo) {
+		this.schullogo = schullogo;
 	}
 
 	/**

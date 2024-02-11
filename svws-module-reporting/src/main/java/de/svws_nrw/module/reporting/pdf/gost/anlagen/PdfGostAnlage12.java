@@ -1,4 +1,4 @@
-package de.svws_nrw.module.reporting.pdf.gost.laufbahnplanung;
+package de.svws_nrw.module.reporting.pdf.gost.anlagen;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.reporting.html.base.HtmlBuilder;
@@ -19,15 +19,15 @@ import java.util.Map;
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung einer pdf-Datei auf Basis der hinterlegten html-Vorlage und den übergebenen Daten.
  */
-public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
+public final class PdfGostAnlage12 {
 
 	/** Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String htmlVorlageDateipfad = "de/svws_nrw/module/reporting/gost/laufbahnplanung/SchuelerErgebnisuebersicht.html";
+	private static final String htmlVorlageDateipfad = "de/svws_nrw/module/reporting/gost/anlagen/Anlage12.html";
 
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
-	private static final String cssDateipfad = "de/svws_nrw/module/reporting/gost/laufbahnplanung/SchuelerErgebnisuebersicht.css";
+	private static final String cssDateipfad = "de/svws_nrw/module/reporting/gost/anlagen/Anlage12.css";
 
-	private PdfGostLaufbahnplanungSchuelerErgebnisuebersicht() {
+	private PdfGostAnlage12() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
 
@@ -35,14 +35,13 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 	/**
 	 * Erstellt das PDF-Dokument und gibt es als Response zum Download zurück.
 	 *
-	 * @param conn          Datenbank-Verbindung
-	 * @param schuelerIDs	Liste der IDs der Schüler, deren Wahlbögen erstellt werden sollen.
-	 * @param detaillevel 	Gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
+	 * @param conn          		Datenbank-Verbindung
+	 * @param schuelerIDs           Liste der IDs der Schüler, deren Wahlbögen erstellt werden sollen.
 	 *
-	 * @return 				HTTP-Response mit der PDF-Datei oder bei Fehler eine WebApplicationException-Response
+	 * @return 						HTTP-Response mit dem PDF-Dokument oder bei Fehler eine WebApplicationException-Response
 	 */
-	public static Response query(final DBEntityManager conn, final List<Long> schuelerIDs, final int detaillevel) {
-		final PdfBuilder pdfBuilder = getPdfBuilder(conn, schuelerIDs, detaillevel);
+	public static Response query(final DBEntityManager conn, final List<Long> schuelerIDs) {
+		final PdfBuilder pdfBuilder = getPdfBuilder(conn, schuelerIDs);
 		return pdfBuilder.getPdfResponse();
 	}
 
@@ -50,17 +49,16 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 	/**
 	 * Erzeugt auf Basis der hinterlegten html-Vorlage und der übergebenen Daten den PdfBuilder zur Erzeugung der PDF-Datei.
 	 *
-	 * @param conn          Datenbank-Verbindung
-	 * @param schuelerIDs	Liste der IDs der Schüler, deren Wahlbögen erstellt werden sollen.
-	 * @param detaillevel 	Gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
+	 * @param conn          		Datenbank-Verbindung
+	 * @param schuelerIDs           Liste der IDs der Schüler, deren Wahlbögen erstellt werden sollen.
 	 *
-	 * @return				Ein PDF-Builder zur Erzeugung der PDF-Datei
+	 * @return						Ein PDF-Builder zur Erzeugung der PDF-Datei
 	 */
-	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final List<Long> schuelerIDs, final int detaillevel) {
+	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final List<Long> schuelerIDs) {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
 		final ReportingRepository reportingRepository = new ReportingRepository(conn);
-		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, true, false);
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, schuelerIDs, false, true);
 		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();
@@ -69,15 +67,17 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 
 		// Einzelne Variablen für den finalen html-Daten-Context sammeln
 		final Map<String, Object> variables = new HashMap<>();
-		variables.put("DruckparameterDetaillevel", detaillevel);
 
 		// Dateiname der PDF-Datei aus den Daten erzeugen.
-		String pdfDateiname = "Laufbahnplanung_Prüfungsergebnisse.pdf";
+		String pdfDateiname = "Anlage12.pdf";
 		if (!htmlContextSchueler.getSchueler().isEmpty()) {
-			final ProxyReportingSchueler ersteLaufbahnplanung = htmlContextSchueler.getSchueler().getFirst();
-			pdfDateiname = "Laufbahnplanung_Prüfungsergebnisse_Abitur-%d_%s.pdf".formatted(
-				ersteLaufbahnplanung.gostLaufbahnplanung().abiturjahr(),
-				ersteLaufbahnplanung.gostLaufbahnplanung().folgeGOStHalbjahr().replace('.', '_'));
+			final ProxyReportingSchueler ersterSchueler = htmlContextSchueler.getSchueler().getFirst();
+			if (htmlContextSchueler.getSchueler().size() == 1) {
+				pdfDateiname = "Anlage12_%s_%s_(%d).pdf".formatted(
+						ersterSchueler.nachname().replace(' ', '_').replace('.', '_'),
+						ersterSchueler.vorname().replace(' ', '_').replace('.', '_'),
+						ersterSchueler.id());
+			}
 		}
 
 		// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen

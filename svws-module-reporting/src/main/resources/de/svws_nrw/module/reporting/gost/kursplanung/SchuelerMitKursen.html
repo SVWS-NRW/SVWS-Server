@@ -47,7 +47,7 @@
 				</tr>
 				<tr>
 					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:style="${((Kursbelegung.kurs().farbeClientRGB() == null || (Kursbelegung.kurs().farbeClientRGB().isEmpty())) ? '' : ' background-color: ' + Kursbelegung.kurs().farbeClientRGB() + ';')}">
-						<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kursbelegung.kurs().bezeichnung()}">M-GK2</p>
+						<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kursbelegung.kurs().bezeichnung()}">M-GK2</p>
 						<p class="no-mt" style="font-size: 6pt;" th:utext="${Kursbelegung.kurs().kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty()) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + Kursbelegung.kurs().lehrkraefteAuflistung()}">GK-s Abifach 3<br/>ABC</p>
 					</td>
 				</tr>

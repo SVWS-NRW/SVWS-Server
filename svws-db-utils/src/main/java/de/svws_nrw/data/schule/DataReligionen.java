@@ -1,13 +1,5 @@
 package de.svws_nrw.data.schule;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.ObjLongConsumer;
-
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.core.types.schule.Religion;
@@ -22,6 +14,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -59,6 +59,17 @@ public final class DataReligionen extends DataManager<Long> {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	/**
+	 * Gibt die Liste der Religionen zurück.
+	 * @return die Liste der Religionen
+	 */
+	public List<ReligionEintrag> getListReligionen() {
+		if (this.conn != null)
+			return getReligionen(this.conn);
+		else
+			return new ArrayList<>();
+	}
 
 	/**
 	 * Gibt die Liste der Religionen zurück.

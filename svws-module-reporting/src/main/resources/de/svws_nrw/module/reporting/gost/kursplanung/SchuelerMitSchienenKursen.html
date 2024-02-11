@@ -42,12 +42,12 @@
 						</colgroup>
 						<tr th:each="Schiene : ${Blockungsergebnis.schienen()}">
 							<td class="bo-grey" th:style="${Schiene.hatKollisionen() ? 'background-color: red;' : 'background-color: white;'}">
-								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
+								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
 								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</td>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
 								th:style="${(Kurs.farbeClientRGB() == null || Kurs.farbeClientRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.farbeClientRGB() + ';'}">
-								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
+								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
 								<p class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart}">GK</p>
 								<p class="no-mt" style="font-size: 6pt;"
 									th:with="summeABs = ${Kurs.anzahlAB12() + Kurs.anzahlAB3() + Kurs.anzahlAB4()}"
@@ -95,13 +95,13 @@
 						</colgroup>
 						<tr th:each="Schiene : ${Blockungsergebnis.schienen()}">
 							<td class="bo-grey" th:style="${#lists.contains(Schiene.idsSchuelerMitKollisionen(), schueler.id()) ? 'background-color: red;' : 'background-color: white;'}">
-								<p class="fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
+								<p class="f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
 								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne()+ ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</td>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
 								th:with="istBelegt = ${!(schueler.getGostKursplanungKursbelegungById(Kurs.id) == null)}"
 								th:style="${(!istBelegt || Kurs.farbeClientRGB() == null || Kurs.farbeClientRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.farbeClientRGB() + ';'}">
-								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung()}">M-GK2</p>
+								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung()}">M-GK2</p>
 								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart()}">GK</p>
 								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}">
 									<p th:if="${Kursbelegung.kurs().id() == Kurs.id()}" class="no-mt" style="font-size: 6pt;"

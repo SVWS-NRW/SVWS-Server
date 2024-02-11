@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.fach.FachDaten;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -79,6 +81,23 @@ public final class DataFachdaten extends DataManager<Long> {
     		return OperationError.NOT_FOUND.getResponse();
 		final FachDaten daten = dtoMapperFach.apply(fach);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * Erstellt eine Map, die alle Fächer der DB als Fachdaten-Objekte zur Fach-ID enthält.
+	 * @return Map der Fachdaten zur Fach-ID.
+	 */
+	public Map<Long, FachDaten> getFaecherdaten() {
+		return conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, dtoMapperFach));
+	}
+
+	/**
+	 * Erstellt eine Map, die die GOSt-Daten aller Fach-Einträge der DB als GostFach-Objekte zur Fach-ID enthält.
+	 * @return Map der GOSt-Daten aller Fächer der DB zur Fach-ID.
+	 */
+	public Map<Long, GostFach> getFaecherGostdaten() {
+		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+		return faecher.values().stream().collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(f, faecher)));
 	}
 
 	private static final Map<String, DataBasicMapper<DTOFach>> patchMappings = Map.ofEntries(

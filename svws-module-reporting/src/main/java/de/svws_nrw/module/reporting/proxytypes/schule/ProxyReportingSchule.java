@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -56,14 +57,16 @@ public class ProxyReportingSchule extends ReportingSchule {
 			reportingRepository.schulstammdaten().plz,
 			null,
 			reportingRepository.schulstammdaten().schulform,
+			null,
 			reportingRepository.schulstammdaten().schulNr,
 			reportingRepository.schulstammdaten().strassenname,
 			reportingRepository.schulstammdaten().telefon,
 			reportingRepository.schulstammdaten().webAdresse);
 
 		    this.reportingRepository = reportingRepository;
-			setSchuljahresabschnitte(this.reportingRepository.mapSchuljahresabschnitte().values().stream().map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList());
-			setAktuellerSchuljahresabschnitt(new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt()));
+			super.setSchullogo(new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64());
+			super.setSchuljahresabschnitte(this.reportingRepository.mapSchuljahresabschnitte().values().stream().map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList());
+			super.setAktuellerSchuljahresabschnitt(new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt()));
 	}
 
 

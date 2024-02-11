@@ -1,20 +1,24 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schule.Religion;
+import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbiturdaten;
+import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
+import jakarta.ws.rs.WebApplicationException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -91,7 +95,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.nachname,
 			schuelerStammdaten.religionabmeldung,
 			schuelerStammdaten.religionanmeldung,
-			Religion.getByID(schuelerStammdaten.religionID),
+			null,
 			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 			Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
 			SchuelerStatus.fromID(schuelerStammdaten.status),
@@ -108,6 +112,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.zuzugsjahr);
 
 		this.reportingRepository = reportingRepository;
+		super.setReligion(this.reportingRepository.katalogReligionen().get(schuelerStammdaten.religionID));
 		super.setWohnortname(super.wohnort() != null ? super.wohnort().ortsname : "");
 		super.setWohnortsteilname(super.wohnortsteil() != null ? super.wohnortsteil().ortsteil : "");
 
@@ -151,9 +156,18 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * @return Daten zum Abitur in der GOSt
 	 */
 	@Override
-	public ReportingSchuelerGostAbiturdaten gostAbiturdaten() {
+	public ReportingSchuelerGostAbitur gostAbiturdaten() {
 		if (super.gostAbiturdaten() == null) {
-			super.setGostAbiturdaten(new ReportingSchuelerGostAbiturdaten());
+			if (this.reportingRepository.mapGostSchuelerAbiturdaten().containsKey(this.id())) {
+				super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id())));
+			} else {
+				try {
+					final Abiturdaten abiturdaten = DBUtilsGostAbitur.getAbiturdaten(this.reportingRepository.conn(), this.id());
+					super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten));
+				} catch (WebApplicationException ex) {
+					throw OperationError.NOT_FOUND.exception("Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				}
+			}
 		}
 		return super.gostAbiturdaten();
 	}
