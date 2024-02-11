@@ -85,7 +85,7 @@ public class GostKursklausurManager {
 	};
 
 	private final @NotNull Comparator<@NotNull GostSchuelerklausur> _compSchuelerklausur = (final @NotNull GostSchuelerklausur a, final @NotNull GostSchuelerklausur b) -> {
-		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManagerOrNull();
 		GostKlausurvorgabe aV = vorgabeBySchuelerklausur(a);
 		GostKlausurvorgabe bV = vorgabeBySchuelerklausur(b);
 		if (aV.quartal != bV.quartal)

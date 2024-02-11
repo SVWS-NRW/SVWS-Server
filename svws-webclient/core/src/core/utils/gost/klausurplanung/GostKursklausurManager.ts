@@ -81,7 +81,7 @@ export class GostKursklausurManager extends JavaObject {
 	} };
 
 	private readonly _compSchuelerklausur : Comparator<GostSchuelerklausur> = { compare : (a: GostSchuelerklausur, b: GostSchuelerklausur) => {
-		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
+		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManagerOrNull();
 		let aV : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(a);
 		let bV : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(b);
 		if (aV.quartal !== bV.quartal)
