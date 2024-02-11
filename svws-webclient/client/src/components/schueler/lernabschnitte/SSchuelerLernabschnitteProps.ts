@@ -12,4 +12,5 @@ export interface SchuelerLernabschnitteProps {
 	setChild: (value: SchuelerLernabschnitteAuswahlChildData) => Promise<void>;
 	child: SchuelerLernabschnitteAuswahlChildData;
 	children: SchuelerLernabschnitteAuswahlChildData[];
+	childrenHidden: boolean[];
 }

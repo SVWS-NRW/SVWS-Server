@@ -1,8 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Jahrgaenge, JahrgangsUtils, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
+import { routeError } from "~/router/error/RouteError";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausurenProps";
@@ -19,6 +21,19 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 		super.text = "Gost-Klausuren";
 		super.children = [
 		];
+		this.isHidden = (params?: RouteParams) => {
+			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
+				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+			const manager = routeSchueler.data.schuelerListeManager;
+			if (!manager.hasDaten())
+				return false;
+			const abiturjahr = manager.auswahl().abiturjahrgang;
+			const jahrgang = manager.jahrgaenge.get(manager.auswahl().idJahrgang);
+			if (((abiturjahr !== null) && (manager.abiturjahrgaenge.get(abiturjahr) !== null))
+				&& ((jahrgang !== null) && (JahrgangsUtils.istGymOb(jahrgang.kuerzelStatistik))))
+				return false;
+			return routeSchueler.getRoute(parseInt(params.id));
+		}
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

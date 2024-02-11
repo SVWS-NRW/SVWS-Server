@@ -11,4 +11,5 @@ export interface GostKlausurplanungAuswahlProps {
 	setChild: (value: GostKlausurplanungAuswahlChildData) => Promise<void>;
 	child: GostKlausurplanungAuswahlChildData;
 	children: GostKlausurplanungAuswahlChildData[];
+	childrenHidden: boolean[];
 }

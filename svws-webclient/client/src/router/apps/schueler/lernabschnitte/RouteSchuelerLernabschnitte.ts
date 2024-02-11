@@ -76,6 +76,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			setChild: this.setChild,
 			child: this.getChild(),
 			children: this.getChildData(),
+			childrenHidden: this.children_hidden().value,
 		};
 	}
 

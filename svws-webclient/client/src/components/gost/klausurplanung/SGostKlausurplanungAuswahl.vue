@@ -4,7 +4,7 @@
 	<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
-				:hidden="false" @select="setChild(c)" :key="index" />
+				:hidden="childrenHidden[index]" @select="setChild(c)" :key="index" />
 		</nav>
 		<svws-ui-sub-nav />
 	</Teleport>
