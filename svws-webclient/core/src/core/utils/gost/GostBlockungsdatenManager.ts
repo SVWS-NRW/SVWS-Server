@@ -1592,6 +1592,21 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls beide Schüler bezogen auf das Fach die selbe Kursart haben oder eine Exception, falls zum Fach keine Fachwahl existiert.
+	 *
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches
+	 *
+	 * @return TRUE, falls beide Schüler bezogen auf das Fach die selbe Kursart haben oder eine Exception, falls zum Fach keine Fachwahl existiert.
+	 */
+	public schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1 : number, idSchueler2 : number, idFach : number) : boolean {
+		const fachwahl1 : GostFachwahl = this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler1, idFach);
+		const fachwahl2 : GostFachwahl = this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler2, idFach);
+		return fachwahl1.kursartID === fachwahl2.kursartID;
+	}
+
+	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
 	 * @param idSchueler  Die Datenbank.ID des Schülers.

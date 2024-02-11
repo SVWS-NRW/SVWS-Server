@@ -14,14 +14,17 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen der Kursblockung eingesetzt werden.
- *
- * <br> Um eine neue Regel zu definieren, geht man wie folgt vor:
+ * Um eine neue Regel zu definieren, geht man wie folgt vor:
+ * <br>
+ * <br> Passive Anpassung
  * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE for Issue #1483
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE for Issue #1483
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE for Issue #1483
+ * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE for Issue #1483
+ * <br>
+ * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> TODO for Issue #1483
  * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       --> TODO for Issue #1483
- * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> TODO for Issue #1483
  */
 public enum GostKursblockungRegelTyp {
 
