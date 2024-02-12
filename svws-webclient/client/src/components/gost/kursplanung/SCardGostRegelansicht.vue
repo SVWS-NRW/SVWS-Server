@@ -12,6 +12,7 @@
 			<Blockungsregel_4 v-if="!nurRegelverletzungen || regeln[4].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_5 v-if="!nurRegelverletzungen || regeln[5].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_11 v-if="!nurRegelverletzungen || regeln[11].value.length" v-model="regel" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[11].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_12 v-if="!nurRegelverletzungen || regeln[12].value.length" v-model="regel" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[12].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 		</div>
 		<Blockungsregel_10 v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 	</div>
@@ -69,7 +70,7 @@
 
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 
-	for (let i = 1; i < 12; i++)
+	for (let i = 1; i < 13; i++)
 		regeln[i] = computed(() => {
 			const a = [];
 			for (const r of props.getDatenmanager().regelGetListe())
