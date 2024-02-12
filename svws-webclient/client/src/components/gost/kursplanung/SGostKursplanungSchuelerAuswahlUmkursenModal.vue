@@ -20,11 +20,11 @@
 					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
 						:no-data="fachwahlschueler.length <= 0" scroll>
 						<template #cell(name)="{ rowData }">
-							<div @click="move(rowData.id)" class="w-full cursor-pointer text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="move(rowData.id)" class="w-full cursor-copy text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
 							<svws-ui-select title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
-								:model-value="getKurs(rowData)" @update:model-value="(value : GostBlockungsergebnisKurs | undefined) => updateZuordnung(rowData, value)"
+								:model-value="getKurs(rowData)" @update:model-value="value => updateZuordnung(rowData, value)"
 								class="w-full" headless removable />
 						</template>
 					</svws-ui-table>
@@ -54,8 +54,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { GostBlockungsergebnisKurs, GostBlockungsergebnisManager, Schueler, List } from '@core';
-	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart } from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List } from '@core';
+	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
@@ -166,17 +166,17 @@
 		await props.updateKursSchuelerZuordnung(id, kurs.id, kurswahl?.id);
 	}
 
-	async function updateZuordnung(schueler: Schueler, neuer_kurs: GostBlockungsergebnisKurs | undefined) {
+	async function updateZuordnung(schueler: Schueler, neuer_kurs: GostBlockungsergebnisKurs | undefined | null) {
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
-		if ((neuer_kurs === undefined) && (alter_kurs !== null)) {
+		if (((neuer_kurs === undefined) || (neuer_kurs === null)) && (alter_kurs !== null)) {
 			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
 			zuordnung.idSchueler = schueler.id;
 			zuordnung.idKurs = alter_kurs.id;
 			await props.removeKursSchuelerZuordnung([ zuordnung ]);
-		} else if (neuer_kurs !== undefined) {
+		} else if (neuer_kurs instanceof GostBlockungsergebnisKurs) {
 			await props.updateKursSchuelerZuordnung(schueler.id, neuer_kurs.id, alter_kurs?.id ?? undefined);
 		}
 	}
