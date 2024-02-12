@@ -1,7 +1,8 @@
-import { type WritableComputedRef } from "vue";
+import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet, List, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
+import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -46,4 +47,5 @@ export interface GostKursplanungProps {
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
+	apiStatus: ApiStatus;
 }

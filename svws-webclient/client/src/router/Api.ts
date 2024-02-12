@@ -392,11 +392,13 @@ class Api {
 	 * @returns die Rückgabe der API-Funktion
 	 */
 	public call = <T extends Array<any>, U>(func: (...params: T) => U) => {
-		this.status.start();
-		try {
-			return (...params: T): U => func(...params);
-		} finally {
-			this.status.stop();
+		return async (...params: T): Promise<Awaited<U>> => {
+			this.status.start();
+			try {
+				return await func(...params)
+			} finally {
+				this.status.stop();
+			}
 		}
 	}
 

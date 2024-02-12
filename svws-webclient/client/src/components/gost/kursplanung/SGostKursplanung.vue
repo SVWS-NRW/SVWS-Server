@@ -98,7 +98,7 @@
 						<span class="align-middle">Neue Blockung erstellen</span>
 					</div>
 					<div v-if="persistiert">
-						<svws-ui-button type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung"> <i-ri-arrow-turn-back-line class="-mb-0.5" /> </svws-ui-button>
+						<svws-ui-button :disabled="apiStatus.pending" type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung"> <i-ri-arrow-turn-back-line class="-mb-0.5" /> </svws-ui-button>
 						<span class="align-middle">Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten</span>
 					</div>
 				</div>
