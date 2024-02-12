@@ -1,7 +1,7 @@
-import type { GostBlockungRegel, GostFach } from "@core";
 import type { Ref, WritableComputedRef } from 'vue';
-import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@core";
 import { computed } from 'vue';
+import type { GostBlockungRegel } from "@core";
+import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag, GostFach } from "@core";
 
 export function getKursFromId(kurse: Iterable<GostBlockungKurs>, kursId: number): GostBlockungKurs {
 	for (const kurs of kurse)
@@ -16,17 +16,7 @@ export function getKursbezeichnung(kurs: GostBlockungKurs, mapFaecher: Map<numbe
 	const suffix = kurs.suffix ? "-" + kurs.suffix : "";
 	return `${kuerzel}-${kursart}${kurs.nummer}${suffix}`
 }
-/*
-export function createKursbezeichnungsGetter(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>, parameter: number = 0) {
-	return  (regel: GostBlockungRegel): String => {
-		const manager = blockung.datenmanager
-		if (manager === undefined)
-			throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
-		const kurs = manager.kursGet(regel.parameter.get(parameter))
-		return manager.kursGetName(kurs.id)
-	}
-}
-*/
+
 export function useRegelParameterKursart(regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostKursart> {
 	return computed({
 		get: () => regel.value === undefined ? GostKursart.LK : GostKursart.fromID(regel.value.parameter.get(parameter)),
@@ -41,6 +31,20 @@ export function useRegelParameterKurs(kurse: Iterable<GostBlockungKurs>, regel: 
 				if (kurs.id === regel.value?.parameter.get(parameter))
 					return kurs;
 			return new GostBlockungKurs();
+		},
+		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
+	})
+}
+
+export function useRegelParameterFach(faecher: Iterable<GostFach> | Map<number, GostFach>, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostFach> {
+	return computed({
+		get: () => {
+			if (faecher instanceof Map)
+				faecher = faecher.values();
+			for (const fach of faecher)
+				if (fach.id === regel.value?.parameter.get(parameter))
+					return fach;
+			return new GostFach();
 		},
 		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
 	})
