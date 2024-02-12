@@ -18,7 +18,7 @@
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
-			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :mode="mode">
+			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :mode="mode" :get-ergebnismanager="getErgebnismanager">
 			<template #blockungAuswahlActions>
 				<svws-ui-button type="icon" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
 					<i-ri-add-line class="-mx-0.5" />

@@ -66,14 +66,14 @@
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
 		:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
-		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" :get-ergebnismanager="getErgebnismanager" />
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostHalbjahr, List} from "@core";
+	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostHalbjahr, List, GostBlockungsergebnisManager} from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
 
 	const props = defineProps<{
@@ -86,6 +86,7 @@
 		apiStatus: ApiStatus;
 		// ... zusätzlich für die Ergebnisauswahl
 		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
 		rechneGostBlockung: () => Promise<List<number>>;
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
