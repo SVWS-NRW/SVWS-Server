@@ -460,7 +460,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(1);
 		if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 4, "Der Schüler " + getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 4, "SchülerIn " + getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".");
 		}
 	}
 
@@ -469,7 +469,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(1);
 		if (getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 5, "Der Schüler " + getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 5, "SchülerIn " + getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".");
 		}
 	}
 
@@ -498,7 +498,7 @@ public class GostBlockungsergebnisManager {
 				if (schiene1 == schiene2) {
 					regelVerletzungen.add(r.id);
 					final int nr  = getSchieneG(schiene1.id).nummer;
-					MapUtils.addToList(mapRegelVerletzungen, 7, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene(" + nr + ") sein.");
+					MapUtils.addToList(mapRegelVerletzungen, 7, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.");
 				}
 	}
 
@@ -541,7 +541,7 @@ public class GostBlockungsergebnisManager {
 								if (gLehr1.id == gLehr2.id) {
 									regelVerletzungen.add(r.id);
 									final int nr  = getSchieneG(eSchiene.id).nummer;
-									MapUtils.addToList(mapRegelVerletzungen, 10, "Die Lehrkraft " + gLehr1.kuerzel + " und die Lehrkraft " +  gLehr2.kuerzel + " sollten gemeinsam in einer Schiene(" + nr + ") sein.");
+									MapUtils.addToList(mapRegelVerletzungen, 10, "Der Kurs " + getOfKursName(eKurs1.id) + " und der Kurs " + getOfKursName(eKurs2.id) + " haben die Lehrkraft " + gLehr1.kuerzel + " in der selben Schiene (" + nr + ").");
 								}
 	}
 
@@ -565,13 +565,13 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
 			return;
 		}
 
 		if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 		}
 
 	}
@@ -596,13 +596,13 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
 			return;
 		}
 
 		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 		}
 
 	}
@@ -614,7 +614,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFach fach : _parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
 			if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
-				MapUtils.addToList(mapRegelVerletzungen, 13, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+				MapUtils.addToList(mapRegelVerletzungen, 13, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
 	}
 
@@ -625,7 +625,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFach fach : _parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
 			if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
-				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
 	}
 
