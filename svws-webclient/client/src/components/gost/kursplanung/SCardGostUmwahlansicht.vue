@@ -43,9 +43,9 @@
 							</template>
 						</svws-ui-table>
 						<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
-						<svws-ui-button type="transparent" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="-ml-3"><i-ri-sparkling-line />Verteilen</svws-ui-button>
+						<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><i-ri-sparkling-line />Verteilen</svws-ui-button>
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
-						<div class="mt-5 pr-3 py-4 border-2 -mx-3 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
+						<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
 							<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
 								<i-ri-delete-bin-line class="text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
 								<span class="text-sm w-2/3">
