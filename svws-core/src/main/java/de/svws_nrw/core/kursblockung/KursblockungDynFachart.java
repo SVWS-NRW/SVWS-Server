@@ -8,9 +8,9 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Eine Fachart ist eine Kombination aus Fach und Kursart. Kurse sind genau einer Fachart zugeordnet. Ein Schüler ist
- * mehreren Facharten zugeordnet (entsprechend der Anzahl seiner Fachwahlen). Ein Objekt dieser Klasse kennt alle seine
- * Kurse und speichert die Anzahl an SuS die der Fachart zugeordnet wurden, deren Fachwahl also erfüllt wurde.
+ * Eine Fachart ist eine Kombination aus Fach und Kursart. Kurse sind genau einer Fachart zugeordnet.
+ * Ein Schüler ist mehreren Facharten zugeordnet (entsprechend der Anzahl seiner Fachwahlen).
+ * Ein Objekt dieser Klasse kennt alle seine Kurse und speichert die Anzahl an SuS die der Fachart zugeordnet wurden, deren Fachwahl also erfüllt wurde.
  *
  * @author Benjamin A. Bartsch
  */
@@ -45,6 +45,11 @@ public class KursblockungDynFachart {
 	/** Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. */
 	private final @NotNull KursblockungDynStatistik statistik;
 
+
+	private final @NotNull int[][] regelverletzungSchuelerpaarBeimHinzufuegen;
+	// TODO regelHinzufuegenNichtZusammen(S1, S2) --> matrix += 1, Verletzungen += 0  (man startet mit ohne  Regelverletzung)
+	// TODO regelHinzufuegenZusammen(S1, S2)      --> matrix -= 1, Verletzungen += 1  (man startet mit einer Regelverletzung)
+
 	/**
 	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr          Eine laufende Nummer (ID) für alle Facharten.
@@ -52,8 +57,12 @@ public class KursblockungDynFachart {
 	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
 	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
 	 */
-	public KursblockungDynFachart(final @NotNull Random pRandom, final int pNr, final @NotNull GostFach pGostFach,
-			final @NotNull GostKursart pGostKursart, final @NotNull KursblockungDynStatistik pStatistik) {
+	public KursblockungDynFachart(
+					final @NotNull Random pRandom,
+					final int pNr,
+					final @NotNull GostFach pGostFach,
+					final @NotNull GostKursart pGostKursart,
+					final @NotNull KursblockungDynStatistik pStatistik) {
 		_random = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
@@ -63,6 +72,7 @@ public class KursblockungDynFachart {
 		kurseMax = 0;
 		schuelerMax = 0;
 		schuelerAnzNow = 0;
+		regelverletzungSchuelerpaarBeimHinzufuegen = new int[100][100];
 	}
 
 	/** Durch das Überschreiben dieser Methode, liefert dieses Objekt eine automatische String-Darstellung,
@@ -133,19 +143,15 @@ public class KursblockungDynFachart {
 	 */
 	KursblockungDynKurs gibKleinstenKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
 		for (int i = 0; i < kursArr.length; i++) {
-
 			// Überspringe gesperrte Kurse.
 			final @NotNull KursblockungDynKurs kurs = kursArr[i];
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
 
 			// Suche passende Schiene.
-			for (final int c : kurs.gibSchienenLage()) {
-				if (c == pSchiene) {
+			for (final int c : kurs.gibSchienenLage())
+				if (c == pSchiene)
 					return kurs;
-				}
-			}
 		}
 		return null;
 	}
@@ -155,9 +161,8 @@ public class KursblockungDynFachart {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist. */
 	boolean gibHatMultikurs() {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			if (kurs.gibSchienenAnzahl() > 1) {
+			if (kurs.gibSchienenAnzahl() > 1)
 				return true;
-			}
 		}
 		return false;
 	}
@@ -169,12 +174,10 @@ public class KursblockungDynFachart {
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist. */
 	boolean gibHatKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
-			if (kurs.gibIstInSchiene(pSchiene)) {
+			if (kurs.gibIstInSchiene(pSchiene))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -186,12 +189,10 @@ public class KursblockungDynFachart {
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf. */
 	public boolean gibHatKursMitFreierSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
-			if (kurs.gibIstSchieneFrei(pSchiene)) {
+			if (kurs.gibIstSchieneFrei(pSchiene))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -279,17 +280,15 @@ public class KursblockungDynFachart {
 			}
 		}
 
-		throw new DeveloperNotificationException(
-				"aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!");
+		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!");
 	}
 
 	/** Debug Ausgabe. Nur für Testzwecke.
 	 *
 	 * @param schuelerArr Das Array mit den Schülerdaten. */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		for (int i = 0; i < kursArr.length; i++) {
+		for (int i = 0; i < kursArr.length; i++)
 			kursArr[i].debug(schuelerArr);
-		}
 	}
 
 	/**

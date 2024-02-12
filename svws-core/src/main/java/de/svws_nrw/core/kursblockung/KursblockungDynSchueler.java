@@ -623,7 +623,7 @@ public class KursblockungDynSchueler {
 	 *
 	 * @param  kurs Der Kurs in dem der Schüler potentiell ist.
 	 *
-	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
+	 * @return TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
 	boolean gibIstInKurs(final KursblockungDynKurs kurs) {
 		for (final KursblockungDynKurs zugeordneterKurs : fachartZuKurs)

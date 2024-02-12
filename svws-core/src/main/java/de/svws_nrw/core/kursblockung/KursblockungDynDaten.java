@@ -143,7 +143,7 @@ public class KursblockungDynDaten {
 
 		schritt14FehlerBeiRegel_10(input);
 
-		schritt14FehlerBeiRegel_11_und_12_und_13_und_14(input);
+		schritt14FehlerBeiRegel_11_bis_14(input);
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -816,8 +816,8 @@ public class KursblockungDynDaten {
 							}
 	}
 
-	private void schritt14FehlerBeiRegel_11_und_12_und_13_und_14(final @NotNull GostBlockungsdatenManager input) {
-		// Gibt es einen Widersprich in den Regeln 11 bis 14?
+	private void schritt14FehlerBeiRegel_11_bis_14(final @NotNull GostBlockungsdatenManager input) {
+		// Gibt es einen Widerspruch in den Regeln 11 bis 14?
 		final @NotNull HashSet<String> setSSF = new HashSet<>();
 
 		for (final @NotNull GostBlockungRegel regel11 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {

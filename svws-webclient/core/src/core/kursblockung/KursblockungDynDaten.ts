@@ -132,7 +132,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt12FehlerBeiRegel_7_oder_8();
 		this.schritt13FehlerBeiRegel_9();
 		this.schritt14FehlerBeiRegel_10(input);
-		this.schritt14FehlerBeiRegel_11_und_12_und_13_und_14(input);
+		this.schritt14FehlerBeiRegel_11_bis_14(input);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -683,7 +683,7 @@ export class KursblockungDynDaten extends JavaObject {
 							}
 	}
 
-	private schritt14FehlerBeiRegel_11_und_12_und_13_und_14(input : GostBlockungsdatenManager) : void {
+	private schritt14FehlerBeiRegel_11_bis_14(input : GostBlockungsdatenManager) : void {
 		const setSSF : HashSet<string | null> = new HashSet();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();

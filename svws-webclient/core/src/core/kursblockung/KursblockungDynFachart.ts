@@ -57,6 +57,8 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	private readonly statistik : KursblockungDynStatistik;
 
+	private readonly regelverletzungSchuelerpaarBeimHinzufuegen : Array<Array<number> | null>;
+
 
 	/**
 	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -76,6 +78,7 @@ export class KursblockungDynFachart extends JavaObject {
 		this.kurseMax = 0;
 		this.schuelerMax = 0;
 		this.schuelerAnzNow = 0;
+		this.regelverletzungSchuelerpaarBeimHinzufuegen = [...Array(100)].map(e => Array(100).fill(0));
 	}
 
 	/**
@@ -151,14 +154,11 @@ export class KursblockungDynFachart extends JavaObject {
 	gibKleinstenKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
 		for (let i : number = 0; i < this.kursArr.length; i++) {
 			const kurs : KursblockungDynKurs = this.kursArr[i];
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
-			for (const c of kurs.gibSchienenLage()) {
-				if (c === pSchiene) {
+			for (const c of kurs.gibSchienenLage())
+				if (c === pSchiene)
 					return kurs;
-				}
-			}
 		}
 		return null;
 	}
@@ -170,9 +170,8 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	gibHatMultikurs() : boolean {
 		for (const kurs of this.kursArr) {
-			if (kurs.gibSchienenAnzahl() > 1) {
+			if (kurs.gibSchienenAnzahl() > 1)
 				return true;
-			}
 		}
 		return false;
 	}
@@ -186,12 +185,10 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	gibHatKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
 		for (const kurs of this.kursArr) {
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
-			if (kurs.gibIstInSchiene(pSchiene)) {
+			if (kurs.gibIstInSchiene(pSchiene))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -205,12 +202,10 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	public gibHatKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
 		for (const kurs of this.kursArr) {
-			if (kursGesperrt[kurs.gibInternalID()]) {
+			if (kursGesperrt[kurs.gibInternalID()])
 				continue;
-			}
-			if (kurs.gibIstSchieneFrei(pSchiene)) {
+			if (kurs.gibIstSchieneFrei(pSchiene))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -311,9 +306,8 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schuelerArr Das Array mit den Schülerdaten.
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		for (let i : number = 0; i < this.kursArr.length; i++) {
+		for (let i : number = 0; i < this.kursArr.length; i++)
 			this.kursArr[i].debug(schuelerArr);
-		}
 	}
 
 	/**

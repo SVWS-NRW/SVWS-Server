@@ -18,7 +18,7 @@ export class DateUtils extends JavaObject {
 	/**
 	 * Ein Mapping für den Monat als Zahl zu seiner textuellen Beschreibung.
 	 */
-	public static readonly MONAT_ZU_TEXT : Array<string | null> = ["", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+	private static readonly MONAT_ZU_TEXT : Array<string | null> = ["", "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
 	/**
 	 *  Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
