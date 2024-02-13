@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -885,7 +886,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
 
 		// Prüfe, ob jeweils der Schüler des Lernabschnittes ein Entlassdatum eingetragen hat, welches vor dem Lernabschnitt liegt - inkonsistente Daten?!
-		final List<Long> listSchuelerIDs = listLernabschnittIDs.stream().map(mapLernabschnitte::get).filter(la -> la != null).map(la -> la.Schueler_ID).toList();
+		final List<Long> listSchuelerIDs = listLernabschnittIDs.stream().map(mapLernabschnitte::get).filter(Objects::nonNull).map(la -> la.Schueler_ID).toList();
 		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, listSchuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final long laid : listLernabschnittIDs) {
 			final DTOSchuelerLernabschnittsdaten la = mapLernabschnitte.get(laid);
@@ -1005,17 +1006,16 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final DTOGostBlockungKurslehrer kurslehrer = new DTOGostBlockungKurslehrer(idKurs, kurs.Lehrer_ID, 1, wochenStunden);
 				conn.transactionPersist(kurslehrer);
 			}
-			conn.transactionFlush();
 			// Füge die Kurs-Schienen-Zuordnung hinzu
 			for (final long schienenID : schienen) {
 				final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchiene = new DTOGostBlockungZwischenergebnisKursSchiene(
 						idErgebnis, idKurs, schienenID);
 				conn.transactionPersist(zuordnungKursSchiene);
 			}
-			conn.transactionFlush();
 			// TODO Weitere Kurs-Lehrer ergänzen (s.o.)
 			idKurs++;
 		}
+		conn.transactionFlush();
 
 		// Regeln sind keine bekannt, also werden auch keine erstellt.
 
@@ -1041,7 +1041,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					idErgebnis, kursID, idSchueler);
 				conn.transactionPersist(zuordnungKursSchueler);
 			}
-			conn.transactionFlush();
 		}
 		conn.transactionFlush();
 		return get(idBlockung);
