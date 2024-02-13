@@ -83,14 +83,14 @@
 		</svws-ui-table>
 		<svws-ui-spacing :size="2" />
 		<svws-ui-content-card>
-			<svws-ui-input-wrapper :grid="2">
+			<svws-ui-input-wrapper :grid="2" v-if="hatLernbereichsnote">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
 				<svws-ui-select title="Gesellschaftswissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete
 					v-model="lernbereichsnoteGSbzwAL" />
 				<svws-ui-select title="Naturwissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete
 					v-model="lernbereichsnoteNW" />
 			</svws-ui-input-wrapper>
-			<svws-ui-spacing :size="2" />
+			<svws-ui-spacing :size="2" v-if="hatLernbereichsnote" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden (Summe)</span>
 				<svws-ui-input-number placeholder="Maximal" :min="0"
@@ -113,7 +113,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag, type FaecherListeEintrag, ZulaessigesFach } from "@core";
+	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag, type FaecherListeEintrag, ZulaessigesFach, Schulform, Jahrgaenge, Schulgliederung } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
@@ -259,6 +259,10 @@
 			await props.patchLeistung({ kursID: kurs.id, lehrerID: kurs.lehrer }, leistung.id);
 		}
 	}
+
+	const lernbereichsnote1Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote1Bezeichnung());
+	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
+	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || lernbereichsnote2Bezeichnung.value !== null);
 
 </script>
 

@@ -1,32 +1,40 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
-import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
-import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
+import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
+import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import type { List } from '../../../java/util/List';
+import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
+import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
+import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
+import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../core/types/Note';
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
-import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
-import type { List } from '../../../java/util/List';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
+import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class SchuelerLernabschnittManager extends JavaObject {
 
+	private readonly _schulform : Schulform;
+
 	private readonly _schueler : SchuelerListeEintrag;
 
 	private readonly _lernabschnittsdaten : SchuelerLernabschnittsdaten;
+
+	private readonly _schuljahresabschnitt : Schuljahresabschnitt;
 
 	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap();
 
@@ -93,8 +101,10 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Lernabschnittsdaten und den übergebenen Katalogen
 	 *
+	 * @param schulform             die Schulform der Schule des Schülers
 	 * @param schueler              Informationen zu dem Schüler
 	 * @param lernabschnittsdaten   die Lernabschnittsdaten
+	 * @param schuljahresabschnitt  der Schuljahresabschnitt der Lernabschnittsdaten
 	 * @param faecher               der Katalog der Fächer
 	 * @param jahrgaenge            der Katalog der Jahrgänge
 	 * @param klassen               der Katalog der Klassen
@@ -102,10 +112,12 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
 		super();
+		this._schulform = schulform;
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
+		this._schuljahresabschnitt = schuljahresabschnitt;
 		this.initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
 		this.initFaecher(faecher);
 		this.initFoerderschwerpunkte(foerderschwerpunkte);
@@ -181,6 +193,57 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public lernabschnittGet() : SchuelerLernabschnittsdaten {
 		return this._lernabschnittsdaten;
+	}
+
+	/**
+	 * Gibt die Schulgliederung zurück, die dem Lernabschnitt zugeordnet ist oder
+	 * null, falls keine Zuordnung existiert.
+	 *
+	 * @return die Schulgliederung oder null
+	 */
+	public lernabschnittGetGliederung() : Schulgliederung | null {
+		if (this._lernabschnittsdaten.schulgliederung === null)
+			return null;
+		return Schulgliederung.getByKuerzel(this._lernabschnittsdaten.schulgliederung);
+	}
+
+	/**
+	 * Gibt den Statistik-Jahrgang zurück, der dem Lernabschnitt zugeordnet ist oder null,
+	 * falls kein Jahrgang zugeordnet ist.
+	 *
+	 * @return der Statistik-Jahrgang
+	 */
+	public lernabschnittGetStatistikJahrgang() : Jahrgaenge | null {
+		if (this._lernabschnittsdaten.jahrgangID === null)
+			return null;
+		const eintrag : JahrgangsListeEintrag | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
+		if ((eintrag === null) || (eintrag.kuerzelStatistik === null))
+			return null;
+		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
+	}
+
+	/**
+	 * Gibt die Bezeichnung für die Lernbereichtsnote 1 zurück, sofern eine angegeben werden kann.
+	 *
+	 * @return die Bezeichnung für die Lernbereichtsnote 1
+	 */
+	public lernabschnittGetLernbereichsnote1Bezeichnung() : string | null {
+		const jg : Jahrgaenge | null = this.lernabschnittGetStatistikJahrgang();
+		if (jg === null)
+			return null;
+		return jg.getLernbereichsnote1Bezeichnung(this._schulform, this.lernabschnittGetGliederung(), this._schuljahresabschnitt.schuljahr);
+	}
+
+	/**
+	 * Gibt die Bezeichnung für die Lernbereichtsnote 2 zurück, sofern eine angegeben werden kann.
+	 *
+	 * @return die Bezeichnung für die Lernbereichtsnote 2
+	 */
+	public lernabschnittGetLernbereichsnote2Bezeichnung() : string | null {
+		const jg : Jahrgaenge | null = this.lernabschnittGetStatistikJahrgang();
+		if (jg === null)
+			return null;
+		return jg.getLernbereichsnote2Bezeichnung(this._schulform, this.lernabschnittGetGliederung(), this._schuljahresabschnitt.schuljahr);
 	}
 
 	private leistungAddInternal(leistungsdaten : SchuelerLeistungsdaten) : void {
@@ -495,6 +558,24 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public noteGetByLeistungIdOrException(idLeistung : number) : Note {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		return Note.fromKuerzel(leistung.note);
+	}
+
+	/**
+	 * Gibt die Schulform der Schule des Schülers zurück.
+	 *
+	 * @return die Schulform der Schule des Schülers
+	 */
+	public schulformGet() : Schulform {
+		return this._schulform;
+	}
+
+	/**
+	 * Gibt den Schuljahresabschnitt des Lernabschnittes zurück.
+	 *
+	 * @return der Schuljahresabschnitt des Lernabschnittes
+	 */
+	public schuljahresabschnittGet() : Schuljahresabschnitt {
+		return this._schuljahresabschnitt;
 	}
 
 	/**

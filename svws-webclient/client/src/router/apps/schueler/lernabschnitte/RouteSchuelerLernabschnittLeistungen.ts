@@ -2,6 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
@@ -29,6 +30,7 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, Rou
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittLeistungenProps {
 		return {
+			schulform: api.schulform,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchLeistung: routeSchuelerLernabschnitte.data.patchLeistung,

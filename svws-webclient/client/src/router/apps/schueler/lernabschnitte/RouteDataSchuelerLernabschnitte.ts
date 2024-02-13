@@ -1,5 +1,5 @@
 import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
-import { ArrayList, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
+import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -106,7 +106,11 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt);
 		const schueler = routeSchueler.data.schuelerListeManager.auswahl();
-		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
+		const mapSchuljahresabschnitte = api.mapAbschnitte.value;
+		const schuljahresabschnitt = mapSchuljahresabschnitte.get(daten.schuljahresabschnitt);
+		if (schuljahresabschnitt === undefined)
+			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
+		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
 		let klausurManager = undefined;
 		const abiturjahrgang = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
 		if (abiturjahrgang !== null) {

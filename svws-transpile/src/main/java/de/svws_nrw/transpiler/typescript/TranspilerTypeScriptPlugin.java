@@ -1189,7 +1189,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 		if (node.getExpression() instanceof final SwitchExpressionTree set)
-			return converted + "return _sevar_" + set.toString().hashCode() + ";";
+			return converted + "return _sevar_" + Math.abs(set.toString().hashCode()) + ";";
 		return "return %s;".formatted(converted);
 	}
 

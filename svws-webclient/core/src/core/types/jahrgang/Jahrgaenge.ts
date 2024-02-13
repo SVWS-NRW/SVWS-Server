@@ -175,12 +175,12 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
 	 */
-	private schulformen : Array<ArrayList<Schulform | null>>;
+	private readonly schulformen : Array<ArrayList<Schulform | null>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
 	 */
-	private bezeichnungen : Array<ArrayList<string>>;
+	private readonly bezeichnungen : Array<ArrayList<string>>;
 
 	/**
 	 * Erzeugt einen neuen Jahrgang in der Aufzählung.
@@ -755,6 +755,163 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 				return false;
 			}
 		}
+	}
+
+	/**
+	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 1 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return true, falls eine Lernbereichsnote vorhanden ist.
+	 */
+	public hatLernbereichsnote1(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : boolean {
+		let _sevar_1515493925 : any;
+		const _seexpr_1515493925 = (schulform);
+		if (_seexpr_1515493925 === Schulform.R) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.SR) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.H) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.S) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.FW) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.WF) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.GY) {
+			_sevar_1515493925 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.SG) {
+			_sevar_1515493925 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.GM) {
+			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1515493925 === Schulform.GE) {
+			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1515493925 === Schulform.PS) {
+			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1515493925 === Schulform.SK) {
+			_sevar_1515493925 = ((this as unknown === Jahrgaenge.JG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1515493925 === Schulform.HI) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.KS) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.V) {
+			_sevar_1515493925 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1515493925 === Schulform.BK) {
+			_sevar_1515493925 = false;
+		} else if (_seexpr_1515493925 === Schulform.SB) {
+			_sevar_1515493925 = false;
+		} else if (_seexpr_1515493925 === Schulform.WB) {
+			_sevar_1515493925 = false;
+		} else if (_seexpr_1515493925 === Schulform.G) {
+			_sevar_1515493925 = false;
+		}
+		return _sevar_1515493925;
+	}
+
+	/**
+	 * Gibt die Bezeichnung der Lernbereichtsnote 1 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 1 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
+	 */
+	public getLernbereichsnote1Bezeichnung(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : string | null {
+		if (!this.hatLernbereichsnote1(schulform, schulgliederung, schuljahr))
+			return null;
+		let _sevar_825399400 : any;
+		const _seexpr_825399400 = (schulform);
+		if (_seexpr_825399400 === Schulform.H) {
+			_sevar_825399400 = "Arbeitslehre";
+		} else if (_seexpr_825399400 === Schulform.GM) {
+			_sevar_825399400 = "Arbeitslehre";
+		} else if (_seexpr_825399400 === Schulform.GE) {
+			_sevar_825399400 = "Arbeitslehre";
+		} else if (_seexpr_825399400 === Schulform.PS) {
+			_sevar_825399400 = "Arbeitslehre";
+		} else if (_seexpr_825399400 === Schulform.SK) {
+			_sevar_825399400 = "Arbeitslehre";
+		} else {
+			_sevar_825399400 = "Gesellschaftslehre";
+		}
+		return _sevar_825399400;
+	}
+
+	/**
+	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 2 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return true, falls eine Lernbereichsnote vorhanden ist.
+	 */
+	public hatLernbereichsnote2(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : boolean {
+		let _sevar_1174212382 : any;
+		const _seexpr_1174212382 = (schulform);
+		if (_seexpr_1174212382 === Schulform.R) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.SR) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.H) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.S) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.FW) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.WF) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.GY) {
+			_sevar_1174212382 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.SG) {
+			_sevar_1174212382 = (schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown) ? (this as unknown === Jahrgaenge.JG_EF as unknown) : (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.GM) {
+			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1174212382 === Schulform.GE) {
+			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1174212382 === Schulform.PS) {
+			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1174212382 === Schulform.SK) {
+			_sevar_1174212382 = ((this as unknown === Jahrgaenge.JG_10 as unknown) || (this as unknown === Jahrgaenge.JG_09 as unknown) || (this as unknown === Jahrgaenge.JG_08 as unknown));
+		} else if (_seexpr_1174212382 === Schulform.HI) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.KS) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.V) {
+			_sevar_1174212382 = (this as unknown === Jahrgaenge.JG_10 as unknown);
+		} else if (_seexpr_1174212382 === Schulform.BK) {
+			_sevar_1174212382 = false;
+		} else if (_seexpr_1174212382 === Schulform.SB) {
+			_sevar_1174212382 = false;
+		} else if (_seexpr_1174212382 === Schulform.WB) {
+			_sevar_1174212382 = false;
+		} else if (_seexpr_1174212382 === Schulform.G) {
+			_sevar_1174212382 = false;
+		}
+		return _sevar_1174212382;
+	}
+
+	/**
+	 * Gibt die Bezeichnung der Lernbereichtsnote 2 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 2 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
+	 */
+	public getLernbereichsnote2Bezeichnung(schulform : Schulform, schulgliederung : Schulgliederung | null, schuljahr : number) : string | null {
+		if (!this.hatLernbereichsnote2(schulform, schulgliederung, schuljahr))
+			return null;
+		return "Naturwissenschaft";
 	}
 
 	/**

@@ -463,10 +463,12 @@ public enum Jahrgaenge {
 	private static final @NotNull HashMap<@NotNull Long, Jahrgaenge> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull ArrayList<Schulform> @NotNull[] schulformen;
+	private @NotNull
+	final ArrayList<Schulform> @NotNull[] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull ArrayList<@NotNull String> @NotNull[] bezeichnungen;
+	private @NotNull
+	final ArrayList<@NotNull String> @NotNull[] bezeichnungen;
 
 
 	/**
@@ -949,6 +951,93 @@ public enum Jahrgaenge {
 			default:
 				return false;
 		}
+	}
+
+
+	/**
+	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 1 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return true, falls eine Lernbereichsnote vorhanden ist.
+	 */
+	public boolean hatLernbereichsnote1(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
+		return switch (schulform) {
+			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
+			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
+				? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
+			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) && (schuljahr <= 2024))
+				|| ((this == Jahrgaenge.JG_09) && (schuljahr <= 2023))
+				|| ((this == Jahrgaenge.JG_08) && (schuljahr <= 2022));
+			case HI -> (this == Jahrgaenge.JG_10);
+			case KS -> (this == Jahrgaenge.JG_10);
+			case V -> (this == Jahrgaenge.JG_10);
+			case BK, SB, WB, G -> false;
+		};
+	}
+
+
+	/**
+	 * Gibt die Bezeichnung der Lernbereichtsnote 1 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 1 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
+	 */
+	public String getLernbereichsnote1Bezeichnung(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
+		if (!hatLernbereichsnote1(schulform, schulgliederung, schuljahr))
+			return null;
+		return switch (schulform) {
+			case H, GM, GE, PS, SK -> "Arbeitslehre";
+			default -> "Gesellschaftslehre";
+		};
+	}
+
+
+	/**
+	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 2 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return true, falls eine Lernbereichsnote vorhanden ist.
+	 */
+	public boolean hatLernbereichsnote2(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
+		return switch (schulform) {
+			case R, SR, H, S, FW, WF -> (this == Jahrgaenge.JG_10);
+			case GY, SG -> (schulgliederung == Schulgliederung.GY8) || (schulgliederung == Schulgliederung.DEFAULT)
+				? (this == Jahrgaenge.JG_EF) : (this == Jahrgaenge.JG_10);
+			case GM, GE, PS, SK -> ((this == Jahrgaenge.JG_10) || (this == Jahrgaenge.JG_09) || (this == Jahrgaenge.JG_08));
+			case HI -> (this == Jahrgaenge.JG_10);
+			case KS -> (this == Jahrgaenge.JG_10);
+			case V -> (this == Jahrgaenge.JG_10);
+			case BK, SB, WB, G -> false;
+		};
+	}
+
+
+	/**
+	 * Gibt die Bezeichnung der Lernbereichtsnote 2 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 2 angebeben werden kann.
+	 *
+	 * @param schulform        die Schulform
+	 * @param schulgliederung  die Schulgliederung
+	 * @param schuljahr        das Schuljahr
+	 *
+	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
+	 */
+	public String getLernbereichsnote2Bezeichnung(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
+		if (!hatLernbereichsnote2(schulform, schulgliederung, schuljahr))
+			return null;
+		return "Naturwissenschaft";
 	}
 
 }

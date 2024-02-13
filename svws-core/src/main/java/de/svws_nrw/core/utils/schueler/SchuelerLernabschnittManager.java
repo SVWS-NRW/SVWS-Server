@@ -15,9 +15,13 @@ import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
 import de.svws_nrw.core.utils.kurse.KursUtils;
@@ -29,9 +33,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public class SchuelerLernabschnittManager {
 
+	private final @NotNull Schulform _schulform;
 	private final @NotNull SchuelerListeEintrag _schueler;
 
 	private final @NotNull SchuelerLernabschnittsdaten _lernabschnittsdaten;
+	private final @NotNull Schuljahresabschnitt _schuljahresabschnitt;
 	private final @NotNull Map<@NotNull Long, @NotNull SchuelerLeistungsdaten> _mapLeistungById = new HashMap<>();
 
 	private final @NotNull List<@NotNull FaecherListeEintrag> _faecher = new ArrayList<>();
@@ -93,8 +99,10 @@ public class SchuelerLernabschnittManager {
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Lernabschnittsdaten und den übergebenen Katalogen
 	 *
+	 * @param schulform             die Schulform der Schule des Schülers
 	 * @param schueler              Informationen zu dem Schüler
 	 * @param lernabschnittsdaten   die Lernabschnittsdaten
+	 * @param schuljahresabschnitt  der Schuljahresabschnitt der Lernabschnittsdaten
 	 * @param faecher               der Katalog der Fächer
 	 * @param jahrgaenge            der Katalog der Jahrgänge
 	 * @param klassen               der Katalog der Klassen
@@ -102,16 +110,20 @@ public class SchuelerLernabschnittManager {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public SchuelerLernabschnittManager(final @NotNull SchuelerListeEintrag schueler,
+	public SchuelerLernabschnittManager(final @NotNull Schulform schulform,
+			final @NotNull SchuelerListeEintrag schueler,
 			final @NotNull SchuelerLernabschnittsdaten lernabschnittsdaten,
+			final @NotNull Schuljahresabschnitt schuljahresabschnitt,
 			final @NotNull List<@NotNull FaecherListeEintrag> faecher,
 			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
+		this._schulform = schulform;
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
+		this._schuljahresabschnitt = schuljahresabschnitt;
 		initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
 		initFaecher(faecher);
 		initFoerderschwerpunkte(foerderschwerpunkte);
@@ -188,6 +200,61 @@ public class SchuelerLernabschnittManager {
 	 */
 	public @NotNull SchuelerLernabschnittsdaten lernabschnittGet() {
 		return this._lernabschnittsdaten;
+	}
+
+
+	/**
+	 * Gibt die Schulgliederung zurück, die dem Lernabschnitt zugeordnet ist oder
+	 * null, falls keine Zuordnung existiert.
+	 *
+	 * @return die Schulgliederung oder null
+	 */
+	public Schulgliederung lernabschnittGetGliederung() {
+		if (this._lernabschnittsdaten.schulgliederung == null)
+			return null;
+		return Schulgliederung.getByKuerzel(this._lernabschnittsdaten.schulgliederung);
+	}
+
+
+	/**
+	 * Gibt den Statistik-Jahrgang zurück, der dem Lernabschnitt zugeordnet ist oder null,
+	 * falls kein Jahrgang zugeordnet ist.
+	 *
+	 * @return der Statistik-Jahrgang
+	 */
+	public Jahrgaenge lernabschnittGetStatistikJahrgang() {
+		if (this._lernabschnittsdaten.jahrgangID == null)
+			return null;
+		final JahrgangsListeEintrag eintrag = _mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
+		if ((eintrag == null) || (eintrag.kuerzelStatistik == null))
+			return null;
+		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
+	}
+
+
+	/**
+	 * Gibt die Bezeichnung für die Lernbereichtsnote 1 zurück, sofern eine angegeben werden kann.
+	 *
+	 * @return die Bezeichnung für die Lernbereichtsnote 1
+	 */
+	public String lernabschnittGetLernbereichsnote1Bezeichnung() {
+		final Jahrgaenge jg = lernabschnittGetStatistikJahrgang();
+		if (jg == null)
+			return null;
+		return jg.getLernbereichsnote1Bezeichnung(_schulform, lernabschnittGetGliederung(), _schuljahresabschnitt.schuljahr);
+	}
+
+
+	/**
+	 * Gibt die Bezeichnung für die Lernbereichtsnote 2 zurück, sofern eine angegeben werden kann.
+	 *
+	 * @return die Bezeichnung für die Lernbereichtsnote 2
+	 */
+	public String lernabschnittGetLernbereichsnote2Bezeichnung() {
+		final Jahrgaenge jg = lernabschnittGetStatistikJahrgang();
+		if (jg == null)
+			return null;
+		return jg.getLernbereichsnote2Bezeichnung(_schulform, lernabschnittGetGliederung(), _schuljahresabschnitt.schuljahr);
 	}
 
 
@@ -515,6 +582,26 @@ public class SchuelerLernabschnittManager {
 	public @NotNull Note noteGetByLeistungIdOrException(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		return Note.fromKuerzel(leistung.note);
+	}
+
+
+	/**
+	 * Gibt die Schulform der Schule des Schülers zurück.
+	 *
+	 * @return die Schulform der Schule des Schülers
+	 */
+	public @NotNull Schulform schulformGet() {
+		return this._schulform;
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt des Lernabschnittes zurück.
+	 *
+	 * @return der Schuljahresabschnitt des Lernabschnittes
+	 */
+	public @NotNull Schuljahresabschnitt schuljahresabschnittGet() {
+		return this._schuljahresabschnitt;
 	}
 
 
