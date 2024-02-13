@@ -289,6 +289,9 @@ public class KursblockungDynDaten {
 				case SCHUELER_VERBIETEN_MIT_SCHUELER:
 					schritt01FehlerBeiReferenzen_Regeltyp14(daten, setSchueler);
 					break;
+				case KURS_MAXIMALE_SCHUELERANZAHL:
+					schritt01FehlerBeiReferenzen_Regeltyp15(daten, setKurse);
+					break;
 				default:
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
 			}
@@ -453,6 +456,18 @@ public class KursblockungDynDaten {
 		final long schuelerID2 = daten[1];
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_MAXIMALE_SCHUELERANZAHL daten.length=" + length + ", statt 2!", length != 2);
+
+		final long kursID = daten[0];
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+
+		final int anzahlSus = daten[1].intValue();
+		DeveloperNotificationException.ifSmaller("anzahlSus", anzahlSus,   0);
+		DeveloperNotificationException.ifGreater("anzahlSus", anzahlSus, 100);
 	}
 
 	private void schritt02FehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {

@@ -135,8 +135,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 
 	/**
 	 *  Der Regel-Typ zum forcieren, dass ein Kurs eine bestimmte Schüleranzahl nicht überschreitet.
-	 *  <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
-	 *  <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 *  <br>- Parameter A: Datenbank-ID des Kurses (long)
+	 *  <br>- Parameter B: Die maximal erlaubte Schüleranzahl. Gültige Werte sind im Intervall 0 bis 100.
 	 */
 	public static readonly KURS_MAXIMALE_SCHUELERANZAHL : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MAXIMALE_SCHUELERANZAHL", 15, 15, "Kurs: Maximale Schüleranzahl", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
 
