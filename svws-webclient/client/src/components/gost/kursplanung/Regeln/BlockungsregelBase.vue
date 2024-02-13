@@ -8,7 +8,14 @@
 			</template>
 			<template #body>
 				<div v-for="r in regeln" :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
-					<slot name="regelRead" :regel="r" />
+					<svws-ui-tooltip autosize>
+						<slot name="regelRead" :regel="r" />
+						<template #content>
+							<template v-for="text in getErgebnismanager().regelGetMengeAnVerletzungen(GostKursblockungRegelTyp.fromTyp(r.typ))" :key="text">
+								<br>{{ text }}
+							</template>
+						</template>
+					</svws-ui-tooltip>
 					<div class="svws-ui-td" role="cell">
 						<svws-ui-button type="icon" @click.stop="regel_entfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
 					</div>
@@ -36,11 +43,11 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungsergebnisManager, GostKursblockungRegelTyp } from "@core";
-	import { GostBlockungRegel } from "@core";
-	import type {DataTableColumn} from "@ui";
-	import {api} from "~/router/Api";
-	import {computed, type ComputedRef} from "vue";
+	import { computed } from "vue";
+	import type {DataTableColumn } from "@ui";
+	import type { GostBlockungsergebnisManager } from "@core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
+	import { api } from "~/router/Api";
 
 	type DataTableColumnSource = DataTableColumn | string
 
@@ -60,7 +67,7 @@
 		(e: 'regelEntfernen', v: GostBlockungRegel): void;
 	}>()
 
-	const pending: ComputedRef<boolean> = computed(() => api.status.pending);
+	const pending = computed<boolean>(() => api.status.pending);
 
 	function select_regel(r: GostBlockungRegel) {
 		emit('update:modelValue', r);
