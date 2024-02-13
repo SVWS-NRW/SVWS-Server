@@ -323,6 +323,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_kursID_kurs.clear();
 		this._map_kursID_schuelerIDs.clear();
 		this._map_kursID_dummySuS.clear();
+		this._map_kursID_maxSuS.clear();
 		this._map_fachID_kurse.clear();
 		this._map_fachartID_kurse.clear();
 		this._map_fachartID_kursdifferenz.clear();
@@ -394,6 +395,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		this._map_kursID_dummySuS.clear();
+		this._map_kursID_maxSuS.clear();
 		this._map_regelID_verletzungen.clear();
 		this._list_verletzte_regeltypen_sortiert.clear();
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))

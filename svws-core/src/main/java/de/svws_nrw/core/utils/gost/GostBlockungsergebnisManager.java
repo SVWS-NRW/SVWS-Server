@@ -256,6 +256,7 @@ public class GostBlockungsergebnisManager {
 		_map_kursID_kurs.clear();
 		_map_kursID_schuelerIDs.clear();
 		_map_kursID_dummySuS.clear();
+		_map_kursID_maxSuS.clear();
 		_map_fachID_kurse.clear();
 		_map_fachartID_kurse.clear();
 		_map_fachartID_kursdifferenz.clear();
@@ -374,6 +375,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		_map_kursID_dummySuS.clear(); // Wird mit Regel 9 gefüllt.
+		_map_kursID_maxSuS.clear(); // Wird mit Regel 15 gefüllt.
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
 
@@ -534,7 +536,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(0);
 		final int anzahl = r.parameter.get(1).intValue();
 		DeveloperNotificationException.ifTrue("Regel 9 DummySuS-Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
-		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_dummySuS, idKurs, anzahl);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_dummySuS, idKurs, anzahl); // map wird vorher geleert
 	}
 
 	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
@@ -639,7 +641,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(0);
 		final int maxSuS = r.parameter.get(1).intValue();
 		DeveloperNotificationException.ifTrue("Regel 15 maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
-		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_maxSuS, idKurs, maxSuS);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_maxSuS, idKurs, maxSuS); // map wird vorher geleert
 		final int sus = getOfKursAnzahlSchuelerPlusDummy(idKurs);
 
 		if (sus > maxSuS) {
