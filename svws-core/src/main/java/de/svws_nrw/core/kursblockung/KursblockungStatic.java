@@ -4,21 +4,25 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Diese Klasse bietet statische Helfer-Methoden an.
+/**
+ * Diese Klasse bietet statische Helfer-Methoden an.
  *
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch
+ */
 public final class KursblockungStatic {
 
 	private KursblockungStatic() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
 
-	/** Erzeugt ein Array der Größe {@code n}, füllt es mit den Zahlen {@code 0 bis n-1} und permutiert das Array dann
-	 * zufällig.
+	/**
+	 * Liefert ein neues Array der Größe {@code n} mit den Zahlen {@code 0 bis n-1} permutiert.
 	 *
-	 * @param  pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param  n       Die Größe des Arrays.
-	 * @return         Eine Array-Referenz. */
+	 * @param  pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param  n        Die Größe des Arrays.
+	 *
+	 * @return ein neues Array der Größe {@code n} mit den Zahlen {@code 0 bis n-1} permutiert.
+	 */
 	public static @NotNull int[] gibPermutation(final @NotNull Random pRandom, final int n) {
 		final @NotNull int[] temp = new int[n];
 		for (int i = 0; i < n; i++) {
@@ -28,10 +32,12 @@ public final class KursblockungStatic {
 		return temp;
 	}
 
-	/** Permutiert das Array {@code perm} zufällig.
+	/**
+	 * Permutiert das Array {@code perm} zufällig.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param perm    Das zu permutierende Array. */
+	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param perm     Das zu permutierende Array.
+	 */
 	public static void aktionPermutiere(final @NotNull Random pRandom, final @NotNull int[] perm) {
 		final int n = perm.length;
 		for (int i1 = 0; i1 < n; i1++) {
@@ -42,6 +48,5 @@ public final class KursblockungStatic {
 			perm[i2] = s1;
 		}
 	}
-
 
 }

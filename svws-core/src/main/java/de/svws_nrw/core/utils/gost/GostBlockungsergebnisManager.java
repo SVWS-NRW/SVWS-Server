@@ -132,6 +132,9 @@ public class GostBlockungsergebnisManager {
 	/** Liste aller Regeltypen, die mindestens eine Regelverletzung haben. */
 	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _list_verletzte_regeltypen_sortiert = new ArrayList<>();
 
+	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität */
+	private @NotNull String _regelverletzungen_der_faecherparallelitaet = "";
+
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
 	 * Ergebnisses ist -1 und muss noch gesetzt werden.
@@ -260,6 +263,7 @@ public class GostBlockungsergebnisManager {
 		_map_fachID_kurse.clear();
 		_map_fachartID_kurse.clear();
 		_map_fachartID_kursdifferenz.clear();
+		_regelverletzungen_der_faecherparallelitaet = "";
 
 		// copy attributes
 		_ergebnis = new GostBlockungsergebnis();
@@ -378,6 +382,7 @@ public class GostBlockungsergebnisManager {
 		_map_kursID_maxSuS.clear(); // Wird mit Regel 15 gefüllt.
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
+		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4(); // Fächerparallelität
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
@@ -436,12 +441,53 @@ public class GostBlockungsergebnisManager {
 		updateAll();
 	}
 
+	private @NotNull String stateRegelvalidierungTooltip4() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		for (int nr = 1; nr <= _map_schienenNr_schiene.size(); nr++) {
+			final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
+			final @NotNull String proSchiene = stateRegelvalidierungTooltip4proSchiene(schiene.id);
+			if (!proSchiene.isEmpty())
+				sb.append("Schiene " + nr + ":\n" + proSchiene);
+		}
+
+		return sb.toString();
+	}
+
+	private @NotNull String stateRegelvalidierungTooltip4proSchiene(final long idSchiene) {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		for (final long idFachart : _fachartmenge_sortiert) {
+			final @NotNull String proFachart = stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene, idFachart);
+			if (!proFachart.isEmpty())
+				sb.append(proFachart + "\n");
+		}
+
+		return sb.toString();
+	}
+
+	private @NotNull String stateRegelvalidierungTooltip4proSchieneUndFachart(final long idSchiene, final long idFachart) {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		if (_map2D_schienenID_fachartID_kurse.contains(idSchiene, idFachart)) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
+			if (kursGruppe.size() >= 2) {
+				sb.append("  " + getOfFachartName(idFachart) + ":");
+				for (int i = 0; i < kursGruppe.size(); i++) {
+					final @NotNull GostBlockungsergebnisKurs kurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
+					sb.append((i == 0 ? "" : ",") + " " + getOfKursName(kurs.id));
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
 		for (int schienenNr = r.parameter.get(1).intValue(); schienenNr <= r.parameter.get(2).intValue(); schienenNr++)
 			for (final GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse)
 				if (eKurs.kursart == r.parameter.get(0).intValue()) {
 					regelVerletzungen.add(r.id);
-					MapUtils.addToList(mapRegelVerletzungen, 1, "Die Kursart von " + getOfKursName(eKurs.id) + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+					MapUtils.addToList(mapRegelVerletzungen, 1, "Kursart " + getOfKursName(eKurs.id) + " sollte nicht auf Schiene " + schienenNr + " liegen.");
 				}
 	}
 
@@ -450,7 +496,7 @@ public class GostBlockungsergebnisManager {
 		final int schienenNr = r.parameter.get(1).intValue();
 		if (!getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 2, "Der Kurs " + getOfKursName(idKurs) + " sollte fixiert sein in Schiene " + schienenNr + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 2, "Kurs " + getOfKursName(idKurs) + " sollte fixiert sein in Schiene " + schienenNr + ".");
 		}
 	}
 
@@ -459,7 +505,7 @@ public class GostBlockungsergebnisManager {
 		final int schienenNr = r.parameter.get(1).intValue();
 		if (getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 3, "Der Kurs " + getOfKursName(idKurs) + " sollte gesperrt sein in Schiene " + schienenNr + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 3, "Kurs " + getOfKursName(idKurs) + " sollte gesperrt sein in Schiene " + schienenNr + ".");
 		}
 	}
 
@@ -468,7 +514,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(1);
 		if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 4, "SchülerIn " + getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 4, getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".");
 		}
 	}
 
@@ -477,7 +523,7 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(1);
 		if (getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 5, "SchülerIn " + getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 5, getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".");
 		}
 	}
 
@@ -493,7 +539,7 @@ public class GostBlockungsergebnisManager {
 				final boolean b2 = (schienenNrVon <= nr) && (nr <= schienenNrBis);
 				if (b1 != b2) {
 					regelVerletzungen.add(r.id);
-					MapUtils.addToList(mapRegelVerletzungen, 6, "Die Kursart des Kurses " + getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " +  schienenNrVon + " bis " + schienenNrBis + " sein.");
+					MapUtils.addToList(mapRegelVerletzungen, 6, "Kursart von " + getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " +  schienenNrVon + " bis " + schienenNrBis + " sein.");
 				}
 			}
 	}
@@ -506,7 +552,7 @@ public class GostBlockungsergebnisManager {
 				if (schiene1 == schiene2) {
 					regelVerletzungen.add(r.id);
 					final int nr  = getSchieneG(schiene1.id).nummer;
-					MapUtils.addToList(mapRegelVerletzungen, 7, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.");
+					MapUtils.addToList(mapRegelVerletzungen, 7, "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.");
 				}
 	}
 
@@ -520,14 +566,14 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
 				if (!set2.contains(schiene1)) {
 					regelVerletzungen.add(r.id);
-					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
 				}
 		} else {
 			// "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
 			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
 				if (!set1.contains(schiene2)) {
 					regelVerletzungen.add(r.id);
-					MapUtils.addToList(mapRegelVerletzungen, 8, "Der Kurs " + getOfKursName(idKurs1) + " und der Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
+					MapUtils.addToList(mapRegelVerletzungen, 8, "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.");
 				}
 		}
 	}
@@ -549,7 +595,7 @@ public class GostBlockungsergebnisManager {
 								if (gLehr1.id == gLehr2.id) {
 									regelVerletzungen.add(r.id);
 									final int nr  = getSchieneG(eSchiene.id).nummer;
-									MapUtils.addToList(mapRegelVerletzungen, 10, "Der Kurs " + getOfKursName(eKurs1.id) + " und der Kurs " + getOfKursName(eKurs2.id) + " haben die Lehrkraft " + gLehr1.kuerzel + " in der selben Schiene (" + nr + ").");
+									MapUtils.addToList(mapRegelVerletzungen, 10, "Kurs " + getOfKursName(eKurs1.id) + " und Kurs " + getOfKursName(eKurs2.id) + " haben die Lehrkraft " + gLehr1.kuerzel + " in der selben Schiene (" + nr + ").");
 								}
 	}
 
@@ -561,25 +607,25 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			MapUtils.addToList(mapRegelVerletzungen, 11, getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.");
 			return;
 		}
 
 		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			MapUtils.addToList(mapRegelVerletzungen, 11, getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.");
 			return;
 		}
 
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 11, getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".");
 			return;
 		}
 
 		if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 11, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+			MapUtils.addToList(mapRegelVerletzungen, 11, getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.");
 		}
 
 	}
@@ -592,25 +638,25 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			MapUtils.addToList(mapRegelVerletzungen, 12, getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
 			return;
 		}
 
 		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " hat gar nicht das Fach " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
+			MapUtils.addToList(mapRegelVerletzungen, 12, getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.");
 			return;
 		}
 
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart im Fach " + fach.kuerzelAnzeige + ".");
+			MapUtils.addToList(mapRegelVerletzungen, 12, getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".");
 			return;
 		}
 
 		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
-			MapUtils.addToList(mapRegelVerletzungen, 12, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+			MapUtils.addToList(mapRegelVerletzungen, 12, getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.");
 		}
 
 	}
@@ -622,7 +668,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFach fach : _parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
 			if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
-				MapUtils.addToList(mapRegelVerletzungen, 13, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+				MapUtils.addToList(mapRegelVerletzungen, 13, getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.");
 			}
 	}
 
@@ -633,7 +679,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFach fach : _parent.schuelerGetFachListeGemeinsamerFacharten(idSchueler1, idSchueler2))
 			if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
-				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
+				MapUtils.addToList(mapRegelVerletzungen, 14, getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.");
 			}
 	}
 
@@ -1454,6 +1500,19 @@ public class GostBlockungsergebnisManager {
 	 */
 	public int getOfFachartKursdifferenz(final long idFachart) throws DeveloperNotificationException {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
+	}
+
+	/**
+	 * Liefert den Namen der Fachart, z. B. D-LK.
+	 *
+	 * @param idFachart  Die ID der Fachart.
+	 *
+	 * @return den Namen der Fachart, z. B. D-LK.
+	 */
+	public String getOfFachartName(final long idFachart) {
+		final long idFach = GostKursart.getFachID(idFachart);
+		final int idKursart = GostKursart.getKursartID(idFachart);
+		return _parent.faecherManager().getOrException(idFach).kuerzelAnzeige + "-" + GostKursart.fromID(idKursart).kuerzel;
 	}
 
 	/**
@@ -2972,6 +3031,15 @@ public class GostBlockungsergebnisManager {
 	 */
 	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
 		return _list_verletzte_regeltypen_sortiert;
+	}
+
+	/**
+	 * Liefert einen Tooltip für alle Regelverletzungen der Fächerparallelität.
+	 *
+	 * @return einen Tooltip für alle Regelverletzungen der Fächerparallelität.
+	 */
+	final @NotNull String regelGetTooltipFuerFaecherparallelitaet() {
+		return _regelverletzungen_der_faecherparallelitaet;
 	}
 
 	// #########################################################################
