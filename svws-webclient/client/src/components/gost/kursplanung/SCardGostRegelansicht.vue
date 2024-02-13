@@ -17,7 +17,7 @@
 			<Blockungsregel_13 v-if="!nurRegelverletzungen || regeln[13].value.length" v-model="regel" :map-schueler="mapSchueler" :regeln="regeln[13].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_14 v-if="!nurRegelverletzungen || regeln[14].value.length" v-model="regel" :map-schueler="mapSchueler" :regeln="regeln[14].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 		</div>
-		<Blockungsregel_10 v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
+		<Blockungsregel_10 v-if="!nurRegelverletzungen || regeln[10].value.length" v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 	</div>
 </template>
 
