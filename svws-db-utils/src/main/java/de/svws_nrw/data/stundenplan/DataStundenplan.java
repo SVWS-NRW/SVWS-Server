@@ -18,6 +18,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -138,7 +140,26 @@ public final class DataStundenplan extends DataManager<Long> {
 		Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-		Map.entry("wochenTypModell", (conn, dto, value, map) -> dto.WochentypModell = JSONMapper.convertToIntegerInRange(value, false, 0, 100))
+		Map.entry("wochenTypModell", (conn, dto, value, map) -> {
+			final long idStundenplan = dto.ID;
+			int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
+			if (wochentypmodell == 1)
+				wochentypmodell = 0;
+			// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
+			final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
+					.stream().map(z -> z.ID).toList();
+			if (!idsZeitraster.isEmpty()) {
+				final List<DTOStundenplanUnterricht> unterrichte = conn.queryList("SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN ?1 AND e.Wochentyp > ?2", DTOStundenplanUnterricht.class, idsZeitraster, wochentypmodell);
+				if (!unterrichte.isEmpty()) {
+					for (final DTOStundenplanUnterricht unterricht : unterrichte)
+						unterricht.Wochentyp = 0;
+					conn.transactionPersistAll(unterrichte);
+					conn.transactionFlush();
+				}
+			}
+			// Setze das Wochentyp-Modell
+			dto.WochentypModell = wochentypmodell;
+		})
 	);
 
 	@Override
