@@ -42,8 +42,8 @@
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 							<template #content>
 								Maximale Kursdifferenz: {{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}
-								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm.filter(differenz => differenz > 0)" :key="d">
-									<br>Differenz {{ i }}: {{ d }}x
+								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="d">
+									<template v-if="d > 0"><br>Differenz {{ i }}: {{ d }}x</template>
 								</template>
 							</template>
 						</svws-ui-tooltip>

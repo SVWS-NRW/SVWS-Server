@@ -31,8 +31,15 @@
 				</template>
 				<template #cell(wert3)="{ rowData: row }">
 					<div class="table-cell">
-						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`Maximale Kursdifferenz: ${getBewertungWert(row, 3)}`"
-							:style="{'background-color': getBewertungColor(row, 3)}">{{ getBewertungWert(row, 3) }}</span>
+						<svws-ui-tooltip>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 3)}">{{ getBewertungWert(row, 3) }}</span>
+							<template #content>
+								Maximale Kursdifferenz: {{ getBewertungWert(row, 3) }}
+								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="d">
+									<template v-if="d > 0"><br>Differenz {{ i }}: {{ d }}x</template>
+								</template>
+							</template>
+						</svws-ui-tooltip>
 					</div>
 				</template>
 				<template #cell(wert4)="{ rowData: row }">
@@ -93,6 +100,7 @@
 	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
 
 	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
+	const mapErgebnismanager = ref<Map<number, GostBlockungsergebnisManager>>(new Map());
 
 	async function getWaiting() {
 		const p = workerManager.value?.waiting;
