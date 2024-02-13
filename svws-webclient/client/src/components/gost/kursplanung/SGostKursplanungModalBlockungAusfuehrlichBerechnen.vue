@@ -71,7 +71,8 @@
 					<i-ri-download-2-line />
 					<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
 				</svws-ui-button>
-				<svws-ui-button type="danger" @click="showModal().value = false">Abbrechen</svws-ui-button>
+				<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+				<svws-ui-button v-else type="danger" @click="closeModal">Alle berechneten Ergebnisse verwerfen und schließen</svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
@@ -116,6 +117,8 @@
 
 	const liste = computed<List<GostBlockungsergebnis>>(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
 	const listErgebnismanager = computed<List<GostBlockungsergebnisManager>>(() => workerManager.value?.getErgebnisManager() ?? new ArrayList<GostBlockungsergebnisManager>());
+
+	const nachfragen = ref(false);
 
 	async function getWaiting() {
 		const p = workerManager.value?.waiting;
@@ -163,7 +166,7 @@
 		for (const ergebnis of selected.value)
 			ergebnisse.add(ergebnis);
 		await props.addErgebnisse(ergebnisse);
-		showModal().value = false;
+		closeModal();
 	}
 
 	function getBewertungWert(ergebnis: GostBlockungsergebnis, value: number) : number {
@@ -192,5 +195,6 @@
 	}
 
 	const openModal = () => showModal().value = true;
+	const closeModal = () => (showModal().value = false) && (nachfragen.value = false);
 
 </script>

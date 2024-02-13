@@ -32,7 +32,7 @@
 								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Schnell </svws-ui-button>
 							</template>
 							<svws-ui-tooltip position="top" v-else>
-								<svws-ui-button type="transparent" disabled> <i-ri-calculator-line class="-mx-0.5" /> <s>Berechnen</s> </svws-ui-button>
+								<svws-ui-button type="transparent" disabled> <i-ri-calculator-line class="-mx-0.5" />Berechnen</svws-ui-button>
 								<template #content>
 									<div class="normal-case text-base rich-text">
 										Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
@@ -106,8 +106,6 @@
 		&& props.getDatenmanager().getFaecherAnzahl() > 0
 		&& props.getDatenmanager().kursGetAnzahl() > 0
 	)
-
-	const allow_berechne_blockung_lokal = computed(() => allow_berechne_blockung.value);
 
 	const listBlockungen = computed(()=> {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
