@@ -36,7 +36,7 @@
 								</template>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else>							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span></span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung2Wert(row.id)} Wahlkonflikte`" :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
 						<svws-ui-tooltip>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
@@ -47,7 +47,13 @@
 								</template>
 							</template>
 						</svws-ui-tooltip>
-						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+						<svws-ui-tooltip v-if="auswahlErgebnis?.id === row.id" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+							<template #content>
+								<pre>{{ getErgebnismanager().regelGetTooltipFuerFaecherparallelitaet() }}</pre>
+							</template>
+						</svws-ui-tooltip>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 					</span>
 					<div class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
