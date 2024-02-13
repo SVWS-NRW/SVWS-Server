@@ -360,8 +360,8 @@
 			return false;
 		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id) && kurs.id === dragData.kurs.id)
 			return false;
-		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, dragData.schiene.id) && kurs.id === dragData.kurs.id)
-			return false;
+		// if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, dragData.schiene.id) && kurs.id === dragData.kurs.id)
+		// 	return false;
 		return true;
 	});
 

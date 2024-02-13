@@ -347,8 +347,7 @@
 
 	async function dropKursSchiene(zone: SGostKursplanungKursansichtDragData) {
 		if ((zone === undefined) || (dragDataKursSchiene.value === undefined)) {
-			if (dropDataKursSchiene.value !== undefined)
-				dropDataKursSchiene.value = undefined;
+			dropDataKursSchiene.value = undefined;
 			return;
 		}
 		if (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id)) {
