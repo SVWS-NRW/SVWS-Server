@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
  * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE for Issue #1483
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE for Issue #1483, #1496
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE for Issue #1483
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE for Issue #1483
  * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE for Issue #1483
@@ -186,6 +186,16 @@ public enum GostKursblockungRegelTyp {
 	SCHUELER_VERBIETEN_MIT_SCHUELER(14, "Schüler: Verbieten mit Schüler", Arrays.asList(
 		GostKursblockungRegelParameterTyp.SCHUELER_ID,
 		GostKursblockungRegelParameterTyp.SCHUELER_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Kurs eine bestimmte Schüleranzahl nicht überschreitet.
+	 * <br>- Parameter A: Datenbank-ID des Kurses (long)
+	 * <br>- Parameter B: Die maximal erlaubte Schüleranzahl. Gültige Werte sind im Intervall 0 bis 100.
+	 */
+	KURS_MAXIMALE_SCHUELERANZAHL(15, "Kurs: Maximale Schüleranzahl", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.GANZZAHL
 	));
 
 	/** Die ID des Regel-Typs */
@@ -296,8 +306,9 @@ public enum GostKursblockungRegelTyp {
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
 	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel pRegel, final int pSchienenNr) {
-		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		final @NotNull List<@NotNull Long> param = pRegel.parameter;
+
+		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		switch (typ) {
 			// Fälle, bei denen es zu einer Veränderung kommt.
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
@@ -316,7 +327,7 @@ public enum GostKursblockungRegelTyp {
 					return new long[] { param.get(0), von, bis };
 				return null;
 
-			// Keine Veränderung: Kopiere die Parameter.
+			// Keine Veränderung: Kopiere alle Parameter.
 			default:
 				final long[] temp = new long[param.size()];
 				for (int i = 0; i < temp.length; i++)

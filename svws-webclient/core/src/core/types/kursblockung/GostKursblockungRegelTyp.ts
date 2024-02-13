@@ -134,6 +134,13 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	public static readonly SCHUELER_VERBIETEN_MIT_SCHUELER : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_MIT_SCHUELER", 14, 14, "Schüler: Verbieten mit Schüler", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.SCHUELER_ID));
 
 	/**
+	 *  Der Regel-Typ zum forcieren, dass ein Kurs eine bestimmte Schüleranzahl nicht überschreitet.
+	 *  <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 *  <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 */
+	public static readonly KURS_MAXIMALE_SCHUELERANZAHL : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MAXIMALE_SCHUELERANZAHL", 15, 15, "Kurs: Maximale Schüleranzahl", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
+
+	/**
 	 * Die ID des Regel-Typs
 	 */
 	public readonly typ : number;
@@ -250,8 +257,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
 	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		const param : List<number> = pRegel.parameter;
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		switch (typ) {
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
