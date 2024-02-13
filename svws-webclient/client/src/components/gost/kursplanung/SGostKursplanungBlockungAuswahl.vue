@@ -26,9 +26,9 @@
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
 							<template v-if="allow_berechne_blockung">
-								<s-gost-kursplanung-modal-blockung-lokal-berechnen v-if="allow_berechne_blockung" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
+								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
 									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Ausführlich </svws-ui-button>
-								</s-gost-kursplanung-modal-blockung-lokal-berechnen>
+								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
 								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Schnell </svws-ui-button>
 							</template>
 							<svws-ui-tooltip position="top" v-else>
