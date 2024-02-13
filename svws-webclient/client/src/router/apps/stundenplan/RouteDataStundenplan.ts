@@ -99,6 +99,9 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.start();
 		await api.server.patchStundenplan(data, api.schema, this.auswahl.id);
 		const daten = this.daten;
+		Object.assign(daten, data);
+		if (data.wochenTypModell !== undefined)
+			this.stundenplanManager.stundenplanSetWochenTypModell(data.wochenTypModell);
 		if (this.auswahl) {
 			if (data.bezeichnungStundenplan)
 				this.auswahl.bezeichnung = data.bezeichnungStundenplan;
@@ -108,7 +111,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 				this.auswahl.gueltigBis = data.gueltigBis;
 			this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
 		}
-		this.setPatchedState({daten: Object.assign(daten, data), auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege});
+		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
 		api.status.stop();
 	}
 

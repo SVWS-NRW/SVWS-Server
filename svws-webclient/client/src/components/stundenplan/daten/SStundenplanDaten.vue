@@ -4,7 +4,10 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
-					<svws-ui-input-number placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() || 1" @change="wochenTypModell => doPatch(wochenTypModell)" :min="1" />
+					<div :class="{'flex gap-2': showExtraWTM}">
+						<svws-ui-select :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" />
+						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
+					</div>
 					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
 					<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 				</svws-ui-input-wrapper>
@@ -51,9 +54,10 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { type StundenplanRaum, type Raum, ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
+	import type { StundenplanRaum, Raum } from "@core";
+	import { ArrayList } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
 
@@ -79,14 +83,13 @@
 		}
 	}
 
-	async function doPatch(wochenTypModell: number | null) {
-		if (wochenTypModell === null || wochenTypModell < 1)
-			return;
-		// 1 ist nicht zulässig, wird zu 0 konvertiert, allgemein
-		await props.patch({wochenTypModell: wochenTypModell === 1 ? 0 : wochenTypModell});
+	async function doPatch(wochenTypModell: number | null | undefined) {
+		if (wochenTypModell !== null)
+			await props.patch({wochenTypModell});
 	}
 
-
+	const wochenTypModell = ['keins', null, 'AB-Wochen', 'ABC-Wochen', 'ABCD-Wochen', 'weitere'];
+	const showExtraWTM = computed(() => props.stundenplanManager().getWochenTypModell() > 4);
 
 	const raum = ref<StundenplanRaum | undefined>();
 	const selected = ref<StundenplanRaum[]>([]);
