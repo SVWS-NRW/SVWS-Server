@@ -1,5 +1,5 @@
 import { shallowRef } from "vue";
-import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator } from "@core";
+import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsdatenManager, GostFaecherManager, GostBlockungsergebnisManager } from "@core";
 import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
 	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
@@ -19,6 +19,9 @@ export class WorkerManagerKursblockung {
 
 	/** Die Daten der Kursblockung */
 	protected blockung: GostBlockungsdaten;
+
+	/** Der Daten-Manager für die Nutzung im Worker */
+	protected datenManager: GostBlockungsdatenManager;
 
 	/** Die maximale Anzahl von Ergebnissen, die in der Liste der besten Ergebnisse gespeichert werden */
 	protected maxErgebnisse = shallowRef<number>(10);
@@ -66,6 +69,7 @@ export class WorkerManagerKursblockung {
 	public constructor(faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
 		this.faecherListe = faecherListe;
 		this.blockung = blockung;
+		this.datenManager = new GostBlockungsdatenManager(this.blockung, new GostFaecherManager(faecherListe));
 		this.usedWorkerThreads.value = 1;
 	}
 
@@ -198,6 +202,19 @@ export class WorkerManagerKursblockung {
 	 */
 	public getErgebnisse() : List<GostBlockungsergebnis> {
 		return this.ergebnisse.value;
+	}
+
+
+	/**
+	 * Gibt die Liste Ergebnis-Manager der aktuell besten Blockungsergebnisse zurück.
+	 *
+	 * @returns die Liste der Ergebnis-Manager zu den aktuell besten Ergebnissen
+	 */
+	public getErgebnisManager() : List<GostBlockungsergebnisManager> {
+		const result = new ArrayList<GostBlockungsergebnisManager>();
+		for (const ergebnis of this.getErgebnisse())
+			result.add(new GostBlockungsergebnisManager(this.datenManager, ergebnis));
+		return result;
 	}
 
 	/**
