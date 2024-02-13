@@ -471,9 +471,10 @@ public class GostBlockungsergebnisManager {
 
 		if (_map2D_schienenID_fachartID_kurse.contains(idSchiene, idFachart)) {
 			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
-			if (kursGruppe.size() >= 2) {
-				sb.append("  " + getOfFachartName(idFachart) + ":");
-				for (int i = 0; i < kursGruppe.size(); i++) {
+			final int n = kursGruppe.size();
+			if (n >= 2) {
+				sb.append("  " + getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
+				for (int i = 0; i < n; i++) {
 					final @NotNull GostBlockungsergebnisKurs kurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
 					sb.append((i == 0 ? "" : ",") + " " + getOfKursName(kurs.id));
 				}

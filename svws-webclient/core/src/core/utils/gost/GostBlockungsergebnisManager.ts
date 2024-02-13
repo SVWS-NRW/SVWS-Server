@@ -468,9 +468,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const sb : StringBuilder = new StringBuilder();
 		if (this._map2D_schienenID_fachartID_kurse.contains(idSchiene, idFachart)) {
 			const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
-			if (kursGruppe.size() >= 2) {
-				sb.append("  " + this.getOfFachartName(idFachart)! + ":");
-				for (let i : number = 0; i < kursGruppe.size(); i++) {
+			const n : number = kursGruppe.size();
+			if (n >= 2) {
+				sb.append("  " + this.getOfFachartName(idFachart)! + " (+" + (n - 1) + "):");
+				for (let i : number = 0; i < n; i++) {
 					const kurs : GostBlockungsergebnisKurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
 					sb.append((i === 0 ? "" : ",") + " " + this.getOfKursName(kurs.id)!);
 				}
