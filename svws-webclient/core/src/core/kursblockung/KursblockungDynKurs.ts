@@ -11,6 +11,11 @@ import { LogLevel } from '../../core/logger/LogLevel';
 export class KursblockungDynKurs extends JavaObject {
 
 	/**
+	 * Der Default-Wert für die höchste Schüleranzahl pro Kurs.
+	 */
+	private static readonly MAX_SUS_DEFAULT : number = 1000;
+
+	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
@@ -86,6 +91,11 @@ export class KursblockungDynKurs extends JavaObject {
 	private schuelerAnzDummy : number = 0;
 
 	/**
+	 * Die maximale Anzahl an erlaubten SuS in diesem Kurs.
+	 */
+	private schuelerAnzMax : number = 0;
+
+	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	private readonly logger : Logger;
@@ -103,7 +113,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInternalID          Eine interne ID für schnellen Zugriff.
 	 */
-	public constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, pKursID : number, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number) {
+	constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, pKursID : number, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number) {
 		super();
 		this._random = pRandom;
 		this.schienenLage = pSchienenLage;
@@ -115,6 +125,7 @@ export class KursblockungDynKurs extends JavaObject {
 		this.schuelerAnzDummy = 0;
 		this.logger = pLogger;
 		this.internalID = pInternalID;
+		this.schuelerAnzMax = KursblockungDynKurs.MAX_SUS_DEFAULT;
 		this.schienenLageSaveS = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveK = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveG = Array(this.schienenLage.length).fill(null);
@@ -149,7 +160,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Die Kurs-ID der GUI.
 	 */
-	public gibDatenbankID() : number {
+	gibDatenbankID() : number {
 		return this.databaseID;
 	}
 
@@ -158,7 +169,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Die zum Kurs zugehörige Fachart.
 	 */
-	public gibFachart() : KursblockungDynFachart {
+	gibFachart() : KursblockungDynFachart {
 		return this.fachart;
 	}
 
@@ -167,7 +178,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs.
 	 */
-	public gibSchuelerAnzahl() : number {
+	gibSchuelerAnzahl() : number {
 		return this.schuelerAnz + this.schuelerAnzDummy;
 	}
 
@@ -178,7 +189,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Liefert {@code true}, falls die Schienenlage des Kurses noch veränderbar ist.
 	 */
-	public gibHatFreiheitsgrade() : boolean {
+	gibHatFreiheitsgrade() : boolean {
 		return (this.schienenLageFixiert < this.schienenLage.length) && (this.schienenFrei.length > 0);
 	}
 
@@ -187,7 +198,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
 	 */
-	public gibSchienenLage() : Array<number> {
+	gibSchienenLage() : Array<number> {
 		const length : number = this.schienenLage.length;
 		const lage : Array<number> = Array(length).fill(0);
 		for (let i : number = 0; i < length; i++)
@@ -200,7 +211,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Die Anzahl an Schienen, die dieser Kurs belegt.
 	 */
-	public gibSchienenAnzahl() : number {
+	gibSchienenAnzahl() : number {
 		return this.schienenLage.length;
 	}
 
@@ -209,7 +220,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser.
 	 */
-	public gibGewichtetesMatchingBewertung() : number {
+	gibGewichtetesMatchingBewertung() : number {
 		const anzahl : number = this.gibSchuelerAnzahl();
 		return anzahl * anzahl;
 	}
@@ -276,7 +287,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf.
 	 */
-	public gibIstSchieneFrei(pSchiene : number) : boolean {
+	gibIstSchieneFrei(pSchiene : number) : boolean {
 		for (let i : number = 0; i < this.schienenFrei.length; i++)
 			if (this.schienenFrei[i].gibNr() === pSchiene)
 				return true;
@@ -293,10 +304,32 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl der freien Schüler-Plätze in diesem Kurs.
+	 *
+	 * <br>Falls die maximale Anzahl nicht begrenzt wurde, ist dieser Wert utopisch hoch.
+	 *
+	 * @return die Anzahl der freien Schüler-Plätze in diesem Kurs.
+	 */
+	gibAnzahlFreiePlaetze() : number {
+		return this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
+	 *
+	 * @param kursGesperrt  Die Kurssperrung des Schülers.
+	 *
+	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
+	 */
+	gibIstErlaubtFuerSchueler(kursGesperrt : Array<boolean>) : boolean {
+		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !kursGesperrt[this.internalID];
+	}
+
+	/**
 	 *Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenS} zu laden.
 	 */
-	public aktionZustandSpeichernS() : void {
+	aktionZustandSpeichernS() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveS, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFrei, 0, this.schienenFreiSaveS, 0, this.schienenFrei.length);
 	}
@@ -305,7 +338,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *Speichert die aktuelle Lage der Schienen im Zustand K, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenK} zu laden.
 	 */
-	public aktionZustandSpeichernK() : void {
+	aktionZustandSpeichernK() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveK, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFrei, 0, this.schienenFreiSaveK, 0, this.schienenFrei.length);
 	}
@@ -314,7 +347,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *Speichert die aktuelle Lage der Schienen im Zustand G, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenG} zu laden.
 	 */
-	public aktionZustandSpeichernG() : void {
+	aktionZustandSpeichernG() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveG, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFrei, 0, this.schienenFreiSaveG, 0, this.schienenFrei.length);
 	}
@@ -322,7 +355,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 *Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernS} gespeicherte Lage der Schienen.
 	 */
-	public aktionZustandLadenS() : void {
+	aktionZustandLadenS() : void {
 		this.aktionSchienenLageEntfernen();
 		System.arraycopy(this.schienenLageSaveS, 0, this.schienenLage, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFreiSaveS, 0, this.schienenFrei, 0, this.schienenFrei.length);
@@ -332,7 +365,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 *Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernK} gespeicherte Lage der Schienen.
 	 */
-	public aktionZustandLadenK() : void {
+	aktionZustandLadenK() : void {
 		this.aktionSchienenLageEntfernen();
 		System.arraycopy(this.schienenLageSaveK, 0, this.schienenLage, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFreiSaveK, 0, this.schienenFrei, 0, this.schienenFrei.length);
@@ -342,7 +375,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 *Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernG} gespeicherte Lage der Schienen.
 	 */
-	public aktionZustandLadenG() : void {
+	aktionZustandLadenG() : void {
 		this.aktionSchienenLageEntfernen();
 		System.arraycopy(this.schienenLageSaveG, 0, this.schienenLage, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFreiSaveG, 0, this.schienenFrei, 0, this.schienenFrei.length);
@@ -352,7 +385,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 *Verteilt den Kurs auf die Schienen zufällig.
 	 */
-	public aktionZufaelligVerteilen() : void {
+	aktionZufaelligVerteilen() : void {
 		if (!this.gibHatFreiheitsgrade())
 			return;
 		if (this.schuelerAnz > 0) {
@@ -375,7 +408,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll.
 	 */
-	public aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<number>) : void {
+	aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<number>) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++) {
 			const schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
 			if (pSchienenWahl.contains(schieneL.gibNr()))
@@ -419,7 +452,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Entfernt einen Schüler aus diesem Kurs.
 	 */
-	public aktionSchuelerEntfernen() : void {
+	aktionSchuelerEntfernen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz--;
 		this.fachart.aktionSchuelerWurdeEntfernt();
@@ -429,7 +462,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Fügt einen Schüler diesem Kurs hinzu.
 	 */
-	public aktionSchuelerHinzufuegen() : void {
+	aktionSchuelerHinzufuegen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
@@ -437,23 +470,22 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
+	 * Setzt die Höchstgrenze für die SuS in diesem Kurs.
+	 *
+	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
+	 */
+	setzeMaxSuS(maxSuS : number) : void {
+		this.schuelerAnzMax = maxSuS;
+	}
+
+	/**
 	 * Fügt einen Dummy-Schüler diesem Kurs hinzu.
 	 */
-	public aktionSchuelerDummyHinzufuegen() : void {
+	aktionSchuelerDummyHinzufuegen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnzDummy++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
-	}
-
-	private aktionSchienenLageHinzufuegen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			this.schienenLage[i].aktionKursHinzufuegen(this);
-	}
-
-	private aktionSchienenLageEntfernen() : void {
-		for (let i : number = 0; i < this.schienenLage.length; i++)
-			this.schienenLage[i].aktionKursEntfernen(this);
 	}
 
 	/**
@@ -471,6 +503,16 @@ export class KursblockungDynKurs extends JavaObject {
 					this.logger.logLn("        " + s.gibDatenbankID());
 		}
 		this.logger.modifyIndent(-4);
+	}
+
+	private aktionSchienenLageHinzufuegen() : void {
+		for (let i : number = 0; i < this.schienenLage.length; i++)
+			this.schienenLage[i].aktionKursHinzufuegen(this);
+	}
+
+	private aktionSchienenLageEntfernen() : void {
+		for (let i : number = 0; i < this.schienenLage.length; i++)
+			this.schienenLage[i].aktionKursEntfernen(this);
 	}
 
 	transpilerCanonicalName(): string {

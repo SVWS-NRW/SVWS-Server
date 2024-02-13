@@ -63,7 +63,7 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		schueler.aktionZustandSpeichernS();
 		schueler.aktionKurseAlleEntfernen();
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-		schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		const cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
 		if (cmp < 0)

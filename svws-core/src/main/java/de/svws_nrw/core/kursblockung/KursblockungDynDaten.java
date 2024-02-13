@@ -139,11 +139,13 @@ public class KursblockungDynDaten {
 
 		schritt12FehlerBeiRegel_7_oder_8();
 
-		schritt13FehlerBeiRegel_9();
+		schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
 
 		schritt14FehlerBeiRegel_10(input);
 
 		schritt14FehlerBeiRegel_11_bis_14(input);
+
+		schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -794,7 +796,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt13FehlerBeiRegel_9() {
+	private void schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() {
 		// Regel 9 - KURS_MIT_DUMMY_SUS_AUFFUELLEN
 		for (final @NotNull GostBlockungRegel regel9 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			final long kursID = regel9.parameter.get(0);
@@ -872,6 +874,20 @@ public class KursblockungDynDaten {
 		// TODO Regel 11 bis 14 in den dynamischen Daten persistieren.
 	}
 
+	private void schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {
+		// Problematisch sind hier im Kurs fixierte SuS. Diese werden im Nachhinein hineingesetzt, falls dies nicht im Algorithmus
+		// geschehen ist. Dadurch kann ganz am Ende die Kurs-Obergrenze überschritten werden. Man kann aber nicht vorher auch nicht
+		// "maxSuS" um die fixierten reduzieren, da diese meistens auch einen Platz im Kurs finden.
+
+		for (final @NotNull GostBlockungRegel regel15 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+			final long idKurs = regel15.parameter.get(0);
+			final int maxSuS = regel15.parameter.get(1).intValue();
+
+			final @NotNull KursblockungDynKurs kurs = gibKurs(idKurs);
+			kurs.setzeMaxSuS(maxSuS);
+		}
+	}
+
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {
 		return _fachartMap2D.getNonNullOrException(fachID, kursart);
 	}
@@ -889,12 +905,56 @@ public class KursblockungDynDaten {
 	// ########################################
 
 	/**
+	 * Liefert ein neu erzeugtes {@link GostBlockungsergebnisManager}-Objekt.
+	 * <br>Dieses Objekt beinhaltet alle Informationen für die GUI.
+	 *
+	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
+	 * @param  pErgebnisID   Die ID des Ergebnisses.
+	 *
+	 * @return ein neu erzeugtes {@link GostBlockungsergebnisManager}-Objekt.
+	 */
+	@NotNull GostBlockungsergebnisManager gibErzeugtesKursblockungOutput(final @NotNull GostBlockungsdatenManager pDataManager, final long pErgebnisID) {
+		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
+
+		// Erzeuge die Kurs-Schienen-Zuordnungen (Manager hat eine 1-Indizierung der Schiene!)
+		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
+			for (final int schienenNr : dynKurs.gibSchienenLage())
+				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
+
+		// Erzeuge die Schüler-Kurs-Zuordnungen.
+		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
+			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
+				if (kurs != null)
+					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+
+		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
+		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
+			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				final long idSchueler = gRegel.parameter.get(0);
+				final long idKurs = gRegel.parameter.get(1);
+				if (!out.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+					out.setSchuelerKurs(idSchueler, idKurs, true); // Kann zu Kollisionen führen!
+			}
+
+		return out;
+	}
+
+	/**
 	 * Liefert das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
 	 *
 	 * @return Das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	@NotNull Logger gibLogger() {
 		return _logger;
+	}
+
+	/**
+	 * Liefert das {@link Random}-Objekt.
+	 *
+	 * @return das {@link Random}-Objekt.
+	 */
+	@NotNull Random gibRandom() {
+		return _random;
 	}
 
 	/**
@@ -924,41 +984,6 @@ public class KursblockungDynDaten {
 	 */
 	int gibSchienenAnzahl() {
 		return _schienenArr.length;
-	}
-
-	/**
-	 * Erzeugt ein Objekt {@link GostBlockungsergebnisManager}. Dieses Objekt beinhaltet alle Informationen aus denen
-	 * die GUI die Kurs-Zu-Schiene und die SuS-Zu-Kurs-Zuordnungen rekonstruieren kann.
-	 *
-	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
-	 * @param  pErgebnisID   Die ID des Ergebnisses.
-	 *
-	 * @return               Das Blockungsergebnis für die GUI.
-	 */
-	@NotNull GostBlockungsergebnisManager gibErzeugtesKursblockungOutput(final @NotNull GostBlockungsdatenManager pDataManager, final long pErgebnisID) {
-		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
-
-		// Erzeuge die Kurs-Schienen-Zuordnungen (Manager hat eine 1-Indizierung der Schiene!)
-		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
-			for (final int schienenNr : dynKurs.gibSchienenLage())
-				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
-
-		// Erzeuge die Schüler-Kurs-Zuordnungen.
-		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
-			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
-				if (kurs != null)
-					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
-
-		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
-		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
-			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
-				final long schuelerID = gRegel.parameter.get(0);
-				final long kursID = gRegel.parameter.get(1);
-				if (!out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
-					out.setSchuelerKurs(schuelerID, kursID, true); // Kann zu Kollisionen führen!
-			}
-
-		return out;
 	}
 
 	/**
@@ -1079,11 +1104,25 @@ public class KursblockungDynDaten {
 	// ########################################
 
 	/**
-	 * Entfernt alle SuS aus ihren Kursen.
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
+	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 *
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	void aktionSchuelerAusAllenKursenEntfernen() {
-		for (int i = 0; i < _schuelerArr.length; i++)
-			_schuelerArr[i].aktionKurseAlleEntfernen();
+	int gibBewertung_NW_KD_JetztS() {
+		return _statistik.gibBewertungZustandS_NW_KD();
+	}
+
+	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynDaten b) {
+		return _statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
 	}
 
 	/**
@@ -1221,6 +1260,14 @@ public class KursblockungDynDaten {
 	}
 
 	/**
+	 * Entfernt alle SuS aus ihren Kursen.
+	 */
+	void aktionSchuelerAusAllenKursenEntfernen() {
+		for (int i = 0; i < _schuelerArr.length; i++)
+			_schuelerArr[i].aktionKurseAlleEntfernen();
+	}
+
+	/**
 	 * Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	void aktionKurseFreieZufaelligVerteilen() {
@@ -1251,17 +1298,6 @@ public class KursblockungDynDaten {
 			if (kurs.gibSchienenAnzahl() == 1)
 				kurs.aktionZufaelligVerteilen();
 		}
-	}
-
-	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
-	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	int gibBewertung_NW_KD_JetztS() {
-		return _statistik.gibBewertungZustandS_NW_KD();
 	}
 
 	/**
@@ -1296,7 +1332,7 @@ public class KursblockungDynDaten {
 			final int i = perm[p];
 			final KursblockungDynSchueler schueler = _schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}
 	}
@@ -1312,28 +1348,8 @@ public class KursblockungDynDaten {
 			final int i = perm[p];
 			final KursblockungDynSchueler schueler = _schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		}
-	}
-
-	/**
-	 * Liefert das {@link Random}-Objekt.
-	 *
-	 * @return das {@link Random}-Objekt.
-	 */
-	public @NotNull Random gibRandom() {
-		return _random;
-	}
-
-	/**
-	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
-	 *
-	 * @param b  Das zu vergleichende Objekt.
-	 *
-	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
-	 */
-	public boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynDaten b) {
-		return _statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
 	}
 }

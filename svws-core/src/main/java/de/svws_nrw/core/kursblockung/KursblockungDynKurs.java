@@ -14,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KursblockungDynKurs {
 
+	/** Der Default-Wert für die höchste Schüleranzahl pro Kurs. */
+	private static final int MAX_SUS_DEFAULT = 1000;
+
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
 
@@ -59,6 +62,9 @@ public class KursblockungDynKurs {
 	/** Die Anzahl an Dummy-SuS in diesem Kurs. */
 	private int schuelerAnzDummy;
 
+	/** Die maximale Anzahl an erlaubten SuS in diesem Kurs. */
+	private int schuelerAnzMax;
+
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
 	private final @NotNull Logger logger;
 
@@ -72,7 +78,7 @@ public class KursblockungDynKurs {
 	 * @param pFachart             Die zu diesem Kurs zugehörige Fachart.
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInternalID          Eine interne ID für schnellen Zugriff. */
-	public KursblockungDynKurs(final @NotNull Random pRandom, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
+	KursblockungDynKurs(final @NotNull Random pRandom, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
 			final int pSchienenLageFixiert, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei, final long pKursID,
 			final @NotNull KursblockungDynFachart pFachart, final @NotNull Logger pLogger, final int pInternalID) {
 		_random = pRandom;
@@ -85,6 +91,7 @@ public class KursblockungDynKurs {
 		schuelerAnzDummy = 0;
 		logger = pLogger;
 		internalID = pInternalID;
+		schuelerAnzMax = MAX_SUS_DEFAULT;
 
 		schienenLageSaveS = new KursblockungDynSchiene[schienenLage.length];
 		schienenLageSaveK = new KursblockungDynSchiene[schienenLage.length];
@@ -127,21 +134,21 @@ public class KursblockungDynKurs {
 	/** Die Kurs-ID der GUI.
 	 *
 	 * @return Die Kurs-ID der GUI. */
-	public long gibDatenbankID() {
+	long gibDatenbankID() {
 		return databaseID;
 	}
 
 	/** Liefert die zum Kurs zugehörige Fachart.
 	 *
 	 * @return Die zum Kurs zugehörige Fachart. */
-	public @NotNull KursblockungDynFachart gibFachart() {
+	@NotNull KursblockungDynFachart gibFachart() {
 		return fachart;
 	}
 
 	/** Liefert die aktuelle Anzahl an Schülern in diesem Kurs.
 	 *
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs. */
-	public int gibSchuelerAnzahl() {
+	int gibSchuelerAnzahl() {
 		return schuelerAnz + schuelerAnzDummy;
 	}
 
@@ -152,7 +159,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Liefert {@code true}, falls die Schienenlage des Kurses noch veränderbar ist.
 	 */
-	public boolean gibHatFreiheitsgrade() {
+	boolean gibHatFreiheitsgrade() {
 		return (schienenLageFixiert < schienenLage.length) && (schienenFrei.length > 0);
 	}
 
@@ -161,7 +168,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
 	 */
-	public @NotNull int[] gibSchienenLage() {
+	@NotNull int[] gibSchienenLage() {
 		final int length = schienenLage.length;
 
 		final @NotNull int[] lage = new int[length];
@@ -174,14 +181,14 @@ public class KursblockungDynKurs {
 	/** Liefert die Anzahl an Schienen, die dieser Kurs belegt.
 	 *
 	 * @return Die Anzahl an Schienen, die dieser Kurs belegt. */
-	public int gibSchienenAnzahl() {
+	int gibSchienenAnzahl() {
 		return schienenLage.length;
 	}
 
 	/** Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser.
 	 *
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser. */
-	public long gibGewichtetesMatchingBewertung() {
+	long gibGewichtetesMatchingBewertung() {
 		final long anzahl = gibSchuelerAnzahl();
 		return anzahl * anzahl;
 	}
@@ -244,7 +251,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf. */
-	public boolean gibIstSchieneFrei(final int pSchiene) {
+	boolean gibIstSchieneFrei(final int pSchiene) {
 		for (int i = 0; i < schienenFrei.length; i++)
 			if (schienenFrei[i].gibNr() == pSchiene)
 				return true;
@@ -263,29 +270,52 @@ public class KursblockungDynKurs {
 		return internalID;
 	}
 
+	/**
+	 * Liefert die Anzahl der freien Schüler-Plätze in diesem Kurs.
+	 *
+	 * <br>Falls die maximale Anzahl nicht begrenzt wurde, ist dieser Wert utopisch hoch.
+	 *
+	 * @return die Anzahl der freien Schüler-Plätze in diesem Kurs.
+	 *
+	 */
+	int gibAnzahlFreiePlaetze() {
+		return schuelerAnzMax - schuelerAnz - schuelerAnzDummy;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
+	 *
+	 * @param kursGesperrt  Die Kurssperrung des Schülers.
+	 *
+	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
+	 */
+	boolean gibIstErlaubtFuerSchueler(final @NotNull boolean[] kursGesperrt) {
+		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !kursGesperrt[internalID];
+	}
+
 	/** Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenS} zu laden. */
-	public void aktionZustandSpeichernS() {
+	void aktionZustandSpeichernS() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveS, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveS, 0, schienenFrei.length);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand K, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenK} zu laden. */
-	public void aktionZustandSpeichernK() {
+	void aktionZustandSpeichernK() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveK, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveK, 0, schienenFrei.length);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand G, um diese bei Bedarf mit der Methode
 	 * {@link #aktionZustandLadenG} zu laden. */
-	public void aktionZustandSpeichernG() {
+	void aktionZustandSpeichernG() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveG, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveG, 0, schienenFrei.length);
 	}
 
 	/** Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernS} gespeicherte Lage der Schienen. */
-	public void aktionZustandLadenS() {
+	void aktionZustandLadenS() {
 		aktionSchienenLageEntfernen();
 		System.arraycopy(schienenLageSaveS, 0, schienenLage, 0, schienenLage.length);
 		System.arraycopy(schienenFreiSaveS, 0, schienenFrei, 0, schienenFrei.length);
@@ -293,7 +323,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernK} gespeicherte Lage der Schienen. */
-	public void aktionZustandLadenK() {
+	void aktionZustandLadenK() {
 		aktionSchienenLageEntfernen();
 		System.arraycopy(schienenLageSaveK, 0, schienenLage, 0, schienenLage.length);
 		System.arraycopy(schienenFreiSaveK, 0, schienenFrei, 0, schienenFrei.length);
@@ -301,7 +331,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Lädt die zuvor mit der Methode {@link #aktionZustandSpeichernG} gespeicherte Lage der Schienen. */
-	public void aktionZustandLadenG() {
+	void aktionZustandLadenG() {
 		aktionSchienenLageEntfernen();
 		System.arraycopy(schienenLageSaveG, 0, schienenLage, 0, schienenLage.length);
 		System.arraycopy(schienenFreiSaveG, 0, schienenFrei, 0, schienenFrei.length);
@@ -309,7 +339,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Verteilt den Kurs auf die Schienen zufällig. */
-	public void aktionZufaelligVerteilen() {
+	void aktionZufaelligVerteilen() {
 		// Kurs kann nicht wandern? --> Abbruch
 		if (!gibHatFreiheitsgrade())
 			return;
@@ -336,7 +366,7 @@ public class KursblockungDynKurs {
 	/** Setzt die Lage des Kurses auf die in der Liste übergebenen Schienen.
 	 *
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll. */
-	public void aktionVerteileAufSchienen(final @NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
+	void aktionVerteileAufSchienen(final @NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
 
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
 			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
@@ -391,7 +421,7 @@ public class KursblockungDynKurs {
 	/**
 	 * Entfernt einen Schüler aus diesem Kurs.
 	 */
-	public void aktionSchuelerEntfernen() {
+	void aktionSchuelerEntfernen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz--; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
@@ -401,7 +431,7 @@ public class KursblockungDynKurs {
 	/**
 	 * Fügt einen Schüler diesem Kurs hinzu.
 	 */
-	public void aktionSchuelerHinzufuegen() {
+	void aktionSchuelerHinzufuegen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz++; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
@@ -409,27 +439,22 @@ public class KursblockungDynKurs {
 	}
 
 	/**
+	 * Setzt die Höchstgrenze für die SuS in diesem Kurs.
+	 *
+	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
+	 */
+	void setzeMaxSuS(final int maxSuS) {
+		schuelerAnzMax = maxSuS;
+	}
+
+	/**
 	 * Fügt einen Dummy-Schüler diesem Kurs hinzu.
 	 */
-	public void aktionSchuelerDummyHinzufuegen() {
+	void aktionSchuelerDummyHinzufuegen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnzDummy++; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
-	}
-
-	// ########################################
-	// ########### PRIVATE METHODEN ###########
-	// ########################################
-
-	private void aktionSchienenLageHinzufuegen() {
-		for (int i = 0; i < schienenLage.length; i++)
-			schienenLage[i].aktionKursHinzufuegen(this);
-	}
-
-	private void aktionSchienenLageEntfernen() {
-		for (int i = 0; i < schienenLage.length; i++)
-			schienenLage[i].aktionKursEntfernen(this);
 	}
 
 	/**
@@ -447,6 +472,20 @@ public class KursblockungDynKurs {
 					logger.logLn("        " + s.gibDatenbankID());
 		}
 		logger.modifyIndent(-4);
+	}
+
+	// ########################################
+	// ########### PRIVATE METHODEN ###########
+	// ########################################
+
+	private void aktionSchienenLageHinzufuegen() {
+		for (int i = 0; i < schienenLage.length; i++)
+			schienenLage[i].aktionKursHinzufuegen(this);
+	}
+
+	private void aktionSchienenLageEntfernen() {
+		for (int i = 0; i < schienenLage.length; i++)
+			schienenLage[i].aktionKursEntfernen(this);
 	}
 
 }

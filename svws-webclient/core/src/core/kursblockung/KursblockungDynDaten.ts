@@ -130,9 +130,10 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.schritt12FehlerBeiRegel_7_oder_8();
-		this.schritt13FehlerBeiRegel_9();
+		this.schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
 		this.schritt14FehlerBeiRegel_10(input);
 		this.schritt14FehlerBeiRegel_11_bis_14(input);
+		this.schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -666,7 +667,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt13FehlerBeiRegel_9() : void {
+	private schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() : void {
 		for (const regel9 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			const kursID : number = regel9.parameter.get(0).valueOf();
 			const susAnzahl : number = regel9.parameter.get(1)!;
@@ -731,6 +732,15 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
+	private schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() : void {
+		for (const regel15 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+			const idKurs : number = regel15.parameter.get(0).valueOf();
+			const maxSuS : number = regel15.parameter.get(1)!;
+			const kurs : KursblockungDynKurs = this.gibKurs(idKurs);
+			kurs.setzeMaxSuS(maxSuS);
+		}
+	}
+
 	private gibFachart(fachID : number, kursart : number) : KursblockungDynFachart {
 		return this._fachartMap2D.getNonNullOrException(fachID, kursart);
 	}
@@ -744,12 +754,49 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
+	 * Liefert ein neu erzeugtes {@link GostBlockungsergebnisManager}-Objekt.
+	 * <br>Dieses Objekt beinhaltet alle Informationen für die GUI.
+	 *
+	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
+	 * @param  pErgebnisID   Die ID des Ergebnisses.
+	 *
+	 * @return ein neu erzeugtes {@link GostBlockungsergebnisManager}-Objekt.
+	 */
+	gibErzeugtesKursblockungOutput(pDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
+		const out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
+		for (const dynKurs of this._kursArr)
+			for (const schienenNr of dynKurs.gibSchienenLage())
+				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
+		for (const dynSchueler of this._schuelerArr)
+			for (const kurs of dynSchueler.gibKurswahlen())
+				if (kurs !== null)
+					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+		for (const gRegel of pDataManager.regelGetListe())
+			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				const idSchueler : number = gRegel.parameter.get(0).valueOf();
+				const idKurs : number = gRegel.parameter.get(1).valueOf();
+				if (!out.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+					out.setSchuelerKurs(idSchueler, idKurs, true);
+			}
+		return out;
+	}
+
+	/**
 	 * Liefert das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
 	 *
 	 * @return Das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	gibLogger() : Logger {
 		return this._logger;
+	}
+
+	/**
+	 * Liefert das {@link Random}-Objekt.
+	 *
+	 * @return das {@link Random}-Objekt.
+	 */
+	gibRandom() : Random {
+		return this._random;
 	}
 
 	/**
@@ -779,34 +826,6 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	gibSchienenAnzahl() : number {
 		return this._schienenArr.length;
-	}
-
-	/**
-	 * Erzeugt ein Objekt {@link GostBlockungsergebnisManager}. Dieses Objekt beinhaltet alle Informationen aus denen
-	 * die GUI die Kurs-Zu-Schiene und die SuS-Zu-Kurs-Zuordnungen rekonstruieren kann.
-	 *
-	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
-	 * @param  pErgebnisID   Die ID des Ergebnisses.
-	 *
-	 * @return               Das Blockungsergebnis für die GUI.
-	 */
-	gibErzeugtesKursblockungOutput(pDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
-		const out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
-		for (const dynKurs of this._kursArr)
-			for (const schienenNr of dynKurs.gibSchienenLage())
-				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
-		for (const dynSchueler of this._schuelerArr)
-			for (const kurs of dynSchueler.gibKurswahlen())
-				if (kurs !== null)
-					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
-		for (const gRegel of pDataManager.regelGetListe())
-			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
-				const schuelerID : number = gRegel.parameter.get(0).valueOf();
-				const kursID : number = gRegel.parameter.get(1).valueOf();
-				if (!out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
-					out.setSchuelerKurs(schuelerID, kursID, true);
-			}
-		return out;
 	}
 
 	/**
@@ -922,11 +941,25 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Entfernt alle SuS aus ihren Kursen.
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
+	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 *
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	aktionSchuelerAusAllenKursenEntfernen() : void {
-		for (let i : number = 0; i < this._schuelerArr.length; i++)
-			this._schuelerArr[i].aktionKurseAlleEntfernen();
+	gibBewertung_NW_KD_JetztS() : number {
+		return this._statistik.gibBewertungZustandS_NW_KD();
+	}
+
+	/**
+	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 *
+	 * @param b  Das zu vergleichende Objekt.
+	 *
+	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
+	 */
+	gibIstBesser_NW_KD_FW_Als(b : KursblockungDynDaten) : boolean {
+		return this._statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
 	}
 
 	/**
@@ -1028,6 +1061,14 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
+	 * Entfernt alle SuS aus ihren Kursen.
+	 */
+	aktionSchuelerAusAllenKursenEntfernen() : void {
+		for (let i : number = 0; i < this._schuelerArr.length; i++)
+			this._schuelerArr[i].aktionKurseAlleEntfernen();
+	}
+
+	/**
 	 * Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKurseFreieZufaelligVerteilen() : void {
@@ -1061,17 +1102,6 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
-	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	gibBewertung_NW_KD_JetztS() : number {
-		return this._statistik.gibBewertungZustandS_NW_KD();
-	}
-
-	/**
 	 * Verteilt die SuS auf die jetzige Kurslage. Pro S. werden erst die Multikurse verteilt, dann werden die übrigen
 	 * Kurse mit Hilfe eines spezielle bipartiten Matching-Algorithmus verteilt. Sobald ein S. seine Nichtwahlen durch
 	 * eine Veränderung der Kurslage reduzieren könnte, wird die Kurslage verändert.
@@ -1099,7 +1129,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const i : number = perm[p];
 			const schueler : KursblockungDynSchueler | null = this._schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}
 	}
@@ -1114,29 +1144,9 @@ export class KursblockungDynDaten extends JavaObject {
 			const i : number = perm[p];
 			const schueler : KursblockungDynSchueler | null = this._schuelerArr[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		}
-	}
-
-	/**
-	 * Liefert das {@link Random}-Objekt.
-	 *
-	 * @return das {@link Random}-Objekt.
-	 */
-	public gibRandom() : Random {
-		return this._random;
-	}
-
-	/**
-	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
-	 *
-	 * @param b  Das zu vergleichende Objekt.
-	 *
-	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
-	 */
-	public gibIstBesser_NW_KD_FW_Als(b : KursblockungDynDaten) : boolean {
-		return this._statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
 	}
 
 	transpilerCanonicalName(): string {

@@ -86,7 +86,7 @@ public final class KursblockungAlgorithmusSMatching extends KursblockungAlgorith
 		// Schueler auf seine Kurse neu verteilen.
 		schueler.aktionKurseAlleEntfernen();
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-		schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
+		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenMitBipartiteMatching();
 
 		// Schlechter? --> Kurszuordnung zurück.
