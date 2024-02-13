@@ -9,9 +9,9 @@
 								<span>Schiene</span>
 							</div>
 							<div class="flex flex-row gap-2">
-								<svws-ui-button type="transparent" size="small" class="-my-1" @click="zeigeSchienenbezeichnungen = !zeigeSchienenbezeichnungen" title="Schiene hinzufügen">
+								<svws-ui-button type="transparent" size="small" @click="zeigeSchienenbezeichnungen = !zeigeSchienenbezeichnungen" :title="zeigeSchienenbezeichnungen ? 'Zeige nur die Schiennummer':'Zeige den vollständigen Schienennamen'">
 									<i-ri-text v-if="zeigeSchienenbezeichnungen" />
-									<i-ri-number-1 v-else />
+									<i-ri-expand-height-line v-else />
 								</svws-ui-button>
 								<template v-if="allow_regeln">
 									<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
@@ -36,7 +36,7 @@
 							</svws-ui-tooltip>
 							<template v-else-if="zeigeSchienenbezeichnungen">
 								<div>
-									<span style="writing-mode: vertical-lr;" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex items-center justify-center border-l border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">
+									<span style="writing-mode: vertical-lr;" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center border-l border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">
 										{{ s.bezeichnung }}
 									</span>
 									<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />

@@ -11,7 +11,7 @@
 		</template>
 		<template #regelEdit>
 			<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" label="Kurs hat" />
-			<svws-ui-input-number placeholder="maximale Schülerzahl" v-model="anzahl" :min="1" />
+			<svws-ui-input-number placeholder="maximale Schülerzahl" v-model="anzahl" :min="0" />
 		</template>
 	</BlockungsregelBase>
 </template>
