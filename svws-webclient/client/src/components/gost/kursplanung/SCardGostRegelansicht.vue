@@ -9,6 +9,7 @@
 			<Blockungsregel_7 v-if="!nurRegelverletzungen || regeln[7].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_8 v-if="!nurRegelverletzungen || regeln[8].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_9 v-if="!nurRegelverletzungen || regeln[9].value.length" v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+			<Blockungsregel_15 v-if="!nurRegelverletzungen || regeln[15].value.length" v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[15].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_4 v-if="!nurRegelverletzungen || regeln[4].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_5 v-if="!nurRegelverletzungen || regeln[5].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
 			<Blockungsregel_11 v-if="!nurRegelverletzungen || regeln[11].value.length" v-model="regel" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[11].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
@@ -72,7 +73,7 @@
 
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 
-	for (let i = 1; i < 15; i++)
+	for (let i = 1; i < 16; i++)
 		regeln[i] = computed(() => {
 			const a = [];
 			for (const r of props.getDatenmanager().regelGetListe())
