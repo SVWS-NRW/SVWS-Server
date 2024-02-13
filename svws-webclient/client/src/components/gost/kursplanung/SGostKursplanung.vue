@@ -54,6 +54,19 @@
 							<i-ri-delete-bin-line /> Entfernen
 						</svws-ui-button>
 					</div>
+					<div v-else class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<div>
+							<svws-ui-tooltip>
+								<span><i-ri-prohibited-line /></span>
+								<template #content>
+									Die grundlegenden Daten und Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
+									ein Ergebnis existiert. Um erneut Änderungen vornehmen zu können, leiten Sie die Blockung ab oder entfernen Sie
+									alle Ergebnisse bis auf eines.
+								</template>
+							</svws-ui-tooltip>
+						</div>
+					</div>
 					<div v-if="(regelzahl > 1) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
