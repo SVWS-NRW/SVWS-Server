@@ -93,6 +93,9 @@ public class GostBlockungsergebnisManager {
 	/** Kurs-ID --> Anzahl an Dummy-SuS */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_dummySuS = new HashMap<>();
 
+	/** Kurs-ID --> Maximale Anzahl an SuS */
+	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_maxSuS = new HashMap<>();
+
 	/** Kurs-ID --> Set<SchuelerID> */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _map_kursID_schuelerIDs = new HashMap<>();
 
@@ -416,8 +419,11 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
 			stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen, _map_regelID_verletzungen);
 
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, _map_regelID_verletzungen);
+
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14};
+		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15};
 		for (final int regeltyp : regeltypSortierung)
 			if (_map_regelID_verletzungen.containsKey(regeltyp))
 				_list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
@@ -628,6 +634,20 @@ public class GostBlockungsergebnisManager {
 				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
 	}
+
+	private void stateRegelvalidierung15_kurs_maximale_schueleranzahl(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen, final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> mapRegelVerletzungen) {
+		final long idKurs = r.parameter.get(0);
+		final int maxSuS = r.parameter.get(1).intValue();
+		DeveloperNotificationException.ifTrue("Regel 15 maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
+		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_maxSuS, idKurs, maxSuS);
+		final int sus = getOfKursAnzahlSchuelerPlusDummy(idKurs);
+
+		if (sus > maxSuS) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 15, "Kurs " + getOfKursName(idKurs) + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.");
+		}
+	}
+
 
 	/**
 	 * Fügt den Schüler dem Kurs hinzu.<br>
@@ -2308,12 +2328,35 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 *
-	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 */
 	public int getOfKursAnzahlSchueler(final long idKurs) {
 		return getKursE(idKurs).schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
+	 */
+	public int getOfKursAnzahlSchuelerPlusDummy(final long idKurs) {
+		return getKursE(idKurs).schueler.size() + MapUtils.getOrDefault(_map_kursID_dummySuS, idKurs, 0);
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS des Kurses. Dummy-SuS werden durch die Regel mit dem
+	 * Typ {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN} einem Kurs zugeordnet.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Dummy-SuS des Kurses.
+	 */
+	public int getOfKursAnzahlSchuelerDummy(final long idKurs) {
+		return MapUtils.getOrDefault(_map_kursID_dummySuS, idKurs, 0);
 	}
 
 	/**
@@ -2338,18 +2381,6 @@ public class GostBlockungsergebnisManager {
 	public int getOfKursAnzahlSchuelerNichtExtern(final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
 		return ListUtils.getCountFiltered(kursE.schueler, (final @NotNull Long idSchueler) -> !getOfSchuelerHatStatusExtern(idSchueler));
-	}
-
-	/**
-	 * Liefert die Anzahl an Dummy-SuS des Kurses.  Dummy-SuS werden durch die Regel mit dem
-	 * Typ {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN} einem Kurs zugeordnet.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Anzahl an Dummy-SuS des Kurses.
-	 */
-	public int getOfKursAnzahlSchuelerDummy(final long idKurs) {
-		return MapUtils.getOrDefault(_map_kursID_dummySuS, idKurs, 0);
 	}
 
 	/**

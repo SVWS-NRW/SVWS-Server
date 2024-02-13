@@ -119,6 +119,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_kursID_dummySuS : JavaMap<number, number> = new HashMap();
 
 	/**
+	 * Kurs-ID --> Maximale Anzahl an SuS
+	 */
+	private readonly _map_kursID_maxSuS : JavaMap<number, number> = new HashMap();
+
+	/**
 	 * Kurs-ID --> Set<SchuelerID>
 	 */
 	private readonly _map_kursID_schuelerIDs : JavaMap<number, JavaSet<number>> = new HashMap();
@@ -419,7 +424,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
 			this.stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen, this._map_regelID_verletzungen);
-		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14];
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			this.stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, this._map_regelID_verletzungen);
+		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15];
 		for (const regeltyp of regeltypSortierung)
 			if (this._map_regelID_verletzungen.containsKey(regeltyp))
 				this._list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
@@ -611,6 +618,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				regelVerletzungen.add(r.id);
 				MapUtils.addToList(mapRegelVerletzungen, 14, "SchülerIn " + this.getOfSchuelerNameVorname(idSchueler1)! + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler2)! + " sollten nicht gemeinsam in Fach " + fach.kuerzelAnzeige + " sein.");
 			}
+	}
+
+	private stateRegelvalidierung15_kurs_maximale_schueleranzahl(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
+		const idKurs : number = r.parameter.get(0).valueOf();
+		const maxSuS : number = r.parameter.get(1)!;
+		DeveloperNotificationException.ifTrue("Regel 15 maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_maxSuS, idKurs, maxSuS);
+		const sus : number = this.getOfKursAnzahlSchuelerPlusDummy(idKurs);
+		if (sus > maxSuS) {
+			regelVerletzungen.add(r.id);
+			MapUtils.addToList(mapRegelVerletzungen, 15, "Kurs " + this.getOfKursName(idKurs)! + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.");
+		}
 	}
 
 	/**
@@ -2172,12 +2191,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 *
-	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 */
 	public getOfKursAnzahlSchueler(idKurs : number) : number {
 		return this.getKursE(idKurs).schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind plus potentiell zugeordnete Dummy SuS.
+	 */
+	public getOfKursAnzahlSchuelerPlusDummy(idKurs : number) : number {
+		return this.getKursE(idKurs).schueler.size() + MapUtils.getOrDefault(this._map_kursID_dummySuS, idKurs, 0);
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS des Kurses. Dummy-SuS werden durch die Regel mit dem
+	 * Typ {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN} einem Kurs zugeordnet.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Dummy-SuS des Kurses.
+	 */
+	public getOfKursAnzahlSchuelerDummy(idKurs : number) : number {
+		return MapUtils.getOrDefault(this._map_kursID_dummySuS, idKurs, 0)!;
 	}
 
 	/**
@@ -2202,18 +2244,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchuelerNichtExtern(idKurs : number) : number {
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => !this.getOfSchuelerHatStatusExtern(idSchueler) });
-	}
-
-	/**
-	 * Liefert die Anzahl an Dummy-SuS des Kurses.  Dummy-SuS werden durch die Regel mit dem
-	 * Typ {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN} einem Kurs zugeordnet.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Anzahl an Dummy-SuS des Kurses.
-	 */
-	public getOfKursAnzahlSchuelerDummy(idKurs : number) : number {
-		return MapUtils.getOrDefault(this._map_kursID_dummySuS, idKurs, 0)!;
 	}
 
 	/**
