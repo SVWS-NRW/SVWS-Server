@@ -3878,6 +3878,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl der {@link StundenplanUnterricht#wochentyp}-Korrekturen, bei einer simulierten Veränderung des (globalen) Wochentyp-Modells.
+	 *
+	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
+	 *
+	 * @return die Anzahl der {@link StundenplanUnterricht#wochentyp}-Korrekturen, bei einer simulierten Veränderung des (globalen) Wochentyp-Modells.
+	 */
+	public stundenplanGetWochenTypModellSimulation(modellTyp : number) : number {
+		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp === 1));
+		let summe : number = 0;
+		for (const u of this._unterricht_by_id.values())
+			if (u.wochentyp > modellTyp)
+				summe++;
+		return summe;
+	}
+
+	/**
 	 * Liefert zum übergebenen Wochentyp einen passenden String.
 	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
 	 * <br>Laufzeit: O(1)
