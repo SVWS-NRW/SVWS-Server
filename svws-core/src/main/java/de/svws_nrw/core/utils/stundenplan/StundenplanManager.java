@@ -295,7 +295,7 @@ public class StundenplanManager {
 
 	// Stundenplan
 	private final long _stundenplanID;
-	private final int _stundenplanWochenTypModell;
+	private int _stundenplanWochenTypModell;
 	private final long _stundenplanSchuljahresAbschnittID;
 	private final @NotNull String _stundenplanGueltigAb;
 	private final @NotNull String _stundenplanGueltigBis;
@@ -4107,6 +4107,31 @@ public class StundenplanManager {
 	 */
 	public int stundenplanGetWochenTypModell() {
 		return _stundenplanWochenTypModell;
+	}
+
+	/**
+	 * Aktualisiert das (globale) Wochentyp-Modell für die Wochen des Stundenplans.
+	 * <br>0: Stundenplan gilt jede Woche.
+	 * <br>1: Ungültiger Wert.
+	 * <br>N: Stundenplan wiederholt sich alle N Wochen.
+	 * <br>Für alle {@link StundenplanUnterricht#wochentyp} deren Wert ungültig ist, wird der Wert auf 0 gesetzt.
+	 *
+	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
+	 */
+	public void stundenplanSetWochenTypModell(final int modellTyp) {
+		// check
+		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp == 1));
+
+		// change
+		_stundenplanWochenTypModell = modellTyp;
+
+		// Alle Unterrichte müssen revalidiert werden, falls sie außerhalb der gültigen Wochen liegen.
+		for (final @NotNull StundenplanUnterricht u : _unterricht_by_id.values())
+			if (u.wochentyp > _stundenplanWochenTypModell)
+				u.wochentyp = 0;
+
+		// update
+		update_all();
 	}
 
 	/**

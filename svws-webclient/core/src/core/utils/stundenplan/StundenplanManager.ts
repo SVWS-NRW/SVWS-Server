@@ -423,7 +423,7 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanID : number;
 
-	private readonly _stundenplanWochenTypModell : number;
+	private _stundenplanWochenTypModell : number = 0;
 
 	private readonly _stundenplanSchuljahresAbschnittID : number;
 
@@ -3857,6 +3857,24 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanGetWochenTypModell() : number {
 		return this._stundenplanWochenTypModell;
+	}
+
+	/**
+	 * Aktualisiert das (globale) Wochentyp-Modell für die Wochen des Stundenplans.
+	 * <br>0: Stundenplan gilt jede Woche.
+	 * <br>1: Ungültiger Wert.
+	 * <br>N: Stundenplan wiederholt sich alle N Wochen.
+	 * <br>Für alle {@link StundenplanUnterricht#wochentyp} deren Wert ungültig ist, wird der Wert auf 0 gesetzt.
+	 *
+	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
+	 */
+	public stundenplanSetWochenTypModell(modellTyp : number) : void {
+		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp === 1));
+		this._stundenplanWochenTypModell = modellTyp;
+		for (const u of this._unterricht_by_id.values())
+			if (u.wochentyp > this._stundenplanWochenTypModell)
+				u.wochentyp = 0;
+		this.update_all();
 	}
 
 	/**
