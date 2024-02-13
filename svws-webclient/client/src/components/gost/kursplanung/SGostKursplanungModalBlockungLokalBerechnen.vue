@@ -15,12 +15,21 @@
 				<div class="pl-2"><svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> <i-ri-add-line /> </svws-ui-button></div>
 				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
 			</div>
-			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative"
-				:columns="cols" :items="liste" :count="!liste.isEmpty()">
-				<template #cell(wert1)="{ rowData: row }">
+			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative" :columns="cols" :items="liste" :count="!liste.isEmpty()">
+				<template #cell(wert1)="{ rowData: row, rowIndex }">
 					<div class="table-cell">
-						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 1)} Regelverletzungen`"
-							:style="{'background-color': getBewertungColor(row, 1)}">{{ getBewertungWert(row, 1) }}</span>
+						<svws-ui-tooltip v-if="getBewertungWert(row, 1) > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 1)}">{{ getBewertungWert(row, 1) }}</span>
+							<template #content>
+								{{ getBewertungWert(row, 1) }} Regelverletzungen
+								<template v-for="typ in listErgebnismanager.get(rowIndex).regelGetMengeVerletzterTypen()" :key="typ.id">
+									<template v-for="text in listErgebnismanager.get(rowIndex).regelGetMengeAnVerletzungen(typ)" :key="text">
+										<br>{{ text }}
+									</template>
+								</template>
+							</template>
+						</svws-ui-tooltip>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert2)="{ rowData: row }">
@@ -36,16 +45,22 @@
 							<template #content>
 								Maximale Kursdifferenz: {{ getBewertungWert(row, 3) }}
 								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="d">
-									<template v-if="d > 0"><br>Differenz {{ i }}: {{ d }}x</template>
+									<template v-if="(i === 1 && row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] > 0)"><br>Optimal 0/1: {{ row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] }}x</template>
+									<template v-if="(d > 0) && (i >= 2)"><br>Differenz {{ i }}: {{ d }}x</template>
 								</template>
 							</template>
 						</svws-ui-tooltip>
 					</div>
 				</template>
-				<template #cell(wert4)="{ rowData: row }">
+				<template #cell(wert4)="{ rowData: row, rowIndex }">
 					<div class="table-cell">
-						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 4)} Fächer parallel`"
-							:style="{'background-color': getBewertungColor(row, 4)}">{{ getBewertungWert(row, 4) }}</span>
+						<svws-ui-tooltip v-if="getBewertungWert(row, 4) > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 4)}">{{ getBewertungWert(row, 4) }}</span>
+							<template #content>
+								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
+							</template>
+						</svws-ui-tooltip>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 			</svws-ui-table>
@@ -99,8 +114,8 @@
 
 	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
 
-	const liste = computed(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
-	const mapErgebnismanager = ref<Map<number, GostBlockungsergebnisManager>>(new Map());
+	const liste = computed<List<GostBlockungsergebnis>>(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
+	const listErgebnismanager = computed<List<GostBlockungsergebnisManager>>(() => workerManager.value?.getErgebnisManager() ?? new ArrayList<GostBlockungsergebnisManager>());
 
 	async function getWaiting() {
 		const p = workerManager.value?.waiting;

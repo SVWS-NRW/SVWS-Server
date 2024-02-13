@@ -25,7 +25,7 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === row}">
-						<svws-ui-tooltip v-if="auswahlErgebnis?.id === row.id" autosize>
+						<svws-ui-tooltip v-if="(auswahlErgebnis?.id === row.id) && (getDatenmanager().ergebnisGetBewertung1Wert(row.id) > 0)" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 							<template #content>
 								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
@@ -43,12 +43,13 @@
 							<template #content>
 								Maximale Kursdifferenz: {{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}
 								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="d">
-									<template v-if="d > 0"><br>Differenz {{ i }}: {{ d }}x</template>
+									<template v-if="(i === 1 && row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] > 0)"><br>Optimal 0/1: {{ row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] }}x</template>
+									<template v-if="(d > 0) && (i >= 2)"><br>Differenz {{ i }}: {{ d }}x</template>
 								</template>
 							</template>
 						</svws-ui-tooltip>
-						<svws-ui-tooltip v-if="auswahlErgebnis?.id === row.id" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+						<svws-ui-tooltip v-if="(auswahlErgebnis?.id === row.id) && (getDatenmanager().ergebnisGetBewertung4Wert(row.id) > 0)" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 							<template #content>
 								<pre>{{ getErgebnismanager().regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
