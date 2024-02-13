@@ -89,7 +89,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 			return this.getRouteHalbjahr(abiturjahr, hj.id);
 		}
-		await this.data.setHalbjahr(halbjahr);
 		const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);
 		if (changedHalbjahr)
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id);

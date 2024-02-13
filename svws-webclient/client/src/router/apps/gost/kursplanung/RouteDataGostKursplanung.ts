@@ -24,6 +24,7 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
+	halbjahrInitialisiert: boolean;
 	mapBlockungen: Map<number, GostBlockungListeneintrag>;
 	existiertSchuljahresabschnitt: boolean;
 	// ...auch abhängig von der ausgewählten Blockung
@@ -45,6 +46,7 @@ const defaultState: RouteStateGostKursplanung = {
 	mapFachwahlStatistik: new Map(),
 	mapLehrer: new Map(),
 	halbjahr: GostHalbjahr.EF1,
+	halbjahrInitialisiert: false,
 	mapBlockungen: new Map(),
 	existiertSchuljahresabschnitt: false,
 	auswahlBlockung: undefined,
@@ -114,6 +116,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			faecherManager,
 			mapLehrer,
 			halbjahr: this._state.value.halbjahr,
+			halbjahrInitialisiert: false,
 		});
 	}
 
@@ -146,8 +149,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (halbjahr === this._state.value.halbjahr)
-			return false;
+		const result : boolean = (halbjahr !== this._state.value.halbjahr);
+		if ((!result) && (this._state.value.halbjahrInitialisiert === true))
+			return result;
 		// Lade die Liste der Blockungen
 		api.status.start();
 		const listBlockungen = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, this.abiturjahr, halbjahr.id);
@@ -172,6 +176,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			halbjahr,
+			halbjahrInitialisiert: true,
 			mapBlockungen,
 			existiertSchuljahresabschnitt,
 			auswahlBlockung,
@@ -180,7 +185,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
 		});
-		return true;
+		return result;
 	}
 
 	public get existiertSchuljahresabschnitt() : boolean {
