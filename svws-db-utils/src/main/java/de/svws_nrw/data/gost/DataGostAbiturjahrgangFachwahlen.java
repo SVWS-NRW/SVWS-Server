@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFachwahlManager;
@@ -143,7 +144,12 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	        }
 		}
 		return matrixFachwahlen.values().stream()
-				.sorted((a, b) -> Integer.compare(faecher.get(a.id).SortierungAllg, faecher.get(b.id).SortierungAllg))
+				.sorted((a, b) -> {
+					final int cmp = GostFachbereich.compareFachByKuerzel(a.kuerzelStatistik, b.kuerzelStatistik);
+					if (cmp != 0)
+						return cmp;
+					return Integer.compare(faecher.get(a.id).SortierungAllg, faecher.get(b.id).SortierungAllg);
+				})
 				.toList();
 	}
 

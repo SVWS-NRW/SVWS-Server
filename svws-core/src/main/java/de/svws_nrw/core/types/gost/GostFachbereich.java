@@ -1,10 +1,9 @@
 package de.svws_nrw.core.types.gost;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -98,8 +97,8 @@ public enum GostFachbereich {
 	PROJEKTKURSE(null, ZulaessigesFach.PX);
 
 
-	/** Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
-	private static final @NotNull Set<@NotNull ZulaessigesFach> _setAlleFaecher = new HashSet<@NotNull ZulaessigesFach>();
+	/** Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer */
+	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull Integer> _mapAlleFaecher = new HashMap<@NotNull ZulaessigesFach, @NotNull Integer>();
 
 	/** Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
 	private static final @NotNull List<@NotNull ZulaessigesFach> _listAlleFaecher = new ArrayList<@NotNull ZulaessigesFach>();
@@ -217,15 +216,98 @@ public enum GostFachbereich {
 
 
 	/**
-	 * Gibt alle Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 * Gibt eine Map aller Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet
+	 * sind. Dabei wird jedem Fach eine Nummer zugeordnet, welche der Sortierung in der Standard-Sortierung
+	 * der Oberstufenfächer entspricht.
 	 *
 	 * @return die Menge der Fächer
 	 */
-	public static @NotNull Set<@NotNull ZulaessigesFach> getAlleFaecher() {
-		if (_setAlleFaecher.isEmpty())
-			for (final @NotNull GostFachbereich fb : GostFachbereich.values())
-				_setAlleFaecher.addAll(fb.getFaecher());
-		return _setAlleFaecher;
+	public static @NotNull Map<@NotNull ZulaessigesFach, @NotNull Integer> getAlleFaecher() {
+		if (_mapAlleFaecher.isEmpty()) {
+			final @NotNull List<@NotNull ZulaessigesFach> alleFaecher = getAlleFaecherSortiert();
+			for (int i = 0; i < alleFaecher.size(); i++) {
+				final @NotNull ZulaessigesFach fach = alleFaecher.get(i);
+				_mapAlleFaecher.put(fach, i);
+			}
+		}
+		return _mapAlleFaecher;
+	}
+
+
+	/**
+	 * Gibt den Integer Wert für die Sortierreihenfolge der Oberstufen-Fächer zu dem
+	 * angegebenen Fach zurück.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @return der Integer-Wert für die Sortierreihenfolge des Faches und Integer-MAX_VALUE, falls
+	 *   das übergeben Fach kein Fach der Gymnasialen Oberstufe ist.
+	 */
+	public static int getSortierung(@NotNull final ZulaessigesFach fach) {
+		final Integer sortierung = getAlleFaecher().get(fach);
+		if (sortierung == null)
+			return Integer.MAX_VALUE;
+		return sortierung;
+	}
+
+
+	/**
+	 * Vergleicht die Fächer fa und fb anhand ihrer Standard-Sortierung für die gymnasiale Oberstufe
+	 *
+	 * @param fa   das erste Fach
+	 * @param fb   das zweite Fach
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static int compareFach(final ZulaessigesFach fa, final ZulaessigesFach fb) {
+		// Prüfe zunächst auf null-Werte ...
+		if ((fa == null) && (fb == null))
+			return 0;
+		if (fa == null)
+			return Integer.MAX_VALUE;
+		if (fb == null)
+			return Integer.MIN_VALUE;
+		return Integer.compare(GostFachbereich.getSortierung(fa), GostFachbereich.getSortierung(fb));
+	}
+
+
+	/**
+	 * Vergleicht die Fächer mit den Statistik-Kürzeln ka und kb anhand ihrer Standard-Sortierung
+	 * für die gymnasiale Oberstufe
+	 *
+	 * @param ka   das Kürzel des ersten Faches
+	 * @param kb   das Kürzel des zweiten Faches
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static int compareFachByKuerzel(final String ka, final String kb) {
+		return compareFach(ZulaessigesFach.getByKuerzelASD(ka), ZulaessigesFach.getByKuerzelASD(kb));
+	}
+
+
+	/**
+	 * Vergleicht die beiden Fächer der Gymnasialen Oberstufe anhand ihrer Standard-Sortierung
+	 * für die gymnasiale Oberstufe
+	 *
+	 * @param fa   das erste Fach
+	 * @param fb   das zweite Fach
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static int compareGostFach(final GostFach fa, final GostFach fb) {
+		// Prüfe zunächst auf null-Werte ...
+		if ((fa == null) && (fb == null))
+			return 0;
+		if (fa == null)
+			return Integer.MAX_VALUE;
+		if (fb == null)
+			return Integer.MIN_VALUE;
+		// ... sortiere dann zunächst anhand des Fachbereichs ...
+		final int cmp = GostFachbereich.compareFachByKuerzel(fa.kuerzel, fb.kuerzel);
+		if (cmp != 0)
+			return cmp;
+		// ... und nutze als zweites Kriterium die Sortierung des Faches
+		return Integer.compare(fa.sortierung, fb.sortierung);
 	}
 
 

@@ -7,7 +7,6 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostLaufbahnplanungFachkombinationTyp } from '../../../core/types/gost/GostLaufbahnplanungFachkombinationTyp';
 import type { Comparator } from '../../../java/util/Comparator';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { GostJahrgangFachkombination, cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
@@ -20,11 +19,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
 	 */
-	public static readonly comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
-		const va : number = (a === null) ? JavaInteger.MIN_VALUE : a.sortierung;
-		const vb : number = (b === null) ? JavaInteger.MIN_VALUE : b.sortierung;
-		return JavaInteger.compare(va, vb);
-	} };
+	public static readonly comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => GostFachbereich.compareGostFach(a, b) };
 
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.

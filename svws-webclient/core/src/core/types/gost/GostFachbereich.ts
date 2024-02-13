@@ -1,14 +1,14 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import type { JavaSet } from '../../../java/util/JavaSet';
+import { HashMap } from '../../../java/util/HashMap';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { HashSet } from '../../../java/util/HashSet';
 
 export class GostFachbereich extends JavaEnum<GostFachbereich> {
 
@@ -124,9 +124,9 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	public static readonly PROJEKTKURSE : GostFachbereich = new GostFachbereich("PROJEKTKURSE", 20, null, ZulaessigesFach.PX);
 
 	/**
-	 * Ein Set mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 * Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer
 	 */
-	private static readonly _setAlleFaecher : JavaSet<ZulaessigesFach> = new HashSet<ZulaessigesFach>();
+	private static readonly _mapAlleFaecher : JavaMap<ZulaessigesFach, number> = new HashMap<ZulaessigesFach, number>();
 
 	/**
 	 * Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
@@ -255,15 +255,90 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	}
 
 	/**
-	 * Gibt alle Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind.
+	 * Gibt eine Map aller Fächer zurück, die einem Fachbereich der gymnasialen Oberstufe zugeordnet
+	 * sind. Dabei wird jedem Fach eine Nummer zugeordnet, welche der Sortierung in der Standard-Sortierung
+	 * der Oberstufenfächer entspricht.
 	 *
 	 * @return die Menge der Fächer
 	 */
-	public static getAlleFaecher() : JavaSet<ZulaessigesFach> {
-		if (GostFachbereich._setAlleFaecher.isEmpty())
-			for (const fb of GostFachbereich.values())
-				GostFachbereich._setAlleFaecher.addAll(fb.getFaecher());
-		return GostFachbereich._setAlleFaecher;
+	public static getAlleFaecher() : JavaMap<ZulaessigesFach, number> {
+		if (GostFachbereich._mapAlleFaecher.isEmpty()) {
+			const alleFaecher : List<ZulaessigesFach> = GostFachbereich.getAlleFaecherSortiert();
+			for (let i : number = 0; i < alleFaecher.size(); i++) {
+				const fach : ZulaessigesFach = alleFaecher.get(i);
+				GostFachbereich._mapAlleFaecher.put(fach, i);
+			}
+		}
+		return GostFachbereich._mapAlleFaecher;
+	}
+
+	/**
+	 * Gibt den Integer Wert für die Sortierreihenfolge der Oberstufen-Fächer zu dem
+	 * angegebenen Fach zurück.
+	 *
+	 * @param fach   das Fach
+	 *
+	 * @return der Integer-Wert für die Sortierreihenfolge des Faches und Integer-MAX_VALUE, falls
+	 *   das übergeben Fach kein Fach der Gymnasialen Oberstufe ist.
+	 */
+	public static getSortierung(fach : ZulaessigesFach) : number {
+		const sortierung : number | null = GostFachbereich.getAlleFaecher().get(fach);
+		if (sortierung === null)
+			return JavaInteger.MAX_VALUE;
+		return sortierung!;
+	}
+
+	/**
+	 * Vergleicht die Fächer fa und fb anhand ihrer Standard-Sortierung für die gymnasiale Oberstufe
+	 *
+	 * @param fa   das erste Fach
+	 * @param fb   das zweite Fach
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static compareFach(fa : ZulaessigesFach | null, fb : ZulaessigesFach | null) : number {
+		if ((fa === null) && (fb === null))
+			return 0;
+		if (fa === null)
+			return JavaInteger.MAX_VALUE;
+		if (fb === null)
+			return JavaInteger.MIN_VALUE;
+		return JavaInteger.compare(GostFachbereich.getSortierung(fa), GostFachbereich.getSortierung(fb));
+	}
+
+	/**
+	 * Vergleicht die Fächer mit den Statistik-Kürzeln ka und kb anhand ihrer Standard-Sortierung
+	 * für die gymnasiale Oberstufe
+	 *
+	 * @param ka   das Kürzel des ersten Faches
+	 * @param kb   das Kürzel des zweiten Faches
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static compareFachByKuerzel(ka : string | null, kb : string | null) : number {
+		return GostFachbereich.compareFach(ZulaessigesFach.getByKuerzelASD(ka), ZulaessigesFach.getByKuerzelASD(kb));
+	}
+
+	/**
+	 * Vergleicht die beiden Fächer der Gymnasialen Oberstufe anhand ihrer Standard-Sortierung
+	 * für die gymnasiale Oberstufe
+	 *
+	 * @param fa   das erste Fach
+	 * @param fb   das zweite Fach
+	 *
+	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
+	 */
+	public static compareGostFach(fa : GostFach | null, fb : GostFach | null) : number {
+		if ((fa === null) && (fb === null))
+			return 0;
+		if (fa === null)
+			return JavaInteger.MAX_VALUE;
+		if (fb === null)
+			return JavaInteger.MIN_VALUE;
+		const cmp : number = GostFachbereich.compareFachByKuerzel(fa.kuerzel, fb.kuerzel);
+		if (cmp !== 0)
+			return cmp;
+		return JavaInteger.compare(fa.sortierung, fb.sortierung);
 	}
 
 	/**

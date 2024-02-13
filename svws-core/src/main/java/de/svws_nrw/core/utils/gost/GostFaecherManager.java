@@ -22,11 +22,8 @@ import jakarta.validation.constraints.NotNull;
 public class GostFaecherManager {
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
-	public static final @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
-		final int va = (a == null) ? Integer.MIN_VALUE : a.sortierung;
-		final int vb = (b == null) ? Integer.MIN_VALUE : b.sortierung;
-		return Integer.compare(va, vb);
-	};
+	public static final @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> GostFachbereich.compareGostFach(a, b);
+
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */
 	private final @NotNull List<@NotNull GostFach> _faecher = new ArrayList<>();

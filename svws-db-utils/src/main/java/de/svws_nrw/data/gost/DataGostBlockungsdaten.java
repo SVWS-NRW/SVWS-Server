@@ -922,7 +922,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<Long> faecherCheckIDs = faecher.stream().map(f -> f.Fach_ID).toList();
 			final List<DTOFach> faecherCheck = conn.queryNamed("DTOFach.id.multiple", setFachIDs, DTOFach.class);
 			for (final DTOFach dtoFach : faecherCheck) {
-				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().contains(dtoFach.StatistikFach))) {
+				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().containsKey(dtoFach.StatistikFach))) {
 					dtoFach.IstOberstufenFach = true;
 					conn.transactionPersist(dtoFach);
 				}

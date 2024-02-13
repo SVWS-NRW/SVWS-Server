@@ -115,7 +115,7 @@ public final class DataFaecherliste extends DataManager<Long> {
     	if (!schulform.daten.hatGymOb)
     		throw OperationError.BAD_REQUEST.exception("Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
     	// Lege Datenstrukturen für die Zuordnung zu den einzelnen Statistik-Fächern an und befülle diese
-    	final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher();
+    	final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
     	final @NotNull ArrayMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(ZulaessigesFach.values());
     	final @NotNull List<@NotNull DTOFach> nichtZugeordnet = new ArrayList<>();
     	for (final @NotNull DTOFach fach : faecher) {
