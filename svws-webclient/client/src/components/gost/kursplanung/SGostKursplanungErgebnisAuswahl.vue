@@ -25,7 +25,7 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === row}">
-						<svws-ui-tooltip autosize>
+						<svws-ui-tooltip v-if="auswahlErgebnis?.id === row.id" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 							<template #content>
 								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
@@ -36,6 +36,7 @@
 								</template>
 							</template>
 						</svws-ui-tooltip>
+						<span v-else>							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span></span>
 						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung2Wert(row.id)} Wahlkonflikte`" :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
 						<svws-ui-tooltip>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
