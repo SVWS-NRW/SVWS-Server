@@ -4,11 +4,9 @@
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select :model-value="Wochentag.fromIDorException(item.id)" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
+				<svws-ui-select :model-value="Wochentag.MONTAG" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
-				<svws-ui-text-input v-model="item.beginn" required placeholder="Beginn" />
-				<svws-ui-text-input v-model="item.ende" required placeholder="Ende" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -24,13 +22,13 @@
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		addPausenzeit: (raum: StundenplanPausenzeit) => Promise<void>;
+		addPausenzeit: (raum: Partial<StundenplanPausenzeit>) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const item = ref<StundenplanPausenzeit>(new StundenplanPausenzeit());
+	const item = ref<Partial<StundenplanPausenzeit>>(new StundenplanPausenzeit());
 
 	const openModal = () => {
 		showModal().value = true;
@@ -50,6 +48,7 @@
 	}
 
 	async function importer() {
+		delete item.value.klassen;
 		await props.addPausenzeit(item.value);
 		showModal().value = false;
 	}

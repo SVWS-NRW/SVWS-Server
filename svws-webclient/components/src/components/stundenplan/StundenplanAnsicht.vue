@@ -212,7 +212,9 @@
 	});
 
 	const wochentagRange = computed(() => {
-		return props.manager().zeitrasterGetWochentageAlsEnumRange();
+		const z = props.manager().zeitrasterGetWochentageAlsEnumRange();
+		const p = props.manager().pausenzeitGetWochentageAlsEnumRange();
+		return z.length > p.length ? z : p;
 	});
 
 	const zeitrasterRange = computed(() => {

@@ -125,8 +125,9 @@
 	});
 
 	const wochentagRange = computed(() => {
-		return props.manager().zeitrasterGetWochentageAlsEnumRange();
-		//TODO pausenzeiten WT prüfen: pausenzeitGetWochentageAlsEnumRange()
+		const z = props.manager().zeitrasterGetWochentageAlsEnumRange();
+		const p = props.manager().pausenzeitGetWochentageAlsEnumRange();
+		return z.length > p.length ? z : p;
 	});
 
 	const zeitrasterRange = computed(() => {
