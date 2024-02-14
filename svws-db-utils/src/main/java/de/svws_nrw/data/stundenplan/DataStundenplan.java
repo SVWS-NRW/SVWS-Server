@@ -157,6 +157,9 @@ public final class DataStundenplan extends DataManager<Long> {
 					conn.transactionFlush();
 				}
 			}
+			// Lösche die Kalenderwochenzuordnungen, falls das Wochentypmodell reduiziert wurde
+			if (dto.WochentypModell > wochentypmodell)
+				conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
 			// Setze das Wochentyp-Modell
 			dto.WochentypModell = wochentypmodell;
 		})
