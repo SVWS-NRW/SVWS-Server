@@ -3880,12 +3880,14 @@ export class StundenplanManager extends JavaObject {
 	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
 	 */
 	public stundenplanSetWochenTypModell(modellTyp : number) : void {
+		if (modellTyp === this._stundenplanWochenTypModell)
+			return;
 		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp === 1));
-		this._stundenplanWochenTypModell = modellTyp;
 		for (const u of this._unterricht_by_id.values())
-			if (u.wochentyp > this._stundenplanWochenTypModell)
+			if (u.wochentyp > modellTyp)
 				u.wochentyp = 0;
 		this._kwz_by_id.clear();
+		this._stundenplanWochenTypModell = modellTyp;
 		this.update_all();
 	}
 

@@ -4130,19 +4130,23 @@ public class StundenplanManager {
 	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
 	 */
 	public void stundenplanSetWochenTypModell(final int modellTyp) {
+		// Unverändert?
+		if (modellTyp == _stundenplanWochenTypModell)
+			return;
+
 		// check
 		DeveloperNotificationException.ifTrue("Das (globale) Wochentyp-Modell kann nur die Werte (0, 2, 3, ..., N) annehmen!", (modellTyp < 0) || (modellTyp == 1));
 
-		// change
-		_stundenplanWochenTypModell = modellTyp;
-
 		// Alle Unterrichte müssen revalidiert werden, falls sie außerhalb der gültigen Wochen liegen.
 		for (final @NotNull StundenplanUnterricht u : _unterricht_by_id.values())
-			if (u.wochentyp > _stundenplanWochenTypModell)
+			if (u.wochentyp > modellTyp)
 				u.wochentyp = 0;
 
 		// Alle StundenplanKalenderwochenzuordnung-Objekte müssen zudem gelöscht werden. Es greift dann der Default.
 		_kwz_by_id.clear();
+
+		// change
+		_stundenplanWochenTypModell = modellTyp;
 
 		// update
 		update_all();
