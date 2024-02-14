@@ -5,7 +5,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
 					<div :class="{'flex gap-2': showExtraWTM}">
-						<svws-ui-select :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" />
+						<svws-ui-select :items="[0,2,3,4,5]" :item-text="i=> ''+wochenTypModell[i]" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
 					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
@@ -47,6 +47,7 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
+			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" />
 		</div>
 	</div>
 </template>
@@ -54,12 +55,15 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
+	import type { DataTableColumn } from "@ui";
+	import { SvwsUiSelect } from "@ui";
 	import type { StundenplanRaum, Raum } from "@core";
 	import { ArrayList } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
+	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>> | null>(null);
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang", sortable: true, defaultSort: "asc", span: 0.25 },
@@ -78,18 +82,29 @@
 	async function updateJahrgaenge(id: number) {
 		if (jahrgaenge.value.includes(id))
 			await props.removeJahrgang(id);
-		else {
-			await props.removeJahrgang(id);
-		}
+		else
+			await props.addJahrgang(id);
 	}
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
-		if (wochenTypModell !== null)
-			await props.patch({wochenTypModell});
+		if ((wochenTypModell !== null) && (wochenTypModell !== undefined) && (wochenTypModell !== 1)) {
+			if (props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) < 1 || wtmOK.value === true) {
+				await props.patch({wochenTypModell});
+				wtmOK.value === undefined;
+			}
+			else if (wtmOK.value === false)
+				select.value?.reset(true);
+			else {
+				newWTM.value = wochenTypModell;
+				wtmOK.value = false;
+			}
+		}
 	}
 
 	const wochenTypModell = ['keins', null, 'AB-Wochen', 'ABC-Wochen', 'ABCD-Wochen', 'weitere'];
 	const showExtraWTM = computed(() => props.stundenplanManager().getWochenTypModell() > 4);
+	const wtmOK = ref<boolean | undefined>(undefined);
+	const newWTM = ref<number>(-1);
 
 	const raum = ref<StundenplanRaum | undefined>();
 	const selected = ref<StundenplanRaum[]>([]);

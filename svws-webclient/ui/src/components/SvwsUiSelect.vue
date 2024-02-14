@@ -189,8 +189,11 @@
 		doFocus();
 	}
 
-	function reset() {
-		selectedItem.value = props.useNull ? null : undefined;
+	function reset(originalValue?: boolean) {
+		if (originalValue === true)
+			selectedItem.value = props.modelValue;
+		else
+			selectedItem.value = props.useNull ? null : undefined;
 		const el: typeof TextInput = inputEl.value!;
 		el?.input.blur();
 	}
@@ -316,7 +319,7 @@
 
 	defineExpose<{
 		content: ComputedRef<SelectDataType>,
-		reset: () => void,
+		reset: (originalValue?: boolean) => void,
 	}>({ content, reset });
 
 </script>
