@@ -205,7 +205,7 @@
 		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin)
 			for (const klausur of props.kMan().kursklausurGetMengeByTerminid(dragData.value.id))
 				kursIds.add(klausur.idKurs);
-		return props.stundenplanmanager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, 1, day, stunde);
+		return props.stundenplanmanager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kwAuswahl.value.wochentyp, day, stunde);
 	}
 
 	function sumSchreiber(day: any, stunde: number) {
