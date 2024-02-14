@@ -84,8 +84,9 @@ publish_dockerhub:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
-
+        ##- ./gradlew :deployment:docker:dockerPushAllDockerhub
+        - ./gradlew :deployment:docker:dockerBuildTag
+        
 publish_github:
     stage: publish
     rules:
