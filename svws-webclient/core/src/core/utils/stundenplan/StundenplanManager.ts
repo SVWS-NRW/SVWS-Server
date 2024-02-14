@@ -1743,6 +1743,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl aller vom Default abweichenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die Anzahl aller vom Default abweichenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public kalenderwochenzuordnungGetAnzahl() : number {
+		return this._kwz_by_id.size();
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -3865,6 +3875,7 @@ export class StundenplanManager extends JavaObject {
 	 * <br>1: Ungültiger Wert.
 	 * <br>N: Stundenplan wiederholt sich alle N Wochen.
 	 * <br>Für alle {@link StundenplanUnterricht#wochentyp} deren Wert ungültig ist, wird der Wert auf 0 gesetzt.
+	 * <br>Zudem werden alle (nicht Dummy) {@link StundenplanKalenderwochenzuordnung}-Objekte gelöscht.
 	 *
 	 * @param modellTyp  Der neue Wert für das (globale) Wochentyp-Modell.
 	 */
@@ -3874,6 +3885,7 @@ export class StundenplanManager extends JavaObject {
 		for (const u of this._unterricht_by_id.values())
 			if (u.wochentyp > this._stundenplanWochenTypModell)
 				u.wochentyp = 0;
+		this._kwz_by_id.clear();
 		this.update_all();
 	}
 

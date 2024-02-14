@@ -46,8 +46,12 @@ public class KursblockungDynFachart {
 
 
 	private final @NotNull int[][] regelverletzungSchuelerpaarBeimHinzufuegen;
-	// TODO regelHinzufuegenNichtZusammen(S1, S2) --> matrix += 1, Verletzungen += 0  (man startet mit ohne  Regelverletzung)
-	// TODO regelHinzufuegenZusammen(S1, S2)      --> matrix -= 1, Verletzungen += 1  (man startet mit einer Regelverletzung)
+	// TODO Regeln 11-14:
+	//      a) Die Fachart hat alle (ZUSAMMEN/VERBOTEN)-Implikationen (pro Schüler) gespeichert.
+	//      b) Sobald ein Schüler einem Kurs hinzugefügt wurde hat dies Implikationen bei anderen Kursen der selben Fachart.
+	//         NICHT ZUSAMMEN --> Beim selben Kurs         SCHUELER_VERBOTEN[ID]++
+	//         ZUSAMMEN       --> Bei allen anderen Kursen SCHUELER_VERBOTEN[ID]++
+	//      c) Verwende "SCHUELER_VERBOTEN" in "gibIstErlaubtFuerSchueler" von "KursblockungDynKurs".
 
 	/**
 	 * @param pRandom      Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.

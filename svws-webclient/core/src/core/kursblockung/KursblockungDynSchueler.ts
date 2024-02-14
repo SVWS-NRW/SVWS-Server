@@ -453,7 +453,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Geht die Facharten durch (Facharten mit einer kleineren Kursanzahl zuerst) und geht dann pro Fachart alle Kurse
 	 * durch (Kurse mit kleinerer Schüleranzahl zuerst). Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es
 	 * geht weiter mit der nächsten Fachart. Ein Kurs ist wählbar, wenn nicht bereits ein Kurs zugeordnet wurde und die
-	 * Schienen in den der Kurs sind frei sind.<br>
+	 * Schienen in den der Kurs sind frei sind.
 	 */
 	aktionKurseVerteilenZufaellig() : void {
 		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
