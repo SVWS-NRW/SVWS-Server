@@ -145,6 +145,8 @@ public final class DataStundenplan extends DataManager<Long> {
 			int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
 			if (wochentypmodell == 1)
 				wochentypmodell = 0;
+			if (dto.WochentypModell == wochentypmodell)
+				return;
 			// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
 			final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
 					.stream().map(z -> z.ID).toList();
@@ -157,9 +159,8 @@ public final class DataStundenplan extends DataManager<Long> {
 					conn.transactionFlush();
 				}
 			}
-			// Lösche die Kalenderwochenzuordnungen, falls das Wochentypmodell reduiziert wurde
-			if (dto.WochentypModell > wochentypmodell)
-				conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
+			// Lösche die Kalenderwochenzuordnungen
+			conn.transactionExecuteDelete("DELETE FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Stundenplan_ID = %d".formatted(dto.ID));
 			// Setze das Wochentyp-Modell
 			dto.WochentypModell = wochentypmodell;
 		})
