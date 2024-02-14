@@ -1794,7 +1794,7 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
 		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
-		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp (" + kwz.wochentyp + ") > stundenplanWochenTypModell (" + _stundenplanWochenTypModell + ")", kwz.wochentyp > _stundenplanWochenTypModell);
 		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0);
 	}
 
