@@ -1,4 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { StundenplanAuswahlProps } from "@comp";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -7,8 +8,9 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 
-import type { StundenplanAuswahlProps } from "@comp";
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
 
@@ -23,6 +25,9 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			routeSchuelerStundenplanDaten
 		];
 		super.defaultChild = routeSchuelerStundenplanDaten;
+		api.config.addElements([
+			new ConfigElement("schueler.stundenplan.ganzerStundenplan", "user", "true"),
+		]);
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
@@ -61,9 +66,10 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			manager: () => this.data.manager,
 			wochentyp: () => this.data.wochentyp,
 			kalenderwoche: () => this.data.kalenderwoche,
+			ganzerStundenplan: () => this.data.ganzerStundenplan,
+			setGanzerStundenplan: this.data.setGanzerStundenplan,
 		};
 	}
-
 }
 
 export const routeSchuelerStundenplan = new RouteSchuelerStundenplan();

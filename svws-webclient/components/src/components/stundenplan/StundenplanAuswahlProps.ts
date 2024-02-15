@@ -9,4 +9,6 @@ export interface StundenplanAuswahlProps {
 	manager: () => StundenplanManager;
 	wochentyp: () => number;
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
+	ganzerStundenplan: () => boolean;
+	setGanzerStundenplan: (value: boolean) => void;
 }

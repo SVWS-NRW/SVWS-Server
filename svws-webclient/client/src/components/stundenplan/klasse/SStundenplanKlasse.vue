@@ -149,7 +149,7 @@
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
 			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
-				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" class="h-full overflow-scroll pr-4" />
+				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" class="h-full overflow-scroll pr-4" :ignore-empty="ganzerStundenplan" />
 		</template>
 	</div>
 </template>
@@ -173,6 +173,7 @@
 	const wochentyp = ref<number>(0);
 	const wochentypAnzeige = ref<number>(0);
 	const doppelstundenModus = ref<boolean>(false);
+	const ganzerStundenplan = ref<boolean>(true);
 	const schienSortierung = ref<boolean>(true);
 
 	const klasse = computed<StundenplanKlasse>({
