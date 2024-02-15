@@ -1120,20 +1120,6 @@ public class GostBlockungsdatenManager {
 		return (halbjahr.id < 2) ? 13 : 11;
 	}
 
-	private void regelAddOhneSortierung(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException {
-		// Datenkonsistenz überprüfen.
-		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
-		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
-		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
-
-		// Hinzufügen der Regel.
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idRegel_regel, regel.id, regel);
-		MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).add(regel);
-		_map_multikey_regeln.put(multikey, regel);
-		_daten.regeln.add(regel);
-	}
-
 	/**
 	 * Fügt die übergebene Regel zu der Blockung hinzu.
 	 *
@@ -1142,11 +1128,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Daten der Regel inkonsistent sind.
 	 */
 	public void regelAdd(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException {
-		// Regel hinzufügen.
-		regelAddOhneSortierung(regel);
-
-		// Sortieren der Regelmenge.
-		_daten.regeln.sort(_compRegel);
+		regelAddListe(ListUtils.create1(regel));
 	}
 
 	/**
@@ -1157,12 +1139,44 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
 	public void regelAddListe(final @NotNull List<@NotNull GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+		// Regeln überprüfen
+		for (final @NotNull GostBlockungRegel regel : regelmenge)
+			regelCheck(regel);
+
 		// Regeln hinzufügen.
 		for (final @NotNull GostBlockungRegel regel : regelmenge)
 			regelAddOhneSortierung(regel);
 
 		// Sortieren der Regelmenge.
 		_daten.regeln.sort(_compRegel);
+	}
+
+	private void regelCheck(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException {
+		// Ist die ID gültig?
+		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
+
+		// Ist der Regel-Typ gültig?
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
+
+		// Existiert bereits exakt die selbe Regel?
+		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
+		if (_map_multikey_regeln.containsKey(multikey)) {
+			final @NotNull StringBuilder sb = new StringBuilder();
+			sb.append("Die Regel (ID=" + regel.id + ") vom Typ " + typ.bezeichnung + " existiert bereits mit den Parametern: ");
+			for (int i = 0; i < regel.parameter.size(); i++)
+				sb.append("[" + (i == 0 ? "" : ", ") + regel.parameter.get(i) + "]");
+			System.out.println("WARNUNG: " + sb.toString());
+		}
+	}
+
+	private void regelAddOhneSortierung(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException {
+		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idRegel_regel, regel.id, regel);
+		MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).add(regel);
+		_map_multikey_regeln.put(multikey, regel);
+		_daten.regeln.add(regel);
 	}
 
 	/**

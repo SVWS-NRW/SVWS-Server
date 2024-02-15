@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
+import { System } from '../../java/lang/System';
 
 export class ArrayUtils extends JavaObject {
 
@@ -29,6 +30,21 @@ export class ArrayUtils extends JavaObject {
 			perm[i2] = save1;
 		}
 		return perm;
+	}
+
+	/**
+	 * Liefert eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+	 *
+	 * @param a      Das übergebene Array.
+	 * @param value  Die Zahl, welche ergänzt wird.
+	 *
+	 * @return eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+	 */
+	public static erweitern(a : Array<number>, value : number) : Array<number> {
+		const temp : Array<number> | null = Array(a.length + 1).fill(0);
+		System.arraycopy(a, 0, temp, 0, a.length);
+		temp[a.length] = value;
+		return temp;
 	}
 
 	transpilerCanonicalName(): string {

@@ -100,9 +100,14 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	private readonly logger : Logger;
 
+	/**
+	 * Eine Array, welches dynamisch definiert, ob ein Schüler für diesen Kurs verboten ist.
+	 */
+	private readonly schuelerVerboten : Array<number>;
+
 
 	/**
-	 *Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
+	 * Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
 	 *
 	 * @param pRandom              Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pSchienenLage        Ein Array aller Schienen, in denen der Kurs gerade liegt.
@@ -112,8 +117,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param pFachart             Die zu diesem Kurs zugehörige Fachart.
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInternalID          Eine interne ID für schnellen Zugriff.
+	 * @param pSchuelerAnzahl      Die Anzahl aller Schüler.
 	 */
-	constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, pKursID : number, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number) {
+	constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, pKursID : number, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number, pSchuelerAnzahl : number) {
 		super();
 		this._random = pRandom;
 		this.schienenLage = pSchienenLage;
@@ -126,6 +132,7 @@ export class KursblockungDynKurs extends JavaObject {
 		this.logger = pLogger;
 		this.internalID = pInternalID;
 		this.schuelerAnzMax = KursblockungDynKurs.MAX_SUS_DEFAULT;
+		this.schuelerVerboten = Array(pSchuelerAnzahl).fill(0);
 		this.schienenLageSaveS = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveK = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveG = Array(this.schienenLage.length).fill(null);
@@ -318,11 +325,12 @@ export class KursblockungDynKurs extends JavaObject {
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
 	 * @param kursGesperrt  Die Kurssperrung des Schülers.
+	 * @param pSchuelerNr   Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
-	gibIstErlaubtFuerSchueler(kursGesperrt : Array<boolean>) : boolean {
-		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !kursGesperrt[this.internalID];
+	gibIstErlaubtFuerSchueler(kursGesperrt : Array<boolean>, pSchuelerNr : number) : boolean {
+		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !kursGesperrt[this.internalID] && (this.schuelerVerboten[pSchuelerNr] <= 0);
 	}
 
 	/**
@@ -450,22 +458,30 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 * Entfernt einen Schüler aus diesem Kurs.
+	 * Fügt einen Schüler diesem Kurs hinzu.
+	 *
+	 * @param schuelerNr  Die interne Nummer des Schülers.
 	 */
-	aktionSchuelerEntfernen() : void {
+	aktionSchuelerHinzufuegen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
-		this.schuelerAnz--;
-		this.fachart.aktionSchuelerWurdeEntfernt();
+		this.schuelerAnz++;
+		for (const verbotenMitNr of this.fachart.gibSchuelerVerbotenMitVon(schuelerNr))
+			this.schuelerVerboten[verbotenMitNr]++;
+		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 	}
 
 	/**
-	 * Fügt einen Schüler diesem Kurs hinzu.
+	 * Entfernt einen Schüler aus diesem Kurs.
+	 *
+	 * @param schuelerNr  Die interne Nummer des Schülers.
 	 */
-	aktionSchuelerHinzufuegen() : void {
+	aktionSchuelerEntfernen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
-		this.schuelerAnz++;
-		this.fachart.aktionSchuelerWurdeHinzugefuegt();
+		this.schuelerAnz--;
+		for (const verbotenMitNr of this.fachart.gibSchuelerVerbotenMitVon(schuelerNr))
+			this.schuelerVerboten[verbotenMitNr]--;
+		this.fachart.aktionSchuelerWurdeEntfernt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 	}
 

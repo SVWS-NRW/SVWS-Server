@@ -3,6 +3,7 @@ import { GostFach } from '../../core/data/gost/GostFach';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
+import { ArrayUtils } from '../../core/utils/ArrayUtils';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
@@ -31,8 +32,7 @@ export class KursblockungDynFachart extends JavaObject {
 	private readonly gostKursart : GostKursart;
 
 	/**
-	 * Ein Array aller Kurse dieser Fachart. Das Array bleibt dynamisch sortiert, so dass im Array zunächst der Kurs
-	 *  mit der geringsten Schüleranzahl ist.
+	 * Ein Array aller Kurse dieser Fachart. Das Array bleibt stets aufsteigend nach Schülerzahlen sortiert.
 	 */
 	private kursArr : Array<KursblockungDynKurs>;
 
@@ -56,17 +56,21 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	private readonly statistik : KursblockungDynStatistik;
 
-	private readonly regelverletzungSchuelerpaarBeimHinzufuegen : Array<Array<number> | null>;
+	/**
+	 * Ordnet jedem Schüler die verbotenen andere Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]
+	 */
+	private readonly schuelerNichtZusammenMitSchueler : Array<Array<number>>;
 
 
 	/**
-	 * @param pRandom      Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pNr          Eine laufende Nummer (ID) für alle Facharten.
-	 * @param pGostFach    Referenz zum zugehörigen GOST-Fach.
-	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
-	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
+	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pNr             Eine laufende Nummer (ID) für alle Facharten.
+	 * @param pGostFach       Referenz zum zugehörigen GOST-Fach.
+	 * @param pGostKursart    Referenz zur zugehörigen GOST-Kursart.
+	 * @param pStatistik      Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
+	 * @param schuelerAnzahl  Die Gesamtanzahl aller Schüler.
 	 */
-	constructor(pRandom : Random, pNr : number, pGostFach : GostFach, pGostKursart : GostKursart, pStatistik : KursblockungDynStatistik) {
+	constructor(pRandom : Random, pNr : number, pGostFach : GostFach, pGostKursart : GostKursart, pStatistik : KursblockungDynStatistik, schuelerAnzahl : number) {
 		super();
 		this._random = pRandom;
 		this.nr = pNr;
@@ -77,7 +81,7 @@ export class KursblockungDynFachart extends JavaObject {
 		this.kurseMax = 0;
 		this.schuelerMax = 0;
 		this.schuelerAnzNow = 0;
-		this.regelverletzungSchuelerpaarBeimHinzufuegen = [...Array(100)].map(e => Array(100).fill(0));
+		this.schuelerNichtZusammenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
 	}
 
 	/**
@@ -168,13 +172,14 @@ export class KursblockungDynFachart extends JavaObject {
 	 *
 	 * @param  pSchiene      Die Schiene, in der gesucht wird.
 	 * @param  kursGesperrt  Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
-	gibKleinstenKursInSchieneFuerSchueler(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
+	gibKleinstenKursInSchieneFuerSchueler(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : KursblockungDynKurs | null {
 		for (let i : number = 0; i < this.kursArr.length; i++) {
 			const kurs : KursblockungDynKurs = this.kursArr[i];
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt))
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID))
 				for (const c of kurs.gibSchienenLage())
 					if (c === pSchiene)
 						return kurs;
@@ -199,12 +204,13 @@ export class KursblockungDynFachart extends JavaObject {
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
-	gibHatKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
+	gibHatSchuelerKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : boolean {
 		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt) && kurs.gibIstInSchiene(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) && kurs.gibIstInSchiene(pSchiene))
 				return true;
 		return false;
 	}
@@ -212,14 +218,15 @@ export class KursblockungDynFachart extends JavaObject {
 	/**
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 *
-	 * @param  pSchiene     D ie Schiene, die angefragt wurde.
+	 * @param  pSchiene      Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
-	gibHatKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
+	gibHatSchuelerKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : boolean {
 		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt) && kurs.gibIstSchieneFrei(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) && kurs.gibIstSchieneFrei(pSchiene))
 				return true;
 		return false;
 	}
@@ -322,6 +329,28 @@ export class KursblockungDynFachart extends JavaObject {
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
 		for (let i : number = 0; i < this.kursArr.length; i++)
 			this.kursArr[i].debug(schuelerArr);
+	}
+
+	/**
+	 * Verbietet, dass zwei Schüler den selben Kurs der Fachart besuchen.
+	 *
+	 * @param internalID1  Die interne ID des 1. Schülers.
+	 * @param internalID2  Die interne ID des 2. Schülers.
+	 */
+	regel_schueler_verbieten_mit_schueler(internalID1 : number, internalID2 : number) : void {
+		this.schuelerNichtZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerNichtZusammenMitSchueler[internalID1], internalID2);
+		this.schuelerNichtZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerNichtZusammenMitSchueler[internalID2], internalID1);
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 */
+	gibSchuelerVerbotenMitVon(schuelerNr : number) : Array<number> {
+		return this.schuelerNichtZusammenMitSchueler[schuelerNr];
 	}
 
 	transpilerCanonicalName(): string {

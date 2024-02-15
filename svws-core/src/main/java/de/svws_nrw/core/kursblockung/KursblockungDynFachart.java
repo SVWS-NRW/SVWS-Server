@@ -5,6 +5,7 @@ import java.util.Random;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.ArrayUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -28,8 +29,7 @@ public class KursblockungDynFachart {
 	/** Referenz zur zugehörigen GOST-Kursart. */
 	private final @NotNull GostKursart gostKursart;
 
-	/** Ein Array aller Kurse dieser Fachart. Das Array bleibt dynamisch sortiert, so dass im Array zunächst der Kurs
-	 * mit der geringsten Schüleranzahl ist. */
+	/** Ein Array aller Kurse dieser Fachart. Das Array bleibt stets aufsteigend nach Schülerzahlen sortiert. */
 	private @NotNull KursblockungDynKurs @NotNull [] kursArr;
 
 	/** Die maximale Anzahl an Schülern, die dieser Fachart zugeordnet sein können. Also die Anzahl der Schüler, die diese Fachart gewählt haben. */
@@ -44,28 +44,24 @@ public class KursblockungDynFachart {
 	/** Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. */
 	private final @NotNull KursblockungDynStatistik statistik;
 
-
-	private final @NotNull int[][] regelverletzungSchuelerpaarBeimHinzufuegen;
-	// TODO Regeln 11-14:
-	//      a) Die Fachart hat alle (ZUSAMMEN/VERBOTEN)-Implikationen (pro Schüler) gespeichert.
-	//      b) Sobald ein Schüler einem Kurs hinzugefügt wurde hat dies Implikationen bei anderen Kursen der selben Fachart.
-	//         NICHT ZUSAMMEN --> Beim selben Kurs         SCHUELER_VERBOTEN[ID]++
-	//         ZUSAMMEN       --> Bei allen anderen Kursen SCHUELER_VERBOTEN[ID]++
-	//      c) Verwende "SCHUELER_VERBOTEN" in "gibIstErlaubtFuerSchueler" von "KursblockungDynKurs".
+	/** Ordnet jedem Schüler die verbotenen andere Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]  */
+	private final @NotNull int @NotNull [][] schuelerNichtZusammenMitSchueler;
 
 	/**
-	 * @param pRandom      Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pNr          Eine laufende Nummer (ID) für alle Facharten.
-	 * @param pGostFach    Referenz zum zugehörigen GOST-Fach.
-	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
-	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
+	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pNr             Eine laufende Nummer (ID) für alle Facharten.
+	 * @param pGostFach       Referenz zum zugehörigen GOST-Fach.
+	 * @param pGostKursart    Referenz zur zugehörigen GOST-Kursart.
+	 * @param pStatistik      Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
+	 * @param schuelerAnzahl  Die Gesamtanzahl aller Schüler.
 	 */
 	KursblockungDynFachart(
 					final @NotNull Random pRandom,
 					final int pNr,
 					final @NotNull GostFach pGostFach,
 					final @NotNull GostKursart pGostKursart,
-					final @NotNull KursblockungDynStatistik pStatistik) {
+					final @NotNull KursblockungDynStatistik pStatistik,
+					final int schuelerAnzahl) {
 		_random = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
@@ -75,7 +71,7 @@ public class KursblockungDynFachart {
 		kurseMax = 0;
 		schuelerMax = 0;
 		schuelerAnzNow = 0;
-		regelverletzungSchuelerpaarBeimHinzufuegen = new int[100][100];
+		schuelerNichtZusammenMitSchueler = new int[schuelerAnzahl][0];
 	}
 
 	/**
@@ -171,13 +167,14 @@ public class KursblockungDynFachart {
 	 *
 	 * @param  pSchiene      Die Schiene, in der gesucht wird.
 	 * @param  kursGesperrt  Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
-	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
+	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
 		for (int i = 0; i < kursArr.length; i++) {
 			final @NotNull KursblockungDynKurs kurs = kursArr[i];
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt))
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID))
 				for (final int c : kurs.gibSchienenLage()) // Suche passende Schiene.
 					if (c == pSchiene)
 						return kurs;
@@ -203,12 +200,13 @@ public class KursblockungDynFachart {
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
-	boolean gibHatKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
+	boolean gibHatSchuelerKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt) &&  kurs.gibIstInSchiene(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) &&  kurs.gibIstInSchiene(pSchiene))
 				return true;
 
 		return false;
@@ -217,15 +215,16 @@ public class KursblockungDynFachart {
 	/**
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 *
-	 * @param  pSchiene     D ie Schiene, die angefragt wurde.
+	 * @param  pSchiene      Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
+	 * @param  pInterneID    Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
-	boolean gibHatKursMitFreierSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
+	boolean gibHatSchuelerKursMitFreierSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt) &&  kurs.gibIstSchieneFrei(pSchiene))
-					return true;
+			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) &&  kurs.gibIstSchieneFrei(pSchiene))
+				return true;
 
 		return false;
 	}
@@ -340,6 +339,28 @@ public class KursblockungDynFachart {
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
 		for (int i = 0; i < kursArr.length; i++)
 			kursArr[i].debug(schuelerArr);
+	}
+
+	/**
+	 * Verbietet, dass zwei Schüler den selben Kurs der Fachart besuchen.
+	 *
+	 * @param internalID1  Die interne ID des 1. Schülers.
+	 * @param internalID2  Die interne ID des 2. Schülers.
+	 */
+	void regel_schueler_verbieten_mit_schueler(final int internalID1, final int internalID2) {
+		schuelerNichtZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerNichtZusammenMitSchueler[internalID1], internalID2);
+		schuelerNichtZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerNichtZusammenMitSchueler[internalID2], internalID1);
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 */
+	@NotNull int[] gibSchuelerVerbotenMitVon(final int schuelerNr) {
+		return schuelerNichtZusammenMitSchueler[schuelerNr];
 	}
 
 }

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -1114,17 +1115,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return (halbjahr.id < 2) ? 13 : 11;
 	}
 
-	private regelAddOhneSortierung(regel : GostBlockungRegel) : void {
-		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
-		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, regel.id, regel);
-		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(regel);
-		this._map_multikey_regeln.put(multikey, regel);
-		this._daten.regeln.add(regel);
-	}
-
 	/**
 	 * Fügt die übergebene Regel zu der Blockung hinzu.
 	 *
@@ -1133,8 +1123,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Daten der Regel inkonsistent sind.
 	 */
 	public regelAdd(regel : GostBlockungRegel) : void {
-		this.regelAddOhneSortierung(regel);
-		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
+		this.regelAddListe(ListUtils.create1(regel));
 	}
 
 	/**
@@ -1146,8 +1135,33 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public regelAddListe(regelmenge : List<GostBlockungRegel>) : void {
 		for (const regel of regelmenge)
+			this.regelCheck(regel);
+		for (const regel of regelmenge)
 			this.regelAddOhneSortierung(regel);
 		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
+	}
+
+	private regelCheck(regel : GostBlockungRegel) : void {
+		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
+		if (this._map_multikey_regeln.containsKey(multikey)) {
+			const sb : StringBuilder = new StringBuilder();
+			sb.append("Die Regel (ID=" + regel.id + ") vom Typ " + typ.bezeichnung + " existiert bereits mit den Parametern: ");
+			for (let i : number = 0; i < regel.parameter.size(); i++)
+				sb.append("[" + (i === 0 ? "" : ", ") + regel.parameter.get(i) + "]");
+			console.log(JSON.stringify("WARNUNG: " + sb.toString()!));
+		}
+	}
+
+	private regelAddOhneSortierung(regel : GostBlockungRegel) : void {
+		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, regel.id, regel);
+		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(regel);
+		this._map_multikey_regeln.put(multikey, regel);
+		this._daten.regeln.add(regel);
 	}
 
 	/**

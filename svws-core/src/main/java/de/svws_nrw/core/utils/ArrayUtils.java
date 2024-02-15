@@ -40,4 +40,19 @@ public final class ArrayUtils {
 		return perm;
 	}
 
+   	/**
+   	 * Liefert eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+   	 *
+   	 * @param a      Das übergebene Array.
+   	 * @param value  Die Zahl, welche ergänzt wird.
+   	 *
+   	 * @return eine Kopie des übergebenen Arrays ergänzt um eine übergebene Zahl.
+   	 */
+	public static @NotNull int[] erweitern(final @NotNull int[] a, final int value) {
+		final int[] temp = new int[a.length + 1];
+		System.arraycopy(a, 0, temp, 0, a.length);
+		temp[a.length] = value;
+		return temp;
+	}
+
 }

@@ -68,7 +68,11 @@ public class KursblockungDynKurs {
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
 	private final @NotNull Logger logger;
 
-	/** Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
+	/** Eine Array, welches dynamisch definiert, ob ein Schüler für diesen Kurs verboten ist.*/
+	private final @NotNull int[] schuelerVerboten;
+
+	/**
+	 * Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
 	 *
 	 * @param pRandom              Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pSchienenLage        Ein Array aller Schienen, in denen der Kurs gerade liegt.
@@ -77,10 +81,19 @@ public class KursblockungDynKurs {
 	 * @param pKursID              Die ID des Kurses.
 	 * @param pFachart             Die zu diesem Kurs zugehörige Fachart.
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pInternalID          Eine interne ID für schnellen Zugriff. */
-	KursblockungDynKurs(final @NotNull Random pRandom, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
-			final int pSchienenLageFixiert, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei, final long pKursID,
-			final @NotNull KursblockungDynFachart pFachart, final @NotNull Logger pLogger, final int pInternalID) {
+	 * @param pInternalID          Eine interne ID für schnellen Zugriff.
+	 * @param pSchuelerAnzahl      Die Anzahl aller Schüler.
+	 */
+	KursblockungDynKurs(
+					final @NotNull Random pRandom,
+					final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
+					final int pSchienenLageFixiert,
+					final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei,
+					final long pKursID,
+					final @NotNull KursblockungDynFachart pFachart,
+					final @NotNull Logger pLogger,
+					final int pInternalID,
+					final int pSchuelerAnzahl) {
 		_random = pRandom;
 		schienenLage = pSchienenLage;
 		schienenLageFixiert = pSchienenLageFixiert;
@@ -92,6 +105,7 @@ public class KursblockungDynKurs {
 		logger = pLogger;
 		internalID = pInternalID;
 		schuelerAnzMax = MAX_SUS_DEFAULT;
+		schuelerVerboten = new int[pSchuelerAnzahl];
 
 		schienenLageSaveS = new KursblockungDynSchiene[schienenLage.length];
 		schienenLageSaveK = new KursblockungDynSchiene[schienenLage.length];
@@ -114,6 +128,8 @@ public class KursblockungDynKurs {
 		// Der Schiene hinzufügen
 		for (int i = 0; i < schienenLage.length; i++)
 			schienenLage[i].aktionKursHinzufuegen(this);
+
+
 
 	}
 
@@ -286,11 +302,12 @@ public class KursblockungDynKurs {
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
 	 * @param kursGesperrt  Die Kurssperrung des Schülers.
+	 * @param pSchuelerNr   Die interne ID des Schülers.
 	 *
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
-	boolean gibIstErlaubtFuerSchueler(final @NotNull boolean[] kursGesperrt) {
-		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !kursGesperrt[internalID];
+	boolean gibIstErlaubtFuerSchueler(final @NotNull boolean[] kursGesperrt, final int pSchuelerNr) {
+		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !kursGesperrt[internalID] && (schuelerVerboten[pSchuelerNr] <= 0);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
@@ -419,22 +436,30 @@ public class KursblockungDynKurs {
 	}
 
 	/**
-	 * Entfernt einen Schüler aus diesem Kurs.
+	 * Fügt einen Schüler diesem Kurs hinzu.
+	 *
+	 * @param schuelerNr  Die interne Nummer des Schülers.
 	 */
-	void aktionSchuelerEntfernen() {
+	void aktionSchuelerHinzufuegen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
-		schuelerAnz--; // Darf erst hier passieren.
-		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
+		schuelerAnz++; // Darf erst hier passieren.
+		for (final int verbotenMitNr : fachart.gibSchuelerVerbotenMitVon(schuelerNr))
+			schuelerVerboten[verbotenMitNr]++; // Sind jetzt andere SuS verboten?
+		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 	}
 
 	/**
-	 * Fügt einen Schüler diesem Kurs hinzu.
+	 * Entfernt einen Schüler aus diesem Kurs.
+	 *
+	 * @param schuelerNr  Die interne Nummer des Schülers.
 	 */
-	void aktionSchuelerHinzufuegen() {
+	void aktionSchuelerEntfernen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
-		schuelerAnz++; // Darf erst hier passieren.
-		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
+		schuelerAnz--; // Darf erst hier passieren.
+		for (final int verbotenMitNr : fachart.gibSchuelerVerbotenMitVon(schuelerNr))
+			schuelerVerboten[verbotenMitNr]--; // Sind jetzt andere SuS erlaubt?
+		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 	}
 
