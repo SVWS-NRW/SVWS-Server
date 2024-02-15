@@ -178,7 +178,7 @@
 		</svws-ui-table>
 		<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-if="schuelerFilter().kurs !== undefined" :get-ergebnismanager="getErgebnismanager"
 			:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
-			:schueler-filter="schuelerFilter" v-slot="{ openModal }">
+			:schueler-filter="schuelerFilter" v-slot="{ openModal }" :allow-regeln="allowRegeln">
 			<svws-ui-button type="secondary" @click="openModal" class="mt-2"><i-ri-group-line /> Kurs-Schüler-Zuordnung ändern </svws-ui-button>
 		</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 	</svws-ui-content-card>
@@ -193,6 +193,8 @@
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
+
+	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
 	const isFilterOpen = computed<boolean>({
 		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true',

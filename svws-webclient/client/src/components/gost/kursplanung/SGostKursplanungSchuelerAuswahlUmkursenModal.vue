@@ -62,6 +62,7 @@
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schuelerFilter: () => GostKursplanungSchuelerFilter;
+		allowRegeln: boolean;
 	}>();
 
 	const _showModal = ref<boolean>(false);
