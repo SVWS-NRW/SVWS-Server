@@ -47,7 +47,7 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
-			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" />
+			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager="stundenplanManager" />
 		</div>
 	</div>
 </template>
@@ -88,7 +88,7 @@
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
 		if ((wochenTypModell !== null) && (wochenTypModell !== undefined) && (wochenTypModell !== 1)) {
-			if (props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) < 1 || wtmOK.value === true) {
+			if (((props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) < 1) && (wochenTypModell === 0)) || wtmOK.value === true) {
 				await props.patch({wochenTypModell});
 				wtmOK.value === undefined;
 			}
