@@ -113,9 +113,9 @@
 							</svws-ui-tooltip>
 						</div>
 					</div>
-					<div role="cell" class="svws-ui-td svws-align-center" @click.stop="fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id)">
+					<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
 						<template v-if="fixierRegeln.get(s.id) === undefined">
-							<i-ri-pushpin-line v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+							<i-ri-pushpin-line v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined)) && allowRegeln" class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
 						</template>
 						<template v-else>
 							<template v-if="fach !== undefined">
@@ -326,9 +326,10 @@
 		await props.removeRegel(idRegel);
 	}
 
-	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number) {
-		if (fachID === undefined)
+	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number, event: Event) {
+		if (fachID === undefined || !allowRegeln.value)
 			return;
+		event.stopPropagation();
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID);
 		if (kurs === null)
 			return;
