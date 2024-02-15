@@ -31,11 +31,44 @@ stages:
     - build
     - integration-tests
     - analyze
-    - build_linux
-    - build_windows
+    - build_installer
     - publish
 
-publish:
+publish_sona:
+        stage: publish
+        rules:
+            -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+                when: manual
+        variables:
+            SECURE_FILES_DOWNLOAD_PATH: '/'
+        needs:
+            -   job: build_linux
+            -   job: build_windows
+        script:
+            - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+            - cat gradle_secure.properties >> gradle.properties
+            - chmod +x ./deployment/setupVersion.sh
+            - ./deployment/setupVersion.sh
+            - ./gradlew signJar publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+
+publish_maven:
+    stage: publish
+    rules:
+        -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+            when: manual
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        -   job: build_linux
+        -   job: build_windows
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew signJar publishReleaseAll
+
+publish_dockerhub:
     stage: publish
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
@@ -51,14 +84,27 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew signJar publishReleaseAllAndCloseSonatype
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
-        - ls -dlah $PWD/artifacts_windows
-        - ls -dlah $PWD/artifacts_linux/distributions
+
+publish_github:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+          when: manual
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: build_linux
+        - job: build_windows
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:githubRelease
 
 build_linux:
-    stage: build_linux
+    stage: build_installer
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
@@ -75,7 +121,7 @@ build_linux:
     when: on_success
 
 build_windows:
-    stage: build_windows
+    stage: build_installer
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:

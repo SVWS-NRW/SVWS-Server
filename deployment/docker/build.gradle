@@ -12,9 +12,12 @@ dependencies {
 
 task copyArtifacts(type: Copy) {
 	description = 'Kopieren der aktuellen Artefakte'
+	dependsOn (':svws-webclient:client:doZip')
+	dependsOn (':svws-webclient:admin:doZip')
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
+
 	into dockerfileAppDir
 	into ("lib/") {
 		from (configurations.runtimeClasspath) {
