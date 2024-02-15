@@ -176,9 +176,10 @@
 				</div>
 			</template>
 		</svws-ui-table>
-		<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-if="schuelerFilter().kurs !== undefined" :get-ergebnismanager="getErgebnismanager"
+		<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-if="schuelerFilter().kurs !== undefined"
+			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
-			:schueler-filter="schuelerFilter" v-slot="{ openModal }" :allow-regeln="allowRegeln">
+			:add-regel="addRegel" :remove-regel="removeRegel" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" v-slot="{ openModal }">
 			<svws-ui-button type="secondary" @click="openModal" class="mt-2"><i-ri-group-line /> Kurs-Schüler-Zuordnung ändern </svws-ui-button>
 		</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 	</svws-ui-content-card>

@@ -7,8 +7,18 @@
 				<!-- Die Tabelle mit den Kursschülern -->
 				<div class="flex flex-col w-96 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">im Kurs {{ kursname }}</span>
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'name', label: 'Name'}]"
+					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: '&nbsp;', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
 						:no-data="schuelerFilter().filtered.value.length <= 0">
+						<template #cell(pin)="{ rowData }">
+							<div @click="toggleFixierRegelKursSchueler(props.schuelerFilter().kurs?.id ?? null, rowData.id)">
+								<template v-if="hatFixierRegelKurs(rowData.id).value">
+									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+								</template>
+								<template v-else-if="allowRegeln">
+									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+								</template>
+							</div>
+						</template>
 						<template #cell(name)="{ rowData }">
 							<div @click="remove(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
@@ -17,8 +27,18 @@
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
 				<div class="flex flex-col w-128 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">mit Fachwahl {{ fachname }} {{ kursart }}</span>
-					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
+					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: '&nbsp;', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
 						:no-data="fachwahlschueler.length <= 0" scroll>
+						<template #cell(pin)="{ rowData }">
+							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id);">
+								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
+									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+								</template>
+								<template v-else-if="allowRegeln">
+									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+								</template>
+							</div>
+						</template>
 						<template #cell(name)="{ rowData }">
 							<div @click="move(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
@@ -54,15 +74,18 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { GostBlockungsergebnisManager, Schueler, List } from '@core';
-	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs } from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager} from '@core';
+	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
+		allowRegeln: boolean;
+		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schuelerFilter: () => GostKursplanungSchuelerFilter;
-		allowRegeln: boolean;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -199,6 +222,46 @@
 	const openModal = () => {
 		showModal().value = true;
 	}
+
+	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
+		if ((!props.allowRegeln) || (idKurs === null))
+			return;
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
+			await props.removeRegel(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id);
+		} else {
+			const regel = new GostBlockungRegel();
+			regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+			regel.parameter.add(idSchueler);
+			regel.parameter.add(idKurs);
+			await props.addRegel(regel);
+		}
+	}
+
+	const hatFixierRegelKurs = (idSchueler: number) => computed<boolean>(() => {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return false;
+		return props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id);
+	});
+
+	const andererKurs = (idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() => {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return null;
+		return props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, kurs.fach_id);
+	});
+
+	const hatFixierRegelAndererKurs = (idSchueler: number) => computed<boolean>(() => {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return false;
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id))
+			return false;
+		const k = andererKurs(idSchueler).value;
+		if (k === null)
+			return false;
+		return props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, k.id);
+	});
 
 	async function uebertragen() {
 		const kurs = props.schuelerFilter().kurs;
