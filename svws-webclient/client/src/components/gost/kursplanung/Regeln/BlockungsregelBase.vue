@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="[]" :no-data="false" :columns="cols ? [...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
+		<svws-ui-table :items="[]" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
 			<template #header v-if="cols === undefined">
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">{{ regelTyp.bezeichnung }}</div>
@@ -8,14 +8,18 @@
 			</template>
 			<template #body>
 				<div v-for="r in regeln" :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
-					<svws-ui-tooltip autosize>
-						<slot name="regelRead" :regel="r" />
+					<svws-ui-tooltip v-if="regelverletzung(r)" autosize>
+						<div class="svws-ui-td" role="cell">
+							<i-ri-information-line />
+						</div>
 						<template #content>
 							<template v-for="text in getErgebnismanager().regelGetMengeAnVerletzungen(GostKursblockungRegelTyp.fromTyp(r.typ))" :key="text">
 								<br>{{ text }}
 							</template>
 						</template>
 					</svws-ui-tooltip>
+					<div v-else class="svws-ui-td" role="cell" />
+					<slot name="regelRead" :regel="r" />
 					<div class="svws-ui-td" role="cell">
 						<svws-ui-button type="icon" @click.stop="regel_entfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
 					</div>
@@ -44,7 +48,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type {DataTableColumn } from "@ui";
+	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungsergebnisManager } from "@core";
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
 	import { api } from "~/router/Api";
