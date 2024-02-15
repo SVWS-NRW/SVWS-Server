@@ -448,7 +448,7 @@
 	}
 
 	.svws-ui-stundenplan--body {
-		@apply flex-grow border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
+		@apply border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
 
 		.svws-hat-zeitachse & {
 			@media screen {
