@@ -121,13 +121,16 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
 			schuelerFilter: () => routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager,
-			config: api.config,
 			addRegel: routeGostKursplanung.data.addRegel,
 			removeRegel: routeGostKursplanung.data.removeRegel,
 			addRegeln: routeGostKursplanung.data.addRegeln,
 			removeRegeln: routeGostKursplanung.data.deleteRegeln,
 			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
 			removeKursSchuelerZuordnung: routeGostKursplanung.data.removeKursSchuelerZuordnung,
+			isSchuelerFilterOpen: () => routeGostKursplanung.data.isSchuelerFilterOpen,
+			setIsSchuelerFilterOpen: routeGostKursplanung.data.setIsSchuelerFilterOpen,
+			showGeschlecht: () => routeGostKursplanung.data.showGeschlecht,
+			setShowGeschlecht: routeGostKursplanung.data.setShowGeschlecht,
 		}
 	}
 

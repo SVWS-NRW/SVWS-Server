@@ -38,6 +38,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
 			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart"),
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),
+			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
 		]);
 	}
 
@@ -227,7 +228,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
-			config: api.config,
 			jahrgangsdaten: () => this.data.jahrgangsdaten,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			addBlockung: this.data.addBlockung,
@@ -270,6 +270,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			mapSchueler: this.data.mapSchueler,
 			removeKursSchuelerZuordnung: this.data.removeKursSchuelerZuordnung,
 			apiStatus: api.status,
+			blockungstabelleHidden: () => this.data.blockungstabelleHidden,
+			setBlockungstabelleHidden: this.data.setBlockungstabelleHidden,
+			zeigeSchienenbezeichnungen: () => this.data.zeigeSchienenbezeichnungen,
+			setZeigeSchienenbezeichnungen: this.data.setZeigeSchienenbezeichnungen,
 		}
 	}
 

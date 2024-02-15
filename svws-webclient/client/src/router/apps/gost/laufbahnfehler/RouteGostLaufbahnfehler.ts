@@ -1,4 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostLaufbahnfehlerProps } from "~/components/gost/laufbahnfehler/SGostLaufbahnfehlerProps";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -9,7 +10,6 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteDataGostLaufbahnfehler";
 
 import { ConfigElement } from "~/components/Config";
-import type { GostLaufbahnfehlerProps } from "~/components/gost/laufbahnfehler/SGostLaufbahnfehlerProps";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
@@ -69,7 +69,6 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {
 		return {
-			config: api.config,
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
@@ -79,10 +78,13 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			getPdfLaufbahnplanung: this.data.getPdfLaufbahnplanung,
 			resetFachwahlenAlle: this.data.resetFachwahlenAlle,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
+			filterFehler: () => this.data.filterFehler,
+			setFilterFehler: this.data.setFilterFehler,
+			filterExterne: () => this.data.filterExterne,
+			setFilterExterne: this.data.setFilterExterne,
 			apiStatus: api.status,
 		};
 	}
-
 }
 
 export const routeGostLaufbahnfehler = new RouteGostLaufbahnfehler();

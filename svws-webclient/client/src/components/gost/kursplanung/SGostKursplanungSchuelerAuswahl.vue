@@ -1,6 +1,7 @@
 <template>
 	<svws-ui-content-card v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl" overflow-scroll>
-		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined" v-model:filter-open="isFilterOpen"
+		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined"
+			:filter-open="isSchuelerFilterOpen()" @update:filter-open="setIsSchuelerFilterOpen"
 			:filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'"
 			:columns="cols" :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
@@ -139,7 +140,7 @@
 							</template>
 						</div>
 					</div>
-					<div v-if="showGeschlecht" role="cell" class="svws-ui-td svws-align-center pl-0">
+					<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
 						<span class="w-full text-center">{{ s.geschlecht }}</span>
 					</div>
 					<div v-if="istSchriftlich(s.id)" role="cell" class="svws-ui-td svws-align-center">
@@ -163,7 +164,7 @@
 								</span>
 							</template>
 							<div class="col-span-full flex items-center gap-1">
-								<svws-ui-checkbox type="toggle" v-model="showGeschlecht" :title="showGeschlecht ? 'Geschlecht in der Tabelle ausblenden' : 'Geschlecht in der Tabelle einblenden'">
+								<svws-ui-checkbox type="toggle" :model-value="showGeschlecht()" @update:model-value="setShowGeschlecht" :title="showGeschlecht() ? 'Geschlecht in der Tabelle ausblenden' : 'Geschlecht in der Tabelle einblenden'">
 									<span class="text-button font-medium">Geschlecht: </span>
 								</svws-ui-checkbox>
 								<span v-if="schuelerFilter().statistics.value.m">{{ schuelerFilter().statistics.value.m }} m<span v-if="schuelerFilter().statistics.value.w || schuelerFilter().statistics.value.d || schuelerFilter().statistics.value.x">, </span></span>
@@ -197,24 +198,6 @@
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
 	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
-
-	const isFilterOpen = computed<boolean>({
-		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true',
-		set: (value) => {
-			if (value === undefined)
-				value = true
-			void props.config.setValue("gost.kursplanung.schueler.auswahl.filterOpen", value ? 'true' : 'false');
-		}
-	});
-
-	const showGeschlecht = computed<boolean>({
-		get: () => props.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true',
-		set: (value) => {
-			if (value === undefined)
-				value = true
-			void props.config.setValue("gost.kursplanung.schueler.auswahl.geschlecht", value ? 'true' : 'false');
-		}
-	});
 
 	const fach = computed<GostFach|undefined>({
 		get: () => {
@@ -265,7 +248,7 @@
 			{key: 'fixiert', label: 'F', tooltip: "Kursfixierung", fixedWidth: 2, align: "center"},
 			{key: 'schuelerAuswahl', label: 'Schüler', span: 1},
 		];
-		if (showGeschlecht.value)
+		if (props.showGeschlecht())
 			cols.push({key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center"});
 		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined)
 			cols.push({key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center"});

@@ -16,8 +16,8 @@
 		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">
 			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
 				<div class="flex flex-wrap gap-x-5">
-					<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
-					<svws-ui-checkbox type="toggle" v-model="filterExterne">Externe ausblenden</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" :model-value="filterExterne()" @update:model-value="setFilterExterne">Externe ausblenden</svws-ui-checkbox>
 				</div>
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			</div>
@@ -92,13 +92,13 @@
 	const auswahl = ref<GostBelegpruefungsErgebnisse[]>([]);
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
-		if ((!filterFehler.value) && (!filterExterne.value))
+		if ((!props.filterFehler()) && (!props.filterExterne()))
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
 		for (const e of props.listBelegpruefungsErgebnisse()) {
-			if (filterFehler.value && e.ergebnis.erfolgreich)
+			if (props.filterFehler() && e.ergebnis.erfolgreich)
 				continue;
-			if ((filterExterne.value) && (SchuelerStatus.fromID(e.schueler.status) === SchuelerStatus.EXTERN))
+			if ((props.filterExterne()) && (SchuelerStatus.fromID(e.schueler.status) === SchuelerStatus.EXTERN))
 				continue;
 			a.add(e);
 		}
@@ -112,16 +112,6 @@
 			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
 		set: (value) => schueler_state.value = value
 	})
-
-	const filterFehler: WritableComputedRef<boolean> = computed({
-		get: () => props.config.getValue('gost.laufbahnfehler.filterFehler') === 'true',
-		set: (value) =>	void props.config.setValue('gost.laufbahnfehler.filterFehler', value === true ? 'true' : 'false')
-	});
-
-	const filterExterne: WritableComputedRef<boolean> = computed({
-		get: () => props.config.getValue('gost.laufbahnfehler.filterExterne') === 'true',
-		set: (value) =>	void props.config.setValue('gost.laufbahnfehler.filterExterne', value === true ? 'true' : 'false')
-	});
 
 	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed<'ef1'|'gesamt'|'auto'>({
 		get: () => {

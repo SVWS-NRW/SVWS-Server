@@ -38,7 +38,23 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		return this._state.value.listBelegpruefungsErgebnisse;
 	}
 
-	private async updateList(abiturjahr : number, gostBelegpruefungsArt : GostBelegpruefungsArt) {
+	get filterFehler(): boolean {
+		return api.config.getValue('gost.laufbahnfehler.filterFehler') === 'true';
+	}
+
+	setFilterFehler = async (value: boolean) => {
+		await api.config.setValue('gost.laufbahnfehler.filterFehler', value ? "true" : "false");
+	}
+
+	get filterExterne(): boolean {
+		return api.config.getValue('gost.laufbahnfehler.filterExterne') === 'true';
+	}
+
+	setFilterExterne = async (value: boolean) => {
+		await api.config.setValue('gost.laufbahnfehler.filterExterne', value ? "true" : "false");
+	}
+
+	protected async updateList(abiturjahr : number, gostBelegpruefungsArt : GostBelegpruefungsArt) {
 		if (abiturjahr < 1)
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`)
 		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === GostBelegpruefungsArt.GESAMT)

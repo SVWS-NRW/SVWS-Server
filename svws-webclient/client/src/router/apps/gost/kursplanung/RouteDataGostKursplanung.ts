@@ -146,6 +146,38 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.halbjahr;
 	}
 
+	get blockungstabelleHidden(): boolean {
+		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true'
+	}
+
+	setBlockungstabelleHidden = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.kursansicht.ausgeblendet', value ? "true" : "false");
+	}
+
+	get zeigeSchienenbezeichnungen(): boolean {
+		return api.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true'
+	}
+
+	setZeigeSchienenbezeichnungen = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.kursansicht.zeigeSchienenbezeichnung', value ? "true" : "false");
+	}
+
+	get isSchuelerFilterOpen(): boolean {
+		return api.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true'
+	}
+
+	setIsSchuelerFilterOpen = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.schueler.auswahl.filterOpen', value ? "true" : "false");
+	}
+
+	get showGeschlecht(): boolean {
+		return api.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true'
+	}
+
+	setShowGeschlecht = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.schueler.auswahl.geschlecht', value ? "true" : "false");
+	}
+
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");

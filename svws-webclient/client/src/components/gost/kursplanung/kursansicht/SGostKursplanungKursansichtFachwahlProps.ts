@@ -1,5 +1,4 @@
 import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-import type { Config } from "~/components/Config";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 export type SGostKursplanungKursansichtDragData = { kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene; fachId: number; } | undefined;
@@ -21,7 +20,6 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 	addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
-	config: Config;
 	hatErgebnis: boolean;
 	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 	fachwahlen: GostStatistikFachwahl;

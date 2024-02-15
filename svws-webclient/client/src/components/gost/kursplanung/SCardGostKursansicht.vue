@@ -9,8 +9,8 @@
 								<span>Schiene</span>
 							</div>
 							<div class="flex flex-row gap-2">
-								<svws-ui-button type="transparent" size="small" @click="zeigeSchienenbezeichnungen = !zeigeSchienenbezeichnungen" :title="zeigeSchienenbezeichnungen ? 'Zeige nur die Schiennummer':'Zeige den vollständigen Schienennamen'">
-									<i-ri-text v-if="zeigeSchienenbezeichnungen" />
+								<svws-ui-button type="transparent" size="small" @click="setZeigeSchienenbezeichnungen(!zeigeSchienenbezeichnungen())" :title="zeigeSchienenbezeichnungen() ? 'Zeige nur die Schiennummer':'Zeige den vollständigen Schienennamen'">
+									<i-ri-text v-if="zeigeSchienenbezeichnungen()" />
 									<i-ri-expand-height-line v-else />
 								</svws-ui-button>
 								<template v-if="allow_regeln">
@@ -134,7 +134,7 @@
 					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:config="config" :fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
+								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -151,7 +151,7 @@
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 						<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:config="config" :fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
+								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -176,12 +176,11 @@
 
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import { computed, onMounted, ref, toRaw } from "vue";
+	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
+	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 	import { ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
-	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
-	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { Config } from "~/components/Config";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -209,7 +208,6 @@
 		ergebnisAktivieren: () => Promise<boolean>;
 		kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 		existiertSchuljahresabschnitt: boolean;
-		config: Config;
 		hatErgebnis: boolean;
 		schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
@@ -218,6 +216,8 @@
 		mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 		blockungstabelleVisible: boolean;
 		toggleBlockungstabelle: () => void;
+		zeigeSchienenbezeichnungen: () => boolean;
+		setZeigeSchienenbezeichnungen: (value: boolean) => void;
 	}>();
 
 	const edit_schienenname: Ref<number|undefined> = ref()
@@ -440,13 +440,6 @@
 		return regeln;
 	}
 
-	const zeigeSchienenbezeichnungen = computed<boolean>({
-		get: () => props.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true',
-		set: (value) => {
-			if (value === undefined)
-				value = true
-			void props.config.setValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", value ? 'true' : 'false');
-		}
-	});
+
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden}">
+	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden()}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
 				<template #icon> <i-ri-printer-line /> </template>
@@ -10,7 +10,7 @@
 			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-						<template v-if="blockungstabelleHidden">
+						<template v-if="blockungstabelleHidden()">
 							<i-ri-menu-unfold-line />
 							Tabelle einblenden
 						</template>
@@ -76,7 +76,8 @@
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
-			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
+			<s-card-gost-kursansicht :zeige-schienenbezeichnungen="zeigeSchienenbezeichnungen" :set-zeige-schienenbezeichnungen="setZeigeSchienenbezeichnungen"
+				:halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
 				:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -85,7 +86,7 @@
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
 				:ergebnis-hochschreiben="ergebnisHochschreiben"
 				:toggle-blockungstabelle="toggleBlockungstabelle"
-				:blockungstabelle-visible="!blockungstabelleHidden"
+				:blockungstabelle-visible="!blockungstabelleHidden()"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs" />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
@@ -127,15 +128,9 @@
 	const props = defineProps<GostKursplanungProps>();
 
 	const collapsed = ref<boolean>(true);
-
 	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
-
 	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
-
-	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
-
 	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
-
 	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id+1]);
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
@@ -145,12 +140,7 @@
 	onMounted(() => isMounted.value = true);
 
 	const onToggle = () => collapsed.value = !collapsed.value;
-	const toggleBlockungstabelle = () => blockungstabelleHidden.value = !blockungstabelleHidden.value;
-
-	const blockungstabelleHidden = computed<boolean>({
-		get: () => props.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true',
-		set: (value) => void props.config.setValue("gost.kursplanung.kursansicht.ausgeblendet", value === true ? 'true' : 'false')
-	});
+	const toggleBlockungstabelle = () => props.setBlockungstabelleHidden(!props.blockungstabelleHidden());
 
 	const dropdownList = [
 		{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true },

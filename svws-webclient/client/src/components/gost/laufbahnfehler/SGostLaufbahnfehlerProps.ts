@@ -1,9 +1,7 @@
 import type { ApiFile, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, SimpleOperationResponse } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { Config } from "~/components/Config";
 
 export interface GostLaufbahnfehlerProps {
-	config: Config,
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: () => GostBelegpruefungsArt;
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
@@ -14,4 +12,8 @@ export interface GostLaufbahnfehlerProps {
 	resetFachwahlenAlle: () => Promise<void>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	apiStatus: ApiStatus;
+	filterFehler: () => boolean;
+	setFilterFehler: (value: boolean) => void;
+	filterExterne: () => boolean;
+	setFilterExterne: (value: boolean) => void;
 }

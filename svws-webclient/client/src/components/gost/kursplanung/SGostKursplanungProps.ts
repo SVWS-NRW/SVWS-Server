@@ -1,7 +1,6 @@
 import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet, List, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-import type { Config } from "~/components/Config";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungProps {
@@ -37,7 +36,6 @@ export interface GostKursplanungProps {
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 	existiertSchuljahresabschnitt: boolean;
-	config: Config;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
 	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
@@ -48,4 +46,8 @@ export interface GostKursplanungProps {
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	apiStatus: ApiStatus;
+	zeigeSchienenbezeichnungen: () => boolean;
+	setZeigeSchienenbezeichnungen: (value: boolean) => void;
+	blockungstabelleHidden: () => boolean;
+	setBlockungstabelleHidden: (value: boolean) => void;
 }
