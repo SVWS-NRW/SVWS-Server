@@ -10,7 +10,7 @@
 					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'name', label: 'Name'}]"
 						:no-data="schuelerFilter().filtered.value.length <= 0">
 						<template #cell(name)="{ rowData }">
-							<div @click="remove(rowData.id)" class="w-full cursor-pointer text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="remove(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
 					</svws-ui-table>
 				</div>
@@ -20,7 +20,7 @@
 					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
 						:no-data="fachwahlschueler.length <= 0" scroll>
 						<template #cell(name)="{ rowData }">
-							<div @click="move(rowData.id)" class="w-full cursor-copy text-left">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="move(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
 							<svws-ui-select title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
