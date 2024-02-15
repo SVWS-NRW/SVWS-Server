@@ -36,7 +36,10 @@
 							</div>
 						</template>
 						<template #cell(name)="{ rowData }">
-							<div @click="remove(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="remove(rowData.id)" class="w-full text-left"
+								:class="(schuelerFilter().kurs !== undefined) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, schuelerFilter().kurs!.id)) ? [] : [ 'cursor-pointer', 'hover:font-bold' ]">
+								{{ rowData.nachname }}, {{ rowData.vorname }}
+							</div>
 						</template>
 					</svws-ui-table>
 				</div>
@@ -59,7 +62,10 @@
 							</div>
 						</template>
 						<template #cell(name)="{ rowData }">
-							<div @click="move(rowData.id)" class="w-full cursor-pointer text-left hover:font-bold">{{ rowData.nachname }}, {{ rowData.vorname }}</div>
+							<div @click="move(rowData.id)" class="w-full text-left"
+								:class="(andererKurs(rowData.id).value !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, andererKurs(rowData.id).value!.id)) ? [] : [ 'cursor-pointer', 'hover:font-bold' ]">
+								{{ rowData.nachname }}, {{ rowData.vorname }}
+							</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
 							<svws-ui-select title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
@@ -197,6 +203,10 @@
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
+		// Prüfe, ob der Schüler in dem Kurs fixiert ist -> Dann wird nicht entfernt
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurs.id))
+			return;
+		// Entferne den Kurs
 		const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
 		zuordnung.idSchueler = id;
 		zuordnung.idKurs = kurs.id;
@@ -204,6 +214,11 @@
 	}
 
 	async function move(id: number) {
+		// Prüfe, ob der Schüler mit seiner Fachwahl bereis in einem anderen Kurs fixiert ist
+		const kurszuordnung = andererKurs(id).value;
+		if ((kurszuordnung !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurszuordnung.id)))
+			return;
+		// Ordne die Fachwahl dem aktuellen Kurs zu
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
