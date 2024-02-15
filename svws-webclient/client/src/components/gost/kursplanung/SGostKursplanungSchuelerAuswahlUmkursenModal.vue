@@ -7,8 +7,24 @@
 				<!-- Die Tabelle mit den Kursschülern -->
 				<div class="flex flex-col w-96 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">im Kurs {{ kursname }}</span>
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: '&nbsp;', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
+					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
 						:no-data="schuelerFilter().filtered.value.length <= 0">
+						<template #header(pin)="{ }">
+							<div @click="toggleFixierRegelAlleKursSchueler">
+								<template v-if="kursSchuelerFixierungen === true">
+									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+								</template>
+								<template v-else-if="kursSchuelerFixierungen === null">
+									<i-ri-pushpin-line class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+								</template>
+								<template v-else-if="allowRegeln">
+									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+								</template>
+								<template v-else>
+									&nbsp;
+								</template>
+							</div>
+						</template>
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(props.schuelerFilter().kurs?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelKurs(rowData.id).value">
@@ -27,14 +43,17 @@
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
 				<div class="flex flex-col w-128 overflow-y-hidden">
 					<span class="text-headline-sm pb-2">mit Fachwahl {{ fachname }} {{ kursart }}</span>
-					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: '&nbsp;', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
+					<svws-ui-table :items="fachwahlschueler" :columns="[{key: 'pin', label: 'Fixierung', fixedWidth: 2 }, {key: 'name', label: 'Name'}, {key: 'kurs', label: 'andere Kurszuordnung'}]"
 						:no-data="fachwahlschueler.length <= 0" scroll>
+						<template #header(pin)="{ }">
+							&nbsp;
+						</template>
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id);">
 								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
 									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
-								<template v-else-if="allowRegeln">
+								<template v-else-if="allowRegeln && (getKurs(rowData) !== undefined)">
 									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
@@ -82,6 +101,8 @@
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
+		addRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
+		removeRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
 		allowRegeln: boolean;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -223,19 +244,65 @@
 		showModal().value = true;
 	}
 
+	function createFixierRegelKursSchueler(idKurs: number, idSchueler: number) : GostBlockungRegel {
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		regel.parameter.add(idSchueler);
+		regel.parameter.add(idKurs);
+		return regel;
+	}
+
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
 		if ((!props.allowRegeln) || (idKurs === null))
 			return;
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
 			await props.removeRegel(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id);
-		} else {
-			const regel = new GostBlockungRegel();
-			regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-			regel.parameter.add(idSchueler);
-			regel.parameter.add(idKurs);
-			await props.addRegel(regel);
-		}
+		else
+			await props.addRegel(createFixierRegelKursSchueler(idKurs, idSchueler));
 	}
+
+	async function toggleFixierRegelAlleKursSchueler() {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return;
+		const kursSchueler = props.schuelerFilter().filtered.value;
+		if (kursSchueler.length === 0)
+			return;
+		// Prüfe, ob alle Schüler im Kurs fixiert sind
+		if (kursSchuelerFixierungen.value === true) {
+			// Wenn ja, dann entferne alle Schüler-Fixierungen im Batch
+			const regeln = new ArrayList<GostBlockungRegel>();
+			for (const schueler of kursSchueler)
+				if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
+					regeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(schueler.id, kurs.id));
+			if (regeln.isEmpty())
+				return;
+			await props.removeRegeln(regeln);
+			return;
+		}
+		// Ansonsten erstelle für alle nicht fixierten Schüler eine neue Fixier-Regel
+		const regeln = new ArrayList<GostBlockungRegel>();
+		for (const schueler of kursSchueler)
+			if (!props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
+				regeln.add(createFixierRegelKursSchueler(kurs.id, schueler.id));
+		if (regeln.isEmpty())
+			return;
+		await props.addRegeln(regeln);
+	}
+
+	const kursSchuelerFixierungen = computed<boolean | null>(() => {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return false;
+		const kursSchueler = props.schuelerFilter().filtered.value;
+		if (kursSchueler.length === 0)
+			return false;
+		let i = 0;
+		for (const schueler of kursSchueler)
+			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
+				i++;
+		return (i === 0) ? false : (i === kursSchueler.length) ? true : null;
+	});
 
 	const hatFixierRegelKurs = (idSchueler: number) => computed<boolean>(() => {
 		const kurs = props.schuelerFilter().kurs;
