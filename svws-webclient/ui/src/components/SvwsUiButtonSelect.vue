@@ -16,7 +16,8 @@
 		<Teleport to="body">
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :filtered-list="dropdownActions">
 				<template #item="{ item }">
-					<button class="svws-ui-dropdown-list--item" role="button" @click="item.separator !== true && action(item)" :disabled="item.separator === true">
+					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-dark">
+					<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
 						{{ item.text }}
 					</button>
 				</template>
