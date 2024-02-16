@@ -936,6 +936,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	updateRegeln = async (typ: string, ids?: List<number>) => {
+		const listKursIDs = ids || this.getListeKursauswahl();
 		switch (typ) {
 			case "fixiereKurseAlle": {
 				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
@@ -946,13 +947,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				break;
 			}
 			case "fixiereKursauswahl": {
-				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseKursauswahl": {
-				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
 				break;
@@ -970,43 +969,58 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				break;
 			}
 			case "fixiereSchuelerKursauswahl": {
-				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "fixiereSchuelerAbiturkurseKursauswahl": {
-				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseSchuelerKursauswahl": {
-				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			}
+			case "leereKurseKursauswahl":
+			case "leereKursFilterFach":
+			case "leereKursFilterKurs": {
+				if (!listKursIDs.isEmpty()) {
+					const list = new ArrayList<GostBlockungsergebnisKursSchuelerZuordnung>();
+					for (const kurs of listKursIDs) {
+						const schueler = this.ergebnismanager.getOfKursSchuelermenge(kurs);
+						for (const s of schueler) {
+							const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+							zuordnung.idKurs = kurs;
+							zuordnung.idSchueler = s.id;
+							list.add(zuordnung);
+						}
+					}
+					await this.removeKursSchuelerZuordnung(list);
+				}
+				break;
+			}
 			case "fixiereSchuelerFilterFach":
 			case "fixiereSchuelerFilterKurs": {
-				if ((ids !== undefined) && (!ids.isEmpty()))
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(ids));
+				if (!listKursIDs.isEmpty())
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseSchuelerFilterFach":
 			case "loeseSchuelerFilterKurs": {
-				if ((ids !== undefined) && (!ids.isEmpty()))
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(ids));
+				if (!listKursIDs.isEmpty())
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			case "fixiereKurseFilterFach": {
-				if ((ids !== undefined) && (!ids.isEmpty()))
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(ids));
+				if (!listKursIDs.isEmpty())
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseKurseFilterFach": {
-				if ((ids !== undefined) && (!ids.isEmpty()))
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(ids));
+				if (!listKursIDs.isEmpty())
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			default:
