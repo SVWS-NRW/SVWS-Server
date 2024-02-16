@@ -33,7 +33,7 @@
 												<span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span>
 												{{ getFachwahlKursname(fach.fachID, schueler.id) }}
 											</template>
-											<span v-if="getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
+											<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
 												<span class="text-sm ml-2 mr-2">—</span>
 												<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
 											</span>
@@ -95,7 +95,8 @@
 									</span>
 									<span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
 									<span class="inline-flex items-center gap-1">
-										<span v-if="getAbiturfach(kurs.id, schueler.id).value !== null" class="opacity-75 inline-block w-3 text-sm mr-2">
+										<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getAbiturfach(kurs.id, schueler.id).value !== null"
+											class="opacity-75 inline-block w-3 text-sm mr-2">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
 										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
