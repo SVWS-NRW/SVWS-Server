@@ -46,6 +46,7 @@ import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
+import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
@@ -4482,6 +4483,30 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateGostBlockungsergebnisKursSchuelerZuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/updateKursSchuelerZuordnungen
+	 *
+	 * Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.
+	 *   Code 404: Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.
+	 *
+	 * @param {GostBlockungsergebnisKursSchuelerZuordnungUpdate} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 */
+	public async updateGostBlockungsergebnisKursSchuelerZuordnungen(data : GostBlockungsergebnisKursSchuelerZuordnungUpdate, schema : string, ergebnisid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/updateKursSchuelerZuordnungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
+		const body : string = GostBlockungsergebnisKursSchuelerZuordnungUpdate.transpilerToJSON(data);
+		await super.postJSON(path, body);
 		return;
 	}
 

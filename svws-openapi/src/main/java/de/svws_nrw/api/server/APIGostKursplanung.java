@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -1467,6 +1468,36 @@ public class APIGostKursplanung {
     		                                    @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		                                    @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen und Hinzufügen mehrerer Kurs-Schüler-Zuordnungen bei einem
+     * Blockungsergebnis einer Blockung der gymnasialen Oberstufe.
+     *
+     * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idErgebnis     die ID des Blockungsergebnisses
+     * @param update         die Information zu den Änderungen an den Kurs-Schüler-Zuordnungen
+     * @param request        die Informationen zur HTTP-Anfrage
+     *
+     * @return eine Response mit dem Status-Code
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/updateKursSchuelerZuordnungen")
+    @Operation(summary = "Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu.",
+               description = "Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu. "
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.")
+    @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
+    public Response updateGostBlockungsergebnisKursSchuelerZuordnungen(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+    		@RequestBody(description = "Die Informationen zu den Kurs-Schüler-Zuordnungen", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsergebnisKursSchuelerZuordnungUpdate.class))) final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).updateKursSchuelerZuordnungen(idErgebnis, update),
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);

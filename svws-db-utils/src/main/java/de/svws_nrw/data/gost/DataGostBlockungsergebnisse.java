@@ -1,10 +1,12 @@
 package de.svws_nrw.data.gost;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -369,6 +371,81 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursNeu);
         return Response.status(Status.NO_CONTENT).build();
 	}
+
+
+	/**
+	 * Entfernt alle zum Entfernen angegebenen Kurs-Schüler-Zuordnungen und fügt anschließend alle
+	 * zum Hinzufügen angegebenen Kurs-Schüler-Zuordnungen hinzu.
+	 *
+	 * @param idZwischenergebnis   die ID des Blockungsergebnisses, bei dem die Zuordnungen vorgenommen werden sollen
+	 * @param update               die zu entfernenden Kurs-Schüler-Zuordnungen und die hinzuzufügenden Kurs-Schüler-Zuordnungen
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 */
+    public Response updateKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
+			return Response.status(Status.NO_CONTENT).build();
+		// Bestimme das Blockungs-Zwischenergebnis
+		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
+		if (ergebnis == null)
+			throw OperationError.NOT_FOUND.exception("Das Blockungsergebnis mit der ID %d wurde nicht gefunden.".formatted(idZwischenergebnis));
+		// Bestimme die zugehörige Blockung
+		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
+		if (blockung == null)
+			throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d wurde nicht gefunden.".formatted(ergebnis.Blockung_ID));
+    	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
+		final List<DTOSchueler> schuelerAbijahrgang = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
+		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
+			throw OperationError.NOT_FOUND.exception("Es wurden keine Schüler in dem Abiturjahrgang gefunden.");
+		final Set<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toSet());
+		// Bestimme alle Kurse der Blockung
+		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
+		if (kurse.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Es wurden keine Kurse in der Blockung gefunden.");
+		final Set<Long> kursIDs = kurse.stream().map(k -> k.ID).collect(Collectors.toSet());
+
+		// Entferne die Kurs-Schüler-Zuordnungen
+		if (!update.listEntfernen.isEmpty()) {
+			final @NotNull HashSet<@NotNull Pair<@NotNull Long, @NotNull Long>> setEntfernt = new HashSet<>();
+			for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung : update.listEntfernen) {
+				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
+				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
+				if (setEntfernt.contains(eintrag))
+					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt entfernt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+				if (!schuelerIDs.contains(zuordnung.idSchueler))
+					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
+				if (!kursIDs.contains(zuordnung.idKurs))
+					throw OperationError.NOT_FOUND.exception("Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
+				// Prüfe, ob die Zuordnung überhaupt existiert und entfernt werden kann
+				final DTOGostBlockungZwischenergebnisKursSchueler dto = conn.queryByKey(DTOGostBlockungZwischenergebnisKursSchueler.class, idZwischenergebnis, zuordnung.idKurs, zuordnung.idSchueler);
+				if (dto == null)
+					throw OperationError.NOT_FOUND.exception();
+				conn.transactionRemove(dto);
+			}
+			conn.transactionFlush();
+		}
+
+		// Füge die Kurs-Schüler-Zuordnungen hinzu
+		if (!update.listHinzuzufuegen.isEmpty()) {
+			final @NotNull HashSet<@NotNull Pair<@NotNull Long, @NotNull Long>> setHinzugefuegt = new HashSet<>();
+			for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung : update.listHinzuzufuegen) {
+				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
+				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
+				if (setHinzugefuegt.contains(eintrag))
+					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt hinzugefügt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+				if (!schuelerIDs.contains(zuordnung.idSchueler))
+					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
+				if (!kursIDs.contains(zuordnung.idKurs))
+					throw OperationError.NOT_FOUND.exception("Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
+				// Füge die neue Kurszuordnung hinzu
+				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(idZwischenergebnis, zuordnung.idKurs, zuordnung.idSchueler));
+			}
+			conn.transactionFlush();
+		}
+		return Response.status(Status.NO_CONTENT).build();
+    }
+
 
 
 	/**
