@@ -95,8 +95,7 @@
 									</span>
 									<span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
 									<span class="inline-flex items-center gap-1">
-										<span v-if="is_draggable(kurs.id, schueler.id).value && (getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach !== null)">
-											<span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span>
+										<span v-if="getAbiturfach(kurs.id, schueler.id).value !== null" class="opacity-75 inline-block w-3 text-sm mr-2">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
 										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
@@ -179,6 +178,13 @@
 	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)
 	);
+
+	const getAbiturfach = (idKurs: number, idSchueler: number) => computed<number | null>(() => {
+		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+			return null;
+		const fachwahl = props.getErgebnismanager().getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		return fachwahl.abiturfach;
+	});
 
 	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
