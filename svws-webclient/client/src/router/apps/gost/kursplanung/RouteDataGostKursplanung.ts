@@ -1,7 +1,7 @@
 
 import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnis } from "@core";
+import { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnis, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
 import type { GostBlockungsdaten } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
 
@@ -628,23 +628,41 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return true;
 	});
 
-	updateKursSchuelerZuordnung = api.call(async (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined): Promise<boolean> => {
+	updateKursSchuelerZuordnungen = api.call(async (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		if (idKursAlt !== undefined) {
-			await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKursAlt);
-			await api.server.createGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKursNeu);
-			this.ergebnismanager.setSchuelerKurs(idSchueler, idKursAlt, false);
-		} else {
-			await api.server.createGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKursNeu);
+		try {
+			await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
+			for (const zuordnung of update.listEntfernen)
+				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
+			for (const zuordnung of update.listHinzuzufuegen)
+				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, true);
+			const ergebnis = this.ergebnismanager.getErgebnis();
+			this.datenmanager.ergebnisUpdateBewertung(ergebnis);
+			this.commit();
+			return true;
+		} catch (e) {
+			// TODO Behandle Error-Responses der API
+			return false;
 		}
-		this.ergebnismanager.setSchuelerKurs(idSchueler, idKursNeu, true);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-		return true;
 	});
+
+	updateKursSchuelerZuordnung = async (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined): Promise<boolean> => {
+		// Erstelle das Update
+		const update = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		if (idKursAlt !== undefined) {
+			const zuordnungAlt = new GostBlockungsergebnisKursSchuelerZuordnung();
+			zuordnungAlt.idSchueler = idSchueler;
+			zuordnungAlt.idKurs = idKursAlt;
+			update.listEntfernen.add(zuordnungAlt);
+		}
+		const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+		zuordnung.idSchueler = idSchueler;
+		zuordnung.idKurs = idKursNeu;
+		update.listHinzuzufuegen.add(zuordnung);
+		return await this.updateKursSchuelerZuordnungen(update);
+	};
 
 	removeKursSchuelerZuordnung = api.call(async (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>): Promise<boolean> => {
 		const liste: List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();

@@ -413,6 +413,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
 				if (setEntfernt.contains(eintrag))
 					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt entfernt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+				setEntfernt.add(eintrag);
 				if (!schuelerIDs.contains(zuordnung.idSchueler))
 					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
 				if (!kursIDs.contains(zuordnung.idKurs))
@@ -434,6 +435,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
 				if (setHinzugefuegt.contains(eintrag))
 					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt hinzugefügt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+				setHinzugefuegt.add(eintrag);
 				if (!schuelerIDs.contains(zuordnung.idSchueler))
 					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
 				if (!kursIDs.contains(zuordnung.idKurs))
