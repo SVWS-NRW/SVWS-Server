@@ -49,15 +49,16 @@
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
+							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
+							:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :allow-regeln="allowRegeln"
+							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
+							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
+						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
+						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Leeren…', action: () => {} }" no-default><template #icon><i-ri-delete-bin-line /></template></svws-ui-button-select>
 						<template v-if="allowRegeln">
-							<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-								:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
-								:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
-								:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :allow-regeln="allowRegeln"
-								:schueler-filter="schuelerFilter" v-slot="{ openModal }">
-								<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
-							</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
-							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Aktion…', action: () => {} }" no-default />
+							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default><template #icon><i-ri-pushpin-line /></template></svws-ui-button-select>
 							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<i-ri-delete-bin-line /> Entfernen
 							</svws-ui-button>
@@ -67,7 +68,8 @@
 								<svws-ui-tooltip>
 									<span><i-ri-prohibited-line /></span>
 									<template #content>
-										Die grundlegenden Daten und Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
+										Derzeit können nur die Kurse-Schienen-Zuordnung und die Kurs-Schüler-Zuordnung bearbeitet werden.
+										Die grundlegenden Daten und die Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
 										ein Ergebnis existiert. Um erneut Änderungen vornehmen zu können, leiten Sie die Blockung ab oder entfernen Sie
 										alle Ergebnisse bis auf eines.
 									</template>
@@ -170,6 +172,36 @@
 		URL.revokeObjectURL(link.href);
 	}
 
+	const actionsKursSchuelerzuordnung = computed(() => {
+		const filter = props.schuelerFilter();
+		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
+		// TODO Leere alle Kurse
+		if ((props.getKursauswahl().size !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size))
+			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateRegeln("leereKurseKursauswahl") });
+		if (filter !== undefined) {
+			if (filter.kurs !== undefined) {
+				const list = new ArrayList<number>();
+				list.add(filter.kurs.id);
+				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs`, action: async () => await props.updateRegeln("leereKursFilterKurs", list) });
+			}
+			if (filter.fach !== undefined) {
+				const list = new ArrayList<number>();
+				let namen = "";
+				for (const k of props.getErgebnismanager().getOfFachKursmenge(filter.fach)) {
+					const kursart = filter.kursart;
+					if ((kursart !== undefined) && (k.kursart !== kursart.id))
+						continue;
+					list.add(k.id);
+					namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
+				}
+				namen = namen.slice(0, -2);
+				if (list.size() > 0)
+					result.push({ text: `${namen}: Leere Kurse`, action: async () => await props.updateRegeln("leereKurseFilterFach", list) });
+			}
+		}
+		return result;
+	});
+
 	const actionsRegeln = computed(() => {
 		const kursauswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size);
@@ -191,7 +223,6 @@
 			if (hatAbiturkurse)
 				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
 			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
-			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateRegeln("leereKurseKursauswahl") });
 		}
 		if (filter !== undefined) {
 			if (filter.kurs !== undefined) {
@@ -200,7 +231,6 @@
 				result.push({ text: "", action: async () => {}, separator: true });
 				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterKurs", list) });
 				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterKurs", list) });
-				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs`, action: async () => await props.updateRegeln("leereKursFilterKurs", list) });
 			}
 			if (filter.fach !== undefined) {
 				const kursart = filter.kursart;
@@ -220,7 +250,6 @@
 					result.push({ text: `${namen}: Löse Kurse`, action: async () => await props.updateRegeln("loeseKurseFilterFach", list) });
 					result.push({ text: `${namen}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterFach", list) });
 					result.push({ text: `${namen}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterFach", list) });
-					result.push({ text: `${namen}: Leere Kurse`, action: async () => await props.updateRegeln("leereKurseFilterFach", list) });
 				}
 			}
 		}
