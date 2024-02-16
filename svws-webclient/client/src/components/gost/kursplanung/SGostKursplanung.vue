@@ -49,6 +49,12 @@
 					<div v-if="allowRegeln" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
+							:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :allow-regeln="allowRegeln"
+							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
+							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
+						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 						<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
 						<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 							<i-ri-delete-bin-line /> Entfernen

@@ -1,14 +1,15 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="medium" class="hidden h-full overflow-none" no-scroll>
+	<svws-ui-modal v-if="filter !== undefined" :show="showModal" size="medium" class="hidden h-full overflow-none" no-scroll>
 		<template #modalTitle>Kurs-Schüler-Zuordnung</template>
 		<template #modalContent>
 			<div class="flex flex-row gap-8 h-full overflow-y-hidden">
 				<!-- Die Tabelle mit den Kursschülern -->
 				<div class="flex flex-col w-96 overflow-y-hidden">
-					<span class="text-headline-sm pb-2">im Kurs {{ kursname }}</span>
-					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
-						:no-data="schuelerFilter().filtered.value.length <= 0">
+					<span class="text-headline-sm pb-2">im Kurs</span>
+					<svws-ui-select :items="filter.getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="filter.kurs || setKurs()" @update:model-value="kurs => filter && (filter.kurs = kurs ?? undefined)" />
+					<svws-ui-table :items="filter.filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
+						:no-data="filter.filtered.value.length <= 0">
 						<template #header(pin)="{ }">
 							<div @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
@@ -26,7 +27,7 @@
 							</div>
 						</template>
 						<template #cell(pin)="{ rowData }">
-							<div @click="toggleFixierRegelKursSchueler(props.schuelerFilter().kurs?.id ?? null, rowData.id)">
+							<div @click="toggleFixierRegelKursSchueler(filter?.kurs?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelKurs(rowData.id).value">
 									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
@@ -37,7 +38,7 @@
 						</template>
 						<template #cell(name)="{ rowData }">
 							<div @click="remove(rowData.id)" class="w-full text-left"
-								:class="(schuelerFilter().kurs !== undefined) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, schuelerFilter().kurs!.id)) ? [] : [ 'cursor-pointer', 'hover:font-bold' ]">
+								:class="(filter.kurs !== undefined) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(rowData.id, filter.kurs!.id)) ? [] : [ 'cursor-pointer', 'hover:font-bold' ]">
 								{{ rowData.nachname }}, {{ rowData.vorname }}
 							</div>
 						</template>
@@ -99,8 +100,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager} from '@core';
-	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs } from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
+	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
@@ -112,7 +113,7 @@
 		allowRegeln: boolean;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		schuelerFilter: () => GostKursplanungSchuelerFilter;
+		schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -120,15 +121,27 @@
 
 	const _kurseZurUebertragung = ref<GostBlockungsergebnisKurs[]>([]);
 
-	const kursname = computed(() => {
-		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
-			return '—';
-		return props.getErgebnismanager().getOfKursName(kurs.id);
-	});
+	const filter = computed(() => props.schuelerFilter())
+
+	function setKurs() {
+		if (filter.value !== undefined && filter.value.kurs === undefined) {
+			if (filter.value.fach === undefined) {
+				const k = props.getErgebnismanager().getKursmenge().getFirst();
+				if (k === null)
+					filter.value.kurs = new GostBlockungKurs();
+				else filter.value.kurs = props.getErgebnismanager().getKursG(k.id);
+			} else {
+				const k = props.getErgebnismanager().getOfFachKursmenge(filter.value.fach).getFirst();
+				if (k === null)
+					filter.value.kurs = new GostBlockungKurs();
+				else filter.value.kurs = props.getErgebnismanager().getKursG(k.id);
+			}
+			return filter.value.kurs;
+		}
+	}
 
 	const kursart = computed(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return '—';
 		const kursart = GostKursart.fromIDorNull(kurs.kursart);
@@ -136,7 +149,7 @@
 	});
 
 	const kurse = computed<List<GostBlockungsergebnisKurs>>(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return new ArrayList<GostBlockungsergebnisKurs>();
 		const fachart = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
@@ -145,7 +158,7 @@
 
 	const listeKurseZurUbertragung = computed<List<GostBlockungsergebnisKurs>>(() => {
 		const result = new ArrayList<GostBlockungsergebnisKurs>();
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return result;
 		// Erstelle einen Filter für das Fach, welches im Modal angezeigt wird und aller Fächer, von denen bereits Kurse für die Übertragung ausgewöhlt wurden
@@ -166,7 +179,7 @@
 	});
 
 	const fachname = computed(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return '—';
 		const fach = props.getErgebnismanager().getFach(kurs.fach_id);
@@ -174,12 +187,14 @@
 	});
 
 	const fachwahlschueler = computed(() => {
-		const kurswahlschueler = props.schuelerFilter().filtered.value;
+		const kurswahlschueler = filter.value?.filtered.value;
+		const arr: Schueler[] = [];
+		if (kurswahlschueler === undefined)
+			return arr;
 		const liste = new Set();
 		for (const s of kurswahlschueler)
 			liste.add(s.id);
-		const arr: Schueler[] = [];
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return arr;
 		const fachwahlen = props.getErgebnismanager().getOfSchuelerMengeGefiltert(-1, kurs.fach_id, kurs.kursart, 0, "");
@@ -190,7 +205,7 @@
 	})
 
 	const kurswahl = (id: number) => computed(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return '———';
 		const kurswahl = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(id, kurs.fach_id);
@@ -200,7 +215,7 @@
 	})
 
 	async function remove(id: number) {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
 		// Prüfe, ob der Schüler in dem Kurs fixiert ist -> Dann wird nicht entfernt
@@ -219,7 +234,7 @@
 		if ((kurszuordnung !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurszuordnung.id)))
 			return;
 		// Ordne die Fachwahl dem aktuellen Kurs zu
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
 		const kurswahl = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(id, kurs.fach_id);
@@ -227,7 +242,7 @@
 	}
 
 	async function updateZuordnung(schueler: Schueler, neuer_kurs: GostBlockungsergebnisKurs | undefined | null) {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
@@ -242,7 +257,7 @@
 	}
 
 	function getKurs(schueler: Schueler) : GostBlockungsergebnisKurs | undefined {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
@@ -277,11 +292,11 @@
 	}
 
 	async function toggleFixierRegelAlleKursSchueler() {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
-		const kursSchueler = props.schuelerFilter().filtered.value;
-		if (kursSchueler.length === 0)
+		const kursSchueler = filter.value?.filtered.value;
+		if (kursSchueler === undefined || kursSchueler.length === 0)
 			return;
 		// Prüfe, ob alle Schüler im Kurs fixiert sind
 		if (kursSchuelerFixierungen.value === true) {
@@ -306,11 +321,11 @@
 	}
 
 	const kursSchuelerFixierungen = computed<boolean | null>(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return false;
-		const kursSchueler = props.schuelerFilter().filtered.value;
-		if (kursSchueler.length === 0)
+		const kursSchueler = filter.value?.filtered.value;
+		if (kursSchueler === undefined || kursSchueler.length === 0)
 			return false;
 		let i = 0;
 		for (const schueler of kursSchueler)
@@ -320,21 +335,21 @@
 	});
 
 	const hatFixierRegelKurs = (idSchueler: number) => computed<boolean>(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return false;
 		return props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id);
 	});
 
 	const andererKurs = (idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return null;
 		return props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, kurs.fach_id);
 	});
 
 	const hatFixierRegelAndererKurs = (idSchueler: number) => computed<boolean>(() => {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return false;
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id))
@@ -346,7 +361,7 @@
 	});
 
 	async function uebertragen() {
-		const kurs = props.schuelerFilter().kurs;
+		const kurs = filter.value?.kurs;
 		if (kurs === undefined)
 			return;
 		const kursSchueler = props.getErgebnismanager().getOfSchuelerMengeGefiltert(kurs.id, -1, -1, 0, "");

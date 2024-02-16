@@ -50,4 +50,5 @@ export interface GostKursplanungProps {
 	setZeigeSchienenbezeichnungen: (value: boolean) => void;
 	blockungstabelleHidden: () => boolean;
 	setBlockungstabelleHidden: (value: boolean) => void;
+	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 }
