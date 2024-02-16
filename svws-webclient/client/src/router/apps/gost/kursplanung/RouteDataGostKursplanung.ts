@@ -1,16 +1,13 @@
 
 import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnis, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
-import type { GostBlockungsdaten } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
-
+import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnis} from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
-
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 
 interface RouteStateGostKursplanung extends RouteStateInterface {

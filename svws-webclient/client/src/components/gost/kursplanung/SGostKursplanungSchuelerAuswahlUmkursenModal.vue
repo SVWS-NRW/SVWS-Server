@@ -104,8 +104,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
-	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs } from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager} from '@core';
+	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
@@ -131,14 +131,18 @@
 	function setKurs() {
 		if (filter.value !== undefined && filter.value.kurs === undefined) {
 			if (filter.value.fach === undefined) {
-				const k = props.getErgebnismanager().getKursmenge().getFirst();
+				const kurse = props.getErgebnismanager().getKursmenge();
+				const k = (kurse.size() > 0) ? kurse.getFirst() : null;
 				if (k === null)
 					filter.value.kurs = new GostBlockungKurs();
 				else filter.value.kurs = props.getErgebnismanager().getKursG(k.id);
 			} else {
-				const k = props.getErgebnismanager().getOfFachKursmenge(filter.value.fach).getFirst();
-				if (k === null)
-					filter.value.kurs = new GostBlockungKurs();
+				const kurse = props.getErgebnismanager().getOfFachKursmenge(filter.value.fach);
+				const k = (kurse.size() > 0) ? kurse.getFirst() : null;
+				if (k === null) {
+					filter.value.fach = undefined;
+					return setKurs();
+				}
 				else filter.value.kurs = props.getErgebnismanager().getKursG(k.id);
 			}
 			return filter.value.kurs;
