@@ -23,7 +23,7 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
+			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': (schuelerFilter()?.fach === kurs.fach_id) && ((schuelerFilter()?.kursart?.id === kurs.kursart) || (schuelerFilter()?.kursart === undefined)), 'svws-expanded': kursdetail_anzeige === kurs.id}">
 				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 					<svws-ui-checkbox :model-value="getKursauswahl().has(kurs.id)" @update:model-value="getKursauswahl().has(kurs.id) ? getKursauswahl().delete(kurs.id) : getKursauswahl().add(kurs.id)" headless />
 				</div>
@@ -65,7 +65,7 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="(schuelerFilter()?.fach === kurs.fach_id) && (schuelerFilter()?.kursart?.id === kurs.kursart) ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] === 0}">{{ kursdifferenz(kurs).value[1] }}</span>

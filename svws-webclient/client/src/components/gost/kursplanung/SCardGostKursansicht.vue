@@ -34,7 +34,7 @@
 									</div>
 								</template>
 							</svws-ui-tooltip>
-							<template v-else-if="zeigeSchienenbezeichnungen">
+							<template v-else-if="zeigeSchienenbezeichnungen()">
 								<div>
 									<span style="writing-mode: vertical-lr;" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center border-l border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">
 										{{ s.bezeichnung }}

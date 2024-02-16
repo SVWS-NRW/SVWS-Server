@@ -130,8 +130,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import { computed, ref, onMounted } from "vue";
+	import type { GostKursplanungProps } from "./SGostKursplanungProps";
+	import { ArrayList } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
 
@@ -173,9 +174,11 @@
 		const kursauswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size);
 		const hatAbiturkurse = (props.halbjahr.halbjahr > 1);
-		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; }> = [];
+		const filter = props.schuelerFilter();
+		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
 		result.push({ text: "Fixiere alle Kurse", action: async () => await props.updateRegeln("fixiereKurseAlle") });
 		result.push({ text: "Löse alle fixierten Kurse", action: async () => await props.updateRegeln("loeseKurseAlle") });
+		result.push({ text: "", action: async () => {}, separator: true });
 		if ((props.getKursauswahl().size === 0) || allSelected) {
 			result.push({ text: "Fixiere alle Schüler", action: async () => await props.updateRegeln("fixiereSchuelerAlle") });
 			if (hatAbiturkurse)
@@ -188,6 +191,35 @@
 			if (hatAbiturkurse)
 				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
 			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
+		}
+		if (filter !== undefined) {
+			if (filter.kurs !== undefined) {
+				const list = new ArrayList<number>();
+				list.add(filter.kurs.id);
+				result.push({ text: "", action: async () => {}, separator: true });
+				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterKurs", list) });
+				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterKurs", list) });
+			}
+			if (filter.fach !== undefined) {
+				const kursart = filter.kursart;
+				const kurse = props.getErgebnismanager().getOfFachKursmenge(filter.fach);
+				const list = new ArrayList<number>();
+				let namen = "";
+				for (const k of kurse) {
+					if ((kursart !== undefined) && (k.kursart !== kursart.id))
+						continue;
+					list.add(k.id);
+					namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
+				}
+				namen = namen.slice(0, -2);
+				if (list.size() > 0) {
+					result.push({ text: "", action: async () => {}, separator: true });
+					result.push({ text: `${namen}: Fixiere Kurse`, action: async () => await props.updateRegeln("fixiereKurseFilterFach", list) });
+					result.push({ text: `${namen}: Löse Kurse`, action: async () => await props.updateRegeln("loeseKurseFilterFach", list) });
+					result.push({ text: `${namen}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterFach", list) });
+					result.push({ text: `${namen}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterFach", list) });
+				}
+			}
 		}
 		return result;
 	});

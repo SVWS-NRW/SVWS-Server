@@ -14,7 +14,7 @@ export interface GostKursplanungProps {
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	addRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
 	removeRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
-	updateRegeln: (typ : string) => Promise<void>;
+	updateRegeln: (typ : string, ids?: List<number>) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 	patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 	addSchiene: () => Promise<GostBlockungSchiene | undefined>;

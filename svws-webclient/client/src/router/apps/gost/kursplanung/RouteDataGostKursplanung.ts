@@ -938,7 +938,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 	}
 
-	updateRegeln = async (typ: string) => {
+	updateRegeln = async (typ: string, ids?: List<number>) => {
 		switch (typ) {
 			case "fixiereKurseAlle": {
 				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
@@ -988,6 +988,28 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				const listKursIDs = this.getListeKursauswahl();
 				if (!listKursIDs.isEmpty())
 					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
+				break;
+			}
+			case "fixiereSchuelerFilterFach":
+			case "fixiereSchuelerFilterKurs": {
+				if ((ids !== undefined) && (!ids.isEmpty()))
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(ids));
+				break;
+			}
+			case "loeseSchuelerFilterFach":
+			case "loeseSchuelerFilterKurs": {
+				if ((ids !== undefined) && (!ids.isEmpty()))
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(ids));
+				break;
+			}
+			case "fixiereKurseFilterFach": {
+				if ((ids !== undefined) && (!ids.isEmpty()))
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(ids));
+				break;
+			}
+			case "loeseKurseFilterFach": {
+				if ((ids !== undefined) && (!ids.isEmpty()))
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(ids));
 				break;
 			}
 			default:
