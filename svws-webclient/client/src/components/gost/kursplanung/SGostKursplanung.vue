@@ -57,7 +57,7 @@
 								:schueler-filter="schuelerFilter" v-slot="{ openModal }">
 								<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 							</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
-							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default><template #icon><i-ri-pushpin-line /></template></svws-ui-button-select>
 							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<i-ri-delete-bin-line /> Entfernen
 							</svws-ui-button>
