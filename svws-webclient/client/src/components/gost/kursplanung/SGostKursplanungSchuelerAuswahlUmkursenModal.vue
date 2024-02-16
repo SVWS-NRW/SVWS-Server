@@ -6,8 +6,12 @@
 			<div class="flex flex-row gap-8 h-full overflow-y-hidden">
 				<!-- Die Tabelle mit den Kursschülern -->
 				<div class="flex flex-col w-96 overflow-y-hidden">
-					<span class="text-headline-sm pb-2">im Kurs</span>
-					<svws-ui-select :items="filter.getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="filter.kurs || setKurs()" @update:model-value="kurs => filter && (filter.kurs = kurs ?? undefined)" />
+					<div class="flex flex-row w-full place-content-center">
+						<span class="text-headline-sm pb-2 pr-2">im Kurs</span>
+						<span class="w-32">
+							<svws-ui-select :items="filter.getKurse()" :item-text="kurs => getErgebnismanager().getOfKursName(kurs.id)" :model-value="filter.kurs || setKurs()" @update:model-value="kurs => filter && (filter.kurs = kurs ?? undefined)" headless />
+						</span>
+					</div>
 					<svws-ui-table :items="filter.filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
 						:no-data="filter.filtered.value.length <= 0">
 						<template #header(pin)="{ }">
