@@ -886,6 +886,23 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return result;
 	}
 
+	regelnDeleteAndAdd = async (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) : Promise<void> => {
+		if (listDelete.isEmpty() && (listAdd.isEmpty()))
+			return;
+		if (!listDelete.isEmpty()) {
+			const listRegelIDs = new ArrayList<number>();
+			for (const regel of listDelete)
+				listRegelIDs.add(regel.id);
+			await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
+			this.datenmanager.regelRemoveListe(listDelete);
+		}
+		if (!listAdd.isEmpty()) {
+			listAdd = await api.server.addGostBlockungRegeln(listAdd, api.schema, this.auswahlBlockung.id);
+			this.datenmanager.regelAddListe(listAdd);
+		}
+		this.commit();
+	}
+
 	deleteRegeln = async (listRegeln: List<GostBlockungRegel>) : Promise<void> => {
 		if (!listRegeln.isEmpty()) {
 			const listRegelIDs = new ArrayList<number>();

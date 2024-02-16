@@ -14,6 +14,7 @@ export interface KursplanungSchuelerAuswahlProps {
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	addRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
 	removeRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
+	regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
 	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	isSchuelerFilterOpen: () => boolean;
