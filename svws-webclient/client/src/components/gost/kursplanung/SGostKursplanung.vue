@@ -46,7 +46,7 @@
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 					</div>
-					<div v-if="allowRegeln" class="flex gap-0.5 items-center leading-none">
+					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
@@ -56,23 +56,24 @@
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
-						<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
-						<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
-							<i-ri-delete-bin-line /> Entfernen
-						</svws-ui-button>
-					</div>
-					<div v-else class="flex gap-0.5 items-center leading-none">
-						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
-						<div>
-							<svws-ui-tooltip>
-								<span><i-ri-prohibited-line /></span>
-								<template #content>
-									Die grundlegenden Daten und Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
-									ein Ergebnis existiert. Um erneut Änderungen vornehmen zu können, leiten Sie die Blockung ab oder entfernen Sie
-									alle Ergebnisse bis auf eines.
-								</template>
-							</svws-ui-tooltip>
-						</div>
+						<template v-if="allowRegeln">
+							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
+								<i-ri-delete-bin-line /> Entfernen
+							</svws-ui-button>
+						</template>
+						<template v-else>
+							<div class="pl-2">
+								<svws-ui-tooltip>
+									<span><i-ri-prohibited-line /></span>
+									<template #content>
+										Die grundlegenden Daten und Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
+										ein Ergebnis existiert. Um erneut Änderungen vornehmen zu können, leiten Sie die Blockung ab oder entfernen Sie
+										alle Ergebnisse bis auf eines.
+									</template>
+								</svws-ui-tooltip>
+							</div>
+						</template>
 					</div>
 					<div v-if="(regelzahl > 1) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
