@@ -100,12 +100,13 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
+	import { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
 	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
+		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		addRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
@@ -365,6 +366,7 @@
 		if (kurs === undefined)
 			return;
 		const kursSchueler = props.getErgebnismanager().getOfSchuelerMengeGefiltert(kurs.id, -1, -1, 0, "");
+		const update = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		for (const s of kursSchueler) {
 			for (const k of _kurseZurUebertragung.value) {
 				if (!props.getErgebnismanager().getOfSchuelerHatFachwahl(s.id, k.fachID, k.kursart))
@@ -372,9 +374,19 @@
 				const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(s.id, k.fachID);
 				if (alter_kurs?.id === k.id)
 					continue;
-				await props.updateKursSchuelerZuordnung(s.id, k.id, alter_kurs?.id ?? undefined);
+				if (alter_kurs !== null) {
+					const zuordnungAlt = new GostBlockungsergebnisKursSchuelerZuordnung();
+					zuordnungAlt.idSchueler = s.id;
+					zuordnungAlt.idKurs = alter_kurs.id;
+					update.listEntfernen.add(zuordnungAlt);
+				}
+				const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+				zuordnung.idSchueler = s.id;
+				zuordnung.idKurs = k.id;
+				update.listHinzuzufuegen.add(zuordnung);
 			}
 		}
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 </script>

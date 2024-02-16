@@ -629,23 +629,21 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	});
 
 	updateKursSchuelerZuordnungen = api.call(async (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate): Promise<boolean> => {
+		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
+			return true;
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		try {
-			await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
-			for (const zuordnung of update.listEntfernen)
-				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
-			for (const zuordnung of update.listHinzuzufuegen)
-				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, true);
-			const ergebnis = this.ergebnismanager.getErgebnis();
-			this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-			this.commit();
-			return true;
-		} catch (e) {
-			// TODO Behandle Error-Responses der API
-			return false;
-		}
+		// Aktualisiere die Zuordnungen ...
+		await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
+		for (const zuordnung of update.listEntfernen)
+			this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
+		for (const zuordnung of update.listHinzuzufuegen)
+			this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, true);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
+		this.commit();
+		return true;
 	});
 
 	updateKursSchuelerZuordnung = async (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined): Promise<boolean> => {

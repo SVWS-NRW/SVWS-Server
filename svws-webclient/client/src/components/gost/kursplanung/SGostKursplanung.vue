@@ -51,6 +51,7 @@
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
+							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
 							:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
