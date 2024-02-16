@@ -169,12 +169,16 @@ export class RouteDataSchema {
 		let schulen: List<SchulenKatalogEintrag> = new ArrayList();
 		let admins: List<BenutzerListeEintrag> = new ArrayList();
 		if (auswahl !== undefined && auswahl.revision > 0) {
+			// Es liegt ein SVWS-Schema vor ...
 			try {
+				// ... versuche die Informationen zur Schule zu laden
 				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
 			} catch (e) {
-				console.log("Die Information zur Schule konnte nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
+				// Gelingt dies nicht, so muss die Initialisierung über den Schul-Katalog angeboten werden
+				console.log("Die Information zur Schule konnten für das Schema " + auswahl.name + " nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
 				schulen = await api.privileged.getAllgemeinenKatalogSchulen();
 			}
+			// Wenn die Revision des Schemas aktuell ist, dann lade auch die Informationen zu den Admin-Benutzern
 			if (auswahl.revision === this.revision)
 				admins = await api.privileged.getSchemaAdmins(auswahl.name);
 		}

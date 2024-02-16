@@ -45,7 +45,8 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 				return this.getChildRoute(this.data.auswahl.name);
 			return;
 		}
-		await this.data.setSchema(this.data.mapSchema.get(to_params.schema));
+		const schemaNeu = this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
+		await this.data.setSchema(schemaNeu);
 		if (to.name === this.name)
 			return this.getChildRoute(to_params.schema);
 		if (!to.name.startsWith(this.data.view.name))
