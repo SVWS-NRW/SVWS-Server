@@ -326,9 +326,11 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
-		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
+		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' und '_map_fachID_kurse' hinzufügen.
+		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
 			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
+			MapUtils.getOrCreateArrayList(_map_fachID_kurse, gFachwahl.fachID);
+		}
 
 		// Map: (schienenID, fachartID) --> Kursmenge = Alle Kurse einer Fachart pro Schiene
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)

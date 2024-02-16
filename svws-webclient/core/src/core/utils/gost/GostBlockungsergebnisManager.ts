@@ -369,8 +369,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
 			}
 		}
-		for (const gFachwahl of this._parent.daten().fachwahlen)
+		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
+			MapUtils.getOrCreateArrayList(this._map_fachID_kurse, gFachwahl.fachID);
+		}
 		for (const gSchiene of this._parent.daten().schienen)
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
 				DeveloperNotificationException.ifMap2DPutOverwrites(this._map2D_schienenID_fachartID_kurse, gSchiene.id, fachartID, new ArrayList());
