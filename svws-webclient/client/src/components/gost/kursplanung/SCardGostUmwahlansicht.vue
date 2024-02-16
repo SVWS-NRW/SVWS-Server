@@ -23,20 +23,25 @@
 										:class="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null ? 'cursor-grab' : 'opacity-50'"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
-											<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null">
-												<span class="rounded-sm w-3 -my-0.5 group-hover:bg-white/50">
-													<i-ri-draggable class="w-4 -ml-0.5 -mr-1 text-black opacity-50 group-hover:opacity-100" />
+											<div class="flex flex-row flex-grow">
+												<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null">
+													<span class="rounded-sm w-3 -my-0.5 group-hover:bg-white/50">
+														<i-ri-draggable class="w-4 -ml-0.5 -mr-1 text-black opacity-50 group-hover:opacity-100" />
+													</span>
+												</template>
+												<template v-else>
+													<span class="w-3 text-sm">&nbsp;</span>
+												</template>
+												<span class="ml-0.5">
+													{{ getFachwahlKursname(fach.fachID, schueler.id) }}
+													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
+														<span class="text-sm ml-2 mr-2">—</span>
+														<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
+													</template>
 												</span>
-												<span class="ml-0.5">{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
-											</template>
-											<template v-else>
-												<span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span>
-												{{ getFachwahlKursname(fach.fachID, schueler.id) }}
-											</template>
-											<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
-												<span class="text-sm ml-2 mr-2">—</span>
-												<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
-											</span>
+											</div>
+											<span v-if="fach.istSchriftlich"> <i-ri-draft-line class="w-5 -my-0.5" /> </span>
+											<span v-else> <i-ri-chat1-line class="w-5 -my-0.5" /> </span>
 										</div>
 									</div>
 								</div>
