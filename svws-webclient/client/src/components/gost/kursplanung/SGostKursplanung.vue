@@ -134,6 +134,7 @@
 <script setup lang="ts">
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
+	import type { DownloadPDFTypen } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 	import { ArrayList } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
@@ -162,7 +163,7 @@
 		{ text: "Kursbelegung gefilterte Schüler", action: () => downloadPDF("Kursbelegung gefilterte Schüler") },
 	]
 
-	async function downloadPDF(title: string) {
+	async function downloadPDF(title: DownloadPDFTypen) {
 		const { data, name } = await props.getPDF(title);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

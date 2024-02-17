@@ -2,7 +2,7 @@
 import { type Ref, ref, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnis} from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -904,17 +904,14 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	regelnDeleteAndAdd = async (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) : Promise<void> => {
 		if (listDelete.isEmpty() && (listAdd.isEmpty()))
 			return;
-		if (!listDelete.isEmpty()) {
-			const listRegelIDs = new ArrayList<number>();
-			for (const regel of listDelete)
-				listRegelIDs.add(regel.id);
-			await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
-			this.datenmanager.regelRemoveListe(listDelete);
-		}
-		if (!listAdd.isEmpty()) {
-			listAdd = await api.server.addGostBlockungRegeln(listAdd, api.schema, this.auswahlBlockung.id);
+		const paar = new GostBlockungRegelUpdate();
+		paar.listEntfernen = listDelete;
+		paar.listHinzuzufuegen = listAdd;
+		listAdd = await api.server.updateGostBlockungRegeln(paar, api.schema, this.auswahlBlockung.id);
+		if (!listAdd.isEmpty())
 			this.datenmanager.regelAddListe(listAdd);
-		}
+		if (!listDelete.isEmpty())
+			this.datenmanager.regelRemoveListe(listDelete);
 		this.commit();
 	}
 
