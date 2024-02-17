@@ -41,6 +41,7 @@ import { GostBlockungKursAufteilung } from '../core/data/gost/GostBlockungKursAu
 import { GostBlockungKursLehrer } from '../core/data/gost/GostBlockungKursLehrer';
 import { GostBlockungListeneintrag } from '../core/data/gost/GostBlockungListeneintrag';
 import { GostBlockungRegel } from '../core/data/gost/GostBlockungRegel';
+import { GostBlockungRegelUpdate } from '../core/data/gost/GostBlockungRegelUpdate';
 import { GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
@@ -3540,6 +3541,37 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateGostBlockungRegeln für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/regeln/update
+	 *
+	 * Entfernt und fügt mehrere Regeln einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Regeln wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBlockungRegel>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Regeln zu löschen oder hinzufügen.
+	 *   Code 404: Ein Wert für das Erstellen der Regeln wurde nicht gefunden.
+	 *
+	 * @param {GostBlockungRegelUpdate} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 *
+	 * @returns Die Regeln wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln
+	 */
+	public async updateGostBlockungRegeln(data : GostBlockungRegelUpdate, schema : string, blockungsid : number) : Promise<List<GostBlockungRegel>> {
+		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/regeln/update"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
+		const body : string = GostBlockungRegelUpdate.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBlockungRegel>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
 		return ret;
 	}
 

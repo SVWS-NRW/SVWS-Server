@@ -5,6 +5,7 @@ import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
+import de.svws_nrw.core.data.gost.GostBlockungRegelUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -950,6 +951,37 @@ public class APIGostKursplanung {
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> regelIDs,
            @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungRegel(conn).deleteMultiple(regelIDs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen und Hinzufügen mehrerer Regeln bei einer
+     * Blockung der gymnasialen Oberstufe.
+     *
+     * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idBlockung     die ID der Blockung
+     * @param update         die Information zu den Änderungen der Regeln
+     * @param request        die Informationen zur HTTP-Anfrage
+     *
+     * @return eine Response mit dem Status-Code
+     */
+    @POST
+    @Path("/blockungen/{blockungsid : \\d+}/regeln/update")
+    @Operation(summary = "Entfernt und fügt mehrere Regeln einer Blockung der Gymnasialen Oberstufe hinzu.",
+               description = "Entfernt und fügt mehrere Regeln einer Blockung der Gymnasialen Oberstufe hinzu. "
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Regeln wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln",
+    	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungRegel.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Regeln zu löschen oder hinzufügen.")
+    @ApiResponse(responseCode = "404", description = "Ein Wert für das Erstellen der Regeln wurde nicht gefunden.")
+    public Response updateGostBlockungRegeln(@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+    		@RequestBody(description = "Die Informationen zu den Regeln", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungRegelUpdate.class))) final @NotNull GostBlockungRegelUpdate update,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungRegel(conn).updateRegeln(idBlockung, update),
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
