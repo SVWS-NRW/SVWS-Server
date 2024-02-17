@@ -1532,31 +1532,15 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Fügt eine Fachwahl hinzu.<br>
-	 * Wirft eine Exception, falls die Fachwahl-Daten inkonsistent sind.
+	 * Fügt eine Fachwahl hinzu.
+	 * <br>Wirft eine Exception, falls die Fachwahl-Daten inkonsistent sind.
 	 *
 	 * @param fachwahl  Die Fachwahl, die hinzugefügt wird.
 	 *
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public void fachwahlAdd(final @NotNull GostFachwahl fachwahl) throws DeveloperNotificationException {
-		// _map_schulerID_fachID_fachwahl
-		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
-
-		// _map_schuelerID_fachwahlen
-		@NotNull final List<@NotNull GostFachwahl> fachwahlenDesSchuelers = MapUtils.getOrCreateArrayList(_map_idSchueler_fachwahlen, fachwahl.schuelerID);
-		fachwahlenDesSchuelers.add(fachwahl);
-		fachwahlenDesSchuelers.sort(_compFachwahlen);
-
-		// _map_fachartID_fachwahlen
-		final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
-		fachwahlGetListeOfFachart(fachartID).add(fachwahl);
-
-		// _map2d_idFach_idKursart_kurse
-		Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
-
-		// fachwahlen
-		_daten.fachwahlen.add(fachwahl);
+		fachwahlAddListe(ListUtils.create1(fachwahl));
 	}
 
 	/**
@@ -1567,8 +1551,30 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public void fachwahlAddListe(final @NotNull List<@NotNull GostFachwahl> fachwahlmenge) throws DeveloperNotificationException {
-		for (final @NotNull GostFachwahl gFachwahl : fachwahlmenge)
-			fachwahlAdd(gFachwahl);
+		// check
+		for (final @NotNull GostFachwahl fachwahl : fachwahlmenge)
+			GostKursart.fromFachwahlOrException(fachwahl);
+
+		// add
+		for (final @NotNull GostFachwahl fachwahl : fachwahlmenge) {
+			// _map_schulerID_fachID_fachwahl
+			DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
+
+			// _map_schuelerID_fachwahlen
+			@NotNull final List<@NotNull GostFachwahl> fachwahlenDesSchuelers = MapUtils.getOrCreateArrayList(_map_idSchueler_fachwahlen, fachwahl.schuelerID);
+			fachwahlenDesSchuelers.add(fachwahl);
+			fachwahlenDesSchuelers.sort(_compFachwahlen);
+
+			// _map_fachartID_fachwahlen
+			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
+			fachwahlGetListeOfFachart(fachartID).add(fachwahl);
+
+			// _map2d_idFach_idKursart_kurse
+			Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
+
+			// fachwahlen
+			_daten.fachwahlen.add(fachwahl);
+		}
 	}
 
 	/**

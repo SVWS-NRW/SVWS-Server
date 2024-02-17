@@ -1482,22 +1482,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt eine Fachwahl hinzu.<br>
-	 * Wirft eine Exception, falls die Fachwahl-Daten inkonsistent sind.
+	 * Fügt eine Fachwahl hinzu.
+	 * <br>Wirft eine Exception, falls die Fachwahl-Daten inkonsistent sind.
 	 *
 	 * @param fachwahl  Die Fachwahl, die hinzugefügt wird.
 	 *
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public fachwahlAdd(fachwahl : GostFachwahl) : void {
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
-		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_idSchueler_fachwahlen, fachwahl.schuelerID);
-		fachwahlenDesSchuelers.add(fachwahl);
-		fachwahlenDesSchuelers.sort(this._compFachwahlen);
-		const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
-		this.fachwahlGetListeOfFachart(fachartID).add(fachwahl);
-		Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
-		this._daten.fachwahlen.add(fachwahl);
+		this.fachwahlAddListe(ListUtils.create1(fachwahl));
 	}
 
 	/**
@@ -1508,8 +1501,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public fachwahlAddListe(fachwahlmenge : List<GostFachwahl>) : void {
-		for (const gFachwahl of fachwahlmenge)
-			this.fachwahlAdd(gFachwahl);
+		for (const fachwahl of fachwahlmenge)
+			GostKursart.fromFachwahlOrException(fachwahl);
+		for (const fachwahl of fachwahlmenge) {
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
+			const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_idSchueler_fachwahlen, fachwahl.schuelerID);
+			fachwahlenDesSchuelers.add(fachwahl);
+			fachwahlenDesSchuelers.sort(this._compFachwahlen);
+			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
+			this.fachwahlGetListeOfFachart(fachartID).add(fachwahl);
+			Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
+			this._daten.fachwahlen.add(fachwahl);
+		}
 	}
 
 	/**
