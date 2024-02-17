@@ -1,7 +1,8 @@
 import type { WritableComputedRef } from "vue";
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet, List, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, List, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
+import type { RegelActionTypen, KurseLeerenTypen } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -14,7 +15,8 @@ export interface GostKursplanungProps {
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	addRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
 	removeRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
-	updateRegeln: (typ : string, ids?: List<number>) => Promise<void>;
+	updateRegeln: (typ : RegelActionTypen, ids?: List<number>) => Promise<void>;
+	updateKurseLeeren: (typ : KurseLeerenTypen, ids?: List<number>) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 	patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 	addSchiene: () => Promise<GostBlockungSchiene | undefined>;

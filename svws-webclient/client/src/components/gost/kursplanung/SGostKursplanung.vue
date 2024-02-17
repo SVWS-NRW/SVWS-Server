@@ -178,14 +178,14 @@
 		const kursIdsAlle = new ArrayList<number>();
 		for (const k of props.getErgebnismanager().getKursmenge())
 			kursIdsAlle.add(k.id);
-		result.push({ text: "Leere alle Kurse", action: async () => await props.updateRegeln("leereKurseAlle", kursIdsAlle) });
+		result.push({ text: "Leere alle Kurse", action: async () => await props.updateKurseLeeren("leereKurseAlle", kursIdsAlle) });
 		if ((props.getKursauswahl().size !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size))
-			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateRegeln("leereKurseKursauswahl") });
+			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
 		if (filter !== undefined) {
 			if (filter.kurs !== undefined) {
 				const list = new ArrayList<number>();
 				list.add(filter.kurs.id);
-				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs`, action: async () => await props.updateRegeln("leereKursFilterKurs", list) });
+				result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
 			}
 			if (filter.fach !== undefined) {
 				const list = new ArrayList<number>();
@@ -199,7 +199,7 @@
 				}
 				namen = namen.slice(0, -2);
 				if (list.size() > 0)
-					result.push({ text: `${namen}: Leere Kurse`, action: async () => await props.updateRegeln("leereKurseFilterFach", list) });
+					result.push({ text: `${namen}: Leere Kurse`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
 			}
 		}
 		return result;

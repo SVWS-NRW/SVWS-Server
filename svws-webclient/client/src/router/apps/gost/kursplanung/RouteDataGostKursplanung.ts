@@ -54,6 +54,11 @@ const defaultState: RouteStateGostKursplanung = {
 	auswahlSchueler: undefined,
 };
 
+export type RegelActionTypen = 'fixiereKurseAlle' | 'loeseKurseAlle' | 'fixiereKursauswahl' | 'fixiereKurseFilterFach' | 'loeseKursauswahl' | 'loeseKurseFilterFach'
+	| 'fixiereSchuelerAlle' | 'fixiereSchuelerAbiturkurseAlle' | 'loeseSchuelerAlle' | 'fixiereSchuelerAbiturkurseKursauswahl' | 'fixiereSchuelerFilterFach'
+	| 'fixiereSchuelerFilterKurs' | 'fixiereSchuelerKursauswahl' | 'loeseSchuelerKursauswahl' | 'loeseSchuelerFilterFach' | 'loeseSchuelerFilterKurs'
+
+export type KurseLeerenTypen = "leereKurseAlle" | "leereKurseKursauswahl" | "leereKursFilterFach" | "leereKursFilterKurs"
 
 export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanung> {
 
@@ -935,57 +940,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 	}
 
-	updateRegeln = async (typ: string, ids?: List<number>) => {
+	updateKurseLeeren = async (typ: KurseLeerenTypen, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();
 		const listDelete = new ArrayList<GostBlockungRegel>();
 		const listAdd = new ArrayList<GostBlockungRegel>();
 		switch (typ) {
-			case "fixiereKurseAlle": {
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
-				await this.regelnDeleteAndAdd(listDelete, listAdd);
-				break;
-			}
-			case "loeseKurseAlle": {
-				await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen());
-				break;
-			}
-			case "fixiereKursauswahl": {
-				if (!listKursIDs.isEmpty())
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
-				break;
-			}
-			case "loeseKursauswahl": {
-				if (!listKursIDs.isEmpty())
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
-				break;
-			}
-			case "fixiereSchuelerAlle": {
-				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
-				break;
-			}
-			case "fixiereSchuelerAbiturkurseAlle": {
-				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
-				break;
-			}
-			case "loeseSchuelerAlle": {
-				await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
-				break;
-			}
-			case "fixiereSchuelerKursauswahl": {
-				if (!listKursIDs.isEmpty())
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
-				break;
-			}
-			case "fixiereSchuelerAbiturkurseKursauswahl": {
-				if (!listKursIDs.isEmpty())
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
-				break;
-			}
-			case "loeseSchuelerKursauswahl": {
-				if (!listKursIDs.isEmpty())
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
-				break;
-			}
 			case "leereKurseAlle":
 			case "leereKurseKursauswahl":
 			case "leereKursFilterFach":
@@ -1005,31 +964,56 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				}
 				break;
 			}
-			case "fixiereSchuelerFilterFach":
-			case "fixiereSchuelerFilterKurs": {
-				if (!listKursIDs.isEmpty())
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
-				break;
-			}
-			case "loeseSchuelerFilterFach":
-			case "loeseSchuelerFilterKurs": {
-				if (!listKursIDs.isEmpty())
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
-				break;
-			}
-			case "fixiereKurseFilterFach": {
-				if (!listKursIDs.isEmpty())
-					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
-				break;
-			}
-			case "loeseKurseFilterFach": {
-				if (!listKursIDs.isEmpty())
-					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
-				break;
-			}
 			default:
-				throw new DeveloperNotificationException("Der Typ " + typ + " für die Aktualisierung von Regeln wird noch nicht unterstützt.");
+				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Leerung von Kursen wird noch nicht unterstützt.`);
 		}
+	}
+
+	updateRegeln = async (typ: RegelActionTypen, ids?: List<number>) => {
+		const listKursIDs = ids || this.getListeKursauswahl();
+		const listDelete = new ArrayList<GostBlockungRegel>();
+		const listAdd = new ArrayList<GostBlockungRegel>();
+		switch (typ) {
+			case "fixiereKurseAlle":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
+				break;
+			case "loeseKurseAlle":
+				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen())
+				break;
+			case "fixiereKursauswahl":
+			case "fixiereKurseFilterFach":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
+				break;
+			case "loeseKursauswahl":
+			case "loeseKurseFilterFach":
+				listDelete.addAll(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
+				break;
+			case "fixiereSchuelerAlle":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
+				break;
+			case "fixiereSchuelerAbiturkurseAlle":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
+				break;
+			case "loeseSchuelerAlle":
+				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
+				break;
+			case "fixiereSchuelerAbiturkurseKursauswahl":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
+				break;
+			case "fixiereSchuelerFilterFach":
+			case "fixiereSchuelerFilterKurs":
+			case "fixiereSchuelerKursauswahl":
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
+				break;
+			case "loeseSchuelerKursauswahl":
+			case "loeseSchuelerFilterFach":
+			case "loeseSchuelerFilterKurs":
+				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
+				break;
+			default:
+				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Aktualisierung von Regeln wird noch nicht unterstützt.`);
+		}
+		await this.regelnDeleteAndAdd(listDelete, listAdd);
 	}
 
 }
