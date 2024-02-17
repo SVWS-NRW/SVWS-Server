@@ -499,18 +499,14 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls die Daten des Kurses inkonsistent sind.
 	 */
 	public void kursAdd(final @NotNull GostBlockungKurs kurs) throws DeveloperNotificationException {
-		// Hinzufügen des Kurses.
-		kursAddKursOhneSortierung(kurs);
-
-		// Sortieren der Kursmengen.
-		_list_kurse_sortiert_fach_kursart_kursnummer.sort(_compKurs_fach_kursart_kursnummer);
-		_list_kurse_sortiert_kursart_fach_kursnummer.sort(_compKurs_kursart_fach_kursnummer);
+		kursAddListe(ListUtils.create1(kurs));
 	}
 
 	/**
 	 * Fügt die Menge an Kursen hinzu.
 	 *
 	 * @param kursmenge Die Menge an Kursen.
+	 *
 	 * @throws DeveloperNotificationException Falls die Daten der Kurse inkonsistent sind.
 	 */
 	public void kursAddListe(final @NotNull List<@NotNull GostBlockungKurs> kursmenge) throws DeveloperNotificationException {

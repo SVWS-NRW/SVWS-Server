@@ -168,11 +168,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		// Kurse hinzufügen.
 		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
+		final List<GostBlockungKurs> kursListeAdd = new ArrayList<>();
 		for (final DTOGostBlockungKurs kurs : kurse) {
 			if (faecherManager.get(kurs.Fach_ID) == null)
 				throw OperationError.NOT_FOUND.exception("Das Fach mit der ID " + kurs.Fach_ID + " ist nicht als Fach der gymnasialen Oberstufe gekennzeichnet.");
-			manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+			kursListeAdd.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 		}
+		manager.kursAddListe(kursListeAdd);
 
 		// Kurs-Lehrer hinzufügen
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
@@ -402,11 +404,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			int anzahlZK = (fwHj.wahlenZK + 10) / 20;
 			if ((fwHj.wahlenZK > 0) && (anzahlZK < 1))
 				anzahlZK = 1;
+			final List<GostBlockungKurs> kursListeAdd = new ArrayList<>();
 			for (int i = 1; i <= anzahlLK; i++) {
 				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
 				conn.transactionPersist(kurs);
-				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+				kursListeAdd.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 			}
+			manager.kursAddListe(kursListeAdd);
 			for (int i = 1; i <= anzahlGK; i++) {
 				GostKursart kursart = GostKursart.GK;
 				if (zulFach == ZulaessigesFach.VX)

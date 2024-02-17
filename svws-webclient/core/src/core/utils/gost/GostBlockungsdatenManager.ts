@@ -536,15 +536,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die Daten des Kurses inkonsistent sind.
 	 */
 	public kursAdd(kurs : GostBlockungKurs) : void {
-		this.kursAddKursOhneSortierung(kurs);
-		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
-		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
+		this.kursAddListe(ListUtils.create1(kurs));
 	}
 
 	/**
 	 * Fügt die Menge an Kursen hinzu.
 	 *
 	 * @param kursmenge Die Menge an Kursen.
+	 *
 	 * @throws DeveloperNotificationException Falls die Daten der Kurse inkonsistent sind.
 	 */
 	public kursAddListe(kursmenge : List<GostBlockungKurs>) : void {
