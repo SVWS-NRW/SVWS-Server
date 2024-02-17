@@ -937,9 +937,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	updateRegeln = async (typ: string, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();
+		const listDelete = new ArrayList<GostBlockungRegel>();
+		const listAdd = new ArrayList<GostBlockungRegel>();
 		switch (typ) {
 			case "fixiereKurseAlle": {
-				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
+				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
+				await this.regelnDeleteAndAdd(listDelete, listAdd);
 				break;
 			}
 			case "loeseKurseAlle": {
@@ -983,6 +986,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			}
+			case "leereKurseAlle":
 			case "leereKurseKursauswahl":
 			case "leereKursFilterFach":
 			case "leereKursFilterKurs": {

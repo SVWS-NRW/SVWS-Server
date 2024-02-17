@@ -175,7 +175,10 @@
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
-		// TODO Leere alle Kurse
+		const kursIdsAlle = new ArrayList<number>();
+		for (const k of props.getErgebnismanager().getKursmenge())
+			kursIdsAlle.add(k.id);
+		result.push({ text: "Leere alle Kurse", action: async () => await props.updateRegeln("leereKurseAlle", kursIdsAlle) });
 		if ((props.getKursauswahl().size !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size))
 			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateRegeln("leereKurseKursauswahl") });
 		if (filter !== undefined) {
