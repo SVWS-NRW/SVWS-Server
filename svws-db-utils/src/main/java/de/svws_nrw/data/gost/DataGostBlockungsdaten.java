@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
+import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
@@ -163,8 +164,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		// Schienen hinzufügen.
 		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID, DTOGostBlockungSchiene.class);
+		final List<GostBlockungSchiene> schieneListeAdd = new ArrayList<>();
 		for (final DTOGostBlockungSchiene schiene : schienen)
-			manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
+			schieneListeAdd.add(DataGostBlockungSchiene.dtoMapper.apply(schiene));
+		manager.schieneAddListe(schieneListeAdd);
 
 		// Kurse hinzufügen.
 		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
@@ -382,12 +385,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Schienen anlegen
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		final long schienenID = dbSchienenID == null ? 0 : dbSchienenID.MaxID;
+		final List<GostBlockungSchiene> schieneListeAdd = new ArrayList<>();
 		for (int i = 1; i <= anzahlSchienen; i++) {
-			final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i,
-					"Schiene " + i, 3);
+			final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i, "Schiene " + i, 3);
 			conn.transactionPersist(schiene);
-			manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
+			schieneListeAdd.add(DataGostBlockungSchiene.dtoMapper.apply(schiene));
 		}
+		manager.schieneAddListe(schieneListeAdd);
+
 		conn.transactionFlush();
 		// Anhand der Fachwahlstatistik eine Default-Anzahl für die Kursanzahl ermitteln und
 		// DTOGostBlockungKurs-Objekte dafür persistieren
