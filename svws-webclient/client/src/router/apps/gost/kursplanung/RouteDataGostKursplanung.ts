@@ -1,5 +1,8 @@
 
 import { type Ref, ref, computed } from "vue";
+import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
+import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
+import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnis} from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
@@ -55,15 +58,6 @@ const defaultState: RouteStateGostKursplanung = {
 	schuelerFilter: emptySchuelerFilter(),
 	auswahlSchueler: undefined,
 };
-
-export type DownloadPDFTypen = "Schülerliste markierte Kurse" | "Kurse-Schienen-Zuordnung" | "Kurse-Schienen-Zuordnung markierter Schüler"
-	| "Kurse-Schienen-Zuordnung gefilterte Schüler" | "Kursbelegung markierter Schüler" | "Kursbelegung gefilterte Schüler"
-
-export type RegelActionTypen = 'fixiereKurseAlle' | 'loeseKurseAlle' | 'fixiereKursauswahl' | 'fixiereKurseFilterFach' | 'loeseKursauswahl' | 'loeseKurseFilterFach'
-	| 'fixiereSchuelerAlle' | 'fixiereSchuelerAbiturkurseAlle' | 'loeseSchuelerAlle' | 'fixiereSchuelerAbiturkurseKursauswahl' | 'fixiereSchuelerFilterFach'
-	| 'fixiereSchuelerFilterKurs' | 'fixiereSchuelerKursauswahl' | 'loeseSchuelerKursauswahl' | 'loeseSchuelerFilterFach' | 'loeseSchuelerFilterKurs'
-
-export type KurseLeerenTypen = "leereKurseAlle" | "leereKurseKursauswahl" | "leereKurseFilterFach" | "leereKursFilterKurs"
 
 export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanung> {
 

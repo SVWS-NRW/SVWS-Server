@@ -2,7 +2,9 @@ import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, List, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { RegelActionTypen, KurseLeerenTypen, DownloadPDFTypen } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
+import type { DownloadPDFTypen } from "./DownloadPDFTypen";
+import type { KurseLeerenTypen } from "./KurseLeerenTypen";
+import type { RegelActionTypen } from "./RegelActionTypen";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
