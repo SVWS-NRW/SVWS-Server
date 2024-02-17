@@ -153,6 +153,7 @@ export { GostBlockungKursAufteilung } from './core/data/gost/GostBlockungKursAuf
 export { GostBlockungKursLehrer } from './core/data/gost/GostBlockungKursLehrer';
 export { GostBlockungListeneintrag } from './core/data/gost/GostBlockungListeneintrag';
 export { GostBlockungRegel } from './core/data/gost/GostBlockungRegel';
+export { GostBlockungRegelUpdate } from './core/data/gost/GostBlockungRegelUpdate';
 export { GostBlockungSchiene } from './core/data/gost/GostBlockungSchiene';
 export { GostBlockungsdaten } from './core/data/gost/GostBlockungsdaten';
 export { GostBlockungsergebnis } from './core/data/gost/GostBlockungsergebnis';
