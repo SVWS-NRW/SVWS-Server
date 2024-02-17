@@ -215,6 +215,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					"DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
 			final Map<Long, List<DTOGostBlockungRegelParameter>> regelParams = regelParamsDB.stream()
 					.collect(Collectors.groupingBy(r -> r.Regel_ID));
+			final List<GostBlockungRegel> regelListeAdd = new ArrayList<>();
 			for (final DTOGostBlockungRegel regel : regeln) {
 				final GostBlockungRegel eintrag = new GostBlockungRegel();
 				eintrag.id = regel.ID;
@@ -223,8 +224,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				if ((p != null) && (!p.isEmpty()))
 					eintrag.parameter.addAll(p.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer))
 							.map(r -> r.Parameter).toList());
-				manager.regelAdd(eintrag);
+				regelListeAdd.add(eintrag);
 			}
+			manager.regelAddListe(regelListeAdd);
 		}
 
 		// Schüler-Menge hinzufügen.
