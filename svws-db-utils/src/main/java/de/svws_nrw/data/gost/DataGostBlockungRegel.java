@@ -270,7 +270,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	    		};
     		} else {
 				paramValue = regelParameter.get(i);
-				validateRegelParameter(blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
+				validateRegelParameter(conn, blockung.Abi_Jahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
     		}
     		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
     		conn.transactionPersist(param);
@@ -280,7 +280,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private void validateRegelParameter(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostKursblockungRegelParameterTyp paramType, final long paramValue) {
+	private static void validateRegelParameter(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostKursblockungRegelParameterTyp paramType, final long paramValue) {
 		switch (paramType) {
 			case KURSART -> {
 				if (GostKursart.fromIDorNull((int) paramValue) == null)
@@ -316,7 +316,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private void validateRegel(final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) {
+	private static void validateRegel(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) {
 		// Prüfe ob der Regel-Typ korrekt ist
 		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
@@ -344,12 +344,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
     	for (int i = 0; i < regelTyp.getParamCount(); i++) {
     		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
 			final long paramValue = regel.parameter.get(i);
-    		validateRegelParameter(abijahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
+    		validateRegelParameter(conn, abijahrgang, idBlockung, setSchuelerIDs, faecher, paramType, paramValue);
     	}
 	}
 
 
-	private List<GostBlockungRegel> addRegelnInternal(final DTOGostBlockung blockung, final List<GostBlockungRegel> regeln) {
+	private static List<GostBlockungRegel> addRegelnInternal(final @NotNull DBEntityManager conn, final DTOGostBlockung blockung, final List<GostBlockungRegel> regeln) {
 		if (regeln.isEmpty())
 			return new ArrayList<>();
 		try {
@@ -365,7 +365,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	        // Durchwandere die Regeln und füge sie nacheinander hinzu
 			for (final GostBlockungRegel regel : regeln) {
 				// validiere die Regel
-				validateRegel(blockung.Abi_Jahrgang, blockung.ID, setSchuelerIDs, faecher, regel, mapVorhanden);
+				validateRegel(conn, blockung.Abi_Jahrgang, blockung.ID, setSchuelerIDs, faecher, regel, mapVorhanden);
 				final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 				// Füge die Regel hinzu
 				regel.id = idRegel++;
@@ -406,7 +406,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
         	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-        final List<GostBlockungRegel> daten = addRegelnInternal(blockung, regeln);
+        final List<GostBlockungRegel> daten = addRegelnInternal(conn, blockung, regeln);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -446,7 +446,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private void deleteMultipleInternal(final List<Long> regelIDs) {
+	private static void deleteMultipleInternal(final @NotNull DBEntityManager conn, final List<Long> regelIDs) {
 		if (regelIDs.isEmpty())
 			return;
 		// Bestimme die Regeln
@@ -480,7 +480,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			throw OperationError.BAD_REQUEST.exception("Es wurden keine IDs für Regeln angegeben.");
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		deleteMultipleInternal(regelIDs);
+		deleteMultipleInternal(conn, regelIDs);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -489,7 +489,33 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * Entfernt alle zum Entfernen angegebenen Blockungsregeln und fügt anschließend alle
 	 * zum Hinzufügen angegebenen Blockungsregeln hinzu.
 	 *
-	 * @param idBlockung   die ID der Blockung, bei dem die Regeln vorgenommen werden sollen
+	 * @param conn       die Datenbankverbindung
+	 * @param blockung   die Blockung, bei der die Regelanpassungen vorgenommen werden sollen
+	 * @param update     die zu entfernenden Regeln und die hinzuzufügenden Regeln
+	 *
+	 * @return die hinzugefügten Regeln mit den neuen IDs
+	 */
+	public static @NotNull List<@NotNull GostBlockungRegel> updateBlockungsregeln(final @NotNull DBEntityManager conn, final @NotNull DTOGostBlockung blockung, final @NotNull GostBlockungRegelUpdate update) {
+        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+        if (vorlage == null)
+        	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		// Entferne die Regeln
+		if (!update.listEntfernen.isEmpty()) {
+			final @NotNull List<@NotNull Long> listEntfernenIDs = update.listEntfernen.stream().map(r -> r.id).toList();
+			deleteMultipleInternal(conn, listEntfernenIDs);
+			conn.transactionFlush();
+		}
+		// Füge die Kurs-Schüler-Zuordnungen hinzu
+        return addRegelnInternal(conn, blockung, update.listHinzuzufuegen);
+	}
+
+
+	/**
+	 * Entfernt alle zum Entfernen angegebenen Blockungsregeln und fügt anschließend alle
+	 * zum Hinzufügen angegebenen Blockungsregeln hinzu.
+	 *
+	 * @param idBlockung   die ID der Blockung, bei der die Regelanpassungen vorgenommen werden sollen
 	 * @param update       die zu entfernenden Regeln und die hinzuzufügenden Regeln
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
@@ -502,18 +528,8 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null)
 			throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d wurde nicht gefunden.".formatted(idBlockung));
-        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
-        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-        if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
-		// Entferne die Regeln
-		if (!update.listEntfernen.isEmpty()) {
-			final @NotNull List<@NotNull Long> listEntfernenIDs = update.listEntfernen.stream().map(r -> r.id).toList();
-			deleteMultipleInternal(listEntfernenIDs);
-			conn.transactionFlush();
-		}
 		// Füge die Kurs-Schüler-Zuordnungen hinzu
-        final List<GostBlockungRegel> daten = addRegelnInternal(blockung, update.listHinzuzufuegen);
+        final List<GostBlockungRegel> daten = updateBlockungsregeln(conn, blockung, update);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 

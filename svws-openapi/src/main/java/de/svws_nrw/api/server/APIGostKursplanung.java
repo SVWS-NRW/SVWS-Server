@@ -1522,6 +1522,8 @@ public class APIGostKursplanung {
     @Operation(summary = "Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu.",
                description = "Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu. "
                 + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.",
+    	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungRegel.class))))
     @ApiResponse(responseCode = "204", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.")
     @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.")

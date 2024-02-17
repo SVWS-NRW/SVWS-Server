@@ -4525,6 +4525,9 @@ export class ApiServer extends BaseApi {
 	 * Entfernt und fügt mehrere Kurs-Schüler-Zuordnungen bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBlockungRegel>
 	 *   Code 204: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.
 	 *   Code 404: Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.

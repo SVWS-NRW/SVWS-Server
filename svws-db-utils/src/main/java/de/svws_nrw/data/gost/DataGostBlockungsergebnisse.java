@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
+import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
@@ -445,7 +446,11 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			}
 			conn.transactionFlush();
 		}
-		return Response.status(Status.NO_CONTENT).build();
+		// Passe ggf die Regeln an
+		final List<GostBlockungRegel> daten = (update.regelUpdates.listEntfernen.isEmpty() && update.regelUpdates.listHinzuzufuegen.isEmpty())
+				? new ArrayList<>()
+				: DataGostBlockungRegel.updateBlockungsregeln(conn, blockung, update.regelUpdates);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 
