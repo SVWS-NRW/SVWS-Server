@@ -1034,7 +1034,7 @@ public class APIGostKursplanung {
     		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.")
     @ApiResponse(responseCode = "200", description = "Die Ergebnisse wurden erfolgreich der Blockung hinzugefügt",
     		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnis.class))))
-    @ApiResponse(responseCode = "400", description = "Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID in der Ergebnissen). ")
+    @ApiResponse(responseCode = "400", description = "Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID in der Ergebnissen).")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -1524,7 +1524,6 @@ public class APIGostKursplanung {
                 + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen und Hinzufügen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.",
     	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungRegel.class))))
-    @ApiResponse(responseCode = "204", description = "Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.")
     @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
     public Response updateGostBlockungsergebnisKursSchuelerZuordnungen(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,

@@ -634,13 +634,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return false;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		// Aktualisiere die Zuordnungen ...
-		await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
+		const listRegelnAdded = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
 		for (const zuordnung of update.listEntfernen)
 			this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
 		for (const zuordnung of update.listHinzuzufuegen)
 			this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, true);
 		const ergebnis = this.ergebnismanager.getErgebnis();
 		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
+		if (!listRegelnAdded.isEmpty())
+			this.datenmanager.regelAddListe(listRegelnAdded);
+		if (!update.regelUpdates.listEntfernen.isEmpty())
+			this.datenmanager.regelRemoveListe(update.regelUpdates.listEntfernen);
 		this.commit();
 		return true;
 	});

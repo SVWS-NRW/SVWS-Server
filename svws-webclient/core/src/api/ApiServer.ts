@@ -3299,7 +3299,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Ergebnisse wurden erfolgreich der Blockung hinzugefügt
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostBlockungsergebnis>
-	 *   Code 400: Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID in der Ergebnissen). 
+	 *   Code 400: Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID in der Ergebnissen).
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.
 	 *   Code 404: Keine Blockung vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -4528,21 +4528,25 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostBlockungRegel>
-	 *   Code 204: Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnungen zu löschen oder hinzufügen.
 	 *   Code 404: Das Zwischenergebnis, ein Schüler oder ein Kurs wurde nicht in einer gültigen Zuordnung gefunden.
 	 *
 	 * @param {GostBlockungsergebnisKursSchuelerZuordnungUpdate} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 *
+	 * @returns Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.
 	 */
-	public async updateGostBlockungsergebnisKursSchuelerZuordnungen(data : GostBlockungsergebnisKursSchuelerZuordnungUpdate, schema : string, ergebnisid : number) : Promise<void> {
+	public async updateGostBlockungsergebnisKursSchuelerZuordnungen(data : GostBlockungsergebnisKursSchuelerZuordnungUpdate, schema : string, ergebnisid : number) : Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/updateKursSchuelerZuordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const body : string = GostBlockungsergebnisKursSchuelerZuordnungUpdate.transpilerToJSON(data);
-		await super.postJSON(path, body);
-		return;
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBlockungRegel>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
