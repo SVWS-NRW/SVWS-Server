@@ -54,11 +54,14 @@ const defaultState: RouteStateGostKursplanung = {
 	auswahlSchueler: undefined,
 };
 
+export type DownloadPDFTypen = "Schülerliste markierte Kurse" | "Kurse-Schienen-Zuordnung" | "Kurse-Schienen-Zuordnung markierter Schüler"
+	| "Kurse-Schienen-Zuordnung gefilterte Schüler" | "Kursbelegung markierter Schüler" | "Kursbelegung gefilterte Schüler"
+
 export type RegelActionTypen = 'fixiereKurseAlle' | 'loeseKurseAlle' | 'fixiereKursauswahl' | 'fixiereKurseFilterFach' | 'loeseKursauswahl' | 'loeseKurseFilterFach'
 	| 'fixiereSchuelerAlle' | 'fixiereSchuelerAbiturkurseAlle' | 'loeseSchuelerAlle' | 'fixiereSchuelerAbiturkurseKursauswahl' | 'fixiereSchuelerFilterFach'
 	| 'fixiereSchuelerFilterKurs' | 'fixiereSchuelerKursauswahl' | 'loeseSchuelerKursauswahl' | 'loeseSchuelerFilterFach' | 'loeseSchuelerFilterKurs'
 
-export type KurseLeerenTypen = "leereKurseAlle" | "leereKurseKursauswahl" | "leereKursFilterFach" | "leereKursFilterKurs"
+export type KurseLeerenTypen = "leereKurseAlle" | "leereKurseKursauswahl" | "leereKurseFilterFach" | "leereKursFilterKurs"
 
 export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanung> {
 
@@ -821,37 +824,33 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 	}
 
-	getPDF = async (title: string): Promise<ApiFile> => {
+	getPDF = async (title: DownloadPDFTypen): Promise<ApiFile> => {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
-		try {
-			const list = new ArrayList<number>();
-			switch (title) {
-				case "Schülerliste markierte Kurse":
-					for (const kurs of this.kursAuswahl.value)
-						list.add(kurs);
-					return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kurse-Schienen-Zuordnung":
-					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kurse-Schienen-Zuordnung markierter Schüler":
-					list.add(this.auswahlSchueler.id);
-					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kurse-Schienen-Zuordnung gefilterte Schüler":
-					for (const schueler of this.schuelerFilter.filtered.value)
-						list.add(schueler.id);
-					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kursbelegung markierter Schüler":
-					list.add(this.auswahlSchueler.id);
-					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kursbelegung gefilterte Schüler":
-					for (const schueler of this.schuelerFilter.filtered.value)
-						list.add(schueler.id);
-					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				default:
-					throw new Error();
-			}
-		} catch(e) {
-			throw new DeveloperNotificationException("Es wurde kein gültiges PDF angegeben");
+		const list = new ArrayList<number>();
+		switch (title) {
+			case "Schülerliste markierte Kurse":
+				for (const kurs of this.kursAuswahl.value)
+					list.add(kurs);
+				return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			case "Kurse-Schienen-Zuordnung":
+				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			case "Kurse-Schienen-Zuordnung markierter Schüler":
+				list.add(this.auswahlSchueler.id);
+				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
+				for (const schueler of this.schuelerFilter.filtered.value)
+					list.add(schueler.id);
+				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			case "Kursbelegung markierter Schüler":
+				list.add(this.auswahlSchueler.id);
+				return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			case "Kursbelegung gefilterte Schüler":
+				for (const schueler of this.schuelerFilter.filtered.value)
+					list.add(schueler.id);
+				return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
+			default:
+				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}
 	}
 
@@ -861,15 +860,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			id = value.id;
 		else
 			id = value;
-		if ((id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive())) {
-			if (this.hatErgebnis && this.hatSchueler && (id !== undefined)) {
+		if ((id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive()))
+			if (this.hatErgebnis && this.hatSchueler && (id !== undefined))
 				await RouteManager.doRoute(routeGostKursplanung.getRouteSchueler(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, id, this.auswahlSchueler.id));
-			} else if (id !== undefined) {
+			else if (id !== undefined)
 				await RouteManager.doRoute(routeGostKursplanung.getRouteErgebnis(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, id));
-			} else {
+			else
 				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id));
-			}
-		}
 	}
 
 	gotoSchueler = async (schueler: SchuelerListeEintrag) => {
@@ -947,7 +944,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		switch (typ) {
 			case "leereKurseAlle":
 			case "leereKurseKursauswahl":
-			case "leereKursFilterFach":
+			case "leereKurseFilterFach":
 			case "leereKursFilterKurs": {
 				if (!listKursIDs.isEmpty()) {
 					const list = new ArrayList<GostBlockungsergebnisKursSchuelerZuordnung>();

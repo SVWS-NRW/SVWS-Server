@@ -2,7 +2,7 @@ import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, List, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { RegelActionTypen, KurseLeerenTypen } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
+import type { RegelActionTypen, KurseLeerenTypen, DownloadPDFTypen } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -34,7 +34,7 @@ export interface GostKursplanungProps {
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
-	getPDF: (title: string) => Promise<ApiFile>;
+	getPDF: (title: DownloadPDFTypen) => Promise<ApiFile>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 	existiertSchuljahresabschnitt: boolean;
