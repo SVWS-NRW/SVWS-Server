@@ -51,7 +51,8 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		await RouteManager.doRoute(routeKatalogReligion.getRoute(eintrag.id));
 	}
 
-	addEintrag = async (eintrag: ReligionEintrag) => {
+	addEintrag = async (eintrag: Partial<ReligionEintrag>) => {
+		delete eintrag.id;
 		const res = await api.server.createReligion(eintrag, api.schema);
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		mapKatalogeintraege.set(res.id, res);

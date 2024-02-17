@@ -43,10 +43,10 @@
 	async function saveEntries() {
 		await props.addEintrag(religion.value);
 		showModal().value = false;
-		religion.value = new ReligionEintrag();
 	}
 
 	const openModal = () => {
+		religion.value = new ReligionEintrag();
 		showModal().value = true;
 	}
 
