@@ -22,4 +22,7 @@ public class GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 	/** Die hinzuzufügenden Zuordnungen */
 	public @NotNull List<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> listHinzuzufuegen = new ArrayList<>();
 
+	/** Die Blockungs-Regeln, die dabei angepasst werden sollen (das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist) */
+	public @NotNull GostBlockungRegelUpdate regelUpdates = new GostBlockungRegelUpdate();
+
 }

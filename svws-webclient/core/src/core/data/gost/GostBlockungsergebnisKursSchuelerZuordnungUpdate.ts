@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
 import { GostBlockungsergebnisKursSchuelerZuordnung, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisKursSchuelerZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
@@ -14,6 +15,11 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 	 * Die hinzuzufügenden Zuordnungen
 	 */
 	public listHinzuzufuegen : List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();
+
+	/**
+	 * Die Blockungs-Regeln, die dabei angepasst werden sollen (das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist)
+	 */
+	public regelUpdates : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 
 
 	public constructor() {
@@ -41,6 +47,9 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 				result.listHinzuzufuegen?.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (typeof obj.regelUpdates === "undefined")
+			 throw new Error('invalid json format, missing attribute regelUpdates');
+		result.regelUpdates = GostBlockungRegelUpdate.transpilerFromJSON(JSON.stringify(obj.regelUpdates));
 		return result;
 	}
 
@@ -70,6 +79,7 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 			}
 			result += ' ]' + ',';
 		}
+		result += '"regelUpdates" : ' + GostBlockungRegelUpdate.transpilerToJSON(obj.regelUpdates) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -104,6 +114,9 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.regelUpdates !== "undefined") {
+			result += '"regelUpdates" : ' + GostBlockungRegelUpdate.transpilerToJSON(obj.regelUpdates) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
