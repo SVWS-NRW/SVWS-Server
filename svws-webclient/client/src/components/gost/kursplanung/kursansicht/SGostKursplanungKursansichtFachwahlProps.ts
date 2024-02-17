@@ -21,7 +21,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	hatErgebnis: boolean;
-	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
+	schuelerFilter: () => GostKursplanungSchuelerFilter;
 	fachwahlen: GostStatistikFachwahl;
 	faecherManager: GostFaecherManager;
 	fachwahlenAnzahl: number;

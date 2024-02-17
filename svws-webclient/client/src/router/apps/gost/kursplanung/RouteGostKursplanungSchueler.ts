@@ -126,8 +126,6 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			addRegeln: routeGostKursplanung.data.addRegeln,
 			removeRegeln: routeGostKursplanung.data.deleteRegeln,
 			regelnDeleteAndAdd: routeGostKursplanung.data.regelnDeleteAndAdd,
-			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
-			removeKursSchuelerZuordnung: routeGostKursplanung.data.removeKursSchuelerZuordnung,
 			isSchuelerFilterOpen: () => routeGostKursplanung.data.isSchuelerFilterOpen,
 			setIsSchuelerFilterOpen: routeGostKursplanung.data.setIsSchuelerFilterOpen,
 			showGeschlecht: () => routeGostKursplanung.data.showGeschlecht,

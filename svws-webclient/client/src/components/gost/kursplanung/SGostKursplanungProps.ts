@@ -40,7 +40,7 @@ export interface GostKursplanungProps {
 	existiertSchuljahresabschnitt: boolean;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
-	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
+	schuelerFilter: () => GostKursplanungSchuelerFilter;
 	faecherManager: GostFaecherManager;
 	halbjahr: GostHalbjahr;
 	mapLehrer: Map<number, LehrerListeEintrag>;

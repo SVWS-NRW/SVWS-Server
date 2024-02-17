@@ -15,10 +15,10 @@ export class GostKursplanungSchuelerFilter {
 	private _kursart: Ref<GostKursart | undefined> = ref(undefined);
 	private mapSchueler: Map<number, SchuelerListeEintrag>;
 	private datenmanager: GostBlockungsdatenManager | undefined;
-	private ergebnismanager: () => GostBlockungsergebnisManager;
+	private ergebnismanager: (() => GostBlockungsergebnisManager) | undefined;
 	private faecher: List<GostFach>;
 
-	public constructor(datenmanager: GostBlockungsdatenManager | undefined, ergebnismanager: () => GostBlockungsergebnisManager,
+	public constructor(datenmanager: GostBlockungsdatenManager | undefined, ergebnismanager: (() => GostBlockungsergebnisManager) | undefined,
 		faecher: List<GostFach>, mapSchueler: Map<number, SchuelerListeEintrag>) {
 		this.datenmanager = datenmanager;
 		this.ergebnismanager = ergebnismanager;
@@ -70,12 +70,15 @@ export class GostKursplanungSchuelerFilter {
 
 	public filtered = computed<SchuelerListeEintrag[]>(() => {
 		const gefiltert: SchuelerListeEintrag[] = [];
-		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
-		const res = this.ergebnismanager().getOfSchuelerMengeGefiltert(this.kurs?.id || -1,
-			this.fach || -1,
-			this.kursart?.id || -1,
-			pKonfliktTyp,
-			this._name.value);
+		// Wenn keine Manager initialisiert sind, dann kann nicht gefiltert werden ...
+		if (this.ergebnismanager === undefined) {
+			for (const s of this.mapSchueler.values())
+				gefiltert.push(s);
+			return gefiltert;
+		}
+		// ... wenn sie definiert sind, dann findet die Filterung statt
+		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1 : 0) + (this.nichtwahlen.value ? 2 : 0)
+		const res = this.ergebnismanager().getOfSchuelerMengeGefiltert(this.kurs?.id || -1, this.fach || -1, this.kursart?.id || -1, pKonfliktTyp, this._name.value);
 		if (res === undefined)
 			return gefiltert;
 		for (const s of res) {
@@ -87,6 +90,10 @@ export class GostKursplanungSchuelerFilter {
 	})
 
 	public statistics = computed(() => {
+		// Ist kein Manager vorhanden, dann gib eine leere Statistik zurück...
+		if (this.ergebnismanager === undefined)
+			return { m: 0, w: 0, d: 0, x: 0, schriftlich: 0, muendlich: 0 };
+		// ... ansonsten bestimme die Statistik aus dem Ergebnis-Manager
 		const kurs = this.kurs?.id || -1;
 		const fach = this.fach || -1;
 		const kursart = this.kursart?.id || -1;

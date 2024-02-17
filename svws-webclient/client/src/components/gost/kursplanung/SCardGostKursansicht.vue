@@ -209,7 +209,7 @@
 		kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 		existiertSchuljahresabschnitt: boolean;
 		hatErgebnis: boolean;
-		schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
+		schuelerFilter: () => GostKursplanungSchuelerFilter;
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;

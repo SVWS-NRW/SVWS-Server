@@ -30,10 +30,12 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	// ...auch abhängig von dem ausgewählten Blockungsergebnis
 	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	ergebnismanager: GostBlockungsergebnisManager | undefined;
-	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
+	schuelerFilter: GostKursplanungSchuelerFilter;
 	// ... auch abhängig von dem ausgewählten Schüler
 	auswahlSchueler: SchuelerListeEintrag | undefined;
 }
+
+const emptySchuelerFilter = () => new GostKursplanungSchuelerFilter(undefined, undefined, new ArrayList(), new Map());
 
 const defaultState: RouteStateGostKursplanung = {
 	abiturjahr: undefined,
@@ -50,7 +52,7 @@ const defaultState: RouteStateGostKursplanung = {
 	datenmanager: undefined,
 	auswahlErgebnis: undefined,
 	ergebnismanager: undefined,
-	schuelerFilter: undefined,
+	schuelerFilter: emptySchuelerFilter(),
 	auswahlSchueler: undefined,
 };
 
@@ -220,7 +222,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
-			schuelerFilter: undefined,
+			schuelerFilter: emptySchuelerFilter(),
 		});
 		return result;
 	}
@@ -260,7 +262,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				datenmanager: undefined,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
-				schuelerFilter: undefined,
+				schuelerFilter: emptySchuelerFilter(),
 				auswahlSchueler: undefined,
 			});
 			return;
@@ -281,7 +283,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			mapFachwahlStatistik,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
-			schuelerFilter: undefined,
+			schuelerFilter: emptySchuelerFilter(),
 		});
 		let ergebnis : GostBlockungsergebnisListeneintrag | undefined = undefined;
 		if (ergebnisse.size() > 0) {
@@ -347,7 +349,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			this.setPatchedState({
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
-				schuelerFilter: undefined,
+				schuelerFilter: emptySchuelerFilter(),
 				auswahlSchueler: undefined,
 			});
 			return;
@@ -367,8 +369,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	public get schuelerFilter(): GostKursplanungSchuelerFilter {
-		if (this._state.value.schuelerFilter === undefined)
-			throw new DeveloperNotificationException("Es wurde noch keine Ergebnis geladen, so dass kein Schüler-Filter zur Verfügung steht.");
 		return this._state.value.schuelerFilter;
 	}
 

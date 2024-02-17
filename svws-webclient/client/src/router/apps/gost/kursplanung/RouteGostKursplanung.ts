@@ -263,7 +263,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			kurssortierung: this.data.kurssortierung,
 			getPDF: this.data.getPDF,
 			existiertSchuljahresabschnitt: this.data.existiertSchuljahresabschnitt,
-			schuelerFilter: () => this.data.hatErgebnis ? this.data.schuelerFilter : undefined,
+			schuelerFilter: () => this.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager,
 			halbjahr: this.data.halbjahr,
 			mapLehrer: this.data.mapLehrer,
