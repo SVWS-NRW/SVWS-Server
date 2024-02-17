@@ -25,6 +25,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
+import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungsergebnisListeneintragComparator } from '../../../core/utils/gost/GostBlockungsergebnisListeneintragComparator';
@@ -1299,6 +1300,57 @@ export class GostBlockungsdatenManager extends JavaObject {
 		regelDummy.parameter.add(idSchueler);
 		regelDummy.parameter.add(idKurs);
 		return regelDummy;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Schüler in einen Kurs zu fixieren.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Schüler in einen Kurs zu fixieren.
+	 */
+	public regelupdateGetSchuelerInKursFixierung(idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
+		return this.regelupdateGetSchuelermengeInKursmengeFixierung(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge in einer Kursmenge zu fixieren.
+	 *
+	 * @param listSchuelerID  Die Liste der Schüler-IDs.
+	 * @param listKursID      Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge in einer Kursmenge zu fixieren.
+	 */
+	public regelupdateGetSchuelermengeInKursmengeFixierung(listSchuelerID : List<number>, listKursID : List<number>) : GostBlockungRegelUpdate {
+		const gUpdate : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idSchueler of listSchuelerID)
+			for (const idKurs of listSchuelerID) {
+				const kurs1 : GostBlockungKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_kurs, idKurs);
+				const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
+				const regelSperrung : GostBlockungRegel | null = this._map_multikey_regeln.get(keySperrung);
+				if (regelSperrung !== null)
+					gUpdate.listEntfernen.add(regelSperrung);
+				for (const kurs2 of Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_kurse, kurs1.fach_id, kurs1.kursart)) {
+					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+					const regelFixierung : GostBlockungRegel | null = this._map_multikey_regeln.get(keyFixierung);
+					if (kurs1.id === kurs2.id) {
+						if (regelFixierung === null) {
+							const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+							regelHinzufuegen.id = -1;
+							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+							regelHinzufuegen.parameter.add(idSchueler);
+							regelHinzufuegen.parameter.add(idKurs);
+							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
+						}
+					} else {
+						if (regelFixierung !== null) {
+							gUpdate.listEntfernen.add(regelFixierung);
+						}
+					}
+				}
+			}
+		return gUpdate;
 	}
 
 	/**
