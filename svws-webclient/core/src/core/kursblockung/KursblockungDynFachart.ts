@@ -57,9 +57,14 @@ export class KursblockungDynFachart extends JavaObject {
 	private readonly statistik : KursblockungDynStatistik;
 
 	/**
-	 * Ordnet jedem Schüler die verbotenen andere Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]
+	 * Ordnet jedem Schüler die verbotenen anderen Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]
 	 */
-	private readonly schuelerNichtZusammenMitSchueler : Array<Array<number>>;
+	private readonly schuelerVerbotenMitSchueler : Array<Array<number>>;
+
+	/**
+	 * Ordnet jedem Schüler die zusammen-forcierten anderen Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]
+	 */
+	private readonly schuelerZusammenMitSchueler : Array<Array<number>>;
 
 
 	/**
@@ -81,7 +86,8 @@ export class KursblockungDynFachart extends JavaObject {
 		this.kurseMax = 0;
 		this.schuelerMax = 0;
 		this.schuelerAnzNow = 0;
-		this.schuelerNichtZusammenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
+		this.schuelerVerbotenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
+		this.schuelerZusammenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
 	}
 
 	/**
@@ -338,8 +344,19 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
 	regel_schueler_verbieten_mit_schueler(internalID1 : number, internalID2 : number) : void {
-		this.schuelerNichtZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerNichtZusammenMitSchueler[internalID1], internalID2);
-		this.schuelerNichtZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerNichtZusammenMitSchueler[internalID2], internalID1);
+		this.schuelerVerbotenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerVerbotenMitSchueler[internalID1], internalID2);
+		this.schuelerVerbotenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerVerbotenMitSchueler[internalID2], internalID1);
+	}
+
+	/**
+	 * Forciert, dass zwei Schüler den selben Kurs der Fachart besuchen.
+	 *
+	 * @param internalID1  Die interne ID des 1. Schülers.
+	 * @param internalID2  Die interne ID des 2. Schülers.
+	 */
+	regel_schueler_zusammen_mit_schueler(internalID1 : number, internalID2 : number) : void {
+		this.schuelerZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerZusammenMitSchueler[internalID1], internalID2);
+		this.schuelerZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerZusammenMitSchueler[internalID2], internalID1);
 	}
 
 	/**
@@ -349,8 +366,19 @@ export class KursblockungDynFachart extends JavaObject {
 	 *
 	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
 	 */
-	gibSchuelerVerbotenMitVon(schuelerNr : number) : Array<number> {
-		return this.schuelerNichtZusammenMitSchueler[schuelerNr];
+	gibVonSchuelerVerbotenMit(schuelerNr : number) : Array<number> {
+		return this.schuelerVerbotenMitSchueler[schuelerNr];
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 */
+	gibVonSchuelerZusammenMit(schuelerNr : number) : Array<number> {
+		return this.schuelerZusammenMitSchueler[schuelerNr];
 	}
 
 	transpilerCanonicalName(): string {

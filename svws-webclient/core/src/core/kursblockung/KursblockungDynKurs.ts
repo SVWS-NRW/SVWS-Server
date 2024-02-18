@@ -465,10 +465,14 @@ export class KursblockungDynKurs extends JavaObject {
 	aktionSchuelerHinzufuegen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz++;
-		for (const verbotenMitNr of this.fachart.gibSchuelerVerbotenMitVon(schuelerNr))
-			this.schuelerVerboten[verbotenMitNr]++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
+		for (const verbotenMitNr of this.fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+			this.schuelerVerboten[verbotenMitNr]++;
+		for (const zusammenMitNr of this.fachart.gibVonSchuelerZusammenMit(schuelerNr))
+			for (const kursDerFachart of this.fachart.gibKurse())
+				if (kursDerFachart as unknown !== this as unknown)
+					kursDerFachart.schuelerVerboten[zusammenMitNr]++;
 	}
 
 	/**
@@ -479,10 +483,14 @@ export class KursblockungDynKurs extends JavaObject {
 	aktionSchuelerEntfernen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz--;
-		for (const verbotenMitNr of this.fachart.gibSchuelerVerbotenMitVon(schuelerNr))
-			this.schuelerVerboten[verbotenMitNr]--;
 		this.fachart.aktionSchuelerWurdeEntfernt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
+		for (const verbotenMitNr of this.fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+			this.schuelerVerboten[verbotenMitNr]--;
+		for (const zusammenMitNr of this.fachart.gibVonSchuelerZusammenMit(schuelerNr))
+			for (const kursDerFachart of this.fachart.gibKurse())
+				if (kursDerFachart as unknown !== this as unknown)
+					kursDerFachart.schuelerVerboten[zusammenMitNr]--;
 	}
 
 	/**

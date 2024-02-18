@@ -135,15 +135,15 @@ public class KursblockungDynDaten {
 		// Definiert: fachartArr[i].kursArr
 		schritt10FehlerBeiFachartKursArrayErstellung();
 
-		schritt11FehlerBeiRegel_4_oder_5();
+		schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
 
-		schritt12FehlerBeiRegel_7_oder_8();
+		schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
 
 		schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
 
-		schritt14FehlerBeiRegel_10(input);
+		schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
 
-		schritt14FehlerBeiRegel_11_bis_14(input);
+		schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
 
 		schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 
@@ -752,7 +752,7 @@ public class KursblockungDynDaten {
 
 	}
 
-	private void schritt11FehlerBeiRegel_4_oder_5() {
+	private void schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
 		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			final long schuelerID = regel4.parameter.get(0);
@@ -776,7 +776,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt12FehlerBeiRegel_7_oder_8() {
+	private void schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() {
 		// Regel 7 - KURS_VERBIETEN_MIT_KURS
 		for (final @NotNull GostBlockungRegel regel7 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 			final long kursID1 = regel7.parameter.get(0);
@@ -807,8 +807,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt14FehlerBeiRegel_10(final @NotNull GostBlockungsdatenManager pInput) {
-		// Regel 10 - LEHRKRAEFTE_BEACHTEN
+	private void schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(final @NotNull GostBlockungsdatenManager pInput) {
 		final List<@NotNull GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10.isEmpty()) return;
 
@@ -833,7 +832,7 @@ public class KursblockungDynDaten {
 							}
 	}
 
-	private void schritt14FehlerBeiRegel_11_bis_14(final @NotNull GostBlockungsdatenManager input) {
+	private void schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(final @NotNull GostBlockungsdatenManager input) {
 		// Das Set dient dazu, Widersprüche/Dopplungen bei den Regeln zu finden.
 		final @NotNull HashSet<String> setSSF = new HashSet<>();
 
@@ -844,7 +843,10 @@ public class KursblockungDynDaten {
 			final long idF = regel11.parameter.get(2);
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
-
+			// Regel 11 persistieren
+			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
+			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
+			sch1.regel11_zusammen_mit_schueler_in_fach(sch2, idF);
 		}
 
 		// Regel 12: SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
@@ -867,6 +869,10 @@ public class KursblockungDynDaten {
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				// Regel 13 persistieren
+				final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
+				final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
+				sch1.regel13_zusammen_mit_schueler(sch2);
 			}
 		}
 
@@ -884,7 +890,6 @@ public class KursblockungDynDaten {
 			sch1.regel14_verbieten_mit_schueler(sch2);
 		}
 
-		// TODO Regel ZUSAMMEN
 	}
 
 	private void schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {

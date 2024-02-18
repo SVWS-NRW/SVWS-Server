@@ -616,13 +616,28 @@ public class KursblockungDynSchueler {
 	}
 
 	/**
-	 * Wendet an, dass dieser Schüler und der übergebene Schüler nicht zusammen sind in dem übergebenen Fach.
+	 * Wendet an, dass dieser Schüler und der übergebene Schüler zusammen sein sollen im übergebenen Fach.
+	 *
+	 * @param that    Der übergebene Schüler.
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 */
+	void regel11_zusammen_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
+		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
+		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
+
+		if (fachart1.gibNr() != fachart2.gibNr())
+			throw new DeveloperNotificationException("Regel 11:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!");
+
+		fachart1.regel_schueler_zusammen_mit_schueler(this.internalID, that.internalID);
+	}
+
+	/**
+	 * Wendet an, dass dieser Schüler und der übergebene Schüler nicht zusammen sein sollen im übergebenen Fach.
 	 *
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
 	void regel12_verbieten_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
-
 		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
@@ -633,7 +648,19 @@ public class KursblockungDynSchueler {
 	}
 
 	/**
-	 * Wendet an, dass dieser Schüler und der übergebene Schüler bei gemeinsamen Kursen, nicht zusammen in einem Kurs landen.
+	 * Wendet an, dass dieser Schüler und der übergebene Schüler bei gemeinsamen Kursen zusammen in einem Kurs landen sollen.
+	 *
+	 * @param that  Der übergebene Schüler.
+	 */
+	public void regel13_zusammen_mit_schueler(final @NotNull KursblockungDynSchueler that) {
+		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr)
+			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr)
+				if (fachart1.gibNr() == fachart2.gibNr())
+					fachart1.regel_schueler_zusammen_mit_schueler(this.internalID, that.internalID);
+	}
+
+	/**
+	 * Wendet an, dass dieser Schüler und der übergebene Schüler bei gemeinsamen Kursen, nicht zusammen in einem Kurs landen sollen.
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */

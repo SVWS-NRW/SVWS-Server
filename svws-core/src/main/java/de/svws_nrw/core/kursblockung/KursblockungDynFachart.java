@@ -44,8 +44,11 @@ public class KursblockungDynFachart {
 	/** Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. */
 	private final @NotNull KursblockungDynStatistik statistik;
 
-	/** Ordnet jedem Schüler die verbotenen andere Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]  */
-	private final @NotNull int @NotNull [][] schuelerNichtZusammenMitSchueler;
+	/** Ordnet jedem Schüler die verbotenen anderen Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]  */
+	private final @NotNull int @NotNull [][] schuelerVerbotenMitSchueler;
+
+	/** Ordnet jedem Schüler die zusammen-forcierten anderen Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]  */
+	private final @NotNull int @NotNull [][] schuelerZusammenMitSchueler;
 
 	/**
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -71,7 +74,8 @@ public class KursblockungDynFachart {
 		kurseMax = 0;
 		schuelerMax = 0;
 		schuelerAnzNow = 0;
-		schuelerNichtZusammenMitSchueler = new int[schuelerAnzahl][0];
+		schuelerVerbotenMitSchueler = new int[schuelerAnzahl][0];
+		schuelerZusammenMitSchueler = new int[schuelerAnzahl][0];
 	}
 
 	/**
@@ -348,8 +352,19 @@ public class KursblockungDynFachart {
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
 	void regel_schueler_verbieten_mit_schueler(final int internalID1, final int internalID2) {
-		schuelerNichtZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerNichtZusammenMitSchueler[internalID1], internalID2);
-		schuelerNichtZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerNichtZusammenMitSchueler[internalID2], internalID1);
+		schuelerVerbotenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerVerbotenMitSchueler[internalID1], internalID2);
+		schuelerVerbotenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerVerbotenMitSchueler[internalID2], internalID1);
+	}
+
+	/**
+	 * Forciert, dass zwei Schüler den selben Kurs der Fachart besuchen.
+	 *
+	 * @param internalID1  Die interne ID des 1. Schülers.
+	 * @param internalID2  Die interne ID des 2. Schülers.
+	 */
+	void regel_schueler_zusammen_mit_schueler(final int internalID1, final int internalID2) {
+		schuelerZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerZusammenMitSchueler[internalID1], internalID2);
+		schuelerZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerZusammenMitSchueler[internalID2], internalID1);
 	}
 
 	/**
@@ -359,8 +374,19 @@ public class KursblockungDynFachart {
 	 *
 	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
 	 */
-	@NotNull int[] gibSchuelerVerbotenMitVon(final int schuelerNr) {
-		return schuelerNichtZusammenMitSchueler[schuelerNr];
+	@NotNull int[] gibVonSchuelerVerbotenMit(final int schuelerNr) {
+		return schuelerVerbotenMitSchueler[schuelerNr];
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 */
+	@NotNull int[] gibVonSchuelerZusammenMit(final int schuelerNr) {
+		return schuelerZusammenMitSchueler[schuelerNr];
 	}
 
 }

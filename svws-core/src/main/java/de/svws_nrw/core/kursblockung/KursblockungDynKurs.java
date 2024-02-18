@@ -443,10 +443,16 @@ public class KursblockungDynKurs {
 	void aktionSchuelerHinzufuegen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz++; // Darf erst hier passieren.
-		for (final int verbotenMitNr : fachart.gibSchuelerVerbotenMitVon(schuelerNr))
-			schuelerVerboten[verbotenMitNr]++; // Sind jetzt andere SuS verboten?
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
+		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs verboten.
+		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+			schuelerVerboten[verbotenMitNr]++;
+		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen verboten.
+		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
+			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
+				if (kursDerFachart != this)
+					kursDerFachart.schuelerVerboten[zusammenMitNr]++;
 	}
 
 	/**
@@ -457,10 +463,16 @@ public class KursblockungDynKurs {
 	void aktionSchuelerEntfernen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz--; // Darf erst hier passieren.
-		for (final int verbotenMitNr : fachart.gibSchuelerVerbotenMitVon(schuelerNr))
-			schuelerVerboten[verbotenMitNr]--; // Sind jetzt andere SuS erlaubt?
 		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
+		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs wieder erlaubt.
+		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+			schuelerVerboten[verbotenMitNr]--;
+		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen wieder erlaubt.
+		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
+			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
+				if (kursDerFachart != this)
+					kursDerFachart.schuelerVerboten[zusammenMitNr]--;
 	}
 
 	/**

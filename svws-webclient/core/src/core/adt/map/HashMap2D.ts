@@ -1,7 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -44,7 +43,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 *
 	 * @return Den Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
+	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public getOrException(key1 : K1, key2 : K2) : V | null {
 		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
@@ -77,7 +76,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 *
 	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
+	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public getNonNullOrException(key1 : K1, key2 : K2) : V {
 		const value : V | null = this.getOrException(key1, key2);

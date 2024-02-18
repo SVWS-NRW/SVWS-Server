@@ -128,11 +128,11 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt08FehlerBeiKursErstellung(input, this._schuelerArr.length);
 		this.schritt09FehlerBeiKursFreiErstellung();
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
-		this.schritt11FehlerBeiRegel_4_oder_5();
-		this.schritt12FehlerBeiRegel_7_oder_8();
+		this.schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
+		this.schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
 		this.schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
-		this.schritt14FehlerBeiRegel_10(input);
-		this.schritt14FehlerBeiRegel_11_bis_14(input);
+		this.schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
+		this.schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
 		this.schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
@@ -631,7 +631,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt11FehlerBeiRegel_4_oder_5() : void {
+	private schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() : void {
 		for (const regel4 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			const schuelerID : number = regel4.parameter.get(0).valueOf();
 			const kursID : number = regel4.parameter.get(1).valueOf();
@@ -650,7 +650,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt12FehlerBeiRegel_7_oder_8() : void {
+	private schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() : void {
 		for (const regel7 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 			const kursID1 : number = regel7.parameter.get(0).valueOf();
 			const kursID2 : number = regel7.parameter.get(1).valueOf();
@@ -677,7 +677,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt14FehlerBeiRegel_10(pInput : GostBlockungsdatenManager) : void {
+	private schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(pInput : GostBlockungsdatenManager) : void {
 		const regelnTyp10 : List<GostBlockungRegel> | null = MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10.isEmpty())
 			return;
@@ -698,7 +698,7 @@ export class KursblockungDynDaten extends JavaObject {
 							}
 	}
 
-	private schritt14FehlerBeiRegel_11_bis_14(input : GostBlockungsdatenManager) : void {
+	private schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
 		const setSSF : HashSet<string | null> = new HashSet();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();
@@ -706,6 +706,9 @@ export class KursblockungDynDaten extends JavaObject {
 			const idF : number = regel11.parameter.get(2).valueOf();
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
+			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
+			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
+			sch1.regel11_zusammen_mit_schueler_in_fach(sch2, idF);
 		}
 		for (const regel12 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel12.parameter.get(0).valueOf();
@@ -723,6 +726,9 @@ export class KursblockungDynDaten extends JavaObject {
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
+				const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
+				sch1.regel13_zusammen_mit_schueler(sch2);
 			}
 		}
 		for (const regel14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {

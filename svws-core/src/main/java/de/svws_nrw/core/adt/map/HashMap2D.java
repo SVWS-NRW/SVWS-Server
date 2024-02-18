@@ -54,9 +54,9 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 *
 	 * @return Den Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
+	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
-	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws NullPointerException {
+	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
 		final @NotNull Map<@NotNull K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
@@ -87,9 +87,9 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 *
 	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
+	 * @throws DeveloperNotificationException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
-	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws NullPointerException {
+	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
 		final V value = getOrException(key1, key2);
 		if (value == null)
 			throw new DeveloperNotificationException("value is NULL!");
