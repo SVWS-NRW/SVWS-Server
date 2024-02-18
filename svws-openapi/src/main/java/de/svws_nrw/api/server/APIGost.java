@@ -574,7 +574,7 @@ public class APIGost {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
 		    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbitujahrgang(abiturjahr, GostBelegpruefungsArt.GESAMT);
+		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.GESAMT);
 		    	},
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -610,7 +610,7 @@ public class APIGost {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
 		    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbitujahrgang(abiturjahr, GostBelegpruefungsArt.EF1);
+		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.EF1);
     			},
         		request, ServerMode.STABLE,
         		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

@@ -855,7 +855,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 *
 	 * @return die Belegprüfungsergebnisse
 	 */
-	public Response pruefeBelegungAbitujahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
+	public Response pruefeBelegungAbiturjahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
@@ -874,7 +874,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 
 		// Führe für alle Schüler nacheinander die Belegprüfung durch
 		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
-			if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN) && (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME))
+			if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN)
+					&& (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME) && (dtoSchueler.Status != SchuelerStatus.WARTELISTE))
 				continue;
 
 			// Bestimme die Laufbahndaten des Schülers
