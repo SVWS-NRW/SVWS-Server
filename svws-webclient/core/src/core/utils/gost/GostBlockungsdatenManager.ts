@@ -336,6 +336,16 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return result;
 	}
 
+	private ergebnisRemoveListeByIDs(listeDerErgebnisIDs : List<number>) : void {
+		for (const idErgebnis of listeDerErgebnisIDs)
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, idErgebnis);
+		for (const idErgebnis of listeDerErgebnisIDs) {
+			const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+			this._daten.ergebnisse.remove(e);
+			this._map_idErgebnis_Ergebnis.remove(e.id);
+		}
+	}
+
 	/**
 	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
 	 *
@@ -344,9 +354,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public ergebnisRemoveByID(idErgebnis : number) : void {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
-		this._daten.ergebnisse.remove(e);
-		this._map_idErgebnis_Ergebnis.remove(idErgebnis);
+		this.ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
 	}
 
 	/**
@@ -357,7 +365,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public ergebnisRemove(ergebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.ergebnisRemoveListe(ListUtils.create1(ergebnis));
+		this.ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
 	}
 
 	/**
@@ -368,12 +376,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
 	 */
 	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+		const listIDs : List<number> = new ArrayList();
 		for (const e of ergebnismenge)
-			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, e.id);
-		for (const e of ergebnismenge) {
-			this._daten.ergebnisse.remove(e);
-			this._map_idErgebnis_Ergebnis.remove(e.id);
-		}
+			listIDs.add(e.id);
+		this.ergebnisRemoveListeByIDs(listIDs);
 	}
 
 	/**

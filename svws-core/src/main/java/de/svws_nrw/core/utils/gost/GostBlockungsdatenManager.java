@@ -283,6 +283,21 @@ public class GostBlockungsdatenManager {
 		return result;
 	}
 
+	private void ergebnisRemoveListeByIDs(final @NotNull List<@NotNull Long> listeDerErgebnisIDs) throws DeveloperNotificationException {
+		// Überprüfen
+		for (final long idErgebnis : listeDerErgebnisIDs)
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, idErgebnis);
+
+		// Entfernen des Ergebnisses.
+		for (final long idErgebnis : listeDerErgebnisIDs) {
+			final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+			_daten.ergebnisse.remove(e);
+			_map_idErgebnis_Ergebnis.remove(e.id);
+		}
+
+		// Neusortierung nicht nötig.
+	}
+
 	/**
 	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
 	 *
@@ -291,12 +306,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public void ergebnisRemoveByID(final long idErgebnis) throws DeveloperNotificationException {
-		// Gibt es das Ergebnis?
-		final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
-
-		// Entfernen des Ergebnisses. Neusortierung nicht nötig.
-		_daten.ergebnisse.remove(e);
-		_map_idErgebnis_Ergebnis.remove(idErgebnis);
+		ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
 	}
 
 	/**
@@ -307,7 +317,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public void ergebnisRemove(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
-		ergebnisRemoveListe(ListUtils.create1(ergebnis));
+		ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
 	}
 
 	/**
@@ -318,17 +328,12 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
 	 */
 	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnismenge) throws DeveloperNotificationException {
-		// Überprüfen
+		// ID kopieren, da Löschen über Objektidentität nicht funktioniert!
+		final @NotNull List<@NotNull Long> listIDs = new ArrayList<>();
 		for (final @NotNull GostBlockungsergebnisListeneintrag e : ergebnismenge)
-			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, e.id);
+			listIDs.add(e.id);
 
-		// Entfernen des Ergebnisses.
-		for (final @NotNull GostBlockungsergebnisListeneintrag e : ergebnismenge) {
-			_daten.ergebnisse.remove(e);
-			_map_idErgebnis_Ergebnis.remove(e.id);
-		}
-
-		// Neusortierung nicht nötig.
+		ergebnisRemoveListeByIDs(listIDs);
 	}
 
 	/**
