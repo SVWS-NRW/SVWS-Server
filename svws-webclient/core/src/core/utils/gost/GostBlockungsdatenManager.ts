@@ -282,34 +282,35 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private ergebnisAddOhneSortierung(ergebnis : GostBlockungsergebnisListeneintrag) : void {
-		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
-		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
-		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
-		this._daten.ergebnisse.add(ergebnis);
-	}
-
 	/**
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
 	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
 	 */
 	public ergebnisAdd(ergebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.ergebnisAddOhneSortierung(ergebnis);
-		this._daten.ergebnisse.sort(this._compErgebnisse);
+		this.ergebnisAddListe(ListUtils.create1(ergebnis));
 	}
 
 	/**
 	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
 	public ergebnisAddListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
-		for (const ergebnis of ergebnismenge)
-			this.ergebnisAddOhneSortierung(ergebnis);
+		for (const ergebnis of ergebnismenge) {
+			DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
+			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
+			DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
+			DeveloperNotificationException.ifMapContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, ergebnis.id);
+		}
+		for (const ergebnis of ergebnismenge) {
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
+			this._daten.ergebnisse.add(ergebnis);
+		}
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
@@ -1580,16 +1581,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt einen Schüler hinzu.<br>
-	 * Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
+	 * Fügt einen Schüler hinzu.
+	 * <br>Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
 	 *
 	 * @param schueler  Der Schüler, der hinzugefügt wird.
 	 *
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
 	public schuelerAdd(schueler : Schueler) : void {
-		this.schuelerAddOhneSortierung(schueler);
-		this._daten.schueler.sort(GostBlockungsdatenManager._compSchueler);
+		this.schuelerAddListe(ListUtils.create1(schueler));
 	}
 
 	/**
@@ -1601,7 +1601,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerAddListe(schuelermenge : List<Schueler>) : void {
 		for (const schueler of schuelermenge)
+			DeveloperNotificationException.ifInvalidID(schueler.id + "", schueler.id);
+		for (const schueler of schuelermenge) {
 			this.schuelerAddOhneSortierung(schueler);
+		}
 		this._daten.schueler.sort(GostBlockungsdatenManager._compSchueler);
 	}
 

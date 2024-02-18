@@ -220,43 +220,40 @@ public class GostBlockungsdatenManager {
 		return comp;
 	}
 
-	private void ergebnisAddOhneSortierung(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
-		// Datenkonsistenz überprüfen.
-		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
-		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
-		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
-
-		// Hinzufügen des Kurses.
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
-		_daten.ergebnisse.add(ergebnis);
-	}
-
 	/**
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
 	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
 	 */
 	public void ergebnisAdd(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
-		// Hinzufügen
-		ergebnisAddOhneSortierung(ergebnis);
-
-		// Liste sortieren
-		_daten.ergebnisse.sort(_compErgebnisse);
+		ergebnisAddListe(ListUtils.create1(ergebnis));
 	}
 
 	/**
 	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
 	public void ergebnisAddListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnismenge) throws DeveloperNotificationException {
-		// Hinzufügen
-		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : ergebnismenge)
-			ergebnisAddOhneSortierung(ergebnis);
+		// Datenkonsistenz überprüfen
+		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : ergebnismenge) {
+			DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
+			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
+			DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
+			DeveloperNotificationException.ifMapContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, ergebnis.id);
+		}
 
-		// Liste sortieren
+		// Hinzufügen
+		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : ergebnismenge) {
+			DeveloperNotificationException.ifMapPutOverwrites(_map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
+			_daten.ergebnisse.add(ergebnis);
+		}
+
+		// Sortieren
 		_daten.ergebnisse.sort(_compErgebnisse);
 	}
 
@@ -312,7 +309,28 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public void ergebnisRemove(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
-		ergebnisRemoveByID(ergebnis.id);
+		ergebnisRemoveListe(ListUtils.create1(ergebnis));
+	}
+
+	/**
+	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 *
+	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
+	 */
+	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnismenge) throws DeveloperNotificationException {
+		// Überprüfen
+		for (final @NotNull GostBlockungsergebnisListeneintrag e : ergebnismenge)
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, e.id);
+
+		// Entfernen des Ergebnisses.
+		for (final @NotNull GostBlockungsergebnisListeneintrag e : ergebnismenge) {
+			_daten.ergebnisse.remove(e);
+			_map_idErgebnis_Ergebnis.remove(e.id);
+		}
+
+		// Neusortierung nicht nötig.
 	}
 
 	/**
@@ -469,6 +487,7 @@ public class GostBlockungsdatenManager {
 		return 1 - 1 / (0.25 * wert + 1);
 	}
 
+	// TODO BAR trennen in "Überprüfen" und "Hinzufügen"
 	private void kursAddKursOhneSortierung(final @NotNull GostBlockungKurs kurs) throws DeveloperNotificationException {
 		final int nSchienen = schieneGetAnzahl();
 
@@ -937,6 +956,7 @@ public class GostBlockungsdatenManager {
 	// ##########                Schiene-Anfragen                     ##########
 	// #########################################################################
 
+	// TODO BAR check / add trennen
 	private void schieneAddOhneSortierung(final @NotNull GostBlockungSchiene schiene) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("GostBlockungSchiene.id", schiene.id);
@@ -1651,19 +1671,15 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Fügt einen Schüler hinzu.<br>
-	 * Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
+	 * Fügt einen Schüler hinzu.
+	 * <br>Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
 	 *
 	 * @param schueler  Der Schüler, der hinzugefügt wird.
 	 *
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
 	public void schuelerAdd(final @NotNull Schueler schueler) throws DeveloperNotificationException {
-		// Regel hinzufügen.
-		schuelerAddOhneSortierung(schueler);
-
-		// Sortieren der Schülermenge.
-		_daten.schueler.sort(_compSchueler);
+		schuelerAddListe(ListUtils.create1(schueler));
 	}
 
 	/**
@@ -1674,10 +1690,16 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
 	public void schuelerAddListe(final @NotNull List<@NotNull Schueler> schuelermenge) throws DeveloperNotificationException {
+		// überprüfen
 		for (final @NotNull Schueler schueler : schuelermenge)
-			schuelerAddOhneSortierung(schueler);
+			DeveloperNotificationException.ifInvalidID(schueler.id + "", schueler.id);
 
-		// Sortieren der Schülermenge.
+		// hinzufügen
+		for (final @NotNull Schueler schueler : schuelermenge) {
+			schuelerAddOhneSortierung(schueler);
+		}
+
+		// sortieren
 		_daten.schueler.sort(_compSchueler);
 	}
 

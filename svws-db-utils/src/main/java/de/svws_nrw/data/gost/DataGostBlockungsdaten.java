@@ -401,6 +401,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// TODO Verbesserung des Algorithmus -> Optimierung... erstmal nur eine primitive Variante
 		final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 		long kurseID = dbKurseID == null ? 0 : dbKurseID.MaxID;
+		final List<GostBlockungKurs> kursListe_LK_GK_ZK = new ArrayList<>(); // Liste um alle Kurse zusammen hinzuzufügen.
 		for (final GostStatistikFachwahl fw : fachwahlen) {
 			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
 			if (zulFach == ZulaessigesFach.VF)
@@ -411,13 +412,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			int anzahlZK = (fwHj.wahlenZK + 10) / 20;
 			if ((fwHj.wahlenZK > 0) && (anzahlZK < 1))
 				anzahlZK = 1;
-			final List<GostBlockungKurs> kursListeAdd = new ArrayList<>();
+			// Hinzufügen/Sammeln der LKs
 			for (int i = 1; i <= anzahlLK; i++) {
 				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
 				conn.transactionPersist(kurs);
-				kursListeAdd.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
+				kursListe_LK_GK_ZK.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 			}
-			manager.kursAddListe(kursListeAdd);
+			// Hinzufügen/Sammeln der GKs
 			for (int i = 1; i <= anzahlGK; i++) {
 				GostKursart kursart = GostKursart.GK;
 				if (zulFach == ZulaessigesFach.VX)
@@ -434,15 +435,18 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, 1, wstd);
 				conn.transactionPersist(kurs);
-				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+				kursListe_LK_GK_ZK.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 			}
+			// Hinzufügen/Sammeln der ZKs
 			for (int i = 1; i <= anzahlZK; i++) {
 				final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 1, 3);
 				conn.transactionPersist(kurs);
-				manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
+				kursListe_LK_GK_ZK.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 			}
 		}
 		conn.transactionFlush();
+		// Jetzt erst im Manager alle Kurse gemeinsam hinzufügen.
+		manager.kursAddListe(kursListe_LK_GK_ZK);
 		// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
 		for (final GostBlockungKurs kurs : manager.daten().kurse)
 			conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
