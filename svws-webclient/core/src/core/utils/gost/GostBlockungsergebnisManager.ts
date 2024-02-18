@@ -2864,6 +2864,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
+	 * <br> Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br> Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br> Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
+	 * <br> Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.
@@ -2923,6 +2927,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
+	 * <br> Wenn der Schüler im Kurs fixiert ist, wird dies entfernt.
+	 * <br> Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
+	 * <br> Wenn der Schüler bereits im Kurs gesperrt ist, wird dies ignoriert.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.

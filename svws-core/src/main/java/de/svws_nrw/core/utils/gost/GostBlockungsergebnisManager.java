@@ -3043,9 +3043,12 @@ public class GostBlockungsergebnisManager {
 		return _regelverletzungen_der_faecherparallelitaet;
 	}
 
-
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
+	 * <br> Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br> Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br> Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
+	 * <br> Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.
@@ -3071,8 +3074,7 @@ public class GostBlockungsergebnisManager {
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 
 					if (kurs1.id == kurs2.id) {
-						if (regelFixierung == null) {
-							// Fixiere den Kurs
+						if (regelFixierung == null) { // Fixiere den Kurs
 							final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
 							regelHinzufuegen.id = -1;
 							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
@@ -3118,6 +3120,9 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
+	 * <br> Wenn der Schüler im Kurs fixiert ist, wird dies entfernt.
+	 * <br> Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
+	 * <br> Wenn der Schüler bereits im Kurs gesperrt ist, wird dies ignoriert.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.
@@ -3138,8 +3143,7 @@ public class GostBlockungsergebnisManager {
 				// Überprüfen, ob da eine Sperrung vorliegt.
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung == null) {
-					// Sperre den Kurs
+				if (regelSperrung == null) { // Sperre den Kurs
 					final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
 					regelHinzufuegen.id = -1;
 					regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
