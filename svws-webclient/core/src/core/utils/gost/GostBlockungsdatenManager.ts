@@ -25,7 +25,6 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
-import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungsergebnisListeneintragComparator } from '../../../core/utils/gost/GostBlockungsergebnisListeneintragComparator';
@@ -324,8 +323,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public ergebnisGet(idErgebnis : number) : GostBlockungsergebnisListeneintrag {
-		const e : GostBlockungsergebnisListeneintrag | null = this._map_idErgebnis_Ergebnis.get(idErgebnis);
-		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", e);
+		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", this._map_idErgebnis_Ergebnis.get(idErgebnis));
 	}
 
 	/**
@@ -359,7 +357,23 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public ergebnisRemove(ergebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.ergebnisRemoveByID(ergebnis.id);
+		this.ergebnisRemoveListe(ListUtils.create1(ergebnis));
+	}
+
+	/**
+	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 *
+	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
+	 */
+	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+		for (const e of ergebnismenge)
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, e.id);
+		for (const e of ergebnismenge) {
+			this._daten.ergebnisse.remove(e);
+			this._map_idErgebnis_Ergebnis.remove(e.id);
+		}
 	}
 
 	/**
@@ -1187,6 +1201,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die {@link GostBlockungRegel} anhand des {@link LongArrayKey}-Schlüssels, oder NULL falls keine existiert.
+	 *
+	 * @param key  Der {@link LongArrayKey}-Schlüssel.
+	 *
+	 * @return die {@link GostBlockungRegel} anhand des {@link LongArrayKey}-Schlüssels, oder NULL falls keine existiert.
+	 */
+	public regelGetByLongArrayKeyOrNull(key : LongArrayKey) : GostBlockungRegel | null {
+		return this._map_multikey_regeln.get(key);
+	}
+
+	/**
 	 * Liefert die aktuelle Menge aller Regeln.
 	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt.
 	 * Diese Liste ist stets sortiert nach (TYP, ID).
@@ -1377,89 +1402,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public regelRemove(regel : GostBlockungRegel) : void {
 		this.regelRemoveByID(regel.id);
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu setzen.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu setzen.
-	 */
-	public regelupdateGetSchuelerInKursFixierung(idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
-		return this.regelupdateGetSchuelermengeInKursmengeFixierung(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 */
-	public regelupdateGetSchuelermengeInKursmengeFixierung(listSchuelerID : List<number>, listKursID : List<number>) : GostBlockungRegelUpdate {
-		const gUpdate : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		for (const idSchueler of listSchuelerID)
-			for (const idKurs of listSchuelerID) {
-				const kurs1 : GostBlockungKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_kurs, idKurs);
-				const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
-				const regelSperrung : GostBlockungRegel | null = this._map_multikey_regeln.get(keySperrung);
-				if (regelSperrung !== null)
-					gUpdate.listEntfernen.add(regelSperrung);
-				for (const kurs2 of Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_kurse, kurs1.fach_id, kurs1.kursart)) {
-					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
-					const regelFixierung : GostBlockungRegel | null = this._map_multikey_regeln.get(keyFixierung);
-					if (kurs1.id === kurs2.id) {
-						if (regelFixierung === null) {
-							const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
-							regelHinzufuegen.id = -1;
-							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-							regelHinzufuegen.parameter.add(idSchueler);
-							regelHinzufuegen.parameter.add(idKurs);
-							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
-						}
-					} else {
-						if (regelFixierung !== null) {
-							gUpdate.listEntfernen.add(regelFixierung);
-						}
-					}
-				}
-			}
-		return gUpdate;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu lösen.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu lösen.
-	 */
-	public regelupdateGetSchuelerInKursFixierungLoesen(idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
-		return this.regelupdateGetSchuelermengeInKursmengeFixierungLoesen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
-	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
-	 */
-	public regelupdateGetSchuelermengeInKursmengeFixierungLoesen(listSchuelerID : List<number>, listKursID : List<number>) : GostBlockungRegelUpdate {
-		const gUpdate : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		for (const idSchueler of listSchuelerID)
-			for (const idKurs of listSchuelerID) {
-				const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
-				const regelFixierung : GostBlockungRegel | null = this._map_multikey_regeln.get(keyFixierung);
-				if (regelFixierung !== null)
-					gUpdate.listEntfernen.add(regelFixierung);
-			}
-		return gUpdate;
 	}
 
 	/**

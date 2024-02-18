@@ -11,11 +11,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.Map.Entry;
 
+import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
+import de.svws_nrw.core.data.gost.GostBlockungRegelUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung;
@@ -2281,11 +2283,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Kurs in der Schiene fixiert ist.
 	 */
 	public boolean getOfKursOfSchieneIstFixiert(final long idKurs, final long idSchiene) {
-		final int nummer = getSchieneG(idSchiene).nummer;
-		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
-				return true;
-		return false;
+		return _parent.kursGetHatFixierungInSchiene(idKurs, idSchiene);
 	}
 
 	/**
@@ -2664,6 +2662,121 @@ public class GostBlockungsergebnisManager {
 		return set;
 	}
 
+	private static @NotNull List<@NotNull GostBlockungKurs> regelGetListeToggleFilteredBetween(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB) {
+		final @NotNull List<@NotNull GostBlockungKurs> result = new ArrayList<>();
+		boolean foundA = false;
+		boolean foundB = false;
+
+		// Alle Elemente zwischen den beiden markierten Kursen kopieren.
+		for (final @NotNull GostBlockungKurs kursG : list) {
+			if (kursG == kursA)
+				foundA = true;
+			if (kursG == kursB)
+				foundB = true;
+
+			if (foundA || foundB)
+				result.add(kursG);
+
+			if (foundA && foundB)
+				break;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
+		final int min = Math.min(schieneA.nummer, schieneB.nummer);
+		final int max = Math.max(schieneA.nummer, schieneB.nummer);
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
+
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (int nr = min; nr <= max; nr++)
+				regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
+
+		return regeln;
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 *
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleKursfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
+		final int min = Math.min(schieneA.nummer, schieneB.nummer);
+		final int max = Math.max(schieneA.nummer, schieneB.nummer);
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
+
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) // Kurs im Auswahl-Rechteck?
+					regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kursG.id, schieneG.nummer));
+			}
+
+		return regeln;
+	}
+
+	/**
+	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
+	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
+	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
+	 * <br>Hinweis: Wenn ein Multi-Kurs zum Teil im Auswahl-Rechteck liegt, wird der Kurs ebenso beachtet.
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
+		final int min = Math.min(schieneA.nummer, schieneB.nummer);
+		final int max = Math.max(schieneA.nummer, schieneB.nummer);
+		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
+
+		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
+				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
+				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
+					// Kurs gefunden, füge nun seine SuS hinzu.
+					final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
+					for (final long idSchueler : kursE.schueler)
+						regeln.add(_parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
+					// Bei Multikursen dürfen SuS nur einmalig fixiert werden.
+					break;
+				}
+			}
+
+		return regeln;
+	}
+
 	/**
 	 * Liefert die Regel-Menge aller aktuellen Kurs-Schienen-Fixierungen.
 	 *
@@ -2753,6 +2866,26 @@ public class GostBlockungsergebnisManager {
 				list.add(regel);
 
 		return list;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 *
+	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
+	 */
+	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
+		return _list_verletzte_regeltypen_sortiert;
+	}
+
+	/**
+	 * Liefert zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 *
+	 * @param regeltyp  Das {@link GostKursblockungRegelTyp}-Objekt.
+	 *
+	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
+	 */
+	public @NotNull List<@NotNull String> regelGetMengeAnVerletzungen(final @NotNull GostKursblockungRegelTyp regeltyp) {
+		return MapUtils.getOrCreateArrayList(_map_regelID_verletzungen, regeltyp.typ);
 	}
 
 	/**
@@ -2901,141 +3034,6 @@ public class GostBlockungsergebnisManager {
 		return list;
 	}
 
-	private static @NotNull List<@NotNull GostBlockungKurs> regelGetListeToggleFilteredBetween(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB) {
-		final @NotNull List<@NotNull GostBlockungKurs> result = new ArrayList<>();
-		boolean foundA = false;
-		boolean foundB = false;
-
-		// Alle Elemente zwischen den beiden markierten Kursen kopieren.
-		for (final @NotNull GostBlockungKurs kursG : list) {
-			if (kursG == kursA)
-				foundA = true;
-			if (kursG == kursB)
-				foundB = true;
-
-			if (foundA || foundB)
-				result.add(kursG);
-
-			if (foundA && foundB)
-				break;
-		}
-
-		return result;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 *
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
-	 */
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
-			for (int nr = min; nr <= max; nr++)
-				regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 *
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 */
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleKursfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) // Kurs im Auswahl-Rechteck?
-					regeln.add(_parent.regelGetRegelOrDummyKursFixierungInSchiene(kursG.id, schieneG.nummer));
-			}
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 * <br>Hinweis: Wenn ein Multi-Kurs zum Teil im Auswahl-Rechteck liegt, wird der Kurs ebenso beachtet.
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 */
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetListeToggleSchuelerfixierung(final @NotNull List<@NotNull GostBlockungKurs> list, final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA, final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, kursG.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
-					// Kurs gefunden, füge nun seine SuS hinzu.
-					final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
-					for (final long idSchueler : kursE.schueler)
-						regeln.add(_parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
-					// Bei Multikursen dürfen SuS nur einmalig fixiert werden.
-					break;
-				}
-			}
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
-	 *
-	 * @param regeltyp  Das {@link GostKursblockungRegelTyp}-Objekt.
-	 *
-	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
-	 */
-	public @NotNull List<@NotNull String> regelGetMengeAnVerletzungen(final @NotNull GostKursblockungRegelTyp regeltyp) {
-		return MapUtils.getOrCreateArrayList(_map_regelID_verletzungen, regeltyp.typ);
-	}
-
-	/**
-	 * Liefert die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
-	 *
-	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
-	 */
-	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
-		return _list_verletzte_regeltypen_sortiert;
-	}
-
 	/**
 	 * Liefert einen Tooltip für alle Regelverletzungen der Fächerparallelität.
 	 *
@@ -3043,6 +3041,139 @@ public class GostBlockungsergebnisManager {
 	 */
 	final @NotNull String regelGetTooltipFuerFaecherparallelitaet() {
 		return _regelverletzungen_der_faecherparallelitaet;
+	}
+
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
+	 *
+	 * @param listSchuelerID  Die Liste der Schüler-IDs.
+	 * @param listKursID      Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeFixierungSetzen(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
+		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : listSchuelerID)
+			for (final long idKurs : listKursID) {
+				final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(idKurs);
+
+				// Überprüfen, ob da eine Sperrung vorliegt.
+				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
+				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
+				if (regelSperrung != null)
+					gUpdate.listEntfernen.add(regelSperrung);
+
+				// Ist da eine Fixierung (in den Kursen der selben Fachart)?
+				for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
+					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+
+					if (kurs1.id == kurs2.id) {
+						if (regelFixierung == null) {
+							// Fixiere den Kurs
+							final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+							regelHinzufuegen.id = -1;
+							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+							regelHinzufuegen.parameter.add(idSchueler);
+							regelHinzufuegen.parameter.add(idKurs);
+							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
+						} // ELSE --> Der Kurs ist bereits fixiert.
+					} else {
+						if (regelFixierung != null) {
+							// Nachbarkurs muss seine Fixierung lösen.
+							gUpdate.listEntfernen.add(regelFixierung);
+						} // ELSE --> Der Nachbarkurs ist nicht fixiert, was richtig ist.
+					}
+				}
+
+			}
+
+		return gUpdate;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
+	 *
+	 * @param listSchuelerID  Die Liste der Schüler-IDs.
+	 * @param listKursID      Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeFixierungLoesen(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
+		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : listSchuelerID)
+			for (final long idKurs : listKursID) {
+				// Überprüfen, ob da eine Fixierung vorliegt.
+				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+				if (regelFixierung != null)
+					gUpdate.listEntfernen.add(regelFixierung);
+			}
+
+		return gUpdate;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
+	 *
+	 * @param listSchuelerID  Die Liste der Schüler-IDs.
+	 * @param listKursID      Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeSperrungSetzen(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
+		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : listSchuelerID)
+			for (final long idKurs : listKursID) {
+				// Überprüfen, ob da eine Fixierung vorliegt.
+				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+				if (regelFixierung != null)
+					gUpdate.listEntfernen.add(regelFixierung);
+
+				// Überprüfen, ob da eine Sperrung vorliegt.
+				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
+				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
+				if (regelSperrung == null) {
+					// Sperre den Kurs
+					final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+					regelHinzufuegen.id = -1;
+					regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
+					regelHinzufuegen.parameter.add(idSchueler);
+					regelHinzufuegen.parameter.add(idKurs);
+					gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
+				} // ELSE --> Der Kurs ist bereits gesperrt.
+
+			}
+
+		return gUpdate;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
+	 *
+	 * @param listSchuelerID  Die Liste der Schüler-IDs.
+	 * @param listKursID      Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeSperrungLoesen(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
+		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : listSchuelerID)
+			for (final long idKurs : listKursID) {
+				// Überprüfen, ob da eine Sperrung vorliegt.
+				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
+				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
+				if (regelSperrung != null)
+					gUpdate.listEntfernen.add(regelSperrung);
+			}
+
+		return gUpdate;
 	}
 
 	// #########################################################################

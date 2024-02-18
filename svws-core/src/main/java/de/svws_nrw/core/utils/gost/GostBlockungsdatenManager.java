@@ -14,7 +14,6 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
-import de.svws_nrw.core.data.gost.GostBlockungRegelUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -271,8 +270,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public @NotNull GostBlockungsergebnisListeneintrag ergebnisGet(final long idErgebnis) throws DeveloperNotificationException {
-		final GostBlockungsergebnisListeneintrag e = _map_idErgebnis_Ergebnis.get(idErgebnis);
-		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", e);
+		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_Ergebnis.get(idErgebnis));
 	}
 
 	/**
@@ -1218,6 +1216,17 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert die {@link GostBlockungRegel} anhand des {@link LongArrayKey}-Schlüssels, oder NULL falls keine existiert.
+	 *
+	 * @param key  Der {@link LongArrayKey}-Schlüssel.
+	 *
+	 * @return die {@link GostBlockungRegel} anhand des {@link LongArrayKey}-Schlüssels, oder NULL falls keine existiert.
+	 */
+	public GostBlockungRegel regelGetByLongArrayKeyOrNull(@NotNull final LongArrayKey key) {
+		return _map_multikey_regeln.get(key);
+	}
+
+	/**
 	 * Liefert die aktuelle Menge aller Regeln.
 	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt.
 	 * Diese Liste ist stets sortiert nach (TYP, ID).
@@ -1431,101 +1440,6 @@ public class GostBlockungsdatenManager {
 		regelRemoveByID(regel.id);
 	}
 
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu setzen.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu setzen.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelerInKursFixierung(final long idSchueler, final long idKurs) {
-		return regelupdateGetSchuelermengeInKursmengeFixierung(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeFixierung(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
-
-		for (final long idSchueler : listSchuelerID)
-			for (final long idKurs : listSchuelerID) {
-				final @NotNull GostBlockungKurs kurs1 = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_kurs, idKurs);
-
-				// Ist da eine Sperrung?
-				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
-				final GostBlockungRegel regelSperrung = _map_multikey_regeln.get(keySperrung);
-				if (regelSperrung != null)
-					gUpdate.listEntfernen.add(regelSperrung);
-
-				// Ist da eine Fixierung (in den Kursen der selben Fachart)?
-				for (final @NotNull GostBlockungKurs kurs2 : Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_kurse, kurs1.fach_id, kurs1.kursart)) {
-					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
-					final GostBlockungRegel regelFixierung = _map_multikey_regeln.get(keyFixierung);
-
-					if (kurs1.id == kurs2.id) {
-						if (regelFixierung == null) {
-							// Fixiere den Kurs
-							final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-							regelHinzufuegen.id = -1;
-							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-							regelHinzufuegen.parameter.add(idSchueler);
-							regelHinzufuegen.parameter.add(idKurs);
-							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
-						} // ELSE --> Der Kurs ist bereits fixiert.
-					} else {
-						if (regelFixierung != null) {
-							// 3. Fall: Nachbarkurs muss seine Fixierung lösen.
-							gUpdate.listEntfernen.add(regelFixierung);
-						} // ELSE --> Der Nachbarkurs ist nicht fixiert, was richtig ist.
-					}
-				}
-
-			}
-
-		return gUpdate;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu lösen.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schüler-Kurs-Fixierung zu lösen.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelerInKursFixierungLoesen(final long idSchueler, final long idKurs) {
-		return regelupdateGetSchuelermengeInKursmengeFixierungLoesen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
-	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateGetSchuelermengeInKursmengeFixierungLoesen(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
-
-		for (final long idSchueler : listSchuelerID)
-			for (final long idKurs : listSchuelerID) {
-				// Ist da eine Fixierung?
-				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
-				final GostBlockungRegel regelFixierung = _map_multikey_regeln.get(keyFixierung);
-				if (regelFixierung != null)
-					gUpdate.listEntfernen.add(regelFixierung);
-			}
-
-		return gUpdate;
-	}
 
 	/**
 	 * Liefert die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
@@ -2035,7 +1949,5 @@ public class GostBlockungsdatenManager {
 	public @NotNull Comparator<@NotNull GostBlockungKurs> getComparatorKurs_fach_kursart_kursnummer() {
 		return _compKurs_fach_kursart_kursnummer;
 	}
-
-
 
 }
