@@ -54,12 +54,12 @@
 <script setup lang="ts" generic="Item">
 
 	import type { ComputedRef, Ref } from "vue";
+	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
-	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { computed, nextTick, ref, shallowRef, watch, Teleport } from "vue";
 	import { genId } from "../utils";
+	import type TextInput from "./SvwsUiTextInput.vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	const props = withDefaults(defineProps<{
@@ -101,7 +101,6 @@
 	const showList = ref(false);
 	const listIdPrefix = genId();
 
-	// Input element
 	const inputEl = ref(null);
 	const inputElTags = ref(null);
 	const hasFocus = ref(false);
@@ -143,7 +142,6 @@
 			return;
 		data.value = b;
 		emit("update:modelValue", data.value);
-		return;
 	}
 
 	const selectedItem = computed<Item | null | undefined>({
@@ -158,7 +156,7 @@
 		}
 	});
 
-	const selectedItemList = computed(() => new Set(data.value))
+	const selectedItemList = computed(() => new Set(toRaw(data.value)));
 
 	function hasSelected(): boolean {
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
