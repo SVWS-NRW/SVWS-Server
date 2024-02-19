@@ -722,6 +722,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	addErgebnisse = api.call(async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
 		if ((ergebnisse.isEmpty()) || (!this.hatBlockung))
 			return;
+		const liste = new ArrayList<GostBlockungsergebnisListeneintrag>();
 		const idBlockung = this.datenmanager.daten().id;
 		const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
 		for (const ergebnis of ergebnisseMitIDs) {
@@ -732,8 +733,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			ergebnisListenEintrag.gostHalbjahr = ergebnis.gostHalbjahr;
 			ergebnisListenEintrag.istAktiv = ergebnis.istAktiv;
 			ergebnisListenEintrag.bewertung = ergebnis.bewertung;
-			this.datenmanager.ergebnisAdd(ergebnisListenEintrag);
+			liste.add(ergebnisListenEintrag);
 		}
+		this.datenmanager.ergebnisAddListe(liste);
 		this.commit();
 	});
 
@@ -742,10 +744,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const reselect = ergebnisse.some(e => e.id === ergebnisid);
+		const liste = new ArrayList<GostBlockungsergebnisListeneintrag>();
 		for (const ergebnis of ergebnisse) {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
-			this.datenmanager.ergebnisRemove(ergebnis);
+			liste.add(ergebnis);
 		}
+		this.datenmanager.ergebnisRemoveListe(liste);
 		this.commit();
 		if (reselect) {
 			for (const e of this.ergebnisse)
