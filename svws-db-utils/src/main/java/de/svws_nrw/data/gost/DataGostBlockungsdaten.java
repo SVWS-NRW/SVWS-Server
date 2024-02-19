@@ -533,7 +533,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException wae)
 				throw wae;
-			return OperationError.INTERNAL_SERVER_ERROR.exception(e, e.getMessage()).getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.exception(e, e.getMessage(), MediaType.TEXT_PLAIN).getResponse();
 		}
 	}
 

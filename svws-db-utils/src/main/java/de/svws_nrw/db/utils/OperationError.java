@@ -92,6 +92,19 @@ public enum OperationError {
 
 
 	/**
+	 * Gibt die Antwort (siehe {@link Response}) mit dem zugehörigen Status-Code zurück.
+	 *
+	 * @param body       der zu serialisierende Body der Antwort (z.B. log-Informationen zu einem Fehler)
+	 * @param mimetype   der Mimetype des Body
+	 *
+	 * @return die Antwort
+	 */
+	public Response getResponse(final Object body, final String mimetype) {
+		return Response.status(getCode()).type(mimetype).entity(body).build();
+	}
+
+
+	/**
 	 * Erzeugt eine Exception basierend auf Fehler der Datenbank-Operation
 	 *
 	 * @return die WebApplicationException für die Handhabung in der OpenAPI-Schnittstelle
@@ -138,5 +151,21 @@ public enum OperationError {
 	public WebApplicationException exception(final Throwable cause, final Object body) {
 		return new WebApplicationException(cause, getResponse(body));
 	}
+
+
+	/**
+	 * Erzeugt eine Exception basierend auf Fehler der Datenbank-Operation
+	 *
+	 * @param cause     der Grund für diese Exception
+	 * @param body      der zu serialisierende Body der Exception (z.B. log-Informationen zum Fehler)
+	 * @param mimeType  der Mime-Type der Body-Information
+	 *
+	 * @return die WebApplicationException für die Handhabung in der OpenAPI-Schnittstelle
+	 */
+	@SuppressWarnings("resource")
+	public WebApplicationException exception(final Throwable cause, final Object body, final String mimeType) {
+		return new WebApplicationException(cause, getResponse(body, mimeType));
+	}
+
 
 }
