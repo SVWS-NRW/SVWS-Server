@@ -64,6 +64,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -515,19 +516,25 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse
 	 */
 	public Response berechne(final long id, final long zeit) {
-		// Erzeuge den Input für den Kursblockungsalgorithmus
-		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
-		if (manager.daten().fachwahlen.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Keine Fachwahlen für den Abiturjahrgang gefunden.");
-		if (manager.faecherManager().faecher().isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Keine Fächer für den Abiturjahrgang gefunden.");
-		if (manager.daten().kurse.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Es sind keine Kurse für die Blockung angelegt.");
-		manager.setMaxTimeMillis(zeit);
-		final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
-		final ArrayList<GostBlockungsergebnisManager> outputs = algo.handle(manager);
-		final List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
+		try {
+			// Erzeuge den Input für den Kursblockungsalgorithmus
+			final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+			if (manager.daten().fachwahlen.isEmpty())
+				return OperationError.NOT_FOUND.getResponse("Keine Fachwahlen für den Abiturjahrgang gefunden.");
+			if (manager.faecherManager().faecher().isEmpty())
+				return OperationError.NOT_FOUND.getResponse("Keine Fächer für den Abiturjahrgang gefunden.");
+			if (manager.daten().kurse.isEmpty())
+				return OperationError.NOT_FOUND.getResponse("Es sind keine Kurse für die Blockung angelegt.");
+			manager.setMaxTimeMillis(zeit);
+			final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
+			final ArrayList<GostBlockungsergebnisManager> outputs = algo.handle(manager);
+			final List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException wae)
+				throw wae;
+			return OperationError.INTERNAL_SERVER_ERROR.exception(e, e.getMessage()).getResponse();
+		}
 	}
 
 

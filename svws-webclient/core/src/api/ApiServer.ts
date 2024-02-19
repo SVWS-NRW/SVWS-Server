@@ -3525,6 +3525,9 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: List<Long>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.
 	 *   Code 404: Keine Blockung mit der angegebenen ID gefunden.
+	 *   Code 500: Ein unerwarteter Fehler ist beim Blocken aufgetreten.
+	 *     - Mime-Type: text/plain
+	 *     - Rückgabe-Typ: String
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid

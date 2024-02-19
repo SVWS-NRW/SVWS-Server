@@ -203,6 +203,7 @@ public class APIGostKursplanung {
                 		 array = @ArraySchema(schema = @Schema(implementation = Long.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
+    @ApiResponse(responseCode = "500", description = "Ein unerwarteter Fehler ist beim Blocken aufgetreten.", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
     public Response rechneGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @PathParam("zeit") final long zeit, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsdaten(conn).berechne(id, zeit),
         		request, ServerMode.STABLE,
