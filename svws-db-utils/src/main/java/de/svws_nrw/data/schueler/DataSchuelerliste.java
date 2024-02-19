@@ -246,8 +246,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	if (schuelerIDs.isEmpty())
     		return new ArrayList<>();
 		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte =
-			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0",
-				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
+			conn.queryList("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
+					+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		final List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
 		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = listSchuljahresabschnitteIDs.isEmpty()
