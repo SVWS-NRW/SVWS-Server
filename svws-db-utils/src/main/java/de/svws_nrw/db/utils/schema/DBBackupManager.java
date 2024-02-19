@@ -133,12 +133,6 @@ public class DBBackupManager {
 			}
 
 			try {
-				if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername())))
-					throw new DBException("Der Benutzer \"root\" ist kein zulässiger SVWS-Admin-Benutzer für MYSQL / MARIA_DB");
-
-				if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
-					throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
-
 				final Benutzer tgtUser = Benutzer.create(tgtConfig);
 				final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 				if (!tgtManager.dropSVWSSchema())
