@@ -13,7 +13,7 @@
 						</span>
 					</div>
 					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
-						:no-data="schuelerFilter().filtered.value.length <= 0">
+						:no-data="schuelerFilter().filtered.value.length <= 0" scroll>
 						<template #header(pin)="{ }">
 							<div @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
@@ -46,6 +46,11 @@
 								{{ rowData.nachname }}, {{ rowData.vorname }}
 							</div>
 						</template>
+						<template #actions>
+							<svws-ui-button type="transparent" @click="leereKurs">
+								<i-ri-delete-bin-line /> Kurs leeren
+							</svws-ui-button>
+						</template>
 					</svws-ui-table>
 				</div>
 				<!-- Die Tabelle mit den Schülern gleicher Fachwahl, aber nicht in diesem Kurs -->
@@ -73,7 +78,7 @@
 							</div>
 						</template>
 						<template #cell(kurs)="{ rowData }">
-							<svws-ui-select title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
+							<svws-ui-select :key="rowData.id" title="Anderer Kurs" :items="kurse" :item-text="getKursBezeichnung"
 								:model-value="getKurs(rowData)" @update:model-value="value => updateZuordnung(rowData, value)"
 								class="w-full" headless removable />
 						</template>
@@ -90,7 +95,7 @@
 						v-model="_kurseZurUebertragung" class="w-full" removable />
 				</div>
 				<div class="text-center">
-					<svws-ui-button type="secondary" @click="uebertragen()">Schülermenge übertragen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="uebertragen()" :disabled="_kurseZurUebertragung.length === 0">Schülermenge übertragen</svws-ui-button>
 				</div>
 			</div>
 		</template>
@@ -104,7 +109,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager} from '@core';
+	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
 	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
 
 	const props = defineProps<{
@@ -231,6 +236,23 @@
 		zuordnung.idSchueler = id;
 		zuordnung.idKurs = kurs.id;
 		await props.removeKursSchuelerZuordnung([zuordnung]);
+	}
+
+	async function leereKurs() {
+		const kurs = props.schuelerFilter().kurs;
+		if (kurs === undefined)
+			return;
+		const liste = new ArrayList<GostBlockungsergebnisKursSchuelerZuordnung>();
+		for (const s of props.schuelerFilter().filtered.value) {
+			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(s.id, kurs.id))
+				continue;
+			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+			zuordnung.idKurs = kurs.id;
+			zuordnung.idSchueler = s.id;
+			liste.add(zuordnung);
+		}
+		await props.removeKursSchuelerZuordnung(liste);
+
 	}
 
 	async function move(id: number) {
