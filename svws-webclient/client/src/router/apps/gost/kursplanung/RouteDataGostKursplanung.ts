@@ -466,6 +466,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		this.datenmanager.regelAdd(result);
 		this.ergebnismanager.setAddRegelByID(result.id);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		return result;
 	});
@@ -478,6 +480,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return
 		this.datenmanager.regelRemoveByID(result.id);
 		this.ergebnismanager.setRemoveRegelByID(result.id);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		return result;
 	});
@@ -490,6 +494,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.ergebnismanager.setRemoveRegelByID(idRegel);
 		this.datenmanager.regelAdd(data);
 		this.ergebnismanager.setAddRegelByID(data.id);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 	});
 
@@ -910,10 +916,16 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		paar.listEntfernen = listDelete;
 		paar.listHinzuzufuegen = listAdd;
 		listAdd = await api.server.updateGostBlockungRegeln(paar, api.schema, this.auswahlBlockung.id);
-		if (!listAdd.isEmpty())
+		if (!listAdd.isEmpty()) {
 			this.datenmanager.regelAddListe(listAdd);
-		if (!listDelete.isEmpty())
+			this.ergebnismanager.setAddRegelmenge(listAdd);
+		}
+		if (!listDelete.isEmpty()) {
 			this.datenmanager.regelRemoveListe(listDelete);
+			this.ergebnismanager.setRemoveRegelmenge(listDelete);
+		}
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 	}
 
