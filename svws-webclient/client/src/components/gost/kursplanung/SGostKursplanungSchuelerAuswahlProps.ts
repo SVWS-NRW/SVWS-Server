@@ -12,8 +12,6 @@ export interface KursplanungSchuelerAuswahlProps {
 	faecherManager: GostFaecherManager;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-	addRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
-	removeRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
 	regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
 	isSchuelerFilterOpen: () => boolean;
 	setIsSchuelerFilterOpen: (value: boolean) => void;

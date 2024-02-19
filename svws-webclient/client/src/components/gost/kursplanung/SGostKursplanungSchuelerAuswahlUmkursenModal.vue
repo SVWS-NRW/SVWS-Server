@@ -111,10 +111,7 @@
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-		addRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
-		removeRegeln: (listRegeln: List<GostBlockungRegel>) => Promise<void>;
+		regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
 		allowRegeln: boolean;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -293,10 +290,13 @@
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
 		if ((!props.allowRegeln) || (idKurs === null))
 			return;
+		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
+		const listAddRegeln = new ArrayList<GostBlockungRegel>();
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
-			await props.removeRegel(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id);
+			listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs));
 		else
-			await props.addRegel(createFixierRegelKursSchueler(idKurs, idSchueler));
+			listAddRegeln.add(createFixierRegelKursSchueler(idKurs, idSchueler));
+		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
 	}
 
 	async function toggleFixierRegelAlleKursSchueler() {
@@ -306,26 +306,19 @@
 		const kursSchueler = props.schuelerFilter().filtered.value;
 		if (kursSchueler === undefined || kursSchueler.length === 0)
 			return;
+		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
 		// Prüfe, ob alle Schüler im Kurs fixiert sind
-		if (kursSchuelerFixierungen.value === true) {
+		if (kursSchuelerFixierungen.value === true)
 			// Wenn ja, dann entferne alle Schüler-Fixierungen im Batch
-			const regeln = new ArrayList<GostBlockungRegel>();
 			for (const schueler of kursSchueler)
 				if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
-					regeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(schueler.id, kurs.id));
-			if (regeln.isEmpty())
-				return;
-			await props.removeRegeln(regeln);
-			return;
-		}
+					listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(schueler.id, kurs.id));
 		// Ansonsten erstelle für alle nicht fixierten Schüler eine neue Fixier-Regel
-		const regeln = new ArrayList<GostBlockungRegel>();
+		const listAddRegeln = new ArrayList<GostBlockungRegel>();
 		for (const schueler of kursSchueler)
 			if (!props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
-				regeln.add(createFixierRegelKursSchueler(kurs.id, schueler.id));
-		if (regeln.isEmpty())
-			return;
-		await props.addRegeln(regeln);
+				listAddRegeln.add(createFixierRegelKursSchueler(kurs.id, schueler.id));
+		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
 	}
 
 	const kursSchuelerFixierungen = computed<boolean | null>(() => {

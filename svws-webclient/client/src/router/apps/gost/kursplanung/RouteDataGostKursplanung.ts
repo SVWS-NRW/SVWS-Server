@@ -929,25 +929,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	}
 
-	deleteRegeln = async (listRegeln: List<GostBlockungRegel>) : Promise<void> => {
-		if (!listRegeln.isEmpty()) {
-			const listRegelIDs = new ArrayList<number>();
-			for (const regel of listRegeln)
-				listRegelIDs.add(regel.id);
-			await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
-			this.datenmanager.regelRemoveListe(listRegeln);
-			this.commit();
-		}
-	}
-
-	addRegeln = async (listRegeln: List<GostBlockungRegel>) : Promise<void> => {
-		if (!listRegeln.isEmpty()) {
-			listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
-			this.datenmanager.regelAddListe(listRegeln);
-			this.commit();
-		}
-	}
-
 	updateKurseLeeren = async (typ: KurseLeerenTypen, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();
 		const listDelete = new ArrayList<GostBlockungRegel>();

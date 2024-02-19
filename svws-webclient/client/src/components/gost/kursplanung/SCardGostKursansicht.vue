@@ -189,8 +189,7 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-		addRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
-		removeRegeln: (regeln: List<GostBlockungRegel>) => Promise<void>;
+		regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 		patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 		addSchiene: () => Promise<GostBlockungSchiene | undefined>;
@@ -427,14 +426,11 @@
 				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2));
 				break;
 		}
-		const add: List<GostBlockungRegel> = new ArrayList();
-		const remove: List<GostBlockungRegel> = new ArrayList();
+		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
+		const listAddRegeln = new ArrayList<GostBlockungRegel>();
 		for (const regel of regeln)
-			regel.id > 0 ? remove.add(regel) : add.add(regel);
-		if (['schüler fixieren', 'kurse fixieren', 'schienen sperren', 'toggle schüler', 'toggle kurse', 'toggle schienen'].includes(action))
-			await props.addRegeln(add);
-		if ([ 'kurse lösen', 'schüler lösen', 'schienen entsperren', 'toggle schüler', 'toggle kurse', 'toggle schienen'].includes(action))
-			await props.removeRegeln(remove);
+			regel.id > 0 ? listDeleteRegeln.add(regel) : listAddRegeln.add(regel);
+		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
 		dragDataKursSchiene.value = undefined;
 		dropDataKursSchiene.value = undefined;
 		return regeln;

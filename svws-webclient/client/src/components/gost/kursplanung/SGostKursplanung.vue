@@ -52,7 +52,7 @@
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
-							:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :allow-regeln="allowRegeln"
+							:regeln-delete-and-add="regelnDeleteAndAdd" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
@@ -90,7 +90,7 @@
 				:halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
-				:add-regel="addRegel" :remove-regel="removeRegel" :add-regeln="addRegeln" :remove-regeln="removeRegeln" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+				:regeln-delete-and-add="regelnDeleteAndAdd" :add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
