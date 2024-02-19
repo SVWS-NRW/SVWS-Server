@@ -78,10 +78,15 @@
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
 			if (reason.response instanceof Response) {
 				try {
-					const res = await reason.response.json();
-					if ('log' in res && 'success' in res)
-						log = res as SimpleOperationResponse;
-					else if (res.length > 0)
+					let res;
+					if (reason.response.headers.get('content-type') === 'application/json') {
+						res = await reason.response.json();
+						if ('log' in res && 'success' in res)
+							log = res as SimpleOperationResponse;
+					}
+					else
+						res = await reason.response.text();
+					if (res.length > 0)
 						message = res;
 				} catch(e) { void e }
 			}
