@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull ArrayList<@NotNull GostBlockungsergebnisManager>> {
 
-	private static final @NotNull Random _random = new Random();
+	private final @NotNull Random _random = new Random();
 
 	@Override
 	public @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {

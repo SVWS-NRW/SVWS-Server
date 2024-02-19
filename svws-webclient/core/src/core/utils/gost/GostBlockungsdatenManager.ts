@@ -1886,6 +1886,35 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return this._compKurs_fach_kursart_kursnummer;
 	}
 
+	/**
+	 * Liefert eine String-Representation vieler Daten.
+	 *
+	 * @return eine String-Representation vieler Daten.
+	 */
+	public getDebugString() : string {
+		const sb : StringBuilder = new StringBuilder();
+		sb.append("\nSchülermenge = " + this.schuelerGetAnzahl() + "\n");
+		for (const s of this.schuelerGetListe()) {
+			sb.append("    " + s.id + ", " + s.nachname + ", " + s.vorname + "\n");
+		}
+		sb.append("\nKurse = " + this.kursGetAnzahl() + "\n");
+		for (const k of this.kursGetListeSortiertNachFachKursartNummer()) {
+			sb.append("    " + k.id + ", " + k.fach_id + ", " + k.kursart + ", " + k.nummer + "\n");
+		}
+		sb.append("\nFachwahlen = " + this.fachwahlGetAnzahl() + "\n");
+		for (const idFach of this._map2d_idFach_idKursart_fachwahlen.getKeySet()) {
+			for (const idKursart of this._map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach)) {
+				const nKurse : number = this._map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart).size();
+				sb.append("    Fach = " + idFach + ", Kursart = " + idKursart + " (" + nKurse + " Kurse)\n");
+				const list : List<GostFachwahl> = this._map2d_idFach_idKursart_fachwahlen.getNonNullOrException(idFach, idKursart);
+				for (const fachwahl of list) {
+					sb.append("        " + fachwahl.schuelerID + "\n");
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.gost.GostBlockungsdatenManager';
 	}

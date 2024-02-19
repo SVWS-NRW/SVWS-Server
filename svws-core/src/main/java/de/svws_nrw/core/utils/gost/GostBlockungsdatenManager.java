@@ -1955,4 +1955,38 @@ public class GostBlockungsdatenManager {
 		return _compKurs_fach_kursart_kursnummer;
 	}
 
+	/**
+	 * Liefert eine String-Representation vieler Daten.
+	 *
+	 * @return eine String-Representation vieler Daten.
+	 */
+	public @NotNull String getDebugString() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		sb.append("\nSchülermenge = " + schuelerGetAnzahl() + "\n");
+		for (final @NotNull Schueler s : schuelerGetListe()) {
+			sb.append("    " + s.id + ", " + s.nachname + ", " + s.vorname + "\n");
+		}
+
+		sb.append("\nKurse = " + kursGetAnzahl() + "\n");
+		for (final @NotNull GostBlockungKurs k : kursGetListeSortiertNachFachKursartNummer()) {
+			sb.append("    " + k.id + ", " + k.fach_id + ", " + k.kursart + ", " + k.nummer + "\n");
+		}
+
+		sb.append("\nFachwahlen = " + fachwahlGetAnzahl() + "\n");
+		for (final long idFach : _map2d_idFach_idKursart_fachwahlen.getKeySet()) {
+			for (final int idKursart : _map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach)) {
+				final int nKurse = _map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart).size();
+				sb.append("    Fach = " + idFach + ", Kursart = " + idKursart + " (" + nKurse + " Kurse)\n");
+				final @NotNull List<@NotNull GostFachwahl> list = _map2d_idFach_idKursart_fachwahlen.getNonNullOrException(idFach, idKursart);
+
+				for (final @NotNull  GostFachwahl fachwahl : list) {
+					sb.append("        " + fachwahl.schuelerID + "\n");
+				}
+			}
+		}
+
+		return sb.toString();
+	}
+
 }

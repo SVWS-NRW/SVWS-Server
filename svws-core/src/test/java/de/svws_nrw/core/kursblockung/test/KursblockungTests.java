@@ -94,8 +94,8 @@ class KursblockungTests {
 	/**
 	 * Testet den Algorithmus "Minimum Weight Bipartite Matching". Hierfür werden Matrizen unterschiedlicher Dimension
 	 * erzeugt und mit Zahlen von -9 bis +9 zufällig gefüllt. Ebenso wird durch einen Brute-Force-Algorithmus auch ein
-	 * "Minimum Weight Bipartite Matching" berechnet. Die Ergebnisse beider Algorithmen muss identisch sein (nicht die
-	 * Zuordnung selbst, sondern die Größe des Matchings).
+	 * "Minimum Weight Bipartite Matching" berechnet. Die Ergebnisse beider Algorithmen müssen identisch sein
+	 * (nicht die Zuordnung selbst, sondern die Größe des Matchings).
 	 */
 	@Test
 	@DisplayName("Minimum Weight Bipartite Matching testen.")
@@ -154,7 +154,7 @@ class KursblockungTests {
 		});
 
 		// Einlesen der Kurs42-Daten aus den Textdateien
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, 999, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, 999, false);
 
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
@@ -179,8 +179,8 @@ class KursblockungTests {
 	}
 
 	/**
-	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Fixiert anschließend alle Kurse und lässt dann den
-	 * Kursblockungsalgorithmus lediglich die SuS verteilen.
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein.
+	 * <br>Fixiert anschließend alle Kurse und lässt dann den Kursblockungsalgorithmus lediglich die SuS verteilen.
 	 */
 	@Test
 	@DisplayName("Daten 001 blocken (nur SuS).")
@@ -203,7 +203,7 @@ class KursblockungTests {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, true);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, true);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
 		@NotNull
@@ -221,8 +221,8 @@ class KursblockungTests {
 	}
 
 	/**
-	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und lässt dann den
-	 * Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein.
+	 * <br>Definiert einige Regeln und lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
 	 */
 	@Test
 	@DisplayName("Daten 001 blocken (Kurse und SuS).")
@@ -245,7 +245,7 @@ class KursblockungTests {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, false);
 
 		// Kurs42Daten --> GostBlockungsdatenManager
 		@NotNull
@@ -271,8 +271,9 @@ class KursblockungTests {
 	}
 
 	/**
-	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und explizit Regel 5, indem für Schüler
-	 * Nr. 18 alle Kurse gesperrt werden. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein.
+	 * <br>Definiert einige Regeln und explizit Regel 5, die für Schüler Nr. 18 alle Kurse sperrt.
+	 * <br>Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
 	 */
 	@Test
 	@DisplayName("Daten 001 blocken mit Regel 5 (Verbiete Schüler X in Kurs Y).")
@@ -295,12 +296,10 @@ class KursblockungTests {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, false);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-
-		@NotNull
-		final GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
+		final @NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Fixierungen
 		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.schieneGetAnzahl());
@@ -341,6 +340,131 @@ class KursblockungTests {
 		}
 	}
 
+	/**
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein.
+	 * <br>Definiert einige Standard-Regeln und explizit Regel 12.
+	 * <br>Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
+	@Test
+	@DisplayName("Daten 001 blocken mit Regel 12 (SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH).")
+	void test001_regel_12_schueler_verbieten_mit_schueler_in_fach() {
+
+		// Erzeuge INPUT-Daten.
+		final long maxTimeMillis = 1000 * 1;
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, false);
+
+		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
+		final @NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
+
+		// Standard - Fixierungen
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.schieneGetAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
+		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 68 }, 13);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
+
+		// Weitere Fixierungen
+		// Fach = 0, Kursart = 2 (4 Kurse)
+		// 54
+		// 114
+		// ...
+		regel_12_schueler_nicht_mit_schueler_in_fach(kbInput, 54, 114, 0);
+
+		// Erzeuge den Algorithmus
+		// Der Kursblockungsalgorithmus ist ein Service.
+		final KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
+
+		// Logger vom Service übernehmen
+		final Logger log = kbAlgorithmus.getLogger();
+
+		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
+		log.addConsumer(new Consumer<LogData>() {
+			@Override
+			public void accept(final LogData t) {
+				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+					fail(t.getText());
+			}
+		});
+
+		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+
+		// Blockungsergebnisse vorhanden?
+		assert kbOutputs != null : "kbOutputs == null";
+
+		for (final GostBlockungsergebnisManager ergebnis : kbOutputs)
+			if (ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0))
+				fail("Schüler 54 und 114 sind zusammen in Fach 0 trotz Regel 12!");
+	}
+
+	/**
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein.
+	 * <br>Definiert einige Standard-Regeln und explizit Regel 11.
+	 * <br>Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
+	@Test
+	@DisplayName("Daten 001 blocken mit Regel 11 (SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH).")
+	void test001_regel_11_schueler_zusammen_mit_schueler_in_fach() {
+
+		// Erzeuge INPUT-Daten.
+		final long maxTimeMillis = 1000 * 1;
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, false);
+
+		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
+		final @NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
+
+		// Standard - Fixierungen
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.schieneGetAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
+		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 68 }, 13);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
+
+		// Weitere Fixierungen
+		// Fach = 0, Kursart = 2 (4 Kurse)
+		// 54
+		// 114
+		// ...
+		regel_11_schueler_zusammen_mit_schueler_in_fach(kbInput, 54, 114, 0);
+
+		// Erzeuge den Algorithmus
+
+		// Der Kursblockungsalgorithmus ist ein Service.
+		final KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
+
+		// Logger vom Service übernehmen
+		final Logger log = kbAlgorithmus.getLogger();
+
+		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
+		log.addConsumer(new Consumer<LogData>() {
+			@Override
+			public void accept(final LogData t) {
+				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+					fail(t.getText());
+			}
+		});
+
+		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+
+		// Blockungsergebnisse vorhanden?
+		assert kbOutputs != null : "kbOutputs == null";
+
+		for (final GostBlockungsergebnisManager ergebnis : kbOutputs) {
+			// Ignoriere es wenn Schüler 54 oder Schüler 114 keinen zugeordneten Kurs hat.
+			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(54, 0) == null)
+				continue;
+			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(114, 0) == null)
+				continue;
+			// Wurde die Regel verletzt?
+			if (!ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0))
+				fail("Schüler 54 und 114 sind nicht zusammen in Fach 0 trotz Regel 11!");
+		}
+
+	}
+
 	/** Testet das Einlesen und Konvertieren der Daten 002. Diese befinden sich hier {@link #PFAD_DATEN_002}. */
 	@Test
 	@DisplayName("Daten 002 einlesen.")
@@ -360,7 +484,7 @@ class KursblockungTests {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien
 		final long maxTimeMillis = 1000 * 1;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, false);
 		@NotNull
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
@@ -412,7 +536,7 @@ class KursblockungTests {
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
 		final boolean kurseFixieren = true;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
 
@@ -457,7 +581,7 @@ class KursblockungTests {
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
 		final boolean kurseFixieren = false;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
 		@NotNull
@@ -506,7 +630,7 @@ class KursblockungTests {
 		// Einlesen der Kurs42-Daten aus den Textdateien.
 		final long maxTimeMillis = 1000 * 1;
 		final boolean kurseFixieren = false;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
 
@@ -562,9 +686,8 @@ class KursblockungTests {
 		final boolean kurseFixieren = false;
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
-		@NotNull
-		final GostBlockungsdatenManager man = k42Converter.gibKursblockungInput();
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
+		final @NotNull GostBlockungsdatenManager man = k42Converter.gibKursblockungInput();
 
 		// Weitere Regeln manuell hinzufügen.
 		final GostBlockungRegel regel = new GostBlockungRegel();
@@ -681,13 +804,32 @@ class KursblockungTests {
 	}
 
 	private static void regelFixiereSchuelerInKurs(final @NotNull GostBlockungsdatenManager pInput, final long pSchuelerID, final long pKursID) {
-		@NotNull
-		final GostBlockungKurs kurs = pInput.kursGet(pKursID); // wirft ggf. Exception
+		final @NotNull GostBlockungKurs kurs = pInput.kursGet(pKursID); // wirft ggf. Exception
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.regelGetAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 		gRegel.parameter.add(pSchuelerID);
 		gRegel.parameter.add(kurs.id);
+		pInput.regelAdd(gRegel);
+	}
+
+	private static void regel_12_schueler_nicht_mit_schueler_in_fach(final @NotNull GostBlockungsdatenManager pInput, final long idSchueler1, final long idSchueler2, final long idFach) {
+		final GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.regelGetAnzahl() + 1;
+		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
+		gRegel.parameter.add(idSchueler1);
+		gRegel.parameter.add(idSchueler2);
+		gRegel.parameter.add(idFach);
+		pInput.regelAdd(gRegel);
+	}
+
+	private static void regel_11_schueler_zusammen_mit_schueler_in_fach(final @NotNull GostBlockungsdatenManager pInput, final long idSchueler1, final long idSchueler2, final long idFach) {
+		final GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.regelGetAnzahl() + 1;
+		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ;
+		gRegel.parameter.add(idSchueler1);
+		gRegel.parameter.add(idSchueler2);
+		gRegel.parameter.add(idFach);
 		pInput.regelAdd(gRegel);
 	}
 

@@ -60,7 +60,7 @@ class GostBlockungsergebnisManagerTest {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien
 		final long maxTimeMillis = 999;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_001, maxTimeMillis, false);
 		final GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
 		final GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 
@@ -87,7 +87,7 @@ class GostBlockungsergebnisManagerTest {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien
 		final long maxTimeMillis = 1000 * 1;
-		final Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, false);
+		final Kurs42Converter k42Converter = new Kurs42Converter(PFAD_DATEN_002, maxTimeMillis, false);
 		final GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
 		final GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 

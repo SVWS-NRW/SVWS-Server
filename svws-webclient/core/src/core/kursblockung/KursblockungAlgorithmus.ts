@@ -20,7 +20,7 @@ import { KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAl
 
 export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, ArrayList<GostBlockungsergebnisManager>> {
 
-	private static readonly _random : Random = new Random();
+	private readonly _random : Random = new Random();
 
 
 	public constructor() {
@@ -29,7 +29,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 
 	public handle(pInput : GostBlockungsdatenManager) : ArrayList<GostBlockungsergebnisManager> {
 		this.logger.modifyIndent(+4);
-		const seed : number = KursblockungAlgorithmus._random.nextLong();
+		const seed : number = this._random.nextLong();
 		const random : Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 		const dynDaten : KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, pInput);

@@ -16,7 +16,6 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -28,9 +27,6 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
  * @author Benjamin A. Bartsch */
 public class Kurs42Converter {
 
-	/** Der Logger für Warnungen und Fehlermeldungen. */
-	private final Logger _logger;
-
 	/** Die konvertierten Daten. Diese können an einen Blockungsalgorithmus weitergereicht werden. */
 	private final GostBlockungsdatenManager _manager;
 
@@ -38,13 +34,10 @@ public class Kurs42Converter {
 	 * {@linkplain GostBlockungsdatenManager} um. Es werden die folgenden Dateien eingelesen:<br>
 	 * {@code 'Schueler.txt', 'Kurse.txt', 'Fachwahlen.txt' und 'Blockplan.txt'}
 	 *
-	 * @param pLogger           Der logger.
 	 * @param pPfad             Der Pfad der Kurs42-Exportdateien.
 	 * @param pMaxTimeMillis    Die maximale Blockungszeit in Millisekunden.
 	 * @param pFixiereAlleKurse Falls true, dann wird die aktuelle Kurslage fixiert. */
-	public Kurs42Converter(final Logger pLogger, final String pPfad, final long pMaxTimeMillis, final boolean pFixiereAlleKurse) {
-		this._logger = pLogger;
-
+	public Kurs42Converter(final String pPfad, final long pMaxTimeMillis, final boolean pFixiereAlleKurse) {
 		final HashMap<String, GostFach> mapFaecher = new HashMap<>();
 		final HashMap<String, GostKursart> mapKursarten = new HashMap<>();
 		final HashMap<String, GostBlockungKurs> mapKurse = new HashMap<>();
@@ -190,8 +183,6 @@ public class Kurs42Converter {
 		this._manager = new GostBlockungsdatenManager(gDaten, fManager);
 		this._manager.setMaxTimeMillis(pMaxTimeMillis);
 		this._manager.setID(1);
-
-		this._logger.modifyIndent(-4);
 	}
 
 	/** Diese Methode liefert das zuvor im Konstruktor erzeugte Objekt vom Typ {@link GostBlockungsdatenManager},
