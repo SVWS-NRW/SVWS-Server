@@ -66,6 +66,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 		return {
 			mode: 'lehrer',
 			id: routeLehrer.data.lehrerListeManager.daten().id,
+			ignoreEmpty: routeLehrerStundenplan.data.ganzerStundenplan,
 			manager: () => routeLehrerStundenplan.data.manager,
 			wochentyp: () => routeLehrerStundenplan.data.wochentyp,
 			kalenderwoche: () => routeLehrerStundenplan.data.kalenderwoche,

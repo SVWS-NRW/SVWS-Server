@@ -12,7 +12,7 @@
 		</template>
 		<template v-else>
 			<stundenplan-auswahl :stundenplan="stundenplan" :map-stundenplaene="mapStundenplaene" :goto-stundenplan="gotoStundenplan" :goto-wochentyp="gotoWochentyp"
-				:goto-kalenderwoche="gotoKalenderwoche" :manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" />
+				:goto-kalenderwoche="gotoKalenderwoche" :manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" :ganzer-stundenplan="ganzerStundenplan" :set-ganzer-stundenplan="setGanzerStundenplan" />
 			<router-view :key="$route.hash" />
 		</template>
 	</div>

@@ -58,6 +58,14 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		return this._state.value.mapStundenplaene;
 	}
 
+	get ganzerStundenplan(): boolean {
+		return api.config.getValue("lehrer.stundenplan.ganzerStundenplan") === 'true';
+	}
+
+	setGanzerStundenplan = async (value: boolean) => {
+		await api.config.setValue("lehrer.stundenplan.ganzerStundenplan", value ? "true" : "false");
+	}
+
 	public async ladeListe() {
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();

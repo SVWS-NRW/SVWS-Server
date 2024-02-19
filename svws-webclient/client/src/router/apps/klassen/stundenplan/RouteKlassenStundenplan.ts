@@ -9,6 +9,8 @@ import { routeKlassenStundenplanDaten } from "~/router/apps/klassen/stundenplan/
 import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteDataKlassenStundenplan";
 
 import { type StundenplanAuswahlProps } from "@comp";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 
 const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlassenStundenplan.vue");
 
@@ -23,6 +25,9 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 			routeKlassenStundenplanDaten
 		];
 		super.defaultChild = routeKlassenStundenplanDaten;
+		api.config.addElements([
+			new ConfigElement("klasse.stundenplan.ganzerStundenplan", "user", "true"),
+		]);
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
@@ -67,6 +72,8 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 			manager: () => this.data.manager,
 			wochentyp: () => this.data.wochentyp,
 			kalenderwoche: () => this.data.kalenderwoche,
+			ganzerStundenplan: () => this.data.ganzerStundenplan,
+			setGanzerStundenplan: this.data.setGanzerStundenplan,
 		};
 	}
 

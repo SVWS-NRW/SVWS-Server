@@ -6,8 +6,8 @@
 				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '–' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '–' + toKW(stundenplan.gueltigBis) + ')' }}</div>
 			</div>
 			<div class="svws-ui-stundenplan--auswahl--wrapper">
-				<svws-ui-button type="secondary" @click.stop="ganzerStundenplanAuswahl = !ganzerStundenplanAuswahl" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="text-black dark:text-white h-9">
-					{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}
+				<svws-ui-button type="secondary" @click.stop="ganzerStundenplanAuswahl = !ganzerStundenplanAuswahl" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
+					<span class="flex-grow">{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 				</svws-ui-button>
 				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
 					class="print:hidden"
