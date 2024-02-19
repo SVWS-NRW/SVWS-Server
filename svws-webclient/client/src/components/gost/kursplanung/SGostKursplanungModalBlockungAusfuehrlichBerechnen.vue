@@ -65,14 +65,22 @@
 				</template>
 			</svws-ui-table>
 			<div class="flex flex-row gap-2 pt-4">
-				<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager === undefined || !workerManager?.isInitialized()) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
-				<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
-				<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
-					<i-ri-download-2-line />
-					<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
-				</svws-ui-button>
-				<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
-				<svws-ui-button v-else type="danger" @click="closeModal">Alle berechneten Ergebnisse verwerfen und schließen</svws-ui-button>
+				<template v-if="workerManager !== undefined">
+					<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager.isInitialized() === false) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
+					<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
+					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
+						<i-ri-download-2-line />
+						<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
+					</svws-ui-button>
+					<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+					<svws-ui-button v-else type="danger" @click="closeModal">Alle berechneten Ergebnisse verwerfen und schließen</svws-ui-button>
+				</template>
+				<template v-else>
+					<div class="flex gap-2 w-full">
+						<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+						<div>Der Worker zum Berechnen der Blockungen konnte nicht erstellt werden, bitte Fehlermeldungen überprüfen.</div>
+					</div>
+				</template>
 			</div>
 		</template>
 	</svws-ui-modal>
