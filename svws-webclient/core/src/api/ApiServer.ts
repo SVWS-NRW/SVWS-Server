@@ -10807,7 +10807,7 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neue Religion und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Religion wurde erfolgreich angelegt.
+	 *   Code 201: Religion wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: ReligionEintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Religion anzulegen.
@@ -10815,15 +10815,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {ReligionEintrag} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ReligionEintrag>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Religion wurde erfolgreich angelegt.
 	 */
-	public async createReligion(data : ReligionEintrag, schema : string) : Promise<ReligionEintrag> {
+	public async createReligion(data : Partial<ReligionEintrag>, schema : string) : Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReligionEintrag.transpilerToJSON(data);
+		const body : string = ReligionEintrag.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);

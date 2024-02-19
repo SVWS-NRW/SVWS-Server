@@ -692,7 +692,7 @@ public class APISchule {
     description = "Erstellt eine neue Religion und gibt sie zurück."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Religion wurde erfolgreich angelegt.",
+    @ApiResponse(responseCode = "201", description = "Religion wurde erfolgreich angelegt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = ReligionEintrag.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Religion anzulegen.")
