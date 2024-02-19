@@ -40,20 +40,27 @@
 	const counter = ref(0);
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
-	window.addEventListener("unhandledrejection", function (event) {
-		api.status.stop();
-		const reason: Error = event.reason;
-		void createCapturedError(reason);
+	function errorHandler(event: ErrorEvent | PromiseRejectionEvent) {
 		event.preventDefault();
-	});
+		api.status.stop();
+		if (event instanceof ErrorEvent)
+			void createCapturedError(event.error);
+		if (event instanceof PromiseRejectionEvent)
+			void createCapturedError(event.reason);
+	}
+
+	// Dieser Listener gilt nur für Promises
+	window.addEventListener("unhandledrejection", errorHandler);
+
+	// Dieser Listener fängt alle anderen Fehler ab
+	window.addEventListener("error", errorHandler);
 
 	onErrorCaptured((reason) => {
 		api.status.stop();
-		if (reason.name === 'resetAllErrors') {
+		if (reason.name === 'resetAllErrors')
 			errors.value.clear();
-		} else {
-			void createCapturedError(reason)
-		}
+		else
+			void createCapturedError(reason);
 		return false;
 	});
 

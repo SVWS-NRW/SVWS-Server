@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
-import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsdatenManager, GostFaecherManager, GostBlockungsergebnisManager } from "@core";
-import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
+import { type List, ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsdatenManager, GostFaecherManager, GostBlockungsergebnisManager, KursblockungAlgorithmusPermanent } from "@core";
+import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
 	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 
@@ -70,6 +70,8 @@ export class WorkerManagerKursblockung {
 		this.faecherListe = faecherListe;
 		this.blockung = blockung;
 		this.datenManager = new GostBlockungsdatenManager(this.blockung, new GostFaecherManager(faecherListe));
+		// Teste, ob der Algorithmus überhaupt mit den aktuellen Regeln möglich ist
+		new KursblockungAlgorithmusPermanent(this.datenManager);
 		this.usedWorkerThreads.value = 1;
 	}
 
@@ -179,7 +181,7 @@ export class WorkerManagerKursblockung {
 		if (this.initialized.value === true)
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits initialisiert.")
 		if (this.terminated.value === true)
-			throw new DeveloperNotificationException("Der Worker-Thread fpr den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
+			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
 		for (let i = 0; i < this.threads; i++)
 			this.initWorker(i);
 	}
@@ -350,6 +352,20 @@ export class WorkerManagerKursblockung {
 		this.ergebnisResolvers[index](true);
 	}
 
+	/**
+	 * Bekommt Fehlermeldungen vom Worker, die im Handler aufgetaucht sind
+	 *
+	 * @param index der Index des Workers
+	 * @param data Die Nachricht vom Worker mit dem Aufruf, der den Fehler verursacht hat und der Fehler selbst
+	 */
+	protected handleErrorMessage(index: number, data: WorkerKursblockungErrorMessage) {
+		if ((this.workerInitialized[index] === true) && (index < this.threads)) {
+			this.worker[index].terminate();
+			this.initWorker(index);
+		}
+		throw data.error;
+	}
+
 
 	/**
 	 * Der Handler für das Abarbeiten von eingehenden Nachrichten von dem Worker an diesen Manager
@@ -363,6 +379,7 @@ export class WorkerManagerKursblockung {
 			case 'init': this.handleInitReply(index, e.data); break;
 			case 'next': this.handleNextReply(index, e.data); break;
 			case 'getErgebnisse': this.handleErgebnisseReply(index, e.data); break;
+			case 'Error': this.handleErrorMessage(index, e.data); break;
 			default: throw new DeveloperNotificationException(`Mesage type ${e.data.cmd} not yet implemented`);
 		}
 	}

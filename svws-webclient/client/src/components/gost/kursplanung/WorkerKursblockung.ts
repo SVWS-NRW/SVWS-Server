@@ -1,6 +1,6 @@
 import type { List } from "@core";
-import { ArrayList, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostFach, GostFaecherManager, KursblockungAlgorithmusPermanent } from "@core";
-import type { WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostFach, GostFaecherManager, KursblockungAlgorithmusPermanent } from "@core";
+import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 /**
  * Die Klasse zur Verwaltung des Workers für die asynchrone Berechnung
@@ -115,14 +115,18 @@ class WorkerKursblockung {
 	/**
 	 * Der Handler für das Abarbeiten von eingehenden Nachrichten von dem Manager an diesen Worker
 	 *
-	 * @param e   das eingehende Message-Event
+	 * @param event   das eingehende Message-Event
 	 */
-	public messageHandler = (e: MessageEvent<any>) : void => {
-		const cmd: WorkerKursblockungMessageType = e.data.cmd;
-		switch (cmd) {
-			case 'init': this.handleInit(e.data); return;
-			case 'next': this.handleNext(e.data); return;
-			case 'getErgebnisse': this.handleGetErgebnisse(e.data); return;
+	public messageHandler = (event: MessageEvent<any>) : void => {
+		const cmd: WorkerKursblockungMessageType = event.data.cmd;
+		try {
+			switch (cmd) {
+				case 'init': this.handleInit(event.data); return;
+				case 'next': this.handleNext(event.data); return;
+				case 'getErgebnisse': this.handleGetErgebnisse(event.data); return;
+			}
+		} catch (error) {
+			postMessage(<WorkerKursblockungErrorMessage>{cmd: 'Error', task: cmd, error});
 		}
 	}
 

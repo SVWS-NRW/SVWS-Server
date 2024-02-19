@@ -1,5 +1,5 @@
 /** Die einzelne Nachrichten-Typen, die zwischen Worker und Worker-Manager ausgetausch werden. */
-export type WorkerKursblockungMessageType = 'init' | 'next' | 'getErgebnisse';
+export type WorkerKursblockungMessageType = 'init' | 'next' | 'getErgebnisse' | 'Error';
 
 /**
  * Das allgemeine Nachrichtenformat für den Austausch zwischen Worker und Worker-Manager
@@ -61,4 +61,13 @@ export interface WorkerKursblockungRequestErgebnisse extends WorkerKursblockungM
 export interface WorkerKursblockungReplyErgebnisse extends WorkerKursblockungMessage {
 	cmd: 'getErgebnisse';
 	ergebnisse: string[];
+}
+
+/**
+ * Der Worker hatte eine Fehlermeldung und schickt sie zurück an den Manager
+ */
+export interface WorkerKursblockungErrorMessage extends WorkerKursblockungMessage {
+	cmd: 'Error';
+	task: WorkerKursblockungMessageType;
+	error: Error;
 }
