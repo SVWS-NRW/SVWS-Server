@@ -35,10 +35,12 @@
 					</svws-ui-button>
 					<svws-ui-button type="transparent" @click="copyToClipboard" v-if="toCopy !== undefined">
 						<span>Meldung Kopieren</span>
-						<i-ri-clipboard-line v-if="copied === false" />
+						<i-ri-clipboard-line v-if="copied === null" />
+						<i-ri-error-warning-fill v-else-if="copied === false" />
 						<i-ri-check-line v-else class="text-success" />
 					</svws-ui-button>
 				</div>
+				<div v-if="copied === false" class="p-2 bg-white border rounded-md text-error mt-2">{{ "Es gab einen Fehler beim Kopieren in die Zwischenablage. Ist die Zwischenablage gesperrt?" }}</div>
 				<div class="notification--stack" v-if="$slots.stack && stackOpen">
 					<slot name="stack" />
 				</div>
@@ -74,7 +76,7 @@
 
 	const isOpen = ref(true);
 	const stackOpen = ref(false);
-	const copied = ref(false);
+	const copied = ref<boolean|null>(null);
 
 	function setIsOpen(value: boolean) {
 		isOpen.value = value;
@@ -87,7 +89,11 @@
 	async function copyToClipboard() {
 		if (props.toCopy === undefined)
 			return;
-		await navigator.clipboard.writeText(props.toCopy);
+		try {
+			await navigator.clipboard.writeText(props.toCopy);
+		} catch(e) {
+			copied.value = false;
+		}
 		copied.value = true;
 	}
 

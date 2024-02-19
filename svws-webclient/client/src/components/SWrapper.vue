@@ -24,9 +24,9 @@
 
 <script setup lang="ts">
 
+	import { onErrorCaptured, ref } from 'vue';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
-	import { onErrorCaptured, ref } from 'vue';
 	import { api } from '~/router/Api';
 
 	type CapturedError = {
@@ -60,7 +60,7 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason)
 		counter.value++;
-		let name = "Fehler";
+		let name = `Fehler ${reason.name !== 'Error' ? ': '+reason.name : ''}`;
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException)
