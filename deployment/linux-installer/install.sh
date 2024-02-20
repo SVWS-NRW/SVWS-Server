@@ -204,6 +204,21 @@ else
     		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-test123}
     		read -p "SVWS_TLS_KEY_ALIAS (default: ''): " SVWS_TLS_KEY_ALIAS
     		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS}
+			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) ein:"
+			read -p "Common Name (CN): " INPUT_common_name
+			export INPUT_common_name=${INPUT_common_name}
+			read -p "Organizational Unit (OU): " INPUT_organizational_unit
+			export INPUT_organizational_unit=${INPUT_organizational_unit}
+			read -p "Organization (O): " INPUT_organization
+			export INPUT_organization=${INPUT_organization}
+			read -p "Locality (L): " INPUT_locality
+			export INPUT_locality=${INPUT_locality}
+			read -p "State (S): " INPUT_state
+			export INPUT_state=${INPUT_state}
+			read -p "Country (C): " INPUT_country
+			export INPUT_country=${INPUT_country}
+			read -p "Gültigkeitsdauer des Zertifikats in Tagen: " validity_days
+			export validity_days=${validity_days}
     	else
     		echo "Keystore für TLS:"
     		read -p "SVWS_TLS_KEYSTORE_PATH: " SVWS_TLS_KEYSTORE_PATH
@@ -252,6 +267,13 @@ else
     	echo "  SVWS_TLS_KEYSTORE_PATH: $SVWS_TLS_KEYSTORE_PATH"
     	echo "  SVWS_TLS_KEYSTORE_PASSWORD: $SVWS_TLS_KEYSTORE_PASSWORD"
     	echo "  SVWS_TLS_KEY_ALIAS: $SVWS_TLS_KEY_ALIAS"
+		echo "  Common Name (CN): $INPUT_common_name"
+		echo "  Organizational Unit (OU): $INPUT_organizational_unit"
+		echo "  Organization (O): $INPUT_organization"
+		echo "  Locality (L): $INPUT_locality"
+		echo "  State (S): $INPUT_state"
+		echo "  Country (C): $INPUT_country"
+        echo "  Gültigkeitsdauer des Zertifikats: $validity_days Tage"
 
 		if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
 			echo ""
@@ -284,6 +306,13 @@ else
     echo "SVWS_TLS_KEYSTORE_PATH=$SVWS_TLS_KEYSTORE_PATH" >> .env
     echo "SVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD" >> .env
     echo "SVWS_TLS_KEY_ALIAS=$SVWS_TLS_KEY_ALIAS" >> .env
+    echo "INPUT_common_name=$INPUT_common_name" >> .env
+    echo "INPUT_organizational_unit=$INPUT_organizational_unit" >> .env
+    echo "INPUT_organization=$INPUT_organization" >> .env
+    echo "INPUT_locality=$INPUT_locality" >> .env
+    echo "INPUT_state=$INPUT_state" >> .env
+    echo "INPUT_country=$INPUT_country" >> .env
+    echo "validity_days=$validity_days" >> .env
     echo "TESTDB_PASSWORD=$TESTDB_PASSWORD" >> .env
     echo "TMP_DIR=$TMP_DIR" >> .env
     echo "MDBFILE=$MDBFILE" >> .env
@@ -368,7 +397,7 @@ if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
 	# Keystore erstellen
 	#mkdir -p $SVWS_TLS_KEYSTORE_PATH
     echo "Erstelle Keystore in $SVWS_TLS_KEYSTORE_PATH/keystore ..."
-    keytool -genkey -noprompt -alias alias1 -dname "CN=test, OU=test, O=test, L=test, S=test, C=test" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
+    keytool -genkey -noprompt -alias alias1 -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
     keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias alias1 -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
 else
 	mv  $SVWS_TLS_KEYSTORE_PATH $APP_PATH
