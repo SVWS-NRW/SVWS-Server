@@ -1539,7 +1539,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P11_1 = null
 			WHERE P11_1 IS NOT NULL
-			    AND P11_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P11_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1548,7 +1548,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P11_2 = null
 			WHERE P11_2 IS NOT NULL
-			    AND P11_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P11_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1557,7 +1557,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P12_1 = null
 			WHERE P12_1 IS NOT NULL
-			    AND P12_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P12_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1566,7 +1566,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P12_2 = null
 			WHERE P12_2 IS NOT NULL
-			    AND P12_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P12_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1575,7 +1575,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P13_1 = null
 			WHERE P13_1 IS NOT NULL
-			    AND P13_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P13_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1584,7 +1584,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P13_2 = null
 			WHERE P13_2 IS NOT NULL
-			    AND P13_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P13_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT','E1','E2','E3')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1645,6 +1645,30 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle SchuelerAbiFaecher - Q2.2: Umwandeln von L in S bei der Schriftlichkeit",
 			"""
 			UPDATE SchuelerAbiFaecher SET S13_2='S' WHERE S13_2='L'
+			""",
+			Schema.tab_SchuelerAbiFaecher
+		);
+		add("Tabelle SchuelerAbiFaecher - Q1.1: Umwandeln von V in M bei der Schriftlichkeit",
+			"""
+			UPDATE SchuelerAbiFaecher SET S12_1='M' WHERE S12_1='V'
+			""",
+			Schema.tab_SchuelerAbiFaecher
+		);
+		add("Tabelle SchuelerAbiFaecher - Q1.2: Umwandeln von V in M bei der Schriftlichkeit",
+			"""
+			UPDATE SchuelerAbiFaecher SET S12_2='M' WHERE S12_2='V'
+			""",
+			Schema.tab_SchuelerAbiFaecher
+		);
+		add("Tabelle SchuelerAbiFaecher - Q2.1: Umwandeln von V in M bei der Schriftlichkeit",
+			"""
+			UPDATE SchuelerAbiFaecher SET S13_1='M' WHERE S13_1='V'
+			""",
+			Schema.tab_SchuelerAbiFaecher
+		);
+		add("Tabelle SchuelerAbiFaecher - Q2.2: Umwandeln von V in M bei der Schriftlichkeit",
+			"""
+			UPDATE SchuelerAbiFaecher SET S13_2='M' WHERE S13_2='V'
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
