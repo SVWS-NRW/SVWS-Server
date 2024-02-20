@@ -4,14 +4,11 @@
 			<svws-ui-sub-nav>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeSichtbarAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" autocomplete
-						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0"
-						type="transparent" />
+					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeSichtbarAsList()" :item-text="i => i.kuerzel" autocomplete
+						:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" />
 					<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
-					<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()"
-						class="print:hidden" type="transparent"
-						:disabled="wochentypen().size() <= 0"
-						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
+					<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
+						:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					<svws-ui-button type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
 						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
@@ -99,7 +96,7 @@
 										'text-error font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0,
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 									}">
-										<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all pl-3">{{ kurs.bezeichnung }}</span>
+										<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all pl-3" :title="kurs.bezeichnung">{{ kurs.bezeichnung }}</span>
 										<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><i-ri-check-line /></span>
 									</div>
 									<div role="cell" class="select-none svws-ui-td">
@@ -173,7 +170,7 @@
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
 			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
-				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" class="h-full overflow-scroll pr-4" :ignore-empty="ganzerStundenplan" />
+				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" class="h-full overflow-scroll pr-4" />
 		</template>
 	</div>
 </template>
@@ -197,7 +194,6 @@
 	const wochentyp = ref<number>(0);
 	const wochentypAnzeige = ref<number>(0);
 	const doppelstundenModus = ref<boolean>(false);
-	const ganzerStundenplan = ref<boolean>(true);
 	const schienSortierung = ref<boolean>(true);
 
 	const klasse = computed<StundenplanKlasse>({
@@ -206,7 +202,7 @@
 				try {
 					return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
 				} catch (e) { /* empty */ }
-			return props.stundenplanManager().klasseGetMengeAsList().get(0);
+			return props.stundenplanManager().klasseGetMengeSichtbarAsList().get(0);
 		},
 		set: (value : StundenplanKlasse) => _klasse.value = value
 	});
@@ -351,13 +347,13 @@
 	}
 
 	const colsKlassenunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Klassenunterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "bezeichnung", label: "Unterricht", tooltip: "Klassenunterricht", span: 1 },
 		{ key: "irgendwas", label: "Wochentyp", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
 	const colsKursunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Kursunterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "bezeichnung", label: "Unterricht", tooltip: "Kursunterricht", span: 1 },
 		{ key: "irgendwas", label: "Wochentyp", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
