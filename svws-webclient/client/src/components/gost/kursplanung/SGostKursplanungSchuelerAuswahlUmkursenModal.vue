@@ -50,7 +50,7 @@
 							</div>
 						</template>
 						<template #actions>
-							<svws-ui-button type="transparent" @click="leereKurs" :disabled="apiStatus.pending">
+							<svws-ui-button type="transparent" @click="leereKurs" :disabled="(schuelerFilter().filtered.value.length === 0) || (apiStatus.pending)">
 								<i-ri-delete-bin-line /> Kurs leeren
 							</svws-ui-button>
 						</template>
@@ -88,17 +88,26 @@
 					</svws-ui-table>
 				</div>
 			</div>
+			<!-- Der untere Teil des Modals mit den Gruppenaktionen -->
 			<div class="flex flex-col items-center border-t mt-4 pt-4 border-b pb-4 mb-4">
 				<div class="text-left">
 					Übertragen der Kurs-Schüler-Zuordnung des aktuellen Kurses auf andere Kurse. Dabei werden die Schüler nur
 					übertragen, wenn sie auch die entsprechende Fachwahl des jeweiligen Ziel-Kurses haben.
 				</div>
-				<div class="mt-4 min-w-72 mb-4">
-					<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung"
-						v-model="_kurseZurUebertragung" class="w-full" removable :disabled="apiStatus.pending" />
-				</div>
-				<div class="text-center">
-					<svws-ui-button type="secondary" @click="uebertragen()" :disabled="(_kurseZurUebertragung.length === 0) || (apiStatus.pending)">Schülermenge übertragen</svws-ui-button>
+				<div class="flex gap-2 m-2">
+					<div class="mt-4 min-w-72 mb-4 flex flex-col gap-2">
+						<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung"
+							v-model="_kurseZurUebertragung" class="w-full" removable :disabled="apiStatus.pending" />
+						<div class="text-center">
+							<svws-ui-button type="secondary" @click="uebertragen" :disabled="(_kurseZurUebertragung.length === 0) || apiStatus.pending"><svws-ui-spinner v-if="apiStatus.pending" spinning /> Schülermenge übertragen</svws-ui-button>
+						</div>
+					</div>
+					<div class="flex flex-col gap-2">
+						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben {{ allowRegeln ? 'und Fixierung anpassen':'' }}</svws-ui-checkbox>
+						<svws-ui-checkbox v-if="allowRegeln" :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="zielkurseLeeren">Zielkurse leeren</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="regelnAufheben">auch Regeln in Zielkursen aufheben</svws-ui-checkbox>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -112,9 +121,9 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
+	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
 	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet } from '@core';
-	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
@@ -125,6 +134,10 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schuelerFilter: () => GostKursplanungSchuelerFilter;
+		fixierteVerschieben: () => boolean;
+		setFixierteVerschieben: (value: boolean) => Promise<void>;
+		inZielkursFixieren: () => boolean;
+		setInZielkursFixieren: (value: boolean) => Promise<void>;
 		apiStatus: ApiStatus;
 	}>();
 
@@ -132,6 +145,9 @@
 	const showModal = () => _showModal;
 
 	const _kurseZurUebertragung = ref<GostBlockungsergebnisKurs[]>([]);
+
+	const zielkurseLeeren = ref<boolean>(false);
+	const regelnAufheben = ref<boolean>(false);
 
 	function setKurs() {
 		const filter = props.schuelerFilter();
@@ -364,7 +380,10 @@
 			return;
 		const kursSchueler = props.getErgebnismanager().getOfSchuelerMengeGefiltert(kurs.id, -1, -1, 0, "");
 		const update = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		const setRegelKurs = new HashSet<number>();
 		for (const s of kursSchueler) {
+			if (!props.fixierteVerschieben() && props.getDatenmanager().schuelerGetIstFixiertInKurs(s.id, kurs.id))
+				continue;
 			for (const k of _kurseZurUebertragung.value) {
 				if (!props.getErgebnismanager().getOfSchuelerHatFachwahl(s.id, k.fachID, k.kursart))
 					continue;
@@ -381,8 +400,29 @@
 				zuordnung.idSchueler = s.id;
 				zuordnung.idKurs = k.id;
 				update.listHinzuzufuegen.add(zuordnung);
+				setRegelKurs.add(k.id);
 			}
 		}
+		// nur wenn am Ende fixiert werden soll, Fixierung aktualisieren, sonst lösen
+		update.regelUpdates = (props.inZielkursFixieren() && props.allowRegeln)
+			? props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setRegelKurs)
+			: props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setRegelKurs)
+		// wenn Zielkurse geleert werden sollen, dann alle oder nur listRegelKurse, also die tatsächlich genutzten?
+		if (zielkurseLeeren.value === true) {
+			for (const k of _kurseZurUebertragung.value) {
+				for (const s of k.schueler) {
+					const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+					zuordnung.idKurs = k.id;
+					zuordnung.idSchueler = s;
+					update.listEntfernen.add(zuordnung);
+				}
+			}
+		}
+		// es sollen optional noch die Regeln der Zielkurse entfernt werden
+		// sind das Schüler Sperrungen/Fixierungen?
+		// Betrifft das dann auch nur die tatsächlich genutzten oder alle?
+		// kann ich dann die weiteren GostBlockungRegelUpdate mergen?
+		// Oder muss ich dafür eine zweite Anfrage an die Api schicken?
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 

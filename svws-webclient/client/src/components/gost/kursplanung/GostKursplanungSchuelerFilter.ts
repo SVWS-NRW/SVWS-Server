@@ -27,7 +27,7 @@ export class GostKursplanungSchuelerFilter {
 	}
 
 	public getKurse() : List<GostBlockungKurs> {
-		return this.datenmanager?.kursGetListeSortiertNachKursartFachNummer() || new ArrayList<GostBlockungKurs>();
+		return new ArrayList(this.datenmanager?.kursGetListeSortiertNachKursartFachNummer()) || new ArrayList<GostBlockungKurs>();
 	}
 
 	get name(): string {

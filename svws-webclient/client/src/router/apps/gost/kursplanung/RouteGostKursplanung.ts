@@ -38,7 +38,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
 			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart"),
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),
-			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "false"),
+			new ConfigElement("gost.kursplanung.umkursen.fixierteVerschieben", "user", "false"),
+			new ConfigElement("gost.kursplanung.umkursen.inZielkursFixieren", "user", "false"),
 		]);
 	}
 
@@ -268,10 +269,15 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			updateKursSchuelerZuordnung: this.data.updateKursSchuelerZuordnung,
 			updateKursSchuelerZuordnungen: this.data.updateKursSchuelerZuordnungen,
 			apiStatus: api.status,
+			//Config
 			blockungstabelleHidden: () => this.data.blockungstabelleHidden,
 			setBlockungstabelleHidden: this.data.setBlockungstabelleHidden,
 			zeigeSchienenbezeichnungen: () => this.data.zeigeSchienenbezeichnungen,
 			setZeigeSchienenbezeichnungen: this.data.setZeigeSchienenbezeichnungen,
+			fixierteVerschieben: () => this.data.fixierteVerschieben,
+			setFixierteVerschieben: this.data.setFixierteVerschieben,
+			inZielkursFixieren: () => this.data.inZielkursFixieren,
+			setInZielkursFixieren: this.data.setInZielkursFixieren,
 		}
 	}
 

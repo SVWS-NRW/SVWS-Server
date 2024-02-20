@@ -44,10 +44,15 @@ export interface GostKursplanungProps {
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	apiStatus: ApiStatus;
+	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
+	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
+	// Config
 	zeigeSchienenbezeichnungen: () => boolean;
 	setZeigeSchienenbezeichnungen: (value: boolean) => void;
 	blockungstabelleHidden: () => boolean;
 	setBlockungstabelleHidden: (value: boolean) => void;
-	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
-	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
+	fixierteVerschieben: () => boolean;
+	setFixierteVerschieben: (value: boolean) => Promise<void>;
+	inZielkursFixieren: () => boolean;
+	setInZielkursFixieren: (value: boolean) => Promise<void>;
 }

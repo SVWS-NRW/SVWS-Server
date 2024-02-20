@@ -182,6 +182,22 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		await api.config.setValue('gost.kursplanung.schueler.auswahl.geschlecht', value ? "true" : "false");
 	}
 
+	get fixierteVerschieben(): boolean {
+		return api.config.getValue("gost.kursplanung.umkursen.fixierteVerschieben") === 'true'
+	}
+
+	setFixierteVerschieben = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.umkursen.fixierteVerschieben', value ? "true" : "false");
+	}
+
+	get inZielkursFixieren(): boolean {
+		return api.config.getValue("gost.kursplanung.umkursen.inZielkursFixieren") === 'true'
+	}
+
+	setInZielkursFixieren = async (value: boolean) => {
+		await api.config.setValue('gost.kursplanung.umkursen.inZielkursFixieren', value ? "true" : "false");
+	}
+
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
