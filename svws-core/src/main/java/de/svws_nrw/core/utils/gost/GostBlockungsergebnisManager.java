@@ -3326,6 +3326,18 @@ public class GostBlockungsergebnisManager {
 		return gUpdate;
 	}
 
+	/**
+	 * Entfernt erst alle Regeln aus {@link GostBlockungRegelUpdate#listEntfernen} und
+	 * fügt dann die neuen Regeln aus {@link GostBlockungRegelUpdate#listHinzuzufuegen} hinzu.
+	 *
+	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
+	 */
+	public void regelupdateExecute(final @NotNull GostBlockungRegelUpdate update) {
+		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !_parent.getIstBlockungsVorlage());
+		_parent.regelRemoveListe(update.listEntfernen);
+		_parent.regelAddListe(update.listHinzuzufuegen);
+	}
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich einer Schiene.             ##########
 	// #########################################################################

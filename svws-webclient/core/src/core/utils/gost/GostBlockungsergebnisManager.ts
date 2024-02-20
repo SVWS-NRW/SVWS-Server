@@ -3111,6 +3111,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Entfernt erst alle Regeln aus {@link GostBlockungRegelUpdate#listEntfernen} und
+	 * fügt dann die neuen Regeln aus {@link GostBlockungRegelUpdate#listHinzuzufuegen} hinzu.
+	 *
+	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
+	 */
+	public regelupdateExecute(update : GostBlockungRegelUpdate) : void {
+		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !this._parent.getIstBlockungsVorlage());
+		this._parent.regelRemoveListe(update.listEntfernen);
+		this._parent.regelAddListe(update.listHinzuzufuegen);
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.<br>
 	 * Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.<br>
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
