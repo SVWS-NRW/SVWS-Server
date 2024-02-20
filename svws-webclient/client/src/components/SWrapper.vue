@@ -65,7 +65,7 @@
 	});
 
 	async function createCapturedError(reason: Error) {
-		console.warn(reason)
+		console.warn(reason);
 		counter.value++;
 		let name = `Fehler ${reason.name !== 'Error' ? ': '+reason.name : ''}`;
 		let message = reason.message;
@@ -88,6 +88,8 @@
 						res = await reason.response.text();
 					if (res.length > 0)
 						message = res;
+					else
+						message += ' - Status: '+reason.response.status;
 				} catch(e) { void e }
 			}
 		}
