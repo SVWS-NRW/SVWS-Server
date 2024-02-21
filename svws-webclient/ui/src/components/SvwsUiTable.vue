@@ -49,7 +49,7 @@
 			<slot name="filterAdvanced" />
 		</div>
 	</div>
-	<div class="svws-ui-table" role="table" aria-label="Tabelle"
+	<div class="svws-ui-table" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable;"
 		:class="{
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
@@ -61,8 +61,7 @@
 			'svws-has-background': hasBackground,
 			'overflow-visible': !scroll,
 			'overflow-auto': scroll,
-		}"
-		v-bind="$attrs" style="scrollbar-gutter: stable;">
+		}">
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">
@@ -71,15 +70,13 @@
 					</div>
 					<div v-for="column in columnsComputed" class="svws-ui-td" role="columnheader" :key="column.key" :title="column.tooltip ? '' : column.label" @click.exact="column.sortable && toggleSorting(column)" @keyup.enter="column.sortable && toggleSorting(column)"
 						:class="[
-							`svws-column-key--${column.key}`,
-							`svws-align-${column.align}`,
+							`svws-column-key--${column.key}`, `svws-align-${column.align}`,
 							{
 								'svws-disabled': column.disabled,
 								'svws-sortable-column': column.sortable,
 								'svws-active': column.sortable && (internalSortByAndOrder.key === column.name) && (typeof internalSortByAndOrder.order === 'boolean'),
 								'svws-divider': column.divider,
-							}
-						]" :tabindex="column.sortable ? 0 : -1">
+							}]" :tabindex="column.sortable ? 0 : -1">
 						<slot :name="`header(${column.key})`" :column="column">
 							<svws-ui-tooltip v-if="column.tooltip">
 								<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
@@ -108,36 +105,39 @@
 						</span>
 					</div>
 				</div>
-				<div v-for="(row, index) in sortedRows" class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="(el) => itemRefs.set(index, el)"
-					:class="{
-						'svws-selected': isRowSelected(row),
-						'svws-clicked': isRowClicked(row),
-					}">
-					<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-						<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
-					</div>
-					<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
-						:class="[
-							`svws-column-key--${cell.column.key}`,
-							`svws-align-${cell.column.align}`,
-							{
-								'svws-disabled': cell.column.disabled,
-								'svws-no-value': cell.value === null || cell.value === undefined || cell.value === '',
-								'svws-divider': cell.column.divider,
-							}
-						]">
-						<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
-						<slot v-else name="cell" v-bind="cell">
-							<svws-ui-text-input v-if="row.isEditing" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
-							<template v-else-if="cell.value">
-								{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
-							</template>
-							<template v-else>
-								<span class="text-black/25 dark:text-white/25">—</span>
-							</template>
-						</slot>
-					</div>
-				</div>
+				<template v-for="(row, index) in sortedRows">
+					<slot name="rowCustom" :row="row.source">
+						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }">
+							<slot name="row" :row="row.source">
+								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
+									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
+								</div>
+								<slot name="rowSelectable" :row="row.source">
+									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
+										:class="[
+											`svws-column-key--${cell.column.key}`, `svws-align-${cell.column.align}`,
+											{
+												'svws-disabled': cell.column.disabled,
+												'svws-no-value': cell.value === null || cell.value === undefined || cell.value === '',
+												'svws-divider': cell.column.divider,
+											}]">
+										<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
+										<slot v-else name="cell" v-bind="cell">
+											<svws-ui-text-input v-if="row.isEditing" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
+											<template v-else-if="cell.value">
+												{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
+											</template>
+											<template v-else>
+												<span class="text-black/25 dark:text-white/25">—</span>
+											</template>
+										</slot>
+									</div>
+								</slot>
+							</slot>
+						</div>
+					</slot>
+				</template>
 			</slot>
 		</div>
 		<div v-if="$slots.dataFooter" class="svws-ui-tfoot--data" role="rowgroup">

@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background>
+		<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns="cols" has-background>
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
@@ -66,8 +66,8 @@
 					</div>
 				</div>
 			</template>
-			<template #body>
-				<s-row-gost-faecher v-for="fach in faecherManager().faecher()" :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
+			<template #rowCustom="{ row: fach }">
+				<s-row-gost-faecher :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>

@@ -8,11 +8,9 @@
 				</template>
 			</svws-ui-tooltip>
 		</template>
-		<svws-ui-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
-			<template #body>
-				<div v-for="row in rows" :key="row.hashCode()" class="svws-ui-tr" role="columnheader">
-					<s-row-gost-fachkombination :typ="typ" :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
-				</div>
+		<svws-ui-table :items="rows" :no-data="rows.size() === 0" :columns="cols">
+			<template #row="{ row }">
+				<s-row-gost-fachkombination :typ="typ" :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 			</template>
 			<template #actions>
 				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><i-ri-add-line /> </svws-ui-button>

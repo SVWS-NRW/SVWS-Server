@@ -19,14 +19,13 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
 				<svws-ui-table :items="beratungslehrer()" selectable :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]">
-					<template #cell(kuerzel)="{ rowData:l }">
-						{{ `${l.kuerzel}` }}
+					<template #cell(kuerzel)="{ value }">
+						{{ value }}
 					</template>
-					<template #cell(name)="{ rowData:l }">
+					<template #cell(name)="{ rowData: l }">
 						{{ `${l.nachname}, ${l.vorname}` }}
 					</template>
 					<template #actions>
-						<!-- TODO: Hier kommt das Dropdown hin -->
 						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => lehrer && addBeratungslehrer(lehrer.id)" headless indeterminate
 							autocomplete :item-filter="lehrer_filter" :items="lehrer" removable title="Lehrkraft hinzufügen…" :item-text="l=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 						<svws-ui-button @click="removeBeratungslehrer(selected)" type="trash" :disabled="!selected.length" />
