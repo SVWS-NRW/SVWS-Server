@@ -67,7 +67,7 @@
 				</div>
 			</template>
 			<template #rowCustom="{ row: fach }">
-				<s-row-gost-faecher :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
+				<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
