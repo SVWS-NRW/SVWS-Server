@@ -2876,8 +2876,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const kurs of this.getKursmenge())
-			if (kurs.kursart === kursart)
-				for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++) {
+			for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
+				if (kurs.kursart === kursart) {
 					const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr]);
 					const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
 					if (regelSperrung !== null)
@@ -2887,25 +2887,58 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					if (regelFixierung !== null)
 						u.listEntfernen.add(regelFixierung);
 				}
-		const regelNeu : GostBlockungRegel = new GostBlockungRegel();
-		regelNeu.id = -1;
-		regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
-		regelNeu.parameter.add(kursart as number);
-		regelNeu.parameter.add(schienenNrVon as number);
-		regelNeu.parameter.add(schienenNrBis as number);
-		u.listHinzuzufuegen.add(regelNeu);
+		const keyDuplikat : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis]);
+		if (this._parent.regelGetByLongArrayKeyOrNull(keyDuplikat) !== null) {
+			const regelNeu : GostBlockungRegel = new GostBlockungRegel();
+			regelNeu.id = -1;
+			regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
+			regelNeu.parameter.add(kursart as number);
+			regelNeu.parameter.add(schienenNrVon as number);
+			regelNeu.parameter.add(schienenNrBis as number);
+			u.listHinzuzufuegen.add(regelNeu);
+		}
 		return u;
 	}
 
 	/**
-	 * ...
-	 * @param kursart ...
-	 * @param schieneNrVon ...
-	 * @param schieneNrBis ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
+	 * <br> Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
+	 * <br> Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
+	 *
+	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
+	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
+	 * @param schienenNrBis  Der Endbereich der Schienen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
 	 */
-	public regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart : number, schieneNrVon : number, schieneNrBis : number) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const kurs of this.getKursmenge())
+			for (let schienenNr : number = 1; schienenNr <= this._parent.schieneGetAnzahl(); schienenNr++) {
+				const imSchienenBereich : boolean = (schienenNrVon <= schienenNr) && (schienenNr <= schienenNrBis);
+				const richtigeKursart : boolean = (kurs.kursart === kursart);
+				if (imSchienenBereich !== richtigeKursart) {
+					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr]);
+					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+					if (regelFixierung !== null)
+						u.listEntfernen.add(regelFixierung);
+					const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr]);
+					const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
+					if (regelSperrung !== null)
+						u.listEntfernen.add(regelSperrung);
+				}
+			}
+		const keyDuplikat : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis]);
+		if (this._parent.regelGetByLongArrayKeyOrNull(keyDuplikat) !== null) {
+			const regelNeu : GostBlockungRegel = new GostBlockungRegel();
+			regelNeu.id = -1;
+			regelNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
+			regelNeu.parameter.add(kursart as number);
+			regelNeu.parameter.add(schienenNrVon as number);
+			regelNeu.parameter.add(schienenNrBis as number);
+			u.listHinzuzufuegen.add(regelNeu);
+		}
+		return u;
 	}
 
 	/**
@@ -3295,6 +3328,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !this._parent.getIstBlockungsVorlage());
 		this._parent.regelRemoveListe(update.listEntfernen);
 		this._parent.regelAddListe(update.listHinzuzufuegen);
+		this.stateRevalidateEverything();
 	}
 
 	/**
