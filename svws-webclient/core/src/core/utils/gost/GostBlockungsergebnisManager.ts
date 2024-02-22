@@ -3415,7 +3415,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, anzahl]);
+		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl]);
 		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
 		if (regelDummyAlt !== null)
 			u.listEntfernen.add(regelDummyAlt);
@@ -3431,12 +3431,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param erstellen  eded
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
+	 * <br>(1) Wenn erstellen==FALSE und die Regel existiert, wird sie entfernt.
+	 * <br>(2) Wenn erstellen==TRUE und die Regel existiert nicht, wird sie erzeugt.
+	 *
+	 * @param erstellen  Falls TRUE, wird die Regel aktiviert, andernfalls deaktiviert.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
 	public regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen : boolean) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ]);
+		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
+		if ((!erstellen) && (regelDummyAlt !== null))
+			u.listEntfernen.add(regelDummyAlt);
+		if ((erstellen) && (regelDummyAlt === null)) {
+			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ;
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+		return u;
 	}
 
 	/**

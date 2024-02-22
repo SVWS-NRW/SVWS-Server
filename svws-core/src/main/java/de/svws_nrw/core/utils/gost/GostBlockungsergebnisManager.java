@@ -3676,7 +3676,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, anzahl });
+		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl });
 		final GostBlockungRegel regelDummyAlt = _parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
 		if (regelDummyAlt != null)
 			u.listEntfernen.add(regelDummyAlt);
@@ -3695,12 +3695,33 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * ...
-	 * @param erstellen  eded
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
+	 * <br>(1) Wenn erstellen==FALSE und die Regel existiert, wird sie entfernt.
+	 * <br>(2) Wenn erstellen==TRUE und die Regel existiert nicht, wird sie erzeugt.
+	 *
+	 * @param erstellen  Falls TRUE, wird die Regel aktiviert, andernfalls deaktiviert.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(final boolean erstellen) {
-		return new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ});
+		final GostBlockungRegel regelDummyAlt = _parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
+
+		// (1)
+		if ((!erstellen) && (regelDummyAlt != null))
+			u.listEntfernen.add(regelDummyAlt);
+
+		// (2)
+		if ((erstellen) && (regelDummyAlt == null)) {
+			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ;
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+
+		return u;
 	}
 
 	/**
