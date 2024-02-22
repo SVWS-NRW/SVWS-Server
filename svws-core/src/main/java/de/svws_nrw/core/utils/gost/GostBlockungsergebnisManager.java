@@ -3490,38 +3490,95 @@ public class GostBlockungsergebnisManager {
 
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu setzen.
+	 * <br>(1) Wenn Kurs A mit Kurs B zusammen sein soll, wird dies entfernt.
+	 * <br>(2) Wenn die Regel mit bereits existiert, aber die IDs nicht aufsteigend sind, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht existiert, wird sie hinzugefügt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idKurs1 : setKursID)
+			for (final long idKurs2 : setKursID)
+				if (idKurs1 < idKurs2) {
+					// (1)
+					final @NotNull LongArrayKey keyZusammen12 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2});
+					final GostBlockungRegel regelZusammen12 = _parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
+					if (regelZusammen12 != null)
+						u.listEntfernen.add(regelZusammen12);
+					final @NotNull LongArrayKey keyZusammen21 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1});
+					final GostBlockungRegel regelZusammen21 = _parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
+					if (regelZusammen21 != null)
+						u.listEntfernen.add(regelZusammen21);
+					// (2)
+					final @NotNull LongArrayKey keyVerboten21 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1});
+					final GostBlockungRegel regelVerboten21 = _parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
+					if (regelVerboten21 != null)
+						u.listEntfernen.add(regelVerboten21);
+					// (3)
+					final @NotNull LongArrayKey keyVerboten12 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2});
+					final GostBlockungRegel regelVerboten12 = _parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
+					if (regelVerboten12 == null) {
+						final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+						regelHinzufuegen.id = -1;
+						regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
+						regelHinzufuegen.parameter.add(idKurs1);
+						regelHinzufuegen.parameter.add(idKurs2);
+						u.listHinzuzufuegen.add(regelHinzufuegen);
+					}
+				}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu lösen.
+	 * <br>(1) Wenn das Kurs-Kurs-Verbot existiert (in beliebiger Permutation), wird es entfernt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu lösen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idKurs1 : setKursID)
+			for (final long idKurs2 : setKursID)
+				if (idKurs1 < idKurs2) {
+					// (1a)
+					final @NotNull LongArrayKey keyVerboten12 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2});
+					final GostBlockungRegel regelVerboten12 = _parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
+					if (regelVerboten12 != null)
+						u.listEntfernen.add(regelVerboten12);
+					// (1b)
+					final @NotNull LongArrayKey keyVerboten21 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1});
+					final GostBlockungRegel regelVerboten21 = _parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
+					if (regelVerboten21 != null)
+						u.listEntfernen.add(regelVerboten21);
+				}
+
+		return u;
+	}
+
+	/**
 	 * ...
-	 * @param listKursID ...
+	 * @param setKursID ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(final @NotNull List<@NotNull Long> listKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
 		return new GostBlockungRegelUpdate();
 	}
 
 	/**
 	 * ...
-	 * @param listKursID ...
+	 * @param setKursID ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(final @NotNull List<@NotNull Long> listKursID) {
-		return new GostBlockungRegelUpdate();
-	}
-
-	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull List<@NotNull Long> listKursID) {
-		return new GostBlockungRegelUpdate();
-	}
-
-	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull List<@NotNull Long> listKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
 		return new GostBlockungRegelUpdate();
 	}
 
