@@ -1,47 +1,48 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
-import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungsergebnisBewertung, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
-import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
-import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
-import { System } from '../../../java/lang/System';
-import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { Predicate } from '../../../java/util/function/Predicate';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
-import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import type { List } from '../../../java/util/List';
-import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
-import { Pair } from '../../../core/adt/Pair';
-import { GostFach } from '../../../core/data/gost/GostFach';
-import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
+import { SetUtils } from '../../../core/utils/SetUtils';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
-import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { Schueler } from '../../../core/data/schueler/Schueler';
+import { Arrays } from '../../../java/util/Arrays';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
+import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
+import { LongArrayKey } from '../../../core/adt/LongArrayKey';
+import { Logger } from '../../../core/logger/Logger';
+import { System } from '../../../java/lang/System';
+import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
+import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
+import { Geschlecht } from '../../../core/types/Geschlecht';
+import { Pair } from '../../../core/adt/Pair';
+import { GostFach } from '../../../core/data/gost/GostFach';
+import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
+import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
-import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { ListUtils } from '../../../core/utils/ListUtils';
-import { Arrays } from '../../../java/util/Arrays';
-import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostBlockungsergebnisManager extends JavaObject {
 
@@ -2166,13 +2167,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Menge aller Schüler-Objekte des Kurses.
 	 *
-	 * @param idKursID  Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Menge aller Schüler-Objekte des Kurses.
 	 */
-	public getOfKursSchuelermenge(idKursID : number) : List<Schueler> {
+	public getOfKursSchuelermenge(idKurs : number) : List<Schueler> {
 		const list : List<Schueler> = new ArrayList();
-		for (const idSchueler of this.getKursE(idKursID).schueler)
+		for (const idSchueler of this.getKursE(idKurs).schueler)
 			list.add(this.getSchuelerG(idSchueler!));
 		return list;
 	}
@@ -3099,17 +3100,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
-	 * <br>(1) Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
+	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
 	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Liste der Schüler-IDs.
+	 * @param setKursID      Die Liste der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
-	public regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(listSchuelerID : JavaSet<number>, listKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		for (const idSchueler of listSchuelerID)
-			for (const idKurs of listKursID) {
+		for (const idSchueler of setSchuelerID)
+			for (const idKurs of setKursID) {
 				const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
 				const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (regelFixierung !== null)
@@ -3119,21 +3120,42 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
+	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @param setKursID  Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
 	 */
-	public regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN(listKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID) {
+			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+			u.listEntfernen.addAll(u2.listEntfernen);
+			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+		}
+		return u;
 	}
 
 	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
+	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
+	 *
+	 * @param setKursID  Die Liste der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 */
-	public regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN(listKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID) {
+			const u2 : GostBlockungRegelUpdate = this.regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+			u.listEntfernen.addAll(u2.listEntfernen);
+			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+		}
+		return u;
 	}
 
 	/**
