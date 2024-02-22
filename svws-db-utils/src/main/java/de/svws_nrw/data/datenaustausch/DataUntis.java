@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.svws_nrw.base.untis.UntisGPU001;
+import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
@@ -111,7 +112,7 @@ public final class DataUntis {
         long next_kid = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
         long next_rid = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
         long next_sid = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
-        final Set<Long> setUnterrichtIDs = new HashSet<>();
+        final Set<LongArrayKey> setKursUnterricht = new HashSet<>();
         for (final UntisGPU001 u : unterrichte) {
         	logger.logLn("-> Importiere Unterricht: " + u.toString());
 			// Bestimme den Zeitraster-Eintrag des neuen Stundenplans
@@ -124,14 +125,9 @@ public final class DataUntis {
 			}
 			// Bestimme den Fachlehrer
 			final LehrerListeEintrag lehrer = mapLehrerByKuerzel.get(u.lehrerKuerzel);
-			if (lehrer == null) {
+			if ((u.lehrerKuerzel != null) && (lehrer == null)) {
 				logger.logLn(2, "[Fehler] - Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
 				throw OperationError.NOT_FOUND.exception("Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
-			}
-			// Prüfe, ob die Unterichts-ID aus der Datei schon mit einem früheren Datensatz bearbeitet wurde
-			if (!setUnterrichtIDs.add(u.idUnterricht)) {
-				logger.logLn(2, "Unterricht mit der ID %d wurde bereits hinzugefügt. Überspringe diesen Eintrag...".formatted(u.idUnterricht));
-				continue;
 			}
 			// Prüfe, ob es sich um Kursunterricht handelt
 			final KursListeEintrag kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
@@ -149,13 +145,20 @@ public final class DataUntis {
 				conn.transactionPersist(dtoUnterricht);
 				conn.transactionFlush();
 				// ... Lehrer ...
-				conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+				if (lehrer != null)
+					conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
 				// ... Klasse ...
 				conn.transactionPersist(new DTOStundenplanUnterrichtKlasse(next_kid++, uid, klasse.ID));
 				// ... Raum
 				if (u.raumKuerzel != null)
 					conn.transactionPersist(new DTOStundenplanUnterrichtRaum(next_rid++, uid, DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
 			} else {
+				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
+				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde };
+				if (!setKursUnterricht.add(new LongArrayKey(key))) {
+					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d hinzugefügt. Überspringe diesen Eintrag...".formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde));
+					continue;
+				}
 				// Erstelle den Kurs-Unterricht ...
 				final long uid = next_uid++;
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, 0, kurs.idFach);
@@ -163,7 +166,8 @@ public final class DataUntis {
 				conn.transactionPersist(dtoUnterricht);
 				conn.transactionFlush();
 				// ... Lehrer ...
-				conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+				if (lehrer != null)
+					conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
 				// ... Schiene ...
 				for (final long idJahrgang : kurs.idJahrgaenge) {
 					for (final int schiene : kurs.schienen) {
