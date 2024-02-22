@@ -3272,14 +3272,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu setzen.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 * <br>(1) Wenn Kurs A mit Kurs B zusammen sein soll, wird dies entfernt.
 	 * <br>(2) Wenn die Regel mit bereits existiert, aber die IDs nicht aufsteigend sind, wird dies entfernt.
 	 * <br>(3) Wenn die Regel nicht existiert, wird sie hinzugefügt.
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu setzen.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
@@ -3313,12 +3313,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu lösen.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
 	 * <br>(1) Wenn das Kurs-Kurs-Verbot existiert (in beliebiger Permutation), wird es entfernt.
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Menge (alle Paarungen) zu lösen.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
@@ -3338,21 +3338,69 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param setKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
+	 * <br>(1) Wenn Kurs A mit Kurs B verboten sein soll, wird dies entfernt.
+	 * <br>(2) Wenn die Regel mit bereits existiert, aber die IDs nicht aufsteigend sind, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht existiert, wird sie hinzugefügt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs1 of setKursID)
+			for (const idKurs2 of setKursID)
+				if (idKurs1 < idKurs2) {
+					const keyVerboten12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2]);
+					const regelVerboten12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
+					if (regelVerboten12 !== null)
+						u.listEntfernen.add(regelVerboten12);
+					const keyVerboten21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1]);
+					const regelVerboten21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
+					if (regelVerboten21 !== null)
+						u.listEntfernen.add(regelVerboten21);
+					const keyZusammen21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1]);
+					const regelZusammen21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
+					if (regelZusammen21 !== null)
+						u.listEntfernen.add(regelZusammen21);
+					const keyZusammen12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2]);
+					const regelZusammen12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
+					if (regelZusammen12 === null) {
+						const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+						regelHinzufuegen.id = -1;
+						regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
+						regelHinzufuegen.parameter.add(idKurs1);
+						regelHinzufuegen.parameter.add(idKurs2);
+						u.listHinzuzufuegen.add(regelHinzufuegen);
+					}
+				}
+		return u;
 	}
 
 	/**
-	 * ...
-	 * @param setKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
+	 * <br>(1) Wenn das Kurs-Kurs-Gebot existiert (in beliebiger Permutation), wird es entfernt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs1 of setKursID)
+			for (const idKurs2 of setKursID)
+				if (idKurs1 < idKurs2) {
+					const keyZusammen12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2]);
+					const regelZusammen12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
+					if (regelZusammen12 !== null)
+						u.listEntfernen.add(regelZusammen12);
+					const keyZusammen21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1]);
+					const regelZusammen21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
+					if (regelZusammen21 !== null)
+						u.listEntfernen.add(regelZusammen21);
+				}
+		return u;
 	}
 
 	/**
