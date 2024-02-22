@@ -123,7 +123,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			faecherManager: routeGost.data.faecherManager,
 			addRegel: routeGostKursplanung.data.addRegel,
 			removeRegel: routeGostKursplanung.data.removeRegel,
-			regelnDeleteAndAdd: routeGostKursplanung.data.regelnDeleteAndAdd,
+			regelnUpdate: routeGostKursplanung.data.regelnUpdate,
 			isSchuelerFilterOpen: () => routeGostKursplanung.data.isSchuelerFilterOpen,
 			setIsSchuelerFilterOpen: routeGostKursplanung.data.setIsSchuelerFilterOpen,
 			showGeschlecht: () => routeGostKursplanung.data.showGeschlecht,

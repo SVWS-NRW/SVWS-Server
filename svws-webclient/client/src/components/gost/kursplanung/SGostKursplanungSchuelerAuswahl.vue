@@ -182,11 +182,11 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag } from "@core";
-	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import type { DataTableColumn } from "@ui";
-	import { ArrayList, GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, ListUtils, SchuelerStatus } from "@core";
 	import { computed } from "vue";
+	import type { DataTableColumn } from "@ui";
+	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag , GostBlockungRegel} from "@core";
+	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
@@ -285,30 +285,9 @@
 		return undefined;
 	});
 
-	async function regel_speichern(regel: GostBlockungRegel, idKurs: number, idSchueler: number) {
-		regel.parameter.add(idSchueler);
-		regel.parameter.add(idKurs);
-		await props.addRegel(regel);
-	}
-
 	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
-		const update = props.getErgebnismanager().regelupdateGetSchuelermengeInKursmengeFixierungSetzen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-		// Prüfe, ob bereits eine andere Fixierungen für die Fachwahl bei dem Schüler bestehen und entferne diese ggf. zuvor
-		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
-		const kurs = props.getDatenmanager().kursGet(idKurs);
-		const kurse = props.getDatenmanager().kursGetListeByFachUndKursart(kurs.fach_id, kurs.kursart);
-		for (const k of kurse)
-			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, k.id))
-				listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, k.id));
-		// Füge die Regel hinzu
-		const listAddRegeln = new ArrayList<GostBlockungRegel>();
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-		regel.parameter.add(idSchueler);
-		regel.parameter.add(idKurs);
-		listAddRegeln.add(regel);
-		// console.log(update.listEntfernen, update.listEntfernen, listDeleteRegeln, listAddRegeln)
-		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
+		const update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		await props.regelnUpdate(update);
 	}
 
 	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {

@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager, GostBlockungsdatenManager, GostBlockungRegel, List } from "@core";
+import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager, GostBlockungsdatenManager, GostBlockungRegel, List, GostBlockungRegelUpdate } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface KursplanungSchuelerAuswahlProps {
@@ -12,7 +12,7 @@ export interface KursplanungSchuelerAuswahlProps {
 	faecherManager: GostFaecherManager;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-	regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
+	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	isSchuelerFilterOpen: () => boolean;
 	setIsSchuelerFilterOpen: (value: boolean) => void;
 	showGeschlecht: () => boolean;
