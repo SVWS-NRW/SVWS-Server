@@ -16,7 +16,7 @@ public class Kurs42DataSchienen {
 	/** Die Bezeichnung der Schiene. */
 	public String Bezeichnung;
 
-	/** KopplungsId - beim Import icht verwendet */
+	/** KopplungsId - beim Import nicht verwendet */
 	public String KopplungsId;
 
 	/** Stundenplan - beim Import nicht verwendet */

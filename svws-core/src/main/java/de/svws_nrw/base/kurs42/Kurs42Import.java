@@ -3,6 +3,7 @@ package de.svws_nrw.base.kurs42;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,9 @@ public class Kurs42Import {
 
 	/** Die Menge der Schüler in der SVWS-DB zur Überprüfung auf gültige Schüler-IDs */
 	private final Set<Long> setSchueler;
+
+	/** Die Menge der SchienenNummern, die bei Kursen vorkommen - z.B. bei Regeln */
+	private final Set<Integer> setSchienenBeiKursen = new HashSet<>();
 
 	/** Die Rohdaten zur Blockung aus dem Kurs42 */
 	private final Kurs42DataBlockung k42Blockung;
@@ -218,11 +222,13 @@ public class Kurs42Import {
 					for (final String schiene : tmpSchienen) {
 						if ("".equals(schiene.trim()))
 							continue;
+						final int schienenNummer = Integer.parseInt(schiene.trim()) + 1;   // Die Schienen-Nummer (1-indiziert)
+						setSchienenBeiKursen.add(schienenNummer);
 						final GostBlockungRegel regel = new GostBlockungRegel();
 						regel.id = curRegelID++;
 						regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 						regel.parameter.add(id);  // Kurs-ID
-						regel.parameter.add(Long.parseLong(schiene.trim()) + 1);  // Die Schienen-Nummer (1-indiziert)
+						regel.parameter.add((long) schienenNummer);
 						regeln.add(regel);
 					}
 				} catch (final NumberFormatException nfe) {
@@ -231,11 +237,13 @@ public class Kurs42Import {
 			}
 			if ((k42Kurs.FixiertInSchiene != null) && (!"".equals(k42Kurs.FixiertInSchiene))) {
 				try {
+					final int schienenNummer = Integer.parseInt(k42Kurs.FixiertInSchiene) + 1;  // Die Schienen-Nummer (1-indiziert)
+					setSchienenBeiKursen.add(schienenNummer);
 					final GostBlockungRegel regel = new GostBlockungRegel();
 					regel.id = curRegelID++;
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(id);  // Kurs-ID
-					regel.parameter.add(Long.parseLong(k42Kurs.FixiertInSchiene) + 1);  // Die Schienen-Nummer (1-indiziert)
+					regel.parameter.add((long) schienenNummer);
 					regeln.add(regel);
 				} catch (final NumberFormatException nfe) {
 					throw new IOException(nfe);
@@ -257,7 +265,27 @@ public class Kurs42Import {
 			schiene.nummer = k42Schiene.Id;
 			schiene.bezeichnung = k42Schiene.Bezeichnung;
 			this.schienen.add(schiene);
+			this.setSchienenBeiKursen.remove(schiene.nummer);
 		}
+		// Ergänze Schienen für die Schienennummern, die bei den Kursen als Fixierungen und Sperrungen vorkommen, aber nicht in der Schienen-Datei vorhanden sind
+		for (final int schienenNr : this.setSchienenBeiKursen) {
+			final long id = curSchienenID++;
+			final Kurs42DataSchienen k42Schiene = new Kurs42DataSchienen();
+			k42Schiene.Id = schienenNr;
+			k42Schiene.Bezeichnung = "Schiene " + schienenNr;
+			k42Schiene.KopplungsId = "";
+			k42Schiene.Stundenplan = "";
+			k42Schienen.add(k42Schiene);
+			mapSchieneByID.put(id, k42Schiene);
+			mapSchieneIDToName.put(id, k42Schiene.Bezeichnung);
+			mapSchieneNrToID.put(k42Schiene.Id, id);
+			final GostBlockungSchiene schiene = new GostBlockungSchiene();
+			schiene.id = id;
+			schiene.nummer = k42Schiene.Id;
+			schiene.bezeichnung = k42Schiene.Bezeichnung;
+			this.schienen.add(schiene);
+		}
+		this.setSchienenBeiKursen.clear();
 	}
 
 	private long initBlockplan(final long firstRegelID) throws IOException {
