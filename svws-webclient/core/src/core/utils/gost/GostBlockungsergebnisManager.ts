@@ -3404,12 +3404,30 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param anzahl ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
+	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
+	 * <br>(2) Wenn danach die Anzahl größer 0 ist, wird die Regel hinzugefügt.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 * @param anzahl  Die Anzahl an Dummy-Schülern.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 */
-	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(anzahl : number) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, anzahl]);
+		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
+		if (regelDummyAlt !== null)
+			u.listEntfernen.add(regelDummyAlt);
+		if (anzahl > 0) {
+			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
+			regelHinzufuegen.parameter.add(idKurs);
+			regelHinzufuegen.parameter.add(anzahl as number);
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+		return u;
 	}
 
 	/**
