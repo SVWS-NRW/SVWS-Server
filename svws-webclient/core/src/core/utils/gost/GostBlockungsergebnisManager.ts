@@ -3169,7 +3169,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
-	public regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : List<number>, setKursID : List<number>) : GostBlockungRegelUpdate {
+	public regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3200,7 +3200,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
 	 */
-	public regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : List<number>, setKursID : List<number>) : GostBlockungRegelUpdate {
+	public regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3213,21 +3213,40 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
+	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
 	 */
-	public regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_ALLEN_KURSEN(listKursID : List<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID) {
+			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+			u.listEntfernen.addAll(u2.listEntfernen);
+			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+		}
+		return u;
 	}
 
 	/**
-	 * ...
-	 * @param listKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird die Sperrung entfernt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
 	 */
-	public regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_ALLEN_KURSEN(listKursID : List<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID) {
+			const u2 : GostBlockungRegelUpdate = this.regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+			u.listEntfernen.addAll(u2.listEntfernen);
+			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+		}
+		return u;
 	}
 
 	/**
