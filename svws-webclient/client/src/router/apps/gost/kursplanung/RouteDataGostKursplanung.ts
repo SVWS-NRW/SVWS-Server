@@ -913,8 +913,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
 		update.listHinzuzufuegen = listAdd;
 		this.ergebnismanager.regelupdateExecute(update);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 	}
 

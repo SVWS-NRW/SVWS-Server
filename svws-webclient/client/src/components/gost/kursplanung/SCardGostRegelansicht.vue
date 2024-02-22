@@ -1,23 +1,186 @@
 <template>
 	<div class="mt-6 -mx-6">
-		<div>
-			<svws-ui-checkbox type="toggle" v-model="nurRegelverletzungen" class="mx-6"> Nur Regelverletzungen anzeigen </svws-ui-checkbox>
-			<Blockungsregel_1 v-if="!nurRegelverletzungen || regeln[1].value.length" v-model="regel" :schienen="schienen" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_6 v-if="!nurRegelverletzungen || regeln[6].value.length" v-model="regel" :schienen="schienen" :regeln="regeln[6].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_2 v-if="!nurRegelverletzungen || regeln[2].value.length" v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[2].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_3 v-if="!nurRegelverletzungen || regeln[3].value.length" v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[3].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_7 v-if="!nurRegelverletzungen || regeln[7].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_8 v-if="!nurRegelverletzungen || regeln[8].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_9 v-if="!nurRegelverletzungen || regeln[9].value.length" v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_15 v-if="!nurRegelverletzungen || regeln[15].value.length" v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[15].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_4 v-if="!nurRegelverletzungen || regeln[4].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_5 v-if="!nurRegelverletzungen || regeln[5].value.length" v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_11 v-if="!nurRegelverletzungen || regeln[11].value.length" v-model="regel" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[11].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_12 v-if="!nurRegelverletzungen || regeln[12].value.length" v-model="regel" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[12].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_13 v-if="!nurRegelverletzungen || regeln[13].value.length" v-model="regel" :map-schueler="mapSchueler" :regeln="regeln[13].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
-			<Blockungsregel_14 v-if="!nurRegelverletzungen || regeln[14].value.length" v-model="regel" :map-schueler="mapSchueler" :regeln="regeln[14].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" :get-ergebnismanager="getErgebnismanager" />
+		<svws-ui-checkbox type="toggle" v-model="nurRegelverletzungen" class="mx-6"> Nur Regelverletzungen anzeigen </svws-ui-checkbox>
+		<!-- Regeltyp 1 			 -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS" :regeln="regeln.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_01" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kursart', label: 'Kursart gesperrt in Schienen', span: 2}, {key: 'von', label: 'von'}, {key: 'bis', label: 'bis'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ GostKursart.fromID(r.parameter.get(0)).beschreibung }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(2) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKursart(regel, 0).value" :items="GostKursart.values()" :item-text="i => i.beschreibung" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 2).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 2 			 -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS" :regeln="regeln.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_06" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kursart', label: 'Kursart allein in Schienen', span: 2}, {key: 'von', label: 'von'}, {key: 'bis', label: 'bis'}, ]">
+			<template #regelRead="{regel: r}">
+				<div class="svws-ui-td" role="cell"> {{ GostKursart.fromID(r.parameter.get(0)).beschreibung }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(2) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKursart(regel, 0).value" :items="GostKursart.values()" :item-text="i => i.beschreibung" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 2).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 2  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_02" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kursart', label: 'Kurs fixiert'}, {key: 'in', label: 'in Schiene'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 3  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_03" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kursart', label: 'Kurs gesperrt'}, {key: 'in', label: 'in Schiene'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 7  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_07" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kurs1', label: 'Kurs nie zusammen'}, {key: 'kurs2', label: 'mit Kurs'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 8  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_08" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kurs1', label: 'Kurs immer zusammen'}, {key: 'kurs2', label: 'mit Kurs'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 9  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_09" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kurs', label: 'Kurs auffüllen mit'}, {key: 'anzahl', label: 'externen Schülern', tooltip: 'Dummy-Daten'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurseFiltered(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN).value" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-input-number placeholder="externe Schüler" v-model="regelParameterAnzahlSuS" :min="1" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 15  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL" :regeln="regeln.get(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_15" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'kurs', label: 'Kurs hat'}, {key: 'anzahl', label: 'maximale Schülerzahl' }, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurseFiltered(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL).value" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-input-number placeholder="maximale Schülerzahl" v-model="regelParameterAnzahlSuS" :min="0" :max="100" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 4  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_04" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler fixiert'}, {key: 'in', label: 'in Kurs'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 5  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_05" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler verboten'}, {key: 'in', label: 'in Kurs'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 11  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_11" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler zusammen'}, {key: 'schueler', label: 'mit Schüler'}, {key: 'in', label: 'in Fach'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getErgebnismanager().getFach(r.parameter.get(2)).bezeichnung ?? '??' }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 1).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterFach(mapFaecher, regel, 2).value" :items="mapFaecher" :item-text="i => i.bezeichnung ?? '??'" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 12  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_12" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler verbieten'}, {key: 'schueler', label: 'mit Schüler'}, {key: 'in', label: 'in Fach'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getErgebnismanager().getFach(r.parameter.get(2)).bezeichnung ?? '??' }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 1).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterFach(mapFaecher, regel, 2).value" :items="mapFaecher" :item-text="i => i.bezeichnung ?? '??'" />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 13  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_13" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler zusammen'}, {key: 'schueler', label: 'mit Schüler'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 1).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 14  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER" :regeln="regeln.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)?.value" :get-ergebnismanager="getErgebnismanager"
+			:regel-hinzufuegen="regelHinzufuegen_14" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler verbieten'}, {key: 'schueler', label: 'mit Schüler'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 1).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+			</template>
+		</BlockungsregelBase>
+		<!-- Regeltyp 10  -->
+		<div class="mt-10 px-6">
+			<svws-ui-checkbox type="toggle" v-model="hatRegel" :disabled="disabled"> {{ GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.bezeichnung }} </svws-ui-checkbox>
 		</div>
-		<Blockungsregel_10 v-if="!nurRegelverletzungen || regeln[10].value.length" v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 	</div>
 </template>
 
@@ -25,12 +188,15 @@
 
 	import type { ComputedRef } from 'vue';
 	import { computed, shallowRef, ref } from 'vue';
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
-	import { GostKursblockungRegelTyp } from "@core";
+	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, List, GostBlockungRegelUpdate } from "@core";
+	import { GostFach, SchuelerListeEintrag } from "@core";
+	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene } from "@core";
+	import { GostKursblockungRegelTyp, GostKursart } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
+		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
@@ -40,7 +206,7 @@
 
 	const nurRegelverletzungen = ref<boolean>(false);
 
-	const mapFaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
+	const mapFaecher = computed<Map<number, GostFach>>(() => {
 		const result = new Map<number, GostFach>();
 		const faecher = props.faecherManager.faecher() || [];
 		for (const fach of faecher)
@@ -71,17 +237,187 @@
 
 	const verletzungen = computed(()=> new Set(props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen));
 
-	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
+	const regeln: Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>> = new Map();
 
-	for (let i = 1; i < 16; i++)
-		regeln[i] = computed(() => {
+	for (const regelTyp of GostKursblockungRegelTyp.values())
+		regeln.set(regelTyp, computed(() => {
 			const a = [];
 			for (const r of props.getDatenmanager().regelGetListe())
-				if (r.typ === i)
+				if (r.typ === regelTyp.typ)
 					if (!nurRegelverletzungen.value || verletzungen.value.has(r.id))
 						a.push(r);
 			return a;
-		});
+		}));
+
+	function regelHinzufuegen_01() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
+		r.parameter.add(1);
+		r.parameter.add(1);
+		r.parameter.add(1);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_06() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
+		r.parameter.add(1);
+		r.parameter.add(1);
+		r.parameter.add(1);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_02() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(kurs.id);
+			r.parameter.add(1);
+			regel.value = r;
+		}
+	}
+
+	function regelHinzufuegen_03() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(kurs.id);
+			r.parameter.add(1);
+			regel.value = r;
+		}
+	}
+	function regelHinzufuegen_07() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(kurs.id);
+			r.parameter.add(kurs.id);
+			regel.value = r;
+		}
+	}
+
+	function regelHinzufuegen_08() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(kurs.id);
+			r.parameter.add(kurs.id);
+			regel.value = r;
+		}
+	}
+
+	const KURS_MIT_DUMMY_SUS_AUFFUELLEN_kurseFiltered = computed<List<GostBlockungKurs>>(() => {
+		const usedIDs = new Set<number>();
+		const arr = regeln.get(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)?.value;
+		if (arr === undefined)
+			return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer();
+		for (const r of arr)
+			usedIDs.add(r.parameter.get(0));
+		const result = new ArrayList<GostBlockungKurs>();
+		for (const k of props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
+			if (!usedIDs.has(k.id))
+				result.add(k);
+		return result;
+	});
+
+	function regelHinzufuegen_09() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		if (KURS_MIT_DUMMY_SUS_AUFFUELLEN_kurseFiltered.value.isEmpty())
+			return;
+		r.parameter.add(KURS_MIT_DUMMY_SUS_AUFFUELLEN_kurseFiltered.value.get(0).id);
+		r.parameter.add(1);
+		regel.value = r;
+	}
+
+	const kurseFiltered = (regelTyp: GostKursblockungRegelTyp) => computed<List<GostBlockungKurs>>(() => {
+		const usedIDs = new Set<number>();
+		const arr = regeln.get(regelTyp)?.value;
+		if (arr === undefined)
+			return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer();
+		for (const r of arr)
+			usedIDs.add(r.parameter.get(0));
+		const result = new ArrayList<GostBlockungKurs>();
+		for (const k of props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
+			if (!usedIDs.has(k.id))
+				result.add(k);
+		return result;
+	});
+
+	function regelHinzufuegen_15() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		if (KURS_MIT_DUMMY_SUS_AUFFUELLEN_kurseFiltered.value.isEmpty())
+			return;
+		r.parameter.add(KURS_MIT_DUMMY_SUS_AUFFUELLEN_kurseFiltered.value.get(0).id);
+		r.parameter.add(1);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_04() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(props.mapSchueler.values().next().value.id);
+			r.parameter.add(kurs.id);
+			regel.value = r;
+		}
+	}
+
+	function regelHinzufuegen_05() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
+		const kurs = kurse.value.getFirst();
+		if (kurs !== null) {
+			r.parameter.add(kurs.id);
+			r.parameter.add(kurs.id);
+			regel.value = r;
+		}
+	}
+
+	function regelHinzufuegen_11() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ;
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(mapFaecher.value.values().next().value.id);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_12() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(mapFaecher.value.values().next().value.id);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_13() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		regel.value = r;
+	}
+
+	function regelHinzufuegen_14() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		r.parameter.add(props.mapSchueler.values().next().value.id);
+		regel.value = r;
+	}
+
+	const hatRegel = computed<boolean>({
+		get: () => regeln.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN)?.value.length === 0 ? false : true,
+		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen))
+	})
 
 	async function regelEntfernen(r: GostBlockungRegel) {
 		await props.removeRegel(r.id);
@@ -99,4 +435,96 @@
 		regel.value = undefined;
 	}
 
+	function getKursbezeichnung(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>): string {
+		const kuerzel = mapFaecher.get(kurs.fach_id)?.kuerzelAnzeige;
+		const kursart = kurs.kursart > 0 ? GostKursart.fromID(kurs.kursart) : 'kursart-fehlt';
+		const suffix = kurs.suffix ? "-" + kurs.suffix : "";
+		return `${kuerzel}-${kursart}${kurs.nummer}${suffix}`
+	}
+
+	function getKursFromId(kurse: Iterable<GostBlockungKurs>, kursId: number): GostBlockungKurs {
+		for (const kurs of kurse)
+			if (kurs.id === kursId)
+				return kurs;
+		return new GostBlockungKurs();
+	}
+
+
+	function getSchuelerName(id: number) {
+		const schueler = props.mapSchueler.get(id);
+		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
+	}
+
+	const regelParameterAnzahlSuS = computed<number>({
+		get: () => {
+			if (regel.value === undefined)
+				return 0;
+			return regel.value.parameter.get(1);
+		},
+		set: (value) => {
+			if (regel.value !== undefined)
+				regel.value.parameter.set(1, value)
+		}
+	})
+
+	const regelParameterKursart = (regel: GostBlockungRegel | undefined, parameter: number) => computed<GostKursart>({
+		get: () => regel === undefined ? GostKursart.LK : GostKursart.fromID(regel.parameter.get(parameter)),
+		set: (value) => {
+			if (regel !== undefined)
+				regel.parameter.set(parameter, value.id)
+		}
+	})
+
+	const regelParameterSchiene = (schienen: Iterable<GostBlockungSchiene>, regel: GostBlockungRegel | undefined, parameter: number) => computed<GostBlockungSchiene>({
+		get: () => {
+			for (const schiene of schienen)
+				if (schiene.nummer === regel?.parameter.get(parameter))
+					return schiene;
+			return new GostBlockungSchiene();
+		},
+		set: (value) => {
+			if (regel !== undefined)
+				regel.parameter.set(parameter, value.nummer)
+		}
+	})
+
+	const regelParameterKurs = (kurse: Iterable<GostBlockungKurs>, regel: GostBlockungRegel | undefined, parameter: number) => computed<GostBlockungKurs>({
+		get: () => {
+			for (const kurs of kurse)
+				if (kurs.id === regel?.parameter.get(parameter))
+					return kurs;
+			return new GostBlockungKurs();
+		},
+		set: (value) => {
+			if (regel !== undefined)
+				regel.parameter.set(parameter, value.id)
+		}
+	})
+
+	const regelParameterSchueler = (mapSchueler: Map<number, SchuelerListeEintrag>, regel: GostBlockungRegel | undefined, parameter: number) => computed<SchuelerListeEintrag>({
+		get: () => {
+			if (regel === undefined)
+				return new SchuelerListeEintrag();
+			return mapSchueler.get(regel.parameter.get(parameter)) || new SchuelerListeEintrag();
+		},
+		set: (value) => {
+			if (regel !== undefined)
+				regel.parameter.set(parameter, value.id)
+		}
+	})
+
+	const regelParameterFach = (faecher: Iterable<GostFach> | Map<number, GostFach>, regel: GostBlockungRegel | undefined, parameter: number) => computed<GostFach>({
+		get: () => {
+			if (faecher instanceof Map)
+				faecher = faecher.values();
+			for (const fach of faecher)
+				if (fach.id === regel?.parameter.get(parameter))
+					return fach;
+			return new GostFach();
+		},
+		set: (value) => {
+			if (regel !== undefined)
+				regel.parameter.set(parameter, value.id)
+		}
+	})
 </script>

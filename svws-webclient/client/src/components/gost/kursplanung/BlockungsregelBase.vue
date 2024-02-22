@@ -1,13 +1,13 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="[]" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
+		<svws-ui-table :items="regeln" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
 			<template #header v-if="cols === undefined">
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">{{ regelTyp.bezeichnung }}</div>
 				</div>
 			</template>
-			<template #body>
-				<div v-for="r in regeln" :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
+			<template #rowCustom="{row: r}">
+				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
 					<svws-ui-tooltip v-if="regelverletzung(r)" autosize>
 						<div class="svws-ui-td" role="cell">
 							<i-ri-information-line />
@@ -21,7 +21,7 @@
 					<div v-else class="svws-ui-td" role="cell" />
 					<slot name="regelRead" :regel="r" />
 					<div class="svws-ui-td" role="cell">
-						<svws-ui-button type="icon" @click.stop="regel_entfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click.stop="regelEntfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
 					</div>
 				</div>
 				<span />
@@ -31,7 +31,7 @@
 					<div class="flex gap-1"><slot name="regelEdit" /></div>
 					<div class="flex gap-1 mt-3 justify-end">
 						<svws-ui-button type="transparent" @click="emit('update:modelValue', undefined)" :disabled="pending">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="speichern" :disabled="pending">
+						<svws-ui-button @click="regelSpeichern" :disabled="pending">
 							<template v-if="modelValue?.id === -1">Regel hinzufügen</template>
 							<template v-else>Speichern</template>
 						</svws-ui-button>
@@ -39,7 +39,7 @@
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button @click="regel_hinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
+				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -49,8 +49,8 @@
 
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { GostBlockungsergebnisManager } from "@core";
-	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
+	import type { GostBlockungsergebnisManager , GostBlockungRegel } from "@core";
+	import { GostKursblockungRegelTyp } from "@core";
 	import { api } from "~/router/Api";
 
 	type DataTableColumnSource = DataTableColumn | string
@@ -59,38 +59,22 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
-		regeln: GostBlockungRegel[];
+		regeln: GostBlockungRegel[] | undefined;
 		cols?: DataTableColumnSource[];
 		disabled: boolean;
+		regelEntfernen: (regel: GostBlockungRegel) => Promise<void>;
+		regelSpeichern: () => Promise<void>;
+		regelHinzufuegen: () => void;
 	}>()
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
-		(e: 'regelHinzugefuegen', v: GostBlockungRegel): void;
-		(e: 'regelSpeichern'): void;
-		(e: 'regelEntfernen', v: GostBlockungRegel): void;
 	}>()
 
 	const pending = computed<boolean>(() => api.status.pending);
 
 	function select_regel(r: GostBlockungRegel) {
 		emit('update:modelValue', r);
-	}
-
-	const regel_hinzufuegen = () => {
-		const r = new GostBlockungRegel()
-		r.typ = props.regelTyp.typ
-		emit('regelHinzugefuegen', r)
-	}
-
-	const speichern = async () => {
-		if (!props.modelValue)
-			return;
-		emit('regelSpeichern');
-	}
-
-	const regel_entfernen = async (r: GostBlockungRegel) => {
-		emit('regelEntfernen', r)
 	}
 
 	function regelverletzung(r: GostBlockungRegel) {

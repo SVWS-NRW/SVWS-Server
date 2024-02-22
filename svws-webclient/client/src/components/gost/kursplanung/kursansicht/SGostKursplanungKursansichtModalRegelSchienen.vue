@@ -3,7 +3,7 @@
 		<template #modalTitle>Regel erstellen</template>
 		<template #modalContent>
 			<div class="flex flex-col gap-1">
-				<parameter-kursart v-model="kursart" />
+				<svws-ui-select v-model="kursart" :items="GostKursart.values()" :item-text="i => i.beschreibung" />
 				<span class="mt-1" v-if="von.nummer !== bis.nummer">von Schiene {{ von.nummer }} bis Schiene {{ bis.nummer }}</span>
 				<span class="mt-1" v-else>in Schiene {{ von.nummer }}</span>
 			</div>
