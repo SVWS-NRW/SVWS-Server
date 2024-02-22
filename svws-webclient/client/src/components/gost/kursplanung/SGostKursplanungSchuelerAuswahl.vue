@@ -185,7 +185,7 @@
 	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, SchuelerStatus } from "@core";
+	import { ArrayList, GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, ListUtils, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -292,6 +292,7 @@
 	}
 
 	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
+		const update = props.getErgebnismanager().regelupdateGetSchuelermengeInKursmengeFixierungSetzen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
 		// Prüfe, ob bereits eine andere Fixierungen für die Fachwahl bei dem Schüler bestehen und entferne diese ggf. zuvor
 		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
 		const kurs = props.getDatenmanager().kursGet(idKurs);
@@ -306,10 +307,13 @@
 		regel.parameter.add(idSchueler);
 		regel.parameter.add(idKurs);
 		listAddRegeln.add(regel);
+		// console.log(update.listEntfernen, update.listEntfernen, listDeleteRegeln, listAddRegeln)
 		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
 	}
 
 	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
+		// const update = props.getErgebnismanager().regelupdateGetSchuelermengeInKursmengeFixierungLoesen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
+		// console.log(update.listEntfernen, update.listHinzuzufuegen)
 		const idRegel = fixier_regel(idKurs, idSchueler).value;
 		if (idRegel === undefined)
 			return;

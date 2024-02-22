@@ -909,6 +909,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return result;
 	}
 
+	regelnUpdate = async (update: GostBlockungRegelUpdate) => {
+		const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
+		update.listHinzuzufuegen = listAdd;
+		this.ergebnismanager.regelupdateExecute(update);
+	}
+
 	regelnDeleteAndAdd = async (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) : Promise<void> => {
 		if (listDelete.isEmpty() && (listAdd.isEmpty()))
 			return;
