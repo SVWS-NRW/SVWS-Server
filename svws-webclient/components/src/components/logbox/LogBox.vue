@@ -1,5 +1,5 @@
 <template>
-	<div v-if="logs != null" class="mt-4 h-84 w-full overflow-x-auto">
+	<div v-if="logs != null" class="w-full overflow-x-auto" :class="hfull ? ['h-full','overflow-y-hidden'] : ['mt-4', 'h-84']">
 		<div :class="{ 'text-error': status === false, 'text-success': status === true }">
 			<span class="flex mb-4 text-headline-md">
 				<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-1" />
@@ -7,7 +7,10 @@
 				Log
 			</span>
 		</div>
-		<pre v-if="(status !== undefined)">{{ log }}</pre>
+		<div :class="hfull ? ['h-full', 'overflow-y-auto'] : []">
+			<pre v-if="(status !== undefined)">{{ log }}</pre>
+			<div class="pt-4" />
+		</div>
 	</div>
 </template>
 
@@ -16,10 +19,15 @@
 	import { type List } from '@core';
 	import { computed } from "vue";
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		logs?: List<string | null>;
 		status?: boolean;
-	}>();
+		hfull?: boolean;
+	}>(), {
+		logs: undefined,
+		status: undefined,
+		hfull: false,
+	});
 
 	const log = computed(()=> {
 		if (props.logs === undefined)
