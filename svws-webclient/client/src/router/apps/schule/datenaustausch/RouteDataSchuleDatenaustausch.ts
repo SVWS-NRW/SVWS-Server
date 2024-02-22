@@ -68,7 +68,7 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		try {
 			return await api.server.importStundenplanUntisGPU001(formData, api.schema)
 		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 409))) {
+			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 404) || (e.response.status === 409) || (e.response.status === 500))) {
 				const json : string = await e.response.text();
 				return SimpleOperationResponse.transpilerFromJSON(json);
 			}
