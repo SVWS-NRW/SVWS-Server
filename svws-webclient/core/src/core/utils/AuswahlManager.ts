@@ -33,6 +33,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	protected readonly _schulform : Schulform | null;
 
 	/**
+	 * Der Schuljahresabschnitt
+	 */
+	protected readonly _schuljahresabschnitt : number;
+
+	/**
 	 * Die gefilterte Liste, sofern sie schon berechnet wurde
 	 */
 	protected _filtered : List<TAuswahl> | null = null;
@@ -64,15 +69,17 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
 	 *
-	 * @param schulform        die Schulform, für welche die Auswahl bereitgestellt wird.
-	 * @param values           die Werte für die Auswahlliste
-	 * @param listComparator   ein comparator für das Vergleichen von Auswahl-Werten
-	 * @param listeToId        eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
-	 * @param datenToId        eine Funktion für das Mappen eines Daten-Objektes auf seine ID
-	 * @param order            die Default-Sortierung für die Auswahl-Liste
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
+	 * @param schulform              die Schulform, für welche die Auswahl bereitgestellt wird.
+	 * @param values                 die Werte für die Auswahlliste
+	 * @param listComparator         ein comparator für das Vergleichen von Auswahl-Werten
+	 * @param listeToId              eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
+	 * @param datenToId              eine Funktion für das Mappen eines Daten-Objektes auf seine ID
+	 * @param order                  die Default-Sortierung für die Auswahl-Liste
 	 */
-	protected constructor(schulform : Schulform | null, values : Collection<TAuswahl>, listComparator : Comparator<TAuswahl>, listeToId : JavaFunction<TAuswahl, TID>, datenToId : JavaFunction<TDaten, TID>, order : List<Pair<string, boolean>>) {
+	protected constructor(schuljahresabschnitt : number, schulform : Schulform | null, values : Collection<TAuswahl>, listComparator : Comparator<TAuswahl>, listeToId : JavaFunction<TAuswahl, TID>, datenToId : JavaFunction<TDaten, TID>, order : List<Pair<string, boolean>>) {
 		super();
+		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;

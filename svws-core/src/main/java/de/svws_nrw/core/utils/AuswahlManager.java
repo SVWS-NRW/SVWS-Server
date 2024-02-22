@@ -35,6 +35,9 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/** Die Schulform der Schule */
 	protected final Schulform _schulform;
 
+	/** Der Schuljahresabschnitt */
+	protected final long _schuljahresabschnitt;
+
 	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
 	protected List<@NotNull TAuswahl> _filtered = null;
 
@@ -58,17 +61,19 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
 	 *
-	 * @param schulform        die Schulform, für welche die Auswahl bereitgestellt wird.
-	 * @param values           die Werte für die Auswahlliste
-	 * @param listComparator   ein comparator für das Vergleichen von Auswahl-Werten
-	 * @param listeToId        eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
-	 * @param datenToId        eine Funktion für das Mappen eines Daten-Objektes auf seine ID
-	 * @param order            die Default-Sortierung für die Auswahl-Liste
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
+	 * @param schulform              die Schulform, für welche die Auswahl bereitgestellt wird.
+	 * @param values                 die Werte für die Auswahlliste
+	 * @param listComparator         ein comparator für das Vergleichen von Auswahl-Werten
+	 * @param listeToId              eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
+	 * @param datenToId              eine Funktion für das Mappen eines Daten-Objektes auf seine ID
+	 * @param order                  die Default-Sortierung für die Auswahl-Liste
 	 */
-	protected AuswahlManager(final Schulform schulform,
+	protected AuswahlManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull Collection<@NotNull TAuswahl> values, final @NotNull Comparator<@NotNull TAuswahl> listComparator,
 			final @NotNull Function<@NotNull TAuswahl, @NotNull TID> listeToId, final @NotNull Function<@NotNull TDaten, @NotNull TID> datenToId,
 			final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
+		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;

@@ -80,6 +80,7 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Schülerauswahl bezieht
 	 * @param schulform               die Schulform der Schule
 	 * @param schueler                die Liste der Schüler
 	 * @param jahrgaenge              die Liste des Jahrgangskatalogs
@@ -88,14 +89,14 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public SchuelerListeManager(final Schulform schulform,
+	public SchuelerListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		super(schulform, schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
+		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.klassen = new AttributMitAuswahl<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
@@ -227,7 +228,7 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 		for (final @NotNull SchuelerListeEintrag eintrag : this.liste.list()) {
 			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 				continue;
-			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
+			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
 				continue;
 			if (this.kurse.auswahlExists()) {
 				boolean hatEinenKurs = false;

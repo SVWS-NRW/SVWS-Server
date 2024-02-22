@@ -18,7 +18,7 @@ interface RouteStateLehrer extends RouteStateInterface {
 
 const defaultState = <RouteStateLehrer> {
 	idSchuljahresabschnitt: -1,
-	lehrerListeManager: new LehrerListeManager(null, new ArrayList()),
+	lehrerListeManager: new LehrerListeManager(-1, null, new ArrayList()),
 	view: routeLehrerIndividualdaten
 };
 
@@ -49,7 +49,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			 return;
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const lehrerListeManager = new LehrerListeManager(api.schulform, listLehrer);
+		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schulform, listLehrer);
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, lehrerListeManager });
 	}
 

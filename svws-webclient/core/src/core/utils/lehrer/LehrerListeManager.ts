@@ -71,11 +71,12 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Lahrerauswahl bezieht
 	 * @param schulform     die Schulform der Schule
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public constructor(schulform : Schulform | null, lehrer : List<LehrerListeEintrag>) {
-		super(schulform, lehrer, LehrerUtils.comparator, LehrerListeManager._lehrerToId, LehrerListeManager._lehrerDatenToId, Arrays.asList(new Pair("nachname", true), new Pair("vorname", true), new Pair("kuerzel", true)));
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, lehrer : List<LehrerListeEintrag>) {
+		super(schuljahresabschnitt, schulform, lehrer, LehrerUtils.comparator, LehrerListeManager._lehrerToId, LehrerListeManager._lehrerDatenToId, Arrays.asList(new Pair("nachname", true), new Pair("vorname", true), new Pair("kuerzel", true)));
 		this.personaltypen = new AttributMitAuswahl(Arrays.asList(...PersonalTyp.values()), LehrerListeManager._personaltypToId, LehrerListeManager._comparatorPersonaltypen, this._eventHandlerFilterChanged);
 		this.initLehrer();
 	}

@@ -76,13 +76,14 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
 	 * @param schulform     die Schulform der Schule
 	 * @param klassen       die Liste der Klassen
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public constructor(schulform : Schulform | null, klassen : List<KlassenListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, lehrer : List<LehrerListeEintrag>) {
-		super(schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klassenDatenToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klassenDatenToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KlassenListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, KlassenListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);

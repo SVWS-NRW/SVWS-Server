@@ -19,7 +19,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
-	klassenListeManager: new KlassenListeManager(null, new ArrayList(), new ArrayList(), new ArrayList()),
+	klassenListeManager: new KlassenListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList()),
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenListeEintrag>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenListeEintrag>(),
 	view: routeKlasseDaten,
@@ -57,7 +57,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const klassenListeManager = new KlassenListeManager(api.schulform, listKlassen, listJahrgaenge, listLehrer);
+		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schulform, listKlassen, listJahrgaenge, listLehrer);
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt });
 	}
 

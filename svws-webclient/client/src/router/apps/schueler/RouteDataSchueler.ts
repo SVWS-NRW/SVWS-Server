@@ -18,7 +18,7 @@ interface RouteStateSchueler extends RouteStateInterface {
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: new SchuelerListeManager(null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+	schuelerListeManager: new SchuelerListeManager(-1, null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
 	view: routeSchuelerIndividualdaten,
 };
 
@@ -46,7 +46,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listAbiturjahrgaenge = api.schulform.daten.hatGymOb ? await api.server.getGostAbiturjahrgaenge(api.schema) : new ArrayList<GostJahrgang>();
-		const schuelerListeManager = new SchuelerListeManager(api.schulform, listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
+		const schuelerListeManager = new SchuelerListeManager(idSchuljahresabschnitt, api.schulform, listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen

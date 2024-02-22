@@ -59,16 +59,17 @@ public class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
 	 * @param schulform     die Schulform der Schule
 	 * @param klassen       die Liste der Klassen
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public KlassenListeManager(final Schulform schulform,
+	public KlassenListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
-		super(schulform, klassen, KlassenUtils.comparator, _klasseToId, _klassenDatenToId,
+		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klassenDatenToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("schueleranzahl", true)));
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);

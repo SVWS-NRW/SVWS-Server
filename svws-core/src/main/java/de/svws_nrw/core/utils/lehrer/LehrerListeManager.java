@@ -56,12 +56,13 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Lahrerauswahl bezieht
 	 * @param schulform     die Schulform der Schule
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public LehrerListeManager(final Schulform schulform,
+	public LehrerListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
-		super(schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
+		super(schuljahresabschnitt, schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
 				Arrays.asList(new Pair<>("nachname", true), new Pair<>("vorname", true), new Pair<>("kuerzel", true)));
 		this.personaltypen = new AttributMitAuswahl<>(Arrays.asList(PersonalTyp.values()), _personaltypToId, _comparatorPersonaltypen, _eventHandlerFilterChanged);
 		initLehrer();
