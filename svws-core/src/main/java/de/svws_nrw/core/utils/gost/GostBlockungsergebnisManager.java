@@ -3044,7 +3044,10 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * ...
+     * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu setzen.
+	 * <br> Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird dies ignoriert.
+	 * <br> Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
+	 *
 	 * @param kursart ...
 	 * @param schieneNrVon ...
 	 * @param schieneNrBis ...
@@ -3210,16 +3213,16 @@ public class GostBlockungsergebnisManager {
 	 * <br> Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
 	 * <br> Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Liste der Schüler-IDs.
+	 * @param setKursID      Die Liste der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> listSchuelerID, final @NotNull Set<@NotNull Long> listKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
 
-		for (final long idSchueler : listSchuelerID)
-			for (final long idKurs : listKursID) {
+		for (final long idSchueler : setSchuelerID)
+			for (final long idKurs : setKursID) {
 				final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(idKurs);
 
 				// Überprüfen, ob da eine Sperrung vorliegt.

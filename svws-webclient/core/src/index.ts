@@ -516,6 +516,7 @@ export { Map2DUtils } from './core/utils/Map2DUtils';
 export { Map3DUtils } from './core/utils/Map3DUtils';
 export { Map4DUtils } from './core/utils/Map4DUtils';
 export { MapUtils } from './core/utils/MapUtils';
+export { SetUtils } from './core/utils/SetUtils';
 export { StringUtils } from './core/utils/StringUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
