@@ -6,7 +6,13 @@
 					<abschnitt-auswahl :disable-headless="true" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="a => setAbschnitt(a)" :akt-schulabschnitt="aktSchulabschnitt" />
 					<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
 					<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
-					<div class="col-span-full">
+					<div class="col-span-full flex flex-row gap-2">
+						<svws-ui-tooltip>
+							<span class="font-bold flex flex-row gap-1">GPU001.txt: <i-ri-information-line class="mt-0.5" /></span>
+							<template #content>
+								Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
+							</template>
+						</svws-ui-tooltip>
 						<input type="file" accept=".txt" @change="onFileChanged" :disabled="loading">
 					</div>
 					<div class="col-span-full">
