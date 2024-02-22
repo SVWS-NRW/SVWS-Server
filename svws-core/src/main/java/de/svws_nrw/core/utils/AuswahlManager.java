@@ -246,6 +246,8 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		// ... und berechne ggf. die Sortierung der Liste neu
 		if (updateEintrag)
 			this.orderSet(this.orderGet());
+		// ... und triggere, dass der Filter neu angewendet wird
+		this._filtered = null;
 	}
 
 

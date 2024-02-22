@@ -232,6 +232,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		this._daten = daten;
 		if (updateEintrag)
 			this.orderSet(this.orderGet());
+		this._filtered = null;
 	}
 
 	/**

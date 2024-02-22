@@ -216,34 +216,51 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 
 
 	/**
+	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
+	 *
+	 * @param eintrag   der zu prüfende Eintrag
+	 *
+	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
+	 */
+	protected boolean checkFilter(final @NotNull SchuelerListeEintrag eintrag) {
+		// Lasse die aktuelle Auswahl immer druch den Filter
+		if (this.hasDaten() && this.daten().id == eintrag.id)
+			return true;
+		// Filtere nun anhand dee Filterkriterien
+		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
+			return false;
+		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
+			return false;
+		if (this.kurse.auswahlExists()) {
+			boolean hatEinenKurs = false;
+			for (final long idKurs : eintrag.kurse)
+				if (this.kurse.auswahlHasKey(idKurs))
+					hatEinenKurs = true;
+			if (!hatEinenKurs)
+				return false;
+		}
+		if (this.schulgliederungen.auswahlExists() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
+			return false;
+		if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
+			return false;
+		return true;
+	}
+
+
+	/**
 	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
 	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
 	 * beachtet.
+	 * Eine aktuelle Auswahl gehört dabei immer zum Ergebnis dazu.
 	 *
 	 * @return die gefilterte Liste
 	 */
 	@Override
 	protected @NotNull List<@NotNull SchuelerListeEintrag> onFilter() {
 		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
-		for (final @NotNull SchuelerListeEintrag eintrag : this.liste.list()) {
-			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
-				continue;
-			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
-				continue;
-			if (this.kurse.auswahlExists()) {
-				boolean hatEinenKurs = false;
-				for (final long idKurs : eintrag.kurse)
-					if (this.kurse.auswahlHasKey(idKurs))
-						hatEinenKurs = true;
-				if (!hatEinenKurs)
-					continue;
-			}
-			if (this.schulgliederungen.auswahlExists() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
-				continue;
-			if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
-				continue;
-			tmpList.add(eintrag);
-		}
+		for (final @NotNull SchuelerListeEintrag eintrag : this.liste.list())
+			if (checkFilter(eintrag))
+				tmpList.add(eintrag);
 		final @NotNull Comparator<@NotNull SchuelerListeEintrag> comparator = (final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> this.compare(a, b);
 		tmpList.sort(comparator);
 		return tmpList;
