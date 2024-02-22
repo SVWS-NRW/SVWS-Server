@@ -3273,8 +3273,8 @@ public class GostBlockungsergebnisManager {
 	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 * TODO Wenn der Schüler gar nicht den Kurs wählen kann --> ignorieren.
 	 *
-	 * @param setSchuelerID  Die Liste der Schüler-IDs.
-	 * @param setKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 * @param setKursID      Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
@@ -3319,8 +3319,8 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
 	 *
-	 * @param setSchuelerID  Die Liste der Schüler-IDs.
-	 * @param setKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 * @param setKursID      Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
@@ -3346,7 +3346,7 @@ public class GostBlockungsergebnisManager {
 	 * <br>(3) Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
 	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @param setKursID  Die Liste der Kurs-IDs.
+	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
 	 */
@@ -3366,7 +3366,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
 	 *
-	 * @param setKursID  Die Liste der Kurs-IDs.
+	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 */
@@ -3385,64 +3385,62 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
-	 * <br> Wenn der Schüler im Kurs fixiert ist, wird dies entfernt.
-	 * <br> Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
-	 * <br> Wenn der Schüler bereits im Kurs gesperrt ist, wird dies ignoriert.
+	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
 	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge Schüler-IDs.
+	 * @param setKursID      Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull List<@NotNull Long> setSchuelerID, final @NotNull List<@NotNull Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		for (final long idSchueler : listSchuelerID)
-			for (final long idKurs : listKursID) {
-				// Überprüfen, ob da eine Fixierung vorliegt.
+		for (final long idSchueler : setSchuelerID)
+			for (final long idKurs : setKursID) {
+				// (1)
 				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (regelFixierung != null)
-					gUpdate.listEntfernen.add(regelFixierung);
-
-				// Überprüfen, ob da eine Sperrung vorliegt.
+					u.listEntfernen.add(regelFixierung);
+				// (2)
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung == null) { // Sperre den Kurs
+				if (regelSperrung == null) {
 					final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
 					regelHinzufuegen.id = -1;
 					regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
 					regelHinzufuegen.parameter.add(idSchueler);
 					regelHinzufuegen.parameter.add(idKurs);
-					gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
-				} // ELSE --> Der Kurs ist bereits gesperrt.
-
+					u.listHinzuzufuegen.add(regelHinzufuegen);
+				}
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird die Sperrung entfernt.
 	 *
-	 * @param listSchuelerID  Die Liste der Schüler-IDs.
-	 * @param listKursID      Die Liste der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 * @param setKursID      Die Menge der Kurs-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull List<@NotNull Long> listSchuelerID, final @NotNull List<@NotNull Long> listKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull List<@NotNull Long> setSchuelerID, final @NotNull List<@NotNull Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		for (final long idSchueler : listSchuelerID)
-			for (final long idKurs : listKursID) {
-				// Überprüfen, ob da eine Sperrung vorliegt.
+		for (final long idSchueler : setSchuelerID)
+			for (final long idKurs : setKursID) {
+				// (1)
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				if (regelSperrung != null)
-					gUpdate.listEntfernen.add(regelSperrung);
+					u.listEntfernen.add(regelSperrung);
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
