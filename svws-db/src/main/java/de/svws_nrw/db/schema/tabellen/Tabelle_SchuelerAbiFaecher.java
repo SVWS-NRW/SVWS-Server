@@ -43,8 +43,8 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte FSortierung */
 	public SchemaTabelleSpalte col_FSortierung = add("FSortierung", SchemaDatentypen.INT, false)
-		.setJavaName("-")
-		.setJavaComment("Eine Zahl, welche die Sortierung der Fächer angibt");
+		.setJavaName("FachSortierung")
+		.setJavaComment("Deprecated: Eine Zahl, welche die Sortierung der Fächer angibt");
 
 	/** Die Definition der Tabellenspalte Kurs_ID */
 	public SchemaTabelleSpalte col_Kurs_ID = add("Kurs_ID", SchemaDatentypen.BIGINT, false)

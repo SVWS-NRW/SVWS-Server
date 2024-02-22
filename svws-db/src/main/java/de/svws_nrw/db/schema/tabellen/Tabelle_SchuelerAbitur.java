@@ -178,7 +178,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SummenOK */
 	public SchemaTabelleSpalte col_SummenOK = add("SummenOK", SchemaDatentypen.SMALLINT, false)
 		.setJavaName("-")
-		.setJavaComment("DEPRECATED: Punktsummen OK für alte APO für alres G9 (1: , NULL: )");
+		.setJavaComment("DEPRECATED: Punktsummen OK für alte APO für altes G9 (1: , NULL: )");
 
 	/** Die Definition der Tabellenspalte Zugelassen */
 	public SchemaTabelleSpalte col_Zugelassen = add("Zugelassen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
