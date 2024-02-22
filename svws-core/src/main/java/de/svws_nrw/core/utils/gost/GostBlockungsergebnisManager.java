@@ -3044,18 +3044,45 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-     * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu setzen.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird dies ignoriert.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
+     * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
+     * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
+	 * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
 	 *
-	 * @param kursart ...
-	 * @param schieneNrVon ...
-	 * @param schieneNrBis ...
-	 * @return ...
+	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
+	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
+	 * @param schienenNrBis  Der Endbereich der Schienen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(final int kursart, final int schieneNrVon, final int schieneNrBis) {
-		// ...
-		return new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(final int kursart, final int schienenNrVon, final int schienenNrBis) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : getKursmenge())
+			if (kurs.kursart == kursart)
+				for (int schienenNr = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++) {
+					// Sperrung entfernen?
+					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr});
+					final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
+					if (regelSperrung != null)
+						u.listEntfernen.add(regelSperrung);
+					// Fixierung entfernen?
+					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr});
+					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+					if (regelFixierung != null)
+						u.listEntfernen.add(regelFixierung);
+				}
+
+
+		// Regel 01 KURSART_SPERRE_SCHIENEN_VON_BIS erzeugen
+		final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
+		regelNeu.id = -1;
+		regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
+		regelNeu.parameter.add((long) kursart);
+		regelNeu.parameter.add((long) schienenNrVon);
+		regelNeu.parameter.add((long) schienenNrBis);
+		u.listHinzuzufuegen.add(regelNeu);
+
+		return u;
 	}
 
 	/**
