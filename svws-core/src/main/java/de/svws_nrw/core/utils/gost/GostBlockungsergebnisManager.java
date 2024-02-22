@@ -3045,8 +3045,9 @@ public class GostBlockungsergebnisManager {
 
 	/**
      * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
-     * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
-	 * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
+     * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -3060,21 +3061,19 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKurs kurs : getKursmenge())
 			for (int schienenNr = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
 				if (kurs.kursart == kursart) { // Kursart und Schienenbereich stimmen.
-
-					// Einzel-Sperrung entfernen, da diese Regel ausreicht?
+					// (1)
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr});
 					final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 					if (regelSperrung != null)
 						u.listEntfernen.add(regelSperrung);
-
-					// Fixierung entfernen, da diese falsch wäre?
+					// (2)
 					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr});
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 					if (regelFixierung != null)
 						u.listEntfernen.add(regelFixierung);
 				}
 
-		// Erzeuge die Regel, falls kein Duplikat.
+		// (3)
 		final @NotNull LongArrayKey keyDuplikat = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis});
 		if (_parent.regelGetByLongArrayKeyOrNull(keyDuplikat) != null) {
 			final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
@@ -3091,8 +3090,9 @@ public class GostBlockungsergebnisManager {
 
 	/**
      * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
-     * <br> Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
-     * <br> Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
+     * <br>(1) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
+     * <br>(2) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -3108,14 +3108,12 @@ public class GostBlockungsergebnisManager {
 				final boolean imSchienenBereich = (schienenNrVon <= schienenNr) && (schienenNr <= schienenNrBis);
 				final boolean richtigeKursart = (kurs.kursart == kursart);
 				if (imSchienenBereich != richtigeKursart) { // Kursart ist im falschen Bereich.
-
-					// Fixierungen sind hier nicht erlaubt.
+					// (1)
 					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr});
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 					if (regelFixierung != null)
 						u.listEntfernen.add(regelFixierung);
-
-					// Sperrung entfernen?
+					// (2)
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr});
 					final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 					if (regelSperrung != null)
@@ -3123,7 +3121,7 @@ public class GostBlockungsergebnisManager {
 				}
 			}
 
-		// Erzeuge die Regel, falls kein Duplikat.
+		// (3)
 		final @NotNull LongArrayKey keyDuplikat = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis});
 		if (_parent.regelGetByLongArrayKeyOrNull(keyDuplikat) != null) {
 			final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
@@ -3140,9 +3138,8 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu setzen.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, wird er fixiert.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird dies ignoriert.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
+	 * <br>(2) Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, wird er fixiert.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3157,14 +3154,12 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, idKurs)) {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if (setSchienenNr.contains(schieneG.nummer)) {
-
-					// Falls der Kurs gesperrt ist, dann muss dies entfernt werden, da er ja fixiert wird.
+					// (1)
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 					if (regelSperrung != null)
 						u.listEntfernen.add(regelSperrung);
-
-					// Falls der Kurs nicht fixiert ist, dann fixiere ihn, andernfalls ignoriere es.
+					// (2)
 					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 					if (regelFixierung == null) {
@@ -3183,8 +3178,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird er gelöst.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, passiert nichts.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3199,8 +3193,7 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE : DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, idKurs)) {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if (setSchienenNr.contains(schieneG.nummer)) {
-
-					// Falls der Kurs im Bereich eine Fixierung hat, entferne sie.
+					// (1)
 					final @NotNull LongArrayKey keyKursInSchiene = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regel = _parent.regelGetByLongArrayKeyOrNull(keyKursInSchiene);
 					if (regel != null)
@@ -3213,9 +3206,8 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich bereits gesperrt ist, wird dies ignoriert.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird dies entfernt.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
+	 * <br>(2) Wenn der Kurs im Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3227,8 +3219,7 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID)
 			for (final int schienenNr : setSchienenNr) {
-
-				// Falls der Kurs nicht gesperrt ist, dann sperre ihn, andernfalls ignoriere es.
+				// (1)
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				if (regelSperrung == null) { // Der Kurs muss gesperrt werden.
@@ -3239,8 +3230,7 @@ public class GostBlockungsergebnisManager {
 					regelNeu.parameter.add((long) schienenNr);
 					u.listHinzuzufuegen.add(regelNeu);
 				}
-
-				// Falls der Kurs fixiert ist, dann muss dies entfernt werden, da er ja gesperrt wird.
+				// (2)
 				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (regelFixierung != null)
@@ -3252,8 +3242,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich bereits gesperrt ist, wird er gelöst.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, passiert nichts.
+	 * <br>(1) Wenn der Kurs in dem Schienen-Bereich gesperrt ist, wird die Sperrung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3265,8 +3254,7 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID)
 			for (final int schienenNr : setSchienenNr) {
-
-				// Falls der Kurs im Bereich eine Sperrung hat, entferne sie.
+				// (1)
 				final @NotNull LongArrayKey keyGesperrt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelGesperrt = _parent.regelGetByLongArrayKeyOrNull(keyGesperrt);
 				if (regelGesperrt != null)
@@ -3278,10 +3266,10 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 * <br> Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
-	 * <br> Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
-	 * <br> Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
-	 * <br> Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
+	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
 	 * @param setSchuelerID  Die Liste der Schüler-IDs.
 	 * @param setKursID      Die Liste der Kurs-IDs.
@@ -3289,17 +3277,17 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID)
 			for (final long idKurs : setKursID) {
 				final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(idKurs);
 
-				// Überprüfen, ob da eine Sperrung vorliegt.
+				// (1)
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				if (regelSperrung != null)
-					gUpdate.listEntfernen.add(regelSperrung);
+					u.listEntfernen.add(regelSperrung);
 
 				// Ist da eine Fixierung (in den Kursen der selben Fachart)?
 				for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
@@ -3307,29 +3295,27 @@ public class GostBlockungsergebnisManager {
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 
 					if (kurs1.id == kurs2.id) {
-						if (regelFixierung == null) { // Fixiere den Kurs
+						if (regelFixierung == null) { // (2)
 							final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
 							regelHinzufuegen.id = -1;
 							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 							regelHinzufuegen.parameter.add(idSchueler);
 							regelHinzufuegen.parameter.add(idKurs);
-							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
-						} // ELSE --> Der Kurs ist bereits fixiert.
+							u.listHinzuzufuegen.add(regelHinzufuegen);
+						} // ELSE (3)
 					} else {
-						if (regelFixierung != null) {
-							// Nachbarkurs muss seine Fixierung lösen.
-							gUpdate.listEntfernen.add(regelFixierung);
-						} // ELSE --> Der Nachbarkurs ist nicht fixiert, was richtig ist.
+						if (regelFixierung != null) // (4)
+							u.listEntfernen.add(regelFixierung);
 					}
 				}
-
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
+	 * <br>(1) Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.
@@ -3337,18 +3323,18 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> listSchuelerID, final @NotNull Set<@NotNull Long> listKursID) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : listSchuelerID)
 			for (final long idKurs : listKursID) {
-				// Überprüfen, ob da eine Fixierung vorliegt.
+				// (1)
 				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (regelFixierung != null)
-					gUpdate.listEntfernen.add(regelFixierung);
+					u.listEntfernen.add(regelFixierung);
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**

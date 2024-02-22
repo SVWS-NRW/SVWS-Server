@@ -2864,8 +2864,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
-	 * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
-	 * <br> Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
+	 * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -2902,8 +2903,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
-	 * <br> Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
-	 * <br> Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
+	 * <br>(1) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
+	 * <br>(2) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
+	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -2943,9 +2945,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu setzen.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, wird er fixiert.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird dies ignoriert.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung entfernt.
+	 * <br>(2) Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, wird er fixiert.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -2979,8 +2980,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird er gelöst.
-	 * <br> Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, passiert nichts.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3004,9 +3004,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich bereits gesperrt ist, wird dies ignoriert.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird dies entfernt.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
+	 * <br>(2) Wenn der Kurs im Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3037,8 +3036,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich bereits gesperrt ist, wird er gelöst.
-	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, passiert nichts.
+	 * <br>(1) Wenn der Kurs in dem Schienen-Bereich gesperrt ist, wird die Sperrung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3059,10 +3057,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
-	 * <br> Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
-	 * <br> Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
-	 * <br> Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
-	 * <br> Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
+	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
 	 * @param setSchuelerID  Die Liste der Schüler-IDs.
 	 * @param setKursID      Die Liste der Kurs-IDs.
@@ -3070,14 +3068,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const gUpdate : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
 				const kurs1 : GostBlockungKurs = this._parent.kursGet(idKurs);
 				const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
 				const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				if (regelSperrung !== null)
-					gUpdate.listEntfernen.add(regelSperrung);
+					u.listEntfernen.add(regelSperrung);
 				for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
 					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
 					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
@@ -3088,20 +3086,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 							regelHinzufuegen.parameter.add(idSchueler);
 							regelHinzufuegen.parameter.add(idKurs);
-							gUpdate.listHinzuzufuegen.add(regelHinzufuegen);
+							u.listHinzuzufuegen.add(regelHinzufuegen);
 						}
 					} else {
-						if (regelFixierung !== null) {
-							gUpdate.listEntfernen.add(regelFixierung);
-						}
+						if (regelFixierung !== null)
+							u.listEntfernen.add(regelFixierung);
 					}
 				}
 			}
-		return gUpdate;
+		return u;
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
+	 * <br>(1) Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
 	 *
 	 * @param listSchuelerID  Die Liste der Schüler-IDs.
 	 * @param listKursID      Die Liste der Kurs-IDs.
@@ -3109,15 +3107,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
 	public regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(listSchuelerID : JavaSet<number>, listKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const gUpdate : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of listSchuelerID)
 			for (const idKurs of listKursID) {
 				const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
 				const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (regelFixierung !== null)
-					gUpdate.listEntfernen.add(regelFixierung);
+					u.listEntfernen.add(regelFixierung);
 			}
-		return gUpdate;
+		return u;
 	}
 
 	/**
