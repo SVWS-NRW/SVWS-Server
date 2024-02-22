@@ -3150,7 +3150,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// Beim Fixieren muss man über die Kurse und dann über die Schienen des Kurses iterieren.
 		for (final long idKurs : setKursID)
@@ -3162,7 +3162,7 @@ public class GostBlockungsergebnisManager {
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 					if (regelSperrung != null)
-						gUpdate.listEntfernen.add(regelSperrung);
+						u.listEntfernen.add(regelSperrung);
 
 					// Falls der Kurs nicht fixiert ist, dann fixiere ihn, andernfalls ignoriere es.
 					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
@@ -3173,12 +3173,12 @@ public class GostBlockungsergebnisManager {
 						regelNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 						regelNeu.parameter.add(idKurs);
 						regelNeu.parameter.add((long) schieneG.nummer);
-						gUpdate.listHinzuzufuegen.add(regelNeu);
+						u.listHinzuzufuegen.add(regelNeu);
 					}
 				}
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
@@ -3192,7 +3192,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// Beim Fixieren muss man über die Kurse und dann über die Schienen des Kurses iterieren.
 		for (final long idKurs : setKursID)
@@ -3200,15 +3200,15 @@ public class GostBlockungsergebnisManager {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if (setSchienenNr.contains(schieneG.nummer)) {
 
-					// Falls der Kurs im Bereich eine Fixierung hat entferne sie.
+					// Falls der Kurs im Bereich eine Fixierung hat, entferne sie.
 					final @NotNull LongArrayKey keyKursInSchiene = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regel = _parent.regelGetByLongArrayKeyOrNull(keyKursInSchiene);
 					if (regel != null)
-						gUpdate.listEntfernen.add(regel);
+						u.listEntfernen.add(regel);
 				}
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
@@ -3217,17 +3217,18 @@ public class GostBlockungsergebnisManager {
 	 * <br> Wenn der Kurs in dem Schienen-Bereich fixiert ist, wird dies entfernt.
 	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
 	 *
-	 * @param listKursID  Die Liste der Kurs-IDs.
-	 * @param listSchienenNr efefe
+	 * @param setKursID      Die Menge aller Kurs-IDs.
+	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> listKursID, final @NotNull Set<@NotNull Integer> listSchienenNr) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		// Beim Sperren muss man über die Kurse und dann von Schiene-Min bis Schiene-Max iterieren.
-		for (final long idKurs : listKursID)
-			for (final int schienenNr : listSchienenNr) {
+		for (final long idKurs : setKursID)
+			for (final int schienenNr : setSchienenNr) {
+
+				// Falls der Kurs nicht gesperrt ist, dann sperre ihn, andernfalls ignoriere es.
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				if (regelSperrung == null) { // Der Kurs muss gesperrt werden.
@@ -3236,17 +3237,17 @@ public class GostBlockungsergebnisManager {
 					regelNeu.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 					regelNeu.parameter.add(idKurs);
 					regelNeu.parameter.add((long) schienenNr);
-					gUpdate.listHinzuzufuegen.add(regelNeu);
-				} // ELSE Der Kurs ist bereits gesperrt.
+					u.listHinzuzufuegen.add(regelNeu);
+				}
 
+				// Falls der Kurs fixiert ist, dann muss dies entfernt werden, da er ja gesperrt wird.
 				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-				if (regelFixierung != null) { // Der Fixierung muss entfernt werden.
-					gUpdate.listEntfernen.add(regelFixierung);
-				} // ELSE Der Kurs ist dort nicht fixiert.
+				if (regelFixierung != null)
+					u.listEntfernen.add(regelFixierung);
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
@@ -3254,25 +3255,25 @@ public class GostBlockungsergebnisManager {
 	 * <br> Wenn der Kurs in dem Schienen-Bereich bereits gesperrt ist, wird er gelöst.
 	 * <br> Wenn der Kurs in dem Schienen-Bereich nicht gesperrt ist, passiert nichts.
 	 *
-	 * @param listKursID  Die Liste der Kurs-IDs.
-	 * @param listSchienenNr  fefef
+	 * @param setKursID      Die Menge aller Kurs-IDs.
+	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> listKursID, final @NotNull Set<@NotNull Integer> listSchienenNr) {
-		final @NotNull GostBlockungRegelUpdate gUpdate = new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		// Beim Sperren muss man über die Kurse und dann von Schiene-Min bis Schiene-Max iterieren.
-		for (final long idKurs : listKursID)
-			for (final int schienenNr : listSchienenNr) {
-				final @NotNull LongArrayKey keyKursInSchiene = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr});
-				final GostBlockungRegel regel = _parent.regelGetByLongArrayKeyOrNull(keyKursInSchiene);
-				if (regel != null) {
-					gUpdate.listEntfernen.add(regel);
-				} // ELSE Der Kurs ist bereits nicht gesperrt.
+		for (final long idKurs : setKursID)
+			for (final int schienenNr : setSchienenNr) {
+
+				// Falls der Kurs im Bereich eine Sperrung hat, entferne sie.
+				final @NotNull LongArrayKey keyGesperrt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr});
+				final GostBlockungRegel regelGesperrt = _parent.regelGetByLongArrayKeyOrNull(keyGesperrt);
+				if (regelGesperrt != null)
+					u.listEntfernen.add(regelGesperrt);
 			}
 
-		return gUpdate;
+		return u;
 	}
 
 	/**
