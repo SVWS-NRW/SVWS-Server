@@ -124,6 +124,9 @@ public class GostBlockungsdatenManager {
 	/** Ergebnis-ID --> {@link GostBlockungsergebnis} */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnis> _map_idErgebnis_Ergebnis = new HashMap<>();
 
+	/** Ergebnis-ID --> {@link GostBlockungsergebnisManager} */
+	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnisManager> _map_idErgebnis_ErgebnisManager = new HashMap<>();
+
 	/** Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER). */
 	private final @NotNull List<@NotNull GostBlockungKurs> _list_kurse_sortiert_fach_kursart_kursnummer = new ArrayList<>();
 
@@ -243,11 +246,14 @@ public class GostBlockungsdatenManager {
 			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 			DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
 			DeveloperNotificationException.ifMapContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, ergebnis.id);
+			DeveloperNotificationException.ifMapContains("_map_idErgebnis_ErgebnisManager", _map_idErgebnis_ErgebnisManager, ergebnis.id);
 		}
 
 		// Hinzufügen
 		for (final @NotNull GostBlockungsergebnis ergebnis : ergebnismenge) {
+			final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(this, ergebnis);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_idErgebnis_ErgebnisManager, ergebnis.id, ergebnisManager);
 			_daten.ergebnisse.add(ergebnis);
 		}
 
@@ -269,7 +275,20 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public @NotNull GostBlockungsergebnis ergebnisGet(final long idErgebnis) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_Ergebnis.get(idErgebnis));
+		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_Ergebnis.get(idErgebnis));
+	}
+
+	/**
+	 * Liefert einen {@link GostBlockungsergebnisManager} für das Ergebnis mit der übergebenen ID.
+	 * Wirft eine Exception, falls es keinen Manager für ein Ergebnis mit dieser ID gibt.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
+	 *
+	 * @return einen {@link GostBlockungsergebnisManager} für das Ergebnis.
+	 * @throws DeveloperNotificationException Falls es keinen Manager für ein Ergebnis mit dieser ID gibt.
+	 */
+	public @NotNull GostBlockungsergebnisManager ergebnisManagerGet(final long idErgebnis) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_ErgebnisManager.get(idErgebnis));
 	}
 
 	/**
@@ -284,14 +303,17 @@ public class GostBlockungsdatenManager {
 
 	private void ergebnisRemoveListeByIDs(final @NotNull List<@NotNull Long> listeDerErgebnisIDs) throws DeveloperNotificationException {
 		// Überprüfen
-		for (final long idErgebnis : listeDerErgebnisIDs)
+		for (final long idErgebnis : listeDerErgebnisIDs) {
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, idErgebnis);
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_ErgebnisManager", _map_idErgebnis_ErgebnisManager, idErgebnis);
+		}
 
 		// Entfernen des Ergebnisses.
 		for (final long idErgebnis : listeDerErgebnisIDs) {
 			final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 			_daten.ergebnisse.remove(e);
 			_map_idErgebnis_Ergebnis.remove(e.id);
+			_map_idErgebnis_ErgebnisManager.remove(e.id);
 		}
 
 		// Neusortierung nicht nötig.

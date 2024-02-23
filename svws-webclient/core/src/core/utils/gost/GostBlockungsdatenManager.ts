@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { GostBlockungsergebnisManager } from '../../../core/utils/gost/GostBlockungsergebnisManager';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -169,6 +170,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnis> = new HashMap();
 
 	/**
+	 * Ergebnis-ID --> {@link GostBlockungsergebnisManager}
+	 */
+	private readonly _map_idErgebnis_ErgebnisManager : HashMap<number, GostBlockungsergebnisManager> = new HashMap();
+
+	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
 	 */
 	private readonly _list_kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList();
@@ -304,9 +310,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 			DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
 			DeveloperNotificationException.ifMapContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, ergebnis.id);
+			DeveloperNotificationException.ifMapContains("_map_idErgebnis_ErgebnisManager", this._map_idErgebnis_ErgebnisManager, ergebnis.id);
 		}
 		for (const ergebnis of ergebnismenge) {
+			const ergebnisManager : GostBlockungsergebnisManager | null = new GostBlockungsergebnisManager(this, ergebnis);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_idErgebnis_ErgebnisManager, ergebnis.id, ergebnisManager);
 			this._daten.ergebnisse.add(ergebnis);
 		}
 		this._daten.ergebnisse.sort(this._compErgebnisse);
@@ -322,7 +331,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public ergebnisGet(idErgebnis : number) : GostBlockungsergebnis {
-		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", this._map_idErgebnis_Ergebnis.get(idErgebnis));
+		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!", this._map_idErgebnis_Ergebnis.get(idErgebnis));
+	}
+
+	/**
+	 * Liefert einen {@link GostBlockungsergebnisManager} für das Ergebnis mit der übergebenen ID.
+	 * Wirft eine Exception, falls es keinen Manager für ein Ergebnis mit dieser ID gibt.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
+	 *
+	 * @return einen {@link GostBlockungsergebnisManager} für das Ergebnis.
+	 * @throws DeveloperNotificationException Falls es keinen Manager für ein Ergebnis mit dieser ID gibt.
+	 */
+	public ergebnisManagerGet(idErgebnis : number) : GostBlockungsergebnisManager {
+		return DeveloperNotificationException.ifNull("Es wurde kein Ergebnis mit ID(" + idErgebnis + ") gefunden!", this._map_idErgebnis_ErgebnisManager.get(idErgebnis));
 	}
 
 	/**
@@ -336,12 +358,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private ergebnisRemoveListeByIDs(listeDerErgebnisIDs : List<number>) : void {
-		for (const idErgebnis of listeDerErgebnisIDs)
+		for (const idErgebnis of listeDerErgebnisIDs) {
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, idErgebnis);
+			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_ErgebnisManager", this._map_idErgebnis_ErgebnisManager, idErgebnis);
+		}
 		for (const idErgebnis of listeDerErgebnisIDs) {
 			const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 			this._daten.ergebnisse.remove(e);
 			this._map_idErgebnis_Ergebnis.remove(e.id);
+			this._map_idErgebnis_ErgebnisManager.remove(e.id);
 		}
 	}
 

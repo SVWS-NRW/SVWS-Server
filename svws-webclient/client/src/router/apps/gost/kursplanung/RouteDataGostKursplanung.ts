@@ -355,7 +355,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if (this._state.value.datenmanager === undefined)
 			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
-		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, value);
+		const ergebnismanager = this.datenmanager.ergebnisManagerGet(value.id);
 		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, () => this.ergebnismanager, this.faecherManager.faecher(), this.mapSchueler)
 		api.status.stop();
 		this.setPatchedState({
