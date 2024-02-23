@@ -66,7 +66,7 @@
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
 		:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
-		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" :get-ergebnismanager="getErgebnismanager" />
+		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 </template>
 
 <script setup lang="ts">

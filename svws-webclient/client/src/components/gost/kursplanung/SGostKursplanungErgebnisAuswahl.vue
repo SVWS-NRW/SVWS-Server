@@ -25,12 +25,12 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === row}">
-						<svws-ui-tooltip v-if="(auswahlErgebnis?.id === row.id) && (getDatenmanager().ergebnisGetBewertung1Wert(row.id) > 0)" autosize>
+						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung1Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 							<template #content>
 								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
-								<template v-for="typ in getErgebnismanager().regelGetMengeVerletzterTypen()" :key="typ.id">
-									<template v-for="text in getErgebnismanager().regelGetMengeAnVerletzungen(typ)" :key="text">
+								<template v-for="typ in getErgebnismanager(row).regelGetMengeVerletzterTypen()" :key="typ.id">
+									<template v-for="text in getErgebnismanager(row).regelGetMengeAnVerletzungen(typ)" :key="text">
 										<br>{{ text }}
 									</template>
 								</template>
@@ -48,10 +48,10 @@
 								</template>
 							</template>
 						</svws-ui-tooltip>
-						<svws-ui-tooltip v-if="(auswahlErgebnis?.id === row.id) && (getDatenmanager().ergebnisGetBewertung4Wert(row.id) > 0)" autosize>
+						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung4Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 							<template #content>
-								<pre>{{ getErgebnismanager().regelGetTooltipFuerFaecherparallelitaet() }}</pre>
+								<pre>{{ getErgebnismanager(row).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
@@ -91,7 +91,6 @@
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		getErgebnismanager: () => GostBlockungsergebnisManager;
 		patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
@@ -117,6 +116,10 @@
 		if (!props.auswahlErgebnis)
 			return;
 		await props.removeErgebnisse([props.auswahlErgebnis]);
+	}
+
+	function getErgebnismanager(ergebnis: GostBlockungsergebnis) : GostBlockungsergebnisManager {
+		return props.getDatenmanager().ergebnisManagerGet(ergebnis.id);
 	}
 
 	function color1(ergebnis: GostBlockungsergebnis): string {
