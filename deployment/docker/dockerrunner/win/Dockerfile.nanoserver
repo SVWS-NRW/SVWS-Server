@@ -1,0 +1,30 @@
+FROM mcr.microsoft.com/powershell:lts-nanoserver-1809
+
+
+SHELL ["cmd", "/s", "/c"]
+
+ENV JAVA_VERSION jdk-21.0.1+12
+
+ENV JAVA_HOME C:\\openjdk-21
+# "ERROR: Access to the registry path is denied."
+USER ContainerAdministrator
+RUN echo Updating PATH: %JAVA_HOME%\bin;%PATH% \
+    && setx /M PATH "%JAVA_HOME%\bin;%PATH%" \
+    && echo Complete.
+USER ContainerUser
+
+COPY --from=eclipse-temurin:21.0.1_12-jdk-windowsservercore-1809 $JAVA_HOME $JAVA_HOME
+
+RUN echo Verifying install ... \
+    && echo javac --version && javac --version \
+    && echo java --version && java --version \
+    && echo Complete.
+
+USER ContainerAdministrator
+WORKDIR c:\\builds
+ENV NPM_CONFIG_CACHE=c:\\tmp
+ADD https://svws.nrw.de/uploads/media/dockerrunner/docker-runner-win.zip C:\\tmp\\docker-runner-win.zip
+RUN cd c:\\tmp && tar -xf docker-runner-win.zip
+RUN mkdir c:\\Users\\ContainerAdministrator\\.gradle
+RUN copy "C:\Program Files\PowerShell\pwsh.exe" "C:\Program Files\PowerShell\powershell.exe"
+ENTRYPOINT [ "powershell" ]

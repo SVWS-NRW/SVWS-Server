@@ -131,7 +131,7 @@ build_windows:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
         SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
-    image: svwsnrw/dockerrunner-win
+    image: svwsnrw/dockerrunner-win-nano
     script:
         - ./deployment/setupVersion.ps1
         - c:/tmp/download-secure-files-windows-amd64.exe
