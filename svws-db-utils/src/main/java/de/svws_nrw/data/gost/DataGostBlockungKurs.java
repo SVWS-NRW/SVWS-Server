@@ -417,6 +417,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		// Lösche dann den zweiten Kurs
 		conn.transactionRemove(kurs2);
 		conn.transactionFlush();
+		DataGostBlockungRegel.updateKursRegelnOnDelete(conn, kurs2, kurs1);
 		// Gebe den ersten Kurs zurück
 		final GostBlockungKurs daten = dtoMapper.apply(kurs1);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -466,6 +467,8 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final GostBlockungKurs daten = dtoMapper.apply(kurs);
 		if (!conn.transactionRemove(kurs))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		DataGostBlockungRegel.updateKursRegelnOnDelete(conn, kurs, null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -492,6 +495,8 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final GostBlockungKurs daten = dtoMapper.apply(kurs);
 		if (!conn.transactionRemove(kurs))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		DataGostBlockungRegel.updateKursRegelnOnDelete(conn, kurs, null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -526,6 +531,9 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 					throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			}
 		}
+		conn.transactionFlush();
+		for (final DTOGostBlockungKurs kurs : kurse)
+			DataGostBlockungRegel.updateKursRegelnOnDelete(conn, kurs, null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

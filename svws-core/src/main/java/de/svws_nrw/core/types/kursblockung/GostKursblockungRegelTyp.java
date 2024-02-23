@@ -210,12 +210,27 @@ public enum GostKursblockungRegelTyp {
 	/** Mapping von "Typ --> GostKursblockungRegelTyp". */
 	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel = new HashMap<>();
 
+	/** Mapping vom "Typ --> GostKursblockungRegelTyp mit einer Kurs-ID als Regel-Parameter-Type" */
+	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel_kursid = new HashMap<>();
+
+
+
 	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMap() {
 		if (_map_id_regel.isEmpty())
 			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
 				_map_id_regel.put(gostTyp.typ, gostTyp);
 		return _map_id_regel;
 	}
+
+
+	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMapKursRegeln() {
+		if (_map_id_regel_kursid.isEmpty())
+			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
+				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID))
+					_map_id_regel_kursid.put(gostTyp.typ, gostTyp);
+		return _map_id_regel_kursid;
+	}
+
 
 	/**
 	 * Liefert die Menge aller existierender Regeln.
@@ -334,6 +349,16 @@ public enum GostKursblockungRegelTyp {
 					temp[i] = param.get(i);
 				return temp;
 		}
+	}
+
+
+	/**
+	 * Gibt alle Regel-Typen zurück, welche eine Kurs-ID als Parameter-Typ haben.
+	 *
+	 * @return eine Collection mit allen Regel-Typen mit Bezug zu einem konkreten Kurs
+	 */
+	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getKursRegelTypen() {
+		return getMapKursRegeln().values();
 	}
 
 }

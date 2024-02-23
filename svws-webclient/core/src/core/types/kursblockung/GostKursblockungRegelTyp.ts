@@ -161,6 +161,11 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	private static readonly _map_id_regel : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
 
 	/**
+	 * Mapping vom "Typ --> GostKursblockungRegelTyp mit einer Kurs-ID als Regel-Parameter-Type"
+	 */
+	private static readonly _map_id_regel_kursid : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
+
+	/**
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
@@ -181,6 +186,14 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 			for (const gostTyp of GostKursblockungRegelTyp.values())
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
 		return GostKursblockungRegelTyp._map_id_regel;
+	}
+
+	private static getMapKursRegeln() : HashMap<number, GostKursblockungRegelTyp> {
+		if (GostKursblockungRegelTyp._map_id_regel_kursid.isEmpty())
+			for (const gostTyp of GostKursblockungRegelTyp.values())
+				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID))
+					GostKursblockungRegelTyp._map_id_regel_kursid.put(gostTyp.typ, gostTyp);
+		return GostKursblockungRegelTyp._map_id_regel_kursid;
 	}
 
 	/**
@@ -285,6 +298,15 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 				return temp;
 			}
 		}
+	}
+
+	/**
+	 * Gibt alle Regel-Typen zurück, welche eine Kurs-ID als Parameter-Typ haben.
+	 *
+	 * @return eine Collection mit allen Regel-Typen mit Bezug zu einem konkreten Kurs
+	 */
+	public static getKursRegelTypen() : Collection<GostKursblockungRegelTyp> {
+		return GostKursblockungRegelTyp.getMapKursRegeln().values();
 	}
 
 	/**
