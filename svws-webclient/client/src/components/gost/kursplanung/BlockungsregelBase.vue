@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="regeln" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
+		<svws-ui-table :items="regelnFilter" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
 			<template #header v-if="cols === undefined">
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">{{ regelTyp.bezeichnung }}</div>
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 
+	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungsergebnisManager , GostBlockungRegel } from "@core";
@@ -59,7 +60,7 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
-		regeln: GostBlockungRegel[] | undefined;
+		regeln: Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>>;
 		cols?: DataTableColumnSource[];
 		disabled: boolean;
 		regelEntfernen: (regel: GostBlockungRegel) => Promise<void>;
@@ -83,6 +84,8 @@
 				return true;
 		return false;
 	}
+
+	const regelnFilter = computed(() => props.regeln.get(props.regelTyp)?.value);
 
 </script>
 
