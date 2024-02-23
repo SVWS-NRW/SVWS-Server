@@ -188,7 +188,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
 			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
-		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(ergebnis.Blockung_ID);
+		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, ergebnis.Blockung_ID);
 		return getErgebnis(ergebnis, datenManager);
 	}
 
@@ -835,7 +835,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (dtoErgebnis == null)
 			return OperationError.NOT_FOUND.getResponse();
-		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
+		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
 		// Bestimme die Daten des Ergebnisses
         final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
         final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
@@ -1029,7 +1029,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (dtoErgebnis == null)
 			return OperationError.NOT_FOUND.getResponse();
-		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
+		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
         final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
         final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
 

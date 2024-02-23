@@ -97,7 +97,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostBlockung} in einen Core-DTO
 	 * {@link GostBlockungsdaten}.
 	 */
-	private final Function<DTOGostBlockung, GostBlockungsdaten> dtoMapper = (final DTOGostBlockung blockung) -> {
+	private static final Function<DTOGostBlockung, GostBlockungsdaten> dtoMapper = (final DTOGostBlockung blockung) -> {
 		final GostBlockungsdaten daten = new GostBlockungsdaten();
 		daten.id = blockung.ID;
 		daten.name = blockung.Name;
@@ -135,11 +135,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * Folgende Information werden nicht geladen: die Liste
 	 * der Blockungsergebnisse und das aktuelle Blockungsergebnis
 	 *
-	 * @param id   die ID der Blockung
+	 * @param conn   die Datenbankverbindung
+	 * @param id     die ID der Blockung
 	 *
 	 * @return der Blockungsdaten-Manager
 	 */
-	public GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
+	public static GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final DBEntityManager conn, final Long id) {
 		// Bestimme den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
@@ -258,11 +259,31 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response get(final Long id) {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstellen den Manager mit den Blockungsdaten
-		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 		final GostBlockungsdaten daten = manager.daten();
 		// Ergänze Blockungsliste
 		(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Gibt die Blockungsdaten für die Blockung mit der angegebenen ID als GZip-Json
+	 * zurück.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param id   die ID der Blockung
+	 *
+	 * @return die Response mit der gz-Datei
+	 */
+	public static Response getGZip(final DBEntityManager conn, final Long id) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Erstellen den Manager mit den Blockungsdaten
+		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
+		final GostBlockungsdaten daten = manager.daten();
+		// Ergänze Blockungsliste
+		(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+		return JSONMapper.gzipFileResponseFromObject(daten, "blockung_%d.json.gz".formatted(id));
 	}
 
 
@@ -518,7 +539,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response berechne(final long id, final long zeit) {
 		try {
 			// Erzeuge den Input für den Kursblockungsalgorithmus
-			final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+			final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 			if (manager.daten().fachwahlen.isEmpty())
 				return OperationError.NOT_FOUND.getResponse("Keine Fachwahlen für den Abiturjahrgang gefunden.");
 			if (manager.faecherManager().faecher().isEmpty())

@@ -181,6 +181,36 @@ public class APIGostKursplanung {
 
 
     /**
+     * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der gymnasialen Oberstufe
+     * als GZip-komprimiertes JSON.
+     *
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID der Blockung
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return die Blockungsdaten
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/blockungen/{blockungsid : \\d+}/gzip")
+    @Operation(summary = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus.",
+               description = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID",
+    	content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+    	schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    public Response getGostBlockungGZip(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataGostBlockungsdaten.getGZip(conn, id),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Rechnen einer Blockung mit den in der DB gespeicherten Blockungsdaten.
      * Die Zwischenergebnisse werden in der Datenbank gespeichert.
      *

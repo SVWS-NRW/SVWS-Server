@@ -100,7 +100,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 		// Initialisiere das Blockungsergebnis und dessen Manager.
 		final GostBlockungsergebnis blockungsergebnis = (new DataGostBlockungsergebnisse(this.reportingRepository.conn())).getErgebnisFromID(id);
-		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(this.reportingRepository.conn())).getBlockungsdatenManagerFromDB(blockungsergebnis.blockungID);
+		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
 		final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
 
 		// Sortierungen definieren.

@@ -3514,6 +3514,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostBlockungGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/gzip
+	 *
+	 * Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.
+	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 *
+	 * @returns Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 */
+	public async getGostBlockungGZip(schema : string, blockungsid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/gzip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode rechneGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/rechne/{zeit : \d+}
 	 *
 	 * Berechnet für die angegebene Blockung der gymnasialen Oberstufe Zwischenergebnisse und speichert diese in der DB. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Rechnen einer Blockung besitzt.

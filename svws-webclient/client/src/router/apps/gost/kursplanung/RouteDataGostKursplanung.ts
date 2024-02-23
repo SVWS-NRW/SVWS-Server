@@ -4,7 +4,7 @@ import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDF
 import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
 import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel,
+import { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel,
 	GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
 import { GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager,
 	GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
@@ -269,7 +269,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		}
 		api.status.start();
-		const blockungsdaten = await api.server.getGostBlockung(api.schema, value.id);
+		const blockungsdatenGzip = await api.server.getGostBlockungGZip(api.schema, value.id);
+		const blockungsdatenBlob = await new Response(blockungsdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(await blockungsdatenBlob.text());
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.ergebnisGetListeSortiertNachBewertung();
 		api.status.stop();
