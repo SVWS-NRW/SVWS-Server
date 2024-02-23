@@ -45,7 +45,7 @@ public final class DBBenutzerUtils {
 			final DTOViewBenutzer dbBenutzer = conn.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream().findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return;
-			if (dbBenutzer.IstAdmin)
+			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin))
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
 			conn.queryNamed("DTOViewBenutzerKompetenz.benutzer_id", dbBenutzer.ID, DTOViewBenutzerKompetenz.class).stream()
 				.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
@@ -159,7 +159,7 @@ public final class DBBenutzerUtils {
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
+	private static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
 		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id))
