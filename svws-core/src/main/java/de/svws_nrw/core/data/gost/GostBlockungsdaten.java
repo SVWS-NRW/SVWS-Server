@@ -53,6 +53,6 @@ public class GostBlockungsdaten {
 	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  */
-	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new ArrayList<>();
+	public final @NotNull List<@NotNull GostBlockungsergebnis> ergebnisse = new ArrayList<>();
 
 }

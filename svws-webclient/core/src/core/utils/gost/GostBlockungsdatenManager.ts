@@ -1,6 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -27,11 +26,11 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
-import { GostBlockungsergebnisListeneintragComparator } from '../../../core/utils/gost/GostBlockungsergebnisListeneintragComparator';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { ListUtils } from '../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 
 export class GostBlockungsdatenManager extends JavaObject {
@@ -95,9 +94,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
 	/**
-	 * Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * Ein Comparator für die {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 */
-	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisListeneintragComparator();
+	private readonly _compErgebnisse : Comparator<GostBlockungsergebnis> = new GostBlockungsergebnisComparator();
 
 	/**
 	 * Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER)
@@ -165,9 +164,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _map_idFachart_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
 
 	/**
-	 * Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag}
+	 * Ergebnis-ID --> {@link GostBlockungsergebnis}
 	 */
-	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnisListeneintrag> = new HashMap();
+	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnis> = new HashMap();
 
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
@@ -284,22 +283,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
-	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 * @param ergebnis Das {@link GostBlockungsergebnis}-Objekt, welches hinzugefügt wird.
 	 *
-	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
+	 * @throws DeveloperNotificationException Falls in den Daten Inkonsistenzen sind.
 	 */
-	public ergebnisAdd(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+	public ergebnisAdd(ergebnis : GostBlockungsergebnis) : void {
 		this.ergebnisAddListe(ListUtils.create1(ergebnis));
 	}
 
 	/**
-	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 *
-	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
+	 * @throws DeveloperNotificationException Falls in den Daten Inkonsistenzen sind.
 	 */
-	public ergebnisAddListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+	public ergebnisAddListe(ergebnismenge : List<GostBlockungsergebnis>) : void {
 		for (const ergebnis of ergebnismenge) {
 			DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
@@ -314,25 +313,25 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * Liefert einen {@link GostBlockungsergebnis} aus der Liste der Ergebnisse.
 	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
-	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @return einen {@link GostBlockungsergebnis} aus der Liste der Ergebnisse.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
-	public ergebnisGet(idErgebnis : number) : GostBlockungsergebnisListeneintrag {
+	public ergebnisGet(idErgebnis : number) : GostBlockungsergebnis {
 		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", this._map_idErgebnis_Ergebnis.get(idErgebnis));
 	}
 
 	/**
-	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 *
-	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * @return Eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 */
-	public ergebnisGetListeSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
-		const result : List<GostBlockungsergebnisListeneintrag> = new ArrayList(this._daten.ergebnisse);
+	public ergebnisGetListeSortiertNachBewertung() : List<GostBlockungsergebnis> {
+		const result : List<GostBlockungsergebnis> = new ArrayList(this._daten.ergebnisse);
 		return result;
 	}
 
@@ -340,7 +339,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (const idErgebnis of listeDerErgebnisIDs)
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, idErgebnis);
 		for (const idErgebnis of listeDerErgebnisIDs) {
-			const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+			const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 			this._daten.ergebnisse.remove(e);
 			this._map_idErgebnis_Ergebnis.remove(e.id);
 		}
@@ -351,7 +350,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des zu entfernenden Ergebnisses.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Eregbnis mit dieser ID gibt.
 	 */
 	public ergebnisRemoveByID(idErgebnis : number) : void {
 		this.ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
@@ -362,20 +361,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @param ergebnis  Das zu entfernende Ergebnis.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
-	public ergebnisRemove(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+	public ergebnisRemove(ergebnis : GostBlockungsergebnis) : void {
 		this.ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
 	}
 
 	/**
-	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
 	 */
-	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnis>) : void {
 		const listIDs : List<number> = new ArrayList();
 		for (const e of ergebnismenge)
 			listIDs.add(e.id);
@@ -384,11 +383,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
-	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
 	 *
 	 * @param ergebnis  Das Ergebnis mit der neuen Bewertung.
 	 *
-	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
 	 */
 	public ergebnisUpdateBewertung(ergebnis : GostBlockungsergebnis) : void {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
@@ -404,13 +403,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 *
-	 * @param idErgebnis Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis   die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 1. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung1Wert(idErgebnis : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 		let summe : number = 0;
 		summe += e.bewertung.anzahlKurseNichtZugeordnet;
 		summe += e.bewertung.regelVerletzungen.size();
@@ -422,7 +421,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
@@ -437,13 +436,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 2. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung2Wert(idErgebnis : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 		let summe : number = 0;
 		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
 		summe += e.bewertung.anzahlSchuelerKollisionen;
@@ -455,10 +454,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung2Intervall(idErgebnis : number) : number {
 		const summe : number = this.ergebnisGetBewertung2Wert(idErgebnis);
@@ -470,13 +469,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 3. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung3Wert(idErgebnis : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 		return e.bewertung.kursdifferenzMax;
 	}
 
@@ -485,10 +484,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung3Intervall(idErgebnis : number) : number {
 		let wert : number = this.ergebnisGetBewertung3Wert(idErgebnis);
@@ -504,13 +503,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 4. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung4Wert(idErgebnis : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		const e : GostBlockungsergebnis = this.ergebnisGet(idErgebnis);
 		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
@@ -521,10 +520,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisGetBewertung4Intervall(idErgebnis : number) : number {
 		const wert : number = this.ergebnisGetBewertung4Wert(idErgebnis);

@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
-import type { GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag} from "@core";
+import type { GostBlockungListeneintrag, GostBlockungsergebnis} from "@core";
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -134,7 +134,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		if (idErgebnis === undefined) {
 			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das aktiver oder das erste Element aus
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
-				let ergebnis : GostBlockungsergebnisListeneintrag | undefined = undefined;
+				let ergebnis : GostBlockungsergebnis | undefined = undefined;
 				for (const e of this.data.datenmanager.ergebnisGetListeSortiertNachBewertung()) {
 					if (e.istAktiv === true) {
 						ergebnis = e;

@@ -1,4 +1,4 @@
-import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnisListeneintrag, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
+import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 
@@ -276,7 +276,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		if (blockungsdaten.ergebnisse.isEmpty())
 			return;
 		// Bestimme das aktive Ergebnis, falls gesetzt, sonst nehme das erste in der Liste
-		let ergebnis: GostBlockungsergebnisListeneintrag | undefined = undefined;
+		let ergebnis: GostBlockungsergebnis | undefined = undefined;
 		for (const e of blockungsdaten.ergebnisse) {
 			if (e.istAktiv) {
 				ergebnis = e;

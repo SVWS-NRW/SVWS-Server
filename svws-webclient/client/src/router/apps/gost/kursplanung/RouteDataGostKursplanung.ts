@@ -4,8 +4,10 @@ import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDF
 import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
 import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungsergebnis} from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
+import type { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel,
+	GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
+import { GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager,
+	GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -31,7 +33,7 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
 	datenmanager: GostBlockungsdatenManager | undefined;
 	// ...auch abhängig von dem ausgewählten Blockungsergebnis
-	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+	auswahlErgebnis: GostBlockungsergebnis | undefined;
 	ergebnismanager: GostBlockungsergebnisManager | undefined;
 	schuelerFilter: GostKursplanungSchuelerFilter;
 	// ... auch abhängig von dem ausgewählten Schüler
@@ -279,7 +281,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			ergebnismanager: undefined,
 			schuelerFilter: emptySchuelerFilter(),
 		});
-		let ergebnis : GostBlockungsergebnisListeneintrag | undefined = undefined;
+		let ergebnis : GostBlockungsergebnis | undefined = undefined;
 		if (ergebnisse.size() > 0) {
 			for (const e of ergebnisse) {
 				if (e.istAktiv) {
@@ -324,17 +326,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.ergebnismanager !== undefined;
 	}
 
-	public get ergebnisse(): List<GostBlockungsergebnisListeneintrag> {
+	public get ergebnisse(): List<GostBlockungsergebnis> {
 		return this.datenmanager.ergebnisGetListeSortiertNachBewertung();
 	}
 
-	public get auswahlErgebnis() : GostBlockungsergebnisListeneintrag {
+	public get auswahlErgebnis() : GostBlockungsergebnis {
 		if (this._state.value.auswahlErgebnis === undefined)
 			throw new DeveloperNotificationException("Es wurde noch kein gültiges Ergebnis ausgewählt.");
 		return this._state.value.auswahlErgebnis;
 	}
 
-	public setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
+	public setAuswahlErgebnis = async (value: GostBlockungsergebnis | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if ((this._state.value.auswahlErgebnis?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
@@ -441,7 +443,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 
-	patchErgebnis = async (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number): Promise<boolean> => {
+	patchErgebnis = async (data: Partial<GostBlockungsergebnis>, idErgebnis: number): Promise<boolean> => {
 		if (this._state.value.datenmanager === undefined)
 			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
 		api.status.start();
@@ -728,29 +730,18 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	addErgebnisse = api.call(async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
 		if ((ergebnisse.isEmpty()) || (!this.hatBlockung))
 			return;
-		const liste = new ArrayList<GostBlockungsergebnisListeneintrag>();
 		const idBlockung = this.datenmanager.daten().id;
 		const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
-		for (const ergebnis of ergebnisseMitIDs) {
-			const ergebnisListenEintrag = new GostBlockungsergebnisListeneintrag();
-			ergebnisListenEintrag.id = ergebnis.id;
-			ergebnisListenEintrag.blockungID = ergebnis.blockungID;
-			ergebnisListenEintrag.name = ergebnis.name;
-			ergebnisListenEintrag.gostHalbjahr = ergebnis.gostHalbjahr;
-			ergebnisListenEintrag.istAktiv = ergebnis.istAktiv;
-			ergebnisListenEintrag.bewertung = ergebnis.bewertung;
-			liste.add(ergebnisListenEintrag);
-		}
-		this.datenmanager.ergebnisAddListe(liste);
+		this.datenmanager.ergebnisAddListe(ergebnisseMitIDs);
 		this.commit();
 	});
 
-	removeErgebnisse = api.call(async (ergebnisse: GostBlockungsergebnisListeneintrag[]): Promise<void> => {
+	removeErgebnisse = api.call(async (ergebnisse: GostBlockungsergebnis[]): Promise<void> => {
 		if ((ergebnisse.length <= 0) || (!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const reselect = ergebnisse.some(e => e.id === ergebnisid);
-		const liste = new ArrayList<GostBlockungsergebnisListeneintrag>();
+		const liste = new ArrayList<GostBlockungsergebnis>();
 		for (const ergebnis of ergebnisse) {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
 			liste.add(ergebnis);
@@ -862,9 +853,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 	}
 
-	gotoErgebnis = async (value: GostBlockungsergebnisListeneintrag | number | undefined) => {
+	gotoErgebnis = async (value: GostBlockungsergebnis | number | undefined) => {
 		let id;
-		if (value instanceof GostBlockungsergebnisListeneintrag)
+		if (value instanceof GostBlockungsergebnis)
 			id = value.id;
 		else
 			id = value;

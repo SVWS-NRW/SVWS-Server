@@ -1,4 +1,4 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt, ServerMode, GostBlockungsergebnis, GostBlockungsergebnisManager } from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, List, Schuljahresabschnitt, ServerMode, GostBlockungsergebnis, GostBlockungsergebnisManager } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {
@@ -17,12 +17,12 @@ export interface GostKursplanungAuswahlProps {
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
-	patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
+	patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
 	rechneGostBlockung: () => Promise<List<number>>;
-	removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-	setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+	removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
+	setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
 	hatBlockung: boolean;
-	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+	auswahlErgebnis: GostBlockungsergebnis | undefined;
 	restoreBlockung: () => Promise<void>;
 	aktAbschnitt: Schuljahresabschnitt;
 	mode: ServerMode;

@@ -162,7 +162,6 @@ export { GostBlockungsergebnisKurs } from './core/data/gost/GostBlockungsergebni
 export { GostBlockungsergebnisKursSchienenZuordnung } from './core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 export { GostBlockungsergebnisKursSchuelerZuordnung } from './core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 export { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from './core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
-export { GostBlockungsergebnisListeneintrag } from './core/data/gost/GostBlockungsergebnisListeneintrag';
 export { GostBlockungsergebnisSchiene } from './core/data/gost/GostBlockungsergebnisSchiene';
 export { GostFach } from './core/data/gost/GostFach';
 export { GostFachwahl } from './core/data/gost/GostFachwahl';
@@ -525,7 +524,6 @@ export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisBewertungComparator } from './core/utils/gost/GostBlockungsergebnisBewertungComparator';
 export { GostBlockungsergebnisComparator } from './core/utils/gost/GostBlockungsergebnisComparator';
-export { GostBlockungsergebnisListeneintragComparator } from './core/utils/gost/GostBlockungsergebnisListeneintragComparator';
 export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungsergebnisManager';
 export { GostFachUtils } from './core/utils/gost/GostFachUtils';
 export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';

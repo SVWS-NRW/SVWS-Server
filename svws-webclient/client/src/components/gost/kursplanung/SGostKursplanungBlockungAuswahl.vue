@@ -73,7 +73,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostHalbjahr, List, GostBlockungsergebnisManager} from "@core";
+	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, List, GostBlockungsergebnisManager} from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
 
 	const props = defineProps<{
@@ -87,13 +87,13 @@
 		// ... zusätzlich für die Ergebnisauswahl
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
+		patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
 		rechneGostBlockung: () => Promise<List<number>>;
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
-		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
+		setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
 		hatBlockung: boolean;
-		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+		auswahlErgebnis: GostBlockungsergebnis | undefined;
 		restoreBlockung: () => Promise<void>;
 		istBlockungPersistiert: boolean;
 		mode: ServerMode;

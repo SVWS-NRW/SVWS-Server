@@ -86,23 +86,23 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostHalbjahr, List } from "@core";
+	import type { GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisManager, GostHalbjahr, List } from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		patchErgebnis: (data: Partial<GostBlockungsergebnisListeneintrag>, idErgebnis: number) => Promise<boolean>;
-		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
-		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+		patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
+		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
+		setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
+		auswahlErgebnis: GostBlockungsergebnis | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
 	}>();
 
-	const selected_ergebnisse = ref<GostBlockungsergebnisListeneintrag[]>([]);
+	const selected_ergebnisse = ref<GostBlockungsergebnis[]>([]);
 
-	function getErgebnisse() : List<GostBlockungsergebnisListeneintrag> {
+	function getErgebnisse() : List<GostBlockungsergebnis> {
 		return props.getDatenmanager().ergebnisGetListeSortiertNachBewertung();
 	}
 
@@ -119,19 +119,19 @@
 		await props.removeErgebnisse([props.auswahlErgebnis]);
 	}
 
-	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color1(ergebnis: GostBlockungsergebnis): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color2(ergebnis: GostBlockungsergebnis): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color3(ergebnis: GostBlockungsergebnis): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color4(ergebnis: GostBlockungsergebnis): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function colorMix(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function colorMix(ergebnis: GostBlockungsergebnis): string {
 		const combined = (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id))
 			+ (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
 			+ (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))

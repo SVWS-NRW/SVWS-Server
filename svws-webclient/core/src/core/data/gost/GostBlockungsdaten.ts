@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { Schueler } from '../../../core/data/schueler/Schueler';
-import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -64,7 +64,7 @@ export class GostBlockungsdaten extends JavaObject {
 	/**
 	 * Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.
 	 */
-	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new ArrayList();
+	public readonly ergebnisse : List<GostBlockungsergebnis> = new ArrayList();
 
 
 	public constructor() {
@@ -124,7 +124,7 @@ export class GostBlockungsdaten extends JavaObject {
 		}
 		if ((obj.ergebnisse !== undefined) && (obj.ergebnisse !== null)) {
 			for (const elem of obj.ergebnisse) {
-				result.ergebnisse?.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.ergebnisse?.add(GostBlockungsergebnis.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -203,7 +203,7 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"ergebnisse" : [ ';
 			for (let i = 0; i < obj.ergebnisse.size(); i++) {
 				const elem = obj.ergebnisse.get(i);
-				result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
+				result += GostBlockungsergebnis.transpilerToJSON(elem);
 				if (i < obj.ergebnisse.size() - 1)
 					result += ',';
 			}
@@ -308,7 +308,7 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"ergebnisse" : [ ';
 				for (let i = 0; i < obj.ergebnisse.size(); i++) {
 					const elem = obj.ergebnisse.get(i);
-					result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
+					result += GostBlockungsergebnis.transpilerToJSON(elem);
 					if (i < obj.ergebnisse.size() - 1)
 						result += ',';
 				}

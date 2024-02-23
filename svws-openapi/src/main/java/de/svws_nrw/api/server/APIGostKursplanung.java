@@ -12,7 +12,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -1077,7 +1076,7 @@ public class APIGostKursplanung {
     public Response patchGostBlockungsergebnis(
     		@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id,
     		@RequestBody(description = "Der Patch für das Blockungsergebnis", required = true, content =
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsergebnisListeneintrag.class))) final InputStream is,
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsergebnis.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).patch(id, is),
         		request, ServerMode.STABLE,

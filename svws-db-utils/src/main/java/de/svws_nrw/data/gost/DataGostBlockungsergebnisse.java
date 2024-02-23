@@ -8,7 +8,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -134,16 +133,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             }
             final GostBlockungsergebnis ergebnis = manager.getErgebnisInklusiveUngueltigerWahlen();
             ergebnis.istAktiv = erg.IstAktiv != null && erg.IstAktiv;
-
-            // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
-            final var eintrag = new GostBlockungsergebnisListeneintrag();
-            eintrag.id = ergebnis.id;
-            eintrag.blockungID = ergebnis.blockungID;
-            eintrag.name = ergebnis.name;
-            eintrag.gostHalbjahr = ergebnis.gostHalbjahr;
-            eintrag.istAktiv = ergebnis.istAktiv;
-            eintrag.bewertung = ergebnis.bewertung;
-            datenManager.daten().ergebnisse.add(eintrag);
+            datenManager.daten().ergebnisse.add(ergebnis);
         }
 	}
 

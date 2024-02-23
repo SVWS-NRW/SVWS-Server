@@ -17,7 +17,7 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 	 * <br>(2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser)
 	 * <br>(3) Array an Kursdifferenzen-Histogramm (kleinste größte Kursdifferenz besser)
 	 * <br>(4) Summe gleicher Facharten in der selben Schiene (weniger besser)
-	 * <br>(5) ID von GostBlockungsergebnisListeneintrag (weniger besser)
+	 * <br>(5) ID von GostBlockungsergebnis (weniger besser)
 	 */
 	public GostBlockungsergebnisComparator() {
 		// empty constructor

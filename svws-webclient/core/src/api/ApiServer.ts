@@ -48,7 +48,6 @@ import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
-import { GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
@@ -4163,15 +4162,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<GostBlockungsergebnisListeneintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<GostBlockungsergebnis>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async patchGostBlockungsergebnis(data : Partial<GostBlockungsergebnisListeneintrag>, schema : string, ergebnisid : number) : Promise<void> {
+	public async patchGostBlockungsergebnis(data : Partial<GostBlockungsergebnis>, schema : string, ergebnisid : number) : Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const body : string = GostBlockungsergebnisListeneintrag.transpilerToJSONPatch(data);
+		const body : string = GostBlockungsergebnis.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

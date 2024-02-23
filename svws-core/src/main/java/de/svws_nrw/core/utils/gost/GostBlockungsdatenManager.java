@@ -17,7 +17,6 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -80,8 +79,8 @@ public class GostBlockungsdatenManager {
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
 
-	/** Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
-	private final @NotNull Comparator<@NotNull GostBlockungsergebnisListeneintrag> _compErgebnisse = new GostBlockungsergebnisListeneintragComparator();
+	/** Ein Comparator für die {@link GostBlockungsergebnis} nach ihrer Bewertung. */
+	private final @NotNull Comparator<@NotNull GostBlockungsergebnis> _compErgebnisse = new GostBlockungsergebnisComparator();
 
 	/** Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER) */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_kursart_fach_kursnummer;
@@ -122,8 +121,8 @@ public class GostBlockungsdatenManager {
 	/** Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostFachwahl>> _map_idFachart_fachwahlen = new HashMap<>();
 
-	/** Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag} */
-	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnisListeneintrag> _map_idErgebnis_Ergebnis = new HashMap<>();
+	/** Ergebnis-ID --> {@link GostBlockungsergebnis} */
+	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnis> _map_idErgebnis_Ergebnis = new HashMap<>();
 
 	/** Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER). */
 	private final @NotNull List<@NotNull GostBlockungKurs> _list_kurse_sortiert_fach_kursart_kursnummer = new ArrayList<>();
@@ -222,24 +221,24 @@ public class GostBlockungsdatenManager {
 	/**
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
-	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 * @param ergebnis Das {@link GostBlockungsergebnis}-Objekt, welches hinzugefügt wird.
 	 *
-	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
+	 * @throws DeveloperNotificationException Falls in den Daten Inkonsistenzen sind.
 	 */
-	public void ergebnisAdd(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
+	public void ergebnisAdd(final @NotNull GostBlockungsergebnis ergebnis) throws DeveloperNotificationException {
 		ergebnisAddListe(ListUtils.create1(ergebnis));
 	}
 
 	/**
-	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 *
-	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
+	 * @throws DeveloperNotificationException Falls in den Daten Inkonsistenzen sind.
 	 */
-	public void ergebnisAddListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnismenge) throws DeveloperNotificationException {
+	public void ergebnisAddListe(final @NotNull List<@NotNull GostBlockungsergebnis> ergebnismenge) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen
-		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : ergebnismenge) {
+		for (final @NotNull GostBlockungsergebnis ergebnis : ergebnismenge) {
 			DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 			DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 			DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
@@ -247,7 +246,7 @@ public class GostBlockungsdatenManager {
 		}
 
 		// Hinzufügen
-		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : ergebnismenge) {
+		for (final @NotNull GostBlockungsergebnis ergebnis : ergebnismenge) {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
 			_daten.ergebnisse.add(ergebnis);
 		}
@@ -261,25 +260,25 @@ public class GostBlockungsdatenManager {
 	// #########################################################################
 
 	/**
-	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * Liefert einen {@link GostBlockungsergebnis} aus der Liste der Ergebnisse.
 	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
-	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @return einen {@link GostBlockungsergebnis} aus der Liste der Ergebnisse.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
-	public @NotNull GostBlockungsergebnisListeneintrag ergebnisGet(final long idErgebnis) throws DeveloperNotificationException {
+	public @NotNull GostBlockungsergebnis ergebnisGet(final long idErgebnis) throws DeveloperNotificationException {
 		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", _map_idErgebnis_Ergebnis.get(idErgebnis));
 	}
 
 	/**
-	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 *
-	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * @return Eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 */
-	public @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisGetListeSortiertNachBewertung() {
-		final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> result = new ArrayList<>(_daten.ergebnisse);
+	public @NotNull List<@NotNull GostBlockungsergebnis> ergebnisGetListeSortiertNachBewertung() {
+		final @NotNull List<@NotNull GostBlockungsergebnis> result = new ArrayList<>(_daten.ergebnisse);
 		return result;
 	}
 
@@ -290,7 +289,7 @@ public class GostBlockungsdatenManager {
 
 		// Entfernen des Ergebnisses.
 		for (final long idErgebnis : listeDerErgebnisIDs) {
-			final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+			final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 			_daten.ergebnisse.remove(e);
 			_map_idErgebnis_Ergebnis.remove(e.id);
 		}
@@ -303,7 +302,7 @@ public class GostBlockungsdatenManager {
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des zu entfernenden Ergebnisses.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Eregbnis mit dieser ID gibt.
 	 */
 	public void ergebnisRemoveByID(final long idErgebnis) throws DeveloperNotificationException {
 		ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
@@ -314,23 +313,23 @@ public class GostBlockungsdatenManager {
 	 *
 	 * @param ergebnis  Das zu entfernende Ergebnis.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
-	public void ergebnisRemove(final @NotNull GostBlockungsergebnisListeneintrag ergebnis) throws DeveloperNotificationException {
+	public void ergebnisRemove(final @NotNull GostBlockungsergebnis ergebnis) throws DeveloperNotificationException {
 		ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
 	}
 
 	/**
-	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
 	 *
 	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 *
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit diesen IDs gibt.
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
 	 */
-	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnismenge) throws DeveloperNotificationException {
+	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnis> ergebnismenge) throws DeveloperNotificationException {
 		// ID kopieren, da Löschen über Objektidentität nicht funktioniert!
 		final @NotNull List<@NotNull Long> listIDs = new ArrayList<>();
-		for (final @NotNull GostBlockungsergebnisListeneintrag e : ergebnismenge)
+		for (final @NotNull GostBlockungsergebnis e : ergebnismenge)
 			listIDs.add(e.id);
 
 		ergebnisRemoveListeByIDs(listIDs);
@@ -338,11 +337,11 @@ public class GostBlockungsdatenManager {
 
 	/**
 	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
-	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
 	 *
 	 * @param ergebnis  Das Ergebnis mit der neuen Bewertung.
 	 *
-	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnis} mit der ID gefunden wurde.
 	 */
 	public void ergebnisUpdateBewertung(final @NotNull GostBlockungsergebnis ergebnis) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
@@ -350,7 +349,7 @@ public class GostBlockungsdatenManager {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 
 		// Bewertung aktualisieren.
-		for (final @NotNull GostBlockungsergebnisListeneintrag eintrag : _daten.ergebnisse)
+		for (final @NotNull GostBlockungsergebnis eintrag : _daten.ergebnisse)
 			if (eintrag.id == ergebnis.id)
 				eintrag.bewertung = ergebnis.bewertung;
 
@@ -363,13 +362,13 @@ public class GostBlockungsdatenManager {
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 *
-	 * @param idErgebnis Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis   die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 1. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public int ergebnisGetBewertung1Wert(final long idErgebnis) throws DeveloperNotificationException {
-		final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+		final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 		int summe = 0;
 		summe += e.bewertung.anzahlKurseNichtZugeordnet;
 		summe += e.bewertung.regelVerletzungen.size();
@@ -381,7 +380,7 @@ public class GostBlockungsdatenManager {
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
@@ -396,13 +395,13 @@ public class GostBlockungsdatenManager {
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 2. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public int ergebnisGetBewertung2Wert(final long idErgebnis) throws DeveloperNotificationException {
-		final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+		final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 		int summe = 0;
 		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
 		summe += e.bewertung.anzahlSchuelerKollisionen;
@@ -414,10 +413,10 @@ public class GostBlockungsdatenManager {
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public double ergebnisGetBewertung2Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		final double summe = ergebnisGetBewertung2Wert(idErgebnis);
@@ -429,13 +428,13 @@ public class GostBlockungsdatenManager {
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 3. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public int ergebnisGetBewertung3Wert(final long idErgebnis) throws DeveloperNotificationException {
-		final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+		final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 		return e.bewertung.kursdifferenzMax;
 	}
 
@@ -444,10 +443,10 @@ public class GostBlockungsdatenManager {
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public double ergebnisGetBewertung3Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		int wert = ergebnisGetBewertung3Wert(idErgebnis);
@@ -463,13 +462,13 @@ public class GostBlockungsdatenManager {
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Den Wert des 4. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public int ergebnisGetBewertung4Wert(final long idErgebnis) throws DeveloperNotificationException {
-		final @NotNull GostBlockungsergebnisListeneintrag e = ergebnisGet(idErgebnis);
+		final @NotNull GostBlockungsergebnis e = ergebnisGet(idErgebnis);
 		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
@@ -480,10 +479,10 @@ public class GostBlockungsdatenManager {
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
 	 *
-	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
 	 *
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public double ergebnisGetBewertung4Intervall(final long idErgebnis) throws DeveloperNotificationException {
 		final int wert = ergebnisGetBewertung4Wert(idErgebnis);
