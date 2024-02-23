@@ -109,7 +109,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
-		// Bestimme die Kurssortierung
+		// Lade die Fachwahlstatistik
+		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
+		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
+		for (const fw of listFachwahlStatistik)
+			mapFachwahlStatistik.set(fw.id, fw);
 		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
@@ -120,6 +124,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 			halbjahrInitialisiert: false,
+			mapFachwahlStatistik,
 		});
 	}
 
@@ -267,16 +272,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, value.id);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.ergebnisGetListeSortiertNachBewertung();
-		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, this.abiturjahr);
-		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
-		for (const fw of listFachwahlStatistik)
-			mapFachwahlStatistik.set(fw.id, fw);
 		api.status.stop();
 		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			auswahlBlockung: value,
 			datenmanager,
-			mapFachwahlStatistik,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: emptySchuelerFilter(),

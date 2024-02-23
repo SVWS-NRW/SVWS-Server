@@ -149,9 +149,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				return;   // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id); // Es existiert keine Blockung, also route zu der Halbjahresauswahl
 		}
-		let ergebnisEintrag;
+		let ergebnis;
 		try {
-			ergebnisEintrag = routeGostKursplanung.data.datenmanager.ergebnisGet(idErgebnis);
+			ergebnis = routeGostKursplanung.data.datenmanager.ergebnisGet(idErgebnis);
 		} catch (e) {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
 			if (this.data.ergebnisse.size() <= 0)
@@ -159,16 +159,16 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			const ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 			return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 		}
-		if (routeGostKursplanung.data.auswahlErgebnis.id !== ergebnisEintrag.id) {
+		if (routeGostKursplanung.data.auswahlErgebnis.id !== ergebnis.id) {
 			// ... wurde die ID des Ergebnisses verändert, so setze den neu ausgewählten Ergebnis-Eintrag
-			await routeGostKursplanung.data.setAuswahlErgebnis(ergebnisEintrag);
+			await routeGostKursplanung.data.setAuswahlErgebnis(ergebnis);
 			if (this.data.hatSchueler)
 				return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id, this.data.auswahlSchueler.id);
 			return this.getRouteErgebnis(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id);
 		}
 		// Setze die aktuelle Route auf die Schüler-Route, so dass die Auswahl geladen wird.
 		if (this.name === to.name)
-			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
+			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnis.blockungID, ergebnis.id, undefined);
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
