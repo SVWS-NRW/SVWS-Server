@@ -32,8 +32,6 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
-			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
-				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 			<svws-ui-content-card title="Textvorlagen">
 				<svws-ui-input-wrapper>
 					<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
@@ -42,6 +40,8 @@
 						@change="textMailversand => patchJahrgangsdaten({ textMailversand }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
+			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
+				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 		</div>
 	</div>
 </template>
