@@ -22,7 +22,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	_head : LinkedCollectionElement<E> | null = null;
 
 	/**
-	 * Das letze Element der Collection.
+	 * Das letzte Element der Collection.
 	 */
 	_tail : LinkedCollectionElement<E> | null = null;
 

@@ -53,7 +53,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 	/** Das erste Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _head;
 
-	/** Das letze Element der Collection. */
+	/** Das letzte Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _tail;
 
 	/** Die Anzahl der Elemente in der Collection. */
