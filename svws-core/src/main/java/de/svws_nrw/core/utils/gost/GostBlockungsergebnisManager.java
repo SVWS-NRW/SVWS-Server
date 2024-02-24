@@ -3044,6 +3044,10 @@ public class GostBlockungsergebnisManager {
 		return _regelverletzungen_der_faecherparallelitaet;
 	}
 
+	private static boolean regelupdateIsEqualPair(final long a1, final long a2, final long b1, final long b2) {
+		return ((a1 == b1) && (a2 == b2)) || ((a1 == b2) && (a2 == b1));
+	}
+
 	/**
      * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
      * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
@@ -3727,8 +3731,8 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zusammen zu setzen.
 	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
-	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Verboten-Regel gibt, wird diese entfernt.
-	 * <br>(3) Wenn es eine Schüler-Schüler-Verboten-Regel gibt, wird diese entfernt.
+	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Verbieten-Regel gibt, wird diese entfernt.
+	 * <br>(3) Wenn es eine Schüler-Schüler-Verbieten-Regel gibt, wird diese entfernt.
 	 * <br>(4) Wenn es eine Schüler-Schüler-Zusammen-Regel gibt, wird diese entfernt.
 	 * <br>(5a) Wenn es eine Schüler-Schüler-Fach-Zusammen-Regel in falscher Schüler-ID-Reihenfolge gibt, wird sie entfernt.
 	 * <br>(5b) Wenn es keine Schüler-Schüler-Fach-Zusammen-Regel gibt, wird sie hinzugefügt.
@@ -3890,7 +3894,11 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
-	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
+	 * <br>(1) Wenn es eine Schüler-Schüler-Fach-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(3) Wenn es eine Schüler-Schüler-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt (aber später hinzugefügt).
+	 * <br>(4) Wenn es eine Schüler-Schüler-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(5) Wenn die Schüler-IDs gültig sind, wird nun die Schüler-Schüler-Zusammen-Regel hinzugefügt.
 	 *
 	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
 	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
@@ -3898,7 +3906,41 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
-		return new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final long idS1 = Math.min(idSchueler1, idSchueler2);
+		final long idS2 = Math.max(idSchueler1, idSchueler2);
+
+		// (1)
+		for (final @NotNull GostBlockungRegel regel11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(regel11.parameter.get(0), regel11.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(regel11);
+
+		// (2)
+		for (final @NotNull GostBlockungRegel regel12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(regel12.parameter.get(0), regel12.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(regel12);
+
+		// (3)
+		for (final @NotNull GostBlockungRegel regel13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(regel13.parameter.get(0), regel13.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(regel13);
+
+		// (4)
+		for (final @NotNull GostBlockungRegel regel14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(regel14.parameter.get(0), regel14.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(regel14);
+
+		// (5)
+		if ((0 <= idS1) && (idS1 < idS2)) {
+			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+			regelHinzufuegen.parameter.add(idS1);
+			regelHinzufuegen.parameter.add(idS2);
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+
+		return u;
 	}
 
 	/**
