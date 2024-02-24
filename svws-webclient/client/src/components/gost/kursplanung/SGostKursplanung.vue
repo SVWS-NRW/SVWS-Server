@@ -52,7 +52,7 @@
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
-							:regeln-delete-and-add="regelnDeleteAndAdd" :allow-regeln="allowRegeln"
+							:regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>

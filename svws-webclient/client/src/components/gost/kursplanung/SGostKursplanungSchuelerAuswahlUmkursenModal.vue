@@ -110,13 +110,13 @@
 	import { computed, ref } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
-	import { GostBlockungRegel, GostKursblockungRegelTyp, ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
+	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
-		regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
+		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		allowRegeln: boolean;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -214,16 +214,6 @@
 		return arr;
 	})
 
-	const kurswahl = (id: number) => computed(() => {
-		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
-			return '———';
-		const kurswahl = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(id, kurs.fach_id);
-		if (kurswahl === null)
-			return '———';
-		return props.getErgebnismanager().getOfKursName(kurswahl.id);
-	})
-
 	async function remove(id: number) {
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
@@ -252,11 +242,10 @@
 			liste.add(zuordnung);
 		}
 		await props.removeKursSchuelerZuordnung(liste);
-
 	}
 
 	async function move(id: number) {
-		// Prüfe, ob der Schüler mit seiner Fachwahl bereis in einem anderen Kurs fixiert ist
+		// Prüfe, ob der Schüler mit seiner Fachwahl bereits in einem anderen Kurs fixiert ist
 		const kurszuordnung = andererKurs(id).value;
 		if ((kurszuordnung !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurszuordnung.id)))
 			return;
@@ -297,50 +286,29 @@
 		return props.getErgebnismanager().getOfKursName(k.id);
 	}
 
-	const openModal = () => {
-		showModal().value = true;
-	}
-
-	function createFixierRegelKursSchueler(idKurs: number, idSchueler: number) : GostBlockungRegel {
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-		regel.parameter.add(idSchueler);
-		regel.parameter.add(idKurs);
-		return regel;
-	}
+	const openModal = () => showModal().value = true;
 
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
 		if ((!props.allowRegeln) || (idKurs === null))
 			return;
-		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
-		const listAddRegeln = new ArrayList<GostBlockungRegel>();
+		let update = new GostBlockungRegelUpdate();
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
-			listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs));
+			update.listEntfernen.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs));
 		else
-			listAddRegeln.add(createFixierRegelKursSchueler(idKurs, idSchueler));
-		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
+			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		await props.regelnUpdate(update);
 	}
 
 	async function toggleFixierRegelAlleKursSchueler() {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
-			return;
 		const kursSchueler = props.schuelerFilter().filtered.value;
-		if (kursSchueler === undefined || kursSchueler.length === 0)
+		if ((kurs === undefined) || (kursSchueler === undefined) || (kursSchueler.length === 0))
 			return;
-		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
-		// Prüfe, ob alle Schüler im Kurs fixiert sind
-		if (kursSchuelerFixierungen.value === true)
-			// Wenn ja, dann entferne alle Schüler-Fixierungen im Batch
-			for (const schueler of kursSchueler)
-				if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
-					listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(schueler.id, kurs.id));
-		// Ansonsten erstelle für alle nicht fixierten Schüler eine neue Fixier-Regel
-		const listAddRegeln = new ArrayList<GostBlockungRegel>();
-		for (const schueler of kursSchueler)
-			if (!props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
-				listAddRegeln.add(createFixierRegelKursSchueler(kurs.id, schueler.id));
-		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
+		const setSchueler = new HashSet<number>();
+		for (const s of kursSchueler)
+			setSchueler.add(s.id);
+		const update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id));
+		await props.regelnUpdate(update);
 	}
 
 	const kursSchuelerFixierungen = computed<boolean | null>(() => {
