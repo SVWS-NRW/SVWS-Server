@@ -3601,40 +3601,67 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
-		for (const regel11 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(regel11.parameter.get(0)!, regel11.parameter.get(1)!, idS1, idS2))
-				u.listEntfernen.add(regel11);
-		for (const regel12 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(regel12.parameter.get(0)!, regel12.parameter.get(1)!, idS1, idS2))
-				u.listEntfernen.add(regel12);
-		for (const regel13 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(regel13.parameter.get(0)!, regel13.parameter.get(1)!, idS1, idS2))
-				u.listEntfernen.add(regel13);
-		for (const regel14 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(regel14.parameter.get(0)!, regel14.parameter.get(1)!, idS1, idS2))
-				u.listEntfernen.add(regel14);
+		for (const r11 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0)!, r11.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r11);
+		for (const r12 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0)!, r12.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r12);
+		for (const r13 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0)!, r13.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r13);
+		for (const r14 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0)!, r14.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r14);
 		if ((0 <= idS1) && (idS1 < idS2)) {
-			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
-			regelHinzufuegen.parameter.add(idS1);
-			regelHinzufuegen.parameter.add(idS2);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			const r13neu : GostBlockungRegel = new GostBlockungRegel();
+			r13neu.id = -1;
+			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+			r13neu.parameter.add(idS1);
+			r13neu.parameter.add(idS2);
+			u.listHinzuzufuegen.add(r13neu);
 		}
 		return u;
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
-	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
+	 * <br>(1) Wenn es eine Schüler-Schüler-Fach-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(3) Wenn es eine Schüler-Schüler-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(4) Wenn es eine Schüler-Schüler-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt (aber später hinzugefügt).
+	 * <br>(5) Wenn die Schüler-IDs gültig sind, wird nun die Schüler-Schüler-Verbieten-Regel hinzugefügt.
 	 *
 	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
 	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
 	public regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const idS1 : number = Math.min(idSchueler1, idSchueler2);
+		const idS2 : number = Math.max(idSchueler1, idSchueler2);
+		for (const r11 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0)!, r11.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r11);
+		for (const r12 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0)!, r12.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r12);
+		for (const r13 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0)!, r13.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r13);
+		for (const r14 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0)!, r14.parameter.get(1)!, idS1, idS2))
+				u.listEntfernen.add(r14);
+		if ((0 <= idS1) && (idS1 < idS2)) {
+			const r13neu : GostBlockungRegel = new GostBlockungRegel();
+			r13neu.id = -1;
+			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
+			r13neu.parameter.add(idS1);
+			r13neu.parameter.add(idS2);
+			u.listHinzuzufuegen.add(r13neu);
+		}
+		return u;
 	}
 
 	/**

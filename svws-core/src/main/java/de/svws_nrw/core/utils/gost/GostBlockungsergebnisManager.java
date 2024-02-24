@@ -3911,49 +3911,87 @@ public class GostBlockungsergebnisManager {
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
 
 		// (1)
-		for (final @NotNull GostBlockungRegel regel11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(regel11.parameter.get(0), regel11.parameter.get(1), idS1, idS2))
-				u.listEntfernen.add(regel11);
+		for (final @NotNull GostBlockungRegel r11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r11);
 
 		// (2)
-		for (final @NotNull GostBlockungRegel regel12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(regel12.parameter.get(0), regel12.parameter.get(1), idS1, idS2))
-				u.listEntfernen.add(regel12);
+		for (final @NotNull GostBlockungRegel r12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r12);
 
 		// (3)
-		for (final @NotNull GostBlockungRegel regel13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(regel13.parameter.get(0), regel13.parameter.get(1), idS1, idS2))
-				u.listEntfernen.add(regel13);
+		for (final @NotNull GostBlockungRegel r13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r13);
 
 		// (4)
-		for (final @NotNull GostBlockungRegel regel14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(regel14.parameter.get(0), regel14.parameter.get(1), idS1, idS2))
-				u.listEntfernen.add(regel14);
+		for (final @NotNull GostBlockungRegel r14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r14);
 
 		// (5)
 		if ((0 <= idS1) && (idS1 < idS2)) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
-			regelHinzufuegen.parameter.add(idS1);
-			regelHinzufuegen.parameter.add(idS2);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			final @NotNull GostBlockungRegel r13neu = new GostBlockungRegel();
+			r13neu.id = -1;
+			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
+			r13neu.parameter.add(idS1);
+			r13neu.parameter.add(idS2);
+			u.listHinzuzufuegen.add(r13neu);
 		}
 
 		return u;
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
-	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
+	 * <br>(1) Wenn es eine Schüler-Schüler-Fach-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(3) Wenn es eine Schüler-Schüler-Zusammen-Regel mit den selben Schülern gibt, wird diese entfernt.
+	 * <br>(4) Wenn es eine Schüler-Schüler-Verbieten-Regel mit den selben Schülern gibt, wird diese entfernt (aber später hinzugefügt).
+	 * <br>(5) Wenn die Schüler-IDs gültig sind, wird nun die Schüler-Schüler-Verbieten-Regel hinzugefügt.
 	 *
 	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
 	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
-		return new GostBlockungRegelUpdate();
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final long idS1 = Math.min(idSchueler1, idSchueler2);
+		final long idS2 = Math.max(idSchueler1, idSchueler2);
+
+		// (1)
+		for (final @NotNull GostBlockungRegel r11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r11);
+
+		// (2)
+		for (final @NotNull GostBlockungRegel r12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			if (regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r12);
+
+		// (3)
+		for (final @NotNull GostBlockungRegel r13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r13);
+
+		// (4)
+		for (final @NotNull GostBlockungRegel r14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			if (regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
+				u.listEntfernen.add(r14);
+
+		// (5)
+		if ((0 <= idS1) && (idS1 < idS2)) {
+			final @NotNull GostBlockungRegel r13neu = new GostBlockungRegel();
+			r13neu.id = -1;
+			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
+			r13neu.parameter.add(idS1);
+			r13neu.parameter.add(idS2);
+			u.listHinzuzufuegen.add(r13neu);
+		}
+
+		return u;
 	}
 
 	// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
