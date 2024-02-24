@@ -41,7 +41,6 @@ export { Naturwissenschaften } from './core/abschluss/gost/belegpruefung/Naturwi
 export { Projektkurse } from './core/abschluss/gost/belegpruefung/Projektkurse';
 export { Schwerpunkt } from './core/abschluss/gost/belegpruefung/Schwerpunkt';
 export { Sport } from './core/abschluss/gost/belegpruefung/Sport';
-export { ForEach } from './core/adt/ForEach';
 export { LongArrayKey } from './core/adt/LongArrayKey';
 export { Pair } from './core/adt/Pair';
 export { LinkedCollection } from './core/adt/collection/LinkedCollection';
