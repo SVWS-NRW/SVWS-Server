@@ -413,8 +413,9 @@
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ:
 				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				break;
-			// case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL:
-			// 	update = props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
+			case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ:
+				update = props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
+				break;
 			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ:
 				update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(p.get(0), p.get(1));
 				break;
