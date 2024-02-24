@@ -10,8 +10,6 @@ export interface KursplanungSchuelerAuswahlProps {
 	schueler: SchuelerListeEintrag | undefined;
 	schuelerFilter: () => GostKursplanungSchuelerFilter;
 	faecherManager: GostFaecherManager;
-	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	isSchuelerFilterOpen: () => boolean;
 	setIsSchuelerFilterOpen: (value: boolean) => void;

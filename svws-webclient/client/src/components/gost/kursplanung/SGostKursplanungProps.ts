@@ -12,10 +12,6 @@ export interface GostKursplanungProps {
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addBlockung: () => Promise<void>;
 	restoreBlockung: () => Promise<void>;
-	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
-	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-	regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
 	updateRegeln: (typ : RegelActionTypen, ids?: List<number>) => Promise<void>;
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	updateKurseLeeren: (typ : KurseLeerenTypen, ids?: List<number>) => Promise<void>;

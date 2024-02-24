@@ -138,7 +138,7 @@
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
@@ -155,7 +155,7 @@
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
@@ -166,30 +166,27 @@
 				</template>
 			</template>
 		</svws-ui-table>
-		<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" ref="modalRegelKursartSchienen" />
-		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
+		<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modalRegelKursartSchienen" />
+		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modal_regel_kurse" />
 		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { WritableComputedRef } from "vue";
 	import { computed, onMounted, ref, toRaw } from "vue";
 	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import { GostBlockungRegelUpdate, ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getKursauswahl: () => Set<number>,
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
-		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-		regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
+		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 		patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 		addSchiene: () => Promise<GostBlockungSchiene | undefined>;
@@ -219,16 +216,16 @@
 		setZeigeSchienenbezeichnungen: (value: boolean) => void;
 	}>();
 
-	const edit_schienenname: Ref<number|undefined> = ref()
+	const edit_schienenname = ref<number|undefined>(undefined);
 
-	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : ComputedRef<boolean> => computed(() => {
+	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) => computed<boolean>(() => {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
 		return (anzahl > 0) || (allow_regeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
 	});
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().schieneGetListe());
+	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+	const allow_regeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [];
@@ -290,9 +287,7 @@
 	}
 
 	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
+	onMounted(() => isMounted.value = true);
 
 	function getAnzahlFachwahlen(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : number {
 		const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
@@ -314,7 +309,7 @@
 
 	const modalRegelKursartSchienen = ref();
 
-	const istDropZoneSchiene = (schiene: GostBlockungSchiene) : ComputedRef<boolean> => computed(() => {
+	const istDropZoneSchiene = (schiene: GostBlockungSchiene) => computed<boolean>(() => {
 		return (dragDataKursartSchiene.value !== undefined && (dragDataKursartSchiene.value.schiene.id !== schiene.id));
 	});
 
@@ -364,8 +359,9 @@
 		if ((dragDataKursSchiene.value.kurs.id === zone.kurs.id) && (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(zone.kurs.id, zone.schiene.id)) ) {
 			// Entferne potentielle Fixierung beim Verschieben.
 			if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, zone.schiene.id)) {
-				const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(zone.kurs.id, zone.schiene.id);
-				await props.removeRegel(regel.id);
+				const update = new GostBlockungRegelUpdate();
+				update.listEntfernen.add(props.getDatenmanager().kursGetRegelFixierungInSchiene(zone.kurs.id, zone.schiene.id));
+				await props.regelnUpdate(update);
 			}
 			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, zone.schiene.id);
 		}
@@ -409,6 +405,7 @@
 		const s1 = props.getErgebnismanager().getSchieneG(dragDataKursSchiene.value.schiene.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dropDataKursSchiene.value.schiene.id);
 		const regeln: List<GostBlockungRegel> = new ArrayList();
+		// TODO Auf regelnupdate ändern
 		switch (action) {
 			case 'schüler fixieren':
 			case 'schüler lösen':
@@ -426,11 +423,10 @@
 				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2));
 				break;
 		}
-		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
-		const listAddRegeln = new ArrayList<GostBlockungRegel>();
+		const update = new GostBlockungRegelUpdate();
 		for (const regel of regeln)
-			regel.id > 0 ? listDeleteRegeln.add(regel) : listAddRegeln.add(regel);
-		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
+			regel.id > 0 ? update.listEntfernen.add(regel) : update.listHinzuzufuegen.add(regel);
+		await props.regelnUpdate(update);
 		dragDataKursSchiene.value = undefined;
 		dropDataKursSchiene.value = undefined;
 		return regeln;

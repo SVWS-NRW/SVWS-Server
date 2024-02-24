@@ -458,48 +458,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return true;
 	}
 
-
-	addRegel = api.call(async (regel: GostBlockungRegel) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis))
-			return;
-		const result = await api.server.addGostBlockungRegel(regel.parameter, api.schema, this.auswahlBlockung.id, regel.typ);
-		if (!result)
-			return;
-		this.datenmanager.regelAdd(result);
-		this.ergebnismanager.setAddRegelByID(result.id);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-		return result;
-	});
-
-	removeRegel = api.call(async (id: number) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis))
-			return;
-		const result = await api.server.deleteGostBlockungRegelByID(api.schema, id);
-		if (!result)
-			return
-		this.datenmanager.regelRemoveByID(result.id);
-		this.ergebnismanager.setRemoveRegelByID(result.id);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-		return result;
-	});
-
-	patchRegel = api.call(async (data: GostBlockungRegel, idRegel: number) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis))
-			return;
-		await api.server.patchGostBlockungRegel(data, api.schema, idRegel);
-		this.datenmanager.regelRemoveByID(idRegel);
-		this.ergebnismanager.setRemoveRegelByID(idRegel);
-		this.datenmanager.regelAdd(data);
-		this.ergebnismanager.setAddRegelByID(data.id);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-	});
-
 	patchKurs = api.call(async (data: Partial<GostBlockungKurs>, kurs_id: number) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
@@ -906,26 +864,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	}
 
-	regelnDeleteAndAdd = async (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) : Promise<void> => {
-		if (listDelete.isEmpty() && (listAdd.isEmpty()))
-			return;
-		const paar = new GostBlockungRegelUpdate();
-		paar.listEntfernen = listDelete;
-		paar.listHinzuzufuegen = listAdd;
-		listAdd = await api.server.updateGostBlockungRegeln(paar, api.schema, this.auswahlBlockung.id);
-		if (!listAdd.isEmpty()) {
-			this.datenmanager.regelAddListe(listAdd);
-			this.ergebnismanager.setAddRegelmenge(listAdd);
-		}
-		if (!listDelete.isEmpty()) {
-			this.datenmanager.regelRemoveListe(listDelete);
-			this.ergebnismanager.setRemoveRegelmenge(listDelete);
-		}
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-	}
-
 	updateKurseLeeren = async (typ: KurseLeerenTypen, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();
 		const listDelete = new ArrayList<GostBlockungRegel>();
@@ -956,50 +894,50 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	updateRegeln = async (typ: RegelActionTypen, ids?: List<number>) => {
+		// TODO auf neue regelnUpdate-Methoden umstellen
 		const listKursIDs = ids || this.getListeKursauswahl();
-		const listDelete = new ArrayList<GostBlockungRegel>();
-		const listAdd = new ArrayList<GostBlockungRegel>();
+		const update = new GostBlockungRegelUpdate();
 		switch (typ) {
 			case "fixiereKurseAlle":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
 				break;
 			case "loeseKurseAlle":
-				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen())
+				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen())
 				break;
 			case "fixiereKursauswahl":
 			case "fixiereKurseFilterFach":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
 				break;
 			case "loeseKursauswahl":
 			case "loeseKurseFilterFach":
-				listDelete.addAll(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
+				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
 				break;
 			case "fixiereSchuelerAlle":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
 				break;
 			case "fixiereSchuelerAbiturkurseAlle":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
 				break;
 			case "loeseSchuelerAlle":
-				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
+				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
 				break;
 			case "fixiereSchuelerAbiturkurseKursauswahl":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
 				break;
 			case "fixiereSchuelerFilterFach":
 			case "fixiereSchuelerFilterKurs":
 			case "fixiereSchuelerKursauswahl":
-				listAdd.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
+				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
 				break;
 			case "loeseSchuelerKursauswahl":
 			case "loeseSchuelerFilterFach":
 			case "loeseSchuelerFilterKurs":
-				listDelete.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
+				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			default:
 				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Aktualisierung von Regeln wird noch nicht unterstützt.`);
 		}
-		await this.regelnDeleteAndAdd(listDelete, listAdd);
+		await this.regelnUpdate(update);
 	}
 
 }

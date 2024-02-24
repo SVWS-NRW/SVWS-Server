@@ -291,12 +291,11 @@
 	}
 
 	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
-		// const update = props.getErgebnismanager().regelupdateGetSchuelermengeInKursmengeFixierungLoesen(ListUtils.create1(idSchueler), ListUtils.create1(idKurs));
-		// console.log(update.listEntfernen, update.listHinzuzufuegen)
 		const idRegel = fixier_regel(idKurs, idSchueler).value;
 		if (idRegel === undefined)
 			return;
-		await props.removeRegel(idRegel);
+		const update = props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		await props.regelnUpdate(update);
 	}
 
 	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number, event: Event) {

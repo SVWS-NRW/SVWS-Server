@@ -17,24 +17,23 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, List } from "@core";
-	import type { ComputedRef, Ref} from 'vue';
 	import { computed, ref } from 'vue';
-	import { ArrayList, GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, List } from "@core";
+	import { ArrayList, LehrerListeEintrag } from "@core";
 	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		addLehrerRegel: () => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		kurs: GostBlockungKurs;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const new_kurs_lehrer: Ref<boolean> = ref(false);
+	const new_kurs_lehrer = ref<boolean>(false);
 
-	const kurslehrer: ComputedRef<List<LehrerListeEintrag>> = computed(() => {
+	const kurslehrer = computed<List<LehrerListeEintrag>>(() => {
 		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
 		const tmp = new ArrayList<GostBlockungKursLehrer>(liste);
 		tmp.sort({ compare(a : GostBlockungKursLehrer, b : GostBlockungKursLehrer) {
@@ -49,7 +48,7 @@
 		return result;
 	})
 
-	const lehrer_liste: ComputedRef<LehrerListeEintrag[]> = computed(() => {
+	const lehrer_liste = computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
 		for (const l of kurslehrer.value)
 			vergeben.add(l.id);
@@ -69,29 +68,9 @@
 			const kurslehrer = await props.addKursLehrer(props.kurs.id, lehrer.id);
 			if (!kurslehrer)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
-			await add_lehrer_regel();
+			await props.addLehrerRegel();
 			new_kurs_lehrer.value = false;
 		}
-	}
-
-	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
-		const regeln = props.getDatenmanager().regelGetListe();
-		if (!regeln)
-			return undefined;
-		for (const r of regeln)
-			if (r.typ === regel_typ.typ)
-				return r;
-		return undefined;
-	})
-
-	async function add_lehrer_regel() {
-		if (lehrer_regel.value !== undefined)
-			return;
-		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
-		r.typ = regel_typ.typ;
-		await props.addRegel(r);
 	}
 
 </script>

@@ -9,19 +9,21 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)"><i-ri-lock-line /> Sperren</svws-ui-button>
-			<svws-ui-button type="secondary" @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">Alleine</svws-ui-button>
+			<svws-ui-button type="secondary" @click="regel_hinzufuegen(true)"><i-ri-lock-line /> Sperren</svws-ui-button>
+			<svws-ui-button type="secondary" @click="regel_hinzufuegen(false)">Alleine</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import { ref, shallowRef, type ShallowRef } from "vue";
-	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, GostBlockungSchiene } from "@core";
+	import { ref, shallowRef } from "vue";
+	import type { GostBlockungRegelUpdate, GostBlockungsergebnisManager } from "@core";
+	import { GostKursart, GostBlockungSchiene } from "@core";
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		getErgebnisManager: () => GostBlockungsergebnisManager;
+		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -35,18 +37,17 @@
 		bis.value = schieneBis;
 		showModal().value = true;
 	};
-	defineExpose({ openModal });
 
-	const kursart: ShallowRef<GostKursart> = shallowRef(GostKursart.GK)
+	const kursart = shallowRef<GostKursart>(GostKursart.GK)
 
-	async function regel_hinzufuegen(regeltyp: GostKursblockungRegelTyp) {
+	async function regel_hinzufuegen(value: boolean) {
 		showModal().value = false;
-		const regel = new GostBlockungRegel();
-		regel.typ = regeltyp.typ;
-		regel.parameter.add(kursart.value.id);
-		regel.parameter.add(von.value.nummer);
-		regel.parameter.add(bis.value.nummer);
-		await props.addRegel(regel);
+		const update = value === true
+			? props.getErgebnisManager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
+			: props.getErgebnisManager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
+		await props.regelnUpdate(update);
 	}
+
+	defineExpose({ openModal });
 
 </script>
