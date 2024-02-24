@@ -9,7 +9,7 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :disabled="apiStatus.pending">
+			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :default-action="dropdownDefault" :disabled="apiStatus.pending">
 				<template #icon> <i-ri-printer-line /><svws-ui-spinner :spinning="apiStatus.pending" /> </template>
 			</svws-ui-button-select>
 		</Teleport>
@@ -72,7 +72,6 @@
 <script setup lang="ts">
 
 	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
-	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse } from '@core';
@@ -91,8 +90,10 @@
 	const showModalImport = () => _showModalImport;
 	const auswahl = ref<GostBelegpruefungsErgebnisse[]>([]);
 
-	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
-		if ((!props.filterFehler()) && (!props.filterExterne()))
+	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne());
+
+	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(()=>{
+		if (!hasFilter.value)
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
 		for (const e of props.listBelegpruefungsErgebnisse()) {
@@ -106,14 +107,14 @@
 	})
 
 	const schueler_state = ref();
-	const schueler: WritableComputedRef<GostBelegpruefungsErgebnisse> = computed({
+	const schueler = computed<GostBelegpruefungsErgebnisse>({
 		get: () => schueler_state.value && filtered.value.contains(toRaw(schueler_state.value))
 			? schueler_state.value
 			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
 		set: (value) => schueler_state.value = value
 	})
 
-	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed<'ef1'|'gesamt'|'auto'>({
+	const art = computed<'ef1'|'gesamt'|'auto'>({
 		get: () => {
 			return props.gostBelegpruefungsArt() === GostBelegpruefungsArt.EF1 ? 'ef1' : 'gesamt';
 		},
@@ -156,27 +157,42 @@
 		return res;
 	}
 
-	const dropdownList = [
-		{ text: "Laufbahnwahlbogen gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen", false, 0), default: true },
-		{ text: "Laufbahnwahlbogen (nur Belegung) gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
-		{ text: "Ergebnisliste (nur Summen) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
-		{ text: "Ergebnisliste (nur Summen und Fehler) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
-		{ text: "Ergebnisliste (vollständig) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
-		{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
-		{ text: "Laufbahnwahlbogen markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen", true, 0) },
-		{ text: "Laufbahnwahlbogen (nur Belegung) markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
-		{ text: "Ergebnisliste (nur Summen) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
-		{ text: "Ergebnisliste (nur Summen und Fehler) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },
-		{ text: "Ergebnisliste (vollständig) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 2) }
-	]
+	const dropdownList = computed(() => {
+		const textSchuelerfilter = hasFilter.value ? "gefilterte Schüler" : "alle Schüler";
+		const textSchuelerauswahl = auswahl.value.length > 0 ? "markierte Schüler" : "ausgewählter Schüler";
+		return [
+			{ text: `Laufbahnwahlbogen ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen", false, 0), default: true },
+			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
+			{ text: `Ergebnisliste (nur Summen) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
+			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
+			{ text: `Ergebnisliste (vollständig) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
+			{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
+			{ text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 0) },
+			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
+			{ text: `Ergebnisliste (nur Summen) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
+			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },
+			{ text: `Ergebnisliste (vollständig) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 2) }
+		];
+	});
 
-	async function downloadPDF(title: string, single: boolean, detaillevel: number) {
+	const dropdownDefault = computed(() => {
+		const textSchuelerauswahl = auswahl.value.length > 0 ? "markierte Schüler" : "ausgewählter Schüler";
+		return { text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 0) };
+	});
+
+	async function downloadPDF(title: string, benutzeAuswahl: boolean, detaillevel: number) {
 		const list = new ArrayList<number>();
-		if (single)
-			list.add(schueler.value.schueler.id);
-		else
+		if (benutzeAuswahl) {
+			if (auswahl.value.length > 0) {
+				for (const e of auswahl.value)
+					list.add(e.schueler.id);
+			} else {
+				list.add(schueler.value.schueler.id);
+			}
+		} else {
 			for (const s of filtered.value)
 				list.add(s.schueler.id);
+		}
 		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
