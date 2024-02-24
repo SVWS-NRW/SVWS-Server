@@ -23,7 +23,7 @@
 							<template #content>
 								{{ getBewertungWert(row, 1) }} Regelverletzungen
 								<template v-for="typ in listErgebnismanager.get(rowIndex).regelGetMengeVerletzterTypen()" :key="typ.id">
-									<template v-for="text in listErgebnismanager.get(rowIndex).regelGetMengeAnVerletzungen(typ)" :key="text">
+									<template v-for="text in listErgebnismanager.get(rowIndex).regelGetMengeAnVerletzungen(typ)" :key="text+i">
 										<br>{{ text }}
 									</template>
 								</template>
@@ -44,7 +44,7 @@
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 3)}">{{ getBewertungWert(row, 3) }}</span>
 							<template #content>
 								Maximale Kursdifferenz: {{ getBewertungWert(row, 3) }}
-								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="d">
+								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="`${d}${i}`">
 									<template v-if="(i === 1 && row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] > 0)"><br>Optimal 0/1: {{ row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] }}x</template>
 									<template v-if="(d > 0) && (i >= 2)"><br>Differenz {{ i }}: {{ d }}x</template>
 								</template>
