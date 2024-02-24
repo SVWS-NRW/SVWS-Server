@@ -4,10 +4,8 @@ import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDF
 import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
 import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import { GostBlockungsdaten , ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel,
-	GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
-import { GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager,
-	GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
+import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";

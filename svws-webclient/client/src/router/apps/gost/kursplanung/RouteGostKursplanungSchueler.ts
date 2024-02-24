@@ -135,9 +135,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		return {
 			hatBlockung: routeGostKursplanung.data.hatBlockung && routeGostKursplanung.data.hatErgebnis,
 			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
-			addRegel: routeGostKursplanung.data.addRegel,
-			removeRegel: routeGostKursplanung.data.removeRegel,
-			regelnDeleteAndAdd: routeGostKursplanung.data.regelnDeleteAndAdd,
+			regelnUpdate: routeGostKursplanung.data.regelnUpdate,
 			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
 			removeKursSchuelerZuordnung: routeGostKursplanung.data.removeKursSchuelerZuordnung,
 			autoKursSchuelerZuordnung:  routeGostKursplanung.data.autoKursSchuelerZuordnung,

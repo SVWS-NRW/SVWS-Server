@@ -140,11 +140,11 @@
 
 <script setup lang="ts">
 
-	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List } from "@core";
+	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel, GostBlockungsergebnisKursSchuelerZuordnung } from "@core";
-	import { computed, ref } from "vue";
+	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List , GostBlockungRegel} from "@core";
+	import { ArrayList, ZulaessigesFach, GostBlockungsergebnisKursSchuelerZuordnung, SetUtils, GostBlockungRegelUpdate } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
@@ -251,72 +251,36 @@
 		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler, kurs.fachID, kurs.kursart)
 	);
 
-	const fixier_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
+	const fixier_regel = (idKurs: number, idSchueler: number) => computed<GostBlockungRegel | null>(() => {
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
-			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
-		return undefined;
+			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs);
+		return null;
 	});
 
-	const verbieten_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
+	const verbieten_regel = (idKurs: number, idSchueler: number) => computed<GostBlockungRegel | null>(() => {
 		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler, idKurs))
-			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs).id;
-		return undefined;
+			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs);
+		return null;
 	});
 
-	function fixieren_regel_toggle(idKurs: number, idSchueler: number) {
-		return fixier_regel(idKurs, idSchueler).value
-			? fixieren_regel_entfernen(idKurs, idSchueler)
-			: fixieren_regel_hinzufuegen(idKurs, idSchueler);
+	async function fixieren_regel_toggle(idKurs: number, idSchueler: number) {
+		let update = new GostBlockungRegelUpdate();
+		const regel = fixier_regel(idKurs, idSchueler).value;
+		if (regel !== null)
+			update.listEntfernen.add(regel);
+		else
+			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		await props.regelnUpdate(update);
 	}
 
-	function verbieten_regel_toggle(idKurs: number, idSchueler: number) {
-		return verbieten_regel(idKurs, idSchueler).value
-			? verbieten_regel_entfernen(idKurs, idSchueler)
-			: verbieten_regel_hinzufuegen(idKurs, idSchueler);
-	}
-
-	async function regel_speichern(regel: GostBlockungRegel, idKurs: number, idSchueler: number) {
-		regel.parameter.add(idSchueler);
-		regel.parameter.add(idKurs);
-		await props.addRegel(regel);
-	}
-
-	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
-		// Prüfe, ob bereits eine andere Fixierungen für die Fachwahl bei dem Schüler bestehen und entferne diese ggf. zuvor
-		const listDeleteRegeln = new ArrayList<GostBlockungRegel>();
-		const kurs = props.getDatenmanager().kursGet(idKurs);
-		const kurse = props.getDatenmanager().kursGetListeByFachUndKursart(kurs.fach_id, kurs.kursart);
-		for (const k of kurse)
-			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, k.id))
-				listDeleteRegeln.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, k.id));
-		// Füge die Regel hinzu
-		const listAddRegeln = new ArrayList<GostBlockungRegel>();
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-		regel.parameter.add(idSchueler);
-		regel.parameter.add(idKurs);
-		listAddRegeln.add(regel);
-		await props.regelnDeleteAndAdd(listDeleteRegeln, listAddRegeln);
-	}
-
-	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
-		const idRegel = fixier_regel(idKurs, idSchueler).value;
-		if (idRegel === undefined)
-			return;
-		await props.removeRegel(idRegel);
-	}
-
-	async function verbieten_regel_hinzufuegen(idKurs: number, idSchueler: number) {
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
-		await regel_speichern(regel, idKurs, idSchueler);
-	}
-
-	async function verbieten_regel_entfernen(idKurs: number, idSchueler: number) {
-		const idRegel = verbieten_regel(idKurs, idSchueler).value;
-		if (idRegel === undefined)
-			return;
-		await props.removeRegel(idRegel);
+	async function verbieten_regel_toggle(idKurs: number, idSchueler: number) {
+		let update = new GostBlockungRegelUpdate();
+		const regel = verbieten_regel(idKurs, idSchueler).value;
+		if (regel !== null)
+			update.listEntfernen.add(regel);
+		else
+			update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		await props.regelnUpdate(update);
 	}
 
 	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() =>

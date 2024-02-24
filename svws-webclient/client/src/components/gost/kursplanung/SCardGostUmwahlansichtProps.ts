@@ -1,12 +1,10 @@
-import type { GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisManager, List, SchuelerListeEintrag } from "@core";
+import type { GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisManager, SchuelerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostUmwahlansichtProps {
 	hatBlockung: boolean,
 	hatErgebnis: boolean,
-	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-	regelnDeleteAndAdd: (listDelete: List<GostBlockungRegel>, listAdd: List<GostBlockungRegel>) => Promise<void>;
+	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	autoKursSchuelerZuordnung: (idSchueler : number) => Promise<void>;
