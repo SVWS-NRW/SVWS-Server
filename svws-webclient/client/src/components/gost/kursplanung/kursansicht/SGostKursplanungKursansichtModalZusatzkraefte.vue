@@ -37,16 +37,16 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer , LehrerListeEintrag } from "@core";
-	import type { ComponentExposed } from "vue-component-type-helpers";
-	import { ArrayList, GostKursblockungRegelTyp , GostBlockungRegel  } from "@core";
 	import { computed, ref } from 'vue';
+	import type { ComponentExposed } from "vue-component-type-helpers";
+	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer , LehrerListeEintrag, GostBlockungRegel } from "@core";
+	import { ArrayList, GostKursblockungRegelTyp } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 	import { SvwsUiSelect } from "@ui";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		addLehrerRegel: () => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		kurs: GostBlockungKurs;
@@ -65,7 +65,7 @@
 		set(lehrer: LehrerListeEintrag | undefined | null) {
 			if (lehrer && !props.getDatenmanager().kursGetLehrkraftMitIDExists(props.kurs.id, lehrer.id) && select.value) {
 				void props.addKursLehrer(props.kurs.id, lehrer.id);
-				void add_lehrer_regel();
+				void props.addLehrerRegel();
 				select.value.reset();
 			}
 		}
@@ -129,12 +129,4 @@
 		return undefined;
 	})
 
-	async function add_lehrer_regel() {
-		if (lehrer_regel.value !== undefined)
-			return;
-		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
-		r.typ = regel_typ.typ;
-		await props.addRegel(r);
-	}
 </script>

@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 export type SGostKursplanungKursansichtDragData = { kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene; fachId: number; } | undefined;
@@ -7,9 +7,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getKursauswahl: () => Set<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
-	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
-	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
+	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 	patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 	addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;

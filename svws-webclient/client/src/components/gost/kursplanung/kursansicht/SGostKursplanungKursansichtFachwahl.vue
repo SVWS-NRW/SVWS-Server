@@ -142,7 +142,7 @@
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager"
-				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel"
+				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :regeln-update="regelnUpdate" :add-lehrer-regel="addLehrerRegel"
 				:add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>
@@ -153,8 +153,8 @@
 
 	import { ref, computed } from "vue";
 	import type { SGostKursplanungKursansichtDragData, SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
-	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
-	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
+	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene , GostBlockungRegel} from "@core";
+	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, GostBlockungRegelUpdate, SetUtils} from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const cellRefs = ref([]);
@@ -267,7 +267,7 @@
 			return;
 		if (value !== undefined) {
 			await props.addKursLehrer(kurs.id, value.id);
-			await add_lehrer_regel();
+			await addLehrerRegel();
 		}
 		if (lehrer !== undefined)
 			await props.removeKursLehrer(kurs.id, lehrer.id);
@@ -281,13 +281,11 @@
 		return regeln.get(0);
 	})
 
-	async function add_lehrer_regel() {
+	async function addLehrerRegel() {
 		if (lehrer_regel.value !== undefined)
 			return;
-		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
-		r.typ = regel_typ.typ;
-		await props.addRegel(r);
+		const update = props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(true);
+		await props.regelnUpdate(update);
 	}
 
 	const anzahlSchienen = computed<number>(() => props.getDatenmanager().schieneGetAnzahl());
@@ -372,16 +370,12 @@
 	async function toggleRegelSperreKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (!props.allowRegeln)
 			return;
-		if (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id)) {
-			const regel = props.getDatenmanager().kursGetRegelGesperrtInSchiene(kurs.id, schiene.id);
-			await props.removeRegel(regel.id);
-		} else {
-			const regel = new GostBlockungRegel();
-			regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
-			regel.parameter.add(kurs.id);
-			regel.parameter.add(props.getErgebnismanager().getSchieneG(schiene.id).nummer);
-			await props.addRegel(regel);
-		}
+		let update = new GostBlockungRegelUpdate();
+		if (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
+			update.listEntfernen.add(props.getDatenmanager().kursGetRegelGesperrtInSchiene(kurs.id, schiene.id));
+		else
+			update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(schiene.id));
+		await props.regelnUpdate(update);
 	}
 
 	const istKursVerbotenInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
@@ -391,17 +385,13 @@
 	async function toggleRegelFixiereKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (!props.allowRegeln)
 			return;
+		let update = new GostBlockungRegelUpdate();
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
-		if (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id)) {
-			const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(kurs.id, schiene.id);
-			await props.removeRegel(regel.id);
-		} else {
-			const regel = new GostBlockungRegel();
-			regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-			regel.parameter.add(kurs.id);
-			regel.parameter.add(s.nummer);
-			await props.addRegel(regel);
-		}
+		if (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
+			update.listEntfernen.add(props.getDatenmanager().kursGetRegelFixierungInSchiene(kurs.id, schiene.id));
+		else
+			update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(schiene.id))
+		await props.regelnUpdate(update);
 	}
 
 	const getSchuelerAnzahl = (idKurs: number) => computed(() => {

@@ -4,26 +4,26 @@
 			<div class="flex flex-col gap-2 my-auto">
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Kurs:</span>
-					<svws-ui-button type="icon" @click="del_kurs" title="Kurs entfernen" class="ml-1"><i-ri-delete-bin-line /></svws-ui-button>
-					<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">Hinzufügen</svws-ui-button>
+					<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1"><i-ri-delete-bin-line /></svws-ui-button>
+					<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen">Hinzufügen</svws-ui-button>
 					<svws-ui-button type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 					<template v-if="andereKurse.size > 0">
 						<svws-ui-select :model-value="undefined" @update:model-value="kurs2 => (kurs2 !== undefined && kurs2 !== null) && combineKurs(kurs, kurs2)"
-							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="item => get_kursbezeichnung(item.id)" />
+							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="i => getDatenmanager().kursGetName(i.id)" />
 					</template>
 					<span class="text-sm font-bold">Externe Schüler:</span>
 					<svws-ui-input-number placeholder="externe Schüler" :model-value="getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)" @update:model-value="updateExterne" :min="0" headless />
 				</div>
 			</div>
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
-				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+				:add-lehrer-regel="addLehrerRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			<div class="flex flex-col gap-1 my-auto">
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Schienen:</span>
 					<div class="flex gap-1">
-						<svws-ui-button type="icon" @click="del_schiene" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
 						<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-						<svws-ui-button type="icon" @click="add_schiene" size="small"><i-ri-add-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small"><i-ri-add-line /></svws-ui-button>
 					</div>
 				</div>
 			</div>
@@ -33,18 +33,15 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
-	import { GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
-	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
-		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
+		addLehrerRegel: () => Promise<void>;
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurse: (ids: Iterable<number>) => Promise<void>;
@@ -59,7 +56,7 @@
 		bgColor: string;
 	}>();
 
-	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {
+	const andereKurse = computed<Map<number, GostBlockungsergebnisKurs>>(() => {
 		const result = new Map<number, GostBlockungsergebnisKurs>();
 		for (const k of props.getErgebnismanager().getOfFachartKursmenge(props.fachart))
 			if (k.id !== props.kurs.id)
@@ -67,43 +64,12 @@
 		return result;
 	});
 
-	function get_kursbezeichnung(kurs_id: number): string {
-		return props.getDatenmanager().kursGetName(kurs_id);
-	}
-
-	async function add_kurs() {
-		await props.addKurs(props.kurs.fach_id, props.kurs.kursart)
-	}
-
-	async function del_kurs() {
-		await props.removeKurse([props.kurs.id]);
-	}
-
-	async function add_schiene() {
-		await props.addSchieneKurs(props.kurs);
-	}
-
-	async function del_schiene() {
-		await props.removeSchieneKurs(props.kurs);
-	}
-
 	async function updateExterne(anzahl: number | null) {
 		const curr = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.kurs.id);
 		if (curr === anzahl || (anzahl === null) || anzahl < 0)
 			return;
-		let regel = props.getDatenmanager().kursGetRegelDummySchuelerOrNull(props.kurs.id);
-		if (regel !== null && anzahl === 0)
-			return await props.removeRegel(regel.id);
-		if (regel === null) {
-			regel = new GostBlockungRegel();
-			regel.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
-			regel.parameter.add(props.kurs.id);
-			regel.parameter.add(1, anzahl);
-			return await props.addRegel(regel)
-		} else {
-			regel.parameter.set(1, anzahl);
-			return await props.patchRegel(regel, regel.id);
-		}
+		const update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(props.kurs.id, anzahl);
+		await props.regelnUpdate(update);
 	}
 
 </script>
