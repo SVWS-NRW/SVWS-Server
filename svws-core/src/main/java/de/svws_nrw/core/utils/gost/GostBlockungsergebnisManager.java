@@ -3768,10 +3768,11 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * ...
-	 * @param anzahl  eded
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 * @param anzahl  Die maximale Anzahl an Schülern. Gültige Werte sind [0;99].
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final int anzahl) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final int idKurs, final int anzahl) {
 		return new GostBlockungRegelUpdate();
 	}
 

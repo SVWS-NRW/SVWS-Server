@@ -3498,10 +3498,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * ...
-	 * @param anzahl  eded
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 * @param anzahl  Die maximale Anzahl an Schülern. Gültige Werte sind [0;99].
 	 * @return ...
 	 */
-	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(anzahl : number) : GostBlockungRegelUpdate {
+	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
 		return new GostBlockungRegelUpdate();
 	}
 
