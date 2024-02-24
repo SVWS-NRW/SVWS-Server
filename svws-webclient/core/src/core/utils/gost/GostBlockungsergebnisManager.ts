@@ -3406,7 +3406,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
-	 * <br>(2) Wenn danach die Anzahl größer 0 ist, wird die Regel hinzugefügt.
+	 * <br>(2) Wenn danach die Anzahl einen Wert größer 0 hat, wird die Regel hinzugefügt.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 * @param anzahl  Die Anzahl an Dummy-Schülern.
@@ -3581,33 +3581,56 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ....
-	 * @param setSchuelerID ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
+	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
 	 *
-	 * @return ...
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
-	public regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(setSchuelerID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
 		return new GostBlockungRegelUpdate();
 	}
 
 	/**
-	 * ....
-	 * @param setSchuelerID ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
+	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
 	 *
-	 * @return ...
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
-	public regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(setSchuelerID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
 		return new GostBlockungRegelUpdate();
 	}
 
 	/**
-	 * ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
+	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
+	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99], wird die Regel hinzugefügt.
+	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 * @param anzahl  Die maximale Anzahl an Schülern. Gültige Werte sind [0;99].
-	 * @return ...
+	 * @param anzahl  Die Anzahl an Dummy-Schülern.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
 	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const keyMaxSuSAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl]);
+		const regelMaxSuSAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyMaxSuSAlt);
+		if (regelMaxSuSAlt !== null)
+			u.listEntfernen.add(regelMaxSuSAlt);
+		if ((anzahl >= 0) && (anzahl <= 99)) {
+			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
+			regelHinzufuegen.parameter.add(idKurs);
+			regelHinzufuegen.parameter.add(anzahl as number);
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+		return u;
 	}
 
 	/**

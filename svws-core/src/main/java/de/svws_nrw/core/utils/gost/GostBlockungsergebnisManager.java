@@ -3665,7 +3665,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
-	 * <br>(2) Wenn danach die Anzahl größer 0 ist, wird die Regel hinzugefügt.
+	 * <br>(2) Wenn danach die Anzahl einen Wert größer 0 hat, wird die Regel hinzugefügt.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 * @param anzahl  Die Anzahl an Dummy-Schülern.
@@ -3889,33 +3889,62 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * ....
-	 * @param setSchuelerID ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
+	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
 	 *
-	 * @return ...
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final @NotNull Set<@NotNull Long> setSchuelerID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
 		return new GostBlockungRegelUpdate();
 	}
 
 	/**
-	 * ....
-	 * @param setSchuelerID ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
+	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
 	 *
-	 * @return ...
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final @NotNull Set<@NotNull Long> setSchuelerID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
 		return new GostBlockungRegelUpdate();
 	}
 
+	// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
 	/**
-	 * ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
+	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
+	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99], wird die Regel hinzugefügt.
+	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 * @param anzahl  Die maximale Anzahl an Schülern. Gültige Werte sind [0;99].
-	 * @return ...
+	 * @param anzahl  Die Anzahl an Dummy-Schülern.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final int idKurs, final int anzahl) {
-		return new GostBlockungRegelUpdate();
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final long idKurs, final int anzahl) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		// (1)
+		final @NotNull LongArrayKey keyMaxSuSAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl });
+		final GostBlockungRegel regelMaxSuSAlt = _parent.regelGetByLongArrayKeyOrNull(keyMaxSuSAlt);
+		if (regelMaxSuSAlt != null)
+			u.listEntfernen.add(regelMaxSuSAlt);
+
+		// (2)
+		if ((anzahl >= 0) && (anzahl <= 99)) {
+			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
+			regelHinzufuegen.parameter.add(idKurs);
+			regelHinzufuegen.parameter.add((long) anzahl);
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+
+		return u;
 	}
 
 	/**
