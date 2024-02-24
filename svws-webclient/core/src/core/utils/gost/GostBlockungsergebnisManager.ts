@@ -3518,14 +3518,66 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ....
-	 * @param setSchuelerID ...
-	 * @param setFachID ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
+	 * <br>(1) Wenn beide Schüler-IDs identisch sind, wird die Regel ignoriert.
+	 * <br>(2) Wenn es eine Schüler-Schüler-Fach-Zusammen-Regel gibt, wird diese entfernt.
+	 * <br>(3) Wenn es eine Schüler-Schüler-Zusammen-Regel gibt, wird diese entfernt.
+	 * <br>(4) Wenn es eine Schüler-Schüler-Verboten-Regel gibt, wird diese entfernt.
+	 * <br>(5a) Wenn es eine Schüler-Schüler-Fach-Verboten-Regel in falscher Schüler-ID-Reihenfolge gibt, wird sie entfernt.
+	 * <br>(5b) Wenn es keine Schüler-Schüler-Fach-Verboten-Regel gibt, wird sie hinzugefügt.
 	 *
-	 * @return ...
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
-	public regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(setSchuelerID : JavaSet<number>, setFachID : JavaSet<number>) : GostBlockungRegelUpdate {
-		return new GostBlockungRegelUpdate();
+	public regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const idS1 : number = Math.min(idSchueler1, idSchueler2);
+		const idS2 : number = Math.max(idSchueler1, idSchueler2);
+		if (idS1 === idS2)
+			return u;
+		const keyZusammenFach12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach]);
+		const regelZusammenFach12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammenFach12);
+		if (regelZusammenFach12 !== null)
+			u.listEntfernen.add(regelZusammenFach12);
+		const keyZusammenFach21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach]);
+		const regelZusammenFach21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammenFach21);
+		if (regelZusammenFach21 !== null)
+			u.listEntfernen.add(regelZusammenFach21);
+		const keyZusammen12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2]);
+		const regelZusammen12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
+		if (regelZusammen12 !== null)
+			u.listEntfernen.add(regelZusammen12);
+		const keyZusammen21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS2, idS1]);
+		const regelZusammen21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
+		if (regelZusammen21 !== null)
+			u.listEntfernen.add(regelZusammen21);
+		const keyVerbieten12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2]);
+		const regelVerbieten12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerbieten12);
+		if (regelVerbieten12 !== null)
+			u.listEntfernen.add(regelVerbieten12);
+		const keyVerbieten21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS2, idS1]);
+		const regelVerbieten21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerbieten21);
+		if (regelVerbieten21 !== null)
+			u.listEntfernen.add(regelVerbieten21);
+		const keyVerbietenFach21 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach]);
+		const regelVerbietenFach21 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach21);
+		if (regelVerbietenFach21 !== null)
+			u.listEntfernen.add(regelVerbietenFach21);
+		const keyVerbietenFach12 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach]);
+		const regelVerbietenFach12 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach12);
+		if (regelVerbietenFach12 === null) {
+			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
+			regelHinzufuegen.id = -1;
+			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
+			regelHinzufuegen.parameter.add(idS1);
+			regelHinzufuegen.parameter.add(idS2);
+			regelHinzufuegen.parameter.add(idFach);
+			u.listHinzuzufuegen.add(regelHinzufuegen);
+		}
+		return u;
 	}
 
 	/**
