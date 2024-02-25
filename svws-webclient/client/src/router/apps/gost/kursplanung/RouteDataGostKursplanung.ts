@@ -858,6 +858,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	regelnUpdate = async (update: GostBlockungRegelUpdate) => {
+		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
+			return;
 		const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
 		update.listHinzuzufuegen = listAdd;
 		this.ergebnismanager.regelupdateExecute(update);
