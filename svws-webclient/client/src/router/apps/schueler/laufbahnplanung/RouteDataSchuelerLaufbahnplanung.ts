@@ -157,9 +157,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		list.add(this.auswahl.id);
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema);
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, 1);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(list, api.schema);
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, 0);
 			default:
 				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
 		}

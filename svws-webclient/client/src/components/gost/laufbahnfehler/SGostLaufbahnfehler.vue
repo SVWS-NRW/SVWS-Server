@@ -161,13 +161,13 @@
 		const textSchuelerfilter = hasFilter.value ? "gefilterte Schüler" : "alle Schüler";
 		const textSchuelerauswahl = auswahl.value.length > 0 ? "markierte Schüler" : "ausgewählter Schüler";
 		return [
-			{ text: `Laufbahnwahlbogen ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen", false, 0), default: true },
+			{ text: `Laufbahnwahlbogen ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen", false, 1), default: true },
 			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
 			{ text: `Ergebnisliste (nur Summen) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
 			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
 			{ text: `Ergebnisliste (vollständig) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
 			{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
-			{ text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 0) },
+			{ text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 1) },
 			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
 			{ text: `Ergebnisliste (nur Summen) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
 			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },

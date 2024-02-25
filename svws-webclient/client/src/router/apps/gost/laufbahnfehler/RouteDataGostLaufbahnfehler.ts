@@ -110,9 +110,9 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 			api.status.start();
 			switch (title) {
 				case 'Laufbahnwahlbogen':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema);
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel);
 				case 'Laufbahnwahlbogen (nur Belegung)':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(list, api.schema);
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel);
 				case 'Ergebnisliste Laufbahnwahlen':
 					return await api.server.pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(list, api.schema, detaillevel);
 				default:

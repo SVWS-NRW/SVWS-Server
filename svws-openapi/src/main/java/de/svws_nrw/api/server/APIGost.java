@@ -932,13 +932,14 @@ public class APIGost {
 	 *
 	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param idsSchueler   Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
-	 * @param request     	die Informationen zur HTTP-Anfrage
+	 * @param detaillevel	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = nur belegte Fächer, 1 = alle Fächer
+	 * @param request 		die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
 	 */
 	@POST
 	@Produces("application/pdf")
-	@Path("/schueler/pdf/laufbahnplanungwahlbogen")
+	@Path("/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}")
 	@Operation(
 		summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
 		description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
@@ -964,58 +965,10 @@ public class APIGost {
                     required = true,
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> idsSchueler,
+			@PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, null, new ArrayList<>(), idsSchueler, false, true, 1))
-					.createPdf(),
-			request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe (mit ausschließlich belegten Fächern) als PDF-Datei.
-	 *
-	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idsSchueler   Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
-	 * @param request     	die Informationen zur HTTP-Anfrage
-	 *
-	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe mit ausschließlich belegten Fächern.
-	 */
-	@POST
-	@Produces("application/pdf")
-	@Path("/schueler/pdf/laufbahnplanungwahlbogennurbelegung")
-	@Operation(
-		summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs mit ausschließlich belegten Fächern.",
-		description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs mit ausschließlich belegten Fächern als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
-	@ApiResponse(
-		responseCode = "200",
-		description = "Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe mit ausschließlich belegten Fächern.",
-		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Wahlbogen Laufbahnplanung")))
-	@ApiResponse(
-		responseCode = "403",
-		description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
-	@ApiResponse(
-		responseCode = "404",
-		description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	@ApiResponse(
-		responseCode = "500",
-		description = "Es ist ein unbekannter Fehler aufgetreten.",
-		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(
-		@PathParam("schema") final String schema,
-		@RequestBody(
-			description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.",
-			required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
-		final List<Long> idsSchueler,
-		@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, null, new ArrayList<>(), idsSchueler, false, true, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
