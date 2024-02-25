@@ -420,7 +420,7 @@
 				update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(p.get(0), p.get(1));
 				break;
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ:
-				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create2(p.get(1), p.get(2)));
+				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				break;
 			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ:
 				update = props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
