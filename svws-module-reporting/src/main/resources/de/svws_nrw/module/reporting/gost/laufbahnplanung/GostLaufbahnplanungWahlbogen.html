@@ -3,7 +3,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<title>Wahlbogen-Laufbahnplanung</title>
-		<link rel="stylesheet" href="SchuelerWahlbogen.css" />
+		<link rel="stylesheet" href="GostLaufbahnplanungWahlbogen.css" />
 	</head>
 
 	<body>
@@ -21,7 +21,7 @@
 					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${schueler.gostLaufbahnplanung().aktuelleKlasse()}">Klasse: Q1</td>
 				</tr>
 				<tr>
-					<td style="width: 25%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${DruckparameterNurBelegteFaecher}" class="very-tiny">(nur belegte Fächer)</span></h3></td>
+					<td style="width: 25%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${parameterDetailLevel == 0}" class="very-tiny">(nur belegte Fächer)</span></h3></td>
 					<td style="width: 75%; border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${schueler.nachname() + ', ' + schueler.vorname()}">Musterfrau, Anna</h3></td>
 				</tr>
 			</table>
@@ -53,7 +53,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt()}"  th:style="'background-color: ' + ${Fachwahl.farbeClientRGB()} + ';'">
+					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${parameterDetailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()}"  th:style="'background-color: ' + ${Fachwahl.farbeClientRGB()} + ';'">
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.kuerzel()}"><b>D</b></td>
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.bezeichnung()}"><b>Deutsch</b></td>
 						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn()}">
@@ -103,7 +103,7 @@
 						<td colspan="4" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(schueler.gostLaufbahnplanung().wochenstundenDurchschnittQPh(), 1, 2)}"><b>34,75</b></td>
 						<td class="kompakt" style="border-left: 1px grey solid;"></td>
 					</tr>
-					<tr th:if="${DruckparameterNurBelegteFaecher}">
+					<tr th:if="${parameterDetailLevel == 0}">
 						<td colspan="10" class="tiny" style="font-style: italic">
 							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.bezeichnung()} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>

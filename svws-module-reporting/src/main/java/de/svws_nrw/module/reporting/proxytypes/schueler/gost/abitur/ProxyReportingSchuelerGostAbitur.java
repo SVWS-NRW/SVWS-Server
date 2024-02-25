@@ -2,13 +2,13 @@ package de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.module.reporting.proxytypes.gost.abitur.ProxyReportingGostAbiturFachbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.ArrayList;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostAbitur und erweitert die Klasse {@link ReportingSchuelerGostAbitur}.</p>
@@ -46,7 +46,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
 		super(abiturdaten.abiturjahr,
 			abiturdaten.besondereLernleistung,
-			abiturdaten.besondereLernleistungNotenKuerzel,
+			null,
 			abiturdaten.besondereLernleistungThema,
 			abiturdaten.bewertetesHalbjahr,
 			abiturdaten.bilingualeSprache,
@@ -63,7 +63,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 			abiturdaten.block2DefiziteGesamt,
 			abiturdaten.block2DefiziteLK,
 			abiturdaten.block2PunktSumme,
-			null,
+			new ArrayList<>(),
 			abiturdaten.freiwilligerRuecktritt,
 			abiturdaten.gesamtPunkte,
 			abiturdaten.gesamtPunkteVerbesserung,
@@ -74,11 +74,11 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 			abiturdaten.schuljahrAbitur);
 		this.reportingRepository = reportingRepository;
 
+		super.setBesondereLernleistungNote(Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel));
+
 		super.fachbelegungen().addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, f)).toList());
 
-		super.fachbelegungen().sort(Comparator
-			.comparing((ReportingGostAbiturFachbelegung f) -> (f.fach() == null || f.fach().statistikfach() == null || f.fach().statistikfach().getFachgruppe() == null) ? 0 : Objects.requireNonNull(f.fach().statistikfach().getFachgruppe()).daten.nummer)
-			.thenComparing((ReportingGostAbiturFachbelegung f) -> f.fach().sortierung()));
+		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}
 
 

@@ -2,10 +2,12 @@ package de.svws_nrw.module.reporting.proxytypes.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
+import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegungHalbjahr;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturFachbelegung und erweitert die Klasse {@link ReportingGostAbiturFachbelegung}.</p>
@@ -47,9 +49,9 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 			abiturFachbelegung.block2MuendlichePruefungAbweichung,
 			abiturFachbelegung.block2MuendlichePruefungBestehen,
 			abiturFachbelegung.block2MuendlichePruefungFreiwillig,
-			abiturFachbelegung.block2MuendlichePruefungNotenKuerzel,
+			null,
 			abiturFachbelegung.block2MuendlichePruefungReihenfolge,
-			abiturFachbelegung.block2NotenKuerzelPruefung,
+			null,
 			null,
 			abiturFachbelegung.block2Punkte,
 			abiturFachbelegung.block2PunkteZwischenstand,
@@ -58,19 +60,26 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 			abiturFachbelegung.letzteKursart);
 		this.reportingRepository = reportingRepository;
 
-		super.setBlock2Pruefer(
-			new ProxyReportingLehrer(
-				this.reportingRepository,
-				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer))));
+		super.setBlock2PruefungNote(Note.fromKuerzel(abiturFachbelegung.block2NotenKuerzelPruefung));
+		super.setBlock2MuendlichePruefungNote(Note.fromKuerzel(abiturFachbelegung.block2MuendlichePruefungNotenKuerzel));
+
+		if (abiturFachbelegung.block2Pruefer != null) {
+			super.setBlock2Pruefer(
+				new ProxyReportingLehrer(
+					this.reportingRepository,
+					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer))));
+		}
 
 	 	super.setFach(this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID));
 
-		for (int i = 0; i < abiturFachbelegung.belegungen.length; i++) {
-			if (abiturFachbelegung.belegungen[i] != null)
-				super.halbjahresbelegungen()[i] = new ProxyReportingGostAbiturFachbelegungHalbjahr(this.reportingRepository, abiturFachbelegung.belegungen[i]);
-			else
-				super.halbjahresbelegungen()[i] = null;
+		final ReportingGostAbiturFachbelegungHalbjahr[] belegungenHJ = new ReportingGostAbiturFachbelegungHalbjahr[6];
+		for (int i = 0; i < 6; i++) {
+			if (abiturFachbelegung.belegungen[i] != null) {
+				belegungenHJ[i] = new ProxyReportingGostAbiturFachbelegungHalbjahr(this.reportingRepository, abiturFachbelegung.belegungen[i]);
+			} else
+				belegungenHJ[i] = null;
 		}
+		super.setHalbjahresbelegungen(belegungenHJ);
 	}
 
 

@@ -91,7 +91,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			schuelerStammdaten.istSchulpflichtErfuellt,
 			schuelerStammdaten.istVolljaehrig,
 			schuelerStammdaten.keineAuskunftAnDritte,
-			null,
+			new ArrayList<>(),
 			schuelerStammdaten.nachname,
 			schuelerStammdaten.religionabmeldung,
 			schuelerStammdaten.religionanmeldung,
@@ -134,7 +134,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten des aktuellen Lernabschnitts des Schülers zur Verfügung.
-	 * @return Daten des aktuellen Lernabschnitts
+	 * @return Daten des aktuellen Lernabschnitts, wenn dieser vorhanden ist.
 	 */
 	@Override
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
@@ -142,10 +142,15 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			if (this.reportingRepository.mapAktuelleLernabschnittsdaten().containsKey(this.id())) {
 				super.setAktuellerLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id())));
 			} else {
-				super.setAktuellerLernabschnitt(lernabschnitte().stream()
-					.filter(a -> a.wechselNr() == 0)
-					.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
-					.getFirst());
+				if (!lernabschnitte().isEmpty())
+					if (lernabschnitte().size() == 1) {
+						super.setAktuellerLernabschnitt(lernabschnitte().getFirst());
+					} else {
+						super.setAktuellerLernabschnitt(lernabschnitte().stream()
+							.filter(a -> a.wechselNr() == 0)
+							.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
+							.getFirst());
+					}
 			}
 		}
 		return super.aktuellerLernabschnitt();
@@ -156,8 +161,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * @return Daten zum Abitur in der GOSt
 	 */
 	@Override
-	public ReportingSchuelerGostAbitur gostAbiturdaten() {
-		if (super.gostAbiturdaten() == null) {
+	public ReportingSchuelerGostAbitur gostAbitur() {
+		if (super.gostAbitur() == null) {
 			if (this.reportingRepository.mapGostSchuelerAbiturdaten().containsKey(this.id())) {
 				super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id())));
 			} else {
@@ -169,7 +174,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				}
 			}
 		}
-		return super.gostAbiturdaten();
+		return super.gostAbitur();
 	}
 
 	/**
@@ -192,6 +197,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte().isEmpty()) {
 			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new DataSchuelerLernabschnittsdaten(this.reportingRepositorySchule().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true);
+			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
+			if (schuelerLernabschnittsdaten.isEmpty())
+				return super.lernabschnitte();
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
 				.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
 				.sorted(Comparator
@@ -199,13 +207,18 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					.thenComparing((ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
 					.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
 				.toList());
-			// Aktuellen Lernabschnitt in der Map im Repository speichern.
-			this.reportingRepository.mapAktuelleLernabschnittsdaten()
-				.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
-					.filter(a -> a.wechselNr == 0)
-					.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
-					.toList()
-					.getFirst());
+			// Aktuellen Lernabschnitt in der Map im Repository speichern. Gibt es nur einen Abschnitt, dann wird dieser gespeichert, andernfalls der mit WechselNr. 0 im aktuellen Schuljahresabschnitt.
+			if (schuelerLernabschnittsdaten.size() == 1) {
+				this.reportingRepository.mapAktuelleLernabschnittsdaten()
+					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.getFirst());
+			} else {
+				this.reportingRepository.mapAktuelleLernabschnittsdaten()
+					.computeIfAbsent(super.id(), l -> schuelerLernabschnittsdaten.stream()
+						.filter(a -> a.wechselNr == 0)
+						.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id)
+						.toList()
+						.getFirst());
+			}
 		}
 		return super.lernabschnitte();
 	}

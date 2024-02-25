@@ -153,11 +153,6 @@ public final class HtmlContextSchueler extends HtmlContext {
 		final Context context = new Context();
 		context.setVariable("Schueler", schueler);
 
-		// Die folgenden Variablen werden zur Steuerung von Ausdrucken mit diesem Context benötigt.
-		// Ihre Werte werden durch Werte aus der API überschrieben.
-		context.setVariable("DruckparameterNurBelegteFaecher", false);
-		context.setVariable("DruckparameterDetaillevel", 2);
-
 		super.setContext(context);
 	}
 }

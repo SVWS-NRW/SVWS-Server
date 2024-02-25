@@ -1,11 +1,11 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.abitur;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturdaten.</p>
@@ -22,7 +22,7 @@ public class ReportingSchuelerGostAbitur {
 	private String besondereLernleistung;
 
 	/** Ggf. die Note einer externen besonderen Lernleistung. */
-	private String besondereLernleistungNotenKuerzel;
+	private Note besondereLernleistungNote;
 
 	/** Das Thema der besonderen Lernleistung. */
 	private String besondereLernleistungThema;
@@ -91,7 +91,7 @@ public class ReportingSchuelerGostAbitur {
 	private String note;
 
 	/** Das Projektkursthema, sofern ein Projektkurs belegt wurde. */
-	private String projektKursThema;
+	private String projektkursThema;
 
 	/** Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. */
 	private Boolean pruefungBestanden;
@@ -120,7 +120,7 @@ public class ReportingSchuelerGostAbitur {
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param abiturjahr Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 * @param besondereLernleistung Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
-	 * @param besondereLernleistungNotenKuerzel Ggf. die Note einer externen besonderen Lernleistung.
+	 * @param besondereLernleistungNote Ggf. die Note einer externen besonderen Lernleistung.
 	 * @param besondereLernleistungThema Das Thema der besonderen Lernleistung.
 	 * @param bewertetesHalbjahr Gibt für die einzelnen GostHalbjahr-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
 	 * @param bilingualeSprache Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt.
@@ -143,14 +143,14 @@ public class ReportingSchuelerGostAbitur {
 	 * @param gesamtPunkteVerbesserung Die Gesamtpunktzahl, ab der sich die Abiturnote verbessern würde.
 	 * @param gesamtPunkteVerschlechterung Die Gesamtpunktzahl, ab der sich die Abiturnote verschlechtern würde.
 	 * @param note Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde.
-	 * @param projektKursThema Das Projektkursthema, sofern ein Projektkurs belegt wurde.
+	 * @param projektkursThema Das Projektkurs thema, sofern ein Projektkurs belegt wurde.
 	 * @param pruefungBestanden Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 * @param schuljahrAbitur Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 */
-	public ReportingSchuelerGostAbitur(final int abiturjahr, final String besondereLernleistung, final String besondereLernleistungNotenKuerzel, final String besondereLernleistungThema, final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt, final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK, final Integer block1PunktSummeNormiert, final Boolean block1Zulassung, final Integer block2DefiziteGesamt, final Integer block2DefiziteLK, final Integer block2PunktSumme, final List<ReportingGostAbiturFachbelegung> fachbelegungen, final boolean freiwilligerRuecktritt, final Integer gesamtPunkte, final Integer gesamtPunkteVerbesserung, final Integer gesamtPunkteVerschlechterung, final String note, final String projektKursThema, final Boolean pruefungBestanden, final int schuljahrAbitur) {
+	public ReportingSchuelerGostAbitur(final int abiturjahr, final String besondereLernleistung, final Note besondereLernleistungNote, final String besondereLernleistungThema, final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt, final Integer block1DefiziteLK, final long block1FehlstundenGesamt, final long block1FehlstundenUnentschuldigt, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSummeGK, final Integer block1PunktSummeLK, final Integer block1PunktSummeNormiert, final Boolean block1Zulassung, final Integer block2DefiziteGesamt, final Integer block2DefiziteLK, final Integer block2PunktSumme, final List<ReportingGostAbiturFachbelegung> fachbelegungen, final boolean freiwilligerRuecktritt, final Integer gesamtPunkte, final Integer gesamtPunkteVerbesserung, final Integer gesamtPunkteVerschlechterung, final String note, final String projektkursThema, final Boolean pruefungBestanden, final int schuljahrAbitur) {
 		this.abiturjahr = abiturjahr;
 		this.besondereLernleistung = besondereLernleistung;
-		this.besondereLernleistungNotenKuerzel = besondereLernleistungNotenKuerzel;
+		this.besondereLernleistungNote = besondereLernleistungNote;
 		this.besondereLernleistungThema = besondereLernleistungThema;
 		this.bewertetesHalbjahr = bewertetesHalbjahr;
 		this.bilingualeSprache = bilingualeSprache;
@@ -173,14 +173,60 @@ public class ReportingSchuelerGostAbitur {
 		this.gesamtPunkteVerbesserung = gesamtPunkteVerbesserung;
 		this.gesamtPunkteVerschlechterung = gesamtPunkteVerschlechterung;
 		this.note = note;
-		this.projektKursThema = projektKursThema;
+		this.projektkursThema = projektkursThema;
 		this.pruefungBestanden = pruefungBestanden;
 		this.schuljahrAbitur = schuljahrAbitur;
 
-		this.fachbelegungen().sort(Comparator
-			.comparing((ReportingGostAbiturFachbelegung f) -> (f.fach() == null || f.fach().statistikfach() == null || f.fach().statistikfach().getFachgruppe() == null) ? 0 : Objects.requireNonNull(f.fach().statistikfach().getFachgruppe()).daten.nummer)
-			.thenComparing((ReportingGostAbiturFachbelegung f) -> f.fach().sortierung()));
+		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}
+
+
+	// ##### Berechnete Methodem #####
+
+	/**
+	 * Gibt die Information zurück, ob in der Q-Phase ein Projektkurs belegt wurde.
+	 * @return Projektkursbelegung vorhanden.
+	 */
+	@JsonIgnore
+	public boolean projektkursVorhanden() {
+		return !this.fachbelegungen.stream()
+			.filter(f -> (f != null && "PX".equals(f.fach().fachgruppe().daten.kuerzel)))
+			.toList()
+			.isEmpty();
+	}
+
+	/**
+	 * Gibt die Information zurück, ob in der Q-Phase ein Religionskurs belegt wurde.
+	 * @return Religionskursbelegung vorhanden.
+	 */
+	@JsonIgnore
+	public boolean religionVorhanden() {
+		return !this.fachbelegungen.stream()
+			.filter(f -> (f != null && "RE".equals(f.fach().fachgruppe().daten.kuerzel)))
+			.toList()
+			.isEmpty();
+	}
+
+	/**
+	 * Gibt die Information zurück, ob in der Q-Phase ein Vertiefungskurs belegt wurde.
+	 * @return Vertiefungskursbelegung in Q-Phase vorhanden.
+	 */
+	@JsonIgnore
+	public boolean vertiefungskursVorhanden() {
+		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse = this.fachbelegungen.stream().filter(f -> "VX".equals(f.fach().fachgruppe().daten.kuerzel)).toList();
+		if (listVertiefungskurse.isEmpty())
+			return false;
+
+		for (final ReportingGostAbiturFachbelegung vertiefung : listVertiefungskurse) {
+			for (int i = 0; i < 6; i++) {
+				if (vertiefung.halbjahresbelegungen()[i] != null && 'Q' == vertiefung.halbjahresbelegungen()[i].halbjahrKuerzel().charAt(0))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
 
 
 	// ##### Getter und Setter #####
@@ -219,18 +265,18 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Ggf. Note einer externen besonderen Lernleistung.
-	 * @return Inhalt des Feldes besondereLernleistungNotenKuerzel
+	 * @return Inhalt des Feldes besondereLernleistungNote
 	 */
-	public String besondereLernleistungNotenKuerzel() {
-		return besondereLernleistungNotenKuerzel;
+	public Note besondereLernleistungNote() {
+		return besondereLernleistungNote;
 	}
 
 	/**
 	 * Ggf. Note einer externen besonderen Lernleistung wird gesetzt.
-	 * @param besondereLernleistungNotenKuerzel Neuer Wert für das Feld besondereLernleistungNotenKuerzel
+	 * @param besondereLernleistungNote Neuer Wert für das Feld besondereLernleistungNote
 	 */
-	public void setBesondereLernleistungNotenKuerzel(final String besondereLernleistungNotenKuerzel) {
-		this.besondereLernleistungNotenKuerzel = besondereLernleistungNotenKuerzel;
+	public void setBesondereLernleistungNote(final Note besondereLernleistungNote) {
+		this.besondereLernleistungNote = besondereLernleistungNote;
 	}
 
 	/**
@@ -587,18 +633,18 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.
-	 * @return Inhalt des Feldes projektKursThema
+	 * @return Inhalt des Feldes projektkursThema
 	 */
-	public String projektKursThema() {
-		return projektKursThema;
+	public String projektkursThema() {
+		return projektkursThema;
 	}
 
 	/**
 	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde, wird gesetzt.
-	 * @param projektKursThema Neuer Wert für das Feld projektKursThema
+	 * @param projektkursThema Neuer Wert für das Feld projektkursThema
 	 */
-	public void setProjektKursThema(final String projektKursThema) {
-		this.projektKursThema = projektKursThema;
+	public void setProjektkursThema(final String projektkursThema) {
+		this.projektkursThema = projektkursThema;
 	}
 
 	/**

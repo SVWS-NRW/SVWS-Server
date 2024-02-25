@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.types.fach;
 
+import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.</p>
@@ -27,6 +29,9 @@ public class ReportingFach {
 
 	/** Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt. */
 	private String bilingualeSprache;
+
+	/** Die Fachgruppe, der das Fach angehört. */
+	private Fachgruppe fachgruppe;
 
 	/** Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussberechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde. */
 	private boolean holeAusAltenLernabschnitten;
@@ -81,6 +86,7 @@ public class ReportingFach {
 	 * @param bezeichnungUeberweisungszeugnis Die Bezeichnung des Faches auf Überweisungszeugnissen
 	 * @param bezeichnungZeugnis Die Bezeichnung des Faches auf allgemeinen Zeugnissen
 	 * @param bilingualeSprache Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt.
+	 * @param fachgruppe Die Fachgruppe, der das Fach angehört.
 	 * @param holeAusAltenLernabschnitten Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussberechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde.
 	 * @param id Die ID des Faches.
 	 * @param istFHRFach Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg).
@@ -97,13 +103,14 @@ public class ReportingFach {
 	 * @param sortierung Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 * @param statistikfach Das Statistik-Fach des Faches
 	 */
-	public ReportingFach(final String aufgabenfeld, final boolean aufZeugnis, final String bezeichnung, final String bezeichnungUeberweisungszeugnis, final String bezeichnungZeugnis, final String bilingualeSprache, final boolean holeAusAltenLernabschnitten, final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach, final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK, final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierung, final ZulaessigesFach statistikfach) {
+	public ReportingFach(final String aufgabenfeld, final boolean aufZeugnis, final String bezeichnung, final String bezeichnungUeberweisungszeugnis, final String bezeichnungZeugnis, final String bilingualeSprache, final Fachgruppe fachgruppe, final boolean holeAusAltenLernabschnitten, final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach, final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK, final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierung, final ZulaessigesFach statistikfach) {
 		this.aufgabenfeld = aufgabenfeld;
 		this.aufZeugnis = aufZeugnis;
 		this.bezeichnung = bezeichnung;
 		this.bezeichnungUeberweisungszeugnis = bezeichnungUeberweisungszeugnis;
 		this.bezeichnungZeugnis = bezeichnungZeugnis;
 		this.bilingualeSprache = bilingualeSprache;
+		this.fachgruppe = fachgruppe;
 		this.holeAusAltenLernabschnitten = holeAusAltenLernabschnitten;
 		this.id = id;
 		this.istFHRFach = istFHRFach;
@@ -119,6 +126,18 @@ public class ReportingFach {
 		this.maxZeichenInFachbemerkungen = maxZeichenInFachbemerkungen;
 		this.sortierung = sortierung;
 		this.statistikfach = statistikfach;
+	}
+
+
+
+	/**
+	 * Vergleicht zwei ReportingFächer hinsichtlich ihrer Fachsortierung in der GOSt.
+	 * @param fach1	Erstes ReportingFach
+	 * @param fach2 Zweites ReportingFach
+	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
+	 */
+	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
+		return GostFachbereich.compareFach(fach1.statistikfach(), fach2.statistikfach());
 	}
 
 
@@ -218,6 +237,22 @@ public class ReportingFach {
 	 */
 	public void setBilingualeSprache(final String bilingualeSprache) {
 		this.bilingualeSprache = bilingualeSprache;
+	}
+
+	/**
+	 * Die Fachgruppe, der das Fach angehört.
+	 * @return Fachgruppe des Faches
+	 */
+	public Fachgruppe fachgruppe() {
+		return fachgruppe;
+	}
+
+	/**
+	 * Die Fachgruppe, der das Fach angehört, wird gesetzt.
+	 * @param fachgruppe Neuer Wert für das Feld fachgruppe
+	 */
+	public void setFachgruppe(final Fachgruppe fachgruppe) {
+		this.fachgruppe = fachgruppe;
 	}
 
 	/**

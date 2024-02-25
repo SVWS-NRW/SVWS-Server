@@ -1,9 +1,5 @@
 package de.svws_nrw.data.gost;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -29,6 +25,10 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 
@@ -250,7 +250,7 @@ public final class DBUtilsGostAbitur {
 			fach.block2MuendlichePruefungBestehen = dto.PruefungMuendlichBestehen;
 			fach.block2MuendlichePruefungFreiwillig = dto.PruefungMuendlichFreiwillig;
 			fach.block2MuendlichePruefungReihenfolge = dto.PruefungMuendlichReihenfolge;
-			fach.block2MuendlichePruefungNotenKuerzel = dto.PruefungNotenpunkte.kuerzel;
+			fach.block2MuendlichePruefungNotenKuerzel = dto.PruefungMuendlichNotenpunkte.kuerzel;
 			fach.block2Punkte = dto.PruefungPunktsummeGesamt;
 			fach.block2Pruefer = dto.Fachlehrer_ID;
 			if (dto.EF_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {

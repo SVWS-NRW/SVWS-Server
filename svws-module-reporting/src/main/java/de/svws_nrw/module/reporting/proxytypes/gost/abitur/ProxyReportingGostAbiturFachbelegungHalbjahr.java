@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -50,14 +51,18 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 			abiturFachbelegungHalbjahr.schriftlich,
 			abiturFachbelegungHalbjahr.kursartKuerzel,
 			null,
-			abiturFachbelegungHalbjahr.notenkuerzel,
+			null,
 			abiturFachbelegungHalbjahr.wochenstunden);
 		this.reportingRepository = reportingRepository;
 
-		super.setLehrer(
-			new ProxyReportingLehrer(
-				this.reportingRepository,
-				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegungHalbjahr.lehrer))));
+		super.setNote(Note.fromKuerzel(abiturFachbelegungHalbjahr.notenkuerzel));
+
+		if (abiturFachbelegungHalbjahr.lehrer != null) {
+			super.setLehrer(
+				new ProxyReportingLehrer(
+					this.reportingRepository,
+					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegungHalbjahr.lehrer))));
+		}
 	}
 
 

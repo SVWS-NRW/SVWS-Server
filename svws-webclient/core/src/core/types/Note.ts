@@ -582,6 +582,18 @@ export class Note extends JavaEnum<Note> {
 	}
 
 	/**
+	 * Gibt die Notenpunkte dieser Note als zweistelligen String zurück.
+	 *
+	 * @return Die zweistelligen Notenpunkte.
+	 */
+	public getNotenpunkteZweistellig() : string {
+		if (this.notenpunkte === null)
+			return "";
+		else
+			return (this.notenpunkte.toString().length === 1) ? "0" + this.notenpunkte.toString()! : this.notenpunkte.toString();
+	}
+
+	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
 	 *
 	 * @return der Noten-Katalog-Eintrag

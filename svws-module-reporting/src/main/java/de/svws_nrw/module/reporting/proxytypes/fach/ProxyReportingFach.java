@@ -48,6 +48,7 @@ public class ProxyReportingFach extends ReportingFach {
 			fachDaten.bezeichnungUeberweisungszeugnis,
 			fachDaten.bezeichnungZeugnis,
 			fachDaten.bilingualeSprache,
+			null,
 			fachDaten.holeAusAltenLernabschnitten,
 			fachDaten.id,
 			fachDaten.istFHRFach,
@@ -67,6 +68,7 @@ public class ProxyReportingFach extends ReportingFach {
 
 		if (fachDaten.kuerzelStatistik != null && !fachDaten.kuerzelStatistik.isEmpty()) {
 			super.setStatistikfach(ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik));
+			super.setFachgruppe(super.statistikfach().getFachgruppe());
 		}
 
 		if (FachGostDaten != null) {

@@ -20,10 +20,10 @@ import java.util.List;
 public final class PdfGostKursplanungKurseMitKursschuelern {
 
 	/** Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String htmlVorlageDateipfad = "de/svws_nrw/module/reporting/gost/kursplanung/KursMitKursschuelern.html";
+	private static final String htmlVorlageDateipfad = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html";
 
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
-	private static final String cssDateipfad = "de/svws_nrw/module/reporting/gost/kursplanung/KursMitKursschuelern.css";
+	private static final String cssDateipfad = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css";
 
 	private PdfGostKursplanungKurseMitKursschuelern() {
 		throw new IllegalStateException("Instantiation not allowed");

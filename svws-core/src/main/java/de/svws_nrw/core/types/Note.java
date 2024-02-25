@@ -344,6 +344,17 @@ public enum Note {
 		}
 	}
 
+	/**
+	 * Gibt die Notenpunkte dieser Note als zweistelligen String zurück.
+	 *
+	 * @return Die zweistelligen Notenpunkte.
+	 */
+	public @NotNull String getNotenpunkteZweistellig() {
+		if (notenpunkte == null)
+			return "";
+		else
+			return (notenpunkte.toString().length() == 1) ? "0" + notenpunkte.toString() : notenpunkte.toString();
+	}
 
 	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
@@ -355,5 +366,4 @@ public enum Note {
 			katalogEintrag = new NotenKatalogEintrag(id, sortierung, notenpunkte, kuerzel, text, textZeugnis, gueltigVon, gueltigBis);
 		return katalogEintrag;
 	}
-
 }

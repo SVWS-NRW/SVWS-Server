@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.abitur;
 
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
@@ -37,8 +38,8 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 	/** Die Lehrkraft, welche die Note erteilt. */
 	private ReportingLehrer lehrer;
 
-	/** Das Notenkürzel der erteilten Note. Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist. Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind. */
-	private String notenkuerzel;
+	/** Die erteilte Note. */
+	private Note note;
 
 	/** Die Wochenstundenzahl, mir der das Fach belegt wurde */
 	private int wochenstunden;
@@ -54,10 +55,10 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 	 * @param istSchriftlich Angabe, ob das schriftlich belegt wurde oder nicht.
 	 * @param kursartKuerzel Das Kürzel der Kursart der gymnasialen Oberstufe dieser Fachbelegung
 	 * @param lehrer Die Lehrkraft, welche die Note erteilt.
-	 * @param notenkuerzel Das Notenkürzel der erteilten Note. Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist. Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind.
+	 * @param note Die erteilte Note.
 	 * @param wochenstunden Die Wochenstundenzahl, mir der das Fach belegt wurde
 	 */
-	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis, final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich, final String kursartKuerzel, final ReportingLehrer lehrer, final String notenkuerzel, final int wochenstunden) {
+	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis, final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich, final String kursartKuerzel, final ReportingLehrer lehrer, final Note note, final int wochenstunden) {
 		this.bilingualeSprache = bilingualeSprache;
 		this.block1gewertet = block1gewertet;
 		this.block1kursAufZeugnis = block1kursAufZeugnis;
@@ -67,7 +68,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 		this.istSchriftlich = istSchriftlich;
 		this.kursartKuerzel = kursartKuerzel;
 		this.lehrer = lehrer;
-		this.notenkuerzel = notenkuerzel;
+		this.note = note;
 		this.wochenstunden = wochenstunden;
 	}
 
@@ -220,19 +221,19 @@ public class ReportingGostAbiturFachbelegungHalbjahr {
 	}
 
 	/**
-	 * Das Notenkürzel der erteilten Note. Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist. Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind.
-	 * @return Inhalt des Feldes notenkuerzel
+	 * Die erteilte Note.
+	 * @return Inhalt des Feldes note
 	 */
-	public String notenkuerzel() {
-		return notenkuerzel;
+	public Note note() {
+		return note;
 	}
 
 	/**
-	 * Das Notenkürzel der erteilten Note Das Kürzel ist ein leerer String, falls keine Note in den Leistungsdaten gesetzt ist Der Wert null ist nur zulässig, wenn Fachwahlen vorliegen, für die keine Leistungsdaten hinterlegt sind wird gesetzt.
-	 * @param notenkuerzel Neuer Wert für das Feld notenkuerzel
+	 * Die erteilte Note.
+	 * @param note Neuer Wert für das Feld note
 	 */
-	public void setNotenkuerzel(final String notenkuerzel) {
-		this.notenkuerzel = notenkuerzel;
+	public void setNote(final Note note) {
+		this.note = note;
 	}
 
 	/**

@@ -600,15 +600,15 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten der Abiturdaten der GOSt.
-	 * @return Inhalt des Feldes gostAbiturdaten
+	 * @return Inhalt des Feldes gostAbitur
 	 */
-	public ReportingSchuelerGostAbitur gostAbiturdaten() {
+	public ReportingSchuelerGostAbitur gostAbitur() {
 		return gostAbitur;
 	}
 
 	/**
 	 * Daten der Abiturdaten der GOSt wird gesetzt.
-	 * @param gostAbitur Neuer Wert für das Feld gostAbiturdaten
+	 * @param gostAbitur Neuer Wert für das Feld gostAbitur
 	 */
 	public void setGostAbitur(final ReportingSchuelerGostAbitur gostAbitur) {
 		this.gostAbitur = gostAbitur;

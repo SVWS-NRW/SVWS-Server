@@ -3,7 +3,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<title>Ergebnisübersicht-Laufbahnplanung</title>
-		<link rel="stylesheet" href="SchuelerErgebnisuebersicht.css" />
+		<link rel="stylesheet" href="GostLaufbahnplanungErgebnisuebersicht.css" />
 	</head>
 
 	<body>
@@ -76,7 +76,7 @@
 					<td></td>
 					<td>Fehler</td>
 				</tr>
-				<tr th:if="${(DruckparameterDetaillevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
+				<tr th:if="${(parameterDetailLevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Fehler und Kommentare zur Gesamtlaufbahn:</u></p>
 						<ul th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
@@ -86,7 +86,7 @@
 					</td>
 					<td></td>
 				</tr>
-				<tr th:if="${DruckparameterDetaillevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
+				<tr th:if="${parameterDetailLevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 						<ul>

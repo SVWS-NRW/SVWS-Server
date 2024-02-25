@@ -91,6 +91,7 @@ span.counter-print:after { content: ''; }
 ############################################################################################################### */
 .start-new-page { page-break-before: always; }
 .start-new-page:first-child { page-break-before: avoid; }
+.no-new-page { page-break-before: avoid; page-break-after: avoid; }
 
 /* Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
 ############################################################################################################### */
@@ -99,6 +100,9 @@ body {
 	font-family: 'liberation';
 	font-weight: normal;
 	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
 }
 
 
@@ -108,8 +112,9 @@ h1 { font-size: 14pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.1em;}
 h2 { font-size: 13pt; font-weight: bold; margin-top: 0.8em; margin-bottom: 0.1em;}
 h3 { font-size: 12pt; font-weight: bold; margin-top: 0.6em; margin-bottom: 0.1em;}
 h4 { font-size: 11pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.1em;}
-p	{ margin-top: 0em; margin-bottom: 0.4em; margin-left: 0; margin-right: 0; padding: 0;	}
-ul 	{ margin-top: 0em; margin-bottom: 0.4em; margin-left: 1em; margin-right: 0; padding: 0;	}
+p	{ margin-top: 0em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
+ul 	{ margin-top: 0em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
+sup { vertical-align: 0.6em; font-size: 0.75em; }
 
 .no-mt { margin-top: 0 }
 
@@ -120,14 +125,23 @@ ul 	{ margin-top: 0em; margin-bottom: 0.4em; margin-left: 1em; margin-right: 0; 
 .tiny { font-size: 0.8em; }
 .very-tiny { font-size: 0.7em; }
 
+.ta-lt { text-align: left; vertical-align: top; }
 .ta-ct { text-align: center; vertical-align: top; }
+.ta-rt { text-align: right; vertical-align: top; }
 .ta-lm { text-align: left; vertical-align: middle; }
 .ta-cm { text-align: center; vertical-align: middle; }
 .ta-rm { text-align: right; vertical-align: middle; }
+.ta-lb { text-align: left; vertical-align: bottom; }
 .ta-cb { text-align: center; vertical-align: bottom; }
+.ta-rb { text-align: right; vertical-align: bottom; }
 
 /* Definitionen für Tabellen
 ############################################################################################################### */
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
 thead {
 	display: table-header-group;
 	page-break-inside: avoid;
@@ -142,7 +156,6 @@ tr {
 }
 
 .fixed-layout-100 { width: 100%; table-layout:fixed; }
-.no-space { border-spacing: 0; border-collapse: collapse; }
 .zero-height { height: 0; }
 
 .bo-black { border: 0.5px solid black; }
@@ -153,9 +166,10 @@ tr {
 .bo-r-black { border-right: 0.5px solid black; }
 .bo-lr-black { border-left: 0.5px solid black; border-right: 0.5px solid black; }
 
-
 .bg-lightgrey { background-color: #DADADA; }
 .bg-lightyellow { background-color: #FFFDAF; }
+
+.marg-0 { margin: 0; }
 
 .pad-0 { padding: 0; }
 
@@ -164,6 +178,9 @@ tr {
 .pad-2l { padding-left: 2mm; }
 .pad-2r { padding-right: 2mm; }
 .pad-2b { padding-bottom: 2mm; }
+
+.pad-1122 { padding: 1mm 2mm; }
+.pad-3322 { padding: 3mm 2mm; }
 
 .pad-4 { padding: 4mm; }
 .pad-4t { padding-top: 4mm; }
