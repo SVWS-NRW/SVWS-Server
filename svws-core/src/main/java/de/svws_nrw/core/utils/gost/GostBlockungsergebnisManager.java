@@ -3297,7 +3297,7 @@ public class GostBlockungsergebnisManager {
 
 				// Ist da eine Fixierung (in den Kursen der selben Fachart)?
 				for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
-					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id});
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 
 					if (kurs1.id == kurs2.id) {
@@ -4034,10 +4034,27 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public void regelupdateExecute(final @NotNull GostBlockungRegelUpdate update) {
+		System.out.println("regelupdateExecute " + update.listEntfernen.size() + ", " + update.listHinzuzufuegen.size());
+		System.out.println("Löschen");
+		for (final @NotNull GostBlockungRegel r : update.listEntfernen) {
+			debugRegel(r);
+		}
+		System.out.println("Hinzufügen");
+		for (final @NotNull GostBlockungRegel r : update.listHinzuzufuegen) {
+			debugRegel(r);
+		}
+
 		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !_parent.getIstBlockungsVorlage());
 		_parent.regelRemoveListe(update.listEntfernen);
 		_parent.regelAddListe(update.listHinzuzufuegen);
 		stateRevalidateEverything();
+	}
+
+	private static void debugRegel(final @NotNull GostBlockungRegel r) {
+		for (final @NotNull Long p : r.parameter) {
+			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
+			System.out.println("    TYP " + typ.bezeichnung + ": " + r.parameter);
+		}
 	}
 
 	// #########################################################################

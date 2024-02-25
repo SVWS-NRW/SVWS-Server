@@ -3083,7 +3083,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (regelSperrung !== null)
 					u.listEntfernen.add(regelSperrung);
 				for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
-					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id]);
 					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 					if (kurs1.id === kurs2.id) {
 						if (regelFixierung === null) {
@@ -3698,10 +3698,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public regelupdateExecute(update : GostBlockungRegelUpdate) : void {
+		console.log(JSON.stringify("regelupdateExecute " + update.listEntfernen.size() + ", " + update.listHinzuzufuegen.size()));
+		console.log(JSON.stringify("Löschen"));
+		for (const r of update.listEntfernen) {
+			GostBlockungsergebnisManager.debugRegel(r);
+		}
+		console.log(JSON.stringify("Hinzufügen"));
+		for (const r of update.listHinzuzufuegen) {
+			GostBlockungsergebnisManager.debugRegel(r);
+		}
 		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !this._parent.getIstBlockungsVorlage());
 		this._parent.regelRemoveListe(update.listEntfernen);
 		this._parent.regelAddListe(update.listHinzuzufuegen);
 		this.stateRevalidateEverything();
+	}
+
+	private static debugRegel(r : GostBlockungRegel) : void {
+		for (const p of r.parameter) {
+			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
+			console.log(JSON.stringify("    TYP " + typ.bezeichnung + ": " + r.parameter));
+		}
 	}
 
 	/**
