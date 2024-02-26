@@ -3237,8 +3237,8 @@ public class GostBlockungsergebnisManager {
 	 * @param setKursID ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID) {
-		//System.out.println("called regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<@NotNull Long> setKursID) {
+		//System.out.println("called regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")")
 
 		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
 		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
@@ -3252,8 +3252,8 @@ public class GostBlockungsergebnisManager {
 	 * @param setKursID ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID) {
-		//System.out.println("called regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<@NotNull Long> setKursID) {
+		//System.out.println("called regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")")
 
 		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
 		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
@@ -3266,8 +3266,8 @@ public class GostBlockungsergebnisManager {
 	 * ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE() {
-		//System.out.println("called regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
+		//System.out.println("called regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN (" + "" + ")")
 
 		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
 		for (final @NotNull GostBlockungKurs kurs : _parent.kursGetListeSortiertNachFachKursartNummer())
@@ -3284,8 +3284,8 @@ public class GostBlockungsergebnisManager {
 	 * ...
 	 * @return ...
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE() {
-		//System.out.println("called regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
+		//System.out.println("called regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN (" + "" + ")")
 
 		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
 		for (final @NotNull GostBlockungKurs kurs : _parent.kursGetListeSortiertNachFachKursartNummer())

@@ -3026,7 +3026,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param setKursID ...
 	 * @return ...
 	 */
-	public regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const setSchienenNr : JavaSet<number> = new HashSet<number>();
 		for (const schiene of this._parent.schieneGetListe())
 			setSchienenNr.add(schiene.nummer);
@@ -3038,7 +3038,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param setKursID ...
 	 * @return ...
 	 */
-	public regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const setSchienenNr : JavaSet<number> = new HashSet<number>();
 		for (const schiene of this._parent.schieneGetListe())
 			setSchienenNr.add(schiene.nummer);
@@ -3049,7 +3049,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * ...
 	 * @return ...
 	 */
-	public regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE() : GostBlockungRegelUpdate {
+	public regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() : GostBlockungRegelUpdate {
 		const setKursID : JavaSet<number> = new HashSet<number>();
 		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
 			setKursID.add(kurs.id);
@@ -3063,7 +3063,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * ...
 	 * @return ...
 	 */
-	public regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE() : GostBlockungRegelUpdate {
+	public regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() : GostBlockungRegelUpdate {
 		const setKursID : JavaSet<number> = new HashSet<number>();
 		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
 			setKursID.add(kurs.id);
