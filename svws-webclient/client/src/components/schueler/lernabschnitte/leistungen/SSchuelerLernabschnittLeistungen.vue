@@ -113,8 +113,9 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { Note, ZulaessigeKursart, type SchuelerLeistungsdaten, type List, ArrayList, type KursListeEintrag, type FaecherListeEintrag, ZulaessigesFach, Schulform, Jahrgaenge, Schulgliederung } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
+	import type { SchuelerLeistungsdaten, List, KursListeEintrag, FaecherListeEintrag} from "@core";
+	import { Note, ZulaessigeKursart, ArrayList, ZulaessigesFach } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 

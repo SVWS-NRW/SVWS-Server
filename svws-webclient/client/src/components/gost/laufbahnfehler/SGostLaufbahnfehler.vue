@@ -136,16 +136,6 @@
 		return res;
 	}
 
-	function counterHinweise(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined): number {
-		if (fehlercodes === undefined)
-			return 0;
-		let res = 0;
-		for (const fehler of fehlercodes)
-			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
-				res++;
-		return res;
-	}
-
 	function counterAnzahlOderWochenstunden(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined) : number {
 		if (fehlercodes === undefined)
 			return 0;

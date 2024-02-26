@@ -3,7 +3,6 @@ import { ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { type RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogSchuleDaten } from "./RouteKatalogSchuleDaten";

@@ -14,7 +14,6 @@
 <script setup lang="ts">
 
 	import type { Ref} from 'vue';
-	import { ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		show: () => Ref<boolean>;

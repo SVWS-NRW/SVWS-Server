@@ -27,11 +27,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { BetriebAnsprechpartner, BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag } from "@core";
+	import type { BetriebAnsprechpartner, BetriebStammdaten } from "@core";
 	import { ref, watch } from "vue";
-	import { computed } from "vue";
-
-
 
 	const props = defineProps<{
 		daten: BetriebStammdaten;
@@ -52,11 +49,11 @@
 		{key: 'id', label: 'ID', span: 0.5}
 	]
 
-	watch(() => props.daten, (first, second) => {
+	watch(() => props.daten, () => {
 		selected.value = [];
 	});
 
-	watch(() => props.mapAnsprechpartner, (first, second) => {
+	watch(() => props.mapAnsprechpartner, () => {
 		selected.value = [];
 	});
 

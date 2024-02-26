@@ -45,10 +45,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
 	import type { InitProps } from "./SInitProps";
-
-	const inputFocus = ref(false);
 
 	const props = defineProps<InitProps>()
 </script>

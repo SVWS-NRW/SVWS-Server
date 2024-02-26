@@ -394,7 +394,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	loescheKlausurraum = async (id: number, manager: GostKlausurraumManager): Promise<boolean> => {
 		api.status.start();
-		const ergebnis = await api.server.deleteGostKlausurenRaum(api.schema, id);
+		await api.server.deleteGostKlausurenRaum(api.schema, id);
 		manager.raumRemoveById(id);
 		this.commit();
 		api.status.stop();

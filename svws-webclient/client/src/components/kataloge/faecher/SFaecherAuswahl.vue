@@ -31,7 +31,7 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import { type FaecherListeEintrag, ZulaessigesFach } from "@core";
+	import type { FaecherListeEintrag } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
@@ -39,8 +39,6 @@
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
-
-	const getBgColor = (auswahl: string) => ZulaessigesFach.getByKuerzelASD(auswahl).getHMTLFarbeRGBA(1.0);
 
 	const faecher = computed<FaecherListeEintrag[]>(() => {
 		const result : FaecherListeEintrag[] = [];

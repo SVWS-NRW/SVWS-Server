@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, HashSet, JavaMapEntry, JavaSet} from "@core";
+	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet} from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";

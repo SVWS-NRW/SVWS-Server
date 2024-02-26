@@ -1,4 +1,4 @@
-import type { SchuleStammdaten, SchuelerLernabschnittsdaten, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittManager } from "@core";
+import type { SchuleStammdaten, SchuelerLernabschnittsdaten, SchuelerLernabschnittManager } from "@core";
 
 export interface SchuelerLernabschnittAllgemeinProps {
 	schule: SchuleStammdaten;

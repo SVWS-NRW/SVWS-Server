@@ -5,8 +5,6 @@ import type {
 	GostKlausurraumManager,
 	GostKlausurtermin,
 	GostKursklausurManager,
-	SchuelerListeEintrag,
-	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 

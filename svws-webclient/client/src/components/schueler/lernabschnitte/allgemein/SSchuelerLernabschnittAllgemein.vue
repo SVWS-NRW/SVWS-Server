@@ -68,10 +68,6 @@
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
-	function getLehrerKuerzel(lehrer: LehrerListeEintrag) : string {
-		return lehrer.kuerzel;
-	}
-
 	const klasse = computed<KlassenListeEintrag | undefined>(() => {
 		const id = props.manager().lernabschnittGet().klassenID;
 		if (id === null)

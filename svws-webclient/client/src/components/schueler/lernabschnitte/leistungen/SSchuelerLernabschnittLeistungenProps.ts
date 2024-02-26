@@ -1,4 +1,4 @@
-import type { List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, Schulform, Schulgliederung } from "@core";
+import type { List, SchuelerLeistungsdaten, SchuelerLernabschnittManager, SchuelerLernabschnittsdaten, Schulform } from "@core";
 
 export interface SchuelerLernabschnittLeistungenProps {
 	schulform: Schulform;

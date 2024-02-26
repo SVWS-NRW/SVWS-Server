@@ -398,13 +398,12 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 			return;
 		const bg_ids = new ArrayList<number>();
 		bg_ids.add(benutzer.id);
-		const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID());
+		await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID());
 		this.listBenutzergruppenBenutzer.remove(benutzer);
 		this.listBenutzerAlle.add(benutzer);
 		this.setPatchedState({
 			listBenutzergruppe: this.listBenutzergruppe,
 			mapBenutzergruppe: this.mapBenutzergruppe
-
 		})
 	}
 

@@ -4,7 +4,6 @@ import { ArrayList, BetriebListeEintrag, DeveloperNotificationException } from "
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeKatalogBetriebe } from "./RouteKatalogBetriebe";
 import { routeKatalogBetriebeDaten } from "./RouteKatalogBetriebeDaten";

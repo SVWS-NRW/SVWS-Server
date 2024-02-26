@@ -1,4 +1,4 @@
-import type { GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag, SchuelerListeEintrag } from "@core";
+import type { GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 

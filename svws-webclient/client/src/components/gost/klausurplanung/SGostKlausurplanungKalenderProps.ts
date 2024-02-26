@@ -4,7 +4,6 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurtermin,
 	GostKursklausurManager,
-	SchuelerListeEintrag,
 	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";

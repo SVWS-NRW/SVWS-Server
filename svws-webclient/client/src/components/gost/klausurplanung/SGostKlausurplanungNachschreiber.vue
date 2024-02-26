@@ -114,7 +114,7 @@
 
 <script setup lang="ts">
 
-	import type { List, JavaSet} from "@core";
+	import type { JavaSet} from "@core";
 	import {GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";

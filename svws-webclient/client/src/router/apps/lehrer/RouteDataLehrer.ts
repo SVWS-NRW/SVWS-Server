@@ -4,7 +4,6 @@ import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";

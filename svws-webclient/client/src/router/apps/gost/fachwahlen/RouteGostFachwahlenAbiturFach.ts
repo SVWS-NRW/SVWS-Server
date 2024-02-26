@@ -39,7 +39,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<unknown, RouteGost>
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if ((to_params.abiturjahr instanceof Array) || (to_params.idfach instanceof Array))
 			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		this._idFach.value = !to_params.idfach ? -1 : parseInt(to_params.idfach);
 	}
 

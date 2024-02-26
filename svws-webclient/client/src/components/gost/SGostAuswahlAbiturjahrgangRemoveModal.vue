@@ -25,7 +25,7 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import { type GostJahrgang } from '@core';
+	import type { GostJahrgang } from '@core';
 
 	const props = defineProps<{
 		gostJahrgang: GostJahrgang;
@@ -34,11 +34,6 @@
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
-
-	async function remove_blockung() {
-		showModal().value = false;
-		await props.removeAbiturjahrgang();
-	}
 
 	const openModal = () => {
 		showModal().value = true;

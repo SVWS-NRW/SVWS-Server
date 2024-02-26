@@ -1,7 +1,4 @@
-import { shallowRef} from "vue";
-
 import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 

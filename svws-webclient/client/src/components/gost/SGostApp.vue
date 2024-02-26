@@ -21,17 +21,12 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { GostAppProps } from "./SGostAppProps";
 
 	const props = defineProps<GostAppProps>();
 
-	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return props.auswahl?.jahrgang ?? undefined;
-	});
-
-	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => {
+	const bezeichnung_abiturjahr = computed<string | undefined>(() => {
 		return props.auswahl?.bezeichnung ?? undefined;
 	});
 

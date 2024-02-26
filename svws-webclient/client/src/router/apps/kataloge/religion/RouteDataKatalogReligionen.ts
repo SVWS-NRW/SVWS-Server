@@ -1,4 +1,5 @@
-import { ArrayList, DeveloperNotificationException, type ReligionEintrag } from "@core";
+import type { ReligionEintrag } from "@core";
+import { ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";

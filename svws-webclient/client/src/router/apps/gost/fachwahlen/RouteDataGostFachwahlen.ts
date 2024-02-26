@@ -1,4 +1,3 @@
-import { shallowRef } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
 import type { GostHalbjahr, GostStatistikFachwahl, List, SchuelerListeEintrag } from "@core";

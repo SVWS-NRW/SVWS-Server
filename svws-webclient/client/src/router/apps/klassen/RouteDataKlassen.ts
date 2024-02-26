@@ -1,5 +1,5 @@
 
-import type { KlassenDaten, KlassenListeEintrag, List, Schueler} from "@core";
+import type { KlassenDaten, KlassenListeEintrag, Schueler} from "@core";
 import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 
 import { api } from "~/router/Api";

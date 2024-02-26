@@ -197,8 +197,8 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	deleteLeistungen = async (leistungenIDs: List<number>) => {
 		const leistungen = await api.server.deleteSchuelerLeistungsdatenMultiple(leistungenIDs, api.schema);
-		for (const id of leistungenIDs)
-			this.manager.leistungRemoveByID(id);
+		for (const l of leistungen)
+			this.manager.leistungRemoveByID(l.id);
 		this.commit();
 	}
 

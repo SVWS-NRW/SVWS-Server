@@ -9,7 +9,6 @@ import type {
 	GostKursklausur,
 	GostKursklausurManager,
 	GostSchuelerklausurTermin,
-	SchuelerListeEintrag,
 	List,
 	StundenplanManager,
 } from "@core";

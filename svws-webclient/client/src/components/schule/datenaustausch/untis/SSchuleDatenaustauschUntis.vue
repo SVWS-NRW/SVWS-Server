@@ -71,7 +71,7 @@
 		abschnitt.value = a;
 	}
 
-	async function import_file(event: Event) {
+	async function import_file() {
 		if (!file.value || abschnitt.value === undefined || bezeichnung.value.length < 1)
 			return;
 		status.value = undefined;

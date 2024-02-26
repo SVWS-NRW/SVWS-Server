@@ -134,12 +134,5 @@
 	function color4(ergebnis: GostBlockungsergebnis): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function colorMix(ergebnis: GostBlockungsergebnis): string {
-		const combined = (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id))
-			+ (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
-			+ (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))
-			+ (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id));
-		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
-	}
 
 </script>

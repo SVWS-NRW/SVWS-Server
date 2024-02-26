@@ -7,7 +7,6 @@ import type {
 	GostSchuelerklausurTermin,
 	GostNachschreibterminblockungKonfiguration,
 	List,
-	SchuelerListeEintrag,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
