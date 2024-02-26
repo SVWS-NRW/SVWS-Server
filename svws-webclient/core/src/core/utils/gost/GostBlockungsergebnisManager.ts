@@ -2871,7 +2871,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
-	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
+	 * <br>(3a) Wenn die Regel in falscher von/bis-Reihenfolge existiert, wird sie entfernt.
+	 * <br>(3b) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -2880,9 +2881,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 */
 	public regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
+		const von : number = Math.min(schienenNrVon, schienenNrBis);
+		const bis : number = Math.max(schienenNrVon, schienenNrBis);
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const kurs of this.getKursmenge())
-			for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
+			for (let schienenNr : number = von; schienenNr <= bis; schienenNr++)
 				if (kurs.kursart === kursart) {
 					const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr]);
 					const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
@@ -2893,14 +2896,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					if (regelFixierung !== null)
 						u.listEntfernen.add(regelFixierung);
 				}
-		const keyDuplikat : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis]);
-		if (this._parent.regelGetByLongArrayKeyOrNull(keyDuplikat) === null) {
+		const keyBisVon : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, bis, von]);
+		const regelBisVon : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyBisVon);
+		if (regelBisVon !== null)
+			u.listEntfernen.add(regelBisVon);
+		const keyVonBis : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
+		if (this._parent.regelGetByLongArrayKeyOrNull(keyVonBis) === null) {
 			const regelNeu : GostBlockungRegel = new GostBlockungRegel();
 			regelNeu.id = -1;
 			regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
 			regelNeu.parameter.add(kursart as number);
-			regelNeu.parameter.add(schienenNrVon as number);
-			regelNeu.parameter.add(schienenNrBis as number);
+			regelNeu.parameter.add(von as number);
+			regelNeu.parameter.add(bis as number);
 			u.listHinzuzufuegen.add(regelNeu);
 		}
 		return u;
@@ -2910,7 +2917,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
 	 * <br>(1) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
 	 * <br>(2) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
-	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
+	 * <br>(3a) Wenn die Regel in falscher von/bis-Reihenfolge existiert, wird sie entfernt.
+	 * <br>(3b) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -2919,10 +2927,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
 	 */
 	public regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
+		const von : number = Math.min(schienenNrVon, schienenNrBis);
+		const bis : number = Math.max(schienenNrVon, schienenNrBis);
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const kurs of this.getKursmenge())
 			for (let schienenNr : number = 1; schienenNr <= this._parent.schieneGetAnzahl(); schienenNr++) {
-				const imSchienenBereich : boolean = (schienenNrVon <= schienenNr) && (schienenNr <= schienenNrBis);
+				const imSchienenBereich : boolean = (von <= schienenNr) && (schienenNr <= bis);
 				const richtigeKursart : boolean = (kurs.kursart === kursart);
 				if (imSchienenBereich !== richtigeKursart) {
 					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr]);
@@ -2935,14 +2945,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 						u.listEntfernen.add(regelSperrung);
 				}
 			}
-		const keyDuplikat : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis]);
-		if (this._parent.regelGetByLongArrayKeyOrNull(keyDuplikat) === null) {
+		const keyBisVon : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, bis, von]);
+		const regelBisVon : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyBisVon);
+		if (regelBisVon !== null)
+			u.listEntfernen.add(regelBisVon);
+		const keyVonBis : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
+		if (this._parent.regelGetByLongArrayKeyOrNull(keyVonBis) === null) {
 			const regelNeu : GostBlockungRegel = new GostBlockungRegel();
 			regelNeu.id = -1;
 			regelNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
 			regelNeu.parameter.add(kursart as number);
-			regelNeu.parameter.add(schienenNrVon as number);
-			regelNeu.parameter.add(schienenNrBis as number);
+			regelNeu.parameter.add(von as number);
+			regelNeu.parameter.add(bis as number);
 			u.listHinzuzufuegen.add(regelNeu);
 		}
 		return u;

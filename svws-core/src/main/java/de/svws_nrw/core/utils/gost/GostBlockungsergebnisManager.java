@@ -3052,7 +3052,8 @@ public class GostBlockungsergebnisManager {
      * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
      * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und fixiert ist, wird dies entfernt.
-	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
+	 * <br>(3a) Wenn die Regel in falscher von/bis-Reihenfolge existiert, wird sie entfernt.
+	 * <br>(3b) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -3062,10 +3063,12 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(final int kursart, final int schienenNrVon, final int schienenNrBis) {
 		// System.out.println("called regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursart + ", " + schienenNrVon + ", " + schienenNrBis + ")")
+		final int von = Math.min(schienenNrVon, schienenNrBis);
+		final int bis = Math.max(schienenNrVon, schienenNrBis);
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final @NotNull GostBlockungsergebnisKurs kurs : getKursmenge())
-			for (int schienenNr = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
+			for (int schienenNr = von; schienenNr <= bis; schienenNr++)
 				if (kurs.kursart == kursart) { // Kursart und Schienenbereich stimmen.
 					// (1)
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr});
@@ -3079,15 +3082,21 @@ public class GostBlockungsergebnisManager {
 						u.listEntfernen.add(regelFixierung);
 				}
 
+		// (3a)
+		final @NotNull LongArrayKey keyBisVon = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, bis, von});
+		final GostBlockungRegel regelBisVon = _parent.regelGetByLongArrayKeyOrNull(keyBisVon);
+		if (regelBisVon != null)
+			u.listEntfernen.add(regelBisVon);
+
 		// (3)
-		final @NotNull LongArrayKey keyDuplikat = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis});
-		if (_parent.regelGetByLongArrayKeyOrNull(keyDuplikat) == null) {
+		final @NotNull LongArrayKey keyVonBis = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis});
+		if (_parent.regelGetByLongArrayKeyOrNull(keyVonBis) == null) {
 			final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
 			regelNeu.id = -1;
 			regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
 			regelNeu.parameter.add((long) kursart);
-			regelNeu.parameter.add((long) schienenNrVon);
-			regelNeu.parameter.add((long) schienenNrBis);
+			regelNeu.parameter.add((long) von);
+			regelNeu.parameter.add((long) bis);
 			u.listHinzuzufuegen.add(regelNeu);
 		}
 
@@ -3098,7 +3107,8 @@ public class GostBlockungsergebnisManager {
      * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
      * <br>(1) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
      * <br>(2) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
-	 * <br>(3) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
+	 * <br>(3a) Wenn die Regel in falscher von/bis-Reihenfolge existiert, wird sie entfernt.
+	 * <br>(3b) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -3108,11 +3118,13 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(final int kursart, final int schienenNrVon, final int schienenNrBis) {
 		// System.out.println("called regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursart + ", " + schienenNrVon + ", " + schienenNrBis + ")")
+		final int von = Math.min(schienenNrVon, schienenNrBis);
+		final int bis = Math.max(schienenNrVon, schienenNrBis);
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final @NotNull GostBlockungsergebnisKurs kurs : getKursmenge())
 			for (int schienenNr = 1; schienenNr <= _parent.schieneGetAnzahl(); schienenNr++) {
-				final boolean imSchienenBereich = (schienenNrVon <= schienenNr) && (schienenNr <= schienenNrBis);
+				final boolean imSchienenBereich = (von <= schienenNr) && (schienenNr <= bis);
 				final boolean richtigeKursart = (kurs.kursart == kursart);
 				if (imSchienenBereich != richtigeKursart) { // Kursart ist im falschen Bereich.
 					// (1)
@@ -3128,15 +3140,21 @@ public class GostBlockungsergebnisManager {
 				}
 			}
 
-		// (3)
-		final @NotNull LongArrayKey keyDuplikat = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, schienenNrVon, schienenNrBis});
-		if (_parent.regelGetByLongArrayKeyOrNull(keyDuplikat) == null) {
+		// (3a)
+		final @NotNull LongArrayKey keyBisVon = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, bis, von});
+		final GostBlockungRegel regelBisVon = _parent.regelGetByLongArrayKeyOrNull(keyBisVon);
+		if (regelBisVon != null)
+			u.listEntfernen.add(regelBisVon);
+
+		// (3b)
+		final @NotNull LongArrayKey keyVonBis = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis});
+		if (_parent.regelGetByLongArrayKeyOrNull(keyVonBis) == null) {
 			final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
 			regelNeu.id = -1;
 			regelNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
 			regelNeu.parameter.add((long) kursart);
-			regelNeu.parameter.add((long) schienenNrVon);
-			regelNeu.parameter.add((long) schienenNrBis);
+			regelNeu.parameter.add((long) von);
+			regelNeu.parameter.add((long) bis);
 			u.listHinzuzufuegen.add(regelNeu);
 		}
 
