@@ -211,9 +211,7 @@
 
 	const disabled = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
 
-	const schienen = computed<List<GostBlockungSchiene>>(() => {
-		return props.getDatenmanager().schieneGetListe();
-	});
+	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
 	const kurse = computed<List<GostBlockungKurs>>(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
 
@@ -400,33 +398,17 @@
 	async function regelSpeichern() {
 		if (regel.value === undefined)
 			return;
-		const id = regel.value.id;
 		let update = new GostBlockungRegelUpdate();
 		const p = regel.value.parameter;
 		switch (regel.value.typ) {
-			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
-				update = props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
-				break;
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ:
 				update = props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				break;
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ:
 				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				break;
-			case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ:
-				update = props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
-				break;
-			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ:
-				update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(p.get(0), p.get(1));
-				break;
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ:
 				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
-				break;
-			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ:
-				update = props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
-				break;
-			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ:
-				update = props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
 				break;
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ:
 				update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
@@ -434,22 +416,35 @@
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ:
 				update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				break;
-			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ:
-				update = props.getErgebnismanager().regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(p.get(0), p.get(1));
+			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
+				update = props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				break;
+			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ:
+				update = props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
+				break;
+			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ:
+				update = props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
+				break;
+			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ:
+				update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(p.get(0), p.get(1));
+				break;
+			case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ:
+				update = props.getErgebnismanager().regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(p.get(0), p.get(1),p.get(2));
+				break
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ:
 				update = props.getErgebnismanager().regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(p.get(0), p.get(1), p.get(2));
 				break;
 			case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ:
 				update = props.getErgebnismanager().regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(p.get(0), p.get(1));
 				break;
-			case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ:
-				update = props.getErgebnismanager().regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(p.get(0), p.get(1),p.get(2));
-				break
-			default:
+			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ:
+				update = props.getErgebnismanager().regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(p.get(0), p.get(1));
+				break;
+			case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ:
+				update = props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
 				break;
 		}
-		if (id > 0)
+		if (regel.value.id > 0)
 			update.listEntfernen.add(regel.value);
 		await props.regelnUpdate(update);
 		regel.value = undefined;

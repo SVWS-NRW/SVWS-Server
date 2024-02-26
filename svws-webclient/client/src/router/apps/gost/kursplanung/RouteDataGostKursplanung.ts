@@ -525,7 +525,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	});
 
-	addKursLehrer = api.call(async(kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
+	addKursLehrer = api.call(async (kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		const lehrer = await api.server.addGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
@@ -537,7 +537,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return lehrer;
 	});
 
-	removeKursLehrer = api.call(async(kurs_id: number, lehrer_id: number): Promise<void> => {
+	removeKursLehrer = api.call(async (kurs_id: number, lehrer_id: number): Promise<void> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
@@ -583,6 +583,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	updateKursSchienenZuordnung = api.call(async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
+		// TODO wie in updateKursSchuelerZuordnungen sollten die regelupdates von der Api zurückkommen
 		await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneAlt, false);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneNeu, true);
@@ -857,19 +858,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return result;
 	}
 
-	regelnUpdate = async (update: GostBlockungRegelUpdate) => {
+	regelnUpdate = api.call(async (update: GostBlockungRegelUpdate) => {
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
 			return;
 		const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
 		update.listHinzuzufuegen = listAdd;
 		this.ergebnismanager.regelupdateExecute(update);
 		this.commit();
-	}
+	})
 
-	updateKurseLeeren = async (typ: KurseLeerenTypen, ids?: List<number>) => {
+	updateKurseLeeren = api.call(async (typ: KurseLeerenTypen, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();
-		const listDelete = new ArrayList<GostBlockungRegel>();
-		const listAdd = new ArrayList<GostBlockungRegel>();
 		switch (typ) {
 			case "leereKurseAlle":
 			case "leereKurseKursauswahl":
@@ -893,7 +892,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			default:
 				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Leerung von Kursen wird noch nicht unterstützt.`);
 		}
-	}
+	})
 
 	updateRegeln = async (typ: RegelActionTypen, ids?: List<number>) => {
 		// TODO auf neue regelnUpdate-Methoden umstellen

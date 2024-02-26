@@ -179,8 +179,8 @@
 	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import { GostBlockungRegelUpdate, ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List} from "@core";
+	import { GostBlockungRegelUpdate, ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach, HashSet, SetUtils } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -230,17 +230,15 @@
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
-		if (allow_regeln.value) {
+		if (allow_regeln.value)
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
-		}
 		cols.push({ key: "kurs", label: "Kurs", span: 1.75, minWidth: 8 },
 			{ key: "lehrer", label: "Lehrer", span: 1.5, minWidth: 6 },
 			{ key: "koop", label: "Kooperation", align: 'center', fixedWidth: 3.75 },
 			{ key: "FW", label: "Fachwahl", align: 'center', fixedWidth: 3.75 },
 			{ key: "Diff", label: "Diff", align: 'center', fixedWidth: 3.75 });
-		for (let i = 0; i < schienen.value.size(); i++) {
+		for (let i = 0; i < schienen.value.size(); i++)
 			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3.75, align: 'center' });
-		}
 		return cols;
 	}
 
@@ -259,12 +257,11 @@
 	function updateKursauswahl() {
 		const auswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size);
-		if (allSelected) {
+		if (allSelected)
 			auswahl.clear();
-		} else {
+		else
 			for (const kurs of props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer())
 				auswahl.add(kurs.id);
-		}
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
@@ -326,13 +323,11 @@
 		dragDataKursartSchiene.value = undefined;
 	}
 
-
 	const dragDataKursSchiene = ref<SGostKursplanungKursansichtDragData>(undefined);
 	const dropDataKursSchiene = ref<SGostKursplanungKursansichtDragData>(undefined);
 
 	const modal_regel_kurse = ref();
 	const modal_combine_kurse = ref();
-
 
 	function dragKursSchiene(data: SGostKursplanungKursansichtDragData) {
 		dragDataKursSchiene.value = data;
@@ -358,22 +353,22 @@
 		}
 		if ((dragDataKursSchiene.value.kurs.id === zone.kurs.id) && (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(zone.kurs.id, zone.schiene.id)) ) {
 			// Entferne potentielle Fixierung beim Verschieben.
+			// TODO sollte in der Api gemacht werden und die entsprechenden Regeln zurückgeben
 			if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, zone.schiene.id)) {
-				const update = new GostBlockungRegelUpdate();
-				update.listEntfernen.add(props.getDatenmanager().kursGetRegelFixierungInSchiene(zone.kurs.id, zone.schiene.id));
+				const update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(zone.kurs.id), SetUtils.create1(zone.schiene.id));
 				await props.regelnUpdate(update);
 			}
 			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, zone.schiene.id);
 		}
 	}
 
-	const isSelectedKurse = computed(() => {
+	const isSelectedKurse = computed<HashSet<number>>(() => {
 		const k1 = dragDataKursSchiene.value?.kurs;
 		const k2 = dropDataKursSchiene.value?.kurs;
+		const range = new HashSet<number>();
 		if (k1 === undefined || k2 === undefined)
-			return [];
+			return range;
 		let goon = false;
-		const range = [];
 		const list = props.kurssortierung.value === 'fach'
 			? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
 			: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
@@ -385,11 +380,11 @@
 			if (k.id === kMin.id)
 				goon = true;
 			if (k.id === kMax.id) {
-				range.push(k);
+				range.add(k.id);
 				break;
 			}
 			if (goon)
-				range.push(k);
+				range.add(k.id);
 		}
 		return range;
 	})
@@ -397,35 +392,43 @@
 	async function selectedDo(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') {
 		if (dragDataKursSchiene.value === undefined || dropDataKursSchiene.value === undefined)
 			throw new DeveloperNotificationException("Es wurden keine gültigen Daten für diese Aktion gefunden");
-		const list = props.kurssortierung.value === 'fach'
-			? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
-			: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
-		const k1 = toRaw(dragDataKursSchiene.value.kurs);
-		const k2 = toRaw(dropDataKursSchiene.value.kurs);
 		const s1 = props.getErgebnismanager().getSchieneG(dragDataKursSchiene.value.schiene.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dropDataKursSchiene.value.schiene.id);
+		const schienenSet = new HashSet<number>();
+		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
+			schienenSet.add(i);
 		const regeln: List<GostBlockungRegel> = new ArrayList();
+		let update = new GostBlockungRegelUpdate();
+		console.log(isSelectedKurse.value)
 		// TODO Auf regelnupdate ändern
 		switch (action) {
 			case 'schüler fixieren':
+				// zweiten parameter mit Schüler ergänzen
+				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
+				break;
 			case 'schüler lösen':
-			case 'toggle schüler':
-				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSchuelerfixierung(list, k1, k2, s1, s2));
+				// zweiten parameter mit Schüler ergänzen
+				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
 				break;
+			// case 'toggle schüler':
+			// 	break;
 			case 'kurse fixieren':
+				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
+				break;
 			case 'kurse lösen':
-			case 'toggle kurse':
-				regeln.addAll(props.getErgebnismanager().regelGetListeToggleKursfixierung(list, k1, k2, s1, s2));
+				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
+			// case 'toggle kurse':
+			// 	break;
 			case 'schienen sperren':
-			case 'schienen entsperren':
-			case 'toggle schienen':
-				regeln.addAll(props.getErgebnismanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2));
+				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet)
 				break;
+			case 'schienen entsperren':
+				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet)
+				break;
+			// case 'toggle schienen':
+			// 	break;
 		}
-		const update = new GostBlockungRegelUpdate();
-		for (const regel of regeln)
-			regel.id > 0 ? update.listEntfernen.add(regel) : update.listHinzuzufuegen.add(regel);
 		await props.regelnUpdate(update);
 		dragDataKursSchiene.value = undefined;
 		dropDataKursSchiene.value = undefined;

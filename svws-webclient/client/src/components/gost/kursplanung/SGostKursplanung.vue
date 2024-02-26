@@ -51,9 +51,8 @@
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
-							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen"
-							:regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
-							:schueler-filter="schuelerFilter" v-slot="{ openModal }">
+							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
+							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Leeren…', action: () => {} }" no-default><template #icon><i-ri-delete-bin-line /></template></svws-ui-button-select>

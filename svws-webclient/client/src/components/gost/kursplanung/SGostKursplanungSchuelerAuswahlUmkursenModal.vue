@@ -14,8 +14,11 @@
 					</div>
 					<svws-ui-table :items="schuelerFilter().filtered.value" :columns="[{key: 'pin', label: 'Fixierung aller Kurs-Schüler', fixedWidth: 2 }, {key: 'name', label: 'Name'}]"
 						:no-data="schuelerFilter().filtered.value.length <= 0" scroll>
-						<template #header(pin)="{ }">
-							<div @click="toggleFixierRegelAlleKursSchueler">
+						<template #header(pin)>
+							<div v-if="apiStatus.pending">
+								<svws-ui-spinner spinning />
+							</div>
+							<div v-else @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
 									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
@@ -47,7 +50,7 @@
 							</div>
 						</template>
 						<template #actions>
-							<svws-ui-button type="transparent" @click="leereKurs">
+							<svws-ui-button type="transparent" @click="leereKurs" :disabled="apiStatus.pending">
 								<i-ri-delete-bin-line /> Kurs leeren
 							</svws-ui-button>
 						</template>
@@ -62,7 +65,7 @@
 							&nbsp;
 						</template>
 						<template #cell(pin)="{ rowData }">
-							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id);">
+							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
 									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
@@ -92,10 +95,10 @@
 				</div>
 				<div class="mt-4 min-w-72 mb-4">
 					<svws-ui-multi-select title="Andere Kurse" :items="listeKurseZurUbertragung" :item-text="getKursBezeichnung"
-						v-model="_kurseZurUebertragung" class="w-full" removable />
+						v-model="_kurseZurUebertragung" class="w-full" removable :disabled="apiStatus.pending" />
 				</div>
 				<div class="text-center">
-					<svws-ui-button type="secondary" @click="uebertragen()" :disabled="_kurseZurUebertragung.length === 0">Schülermenge übertragen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="uebertragen()" :disabled="(_kurseZurUebertragung.length === 0) || (apiStatus.pending)">Schülermenge übertragen</svws-ui-button>
 				</div>
 			</div>
 		</template>
@@ -111,6 +114,7 @@
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
 	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet } from '@core';
+	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
@@ -121,6 +125,7 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schuelerFilter: () => GostKursplanungSchuelerFilter;
+		apiStatus: ApiStatus;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -289,7 +294,7 @@
 	const openModal = () => showModal().value = true;
 
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
-		if ((!props.allowRegeln) || (idKurs === null))
+		if ((!props.allowRegeln) || (idKurs === null) || (props.apiStatus.pending))
 			return;
 		let update = new GostBlockungRegelUpdate();
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
@@ -307,7 +312,9 @@
 		const setSchueler = new HashSet<number>();
 		for (const s of kursSchueler)
 			setSchueler.add(s.id);
-		const update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id));
+		const update = !kursSchuelerFixierungen.value
+			? props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
+			: props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
 		await props.regelnUpdate(update);
 	}
 

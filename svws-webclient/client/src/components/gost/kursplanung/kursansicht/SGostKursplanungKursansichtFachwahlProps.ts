@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, HashSet, LehrerListeEintrag, List } from "@core";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 export type SGostKursplanungKursansichtDragData = { kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene; fachId: number; } | undefined;
@@ -26,7 +26,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	kursart: GostKursart;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
-	isSelectedKurse: GostBlockungKurs[];
+	isSelectedKurse: HashSet<number>;
 	selectedDo: (action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') => Promise<List<GostBlockungRegel>>;
 	dragDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	dropDataKursSchiene: () => SGostKursplanungKursansichtDragData;

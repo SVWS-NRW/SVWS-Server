@@ -197,9 +197,8 @@
 		const schieneDrop = props.getErgebnismanager().getSchieneG(s2.id);
 		const sMin = Math.min(schieneDrag.nummer, schieneDrop.nummer);
 		const sMax = Math.max(schieneDrag.nummer, schieneDrop.nummer);
-		if (s3.nummer >= sMin && s3.nummer <= sMax) {
-			return props.isSelectedKurse.includes(k3);
-		}
+		if (s3.nummer >= sMin && s3.nummer <= sMax)
+			return props.isSelectedKurse.contains(k3.id);
 		return false;
 	})
 
