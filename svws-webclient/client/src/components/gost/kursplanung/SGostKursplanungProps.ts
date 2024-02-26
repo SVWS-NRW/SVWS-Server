@@ -4,7 +4,6 @@ import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFil
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 import type { KurseLeerenTypen } from "./KurseLeerenTypen";
-import type { RegelActionTypen } from "./RegelActionTypen";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -12,7 +11,6 @@ export interface GostKursplanungProps {
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addBlockung: () => Promise<void>;
 	restoreBlockung: () => Promise<void>;
-	updateRegeln: (typ : RegelActionTypen, ids?: List<number>) => Promise<void>;
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	updateKurseLeeren: (typ : KurseLeerenTypen, ids?: List<number>) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;

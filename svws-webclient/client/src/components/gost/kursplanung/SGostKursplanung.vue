@@ -209,18 +209,10 @@
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
 		result.push({ text: "Fixiere alle Kurse", action: async () => {
-			const kursSet = new HashSet<number>();
-			for (const kurs of props.getErgebnismanager().getKursmenge())
-				kursSet.add(kurs.id);
-			// TODO
-			//await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE())
+			await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN());
 		}});
 		result.push({ text: "Löse alle fixierten Kurse", action: async () => {
-			const kursSet = new HashSet<number>();
-			for (const kurs of props.getErgebnismanager().getKursmenge())
-				kursSet.add(kurs.id);
-			// TODO
-			//await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE())
+			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN());
 		}});
 		result.push({ text: "", action: async () => {}, separator: true });
 		if ((props.getKursauswahl().size() === 0) || allSelected) {
@@ -232,16 +224,13 @@
 				}});
 			result.push({ text: "Löse alle fixierten Schüler", action: async () => {
 				await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN())
-				// await props.updateRegeln("loeseSchuelerAlle")
 			}});
 		} else {
 			result.push({ text: "Kursauswahl: Fixiere Kurse", action: async () => {
-				// TODO
-				// await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(props.getKursauswahl()))
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(props.getKursauswahl()))
 			}});
 			result.push({ text: "Kursauswahl: Löse fixierte Kurse", action: async () => {
-				// TODO
-				// await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(props.getKursauswahl()))
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(props.getKursauswahl()))
 			}});
 			result.push({ text: "Kursauswahl: Fixiere Schüler", action: async () => {
 				await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(props.getKursauswahl()))

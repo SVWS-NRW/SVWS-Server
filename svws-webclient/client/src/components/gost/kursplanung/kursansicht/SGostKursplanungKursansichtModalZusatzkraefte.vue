@@ -39,8 +39,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer , LehrerListeEintrag, GostBlockungRegel } from "@core";
-	import { ArrayList, GostKursblockungRegelTyp } from "@core";
+	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer , LehrerListeEintrag } from "@core";
+	import { ArrayList } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 	import { SvwsUiSelect } from "@ui";
 
@@ -116,17 +116,6 @@
 			if ((!vergeben.has(l.id)) && (l.istSichtbar))
 				result.push(l);
 		return result;
-	})
-
-	const lehrer_regel = computed<GostBlockungRegel | undefined>(() => {
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
-		const regeln = props.getDatenmanager().regelGetListe();
-		if (!regeln)
-			return undefined;
-		for (const r of regeln)
-			if (r.typ === regel_typ.typ)
-				return r;
-		return undefined;
 	})
 
 </script>

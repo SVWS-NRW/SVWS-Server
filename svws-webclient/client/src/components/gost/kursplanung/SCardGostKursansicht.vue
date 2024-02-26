@@ -176,11 +176,11 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed, onMounted, ref, toRaw } from "vue";
-	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
-	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, JavaSet } from "@core";
-	import { GostBlockungRegelUpdate, ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach, HashSet, SetUtils } from "@core";
+	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List } from "@core";
+	import { DeveloperNotificationException, GostBlockungRegelUpdate, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, SetUtils, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -397,17 +397,13 @@
 		const schienenSet = new HashSet<number>();
 		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
 			schienenSet.add(i);
-		const regeln: List<GostBlockungRegel> = new ArrayList();
 		let update = new GostBlockungRegelUpdate();
 		console.log(isSelectedKurse.value)
-		// TODO Auf regelnupdate ändern
 		switch (action) {
 			case 'schüler fixieren':
-				// zweiten parameter mit Schüler ergänzen
 				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
 				break;
 			case 'schüler lösen':
-				// zweiten parameter mit Schüler ergänzen
 				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
 				break;
 			// case 'toggle schüler':
@@ -432,7 +428,6 @@
 		await props.regelnUpdate(update);
 		dragDataKursSchiene.value = undefined;
 		dropDataKursSchiene.value = undefined;
-		return regeln;
 	}
 
 

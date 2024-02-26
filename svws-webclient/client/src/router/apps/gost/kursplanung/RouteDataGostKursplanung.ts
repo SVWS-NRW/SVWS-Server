@@ -2,10 +2,9 @@
 import { type Ref, ref, computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
-import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
-import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, HashSet } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungRegelUpdate} from "@core";
+import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, HashSet } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -892,52 +891,5 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Leerung von Kursen wird noch nicht unterstützt.`);
 		}
 	})
-
-	updateRegeln = async (typ: RegelActionTypen, ids?: List<number>) => {
-		// TODO auf neue regelnUpdate-Methoden umstellen
-		const listKursIDs = ids || this.getListeKursauswahl();
-		const update = new GostBlockungRegelUpdate();
-		switch (typ) {
-			case "fixiereKurseAlle":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
-				break;
-			case "loeseKurseAlle":
-				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen())
-				break;
-			case "fixiereKursauswahl":
-			case "fixiereKurseFilterFach":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
-				break;
-			case "loeseKursauswahl":
-			case "loeseKurseFilterFach":
-				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
-				break;
-			case "fixiereSchuelerAlle":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
-				break;
-			case "fixiereSchuelerAbiturkurseAlle":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
-				break;
-			case "loeseSchuelerAlle":
-				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
-				break;
-			case "fixiereSchuelerAbiturkurseKursauswahl":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
-				break;
-			case "fixiereSchuelerFilterFach":
-			case "fixiereSchuelerFilterKurs":
-			case "fixiereSchuelerKursauswahl":
-				update.listHinzuzufuegen.addAll(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
-				break;
-			case "loeseSchuelerKursauswahl":
-			case "loeseSchuelerFilterFach":
-			case "loeseSchuelerFilterKurs":
-				update.listEntfernen.addAll(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
-				break;
-			default:
-				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Aktualisierung von Regeln wird noch nicht unterstützt.`);
-		}
-		await this.regelnUpdate(update);
-	}
 
 }
