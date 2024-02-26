@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
@@ -19,6 +22,7 @@ import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
@@ -255,6 +259,54 @@ public final class DBBenutzerUtils {
 			final ServerMode mode, final BenutzerKompetenz... kompetenzen) {
 		try (DBEntityManager conn = getDBConnection(request, mode, kompetenzen)) {
 			return runWithTransaction(task, conn);
+		}
+	}
+
+
+	/**
+	 * Führt die übergebene Aufgabe auf der Datenbank aus und gibt bei Erfolg die Response der Aufgabe zurück.
+	 * Im Fehlerfall wird eine SimpleOperationRespose zurückgegeben.
+	 * Hierfür wird der aktuelle SVWS-Benutzer anhand des HTTP-Requests ermittelt und überprüft, ob der
+	 * Benutzer entweder Admin-Rechte oder eine der übergebenen Kompetenzen besitzt. Die
+	 * dabei erstellte {@link DBEntityManager}-Instanz wird dabei für den Datenbankzugriff genutzt.
+	 *
+	 * Wichtig: Eine Transaktion für die Aufgabe wird erzeugt und von dieser Methode gehandhabt!
+	 *
+	 * @param task          die auszuführende Aufgabe
+	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
+	 * @param kompetenzen   die zu prüfenden Kompetenzen
+	 *
+	 * @return die Response zu der Aufgabe
+	 */
+	@SuppressWarnings("resource")
+	public static Response runWithTransactionOnErrorSimpleResponse(final Function<DBEntityManager, Response> task, final HttpServletRequest request,
+			final ServerMode mode, final BenutzerKompetenz... kompetenzen) {
+		try (DBEntityManager conn = getDBConnection(request, mode, kompetenzen)) {
+			try {
+				conn.transactionBegin();
+				final Response response = task.apply(conn);
+				conn.transactionCommitOrThrow();
+				return response;
+			} catch (final Exception e) {
+				final Logger logger = new Logger();
+				final LogConsumerList log = new LogConsumerList();
+				logger.addConsumer(log);
+				final SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
+				simpleOperationResponse.success = false;
+				int code = OperationError.INTERNAL_SERVER_ERROR.getCode();
+				logger.logLn(e.getMessage());
+				if (e instanceof final WebApplicationException wae)
+					code = wae.getResponse().getStatus();
+			    final StackTraceElement[] stack = e.getStackTrace();
+			    for (final StackTraceElement s : stack)
+			    	logger.logLn(2, s.toString());
+				simpleOperationResponse.log = log.getStrings();
+				return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();
+			} finally {
+				// Perform a rollback if necessary
+				conn.transactionRollbackOrThrow();
+			}
 		}
 	}
 
