@@ -247,34 +247,50 @@
 				await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(props.getKursauswahl()))
 			}});
 			if (hatAbiturkurse)
-				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
-			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
+				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => {
+					// TODO
+				}});
+			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => {
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(props.getKursauswahl()))
+			}});
 		}
 		if (filter.kurs !== undefined) {
-			const list = new ArrayList<number>();
-			list.add(filter.kurs.id);
+			const kurseSet = new HashSet<number>();
+			kurseSet.add(filter.kurs.id);
 			result.push({ text: "", action: async () => {}, separator: true });
-			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterKurs", list) });
-			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterKurs", list) });
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Fixiere Schüler`, action: async () => {
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseSet))
+			}});
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Löse Schüler`, action: async () => {
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseSet))
+			}});
 		}
 		if (filter.fach !== undefined) {
 			const kursart = filter.kursart;
 			const kurse = props.getErgebnismanager().getOfFachKursmenge(filter.fach);
-			const list = new ArrayList<number>();
+			const kurseSet = new HashSet<number>();
 			let namen = "";
 			for (const k of kurse) {
 				if ((kursart !== undefined) && (k.kursart !== kursart.id))
 					continue;
-				list.add(k.id);
+				kurseSet.add(k.id);
 				namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
 			}
 			namen = namen.slice(0, -2);
-			if (list.size() > 0) {
+			if (kurseSet.size() > 0) {
 				result.push({ text: "", action: async () => {}, separator: true });
-				result.push({ text: `${namen}: Fixiere Kurse`, action: async () => await props.updateRegeln("fixiereKurseFilterFach", list) });
-				result.push({ text: `${namen}: Löse Kurse`, action: async () => await props.updateRegeln("loeseKurseFilterFach", list) });
-				result.push({ text: `${namen}: Fixiere Schüler`, action: async () => await props.updateRegeln("fixiereSchuelerFilterFach", list) });
-				result.push({ text: `${namen}: Löse Schüler`, action: async () => await props.updateRegeln("loeseSchuelerFilterFach", list) });
+				result.push({ text: `${namen}: Fixiere Kurse`, action: async () => {
+					// TODO
+				}});
+				result.push({ text: `${namen}: Löse Kurse`, action: async () => {
+					// TODO
+				}});
+				result.push({ text: `${namen}: Fixiere Schüler`, action: async () => {
+					await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseSet))
+				}});
+				result.push({ text: `${namen}: Löse Schüler`, action: async () => {
+					await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseSet))
+				}});
 			}
 		}
 		return result;
