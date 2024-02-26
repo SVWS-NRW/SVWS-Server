@@ -3175,6 +3175,7 @@ public class GostBlockungsergebnisManager {
 		//System.out.println("called regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ", " + setSchienenNr + ")")
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
+		// TODO BAR falsche Kurs-Schienen-Fixierung entfernen?
 		// Beim Fixieren muss man über die Kurse und dann über die Schienen des Kurses iterieren.
 		for (final long idKurs : setKursID)
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE :  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, idKurs)) {
@@ -3229,6 +3230,72 @@ public class GostBlockungsergebnisManager {
 			}
 
 		return u;
+	}
+
+	/**
+	 * ...
+	 * @param setKursID ...
+	 * @return ...
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID) {
+		//System.out.println("called regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+
+		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
+		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+
+		return regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @param setKursID ...
+	 * @return ...
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID) {
+		//System.out.println("called regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+
+		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
+		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+
+		return regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @return ...
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE() {
+		//System.out.println("called regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+
+		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
+		for (final @NotNull GostBlockungKurs kurs : _parent.kursGetListeSortiertNachFachKursartNummer())
+			setKursID.add(kurs.id);
+
+		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
+		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+
+		return regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @return ...
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE() {
+		//System.out.println("called regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE (" + setKursID + ")")
+
+		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
+		for (final @NotNull GostBlockungKurs kurs : _parent.kursGetListeSortiertNachFachKursartNummer())
+			setKursID.add(kurs.id);
+
+		final @NotNull Set<@NotNull Integer> setSchienenNr = new HashSet<@NotNull Integer>();
+		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+
+		return regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
 	}
 
 	/**

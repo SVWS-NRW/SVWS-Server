@@ -3022,6 +3022,58 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * ...
+	 * @param setKursID ...
+	 * @return ...
+	 */
+	public regelupdateCreate_02b_KURS_FIXIERE_IN_SCHIENE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const setSchienenNr : JavaSet<number> = new HashSet<number>();
+		for (const schiene of this._parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+		return this.regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @param setKursID ...
+	 * @return ...
+	 */
+	public regelupdateRemove_02b_KURS_FIXIERE_IN_SCHIENE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const setSchienenNr : JavaSet<number> = new HashSet<number>();
+		for (const schiene of this._parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+		return this.regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @return ...
+	 */
+	public regelupdateCreate_02c_KURS_FIXIERE_IN_SCHIENE() : GostBlockungRegelUpdate {
+		const setKursID : JavaSet<number> = new HashSet<number>();
+		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
+			setKursID.add(kurs.id);
+		const setSchienenNr : JavaSet<number> = new HashSet<number>();
+		for (const schiene of this._parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+		return this.regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
+	 * ...
+	 * @return ...
+	 */
+	public regelupdateRemove_02c_KURS_FIXIERE_IN_SCHIENE() : GostBlockungRegelUpdate {
+		const setKursID : JavaSet<number> = new HashSet<number>();
+		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
+			setKursID.add(kurs.id);
+		const setSchienenNr : JavaSet<number> = new HashSet<number>();
+		for (const schiene of this._parent.schieneGetListe())
+			setSchienenNr.add(schiene.nummer);
+		return this.regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
 	 * <br>(2) Wenn der Kurs im Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
