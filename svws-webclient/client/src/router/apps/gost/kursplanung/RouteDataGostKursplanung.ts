@@ -4,8 +4,8 @@ import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDF
 import type { KurseLeerenTypen } from "~/components/gost/kursplanung/KurseLeerenTypen";
 import type { RegelActionTypen } from "~/components/gost/kursplanung/RegelActionTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
-import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
+import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, HashSet } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -65,8 +65,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		super(defaultState);
 	}
 
-	private _kursauswahl = ref<Set<number>>(new Set<number>());
-
+	private _kursauswahl = ref<JavaSet<number>>(new HashSet<number>());
 
 	public get hatAbiturjahr(): boolean {
 		return this._state.value.abiturjahr !== undefined;
@@ -304,7 +303,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.datenmanager;
 	}
 
-	public get kursAuswahl(): Ref<Set<number>> {
+	public get kursAuswahl(): Ref<JavaSet<number>> {
 		return this._kursauswahl;
 	}
 

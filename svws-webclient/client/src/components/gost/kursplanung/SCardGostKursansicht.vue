@@ -84,7 +84,7 @@
 				</div>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size" :indeterminate="getKursauswahl().size > 0 && getKursauswahl().size < getDatenmanager().kursGetAnzahl()"
+						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': kurssortierung.value === 'kursart'}">
@@ -179,12 +179,12 @@
 	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List} from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, JavaSet } from "@core";
 	import { GostBlockungRegelUpdate, ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach, HashSet, SetUtils } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		getKursauswahl: () => Set<number>,
+		getKursauswahl: () => JavaSet<number>,
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -256,7 +256,7 @@
 
 	function updateKursauswahl() {
 		const auswahl = props.getKursauswahl();
-		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size);
+		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size());
 		if (allSelected)
 			auswahl.clear();
 		else
@@ -362,7 +362,7 @@
 		}
 	}
 
-	const isSelectedKurse = computed<HashSet<number>>(() => {
+	const isSelectedKurse = computed<JavaSet<number>>(() => {
 		const k1 = dragDataKursSchiene.value?.kurs;
 		const k2 = dropDataKursSchiene.value?.kurs;
 		const range = new HashSet<number>();

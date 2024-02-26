@@ -1,11 +1,11 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, HashSet, LehrerListeEintrag, List } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List } from "@core";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 export type SGostKursplanungKursansichtDragData = { kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene; fachId: number; } | undefined;
 
 export interface SGostKursplanungKursansichtFachwahlProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
-	getKursauswahl: () => Set<number>,
+	getKursauswahl: () => JavaSet<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -26,7 +26,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	kursart: GostKursart;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
-	isSelectedKurse: HashSet<number>;
+	isSelectedKurse: JavaSet<number>;
 	selectedDo: (action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') => Promise<List<GostBlockungRegel>>;
 	dragDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	dropDataKursSchiene: () => SGostKursplanungKursansichtDragData;

@@ -58,7 +58,7 @@
 						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Leeren…', action: () => {} }" no-default><template #icon><i-ri-delete-bin-line /></template></svws-ui-button-select>
 						<template v-if="allowRegeln">
 							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default><template #icon><i-ri-pushpin-line /></template></svws-ui-button-select>
-							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size < 1" :class="getKursauswahl().size < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
+							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<i-ri-delete-bin-line /> Entfernen
 							</svws-ui-button>
 						</template>
@@ -133,7 +133,7 @@
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { ArrayList } from "@core";
+	import { ArrayList, HashSet } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
 
@@ -178,7 +178,7 @@
 		for (const k of props.getErgebnismanager().getKursmenge())
 			kursIdsAlle.add(k.id);
 		result.push({ text: "Leere alle Kurse", action: async () => await props.updateKurseLeeren("leereKurseAlle", kursIdsAlle) });
-		if ((props.getKursauswahl().size !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size))
+		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size()))
 			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
 		if (filter.kurs !== undefined) {
 			const list = new ArrayList<number>();
@@ -204,22 +204,48 @@
 
 	const actionsRegeln = computed(() => {
 		const kursauswahl = props.getKursauswahl();
-		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size);
+		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size());
 		const hatAbiturkurse = (props.halbjahr.halbjahr > 1);
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
-		result.push({ text: "Fixiere alle Kurse", action: async () => await props.updateRegeln("fixiereKurseAlle") });
-		result.push({ text: "Löse alle fixierten Kurse", action: async () => await props.updateRegeln("loeseKurseAlle") });
+		result.push({ text: "Fixiere alle Kurse", action: async () => {
+			const kursSet = new HashSet<number>();
+			for (const kurs of props.getErgebnismanager().getKursmenge())
+				kursSet.add(kurs.id);
+			// TODO
+			//await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE())
+		}});
+		result.push({ text: "Löse alle fixierten Kurse", action: async () => {
+			const kursSet = new HashSet<number>();
+			for (const kurs of props.getErgebnismanager().getKursmenge())
+				kursSet.add(kurs.id);
+			// TODO
+			//await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE())
+		}});
 		result.push({ text: "", action: async () => {}, separator: true });
-		if ((props.getKursauswahl().size === 0) || allSelected) {
-			result.push({ text: "Fixiere alle Schüler", action: async () => await props.updateRegeln("fixiereSchuelerAlle") });
+		if ((props.getKursauswahl().size() === 0) || allSelected) {
+			result.push({ text: "Fixiere alle Schüler", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN())});
 			if (hatAbiturkurse)
-				result.push({ text: "Fixiere alle Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseAlle") });
-			result.push({ text: "Löse alle fixierten Schüler", action: async () => await props.updateRegeln("loeseSchuelerAlle") });
+				result.push({ text: "Fixiere alle Schüler mit Abiturkursen", action: async () => {
+					//TODO
+					//props.getErgebnismanager().abitur
+				}});
+			result.push({ text: "Löse alle fixierten Schüler", action: async () => {
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN())
+				// await props.updateRegeln("loeseSchuelerAlle")
+			}});
 		} else {
-			result.push({ text: "Kursauswahl: Fixiere Kurse", action: async () => await props.updateRegeln("fixiereKursauswahl") });
-			result.push({ text: "Kursauswahl: Löse fixierte Kurse", action: async () => await props.updateRegeln("loeseKursauswahl") });
-			result.push({ text: "Kursauswahl: Fixiere Schüler", action: async () => await props.updateRegeln("fixiereSchuelerKursauswahl") });
+			result.push({ text: "Kursauswahl: Fixiere Kurse", action: async () => {
+				// TODO
+				// await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(props.getKursauswahl()))
+			}});
+			result.push({ text: "Kursauswahl: Löse fixierte Kurse", action: async () => {
+				// TODO
+				// await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(props.getKursauswahl()))
+			}});
+			result.push({ text: "Kursauswahl: Fixiere Schüler", action: async () => {
+				await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(props.getKursauswahl()))
+			}});
 			if (hatAbiturkurse)
 				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
 			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
