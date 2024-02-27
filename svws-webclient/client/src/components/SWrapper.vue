@@ -12,7 +12,7 @@
 				</template>
 				{{ error.message }}
 				<template v-if="error.log !== null">
-					<p v-for="log in error.log.log" :key="log || ''" v-html="log" />
+					<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
 				</template>
 				<template #stack v-if="error.stack !== ''">
 					<pre v-html="error.stack" />
@@ -67,7 +67,7 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
-		let name = `Fehler ${reason.name !== 'Error' ? ': '+reason.name : ''}`;
+		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException)
@@ -82,7 +82,7 @@
 					if (reason.response.headers.get('content-type') === 'application/json') {
 						res = await reason.response.json();
 						if ('log' in res && 'success' in res)
-							log = res as SimpleOperationResponse;
+							log = res satisfies SimpleOperationResponse;
 					}
 					else
 						res = await reason.response.text();

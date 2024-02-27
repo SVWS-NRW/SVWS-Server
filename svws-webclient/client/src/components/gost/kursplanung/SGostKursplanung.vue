@@ -2,7 +2,7 @@
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden()}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
-				<template #icon> <i-ri-printer-line /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-printer-line v-else /> </template>
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -55,9 +55,13 @@
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus">
 							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
-						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Leeren…', action: () => {} }" no-default><template #icon><i-ri-delete-bin-line /></template></svws-ui-button-select>
+						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Leeren…', action: () => {} }" no-default>
+							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-delete-bin-line v-else /> </template>
+						</svws-ui-button-select>
 						<template v-if="allowRegeln">
-							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default><template #icon><i-ri-pushpin-line /></template></svws-ui-button-select>
+							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default>
+								<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-pushpin-line v-else /> </template>
+							</svws-ui-button-select>
 							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<i-ri-delete-bin-line /> Entfernen
 							</svws-ui-button>

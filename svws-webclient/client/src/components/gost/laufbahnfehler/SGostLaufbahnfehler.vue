@@ -10,7 +10,7 @@
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :default-action="dropdownDefault" :disabled="apiStatus.pending">
-				<template #icon> <i-ri-printer-line /><svws-ui-spinner :spinning="apiStatus.pending" /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-printer-line v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
 		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">

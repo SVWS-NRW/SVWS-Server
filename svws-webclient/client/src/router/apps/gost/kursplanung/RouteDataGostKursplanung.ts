@@ -779,7 +779,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 	}
 
-	getPDF = async (title: DownloadPDFTypen): Promise<ApiFile> => {
+	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
 		const list = new ArrayList<number>();
@@ -807,7 +807,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			default:
 				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}
-	}
+	})
 
 	gotoErgebnis = async (value: GostBlockungsergebnis | number | undefined) => {
 		let id;
