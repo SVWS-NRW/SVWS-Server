@@ -9,7 +9,7 @@ export interface GostKursplanungAuswahlProps {
 	patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 	addBlockung: () => Promise<void>;
 	removeBlockung: () => Promise<void>;
-	setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
+	gotoBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
 	mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
 	addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
@@ -20,7 +20,7 @@ export interface GostKursplanungAuswahlProps {
 	patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
 	rechneGostBlockung: () => Promise<List<number>>;
 	removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
-	setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
+	gotoErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
 	hatBlockung: boolean;
 	auswahlErgebnis: GostBlockungsergebnis | undefined;
 	restoreBlockung: () => Promise<void>;

@@ -99,8 +99,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined) || (idergebnis === undefined))
 			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
 		if (idschueler === undefined)
-			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
+			return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis }};
+		return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
 	}
 
 	gotoSchuelerIndividualdaten = async (idSchueler: number) => {

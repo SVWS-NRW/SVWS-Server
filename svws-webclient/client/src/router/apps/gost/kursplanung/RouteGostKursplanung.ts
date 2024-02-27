@@ -181,19 +181,19 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 	public getRouteHalbjahr(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { abiturjahr, halbjahr }};
 	}
 
 	public getRouteBlockung(abiturjahr: number, halbjahr: number, idblockung: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
+		return { name: this.name, params: { abiturjahr, halbjahr, idblockung }};
 	}
 
 	public getRouteErgebnis(abiturjahr: number, halbjahr: number, idblockung: number, idergebnis: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
+		return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis }};
 	}
 
 	public getRouteSchueler(abiturjahr: number, halbjahr: number, idblockung: number, idergebnis: number, idschueler: number) : RouteLocationRaw {
-		return { name: routeGostKursplanungSchueler.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
+		return { name: routeGostKursplanungSchueler.name, params: { abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
 	}
 
 
@@ -207,7 +207,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			addBlockung: this.data.addBlockung,
 			removeBlockung: this.data.removeBlockung,
 			patchBlockung: this.data.patchBlockung,
-			setAuswahlBlockung: this.data.gotoBlockung,
+			gotoBlockung: this.data.gotoBlockung,
 			auswahlBlockung: this.data.hatBlockung ? this.data.auswahlBlockung : undefined,
 			mapBlockungen: () => this.data.mapBlockungen,
 			addErgebnisse: this.data.addErgebnisse,
@@ -218,7 +218,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			patchErgebnis: this.data.patchErgebnis,
 			rechneGostBlockung: this.data.rechneGostBlockung,
 			removeErgebnisse: this.data.removeErgebnisse,
-			setAuswahlErgebnis: this.data.setAuswahlErgebnis,
+			gotoErgebnis: this.data.gotoErgebnis,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			auswahlErgebnis: this.data.hatErgebnis ? this.data.auswahlErgebnis : undefined,
 			restoreBlockung: this.data.restoreBlockung,

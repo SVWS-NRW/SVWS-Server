@@ -66,7 +66,7 @@
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
 		:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
-		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+		:goto-ergebnis="gotoErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 </template>
 
 <script setup lang="ts">
@@ -79,7 +79,7 @@
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 		removeBlockung: () => Promise<void>;
-		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
+		gotoBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 		auswahlBlockung: GostBlockungListeneintrag | undefined;
 		mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
 		halbjahr: GostHalbjahr;
@@ -91,7 +91,7 @@
 		rechneGostBlockung: () => Promise<List<number>>;
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
-		setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
+		gotoErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
 		hatBlockung: boolean;
 		auswahlErgebnis: GostBlockungsergebnis | undefined;
 		restoreBlockung: () => Promise<void>;
@@ -118,7 +118,7 @@
 	async function select_blockungauswahl(blockung: GostBlockungListeneintrag | null) {
 		if ((blockung === null) || props.apiStatus.pending)
 			return;
-		await props.setAuswahlBlockung(blockung);
+		await props.gotoBlockung(blockung);
 	}
 
 	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));

@@ -1,6 +1,6 @@
 <template>
 	<template v-if="!getErgebnisse().isEmpty()">
-		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" :selectable="getErgebnisse().size() > 1" class="z-20 relative"
+		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="gotoErgebnis" v-model="selected_ergebnisse" :selectable="getErgebnisse().size() > 1" class="z-20 relative"
 			:columns="[{ key: 'id', label: 'ID', fixedWidth: getErgebnisse().size() > 1 ? 3 : 4.75, align: 'left'}, { key: 'bewertung', label: 'Ergebnis' }]"
 			:items="getErgebnisse()" :count="getErgebnisse().size() > 1">
 			<template #header(id)>
@@ -93,7 +93,7 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
-		setAuswahlErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
+		gotoErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
 		auswahlErgebnis: GostBlockungsergebnis | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
