@@ -105,7 +105,7 @@
 								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart()}">GK</p>
 								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}">
 									<p th:if="${Kursbelegung.kurs().id() == Kurs.id()}" class="no-mt" style="font-size: 6pt;"
-										th:utext="${Kurs.kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty()) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
+										th:utext="${Kurs.kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
 										GK-s Abifach 3
 									</p>
 								</div>

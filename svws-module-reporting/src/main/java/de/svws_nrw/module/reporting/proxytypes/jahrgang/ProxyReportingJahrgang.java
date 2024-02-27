@@ -3,7 +3,6 @@ package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -96,19 +95,16 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public List<ReportingKlasse> klassen() {
 		if (super.klassen().isEmpty()) {
-			super.setKlassen(
-				new DataKlassendaten(this.reportingRepository.conn())
-					.getFromSchuljahresabschnittsIDOhneSchueler(this.reportingRepository.aktuellerSchuljahresabschnitt().id).stream()
-					.filter(kd -> kd.idJahrgang == super.id())
-					.map(kd -> this.reportingRepository.mapKlassen().computeIfAbsent(kd.id, l -> kd))
-					.map(k ->
-						(ReportingKlasse) new ProxyReportingKlasse(
-							this.reportingRepository,
-							k))
-					.sorted(Comparator
-						.comparing(ReportingKlasse::kuerzel)
-						.thenComparing(ReportingKlasse::parallelitaet))
-					.toList());
+			// Im ReportingRepository ist die mapKlassen mit den Klassen des aktuellen Schuljahresabschnittes gefüllt worden.
+			super.setKlassen(this.reportingRepository.mapKlassen().values().stream()
+				.filter(kd -> kd.idJahrgang == super.id())
+				.map(kd -> (ReportingKlasse) new ProxyReportingKlasse(
+					this.reportingRepository,
+					kd))
+				.sorted(Comparator
+					.comparing(ReportingKlasse::kuerzel)
+					.thenComparing(ReportingKlasse::parallelitaet))
+				.toList());
 		}
 		return super.klassen();
 	}

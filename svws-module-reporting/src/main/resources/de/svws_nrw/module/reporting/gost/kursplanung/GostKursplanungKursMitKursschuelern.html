@@ -51,11 +51,11 @@
 						<td></td>
 						<td class="small ta-c" th:text="${Kurs.anzahlKlausurschreiber()}">12</td>
 						<td></td>
-						<td class="small ta-c" th:text="${Kurs.anzahlAB12()}">0</td>
+						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
 						<td></td>
-						<td class="small ta-c" th:text="${Kurs.anzahlAB3()}">5</td>
+						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().charAt(0)) ? '' : Kurs.anzahlAB3()}">5</td>
 						<td></td>
-						<td class="small ta-c" th:text="${Kurs.anzahlAB4()}">3</td>
+						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().charAt(0)) ? '' : Kurs.anzahlAB4()}">3</td>
 					</tr>
 					<tr>
 						<td class="beschriftung">Kursbezeichnung</td>
@@ -105,7 +105,7 @@
 						<td class="bob-grey" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
 						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bob-grey ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
 						<td class="bob-grey ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm'}">s</td>
-						<td class="bob-grey ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()}">3</td>
+						<td class="bob-grey ta-c" th:text="${#strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()}">3</td>
 						<td class="bob-grey ta-c" th:text="${#svwsDate.toDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
 						<td class="bob-grey ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
 					</tr>

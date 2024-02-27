@@ -196,13 +196,18 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private void eintragBeratungslehrkraefteErgaenzen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
-			super.setLetzteBeratungLehrkraft(new ProxyReportingLehrer(this.reportingRepository, new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID)));
+			super.setLetzteBeratungLehrkraft(new ProxyReportingLehrer(
+				this.reportingRepository,
+				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID))));
 		}
 		// Beratungslehrkräfte der Stufe bestimmen aus den GOSt-Daten der Jahrgangsstufe
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
 		if (!beratungslehrer.isEmpty()) {
 			for (final GostBeratungslehrer lehrkraft : beratungslehrer) {
-				super.beratungslehrkraefte().add(new ProxyReportingLehrer(this.reportingRepository, new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id)));
+				super.beratungslehrkraefte().add(
+					new ProxyReportingLehrer(
+						this.reportingRepository,
+						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id))));
 			}
 		}
 	}

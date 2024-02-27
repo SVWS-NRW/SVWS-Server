@@ -142,7 +142,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			if (this.reportingRepository.mapAktuelleLernabschnittsdaten().containsKey(this.id())) {
 				super.setAktuellerLernabschnitt(new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, this.reportingRepository.mapAktuelleLernabschnittsdaten().get(this.id())));
 			} else {
-				if (!lernabschnitte().isEmpty())
+				if (!lernabschnitte().isEmpty()) {
 					if (lernabschnitte().size() == 1) {
 						super.setAktuellerLernabschnitt(lernabschnitte().getFirst());
 					} else {
@@ -151,6 +151,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 							.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList()
 							.getFirst());
 					}
+				}
 			}
 		}
 		return super.aktuellerLernabschnitt();
