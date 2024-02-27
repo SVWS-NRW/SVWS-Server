@@ -115,14 +115,18 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	setFilter = async () => {
-		if (!this.schuelerListeManager.hasDaten()) {
-			const listFiltered = this.schuelerListeManager.filtered();
-			if (!listFiltered.isEmpty()) {
+		this.schuelerListeManager.setFilterAuswahlPermitted(false);
+		const listFiltered = this.schuelerListeManager.filtered();
+		this.schuelerListeManager.setFilterAuswahlPermitted(true);
+		this.schuelerListeManager.filterInvalidateCache();
+		if ((this.schuelerListeManager.hasDaten()) && (listFiltered.contains(this.schuelerListeManager.auswahl()))) {
+			this.commit();
+		} else {
+			if (listFiltered.isEmpty())
+				await this.gotoSchueler(null)
+			else
 				await this.gotoSchueler(listFiltered.get(0));
-				return;
-			}
 		}
-		this.commit();
 	}
 
 }

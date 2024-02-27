@@ -108,6 +108,14 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 
 
 	/**
+	 * Entfernt den aktuelle Cache für die gefilterte Liste und forciert so eine Neu-Berechnung der gecachten Liste
+	 */
+	public void filterInvalidateCache() {
+		this._filtered = null;
+	}
+
+
+	/**
 	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
 	 *
 	 * @param eintrag          der zu prüfende Eintrag

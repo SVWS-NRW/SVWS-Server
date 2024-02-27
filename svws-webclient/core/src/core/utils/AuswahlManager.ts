@@ -113,6 +113,13 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	}
 
 	/**
+	 * Entfernt den aktuelle Cache für die gefilterte Liste und forciert so eine Neu-Berechnung der gecachten Liste
+	 */
+	public filterInvalidateCache() : void {
+		this._filtered = null;
+	}
+
+	/**
 	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
 	 *
 	 * @param eintrag          der zu prüfende Eintrag
