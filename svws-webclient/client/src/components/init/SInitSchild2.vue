@@ -1,33 +1,36 @@
 <template>
-	<svws-ui-content-card title="Datenbank auswählen">
-		<div class="flex items-start gap-3">
-			<div class="flex flex-col gap-3">
-				<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" />
-				<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
-					<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
-					<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
-					<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
-					<svws-ui-text-input v-model="schema" placeholder="Datenbank-Schema" />
-					<svws-ui-text-input v-model="user" placeholder="Datenbankbenutzer" />
-					<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
-					<svws-ui-button @click="migrate()">Migration starten</svws-ui-button>
-				</div>
-				<div class="flex flex-col gap-3" v-if="db === 'mdb'">
-					<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
-					Access-Datei auswählen (Endung .mdb):
-					<input type="file" @change="migrate" :disabled="loading">
-				</div>
+	<div class="flex flex-col mt-3 gap-4">
+		<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
+		<div class="flex flex-col gap-8 text-left" v-if="db === 'mdb'">
+			<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
+			<div class="flex flex-col gap-2 px-2">
+				<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
+				<input type="file" @change="migrate" :disabled="loading" accept=".mdb">
 			</div>
-			<svws-ui-spinner :spinning="loading" />
-			<br>{{
-				status === false
-					? "Fehler beim Upload"
-					: status === true
-						? "Upload erfolgreich"
-						: ""
-			}}
 		</div>
-	</svws-ui-content-card>
+		<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
+			<div class="flex flex-col gap-2 mt-2 mb-6">
+				<div class="flex flex-col text-left gap-0.5 pl-3">
+					<span class="opacity-50">Bei Migration aus einer Schild-Zentral-Instanz:</span>
+					<svws-ui-checkbox class="text-left" type="toggle" v-model="schildzentral">Schulnummer angeben</svws-ui-checkbox>
+				</div>
+				<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
+			</div>
+			<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
+			<svws-ui-text-input v-model="schema" placeholder="Datenbank-Schema" />
+			<svws-ui-text-input v-model="user" placeholder="Datenbank-Benutzer" />
+			<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
+			<svws-ui-button @click="migrate()" class="mx-auto mt-4">Migration starten</svws-ui-button>
+		</div>
+		<svws-ui-spinner :spinning="loading" />
+		<br>{{
+			status === false
+				? "Fehler beim Upload"
+				: status === true
+					? "Upload erfolgreich"
+					: ""
+		}}
+	</div>
 </template>
 
 <script setup lang="ts">

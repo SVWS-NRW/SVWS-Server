@@ -1,12 +1,10 @@
 <template>
-	<svws-ui-content-card title="Schule auswählen">
-		<div class="flex items-start gap-3">
-			<svws-ui-select :model-value="model" @update:model-value="runInitSchule" title="Auswahl Schule" autocomplete
-				:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
-				:item-filter="filter" required :disabled="loading" />
-			<svws-ui-spinner :spinning="loading" />
-		</div>
-	</svws-ui-content-card>
+	<div class="mt-3 flex flex-col">
+		<svws-ui-select :model-value="model" @update:model-value="runInitSchule" title="Schule auswählen" autocomplete
+			:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
+			:item-filter="filter" required :disabled="loading" />
+		<svws-ui-spinner :spinning="loading" />
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -1,17 +1,16 @@
 <template>
-	<svws-ui-content-card title="SQLite-Datenbank auswählen">
-		<div class="flex items-start gap-3">
-			<input type="file" @change="import_file" :disabled="loading">
-			<svws-ui-spinner :spinning="loading" />
-			{{
-				status === false
-					? "Fehler beim Upload"
-					: status === true
-						? "Upload erfolgreich"
-						: ""
-			}}
-		</div>
-	</svws-ui-content-card>
+	<div class="flex flex-col gap-2 px-2 text-left mt-3">
+		<span class="font-bold text-button">SQLite-Datenbank hochladen</span>
+		<input type="file" @change="import_file" :disabled="loading" accept=".sqlite">
+		<svws-ui-spinner :spinning="loading" />
+		{{
+			status === false
+				? "Fehler beim Upload"
+				: status === true
+					? "Upload erfolgreich"
+					: ""
+		}}
+	</div>
 </template>
 
 <script setup lang="ts">
