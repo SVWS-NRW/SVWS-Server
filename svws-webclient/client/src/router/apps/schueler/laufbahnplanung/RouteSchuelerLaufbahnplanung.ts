@@ -32,6 +32,18 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
+		if (from?.checkSuccessorOf('gost')) {
+			for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
+				if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
+					routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
+					routeSchueler.data.setFilter()
+					break;
+				}
+		}
+	}
+
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
