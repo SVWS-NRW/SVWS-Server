@@ -47,7 +47,7 @@ export class GostJahrgangFachwahlen extends JavaObject {
 			result += '"halbjahr" : [ ';
 			for (let i = 0; i < obj.halbjahr.length; i++) {
 				const elem = obj.halbjahr[i];
-				result += (elem == null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
+				result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
 				if (i < obj.halbjahr.length - 1)
 					result += ',';
 			}
@@ -69,7 +69,7 @@ export class GostJahrgangFachwahlen extends JavaObject {
 				result += '"halbjahr" : [ ';
 				for (let i = 0; i < a.length; i++) {
 					const elem = a[i];
-					result += (elem == null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
+					result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
 					if (i < a.length - 1)
 						result += ',';
 				}

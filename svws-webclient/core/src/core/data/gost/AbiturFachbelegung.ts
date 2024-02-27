@@ -148,7 +148,7 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"belegungen" : [ ';
 			for (let i = 0; i < obj.belegungen.length; i++) {
 				const elem = obj.belegungen[i];
-				result += (elem == null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
+				result += (elem === null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
 				if (i < obj.belegungen.length - 1)
 					result += ',';
 			}
@@ -214,7 +214,7 @@ export class AbiturFachbelegung extends JavaObject {
 				result += '"belegungen" : [ ';
 				for (let i = 0; i < a.length; i++) {
 					const elem = a[i];
-					result += (elem == null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
+					result += (elem === null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
 					if (i < a.length - 1)
 						result += ',';
 				}

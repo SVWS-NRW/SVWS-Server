@@ -1939,12 +1939,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (paramType.isNotNull())
 						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
 						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
 				} else
 					sb.append(getIndent() + "result += " + paramType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				sb.append(getIndent() + "if (i < " + objAttr + ".size() - 1)" + System.lineSeparator());
@@ -1976,19 +1976,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
 				} else if (contentType.isPrimitive()) {
 					sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 				} else {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				}
 				sb.append(getIndent() + "if (i < " + objAttr + ".length - 1)" + System.lineSeparator());
 				indentC++;
@@ -2085,12 +2085,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (paramType.isNotNull())
 						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
 						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
 				} else
 					sb.append(getIndent() + "result += " + paramType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				sb.append(getIndent() + "if (i < " + objAttr + ".size() - 1)" + System.lineSeparator());
@@ -2122,19 +2122,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
 				} else if (contentType.isPrimitive()) {
 					sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 				} else {
 					if (contentType.isNotNull())
 						sb.append(getIndent() + "result += " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem == null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : " + contentType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				}
 				sb.append(getIndent() + "if (i < a.length - 1)" + System.lineSeparator());
 				indentC++;

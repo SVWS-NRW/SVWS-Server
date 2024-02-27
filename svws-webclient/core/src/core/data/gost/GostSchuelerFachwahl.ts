@@ -43,7 +43,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 			result += '"halbjahre" : [ ';
 			for (let i = 0; i < obj.halbjahre.length; i++) {
 				const elem = obj.halbjahre[i];
-				result += (elem == null) ? null : '"' + elem + '"';
+				result += (elem === null) ? null : '"' + elem + '"';
 				if (i < obj.halbjahre.length - 1)
 					result += ',';
 			}
@@ -65,7 +65,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 				result += '"halbjahre" : [ ';
 				for (let i = 0; i < a.length; i++) {
 					const elem = a[i];
-					result += (elem == null) ? null : '"' + elem + '"';
+					result += (elem === null) ? null : '"' + elem + '"';
 					if (i < a.length - 1)
 						result += ',';
 				}
