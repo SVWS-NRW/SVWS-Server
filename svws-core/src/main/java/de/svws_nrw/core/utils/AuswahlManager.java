@@ -316,4 +316,24 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		return this.liste.getOrException(this._datenToId.apply(this._daten));
 	}
 
+
+	/**
+	 * Gibt zurück, ob die aktuelle Auswahl beim Filter erlaubt bleibt oder nicht.
+	 *
+	 * @return true, falls die aktuelle Auswahl beim Filtern erlaubt bleibt oder nicht.
+	 */
+	public boolean isFilterAuswahlPermitted() {
+		return this._filterPermitAuswahl;
+	}
+
+
+	/**
+	 * Setzt, ob die aktuelle Auswahl beim Filter erlaubt bleibt oder nicht.
+	 *
+	 * @param value   der neue boolean-Wert
+	 */
+	public void setFilterAuswahlPermitted(final boolean value) {
+		this._filterPermitAuswahl = value;
+	}
+
 }

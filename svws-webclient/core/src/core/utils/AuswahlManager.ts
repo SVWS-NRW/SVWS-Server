@@ -298,6 +298,24 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		return this.liste.getOrException(this._datenToId.apply(this._daten));
 	}
 
+	/**
+	 * Gibt zurück, ob die aktuelle Auswahl beim Filter erlaubt bleibt oder nicht.
+	 *
+	 * @return true, falls die aktuelle Auswahl beim Filtern erlaubt bleibt oder nicht.
+	 */
+	public isFilterAuswahlPermitted() : boolean {
+		return this._filterPermitAuswahl;
+	}
+
+	/**
+	 * Setzt, ob die aktuelle Auswahl beim Filter erlaubt bleibt oder nicht.
+	 *
+	 * @param value   der neue boolean-Wert
+	 */
+	public setFilterAuswahlPermitted(value : boolean) : void {
+		this._filterPermitAuswahl = value;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.AuswahlManager';
 	}
