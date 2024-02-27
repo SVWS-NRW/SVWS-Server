@@ -5,7 +5,6 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -199,7 +198,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	private compare(a : SchuelerListeEintrag, b : SchuelerListeEintrag) : number {
+	protected compareAuswahl(a : SchuelerListeEintrag, b : SchuelerListeEintrag) : number {
 		for (const criteria of this._order) {
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
@@ -233,16 +232,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	/**
-	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
-	 *
-	 * @param eintrag   der zu prüfende Eintrag
-	 *
-	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
-	 */
 	protected checkFilter(eintrag : SchuelerListeEintrag) : boolean {
-		if (this.hasDaten() && this.daten().id === eintrag.id)
-			return true;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
@@ -260,24 +250,6 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
 			return false;
 		return true;
-	}
-
-	/**
-	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
-	 * beachtet.
-	 * Eine aktuelle Auswahl gehört dabei immer zum Ergebnis dazu.
-	 *
-	 * @return die gefilterte Liste
-	 */
-	protected onFilter() : List<SchuelerListeEintrag> {
-		const tmpList : List<SchuelerListeEintrag> = new ArrayList();
-		for (const eintrag of this.liste.list())
-			if (this.checkFilter(eintrag))
-				tmpList.add(eintrag);
-		const comparator : Comparator<SchuelerListeEintrag> = { compare : (a: SchuelerListeEintrag, b: SchuelerListeEintrag) => this.compare(a, b) };
-		tmpList.sort(comparator);
-		return tmpList;
 	}
 
 	transpilerCanonicalName(): string {

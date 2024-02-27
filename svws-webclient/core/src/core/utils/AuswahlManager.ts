@@ -65,6 +65,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	protected _order : List<Pair<string, boolean>>;
 
+	/**
+	 * Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht.
+	 */
+	protected _filterPermitAuswahl : boolean = false;
+
 
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
@@ -85,6 +90,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		this._listeToId = listeToId;
 		this._datenToId = datenToId;
 		this.liste = new AttributMitAuswahl(values, this._listeToId, listComparator, this._eventHandlerMehrfachauswahlChanged);
+		this._filterPermitAuswahl = true;
 	}
 
 	/**
@@ -96,16 +102,35 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public filtered() : List<TAuswahl> {
 		if (this._filtered !== null)
 			return this._filtered;
-		this._filtered = this.onFilter();
+		this._filtered = new ArrayList();
+		const aktAuswahl : TAuswahl | null = (this._daten === null) ? null : this.auswahl();
+		for (const eintrag of this.liste.list())
+			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && this.compareAuswahl(aktAuswahl, eintrag) === 0) || this.checkFilter(eintrag))
+				this._filtered.add(eintrag);
+		const comparator : Comparator<TAuswahl> = { compare : (a: TAuswahl, b: TAuswahl) => this.compareAuswahl(a, b) };
+		this._filtered.sort(comparator);
 		return this._filtered;
 	}
 
 	/**
-	 * Führt die Filterung der Auswahlliste aus und gibt die gefilterte Liste zurück.
+	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
 	 *
-	 * @return die gefilterte Liste
+	 * @param eintrag          der zu prüfende Eintrag
+	 *
+	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
 	 */
-	protected abstract onFilter() : List<TAuswahl>;
+	protected abstract checkFilter(eintrag : TAuswahl) : boolean;
+
+	/**
+	 * Vergleicht zwei Einträge der Auswahl miteinander.
+	 *
+	 * @param a   der erste Eintrag
+	 * @param b   der zweite Eintrag
+	 *
+	 * @return ein negativer Wert, 0 oder ein positiver Werte, wenn der erste Eintrag
+	 *         kleiner, gleich oder größer ist als der zweite Eintrag
+	 */
+	protected abstract compareAuswahl(a : TAuswahl, b : TAuswahl) : number;
 
 	/**
 	 * Diese Methode kann überschrieben werden.

@@ -4,7 +4,6 @@ import { LehrerPersonaldaten } from '../../../core/data/lehrer/LehrerPersonaldat
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { LehrerStammdaten } from '../../../core/data/lehrer/LehrerStammdaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -175,7 +174,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected compare(a : LehrerListeEintrag, b : LehrerListeEintrag) : number {
+	protected compareAuswahl(a : LehrerListeEintrag, b : LehrerListeEintrag) : number {
 		for (const criteria of this._order) {
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
@@ -197,32 +196,19 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	/**
-	 * Gibt eine gefilterte Liste der Lehrer zurück. Als Filter werden dabei
-	 * die Personaltypen, ein Filter auf nur sichtbare Lehrer und einer
-	 * auf nur Statistik-relevante Lehrer beachtet.
-	 *
-	 * @return die gefilterte Liste
-	 */
-	protected onFilter() : List<LehrerListeEintrag> {
-		const tmpList : List<LehrerListeEintrag> = new ArrayList();
-		for (const eintrag of this.liste.list()) {
-			if (this._filterNurSichtbar && !eintrag.istSichtbar)
-				continue;
-			if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik)
-				continue;
-			if (this.personaltypen.auswahlExists()) {
-				if ((eintrag.personTyp === null) || (JavaString.isEmpty(eintrag.personTyp)))
-					continue;
-				const personalTyp : PersonalTyp | null = PersonalTyp.fromBezeichnung(eintrag.personTyp);
-				if ((personalTyp === null) || (!this.personaltypen.auswahlHas(personalTyp)))
-					continue;
-			}
-			tmpList.add(eintrag);
+	protected checkFilter(eintrag : LehrerListeEintrag) : boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
+		if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik)
+			return false;
+		if (this.personaltypen.auswahlExists()) {
+			if ((eintrag.personTyp === null) || (JavaString.isEmpty(eintrag.personTyp)))
+				return false;
+			const personalTyp : PersonalTyp | null = PersonalTyp.fromBezeichnung(eintrag.personTyp);
+			if ((personalTyp === null) || (!this.personaltypen.auswahlHas(personalTyp)))
+				return false;
 		}
-		const comparator : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => this.compare(a, b) };
-		tmpList.sort(comparator);
-		return tmpList;
+		return true;
 	}
 
 	/**

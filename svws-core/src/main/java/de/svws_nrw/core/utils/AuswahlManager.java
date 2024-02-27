@@ -56,6 +56,9 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
 	protected @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order;
 
+	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht. */
+	protected boolean _filterPermitAuswahl;
+
 
 
 	/**
@@ -79,6 +82,7 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		this._listeToId = listeToId;
 		this._datenToId = datenToId;
 		this.liste = new AttributMitAuswahl<>(values, _listeToId, listComparator, _eventHandlerMehrfachauswahlChanged);
+		this._filterPermitAuswahl = true;
 	}
 
 
@@ -91,17 +95,38 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	public @NotNull List<@NotNull TAuswahl> filtered() {
 		if (_filtered != null)
 			return _filtered;
-		_filtered = this.onFilter();
+		_filtered = new ArrayList<>();
+		final TAuswahl aktAuswahl = (this._daten == null) ? null : this.auswahl();
+		for (final @NotNull TAuswahl eintrag : this.liste.list())
+			// Lasse die aktuelle Auswahl immer durch den Filter falls _filterPermitAuswahl gesetzt ist
+			if ((this._filterPermitAuswahl && (aktAuswahl != null) && this.compareAuswahl(aktAuswahl, eintrag) == 0) || checkFilter(eintrag))
+				_filtered.add(eintrag);
+		final @NotNull Comparator<@NotNull TAuswahl> comparator = (final @NotNull TAuswahl a, final @NotNull TAuswahl b) -> this.compareAuswahl(a, b);
+		_filtered.sort(comparator);
 		return _filtered;
 	}
 
 
 	/**
-	 * Führt die Filterung der Auswahlliste aus und gibt die gefilterte Liste zurück.
+	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
 	 *
-	 * @return die gefilterte Liste
+	 * @param eintrag          der zu prüfende Eintrag
+	 *
+	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
 	 */
-	protected abstract @NotNull List<@NotNull TAuswahl> onFilter();
+	protected abstract boolean checkFilter(@NotNull TAuswahl eintrag);
+
+
+	/**
+	 * Vergleicht zwei Einträge der Auswahl miteinander.
+	 *
+	 * @param a   der erste Eintrag
+	 * @param b   der zweite Eintrag
+	 *
+	 * @return ein negativer Wert, 0 oder ein positiver Werte, wenn der erste Eintrag
+     *         kleiner, gleich oder größer ist als der zweite Eintrag
+	 */
+	protected abstract int compareAuswahl(@NotNull TAuswahl a, @NotNull TAuswahl b);
 
 
 	/**

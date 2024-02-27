@@ -1,6 +1,5 @@
 package de.svws_nrw.core.utils.schueler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -28,10 +27,11 @@ import de.svws_nrw.core.utils.kurse.KursUtils;
 import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
 import jakarta.validation.constraints.NotNull;
 
+
 /**
  * Ein Manager zum Verwalten der Schüler-Listen.
  */
-public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull SchuelerListeEintrag, @NotNull SchuelerStammdaten> {
+public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull SchuelerListeEintrag, @NotNull SchuelerStammdaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
@@ -184,7 +184,8 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	private int compare(final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) {
+	@Override
+	protected int compareAuswahl(final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) {
 		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
@@ -215,17 +216,8 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 	}
 
 
-	/**
-	 * Prüft, ob der angegebene Eintrag durch den Filter durchgelassen wird oder nicht.
-	 *
-	 * @param eintrag   der zu prüfende Eintrag
-	 *
-	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
-	 */
+	@Override
 	protected boolean checkFilter(final @NotNull SchuelerListeEintrag eintrag) {
-		// Lasse die aktuelle Auswahl immer druch den Filter
-		if (this.hasDaten() && this.daten().id == eintrag.id)
-			return true;
 		// Filtere nun anhand dee Filterkriterien
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
@@ -244,26 +236,6 @@ public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull
 		if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
 			return false;
 		return true;
-	}
-
-
-	/**
-	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
-	 * beachtet.
-	 * Eine aktuelle Auswahl gehört dabei immer zum Ergebnis dazu.
-	 *
-	 * @return die gefilterte Liste
-	 */
-	@Override
-	protected @NotNull List<@NotNull SchuelerListeEintrag> onFilter() {
-		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
-		for (final @NotNull SchuelerListeEintrag eintrag : this.liste.list())
-			if (checkFilter(eintrag))
-				tmpList.add(eintrag);
-		final @NotNull Comparator<@NotNull SchuelerListeEintrag> comparator = (final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> this.compare(a, b);
-		tmpList.sort(comparator);
-		return tmpList;
 	}
 
 }

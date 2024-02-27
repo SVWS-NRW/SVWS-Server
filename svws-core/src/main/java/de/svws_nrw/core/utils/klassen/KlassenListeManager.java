@@ -1,6 +1,5 @@
 package de.svws_nrw.core.utils.klassen;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -22,10 +21,11 @@ import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.lehrer.LehrerUtils;
 import jakarta.validation.constraints.NotNull;
 
+
 /**
  * Ein Manager zum Verwalten der Klassen-Listen.
  */
-public class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull KlassenListeEintrag, @NotNull KlassenDaten> {
+public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull KlassenListeEintrag, @NotNull KlassenDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<@NotNull KlassenListeEintrag, @NotNull Long> _klasseToId = (final @NotNull KlassenListeEintrag k) -> k.id;
@@ -161,7 +161,8 @@ public class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull 
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected int compare(final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) {
+	@Override
+	protected int compareAuswahl(final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) {
 		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
@@ -180,40 +181,28 @@ public class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull 
 	}
 
 
-	/**
-	 * Gibt eine gefilterte Liste der Klassen zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassenlehrer und ein Filter auf nur sichtbare Klassen beachtet.
-	 *
-	 * @return die gefilterte Liste
-	 */
 	@Override
-	protected @NotNull List<@NotNull KlassenListeEintrag> onFilter() {
-		final @NotNull List<@NotNull KlassenListeEintrag> tmpList = new ArrayList<>();
-		for (final @NotNull KlassenListeEintrag eintrag : this.liste.list()) {
-			if (this._filterNurSichtbar && !eintrag.istSichtbar)
-				continue;
-			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang == null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
-				continue;
-			if (this.lehrer.auswahlExists()) {
-				boolean hatEinenLehrer = false;
-				for (final long idLehrer : eintrag.klassenLehrer)
-					if (this.lehrer.auswahlHasKey(idLehrer))
-						hatEinenLehrer = true;
-				if (!hatEinenLehrer)
-					continue;
-			}
-			if (this.schulgliederungen.auswahlExists()) {
-				if (eintrag.idJahrgang == null)
-					continue;
-				final JahrgangsListeEintrag j = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-				if ((j.kuerzelSchulgliederung == null) || ((j.kuerzelSchulgliederung != null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
-					continue;
-			}
-			tmpList.add(eintrag);
+	protected boolean checkFilter(final @NotNull KlassenListeEintrag eintrag) {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
+		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang == null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
+			return false;
+		if (this.lehrer.auswahlExists()) {
+			boolean hatEinenLehrer = false;
+			for (final long idLehrer : eintrag.klassenLehrer)
+				if (this.lehrer.auswahlHasKey(idLehrer))
+					hatEinenLehrer = true;
+			if (!hatEinenLehrer)
+				return false;
 		}
-		final @NotNull Comparator<@NotNull KlassenListeEintrag> comparator = (final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) -> this.compare(a, b);
-		tmpList.sort(comparator);
-		return tmpList;
+		if (this.schulgliederungen.auswahlExists()) {
+			if (eintrag.idJahrgang == null)
+				return false;
+			final JahrgangsListeEintrag j = this.jahrgaenge.getOrException(eintrag.idJahrgang);
+			if ((j.kuerzelSchulgliederung == null) || ((j.kuerzelSchulgliederung != null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
+				return false;
+		}
+		return true;
 	}
 
 

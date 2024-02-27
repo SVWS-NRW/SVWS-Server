@@ -1,6 +1,5 @@
 package de.svws_nrw.core.utils.lehrer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,10 +20,11 @@ import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import jakarta.validation.constraints.NotNull;
 
+
 /**
  * Ein Manager zum Verwalten der Lehrer-Listen.
  */
-public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull LehrerListeEintrag, @NotNull LehrerStammdaten> {
+public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull LehrerListeEintrag, @NotNull LehrerStammdaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<@NotNull LehrerListeEintrag, @NotNull Long> _lehrerToId = (final @NotNull LehrerListeEintrag k) -> k.id;
@@ -173,7 +173,8 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected int compare(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) {
+	@Override
+	protected int compareAuswahl(final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) {
 		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
@@ -194,33 +195,20 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 	}
 
 
-	/**
-	 * Gibt eine gefilterte Liste der Lehrer zurück. Als Filter werden dabei
-	 * die Personaltypen, ein Filter auf nur sichtbare Lehrer und einer
-	 * auf nur Statistik-relevante Lehrer beachtet.
-	 *
-	 * @return die gefilterte Liste
-	 */
 	@Override
-	protected @NotNull List<@NotNull LehrerListeEintrag> onFilter() {
-		final @NotNull List<@NotNull LehrerListeEintrag> tmpList = new ArrayList<>();
-		for (final @NotNull LehrerListeEintrag eintrag : this.liste.list()) {
-			if (this._filterNurSichtbar && !eintrag.istSichtbar)
-				continue;
-			if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik)
-				continue;
-			if (this.personaltypen.auswahlExists()) {
-				if ((eintrag.personTyp == null) || (eintrag.personTyp.isEmpty()))
-					continue;
-				final PersonalTyp personalTyp = PersonalTyp.fromBezeichnung(eintrag.personTyp);
-				if ((personalTyp == null) || (!this.personaltypen.auswahlHas(personalTyp)))
-					continue;
-			}
-			tmpList.add(eintrag);
+	protected boolean checkFilter(final @NotNull LehrerListeEintrag eintrag) {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
+		if (this._filterNurStatistikrelevant && !eintrag.istRelevantFuerStatistik)
+			return false;
+		if (this.personaltypen.auswahlExists()) {
+			if ((eintrag.personTyp == null) || (eintrag.personTyp.isEmpty()))
+				return false;
+			final PersonalTyp personalTyp = PersonalTyp.fromBezeichnung(eintrag.personTyp);
+			if ((personalTyp == null) || (!this.personaltypen.auswahlHas(personalTyp)))
+				return false;
 		}
-		final @NotNull Comparator<@NotNull LehrerListeEintrag> comparator = (final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> this.compare(a, b);
-		tmpList.sort(comparator);
-		return tmpList;
+		return true;
 	}
 
 

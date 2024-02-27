@@ -5,7 +5,6 @@ import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../java/util/Comparator';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
@@ -164,7 +163,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected compare(a : KlassenListeEintrag, b : KlassenListeEintrag) : number {
+	protected compareAuswahl(a : KlassenListeEintrag, b : KlassenListeEintrag) : number {
 		for (const criteria of this._order) {
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
@@ -183,39 +182,27 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	/**
-	 * Gibt eine gefilterte Liste der Klassen zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassenlehrer und ein Filter auf nur sichtbare Klassen beachtet.
-	 *
-	 * @return die gefilterte Liste
-	 */
-	protected onFilter() : List<KlassenListeEintrag> {
-		const tmpList : List<KlassenListeEintrag> = new ArrayList();
-		for (const eintrag of this.liste.list()) {
-			if (this._filterNurSichtbar && !eintrag.istSichtbar)
-				continue;
-			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
-				continue;
-			if (this.lehrer.auswahlExists()) {
-				let hatEinenLehrer : boolean = false;
-				for (const idLehrer of eintrag.klassenLehrer)
-					if (this.lehrer.auswahlHasKey(idLehrer))
-						hatEinenLehrer = true;
-				if (!hatEinenLehrer)
-					continue;
-			}
-			if (this.schulgliederungen.auswahlExists()) {
-				if (eintrag.idJahrgang === null)
-					continue;
-				const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-				if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
-					continue;
-			}
-			tmpList.add(eintrag);
+	protected checkFilter(eintrag : KlassenListeEintrag) : boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar)
+			return false;
+		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
+			return false;
+		if (this.lehrer.auswahlExists()) {
+			let hatEinenLehrer : boolean = false;
+			for (const idLehrer of eintrag.klassenLehrer)
+				if (this.lehrer.auswahlHasKey(idLehrer))
+					hatEinenLehrer = true;
+			if (!hatEinenLehrer)
+				return false;
 		}
-		const comparator : Comparator<KlassenListeEintrag> = { compare : (a: KlassenListeEintrag, b: KlassenListeEintrag) => this.compare(a, b) };
-		tmpList.sort(comparator);
-		return tmpList;
+		if (this.schulgliederungen.auswahlExists()) {
+			if (eintrag.idJahrgang === null)
+				return false;
+			const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
+			if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
+				return false;
+		}
+		return true;
 	}
 
 	transpilerCanonicalName(): string {
