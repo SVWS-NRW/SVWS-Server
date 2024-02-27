@@ -605,10 +605,10 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, true);
 		const ergebnis = this.ergebnismanager.getErgebnis();
 		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		if (!listRegelnAdded.isEmpty())
-			this.datenmanager.regelAddListe(listRegelnAdded);
-		if (!update.regelUpdates.listEntfernen.isEmpty())
-			this.datenmanager.regelRemoveListe(update.regelUpdates.listEntfernen);
+		if (!update.regelUpdates.listEntfernen.isEmpty() || !listRegelnAdded.isEmpty()) {
+			update.regelUpdates.listHinzuzufuegen = listRegelnAdded;
+			this.regelnUpdate(update.regelUpdates);
+		}
 		this.commit();
 		return true;
 	});

@@ -158,7 +158,7 @@
 			:regel-hinzufuegen="regelHinzufuegen_13" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler zusammen'}, {key: 'schueler', label: 'mit Schüler'}, ]">
 			<template #regelRead="{ regel: r }">
 				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
-				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(1)) }} </div>
 			</template>
 			<template #regelEdit>
 				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
@@ -170,7 +170,7 @@
 			:regel-hinzufuegen="regelHinzufuegen_14" :regel-speichern="regelSpeichern" :regel-entfernen="regelEntfernen" :disabled="disabled" :cols="[ {key: 'schueler', label: 'Schüler verbieten'}, {key: 'schueler', label: 'mit Schüler'}, ]">
 			<template #regelRead="{ regel: r }">
 				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
-				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(1)) }} </div>
 			</template>
 			<template #regelEdit>
 				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
@@ -219,10 +219,10 @@
 
 	const verletzungen = computed(()=> new Set(props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen));
 
-	const regeln: Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>> = new Map();
+	const regeln = ref<Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>>>(new Map());
 
 	for (const regelTyp of GostKursblockungRegelTyp.values())
-		regeln.set(regelTyp, computed(() => {
+		regeln.value.set(regelTyp, computed(() => {
 			const a = [];
 			for (const r of props.getDatenmanager().regelGetListe())
 				if (r.typ === regelTyp.typ)
@@ -304,11 +304,12 @@
 
 	const kurseFiltered = (regelTyp: GostKursblockungRegelTyp) => computed<List<GostBlockungKurs>>(() => {
 		const usedIDs = new Set<number>();
-		const arr = regeln.get(regelTyp)?.value;
+		const arr = regeln.value.get(regelTyp)?.value;
 		if (arr === undefined)
 			return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer();
 		for (const r of arr)
-			usedIDs.add(r.parameter.get(0));
+			if (r.id !== regel.value?.id)
+				usedIDs.add(r.parameter.get(0));
 		const result = new ArrayList<GostBlockungKurs>();
 		for (const k of props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
 			if (!usedIDs.has(k.id))
@@ -383,7 +384,7 @@
 	}
 
 	const hatRegel = computed<boolean>({
-		get: () => regeln.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN)?.value.length === 0 ? false : true,
+		get: () => regeln.value.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN)?.value.length === 0 ? false : true,
 		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen))
 	})
 

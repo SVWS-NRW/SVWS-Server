@@ -398,7 +398,6 @@
 		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
 			schienenSet.add(i);
 		let update = new GostBlockungRegelUpdate();
-		console.log(isSelectedKurse.value)
 		switch (action) {
 			case 'schüler fixieren':
 				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
@@ -417,10 +416,10 @@
 			// case 'toggle kurse':
 			// 	break;
 			case 'schienen sperren':
-				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet)
+				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
 			case 'schienen entsperren':
-				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet)
+				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
 			// case 'toggle schienen':
 			// 	break;
