@@ -75,6 +75,84 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			final int aktQuartal = (Integer) aktAbschnitt[2];
 			final int aktHalbjahr = (aktQuartal % 2 == 1) ? aktQuartal / 2 + 1 : aktQuartal / 2;
 			final Long aktFolgeAbschnittID = (Long) aktAbschnitt[4];
+			// Lege temporär Indizes an, um die Umstellung zu beschleunigen
+			logger.logLn("* Lege temporär Indizes an, um die Umstellung zu beschleunigen");
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_1 ON SchuelerLeistungsdaten(Abschnitt_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_1");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_2 ON SchuelerLernabschnittsdaten(Schuljahresabschnitts_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_2");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_3 ON SchuelerLernabschnittsdaten(Schueler_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_3");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_4 ON Schuljahresabschnitte(FolgeAbschnitt_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_4");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_5 ON Schuljahresabschnitte(VorigerAbschnitt_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_5");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_6 ON SchuelerLernabschnittsdaten(Klassen_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_6");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_7 ON Klassen(Schuljahresabschnitts_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_7");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_8 ON Klassen(Klasse)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_8");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_9 ON SchuelerLernabschnittsdaten(WechselNr)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_9");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_10 ON SchuelerLeistungsdaten(Fach_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_10");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_11 ON SchuelerLeistungsdaten(Kursart)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_11");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_12 ON SchuelerLeistungsdaten(KursartAllg)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_12");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_13 ON Kurse(Schuljahresabschnitts_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_13");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_14 ON Kurse(KurzBez)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_14");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_15 ON Kurse(Jahrgang_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_15");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_16 ON Kurse(ASDJahrgang)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_16");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_17 ON Kurse(Fach_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_17");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_18 ON Kurse(KursartAllg)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_18");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("CREATE INDEX quartals_modus_19 ON SchuelerLeistungsdaten(Kurs_ID)")) {
+				logger.logLn(2, "Fehler beim Erstellen des Index quartals_modus_19");
+				return false;
+			}
 			// Passe das aktuelle Quartal an, falls es Quartal 1 oder 3 ist
 			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " (Schuljahr " + aktSchuljahr + "/" + (aktSchuljahr + 1 - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
 			logger.modifyIndent(2);
@@ -287,8 +365,8 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					+ " AND k1.KurzBez = k2.KurzBez AND k1.Jahrgang_ID = k2.Jahrgang_ID AND k1.ASDJahrgang = k2.ASDJahrgang "
 					+ "AND k1.Fach_ID = k2.Fach_ID AND k1.KursartAllg = k2.KursartAllg "
 					+ "JOIN SchuelerLernabschnittsdaten sla ON s.Abschnitt_ID = sla.ID "
-					+ "AND (sla.Schueler_ID, k1.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) "
-					+ "AND (sla.Schueler_ID, k2.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) ";
+					+ "AND (sla.Schueler_ID, k1.ID, sla.WechselNr) IN (SELECT Schueler_ID, Kurs_ID, LernabschnittWechselNr FROM Kurs_Schueler) "
+					+ "AND (sla.Schueler_ID, k2.ID, sla.WechselNr) IN (SELECT Schueler_ID, Kurs_ID, LernabschnittWechselNr FROM Kurs_Schueler) ";
 				final List<Long> tmpLeistungsdatenIDs = conn.queryNative(sql);
 				if (!tmpLeistungsdatenIDs.isEmpty()) {
 					sql = "UPDATE SchuelerLeistungsdaten SET Kurs_ID = NULL WHERE ID IN ";
@@ -363,6 +441,84 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				return false;
 			}
 			logger.modifyIndent(-2);
+			// Lege temporär Indizes an, um die Umstellung zu beschleunigen
+			logger.logLn("* Entferne die temporären Indizes wieder");
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_1 ON SchuelerLeistungsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_1");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_2 ON SchuelerLernabschnittsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_2");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_3 ON SchuelerLernabschnittsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_3");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_4 ON Schuljahresabschnitte")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_4");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_5 ON Schuljahresabschnitte")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_5");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_6 ON SchuelerLernabschnittsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_6");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_7 ON Klassen")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_7");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_8 ON Klassen")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_8");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_9 ON SchuelerLernabschnittsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_9");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_10 ON SchuelerLeistungsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_10");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_11 ON SchuelerLeistungsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_11");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_12 ON SchuelerLeistungsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_12");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_13 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_13");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_14 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_14");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_15 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_15");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_16 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_16");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_17 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_17");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_18 ON Kurse")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_18");
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("DROP INDEX quartals_modus_19 ON SchuelerLeistungsdaten")) {
+				logger.logLn(2, "Fehler beim Entfernen des Index quartals_modus_19");
+				return false;
+			}
 		}
 		return true;
 	}
