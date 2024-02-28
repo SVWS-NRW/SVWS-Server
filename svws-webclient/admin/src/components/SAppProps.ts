@@ -1,4 +1,3 @@
-import type { SchuleStammdaten, Schulform } from "@core";
 import type { AuswahlChildData } from "./AuswahlChildData";
 import type { ApiStatus } from "./ApiStatus";
 

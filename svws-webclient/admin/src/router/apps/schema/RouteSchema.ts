@@ -86,6 +86,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 			duplicateSchema: this.data.duplicateSchema,
 			refresh: this.data.refresh,
 			migrationQuellinformationen: () => this.data.migrationQuellinformationen.value,
+			apiStatus: api.status,
 		};
 	}
 

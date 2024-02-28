@@ -14,7 +14,7 @@
 				<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen">
 					<svws-ui-button type="secondary" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line /> Schild2-Schema hierher migrieren </svws-ui-button>
 				</s-schema-migrate-modal>
-				<svws-ui-button type="secondary" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen"> <i-ri-upload-2-line /> Backup erstellen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" :disabled="apiStatus.pending"> <i-ri-upload-2-line /> Backup erstellen </svws-ui-button>
 				<s-schema-import-modal v-slot="{ openModal }" :restore-schema="restoreSchema">
 					<svws-ui-button type="secondary" @click="openModal" title="Schema aus Backup wiederherstellen"> <i-ri-download-2-line /> Schema aus Backup hier wiederherstellen </svws-ui-button>
 				</s-schema-import-modal>
@@ -30,9 +30,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
 	import type { DataTableColumn } from "@ui";
-	import { computed, ref } from "vue";
 	import type { SchulenKatalogEintrag } from "@core";
 
 	const props = defineProps<SchemaUebersichtProps>();

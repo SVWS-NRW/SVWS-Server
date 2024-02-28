@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchema, type RouteSchema } from "~/router/apps/schema/RouteSchema";
 
 import type { SchemaUebersichtProps } from "~/components/schema/uebersicht/SSchemaUebersichtProps";
+import { api } from "~/router/Api";
 
 const SSchemaUebersicht = () => import("~/components/schema/uebersicht/SSchemaUebersicht.vue");
 
@@ -36,6 +37,7 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 			schulen: () => routeSchema.data.schulen,
 			revision: routeSchema.data.revision,
 			migrationQuellinformationen: () => routeSchema.data.migrationQuellinformationen.value,
+			apiStatus: api.status,
 		};
 	}
 

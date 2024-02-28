@@ -1,5 +1,6 @@
 import type { BenutzerKennwort, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 import type { SchemaMigrationQuelle } from "./SchemaMigrationQuelle";
+import type { ApiStatus } from "../ApiStatus";
 
 export interface SchemaAuswahlProps {
 	hasRootPrivileges: boolean;
@@ -15,5 +16,6 @@ export interface SchemaAuswahlProps {
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	duplicateSchema: (formData: FormData, duplikat: string) => Promise<SimpleOperationResponse>;
 	refresh: () => Promise<void>;
+	apiStatus: ApiStatus;
 }
 
