@@ -239,6 +239,20 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				}
 			}
 
+			// Anpassen des Klassenlehrern bei zusammenzufassenden Schuljahresabschnitten, welche keine Klassenlehrer zugeordnet haben, aber aus deren Vorgängerabschnitt zugeordnet bekommen können.
+			logger.logLn("- Anpassen des Klassenlehrern bei zusammenzufassenden Schuljahresabschnitten...");
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("INSERT INTO KlassenLehrer "
+					+ "SELECT k2.ID AS Klassen_ID, kl.Lehrer_ID AS Lehrer_ID, kl.Reihenfolge AS Reihenfolge "
+					+ "FROM KlassenLehrer kl "
+					+ "JOIN Klassen k1 ON kl.Klassen_ID = k1.ID "
+					+ "JOIN Schuljahresabschnitte sj ON k1.Schuljahresabschnitts_ID = sj.ID AND sj.Abschnitt IN (1,3) "
+					+ "AND 0 = (SELECT count(*) FROM KlassenLehrer kli JOIN Klassen ki ON kli.Klassen_ID = ki.ID AND ki.Schuljahresabschnitts_ID = sj.FolgeAbschnitt_ID) "
+					+ "JOIN Klassen k2 ON k2.Schuljahresabschnitts_ID = sj.FolgeAbschnitt_ID AND k1.Klasse = k2.Klasse")) {
+				logger.logLn("Fehler beim Anpassen der Klassenlehrer bei zusammenzufassenden Schuljahresabschnitten");
+				logger.modifyIndent(-2);
+				return false;
+			}
+
 			// Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)
 			logger.logLn("- Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)...");
 			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush("UPDATE Schueler JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
