@@ -3774,17 +3774,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
 		console.log(JSON.stringify("called regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl]);
-		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
-		if (regelDummyAlt !== null)
-			u.listEntfernen.add(regelDummyAlt);
+		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			if (idKurs === rAlt.parameter.get(0))
+				u.listEntfernen.add(rAlt);
 		if (anzahl > 0) {
-			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
-			regelHinzufuegen.parameter.add(idKurs);
-			regelHinzufuegen.parameter.add(anzahl as number);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			const rNeu : GostBlockungRegel = new GostBlockungRegel();
+			rNeu.id = -1;
+			rNeu.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
+			rNeu.parameter.add(idKurs);
+			rNeu.parameter.add(anzahl as number);
+			u.listHinzuzufuegen.add(rNeu);
 		}
 		return u;
 	}
@@ -4037,17 +4036,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
 		console.log(JSON.stringify("called regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		const keyMaxSuSAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl]);
-		const regelMaxSuSAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyMaxSuSAlt);
-		if (regelMaxSuSAlt !== null)
-			u.listEntfernen.add(regelMaxSuSAlt);
+		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			if (idKurs === rAlt.parameter.get(0))
+				u.listEntfernen.add(rAlt);
 		if ((anzahl >= 0) && (anzahl <= 99)) {
-			const regelHinzufuegen : GostBlockungRegel = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
-			regelHinzufuegen.parameter.add(idKurs);
-			regelHinzufuegen.parameter.add(anzahl as number);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			const rNeu : GostBlockungRegel = new GostBlockungRegel();
+			rNeu.id = -1;
+			rNeu.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
+			rNeu.parameter.add(idKurs);
+			rNeu.parameter.add(anzahl as number);
+			u.listHinzuzufuegen.add(rNeu);
 		}
 		return u;
 	}

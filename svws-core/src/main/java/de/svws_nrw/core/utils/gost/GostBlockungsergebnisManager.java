@@ -4095,19 +4095,18 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl });
-		final GostBlockungRegel regelDummyAlt = _parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
-		if (regelDummyAlt != null)
-			u.listEntfernen.add(regelDummyAlt);
+		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			if (idKurs == rAlt.parameter.get(0))
+				u.listEntfernen.add(rAlt);
 
 		// (2)
 		if (anzahl > 0) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
-			regelHinzufuegen.parameter.add(idKurs);
-			regelHinzufuegen.parameter.add((long) anzahl);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
+			rNeu.id = -1;
+			rNeu.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
+			rNeu.parameter.add(idKurs);
+			rNeu.parameter.add((long) anzahl);
+			u.listHinzuzufuegen.add(rNeu);
 		}
 
 		return u;
@@ -4430,19 +4429,18 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		final @NotNull LongArrayKey keyMaxSuSAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl });
-		final GostBlockungRegel regelMaxSuSAlt = _parent.regelGetByLongArrayKeyOrNull(keyMaxSuSAlt);
-		if (regelMaxSuSAlt != null)
-			u.listEntfernen.add(regelMaxSuSAlt);
+		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			if (idKurs == rAlt.parameter.get(0))
+				u.listEntfernen.add(rAlt);
 
 		// (2)
 		if ((anzahl >= 0) && (anzahl <= 99)) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
-			regelHinzufuegen.parameter.add(idKurs);
-			regelHinzufuegen.parameter.add((long) anzahl);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
+			final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
+			rNeu.id = -1;
+			rNeu.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
+			rNeu.parameter.add(idKurs);
+			rNeu.parameter.add((long) anzahl);
+			u.listHinzuzufuegen.add(rNeu);
 		}
 
 		return u;
