@@ -422,8 +422,9 @@
 			case 'schienen entsperren':
 				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
-			// case 'toggle schienen':
-			// 	break;
+			case 'toggle schienen':
+				update = props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(isSelectedKurse.value, schienenSet);
+				break;
 		}
 		await props.regelnUpdate(update);
 		dragDataKursSchiene.value = undefined;

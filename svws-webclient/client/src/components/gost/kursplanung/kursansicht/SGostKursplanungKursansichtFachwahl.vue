@@ -125,7 +125,7 @@
 									<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('schienen sperren')">Alle Kurse sperren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('schienen entsperren')">Alle Kurse entsperren</svws-ui-button>
-									<!-- <svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button> -->
+									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse fixieren')">Alle Kurse fixieren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse lösen')">Alle Kurse lösen</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button>
