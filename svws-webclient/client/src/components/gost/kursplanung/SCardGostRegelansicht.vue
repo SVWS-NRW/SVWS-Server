@@ -37,7 +37,7 @@
 				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(1) }} </div>
 			</template>
 			<template #regelEdit>
-				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurseFixiert" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
 				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
 			</template>
 		</BlockungsregelBase>
@@ -212,6 +212,14 @@
 	const disabled = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
+
+	const kurseFixiert = computed<List<GostBlockungKurs>>(() => {
+		const list = new ArrayList<GostBlockungKurs>();
+		for (const kurs of props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
+			if (!props.getDatenmanager().kursIstWeitereFixierungErlaubt(kurs.id))
+				list.add(kurs);
+		return list;
+	});
 
 	const kurse = computed<List<GostBlockungKurs>>(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
 
