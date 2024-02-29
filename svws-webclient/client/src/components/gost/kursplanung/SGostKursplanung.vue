@@ -275,10 +275,10 @@
 			if (kurseSet.size() > 0) {
 				result.push({ text: "", action: async () => {}, separator: true });
 				result.push({ text: `${namen}: Fixiere Kurse`, action: async () => {
-					// TODO
+					await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(kurseSet));
 				}});
 				result.push({ text: `${namen}: Löse Kurse`, action: async () => {
-					// TODO
+					await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(kurseSet));
 				}});
 				result.push({ text: `${namen}: Fixiere Schüler`, action: async () => {
 					await props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseSet))
