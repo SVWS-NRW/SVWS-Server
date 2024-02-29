@@ -4096,8 +4096,10 @@ public class GostBlockungsergebnisManager {
 
 		// (1)
 		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			if (idKurs == rAlt.parameter.get(0))
+			if (idKurs == rAlt.parameter.get(0)) {
 				u.listEntfernen.add(rAlt);
+				System.out.println("Lösche " + rAlt);
+			}
 
 		// (2)
 		if (anzahl > 0) {
@@ -4107,6 +4109,7 @@ public class GostBlockungsergebnisManager {
 			rNeu.parameter.add(idKurs);
 			rNeu.parameter.add((long) anzahl);
 			u.listHinzuzufuegen.add(rNeu);
+			System.out.println("Erzeuge " + rNeu);
 		}
 
 		return u;

@@ -3775,8 +3775,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		console.log(JSON.stringify("called regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			if (idKurs === rAlt.parameter.get(0))
+			if (idKurs === rAlt.parameter.get(0)) {
 				u.listEntfernen.add(rAlt);
+				console.log(JSON.stringify("Lösche " + rAlt));
+			}
 		if (anzahl > 0) {
 			const rNeu : GostBlockungRegel = new GostBlockungRegel();
 			rNeu.id = -1;
@@ -3784,6 +3786,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			rNeu.parameter.add(idKurs);
 			rNeu.parameter.add(anzahl as number);
 			u.listHinzuzufuegen.add(rNeu);
+			console.log(JSON.stringify("Erzeuge " + rNeu));
 		}
 		return u;
 	}

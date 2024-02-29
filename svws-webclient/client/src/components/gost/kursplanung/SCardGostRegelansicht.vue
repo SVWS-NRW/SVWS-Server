@@ -453,8 +453,6 @@
 				update = props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
 				break;
 		}
-		if (regel.value.id > 0)
-			update.listEntfernen.add(regel.value);
 		await props.regelnUpdate(update);
 		regel.value = undefined;
 	}
