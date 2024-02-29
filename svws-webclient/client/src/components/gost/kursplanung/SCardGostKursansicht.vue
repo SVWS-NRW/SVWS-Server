@@ -355,7 +355,7 @@
 			// Entferne potentielle Fixierung beim Verschieben.
 			// TODO sollte in der Api gemacht werden und die entsprechenden Regeln zurückgeben
 			if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, zone.schiene.id)) {
-				const update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(zone.kurs.id), SetUtils.create1(zone.schiene.id));
+				const update = props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(zone.kurs.id, zone.schiene.id);
 				await props.regelnUpdate(update);
 			}
 			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, zone.schiene.id);
@@ -409,10 +409,10 @@
 				update = props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(isSelectedKurse.value);
 				break;
 			case 'kurse fixieren':
-				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(isSelectedKurse.value, schienenSet);
 				break;
 			case 'kurse lösen':
-				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(isSelectedKurse.value, schienenSet);
 				break;
 			case 'toggle kurse':
 				update = props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(isSelectedKurse.value, schienenSet);

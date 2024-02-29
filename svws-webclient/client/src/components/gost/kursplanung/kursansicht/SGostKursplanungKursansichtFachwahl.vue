@@ -384,8 +384,8 @@
 			return;
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
 		const update = (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
-			? props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
-			: props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+			? props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
+			: props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
 		await props.regelnUpdate(update);
 	}
 

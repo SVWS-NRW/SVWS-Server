@@ -216,7 +216,7 @@
 	const kurseFixiert = computed<List<GostBlockungKurs>>(() => {
 		const list = new ArrayList<GostBlockungKurs>();
 		for (const kurs of props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
-			if (!props.getDatenmanager().kursIstWeitereFixierungErlaubt(kurs.id))
+			if (props.getDatenmanager().kursIstWeitereFixierungErlaubt(kurs.id))
 				list.add(kurs);
 		return list;
 	});
@@ -414,7 +414,7 @@
 				update = props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				break;
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ:
-				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
+				update = props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(p.get(0), p.get(1));
 				break;
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ:
 				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
