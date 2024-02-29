@@ -846,7 +846,7 @@ public class GostBlockungsdatenManager {
 				anzahlFixierungen++;
 		}
 
-		return anzahlFixierungen >= anzahlSchienen;
+		return anzahlFixierungen < anzahlSchienen;
 	}
 
 	/**

@@ -871,7 +871,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (rFixierungAlt !== null)
 				anzahlFixierungen++;
 		}
-		return anzahlFixierungen >= anzahlSchienen;
+		return anzahlFixierungen < anzahlSchienen;
 	}
 
 	/**
