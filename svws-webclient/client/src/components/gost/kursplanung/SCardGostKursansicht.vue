@@ -405,8 +405,9 @@
 			case 'schüler lösen':
 				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse.value);
 				break;
-			// case 'toggle schüler':
-			// 	break;
+			case 'toggle schüler':
+				update = props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(isSelectedKurse.value);
+				break;
 			case 'kurse fixieren':
 				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
