@@ -3113,8 +3113,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
-	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist, wird er gesperrt.
-	 * <br>(2) Wenn der Kurs im Schienen-Bereich fixiert ist, wird die Fixierung entfernt.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist und keine Fixierung vorliegt, wird er gesperrt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3127,7 +3126,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const schienenNr of setSchienenNr) {
 				const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr]);
 				const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung === null) {
+				const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
+				const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+				if ((regelSperrung === null) && (regelFixierung === null)) {
 					const regelNeu : GostBlockungRegel = new GostBlockungRegel();
 					regelNeu.id = -1;
 					regelNeu.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
@@ -3135,10 +3136,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					regelNeu.parameter.add(schienenNr as number);
 					u.listHinzuzufuegen.add(regelNeu);
 				}
-				const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
-				const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-				if (regelFixierung !== null)
-					u.listEntfernen.add(regelFixierung);
 			}
 		return u;
 	}
@@ -3323,6 +3320,44 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		u.listEntfernen.addAll(this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um ein Schüler-Kurs-Fixierung-Toggle zu realisieren.
+	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
+	 * <br>(2) Wenn der Schüler im Kurs nicht fixiert ist, wird die Fixierung gesetzt.
+	 * <br>(3) Potentielle Fixierungen in Nachbar-Kursen werden entfernt, da sie in jedem Fall falsch sind.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um ein Schüler-Kurs-Fixierung-Toggle zu realisieren.
+	 */
+	public regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs1 of setKursID)
+			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs1)) {
+				const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs1]);
+				const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+				if (rFixierung !== null) {
+					u.listEntfernen.add(rFixierung);
+				} else {
+					const rNeu : GostBlockungRegel = new GostBlockungRegel();
+					rNeu.id = -1;
+					rNeu.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					rNeu.parameter.add(idSchueler);
+					rNeu.parameter.add(idKurs1);
+					u.listHinzuzufuegen.add(rNeu);
+				}
+				const kurs1 : GostBlockungKurs = this._parent.kursGet(idKurs1);
+				for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
+					if (kurs1.id !== kurs2.id) {
+						const kFixierung2 : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id]);
+						const rFixierung2 : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung2);
+						if (rFixierung2 !== null)
+							u.listEntfernen.add(rFixierung2);
+					}
+			}
 		return u;
 	}
 
