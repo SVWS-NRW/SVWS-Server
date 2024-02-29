@@ -1,16 +1,14 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big">
+	<svws-ui-modal :show="showModal">
 		<template #modalTitle>Schema Duplizieren</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<div class="flex flex-col gap-3 w-128 text-left">
-					<svws-ui-text-input v-model="schema" placeholder="Name des neuen Schemas" />
-					<svws-ui-spacing />
-					<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-					<svws-ui-text-input v-model="password" required placeholder="Passwort" />
-				</div>
-			</div>
+			<svws-ui-input-wrapper>
+				<svws-ui-text-input v-model="schema" placeholder="Name des neuen Schemas" />
+				<svws-ui-spacing />
+				<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
+				<svws-ui-text-input v-model="password" required placeholder="Passwort" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">

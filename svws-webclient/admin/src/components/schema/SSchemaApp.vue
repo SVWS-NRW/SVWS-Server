@@ -1,16 +1,18 @@
 <template>
 	<div v-if="auswahl !== undefined" class="page--flex">
 		<header class="svws-ui-header">
-			<div class="svws-ui-header--title">
-				<div class="svws-headline-wrapper">
+			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
+				<div class="svws-headline-wrapper flex-1">
 					<h2 class="svws-headline">
 						<span>{{ auswahl.name }}</span>
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							<template v-if="auswahl.revision < 0"> kein SVWS-Schema </template>
-							<template v-else> Revision: {{ auswahl.revision }} </template>
-						</svws-ui-badge>
 					</h2>
-					<span v-if="info !== undefined" class="svws-subline">{{ info.schulNr }} {{ info.schulform }} {{ info.bezeichnung }} | {{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }}</span>
+					<span class="svws-subline">
+						<span v-if="auswahl.revision < 0" class="opacity-50"> Kein SVWS-Schema </span>
+						<span v-else> Revision: {{ auswahl.revision }} </span>
+					</span>
+				</div>
+				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3 text-balance">
+					<span><i-ri-school-line class="inline" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span> {{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -20,7 +22,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
-		<i-ri-group-line />
+		<i-ri-archive-stack-line />
 	</div>
 </template>
 

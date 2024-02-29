@@ -5,13 +5,13 @@
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
-					<svws-ui-menu-header :user="username" schule="Admin-Client" />
+					<svws-ui-menu-header :user="username" schule="Admin-Client" is-admin-client />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
 							<template #label> {{ item.text }} </template>
-							<template #icon> <s-app-icon routename="kataloge" /> </template>
+							<template #icon> <s-app-icon routename="schema" /> </template>
 						</svws-ui-menu-item>
 					</template>
 				</template>

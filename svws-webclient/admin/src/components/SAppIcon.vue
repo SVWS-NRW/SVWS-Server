@@ -8,6 +8,7 @@
 	<i-ri-briefcase-line v-else-if="props.routename === 'lehrer'" />
 	<i-ri-book-2-line v-else-if="props.routename === 'kurse'" />
 	<i-ri-graduation-cap-line v-else-if="props.routename === 'gost'" />
+	<i-ri-archive-stack-line v-else-if="props.routename === 'schema'" />
 </template>
 
 <script setup lang="ts">

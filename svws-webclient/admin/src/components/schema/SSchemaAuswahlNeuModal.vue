@@ -1,16 +1,14 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="big">
+	<svws-ui-modal :show="showModal">
 		<template #modalTitle>Neues Schema anlegen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" :disabled="loading" />
-					<svws-ui-spacing />
-					<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
-					<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" />
-				</svws-ui-input-wrapper>
-			</div>
+			<svws-ui-input-wrapper>
+				<svws-ui-text-input v-model="schema" required placeholder="Schemaname" :disabled="loading" />
+				<svws-ui-spacing />
+				<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
+				<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
