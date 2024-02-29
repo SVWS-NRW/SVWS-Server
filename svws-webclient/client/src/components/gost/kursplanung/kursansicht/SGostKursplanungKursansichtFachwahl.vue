@@ -60,7 +60,7 @@
 					</template>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
-					<svws-ui-checkbox headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, Boolean($event))" class="my-auto" />
+					<svws-ui-checkbox headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
 				</div>
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
@@ -369,11 +369,10 @@
 	async function toggleRegelSperreKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (!props.allowRegeln)
 			return;
-		let update = new GostBlockungRegelUpdate();
-		if (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
-			update.listEntfernen.add(props.getDatenmanager().kursGetRegelGesperrtInSchiene(kurs.id, schiene.id));
-		else
-			update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(schiene.id));
+		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		const update = (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
+			? props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+			: props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
 		await props.regelnUpdate(update);
 	}
 
@@ -384,12 +383,10 @@
 	async function toggleRegelFixiereKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (!props.allowRegeln)
 			return;
-		let update = new GostBlockungRegelUpdate();
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
-		if (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
-			update.listEntfernen.add(props.getDatenmanager().kursGetRegelFixierungInSchiene(kurs.id, schiene.id));
-		else
-			update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(schiene.id))
+		const update = (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
+			? props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+			: props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
 		await props.regelnUpdate(update);
 	}
 
