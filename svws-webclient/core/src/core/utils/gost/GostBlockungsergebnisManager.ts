@@ -3033,6 +3033,72 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung einer Rechtecks-Auswahl zu realisieren.
+	 * <br>(1) Wenn der Kurs markiert ist und eine Sperrung hat, wird die Sperrung entfernt.
+	 * <br>(2) Wenn der Kurs markiert ist und keine Fixierung hat, wird eine Fixierung erzeugt.
+	 * <br>(3) Fixierungen außerhalb der Kurslage werden vorsichtshalber gelöscht.
+	 *
+	 * @param setKursID      Die Menge aller Kurs-IDs.
+	 * @param setSchienenNr  Die Menge aller markierten Schienen-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung einer Rechtecks-Auswahl zu realisieren.
+	 */
+	public regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID) {
+			for (const nr of setSchienenNr)
+				if (this.getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
+					const kSperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nr]);
+					const rSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kSperrung);
+					if (rSperrung !== null)
+						u.listEntfernen.add(rSperrung);
+					const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+					const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+					if (rFixierung === null) {
+						const regelNeu : GostBlockungRegel = new GostBlockungRegel();
+						regelNeu.id = -1;
+						regelNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+						regelNeu.parameter.add(idKurs);
+						regelNeu.parameter.add(nr as number);
+						u.listHinzuzufuegen.add(regelNeu);
+					}
+				}
+			for (let nr : number = 1; nr <= this._map_schienenNr_schiene.size(); nr++)
+				if (!this.getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
+					const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+					const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+					if (rFixierung !== null)
+						u.listEntfernen.add(rFixierung);
+				}
+		}
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird die Fixierung entfernt.
+	 *
+	 * @param setKursID      Die Menge aller Kurs-IDs.
+	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
+	 */
+	public regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID)
+			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, idKurs)) {
+				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
+				if (setSchienenNr.contains(schieneG.nummer)) {
+					const keyKursInSchiene : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer]);
+					const regel : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyKursInSchiene);
+					if (regel !== null)
+						u.listEntfernen.add(regel);
+				}
+			}
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
 	 * <br>(1) Fixierungen innerhalb der Kurslage werden hinzugefügt, falls noch nicht existend.
 	 * <br>(2) Fixierungen außerhalb der Kurslage werden gelöscht.
