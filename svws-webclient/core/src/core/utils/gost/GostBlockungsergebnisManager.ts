@@ -3075,9 +3075,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Fixierung zu realisieren.
-	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird er gelöst.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und fixiert ist, wird die Fixierung gelöst.
 	 * <br>(2) Wenn der Kurs im Schienen-Bereich liegt und nicht fixiert ist, wird er fixiert
-	 * <br>(3) und falls dort eine Sperrung vorliegt, dann wird sie entfernt.
+	 * <br>(3) und falls dort eine Sperrung vorliegt, dann wird die Sperrung entfernt.
 	 *
 	 * @param setKursID      Die Menge aller Kurs-IDs.
 	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
@@ -3160,6 +3160,43 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const regelGesperrt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyGesperrt);
 				if (regelGesperrt !== null)
 					u.listEntfernen.add(regelGesperrt);
+			}
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Sperrung zu realisieren.
+	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und gesperrt ist, wird die Sperrung gelöst.
+	 * <br>(2) Wenn der Kurs im Schienen-Bereich liegt und nicht gesperrt ist und keine Fixierung vorliegt, wird er gesperrt.
+	 *
+	 * @param setKursID      Die Menge aller Kurs-IDs.
+	 * @param setSchienenNr  Die Menge aller Schienen-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Sperrung zu realisieren.
+	 */
+	public regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID)
+			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, idKurs)) {
+				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
+				if (setSchienenNr.contains(schieneG.nummer)) {
+					const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer]);
+					const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
+					if (regelSperrung !== null) {
+						u.listEntfernen.add(regelSperrung);
+						continue;
+					}
+					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer]);
+					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+					if (regelFixierung === null) {
+						const regelNeu : GostBlockungRegel = new GostBlockungRegel();
+						regelNeu.id = -1;
+						regelNeu.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+						regelNeu.parameter.add(idKurs);
+						regelNeu.parameter.add(schieneG.nummer as number);
+						u.listHinzuzufuegen.add(regelNeu);
+					}
+				}
 			}
 		return u;
 	}
