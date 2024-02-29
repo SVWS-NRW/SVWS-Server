@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.ArrayMap;
@@ -825,6 +826,39 @@ public class GostBlockungsdatenManager {
 		final int nrSchiene = schieneGet(idSchiene).nummer;
 		final @NotNull LongArrayKey key = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene});
 		return DeveloperNotificationException.ifNull("Kurs " + idKurs + " ist nicht fixiert in Schiene " + idSchiene + "!", _map_multikey_regeln.get(key));
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs nicht nicht vollständig fixiert ist.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Kurs nicht nicht vollständig fixiert ist.
+	 */
+	public boolean kursIstWeitereFixierungErlaubt(final long idKurs) {
+		final int anzahlSchienen = kursGet(idKurs).anzahlSchienen;
+
+		int anzahlFixierungen = 0;
+		for (int nr = 1; nr <= schieneGetAnzahl(); nr++) {
+			final @NotNull LongArrayKey kFixierungAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr});
+			final GostBlockungRegel rFixierungAlt = regelGetByLongArrayKeyOrNull(kFixierungAlt);
+			if (rFixierungAlt != null)
+				anzahlFixierungen++;
+		}
+
+		return anzahlFixierungen >= anzahlSchienen;
+	}
+
+	/**
+	 * Liefert ein Set aller Kurs-IDs.
+	 *
+	 * @return ein Set aller Kurs-IDs.
+	 */
+	public @NotNull Set<@NotNull Long> kursmengeGetSetDerIDs() {
+		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
+		for (final @NotNull GostBlockungKurs kurs : _list_kurse_sortiert_fach_kursart_kursnummer)
+			setKursID.add(kurs.id);
+		return setKursID;
 	}
 
 	/**

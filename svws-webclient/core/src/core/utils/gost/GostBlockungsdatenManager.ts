@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisManager } from '../../../core/utils/gost/GostBlockungsergebnisManager';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -852,6 +853,37 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
 		return DeveloperNotificationException.ifNull("Kurs " + idKurs + " ist nicht fixiert in Schiene " + idSchiene + "!", this._map_multikey_regeln.get(key));
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs nicht nicht vollständig fixiert ist.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Kurs nicht nicht vollständig fixiert ist.
+	 */
+	public kursIstWeitereFixierungErlaubt(idKurs : number) : boolean {
+		const anzahlSchienen : number = this.kursGet(idKurs).anzahlSchienen;
+		let anzahlFixierungen : number = 0;
+		for (let nr : number = 1; nr <= this.schieneGetAnzahl(); nr++) {
+			const kFixierungAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+			const rFixierungAlt : GostBlockungRegel | null = this.regelGetByLongArrayKeyOrNull(kFixierungAlt);
+			if (rFixierungAlt !== null)
+				anzahlFixierungen++;
+		}
+		return anzahlFixierungen >= anzahlSchienen;
+	}
+
+	/**
+	 * Liefert ein Set aller Kurs-IDs.
+	 *
+	 * @return ein Set aller Kurs-IDs.
+	 */
+	public kursmengeGetSetDerIDs() : JavaSet<number> {
+		const setKursID : JavaSet<number> = new HashSet<number>();
+		for (const kurs of this._list_kurse_sortiert_fach_kursart_kursnummer)
+			setKursID.add(kurs.id);
+		return setKursID;
 	}
 
 	/**

@@ -2140,6 +2140,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Kurs der Schiene mit der Nummer zugeordnet ist.
+	 *
+	 * @param  idKurs      Die Datenbank-ID des Kurses.
+	 * @param  schienenNr  Die Nummer der Schiene
+	 *
+	 * @return TRUE, falls der Kurs der Schiene mit der Nummer zugeordnet ist.
+	 */
+	public getOfKursOfSchienenNrIstZugeordnet(idKurs : number, schienenNr : number) : boolean {
+		for (const nr of this.getOfKursSchienenNummern(idKurs))
+			if (nr === schienenNr)
+				return true;
+		return false;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Kurs in der Schiene fixiert ist.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
@@ -2915,10 +2930,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
-	 * <br>(1) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird dies entfernt.
-	 * <br>(2) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird dies entfernt.
-	 * <br>(3a) Wenn die Regel in falscher von/bis-Reihenfolge existiert, wird sie entfernt.
-	 * <br>(3b) Wenn die Regel nicht bereits existiert, wird sie hinzugefügt.
+	 * <br>(1) Alle Regeln der selben Kursart werden zunächst entfernt, da zwei solcher Regeln sich widersprechen würden.
+	 * <br>(2) Wenn eine Kursart-Fixierung im falschen Bereich liegt, wird die Fixierung entfernt.
+	 * <br>(3) Wenn eine Kursart-Sperrung im falschen Bereich liegt, wird die Sperrung entfernt.
+	 * <br>(4) Zuletzt wird die Regel neu erzeugt und hinzugefügt.
 	 *
 	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
 	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
@@ -2930,35 +2945,31 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const von : number = Math.min(schienenNrVon, schienenNrBis);
 		const bis : number = Math.max(schienenNrVon, schienenNrBis);
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const rGleicheKursart of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+			if (kursart === rGleicheKursart.parameter.get(0))
+				u.listEntfernen.add(rGleicheKursart);
 		for (const kurs of this.getKursmenge())
 			for (let schienenNr : number = 1; schienenNr <= this._parent.schieneGetAnzahl(); schienenNr++) {
 				const imSchienenBereich : boolean = (von <= schienenNr) && (schienenNr <= bis);
 				const richtigeKursart : boolean = (kurs.kursart === kursart);
 				if (imSchienenBereich !== richtigeKursart) {
-					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr]);
-					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-					if (regelFixierung !== null)
-						u.listEntfernen.add(regelFixierung);
-					const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr]);
-					const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
-					if (regelSperrung !== null)
-						u.listEntfernen.add(regelSperrung);
+					const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr]);
+					const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+					if (rFixierung !== null)
+						u.listEntfernen.add(rFixierung);
+					const kSperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr]);
+					const rSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kSperrung);
+					if (rSperrung !== null)
+						u.listEntfernen.add(rSperrung);
 				}
 			}
-		const keyBisVon : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, bis, von]);
-		const regelBisVon : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyBisVon);
-		if (regelBisVon !== null)
-			u.listEntfernen.add(regelBisVon);
-		const keyVonBis : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
-		if (this._parent.regelGetByLongArrayKeyOrNull(keyVonBis) === null) {
-			const regelNeu : GostBlockungRegel = new GostBlockungRegel();
-			regelNeu.id = -1;
-			regelNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
-			regelNeu.parameter.add(kursart as number);
-			regelNeu.parameter.add(von as number);
-			regelNeu.parameter.add(bis as number);
-			u.listHinzuzufuegen.add(regelNeu);
-		}
+		const rNeu : GostBlockungRegel = new GostBlockungRegel();
+		rNeu.id = -1;
+		rNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
+		rNeu.parameter.add(kursart as number);
+		rNeu.parameter.add(von as number);
+		rNeu.parameter.add(bis as number);
+		u.listHinzuzufuegen.add(rNeu);
 		return u;
 	}
 
@@ -3022,55 +3033,79 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * ...
-	 * @param setKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
+	 * <br>(1) Fixierungen innerhalb der Kurslage werden hinzugefügt, falls noch nicht existend.
+	 * <br>(2) Fixierungen außerhalb der Kurslage werden gelöscht.
+	 *
+	 * @param setKursID  Die Kursmenge, die fixiert werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
 	 */
 	public regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const setSchienenNr : JavaSet<number> = new HashSet<number>();
-		for (const schiene of this._parent.schieneGetListe())
-			setSchienenNr.add(schiene.nummer);
-		return this.regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+		console.log(JSON.stringify("called regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")"));
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID)
+			for (let nr : number = 1; nr <= this._map_schienenNr_schiene.size(); nr++) {
+				const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+				const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+				if (this.getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
+					if (rFixierung === null) {
+						const rNeu : GostBlockungRegel = new GostBlockungRegel();
+						rNeu.id = -1;
+						rNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+						rNeu.parameter.add(idKurs);
+						rNeu.parameter.add(nr as number);
+						u.listHinzuzufuegen.add(rNeu);
+					}
+				} else {
+					if (rFixierung !== null)
+						u.listEntfernen.add(rFixierung);
+				}
+			}
+		return u;
 	}
 
 	/**
-	 * ...
-	 * @param setKursID ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Fixierung einer Kursmenge komplett zu lösen.
+	 * <br>(1) Alle Fixierungen der Kursmenge werden gelöst.
+	 *
+	 * @param setKursID  Die Kursmenge, deren Fixierungen gelöst werden sollen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Fixierung einer Kursmenge komplett zu lösen.
 	 */
 	public regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const setSchienenNr : JavaSet<number> = new HashSet<number>();
-		for (const schiene of this._parent.schieneGetListe())
-			setSchienenNr.add(schiene.nummer);
-		return this.regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+		console.log(JSON.stringify("called regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")"));
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idKurs of setKursID)
+			for (let nr : number = 1; nr <= this._map_schienenNr_schiene.size(); nr++) {
+				const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+				const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+				if (rFixierung !== null)
+					u.listEntfernen.add(rFixierung);
+			}
+		return u;
 	}
 
 	/**
-	 * ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurse komplett in ihrer Lage zu fixieren.
+	 * <br>(1) Fixierungen innerhalb der Kurslage werden hinzugefügt, falls noch nicht existend.
+	 * <br>(2) Fixierungen außerhalb der Kurslage werden gelöscht.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurse komplett in ihrer Lage zu fixieren.
 	 */
 	public regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() : GostBlockungRegelUpdate {
-		const setKursID : JavaSet<number> = new HashSet<number>();
-		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
-			setKursID.add(kurs.id);
-		const setSchienenNr : JavaSet<number> = new HashSet<number>();
-		for (const schiene of this._parent.schieneGetListe())
-			setSchienenNr.add(schiene.nummer);
-		return this.regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+		console.log(JSON.stringify("called regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN ()"));
+		return this.regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(this._parent.kursmengeGetSetDerIDs());
 	}
 
 	/**
-	 * ...
-	 * @return ...
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Schienen-Fixierungen zu lösen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Schienen-Fixierungen zu lösen.
 	 */
 	public regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() : GostBlockungRegelUpdate {
-		const setKursID : JavaSet<number> = new HashSet<number>();
-		for (const kurs of this._parent.kursGetListeSortiertNachFachKursartNummer())
-			setKursID.add(kurs.id);
-		const setSchienenNr : JavaSet<number> = new HashSet<number>();
-		for (const schiene of this._parent.schieneGetListe())
-			setSchienenNr.add(schiene.nummer);
-		return this.regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(setKursID, setSchienenNr);
+		console.log(JSON.stringify("called regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN ()"));
+		return this.regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(this._parent.kursmengeGetSetDerIDs());
 	}
 
 	/**
@@ -3085,6 +3120,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Fixierung zu realisieren.
 	 */
 	public regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE (" + setKursID + ", " + setSchienenNr + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID)
 			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, idKurs)) {
@@ -3112,6 +3148,64 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
+	 * <br>(1) Wenn der Kurs in der Schiene eine Sperrung hat, wird diese entfernt.
+	 * <br>(2) Wenn der Kurs bereits in der Schiene fixiert ist, passiert nichts weiteres.
+	 * <br>(3) Wenn der Kurs bereits vollständig fixiert ist, werden seine alten Fixierungen entfernt.
+	 * <br>(4) Andernfalls wird der Kurs in der Schiene fixiert.
+	 *
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 * @param schienenNr  Die Nummer der Schiene, die fixiert werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
+	 */
+	public regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(idKurs : number, schienenNr : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE (" + idKurs + ", " + schienenNr + ")"));
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const kSperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kSperrung);
+		if (rSperrung !== null)
+			u.listEntfernen.add(rSperrung);
+		const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+		if (rFixierung !== null)
+			return u;
+		if (!this._parent.kursIstWeitereFixierungErlaubt(idKurs))
+			for (let nr : number = 1; nr <= this._map_schienenNr_schiene.size(); nr++) {
+				const kFixierungAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+				const rFixierungAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierungAlt);
+				if (rFixierungAlt !== null)
+					u.listEntfernen.add(rFixierungAlt);
+			}
+		const rNeu : GostBlockungRegel = new GostBlockungRegel();
+		rNeu.id = -1;
+		rNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		rNeu.parameter.add(idKurs);
+		rNeu.parameter.add(schienenNr as number);
+		u.listHinzuzufuegen.add(rNeu);
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung zu lösen.
+	 * <br>(1) Wenn der Kurs in der Schiene fixiert ist, wird die Fixierung entfernt.
+	 *
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 * @param schienenNr  Die Nummer der Schiene, die gelöst werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung zu lösen.
+	 */
+	public regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(idKurs : number, schienenNr : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE (" + idKurs + ", " + schienenNr + ")"));
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+		if (rFixierung !== null)
+			u.listEntfernen.add(rFixierung);
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 * <br>(1) Wenn der Kurs im Schienen-Bereich nicht gesperrt ist und keine Fixierung vorliegt, wird er gesperrt.
 	 *
@@ -3121,6 +3215,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 */
 	public regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE (" + setKursID + ", " + setSchienenNr + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID)
 			for (const schienenNr of setSchienenNr) {
@@ -3150,6 +3245,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
 	 */
 	public regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE (" + setKursID + ", " + setSchienenNr + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID)
 			for (const schienenNr of setSchienenNr) {
@@ -3172,6 +3268,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Sperrung zu realisieren.
 	 */
 	public regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(setKursID : JavaSet<number>, setSchienenNr : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE (" + setKursID + ", " + setSchienenNr + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID)
 			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, idKurs)) {
@@ -3212,6 +3309,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3251,6 +3349,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
 	public regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3274,6 +3373,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
 	 */
 	public regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3292,6 +3392,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 */
 	public regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3308,6 +3409,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler in ihren aktuellen Kursen zu fixieren.
 	 */
 	public regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN ()"));
 		return this.regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(this._map_kursID_kurs.keySet());
 	}
 
@@ -3318,6 +3420,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
 	 */
 	public regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN ()"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		u.listEntfernen.addAll(this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
 		return u;
@@ -3334,6 +3437,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um ein Schüler-Kurs-Fixierung-Toggle zu realisieren.
 	 */
 	public regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs1)) {
@@ -3372,6 +3476,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
 	public regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3403,6 +3508,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
 	 */
 	public regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3424,6 +3530,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
 	 */
 	public regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3442,6 +3549,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
 	 */
 	public regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3462,6 +3570,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3501,6 +3610,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3528,6 +3638,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3567,6 +3678,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3594,6 +3706,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 */
 	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl]);
 		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
@@ -3620,6 +3733,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
 	public regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen : boolean) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN (" + erstellen + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ]);
 		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
@@ -3650,6 +3764,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zusammen zu setzen.
 	 */
 	public regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -3713,6 +3828,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
 	public regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -3774,6 +3890,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
 	public regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -3814,6 +3931,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
 	public regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -3851,6 +3969,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
 	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
+		console.log(JSON.stringify("called regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const keyMaxSuSAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl]);
 		const regelMaxSuSAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyMaxSuSAlt);
