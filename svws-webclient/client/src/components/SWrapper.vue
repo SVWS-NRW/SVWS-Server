@@ -6,7 +6,7 @@
 			<div class="min-h-[1.85rem]" />
 		</template>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
-			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="JSON.stringify({ env: { mode: api.mode.text, version: api.version }, error }, null, 2)">
+			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="copyString(error)">
 				<template #header>
 					{{ error.name }}
 				</template>
@@ -39,6 +39,11 @@
 
 	const counter = ref(0);
 	const errors = ref<Map<number, CapturedError>>(new Map());
+
+	function copyString(error: Error) {
+		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version }, error }, null, 2);
+		return "```json\n"+json+"\n```";
+	}
 
 	function errorHandler(event: ErrorEvent | PromiseRejectionEvent) {
 		event.preventDefault();

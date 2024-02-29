@@ -787,7 +787,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	gotoBlockung = async (value: GostBlockungListeneintrag | undefined) => {
-		console.log("WARUM???")
 		if (value !== this._state.value.auswahlBlockung) {
 			if (value === undefined || value === null)
 				await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, this.halbjahr.id));
