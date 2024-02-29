@@ -128,11 +128,10 @@
 									<!-- <svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button> -->
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse fixieren')">Alle Kurse fixieren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse lösen')">Alle Kurse lösen</svws-ui-button>
-									<!-- <svws-ui-button size="small" type="transparent" @click="selectedDo('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button> -->
+									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('schüler fixieren')">Alle Schüler fixieren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="selectedDo('schüler lösen')">Alle Schüler lösen</svws-ui-button>
 									<!-- <svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schüler')">Alle Schüler fixieren/lösen</svws-ui-button> -->
-									<!-- <svws-ui-button size="small" type="transparent" @click="selectionAbort">Abbrechen</svws-ui-button> -->
 								</template>
 							</svws-ui-tooltip>
 						</template>

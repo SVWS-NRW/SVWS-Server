@@ -413,8 +413,9 @@
 			case 'kurse lösen':
 				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
-			// case 'toggle kurse':
-			// 	break;
+			case 'toggle kurse':
+				update = props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(isSelectedKurse.value, schienenSet);
+				break;
 			case 'schienen sperren':
 				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse.value, schienenSet);
 				break;
