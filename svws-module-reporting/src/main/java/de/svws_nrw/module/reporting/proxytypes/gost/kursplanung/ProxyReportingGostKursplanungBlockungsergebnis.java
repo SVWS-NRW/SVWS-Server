@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -95,7 +94,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * @param id 					Die ID des Blockungsergebnisses aus der Kursplanung der gymnasialen Oberstufe.
 	*/
 	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final long id) {
-		super(0, 0, 0, 0, 0, 0, "", "", id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		super(0, 0, 0, 0, 0, 0, "", null, id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		this.reportingRepository = reportingRepository;
 
 		// Initialisiere das Blockungsergebnis und dessen Manager.
@@ -151,10 +150,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		// Liste der Kurse aus der Blockung einlesen.
 		// Dabei werden auch die Kursbelegungen der Schüler und die Kurse bei den Schienen ergänzt.
 		for (final GostBlockungKurs kurs : datenManager.kursGetListeSortiertNachKursartFachNummer()) {
-			// Fach für Hintergrundfarbe ermitteln.
-			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(datenManager.kursGet(kurs.id).fach_id).kuerzel);
-			final String farbeClientRGB = (fach != null) ? fach.getHMTLFarbeRGB().replace("rgba", "rgb") : "";
-
 			// Liste der Kurslehrer erzeugen.
 			List<ReportingLehrer> kursLehrer = new ArrayList<>();
 			if (!datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty())
@@ -180,10 +175,10 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 				ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
 				datenManager.kursGetName(kurs.id),
-				farbeClientRGB,
-				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel,
+				reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
+				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
+				GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),
 				kurs.id,
-				GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart).kuerzel,
 				kursLehrer,
 				ergebnisManager.getOfKursSchienenmenge(kurs.id).stream().map(s -> mapBlockungsergebnisSchienenmenge.get(s.id)).toList(),
 				new ArrayList<>());
@@ -228,7 +223,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.setAnzahlSchienen(super.schienen().size());
 		super.setAnzahlSchueler(datenManager.schuelerGetAnzahl());
 		super.setBezeichnung(datenManager.daten().name);
-		super.setGostHalbjahr(GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
+		super.setGostHalbjahr(GostHalbjahr.fromID(datenManager.daten().gostHalbjahr));
 	}
 
 

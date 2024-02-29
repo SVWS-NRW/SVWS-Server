@@ -1,10 +1,13 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKurs.</p>
@@ -38,17 +41,17 @@ public class ReportingGostKursplanungKurs {
 	/** Bezeichnung des Kurses. */
 	private String bezeichnung;
 
-	/** Farbe des Faches des Kurses im Web-Client */
-	private String farbeClientRGB;
+	/** Fach des Kurses */
+	private ReportingFach fach;
 
 	/** Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis. */
-	private String gostHalbjahr;
+	private GostHalbjahr gostHalbjahr;
+
+	/** Kursart des Kurses. */
+	private GostKursart gostKursart;
 
 	/** ID des Kurses */
 	private long id;
-
-	/** Kursart des Kurses. */
-	private String kursart;
 
 	/** Eine Liste der Lehrkräfte des Kurses. */
 	private List<ReportingLehrer> lehrkraefte;
@@ -71,15 +74,15 @@ public class ReportingGostKursplanungKurs {
 	 * @param anzahlKlausurschreiber	Anzahl der Klausurschreiber.
 	 * @param anzahlSchueler			Anzahl der Schülerinnen und Schüler im Kurs.
 	 * @param bezeichnung				Bezeichnung des Kurses.
-	 * @param farbeClientRGB 			Farbe des Faches des Kurses im Web-Client.
+	 * @param fach			 			Farbe des Faches des Kurses im Web-Client.
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
+	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
-	 * @param kursart					Kursart des Kurses.
 	 * @param lehrkraefte				Liste der Lehrkräfte des Kurses.
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
-	public ReportingGostKursplanungKurs(final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final String farbeClientRGB, final String gostHalbjahr, final long id, final String kursart, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+	public ReportingGostKursplanungKurs(final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
 		this.anzahlAB12 = anzahlAB12;
 		this.anzahlAB3 = anzahlAB3;
 		this.anzahlAB4 = anzahlAB4;
@@ -88,10 +91,10 @@ public class ReportingGostKursplanungKurs {
 		this.anzahlKlausurschreiber = anzahlKlausurschreiber;
 		this.anzahlSchueler = anzahlSchueler;
 		this.bezeichnung = bezeichnung;
-		this.farbeClientRGB = farbeClientRGB;
+		this.fach = fach;
 		this.gostHalbjahr = gostHalbjahr;
+		this.gostKursart = gostKursart;
 		this.id = id;
-		this.kursart = kursart;
 		this.lehrkraefte = lehrkraefte;
 		this.schienen = schienen;
 		this.schueler = schueler;
@@ -243,26 +246,26 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Farbe des Faches des Kurses im Web-Client
-	 * @return Inhalt des Feldes farbeClientRGB
+	 * Fach des Kurses
+	 * @return Inhalt des Feldes fach
 	 */
-	public String farbeClientRGB() {
-		return farbeClientRGB;
+	public ReportingFach fach() {
+		return fach;
 	}
 
 	/**
-	 * Farbe des Faches des Kurses im Web-Client wird gesetzt.
-	 * @param farbeClientRGB Neuer Wert für das Feld farbeClientRGB
+	 * Fach des Kurses wird gesetzt.
+	 * @param fach Neuer Wert für das Feld fach
 	 */
-	public void setFarbeClientRGB(final String farbeClientRGB) {
-		this.farbeClientRGB = farbeClientRGB;
+	public void setFach(final ReportingFach fach) {
+		this.fach = fach;
 	}
 
 	/**
 	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
-	public String gostHalbjahr() {
+	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
 	}
 
@@ -270,8 +273,24 @@ public class ReportingGostKursplanungKurs {
 	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis wird gesetzt.
 	 * @param gostHalbjahr Neuer Wert für das Feld gostHalbjahr
 	 */
-	public void setGostHalbjahr(final String gostHalbjahr) {
+	public void setGostHalbjahr(final GostHalbjahr gostHalbjahr) {
 		this.gostHalbjahr = gostHalbjahr;
+	}
+
+	/**
+	 * Kursart des Kurses.
+	 * @return Inhalt des Feldes gostKursart
+	 */
+	public GostKursart gostKursart() {
+		return gostKursart;
+	}
+
+	/**
+	 * Kursart des Kurses wird gesetzt.
+	 * @param gostKursart Neuer Wert für das Feld gostKursart
+	 */
+	public void setGostKursart(final GostKursart gostKursart) {
+		this.gostKursart = gostKursart;
 	}
 
 	/**
@@ -288,22 +307,6 @@ public class ReportingGostKursplanungKurs {
 	 */
 	public void setId(final long id) {
 		this.id = id;
-	}
-
-	/**
-	 * Kursart des Kurses.
-	 * @return Inhalt des Feldes kursart
-	 */
-	public String kursart() {
-		return kursart;
-	}
-
-	/**
-	 * Kursart des Kurses wird gesetzt.
-	 * @param kursart Neuer Wert für das Feld kursart
-	 */
-	public void setKursart(final String kursart) {
-		this.kursart = kursart;
 	}
 
 	/**

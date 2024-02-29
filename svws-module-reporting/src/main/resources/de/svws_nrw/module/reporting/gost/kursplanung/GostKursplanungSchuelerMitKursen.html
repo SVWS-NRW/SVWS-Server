@@ -10,7 +10,7 @@
 		<div style="page-break-inside: avoid;" th:each="schueler,iterStatSchueler : ${Blockungsergebnis.schuelerGefiltert()}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Kursbelegungen<br/>' + 'Abitur ' + ${Blockungsergebnis.abiturjahr()} + ' - ' + ${Blockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler<br/>Abitur 2023 - Q1.2<br/></div>
+			<div class="pageTopRight" th:utext="'Kursbelegungen<br/>' + 'Abitur ' + ${Blockungsergebnis.abiturjahr()} + ' - ' + ${Blockungsergebnis.gostHalbjahr().kuerzel}">Kursbelegungen der Schülerinnen und Schüler<br/>Abitur 2023 - Q1.2<br/></div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 			<div class="pageBottomCenter" th:text="${Blockungsergebnis.bezeichnung() + ' (Erg-ID ' + Blockungsergebnis.id() + ')'}">A23 - Q1.2 (Erg-ID 4)</div>
 			<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
@@ -46,9 +46,9 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:style="${((Kursbelegung.kurs().farbeClientRGB() == null || (Kursbelegung.kurs().farbeClientRGB().isEmpty())) ? '' : ' background-color: ' + Kursbelegung.kurs().farbeClientRGB() + ';')}">
+					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:style="${((Kursbelegung.kurs().fach().statistikfach().getHMTLFarbeRGB() == null || (Kursbelegung.kurs().fach().statistikfach().getHMTLFarbeRGB().isEmpty())) ? '' : ' background-color: ' + Kursbelegung.kurs().fach().statistikfach().getHMTLFarbeRGB() + ';')}">
 						<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kursbelegung.kurs().bezeichnung()}">M-GK2</p>
-						<p class="no-mt" style="font-size: 6pt;" th:utext="${Kursbelegung.kurs().kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + Kursbelegung.kurs().lehrkraefteAuflistung()}">GK-s Abifach 3<br/>ABC</p>
+						<p class="no-mt" style="font-size: 6pt;" th:utext="${Kursbelegung.kurs().gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + Kursbelegung.kurs().lehrkraefteAuflistung()}">GK-s Abifach 3<br/>ABC</p>
 					</td>
 				</tr>
 				<tr style="height: 3px;">

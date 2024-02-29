@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.laufbahnplanung;
 
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostLaufbahnplanungFachwahl.</p>
  * <p>Sie enthält die Daten einer Fachwahl für die Laufbahnplanung der gymnasialen Oberstufe.</p>
@@ -10,9 +12,6 @@ public class ReportingGostLaufbahnplanungFachwahl {
 
 	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
 	private String abiturfach;
-
-	/** Aufgabenfeld des Faches */
-	private int aufgabenfeld;
 
 	/** Fachbelegung in der EF.1 */
 	private String belegungEF1;
@@ -32,11 +31,8 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	/** Fachbelegung in der Q2.2 */
 	private String belegungQ22;
 
-	/** Die Bezeichnung des Faches */
-	private String bezeichnung;
-
-	/** Fachgruppe des Faches */
-	private String fachgruppe;
+	/** Das Fach der Fachwahl */
+	private ReportingFach fach;
 
 	/** Fach ist in mindestens einem Halbjahr der GOSt belegt. */
 	private Boolean fachIstBelegtInGOSt;
@@ -44,14 +40,8 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	/** Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache */
 	private Boolean fachIstFortfuehrbareFremdspracheInGOSt;
 
-	/** Farbe des Faches im Web-Client */
-	private String farbeClientRGB;
-
 	/** Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung */
 	private String jahrgangFremdsprachenbeginn;
-
-	/** Das Kürzel des Faches */
-	private String kuerzel;
 
 	/** Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk */
 	private String positionFremdsprachenfolge;
@@ -61,38 +51,30 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param abiturfach								Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde.
-	 * @param aufgabenfeld								Aufgabenfeld des Faches.
 	 * @param belegungEF1								Fachbelegung in der EF.1
 	 * @param belegungEF2								Fachbelegung in der EF.2
 	 * @param belegungQ11								Fachbelegung in der Q1.1
 	 * @param belegungQ12								Fachbelegung in der Q1.2
 	 * @param belegungQ21								Fachbelegung in der Q2.1
 	 * @param belegungQ22								Fachbelegung in der Q2.2
-	 * @param bezeichnung								Die Bezeichnung des Faches.
-	 * @param fachgruppe								Fachgruppe des Faches.
+	 * @param fach 										Das Fach der Fachwahl.
 	 * @param fachIstBelegtInGOSt						Fach ist in mindestens einem Halbjahr der GOSt belegt.
 	 * @param fachIstFortfuehrbareFremdspracheInGOSt	Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache.
-	 * @param farbeClientRGB							Farbe des Faches im Web-Client.
 	 * @param jahrgangFremdsprachenbeginn				Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung.
-	 * @param kuerzel									Das Kürzel des Faches.
 	 * @param positionFremdsprachenfolge				Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk.
 	 */
-	public ReportingGostLaufbahnplanungFachwahl(final String abiturfach, final int aufgabenfeld, final String belegungEF1, final String belegungEF2, final String belegungQ11, final String belegungQ12, final String belegungQ21, final String belegungQ22, final String bezeichnung, final String fachgruppe, final Boolean fachIstBelegtInGOSt, final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String farbeClientRGB, final String jahrgangFremdsprachenbeginn, final String kuerzel, final String positionFremdsprachenfolge) {
+	public ReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11, final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt, final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
 		this.abiturfach = abiturfach;
-		this.aufgabenfeld = aufgabenfeld;
 		this.belegungEF1 = belegungEF1;
 		this.belegungEF2 = belegungEF2;
 		this.belegungQ11 = belegungQ11;
 		this.belegungQ12 = belegungQ12;
 		this.belegungQ21 = belegungQ21;
 		this.belegungQ22 = belegungQ22;
-		this.bezeichnung = bezeichnung;
-		this.fachgruppe = fachgruppe;
+		this.fach = fach;
 		this.fachIstBelegtInGOSt = fachIstBelegtInGOSt;
 		this.fachIstFortfuehrbareFremdspracheInGOSt = fachIstFortfuehrbareFremdspracheInGOSt;
-		this.farbeClientRGB = farbeClientRGB;
 		this.jahrgangFremdsprachenbeginn = jahrgangFremdsprachenbeginn;
-		this.kuerzel = kuerzel;
 		this.positionFremdsprachenfolge = positionFremdsprachenfolge;
 	}
 
@@ -114,22 +96,6 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	 */
 	public void setAbiturfach(final String abiturfach) {
 		this.abiturfach = abiturfach;
-	}
-
-	/**
-	 * Aufgabenfeld des Faches
-	 * @return Inhalt des Feldes aufgabenfeld
-	 */
-	public int aufgabenfeld() {
-		return aufgabenfeld;
-	}
-
-	/**
-	 * Aufgabenfeld des Faches wird gesetzt.
-	 * @param aufgabenfeld Neuer Wert für das Feld aufgabenfeld
-	 */
-	public void setAufgabenfeld(final int aufgabenfeld) {
-		this.aufgabenfeld = aufgabenfeld;
 	}
 
 	/**
@@ -229,35 +195,19 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Die Bezeichnung des Faches
-	 * @return Inhalt des Feldes bezeichnung
+	 * Das Fach der Fachwahl
+	 * @return Inhalt des Feldes fach
 	 */
-	public String bezeichnung() {
-		return bezeichnung;
+	public ReportingFach fach() {
+		return fach;
 	}
 
 	/**
-	 * Die Bezeichnung des Faches wird gesetzt.
-	 * @param bezeichnung Neuer Wert für das Feld bezeichnung
+	 * Das Fach der Fachwahl wird gesetzt.
+	 * @param fach Neuer Wert für das Feld fach
 	 */
-	public void setBezeichnung(final String bezeichnung) {
-		this.bezeichnung = bezeichnung;
-	}
-
-	/**
-	 * Fachgruppe des Faches
-	 * @return Inhalt des Feldes fachgruppe
-	 */
-	public String fachgruppe() {
-		return fachgruppe;
-	}
-
-	/**
-	 * Fachgruppe des Faches wird gesetzt.
-	 * @param fachgruppe Neuer Wert für das Feld fachgruppe
-	 */
-	public void setFachgruppe(final String fachgruppe) {
-		this.fachgruppe = fachgruppe;
+	public void setFach(final ReportingFach fach) {
+		this.fach = fach;
 	}
 
 	/**
@@ -293,22 +243,6 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	}
 
 	/**
-	 * Farbe des Faches im Web-Client
-	 * @return Inhalt des Feldes farbeClientRGB
-	 */
-	public String farbeClientRGB() {
-		return farbeClientRGB;
-	}
-
-	/**
-	 * Farbe des Faches im Web-Client wird gesetzt.
-	 * @param farbeClientRGB Neuer Wert für das Feld farbeClientRGB
-	 */
-	public void setFarbeClientRGB(final String farbeClientRGB) {
-		this.farbeClientRGB = farbeClientRGB;
-	}
-
-	/**
 	 * Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung
 	 * @return Inhalt des Feldes jahrgangFremdsprachenbeginn
 	 */
@@ -322,22 +256,6 @@ public class ReportingGostLaufbahnplanungFachwahl {
 	 */
 	public void setJahrgangFremdsprachenbeginn(final String jahrgangFremdsprachenbeginn) {
 		this.jahrgangFremdsprachenbeginn = jahrgangFremdsprachenbeginn;
-	}
-
-	/**
-	 * Das Kürzel des Faches
-	 * @return Inhalt des Feldes kuerzel
-	 */
-	public String kuerzel() {
-		return kuerzel;
-	}
-
-	/**
-	 * Das Kürzel des Faches wird gesetzt.
-	 * @param kuerzel Neuer Wert für das Feld kuerzel
-	 */
-	public void setKuerzel(final String kuerzel) {
-		this.kuerzel = kuerzel;
 	}
 
 	/**

@@ -1,12 +1,15 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.kursplanung;
 
-import java.util.List;
-
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungSchiene;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+
+import java.util.List;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKurs und erweitert die Klasse {@link ReportingGostKursplanungKurs}.</p>
@@ -48,16 +51,16 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param anzahlKlausurschreiber	Anzahl der Klausurschreiber.
 	 * @param anzahlSchueler			Anzahl der Schülerinnen und Schüler im Kurs.
 	 * @param bezeichnung				Bezeichnung des Kurses.
-	 * @param farbeClientRGB 			Farbe des Faches des Kurses im Web-Client.
+	 * @param fach 			Farbe des Faches des Kurses im Web-Client.
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
+	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
-	 * @param kursart					Kursart des Kurses.
 	 * @param lehrkraefte				Liste der Lehrkräfte des Kurses.
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
-	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final String farbeClientRGB, final String gostHalbjahr, final long id, final String kursart, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
-		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlKlausurschreiber, anzahlSchueler, bezeichnung, farbeClientRGB, gostHalbjahr, id, kursart, lehrkraefte, schienen, schueler);
+	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlKlausurschreiber, anzahlSchueler, bezeichnung, fach, gostHalbjahr, gostKursart, id, lehrkraefte, schienen, schueler);
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
 

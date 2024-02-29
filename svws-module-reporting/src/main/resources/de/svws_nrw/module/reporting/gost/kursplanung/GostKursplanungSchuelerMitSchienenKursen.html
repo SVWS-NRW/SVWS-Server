@@ -46,9 +46,9 @@
 								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</td>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
-								th:style="${(Kurs.farbeClientRGB() == null || Kurs.farbeClientRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.farbeClientRGB() + ';'}">
+								th:style="${(Kurs.fach().statistikfach().getHMTLFarbeRGB() == null || Kurs.fach().statistikfach().getHMTLFarbeRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.fach().statistikfach().getHMTLFarbeRGB() + ';'}">
 								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
-								<p class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart}">GK</p>
+								<p class="no-mt" style="font-size: 6pt;" th:text="${Kurs.gostKursart().kuerzel}">GK</p>
 								<p class="no-mt" style="font-size: 6pt;"
 									th:with="summeABs = ${Kurs.anzahlAB12() + Kurs.anzahlAB3() + Kurs.anzahlAB4()}"
 									th:utext="${Kurs.anzahlSchueler() + ' (' + Kurs.anzahlKlausurschreiber() + ',' + summeABs + ') (' + Kurs.anzahlExterne() + ',' + Kurs.anzahlDummy() + ')' + '<br/>' + Kurs.lehrkraefteAuflistung()}">
@@ -66,7 +66,7 @@
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Blockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${Blockungsergebnis.gostHalbjahr()}">Q1.2</span><br/>Gesamt: <span th:text="${Blockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${Blockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${Blockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Blockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${Blockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${Blockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${Blockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${Blockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
 					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 					<div class="pageBottomCenter" th:text="${Blockungsergebnis.bezeichnung() + ' (Erg-ID ' + Blockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
 					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
@@ -100,12 +100,12 @@
 							</td>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
 								th:with="istBelegt = ${!(schueler.getGostKursplanungKursbelegungById(Kurs.id) == null)}"
-								th:style="${(!istBelegt || Kurs.farbeClientRGB() == null || Kurs.farbeClientRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.farbeClientRGB() + ';'}">
+								th:style="${(!istBelegt || Kurs.fach().statistikfach().getHMTLFarbeRGB() == null || Kurs.fach().statistikfach().getHMTLFarbeRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.fach().statistikfach().getHMTLFarbeRGB() + ';'}">
 								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung()}">M-GK2</p>
-								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart()}">GK</p>
+								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.gostKursart().kuerzel}">GK</p>
 								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}">
 									<p th:if="${Kursbelegung.kurs().id() == Kurs.id()}" class="no-mt" style="font-size: 6pt;"
-										th:utext="${Kurs.kursart() + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
+										th:utext="${Kurs.gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
 										GK-s Abifach 3
 									</p>
 								</div>

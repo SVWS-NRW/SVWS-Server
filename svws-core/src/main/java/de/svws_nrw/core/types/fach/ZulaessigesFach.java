@@ -5179,13 +5179,12 @@ public enum ZulaessigesFach {
 
 	/**
 	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
-	 * mit der übergebenen Transparenz zurück.
 	 *
 	 * @return die RGB-HTML-Farbdefinition als String
 	 */
 	public @NotNull String getHMTLFarbeRGB() {
 		final @NotNull RGBFarbe farbe = getFarbe();
-		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
 
 

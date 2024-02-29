@@ -1,9 +1,10 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungBlockungsergebnis.</p>
@@ -35,7 +36,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	private String bezeichnung;
 
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
-	private String gostHalbjahr;
+	private GostHalbjahr gostHalbjahr;
 
 	/** ID des Blockungsergebnisses */
 	private long id;
@@ -66,7 +67,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * @param schienen Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
 	 * @param schueler Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
 	 */
-	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung, final String gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung, final GostHalbjahr gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
 		this.abiturjahr = abiturjahr;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
@@ -200,7 +201,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
-	public String gostHalbjahr() {
+	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
 	}
 
@@ -208,7 +209,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses wird gesetzt.
 	 * @param gostHalbjahr Neuer Wert für das Feld gostHalbjahr
 	 */
-	public void setGostHalbjahr(final String gostHalbjahr) {
+	public void setGostHalbjahr(final GostHalbjahr gostHalbjahr) {
 		this.gostHalbjahr = gostHalbjahr;
 	}
 

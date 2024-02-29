@@ -1650,13 +1650,12 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 
 	/**
 	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
-	 * mit der übergebenen Transparenz zurück.
 	 *
 	 * @return die RGB-HTML-Farbdefinition als String
 	 */
 	public getHMTLFarbeRGB() : string {
 		const farbe : RGBFarbe = this.getFarbe();
-		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
 
 	/**

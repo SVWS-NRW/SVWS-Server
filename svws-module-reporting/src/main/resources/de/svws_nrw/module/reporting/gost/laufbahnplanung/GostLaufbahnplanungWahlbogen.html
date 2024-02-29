@@ -53,9 +53,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${parameterDetailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()}"  th:style="'background-color: ' + ${Fachwahl.farbeClientRGB()} + ';'">
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.kuerzel()}"><b>D</b></td>
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.bezeichnung()}"><b>Deutsch</b></td>
+					<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${parameterDetailLevel > 0 || Fachwahl.fachIstBelegtInGOSt()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().getHMTLFarbeRGB()} + ';'">
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.fach().kuerzel()}"><b>D</b></td>
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.fach().bezeichnung()}"><b>Deutsch</b></td>
 						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn()}">
 							<span th:case="'HSU'">HSU-Prüfung</span>
 							<span th:case="'SFP'">Festst.prüf.</span>
@@ -105,7 +105,7 @@
 					</tr>
 					<tr th:if="${parameterDetailLevel == 0}">
 						<td colspan="10" class="tiny" style="font-style: italic">
-							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.bezeichnung()} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.fach().bezeichnung()} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>
 					</tr>
 				</tfoot>

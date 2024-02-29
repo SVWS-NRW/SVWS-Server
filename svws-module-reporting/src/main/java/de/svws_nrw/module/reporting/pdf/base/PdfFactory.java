@@ -142,7 +142,7 @@ public final class PdfFactory {
 			if (e instanceof TemplateProcessingException tPE)
 				htmlTemplate = tPE.getTemplateName();
 
-			logger.logLn("FEHLER  #################################################");
+			logger.logLn("###  FEHLER  ####################################");
 
 			// Sammle alle Fehlerursachen im Log.
 			for (Throwable cause = e; cause != null; cause = cause.getCause()) {
@@ -156,7 +156,7 @@ public final class PdfFactory {
 			// Hänge das html-Template als weiteren Eintrag hinten an, wenn ein Fehler bei der Template-Verarbeitung aufgetreten ist.
 			if (e instanceof TemplateProcessingException && !htmlTemplate.isEmpty()) {
 				logger.logLn(0, "");
-				logger.logLn(0, "Verwendetes html-Template  ##############################");
+				logger.logLn(0, "###  Verwendetes html-Template  #################");
 				logger.logLn(0, htmlTemplate);
 			}
 
@@ -303,21 +303,21 @@ public final class PdfFactory {
 				assert blockungsergebnis != null; // Blockungsbasierte Vorlage, daher vorher schon blockungsergebnis != null geprüft.
 				dateinamePdf = "Schueler-Schienen-Kurse-Zuordnung_%d-%s_(Erg-ID%d).pdf".formatted(
 					blockungsergebnis.abiturjahr(),
-					blockungsergebnis.gostHalbjahr().replace(".", "-"),
+					blockungsergebnis.gostHalbjahr().kuerzel.replace(".", "-"),
 					blockungsergebnis.id());
 				break;
 			case "GostKursplanungSchuelerMitKursen.html" :
 				assert blockungsergebnis != null; // Blockungsbasierte Vorlage, daher vorher schon blockungsergebnis != null geprüft.
 				dateinamePdf = "Schueler-Kurse-Liste_%d-%s_(Erg-ID%d).pdf".formatted(
 					blockungsergebnis.abiturjahr(),
-					blockungsergebnis.gostHalbjahr().replace(".", "-"),
+					blockungsergebnis.gostHalbjahr().kuerzel.replace(".", "-"),
 					blockungsergebnis.id());
 				break;
 			case "GostKursplanungKursMitKursschuelern.html" :
 				assert blockungsergebnis != null; // Blockungsbasierte Vorlage, daher vorher schon blockungsergebnis != null geprüft.
 				dateinamePdf = "Kursliste_%d-%s_(Erg-ID%d).pdf".formatted(
 					blockungsergebnis.abiturjahr(),
-					blockungsergebnis.gostHalbjahr().replace(".", "-"),
+					blockungsergebnis.gostHalbjahr().kuerzel.replace(".", "-"),
 					blockungsergebnis.id());
 				break;
 			default :

@@ -39,7 +39,6 @@ import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.Reportin
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -282,21 +281,17 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		for (final GostFach fach : gostFaecherManager.faecher()) {
-			final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			//final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
 			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
 				"",
-				Objects.requireNonNullElse(zulaessigesFach.daten.aufgabenfeld, 0),
 				"", "",
 				"", "", "", "",
-				fach.bezeichnung,
-				zulaessigesFach.daten.fachgruppe,
+				reportingRepository.mapReportingFaecher().get(fach.id),
 				false,
 				false,
-				zulaessigesFach.getHMTLFarbeRGB().replace("rgba", "rgb"),
 				"",
-				fach.kuerzelAnzeige,
 				""
 			);
 
