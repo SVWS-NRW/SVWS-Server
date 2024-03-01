@@ -21,13 +21,12 @@
 </template>
 
 <script lang="ts" setup>
+
 	import type { ButtonType } from '../types';
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		// Typfehler beim Extract...?
-		//Extract<Size, 'small' | 'normal' | 'big'>;
 		size?: 'small' | 'normal' | 'big'
 	}>(),{
 		type: 'primary',

@@ -92,8 +92,6 @@
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", items: Item[]): void;
-		(e: "focus", event: Event): void;
-		(e: "blur", event: Event): void;
 	}>();
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);

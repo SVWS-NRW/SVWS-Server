@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef, Ref } from 'vue';
+	import type { Ref } from 'vue';
 	import { ref, computed, watch, nextTick } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";

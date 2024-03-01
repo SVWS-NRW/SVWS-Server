@@ -1,5 +1,20 @@
+<template>
+	<label class="toggle" :class="{
+		'toggle--statistics': statistics,
+		'toggle--headless': headless,
+		'toggle--disabled': disabled
+	}">
+		<input v-model="value" class="toggle--control" type="checkbox">
+		<span class="toggle--indicator" />
+		<span v-if="$slots.default || statistics" class="toggle--label">
+			<slot />
+			<i-ri-bar-chart-2-line v-if="statistics" class="ml-2" />
+		</span>
+	</label>
+</template>
+
 <script setup lang='ts'>
-	import {computed, ref} from 'vue';
+	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue?: boolean;
@@ -18,29 +33,10 @@
 	}>();
 
 	const value = computed({
-		get() {
-			return props.modelValue;
-		},
-		set(value: boolean) {
-			emit('update:modelValue', value);
-		}
+		get: () => props.modelValue,
+		set: (value: boolean) => emit('update:modelValue', value)
 	});
 </script>
-
-<template>
-	<label class="toggle" :class="{
-		'toggle--statistics': statistics,
-		'toggle--headless': headless,
-		'toggle--disabled': disabled
-	}">
-		<input v-model="value" class="toggle--control" type="checkbox">
-		<span class="toggle--indicator" />
-		<span v-if="$slots.default || statistics" class="toggle--label">
-			<slot />
-			<i-ri-bar-chart-2-line v-if="statistics" class="ml-2" />
-		</span>
-	</label>
-</template>
 
 <style>
 .toggle {

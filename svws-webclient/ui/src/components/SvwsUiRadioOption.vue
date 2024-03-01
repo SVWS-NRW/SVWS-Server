@@ -1,3 +1,27 @@
+<template>
+	<label class="radio--label" :class="{
+		'radio--label--disabled': disabled,
+		'radio--statistics': statistics,
+		'radio--label--checked-': forceChecked || modelValue === value || checked,
+		'radio--label--no-icon': !icon,
+		'radio--label--no-text': !label,
+		'radio--icon-type-view': iconType === 'view'
+	}">
+		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
+		<span v-if="icon" class="radio--indicator-icon">
+			<template v-if="iconType === 'view'">
+				<i-ri-eye-line class="radio--indicator-icon--checked" />
+			</template>
+			<template v-else>
+				<slot />
+				<i-ri-checkbox-blank-circle-line v-if="!$slots.default" class="radio--indicator-icon--blank" />
+				<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked" />
+			</template>
+		</span>
+		<span class="radio--label--text"> {{ label }} <i-ri-bar-chart-2-line v-if="statistics" class="ml-2" /> </span>
+	</label>
+</template>
+
 <script setup lang='ts'>
 
 	import type { WritableComputedRef} from 'vue';
@@ -35,30 +59,6 @@
 	})
 
 </script>
-
-<template>
-	<label class="radio--label" :class="{
-		'radio--label--disabled': disabled,
-		'radio--statistics': statistics,
-		'radio--label--checked-': forceChecked || modelValue === value || checked,
-		'radio--label--no-icon': !icon,
-		'radio--label--no-text': !label,
-		'radio--icon-type-view': iconType === 'view'
-	}">
-		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
-		<span v-if="icon" class="radio--indicator-icon">
-			<template v-if="iconType === 'view'">
-				<i-ri-eye-line class="radio--indicator-icon--checked" />
-			</template>
-			<template v-else>
-				<slot />
-				<i-ri-checkbox-blank-circle-line v-if="!$slots.default" class="radio--indicator-icon--blank" />
-				<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked" />
-			</template>
-		</span>
-		<span class="radio--label--text"> {{ label }} <i-ri-bar-chart-2-line v-if="statistics" class="ml-2" /> </span>
-	</label>
-</template>
 
 <style lang="postcss">
 .radio--label {
