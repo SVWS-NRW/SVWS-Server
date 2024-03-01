@@ -4,15 +4,15 @@
 			<div class="flex flex-col gap-2 my-auto">
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Kurs:</span>
-					<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1"><i-ri-delete-bin-line /></svws-ui-button>
-					<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen">Hinzufügen</svws-ui-button>
-					<svws-ui-button type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
+					<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1" :disabled="apiStatus.pending"><i-ri-delete-bin-line /></svws-ui-button>
+					<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen" :disabled="apiStatus.pending">Hinzufügen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="splitKurs(kurs)" :disabled="apiStatus.pending">Aufteilen</svws-ui-button>
 					<template v-if="andereKurse.size > 0">
 						<svws-ui-select :model-value="undefined" @update:model-value="kurs2 => (kurs2 !== undefined && kurs2 !== null) && combineKurs(kurs, kurs2)"
-							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="i => getDatenmanager().kursGetName(i.id)" />
+							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="i => getDatenmanager().kursGetName(i.id)" :disabled="apiStatus.pending" />
 					</template>
 					<span class="text-sm font-bold">Externe Schüler:</span>
-					<svws-ui-input-number placeholder="externe Schüler" :model-value="getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)" @update:model-value="updateExterne" :min="0" headless />
+					<svws-ui-input-number placeholder="externe Schüler" :model-value="getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)" @update:model-value="updateExterne" :min="1" headless :disabled="apiStatus.pending" />
 				</div>
 			</div>
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
@@ -21,9 +21,9 @@
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Schienen:</span>
 					<div class="flex gap-1">
-						<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="(kurs.anzahlSchienen <= 1) || (apiStatus.pending)"><i-ri-subtract-line /></svws-ui-button>
 						<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small"><i-ri-add-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending"><i-ri-add-line /></svws-ui-button>
 					</div>
 				</div>
 			</div>
@@ -35,6 +35,7 @@
 
 	import { computed } from 'vue';
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
+	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -54,6 +55,7 @@
 		fachart: number;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		bgColor: string;
+		apiStatus: ApiStatus;
 	}>();
 
 	const andereKurse = computed<Map<number, GostBlockungsergebnisKurs>>(() => {
@@ -65,6 +67,8 @@
 	});
 
 	async function updateExterne(anzahl: number | null) {
+		if (props.apiStatus.pending)
+			return;
 		const curr = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.kurs.id);
 		if (curr === anzahl || (anzahl === null) || anzahl < 0)
 			return;

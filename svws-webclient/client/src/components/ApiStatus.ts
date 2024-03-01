@@ -1,10 +1,9 @@
-import type { ShallowRef} from "vue";
 import { shallowRef } from "vue";
 
 
 export interface ApiPendingData {
 	name: string;
-	id: number;
+	id?: number;
 }
 
 /**
@@ -32,7 +31,7 @@ interface APIStatusState {
 export class ApiStatus {
 
 	/// Der aktuelle Zustand des API-Status
-	private _state: ShallowRef<APIStatusState> = shallowRef({
+	private _state = shallowRef<APIStatusState>({
 		pending: false,
 		error: undefined,
 		data: undefined,
@@ -87,7 +86,7 @@ export class ApiStatus {
 	public start(data?: ApiPendingData): boolean {
 		if (this.pending)
 			return false;
-		this._state.value = { pending: true, error: undefined, data: data };
+		this._state.value = { pending: true, error: undefined, data };
 		return true;
 	}
 
@@ -102,7 +101,7 @@ export class ApiStatus {
 	public stop(error?: Error): boolean {
 		if (!this.pending)
 			return false;
-		this._state.value = { pending: false, error: error, data: undefined };
+		this._state.value = { pending: false, error, data: undefined };
 		return true;
 	}
 

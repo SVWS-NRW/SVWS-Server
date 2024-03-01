@@ -99,7 +99,7 @@
 				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
-				:ergebnis-hochschreiben="ergebnisHochschreiben"
+				:ergebnis-hochschreiben="ergebnisHochschreiben" :api-status="apiStatus"
 				:toggle-blockungstabelle="toggleBlockungstabelle"
 				:blockungstabelle-visible="!blockungstabelleHidden()"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs" />
@@ -112,7 +112,7 @@
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
-						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler" :regeln-update="regelnUpdate" :get-ergebnismanager="getErgebnismanager" />
+						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler" :regeln-update="regelnUpdate" :get-ergebnismanager="getErgebnismanager" :api-status="apiStatus" />
 					</div>
 				</aside>
 			</Teleport>

@@ -1,12 +1,11 @@
-import type { ComputedRef} from "vue";
 import { computed } from "vue";
 
 import type { Config } from "~/components/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
+import type { ApiPendingData} from "~/components/ApiStatus";
 import { ApiStatus } from "~/components/ApiStatus";
 import { version } from '../../version';
 
@@ -242,7 +241,7 @@ class Api {
 	 *
 	 * @return eine Map mit den Schuljahresabschnitten
 	 */
-	public mapAbschnitte: ComputedRef<Map<number, Schuljahresabschnitt>> = computed(() => {
+	public mapAbschnitte = computed<Map<number, Schuljahresabschnitt>>(() => {
 		const mapAbschnitte = new Map<number, Schuljahresabschnitt>();
 		for (const a of this.schuleStammdaten.abschnitte)
 			mapAbschnitte.set(a.id, a);
@@ -391,11 +390,11 @@ class Api {
 	 *
 	 * @returns die Rückgabe der API-Funktion
 	 */
-	public call = <T extends Array<any>, U>(func: (...params: T) => U) => {
+	public call = <T extends Array<any>, U>(func: (...params: T) => U, data?: ApiPendingData) => {
 		return async (...params: T): Promise<Awaited<U>> => {
-			this.status.start();
+			this.status.start(data);
 			try {
-				return await func(...params)
+				return await func(...params);
 			} finally {
 				this.status.stop();
 			}

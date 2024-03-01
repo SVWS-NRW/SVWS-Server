@@ -733,7 +733,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const id = this.auswahlBlockung.id;
 		let liste;
 		try {
-			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
+			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
 			await this.setAuswahlBlockung(this.auswahlBlockung, true);
 			await this.gotoErgebnis(this._state.value.auswahlErgebnis)
@@ -879,7 +879,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		update.listHinzuzufuegen = listAdd;
 		this.ergebnismanager.regelupdateExecute(update);
 		this.commit();
-	})
+	}, {name: 'gost.regelnUpdate'})
 
 	updateKurseLeeren = api.call(async (typ: KurseLeerenTypen, ids?: List<number>) => {
 		const listKursIDs = ids || this.getListeKursauswahl();

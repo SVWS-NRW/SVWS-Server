@@ -26,6 +26,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	kursart: GostKursart;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
+	apiStatus: ApiStatus;
 	selectedDo: (action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') => Promise<void>;
 	// Drag and Drop
 	setDrag: {

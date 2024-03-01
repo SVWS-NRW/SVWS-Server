@@ -141,7 +141,7 @@
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
-				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager"
+				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager" :api-status="apiStatus"
 				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :regeln-update="regelnUpdate" :add-lehrer-regel="addLehrerRegel"
 				:add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
@@ -154,7 +154,7 @@
 	import { ref, computed } from "vue";
 	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene, GostBlockungRegel } from "@core";
-	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils } from "@core";
+	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils, ApiSchema } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const cellRefs = ref([]);

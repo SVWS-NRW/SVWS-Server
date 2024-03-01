@@ -21,17 +21,17 @@
 					<div v-else class="svws-ui-td" role="cell" />
 					<slot name="regelRead" :regel="r" />
 					<div class="svws-ui-td" role="cell">
-						<svws-ui-button type="icon" @click.stop="regelEntfernen(r)" v-if="!disabled" :disabled="pending"><i-ri-delete-bin-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click.stop="regelEntfernen(r)" v-if="!disabled" :disabled="apiStatus.pending"><i-ri-delete-bin-line /></svws-ui-button>
 					</div>
 				</div>
 				<span />
 			</template>
 			<template #footer v-if="modelValue?.typ === regelTyp.typ && !disabled">
-				<div class="mt-7 p-3" :class="{'opacity-50': pending}">
+				<div class="mt-7 p-3" :class="{'opacity-50': apiStatus.pending}">
 					<div class="flex gap-1"><slot name="regelEdit" /></div>
 					<div class="flex gap-1 mt-3 justify-end">
-						<svws-ui-button type="transparent" @click="emit('update:modelValue', undefined)" :disabled="pending">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="regelSpeichern" :disabled="pending">
+						<svws-ui-button type="transparent" @click="abbrechen" :disabled="apiStatus.pending">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="regelSpeichern" :disabled="apiStatus.pending">
 							<template v-if="modelValue?.id === -1">Regel hinzufügen</template>
 							<template v-else>Speichern</template>
 						</svws-ui-button>
@@ -39,7 +39,7 @@
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
+				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -50,9 +50,9 @@
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
+	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { GostBlockungsergebnisManager , GostBlockungRegel } from "@core";
 	import { GostKursblockungRegelTyp } from "@core";
-	import { api } from "~/router/Api";
 
 	type DataTableColumnSource = DataTableColumn | string
 
@@ -66,14 +66,18 @@
 		regelEntfernen: (regel: GostBlockungRegel) => Promise<void>;
 		regelSpeichern: () => Promise<void>;
 		regelHinzufuegen: () => void;
+		apiStatus: ApiStatus;
 	}>()
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
 
-	const pending = computed<boolean>(() => api.status.pending);
-
+	function abbrechen() {
+		if (props.apiStatus.pending)
+			return;
+		emit('update:modelValue', undefined);
+	}
 	function select_regel(r: GostBlockungRegel) {
 		emit('update:modelValue', r);
 	}

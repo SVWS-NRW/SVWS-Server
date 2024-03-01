@@ -141,7 +141,7 @@
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:selected-do="selectedDo"
+								:selected-do="selectedDo" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
 								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
@@ -159,7 +159,7 @@
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:selected-do="selectedDo"
+								:selected-do="selectedDo" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
 								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
@@ -178,6 +178,7 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed, onMounted, ref, toRaw } from "vue";
+	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List } from "@core";
@@ -215,6 +216,7 @@
 		toggleBlockungstabelle: () => void;
 		zeigeSchienenbezeichnungen: () => boolean;
 		setZeigeSchienenbezeichnungen: (value: boolean) => void;
+		apiStatus: ApiStatus;
 	}>();
 
 	const edit_schienenname = ref<number|undefined>(undefined);
