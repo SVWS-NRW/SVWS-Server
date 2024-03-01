@@ -22,7 +22,7 @@
 						</div>
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !overflow-visible !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
-						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-full relative">
+						<div class="flex justify-center text-center items-center w-full relative">
 							<svws-ui-tooltip v-if="s.id === edit_schienenname" keep-open>
 								<span class="opacity-50 border-b border-transparent">{{ s.nummer }}</span>
 								<template #content>
@@ -36,18 +36,17 @@
 							</svws-ui-tooltip>
 							<template v-else-if="zeigeSchienenbezeichnungen()">
 								<div>
-									<span style="writing-mode: vertical-lr;" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center border-l border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">
+									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allow_regeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allow_regeln && (edit_schienenname = s.id)">
 										{{ s.bezeichnung }}
 									</span>
 									<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
 								</div>
 							</template>
 							<template v-else>
-								<span class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center border-b border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
+								<span :class="{ 'border-b border-dotted hover:border-transparent': allow_regeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allow_regeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
 								<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
 							</template>
 						</div>
-						<template v-else>{{ s.nummer }}</template>
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr select-none">

@@ -151,7 +151,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get blockungstabelleHidden(): boolean {
-		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true'
+		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") === 'true';
 	}
 
 	setBlockungstabelleHidden = async (value: boolean) => {
@@ -159,7 +159,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get zeigeSchienenbezeichnungen(): boolean {
-		return api.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true'
+		return api.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true';
 	}
 
 	setZeigeSchienenbezeichnungen = async (value: boolean) => {
@@ -167,7 +167,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get isSchuelerFilterOpen(): boolean {
-		return api.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true'
+		return api.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true';
 	}
 
 	setIsSchuelerFilterOpen = async (value: boolean) => {
@@ -175,7 +175,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get showGeschlecht(): boolean {
-		return api.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true'
+		return api.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true';
 	}
 
 	setShowGeschlecht = async (value: boolean) => {
@@ -183,7 +183,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get fixierteVerschieben(): boolean {
-		return api.config.getValue("gost.kursplanung.umkursen.fixierteVerschieben") === 'true'
+		return api.config.getValue("gost.kursplanung.umkursen.fixierteVerschieben") === 'true';
 	}
 
 	setFixierteVerschieben = async (value: boolean) => {
@@ -191,7 +191,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get inZielkursFixieren(): boolean {
-		return api.config.getValue("gost.kursplanung.umkursen.inZielkursFixieren") === 'true'
+		return api.config.getValue("gost.kursplanung.umkursen.inZielkursFixieren") === 'true';
 	}
 
 	setInZielkursFixieren = async (value: boolean) => {

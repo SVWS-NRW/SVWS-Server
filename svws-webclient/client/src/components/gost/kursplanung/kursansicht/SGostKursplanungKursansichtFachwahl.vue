@@ -41,7 +41,7 @@
 					<div class="flex flex-grow items-center -my-auto h-full">
 						<template v-if="kurs.id === editKursID">
 							<span class="flex-shrink-0 -my-0.5">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
-							<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless class="-my-1" />
+							<svws-ui-text-input :model-value="kurs.suffix" @blur="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless class="-my-1" />
 						</template>
 						<template v-else>
 							<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
@@ -68,7 +68,7 @@
 						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] === 0}">{{ kursdifferenz(kurs).value[1] }}</span>
+						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] <= 1}">{{ kursdifferenz(kurs).value[1] }}</span>
 					</div>
 				</template>
 				<template v-else>
