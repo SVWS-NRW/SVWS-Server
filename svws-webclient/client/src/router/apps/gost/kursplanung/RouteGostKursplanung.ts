@@ -92,7 +92,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return this.getRouteHalbjahr(abiturjahr, hj.id);
 		}
 		const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);
-		if (changedHalbjahr)
+		if (changedHalbjahr && (halbjahr.id !== this.data.halbjahr.id))
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		// Prüfe die Blockung und setzte diese ggf.
 		if (idBlockung === undefined) {
