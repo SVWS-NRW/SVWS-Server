@@ -97,7 +97,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler) {
 			const status = SchuelerStatus.fromID(s.status);
-			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
+			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME, SchuelerStatus.WARTELISTE].includes(status)))
 				mapSchueler.set(s.id, s);
 		}
 		// Lade die Lehrerliste
