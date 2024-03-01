@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-tr !grid-cols-1 -mt-px border-y border-black/10 !border-t-black/10 shadow-inner" :style="{ '--background-color': bgColor }">
+	<div class="svws-ui-tr !grid-cols-1 -mt-px border-y border-black/10 !border-t-black/10 shadow-inner select-none" :style="{ '--background-color': bgColor }">
 		<div class="pr-3 pl-7 pt-3 pb-4 flex gap-16">
 			<div class="flex flex-col gap-2 my-auto">
 				<div class="flex items-center gap-4">

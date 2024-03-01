@@ -1,6 +1,6 @@
 <template>
 	<template v-if="listeDerKurse.isEmpty() && fachwahlenAnzahl !== 0 && allowRegeln">
-		<div role="row" class="svws-ui-tr svws-disabled-soft" :style="{ '--background-color': bgColor }" :key="kursart.id">
+		<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="{ '--background-color': bgColor }" :key="kursart.id">
 			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td text-black/50">{{ fachwahlen.kuerzel }}-{{ kursart.kuerzel }}</div>
@@ -23,7 +23,7 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetail_anzeige === kurs.id}">
+			<div role="row" class="svws-ui-tr select-none" :style="{ '--background-color': bgColor }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetail_anzeige === kurs.id}">
 				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 					<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="getKursauswahl().contains(kurs.id) ? getKursauswahl().remove(kurs.id) : getKursauswahl().add(kurs.id)" headless />
 				</div>
@@ -113,12 +113,12 @@
 							</div>
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
-						<div v-else class=" w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
+						<div v-else class="w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
 							draggable="true" @dragstart.stop="setDrag(kurs, getErgebnismanager().getSchieneG(schiene.id), fachwahlen.id)" @dragend="resetDrag" ref="cellRefs"
-							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value, }">
+							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
-							<div v-if="(!isDragging) && (istKursGesperrtInSchiene(kurs, schiene).value)" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
-							<div v-if="(!isDragging) && (!istKursGesperrtInSchiene(kurs, schiene).value) && allowRegeln" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
+							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
+							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
 						</div>
 						<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
 							<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">
@@ -154,7 +154,7 @@
 	import { ref, computed } from "vue";
 	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene, GostBlockungRegel } from "@core";
-	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils, ApiSchema } from "@core";
+	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const cellRefs = ref([]);
@@ -169,9 +169,8 @@
 		if (filter.fach !== idFach) {
 			filter.kursart = kursart;
 			filter.fach = idFach;
-		} else {
+		} else
 			filter.reset();
-		}
 	}
 
 	async function add_kurs(art: GostKursart) {
@@ -194,9 +193,7 @@
 		editKursID.value = undefined;
 	}
 
-	const kursbezeichnung = (kurs: GostBlockungKurs) => computed<string>(() => {
-		return props.getDatenmanager().kursGetName(kurs.id)
-	});
+	const kursbezeichnung = (kurs: GostBlockungKurs) => computed<string>(() => props.getDatenmanager().kursGetName(kurs.id));
 
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
 		const filter = props.schuelerFilter();

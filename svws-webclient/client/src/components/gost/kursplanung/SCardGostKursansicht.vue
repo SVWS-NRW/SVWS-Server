@@ -2,7 +2,7 @@
 	<svws-ui-content-card overflow-scroll :class="{'mr-16': blockungstabelleVisible}">
 		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr select-none">
 					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						<div class="flex items-center justify-between w-full -my-2">
 							<div class="flex flex-row gap-2">
@@ -50,7 +50,7 @@
 						<template v-else>{{ s.nummer }}</template>
 					</div>
 				</div>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr select-none">
 					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						Schülerzahl
 					</div>
@@ -61,7 +61,7 @@
 						<span v-else class="opacity-25">0</span>
 					</div>
 				</div>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr select-none">
 					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						Kollisionen
 					</div>
@@ -82,7 +82,7 @@
 						<span v-else class="opacity-25 font-normal">0</span>
 					</div>
 				</div>
-				<div role="row" class="svws-ui-tr">
+				<div role="row" class="svws-ui-tr select-none">
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 							@update:model-value="updateKursauswahl" headless />
@@ -334,7 +334,7 @@
 	const modal_combine_kurse = ref();
 
 	async function selectedDo(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') {
-		if (dropSchiene.value === null || dropSchiene2.value === null || isSelectedKurse2.value === null)
+		if (dropSchiene.value === null || dropSchiene2.value === null || kurseInRechteckSet2.value === null)
 			throw new DeveloperNotificationException("Es wurden keine gültigen Daten für diese Aktion gefunden");
 		const s1 = props.getErgebnismanager().getSchieneG(dropSchiene.value.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dropSchiene2.value.id);
@@ -345,31 +345,31 @@
 		let update = new GostBlockungRegelUpdate();
 		switch (action) {
 			case 'schüler fixieren':
-				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse2.value);
+				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseInRechteckSet2.value);
 				break;
 			case 'schüler lösen':
-				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(isSelectedKurse2.value);
+				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseInRechteckSet2.value);
 				break;
 			case 'toggle schüler':
-				update = props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(isSelectedKurse2.value);
+				update = props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(kurseInRechteckSet2.value);
 				break;
 			case 'kurse fixieren':
-				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurseInRechteckSet2.value, schienenSet);
 				break;
 			case 'kurse lösen':
-				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurseInRechteckSet2.value, schienenSet);
 				break;
 			case 'toggle kurse':
-				update = props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(kurseInRechteckSet2.value, schienenSet);
 				break;
 			case 'schienen sperren':
-				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(kurseInRechteckSet2.value, schienenSet);
 				break;
 			case 'schienen entsperren':
-				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurseInRechteckSet2.value, schienenSet);
 				break;
 			case 'toggle schienen':
-				update = props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(isSelectedKurse2.value, schienenSet);
+				update = props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurseInRechteckSet2.value, schienenSet);
 				break;
 		}
 		await props.regelnUpdate(update);
@@ -387,10 +387,10 @@
 	const dropSchiene2 		= ref<GostBlockungSchiene|null>(null);
 	const dropFachID			= ref<number|null>(null);
 	const showTooltip 		= ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
-	const isSelectedKurse2= ref<JavaSet<number>|null>(null);
+	const kurseInRechteckSet2= ref<JavaSet<number>|null>(null);
 
 	/** ist das Drag-Objekt ein Kurs, der auf der Schiene liegt? */
-	const kursInSchiene = computed(() => {
+	const isKursDragging = computed(() => {
 		if (dragKurs.value === null || dragSchiene.value === null)
 			return false;
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragSchiene.value.id);
@@ -401,7 +401,7 @@
 		if (dragKurs.value === null || dragSchiene.value === null || dragOverKurs.value === null || dragOverSchiene.value === null)
 			return false;
 		// wird ein leeres Feld gezogen, dann ist das kein Grund für ein Highlight
-		if (!kursInSchiene.value)
+		if (!isKursDragging.value)
 			return false;
 		// befindet sich der Kurs außerhalb der eigenen Zeile, false
 		if (dragKurs.value.id !== dragOverKurs.value.id)
@@ -420,7 +420,7 @@
 		if (dragKurs.value === null || dragSchiene.value === null || dragOverSchiene.value === null || dragOverKurs.value === null)
 			return false;
 		// wenn kein Kurs gezogen wird, dann kann auch kein Highlighting stattfinden
-		if (!kursInSchiene.value)
+		if (!isKursDragging.value)
 			return false;
 		// kurs auf Kurs ist ungültig
 		if (kurs.id === dragKurs.value.id)
@@ -436,28 +436,28 @@
 		if (dragKurs.value === null || dragSchiene.value === null || dragOverSchiene.value === null || dragOverKurs.value === null)
 			return false;
 		// ein Kurs in der gleichen Zeile, also wenn Kursauswahl = 1, dann nicht erlauben, weil wir verschieben
-		if (kursInSchiene.value && isSelectedKurse.value.size() === 1)
+		if (isKursDragging.value && kurseInRechteckSet.value.size() === 1)
 			return false;
 		// wenn ich auf einem Kurs lande, dann will ich kein Rechteck, sondern eine Kurs mit Kurs-Aktion, es sei denn ich bin im gleichen Kurs oder ich habe keinen Kurs gezogen
-		if (props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id) && isSelectedKurse.value.size() > 1)
+		if (isKursDragging.value && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id))
 			return false;
 		// ist der aktuelle Kurs nicht Teil des Rechtecks, dann nicht highlighten
-		if (!isSelectedKurse.value.contains(kurs.id))
+		if (!kurseInRechteckSet.value.contains(kurs.id))
 			return false;
 		return ((schiene.nummer <= dragSchiene.value.nummer && schiene.nummer >= dragOverSchiene.value.nummer) || (schiene.nummer >= dragSchiene.value.nummer && schiene.nummer <= dragOverSchiene.value.nummer))
 	})
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
 	const highlightRechteckDrop = (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => computed<boolean>(() => {
-		if (dropKurs.value === null || dropSchiene.value === null || dropKurs2.value === null || dropSchiene2.value === null || isSelectedKurse2.value === null)
+		if (dropKurs.value === null || dropSchiene.value === null || dropKurs2.value === null || dropSchiene2.value === null || kurseInRechteckSet2.value === null)
 			return false;
-		if (!isSelectedKurse2.value.contains(kurs.id))
+		if (!kurseInRechteckSet2.value.contains(kurs.id))
 			return false;
 		return ((schiene.nummer <= dropSchiene.value.nummer && schiene.nummer >= dropSchiene2.value.nummer) || (schiene.nummer >= dropSchiene.value.nummer && schiene.nummer <= dropSchiene2.value.nummer))
 	})
 
 	/** Dieses computed ermittelt ein Set von Kursen, die innerhalb des Rechtecks liegen */
-	const isSelectedKurse = computed<JavaSet<number>>(() => {
+	const kurseInRechteckSet = computed<JavaSet<number>>(() => {
 		const range = new HashSet<number>();
 		if (dragKurs.value === null || dragOverKurs.value === null)
 			return range;
@@ -543,7 +543,7 @@
 	function setRechteck() {
 		dropKurs2.value = dragKurs.value;
 		dropSchiene2.value = dragSchiene.value;
-		isSelectedKurse2.value = isSelectedKurse.value;
+		kurseInRechteckSet2.value = kurseInRechteckSet.value;
 		if (dropKurs.value === null || dropSchiene.value === null || dragKurs.value === null || dragSchiene.value === null)
 			return;
 		showTooltip.value = { kursID: dropKurs.value.id, schieneID: dropSchiene.value.id };
