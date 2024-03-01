@@ -29,7 +29,7 @@ export class RouteGostFachwahlenLeistungskurse extends RouteNode<unknown, RouteG
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr }};
 		return false;
 	}
 
@@ -37,6 +37,7 @@ export class RouteGostFachwahlenLeistungskurse extends RouteNode<unknown, RouteG
 		if (to_params.abiturjahr instanceof Array)
 			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		routeGostFachwahlen.data.auswahl = { bereich: 'LK' };
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {

@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe> <hilfe-gost-fachwahlen /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page--content page--content--full">
-		<s-gost-fachwahlen-uebersicht :fachwahlstatistik="fachwahlstatistik" :do-select="doSelect" />
+		<s-gost-fachwahlen-uebersicht :fachwahlstatistik="fachwahlstatistik" :do-select="doSelect" :selected="selected" />
 		<svws-ui-content-card title="Schülerliste">
 			<router-view />
 		</svws-ui-content-card>

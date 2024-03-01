@@ -46,6 +46,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<unknown, RouteGos
 		if (halbjahr === null)
 			return new Error("Fehler: Das Halbjahr " + to_params.idhalbjahr + " ist ungültig");
 		this._halbjahr.value = halbjahr;
+		routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: halbjahr.kuerzel };
 	}
 
 	public getRoute(abiturjahr: number, idfach: number, halbjahr: GostHalbjahr) : RouteLocationRaw {

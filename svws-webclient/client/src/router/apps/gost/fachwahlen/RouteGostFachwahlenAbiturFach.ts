@@ -32,7 +32,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<unknown, RouteGost>
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr }};
 		return false;
 	}
 
@@ -41,10 +41,11 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<unknown, RouteGost>
 			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		this._idFach.value = !to_params.idfach ? -1 : parseInt(to_params.idfach);
+		routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: 'Abitur' };
 	}
 
 	public getRoute(abiturjahr: number, idfach: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr, idfach: idfach }};
+		return { name: this.name, params: { abiturjahr, idfach }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenAbiturFachProps {

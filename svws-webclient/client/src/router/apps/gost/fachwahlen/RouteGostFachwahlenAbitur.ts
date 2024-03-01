@@ -37,6 +37,7 @@ export class RouteGostFachwahlenAbitur extends RouteNode<unknown, RouteGost> {
 		if (to_params.abiturjahr instanceof Array)
 			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		routeGostFachwahlen.data.auswahl = { bereich: 'Abitur' };
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {

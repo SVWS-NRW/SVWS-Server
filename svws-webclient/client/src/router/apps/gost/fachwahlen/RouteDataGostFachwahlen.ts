@@ -20,6 +20,7 @@ interface RouteStateDataGostFachwahlen extends RouteStateInterface {
 	fachwahlstatistik: List<GostStatistikFachwahl>;
 	fachwahlenManager: GostJahrgangsFachwahlenManager;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
+	auswahl: { idFach?: number, bereich: string };
 }
 
 const defaultState = <RouteStateDataGostFachwahlen> {
@@ -27,6 +28,7 @@ const defaultState = <RouteStateDataGostFachwahlen> {
 	fachwahlstatistik: new ArrayList<GostStatistikFachwahl>(),
 	fachwahlenManager: new GostJahrgangsFachwahlenManager(new GostJahrgangFachwahlen()),
 	mapSchueler: new Map<number, SchuelerListeEintrag>(),
+	auswahl: { bereich: 'Fach' }
 };
 
 export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwahlen> {
@@ -53,7 +55,15 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		return this._state.value.mapSchueler;
 	}
 
-	public async setEintrag(abiturjahr: number) {
+	public get auswahl(): { idFach?: number, bereich: string } {
+		return this._state.value.auswahl;
+	}
+
+	public set auswahl(auswahl: { idFach?: number, bereich: string }) {
+		this.setPatchedState({auswahl});
+	}
+
+	public async setEintrag(abiturjahr: number, idFach?: number) {
 		if (abiturjahr === -1) {
 			this.setPatchedDefaultState({ abiturjahr });
 			return;
@@ -68,10 +78,15 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
 				mapSchueler.set(s.id, s);
 		}
-		this.setPatchedDefaultState({ abiturjahr, fachwahlstatistik, fachwahlenManager, mapSchueler });
+		const auswahl = this.auswahl;
+		if (idFach !== undefined)
+			auswahl.idFach = idFach;
+		this.setPatchedDefaultState({ abiturjahr, fachwahlstatistik, fachwahlenManager, mapSchueler, auswahl });
 	}
 
 	doSelect = async (idFach: number | undefined, bereich: string | undefined, halbjahr?: GostHalbjahr) : Promise<void> => {
+		// Setze die Auswahl
+		this.auswahl = { idFach, bereich: bereich || 'Fach' };
 		// Ermittle die Route, die aufgrund der Auswahl genutzt werden soll
 		let route : RouteLocationRaw | undefined;
 		if (idFach === undefined) {
@@ -101,6 +116,5 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		// Führe das Routing durch
 		await RouteManager.doRoute(route);
 	}
-
 }
 

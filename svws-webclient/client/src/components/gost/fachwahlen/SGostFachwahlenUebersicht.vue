@@ -1,6 +1,7 @@
 <template>
 	<svws-ui-content-card title="Übersicht aller Fachwahlen im Jahrgang">
-		<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background :class="{'svws-fachwahlen--has-selection': selected.group !== 'Fach' || selected.row}">
+		{{ selected().idFach }}, {{ selected().bereich }}
+		<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
 			<template #header>
 				<div role="row" class="svws-ui-tr select-none">
 					<div v-for="(heading, index) in colHeadings" :key="heading.text" class="svws-ui-td cursor-pointer" role="columnheader" @click="selectData(undefined, heading.text)"
@@ -8,10 +9,10 @@
 							[`col-span-${heading.cols.length}`]: true,
 							'svws-divider': index !== colHeadings.length - 1,
 							'svws-align-center': index !== 0,
-							'svws-selected': isSelected(undefined, heading.text)
+							'svws-selected': isSelected(undefined, heading.text).value,
 						}">
 						{{ heading.text }}
-						<svws-ui-tooltip v-if="selected.group === heading.text && selected.group === 'Fach' && !selected.row" indicator="help">
+						<svws-ui-tooltip v-if="selected().bereich === heading.text && selected().bereich === 'Fach' && !selected().idFach" indicator="help">
 							<span class="ml-auto">(alle ausgewählt)</span>
 							<template #content>
 								Klicke auf eine Reihe, Spalte oder einzelne Zelle, um Details zu sehen.
@@ -25,7 +26,7 @@
 							:class="{
 								'svws-align-center': h.center,
 								'svws-divider': (n === heading.cols.length - 1 && index !== colHeadings.length - 1),
-								'svws-selected': isSelected(undefined, heading.text)
+								'svws-selected': isSelected(undefined, heading.text).value,
 							}">
 							{{ h.text }}
 						</div>
@@ -39,8 +40,9 @@
 							:class="{
 								'svws-align-center': h.center,
 								'svws-divider': (n === heading.cols.length - 1) && (index !== colHeadings.length - 1),
-								'svws-selected': isSelected(row, heading.text),
-								'svws-selectable': isSelectable(row, heading.text) }">
+								'svws-selected': isSelected(row, heading.text).value,
+								'svws-selectable': isSelectable(row, heading.text).value,
+							}">
 							<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ getData(row, heading.text, h.text) }}</span>
 						</div>
 					</template>
@@ -51,30 +53,28 @@
 </template>
 
 <script setup lang="ts">
+	import { computed } from "vue";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
 	import type { DataTableColumn } from "@ui";
-	import { ref } from "vue";
 	import { GostHalbjahr, ZulaessigesFach, type GostStatistikFachwahl } from "@core";
 
 	const props = defineProps<GostFachwahlenProps>();
 
 	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
 
-	const selected = ref<{ row?: GostStatistikFachwahl, group: string}>({ group : "Fach" });
-
-	async function selectData(row: GostStatistikFachwahl | undefined, group: string) {
-		if ((row !== undefined) && (!isSelectable(row, group)))
+	async function selectData(row: GostStatistikFachwahl | undefined, bereich: string) {
+		if ((row !== undefined) && (!isSelectable(row, bereich).value))
 			return;
 		// Lade die neue Auswahl
 		const fach_id = (row === undefined) ? undefined : row.id;
-		const halbjahr = GostHalbjahr.fromKuerzel(group); // nur für GKs
-		switch (group) {
+		const halbjahr = GostHalbjahr.fromKuerzel(bereich); // nur für GKs
+		switch (bereich) {
 			case "Fach":
 				await props.doSelect(fach_id, undefined);
 				break;
 			case "ZK":
 			case "LK":
-				await props.doSelect(fach_id, group);
+				await props.doSelect(fach_id, bereich);
 				break;
 			case "Abitur":
 				await props.doSelect(fach_id, "Abi");
@@ -84,64 +84,59 @@
 					await props.doSelect(fach_id, "Halbjahr", halbjahr);
 				break;
 		}
-		// Setze die Auswahl
-		if (row === undefined) {
-			selected.value = { row: undefined, group };
-		} else if (isSelectable(row, group)) {
-			selected.value = { row, group };
-		}
 	}
 
-	function isSelected(row: GostStatistikFachwahl | undefined, group: string): boolean {
-		if (selected.value.row === undefined) {
+	const isSelected = (row: GostStatistikFachwahl | undefined, bereich: string) => computed<boolean>(() => {
+		const selected = props.selected();
+		if (selected.idFach === undefined) {
 			// Prüfe, ob alle Fächer ausgewählt sind. In diesem Fall wird keine Auswahl angezeigt
-			if (selected.value.group === "Fach")
+			if (selected.bereich === "Fach")
 				return false;
 			// Prüfe, ob eine Spalte ausgewählt ist. In diesem Fall werden alle Zellen der Spalte hervorgehoben
-			return (selected.value.group === group);
+			return (selected.bereich === bereich);
 		} else {
 			// Prüfe, ob ein Zeile, d.h. ein Fach ausgewählt ist
-			if ((selected.value.row.id === row?.id) && (selected.value.group === "Fach"))
+			if ((selected.idFach === row?.id) && (selected.bereich === "Fach"))
 				return true;
 			// Prüfe, ob die jeweilige Zelle ausgewählt ist
-			return ((selected.value.row.id === row?.id) && (selected.value.group === group));
+			return ((selected.idFach === row?.id) && (props.selected().bereich === bereich));
 		}
-	}
+	})
 
-	function isSelectable(row: GostStatistikFachwahl, group: string) : boolean {
-		if (group === "Fach")
+	const isSelectable = (row: GostStatistikFachwahl, bereich: string) => computed(() => {
+		if (bereich === "Fach")
 			return true;
-		if (group === "Abitur")
+		if (bereich === "Abitur")
 			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
-		if ((group === "ZK") || (group === "LK"))
+		if ((bereich === "ZK") || (bereich === "LK"))
 			return false; // Evtl. für weitere Ansichten: return getData(row, group, "") !== "";
-		const hj = GostHalbjahr.fromKuerzel(group);
+		const hj = GostHalbjahr.fromKuerzel(bereich);
 		if (hj === null)
 			return false;
 		const fw = row.fachwahlen[hj.id];
 		if (fw === null)
 			return false;
 		return (fw.wahlenGK !== 0);
-	}
+	})
 
-	function getData(row: GostStatistikFachwahl, group: string, item: string) {
-		if ((group === "Fach") && (item === "Kürzel"))
+	function getData(row: GostStatistikFachwahl, bereich: string, item: string) {
+		if ((bereich === "Fach") && (item === "Kürzel"))
 			return row.kuerzel;
-		if ((group === "Fach") && (item === "Fach"))
+		if ((bereich === "Fach") && (item === "Fach"))
 			return row.bezeichnung;
-		if ((group === "Abitur") && (item === "3"))
+		if ((bereich === "Abitur") && (item === "3"))
 			return row.wahlenAB3 || "";
-		if ((group === "Abitur") && (item === "4"))
+		if ((bereich === "Abitur") && (item === "4"))
 			return row.wahlenAB4 || "";
-		if ((group === "ZK") && (item === "")) {
+		if ((bereich === "ZK") && (item === "")) {
 			const maxZK = Math.max(row.fachwahlen[2].wahlenZK, row.fachwahlen[3].wahlenZK, row.fachwahlen[4].wahlenZK, row.fachwahlen[5].wahlenZK);
 			return maxZK === 0 ? "" : maxZK;
 		}
-		if ((group === "LK") && (item === "")) {
+		if ((bereich === "LK") && (item === "")) {
 			const maxLK = Math.max(row.fachwahlen[2].wahlenLK, row.fachwahlen[3].wahlenLK, row.fachwahlen[4].wahlenLK, row.fachwahlen[5].wahlenLK);
 			return maxLK === 0 ? "" : maxLK;
 		}
-		const hj = GostHalbjahr.fromKuerzel(group);
+		const hj = GostHalbjahr.fromKuerzel(bereich);
 		if (hj === null)
 			return "";
 		const fw = row.fachwahlen[hj.id];
