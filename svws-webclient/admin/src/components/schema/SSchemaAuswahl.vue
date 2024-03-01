@@ -12,7 +12,7 @@
 				<template #header(isTainted)>
 					<svws-ui-tooltip>
 						<i-ri-file-damage-line class="w-[1.4em] h-[1.4em] -my-1" />
-						<template #content>Tainted: Schema ist nicht in der angegebenen Revision und wird als Entwickler-Schema betrachtet</template>
+						<template #content>Tainted: Schema ist kann von der angegebenen Revision abweichen und wird als Entwickler-Schema betrachtet</template>
 					</svws-ui-tooltip>
 				</template>
 				<template #header(isInConfig)>
@@ -66,7 +66,7 @@
 	const cols = [
 		{ key: "name", label: "Name", sortable: true, span: 2 },
 		{ key: "revision", label: "Revision", sortable: true, span: 1 },
-		{ key: "isTainted", label: "Tainted", tooltip: 'Tainted: Schema ist nicht in der angegebenen Revision und wird als Entwickler-Schema betrachtet', sortable: true, span: 0.5 },
+		{ key: "isTainted", label: "Tainted", tooltip: 'Tainted: Schema kann von der angegebenen Revision abweichen und wird als Entwickler-Schema betrachtet', sortable: true, span: 0.5 },
 		{ key: "isInConfig", label: "Config", tooltip: 'Schema ist in der Config-Datei eingetragen', sortable: true, span: 0.5 },
 	]
 
