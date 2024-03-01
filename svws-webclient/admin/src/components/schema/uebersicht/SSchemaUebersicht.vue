@@ -15,7 +15,7 @@
 					<svws-ui-button type="secondary" @click="openModal" title="Schema aus Backup wiederherstellen"> <i-ri-device-recover-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup wiederherstellen </svws-ui-button>
 				</s-schema-import-modal>
 				<svws-ui-button @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <i-ri-save-3-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
-				<svws-ui-button type="secondary" :disabled="eintrag.isInConfig" @click="inConfig">In Config setzen</svws-ui-button>
+				<!-- <svws-ui-button type="secondary" :disabled="eintrag.isInConfig" @click="inConfig">In Config setzen</svws-ui-button> -->
 			</div>
 			<svws-ui-input-wrapper>
 				<svws-ui-button type="secondary" v-if="revisionUpToDate" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <i-ri-speed-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Revision auf {{ revision }} setzen </svws-ui-button>
@@ -52,8 +52,6 @@
 		{ key: "anzeigename", label: "Name", span: 3 },
 		{ key: "name", label: "Benutzername", span: 1, sortable: true },
 	];
-
-	async function inConfig() {}
 
 	async function getBackupSchema() {
 		const { data, name } = await props.backupSchema();

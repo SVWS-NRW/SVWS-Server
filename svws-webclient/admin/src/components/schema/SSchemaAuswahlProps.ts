@@ -15,6 +15,7 @@ export interface SchemaAuswahlProps {
 	importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	duplicateSchema: (formData: FormData, duplikat: string) => Promise<SimpleOperationResponse>;
+	addExistingSchemaToConfig: (data: BenutzerKennwort, schema: string) => Promise<void>;
 	refresh: () => Promise<void>;
 	apiStatus: ApiStatus;
 }

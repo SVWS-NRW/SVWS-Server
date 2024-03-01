@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
@@ -38,6 +39,7 @@ import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.schema.DBMigrationManager;
 import de.svws_nrw.db.utils.schema.DBRootManager;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
+import de.svws_nrw.db.utils.schema.DBSchemaStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1182,6 +1184,51 @@ public class APISchemaPrivileged {
     		try (DBEntityManager conn2 = schemaUser.getEntityManager()) {
     			return DBBenutzerUtils.runWithTransaction(c2 -> new DataSchuleStammdaten(c2).init(schulnummer), conn2);
     		}
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines bestehenden SVWS-Schemas zu der SVWS-Konfiguration.
+     *
+     * @param schema     das SVWS-Datenbankschema, welches hinzugefügt wird
+     * @param kennwort   Benutzername und Kennwort eines Benutzers mit vollen Rechten auf das Schema
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/api/schema/root/import/existing/{schema}")
+    @Operation(summary = "Fügt ein bestehendes SVWS-Schema zu der SVWS-Konfiguration hinzu.",
+    description = "Fügt ein bestehendes SVWS-Schema zu der SVWS-Konfiguration hinzu."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Das Schema wurde erfolgreich hinzugefügt")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Schema hinzuzufügen oder der "
+    		+ "angegebene Benutzer hat nicht ausreichend Rechte, um auf das Schema zuzugreifen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schema mit dem angebenen Namen gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response importExistingSchema(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Der Benutzername und das Kennwort für den DB-Zugriff auf das Schema", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
+			try {
+	    		final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
+	    		final Benutzer user2 = Benutzer.create(dbconfig);
+	    		try (DBEntityManager conn2 = user2.getEntityManager()) {
+    				final DBSchemaStatus status = DBUtilsSchema.getSchemaStatus(conn2, schema);
+    				if (status != null) {
+    					final SVWSKonfiguration config = SVWSKonfiguration.get();
+    					if (config.hasSchema(schema))
+    						throw OperationError.BAD_REQUEST.exception("Ein Schema mit dem Namen %s existiert bereits in der Konfiguration!".formatted(schema));
+    					if (!config.createOrUpdateSchema(schema, kennwort.user, kennwort.password, false))
+    						throw OperationError.BAD_REQUEST.exception("Benutzername oder Kennwort konnten für das Schema nicht gesetzt werden.");
+    				}
+    				return Response.status(Status.NO_CONTENT).build();
+	    		}
+			} catch (final Exception e) {
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			}
     	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 

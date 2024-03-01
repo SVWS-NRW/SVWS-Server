@@ -600,6 +600,29 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode importExistingSchema für den Zugriff auf die URL https://{hostname}/api/schema/root/import/existing/{schema}
+	 *
+	 * Fügt ein bestehendes SVWS-Schema zu der SVWS-Konfiguration hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Schema wurde erfolgreich hinzugefügt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Schema hinzuzufügen oder der angegebene Benutzer hat nicht ausreichend Rechte, um auf das Schema zuzugreifen.
+	 *   Code 404: Keine Schema mit dem angebenen Namen gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async importExistingSchema(data : BenutzerKennwort, schema : string) : Promise<void> {
+		const path = "/api/schema/root/import/existing/{schema}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = BenutzerKennwort.transpilerToJSON(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode importSQLite2Schema für den Zugriff auf die URL https://{hostname}/api/schema/root/import/sqlite/{schema}
 	 *
 	 * Importiert die übergebene SQLite-Datenbank in das Schema mit dem angegebenen Namen. Sollte ein Schema mit dem Namen bereits bestehen, so wird es ersetzt.

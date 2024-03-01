@@ -44,4 +44,3 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 }
 
 export const routeSchemaUebersicht = new RouteSchemaUebersicht();
-

@@ -34,6 +34,9 @@
 				<template #cell(isInConfig)="{ value, rowData }">
 					<i-ri-check-line v-if="value === true" />
 					<i-ri-alert-fill v-if="rowData.isDeactivated === true" class="text-error" />
+					<s-schema-auswahl-neu-modal v-if="value === false" v-slot="{ openModal }" :add-existing="addExistingSchemaToConfig" :schema="rowData.name">
+						<svws-ui-button @click="openModal" type="icon" title="Schema in die Konfiguration übernehmen"> <i-ri-close-line /> </svws-ui-button>
+					</s-schema-auswahl-neu-modal>
 				</template>
 				<template v-if="hasRootPrivileges" #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" title="Entfernt die ausgewählten SVWS-Schemata. Die jeweiligen Datenbank-Benutzer verlieren ihre Rechte auf das Schema, bleiben allerdings in der Datenbank angelegt." :disabled="apiStatus.pending" />

@@ -408,5 +408,18 @@ export class RouteDataSchema {
 		return result;
 	}
 
+	addExistingSchemaToConfig = async(data: BenutzerKennwort, schema: string) => {
+		if ((schema === undefined) || (schema === ""))
+			throw new DeveloperNotificationException("Es soll ein Schema zur Konfiguration hinzugefügt werden, aber es ist kein Schemaname angegeben.");
+		api.status.start();
+		await api.privileged.importExistingSchema(data, schema);
+		const eintrag = this.mapSchema.get(schema);
+		if (eintrag !== undefined) {
+			eintrag.isInConfig = true;
+		}
+		api.status.stop();
+		this.commit();
+	}
+
 	refresh = async () => await this.init(undefined);
 }
