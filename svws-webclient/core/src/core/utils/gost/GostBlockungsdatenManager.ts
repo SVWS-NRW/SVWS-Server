@@ -276,13 +276,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return -1;
 			if (a.schuelerID > b.schuelerID)
 				return +1;
-			if (a.kursartID < b.kursartID)
-				return -1;
-			if (a.kursartID > b.kursartID)
-				return +1;
 			const aFach : GostFach = this._faecherManager.getOrException(a.fachID);
 			const bFach : GostFach = this._faecherManager.getOrException(b.fachID);
-			return GostFaecherManager.comp.compare(aFach, bFach);
+			const tmp : number = GostFaecherManager.comp.compare(aFach, bFach);
+			if (tmp !== 0)
+				return tmp;
+			return JavaInteger.compare(a.kursartID, b.kursartID);
 		} };
 		return comp;
 	}

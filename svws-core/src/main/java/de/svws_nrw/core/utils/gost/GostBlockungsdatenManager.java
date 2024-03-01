@@ -212,12 +212,12 @@ public class GostBlockungsdatenManager {
 			if (a.schuelerID < b.schuelerID) return -1;
 			if (a.schuelerID > b.schuelerID) return +1;
 
-			if (a.kursartID < b.kursartID) return -1;
-			if (a.kursartID > b.kursartID) return +1;
-
 			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fachID);
 			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fachID);
-			return GostFaecherManager.comp.compare(aFach, bFach);
+			final int tmp = GostFaecherManager.comp.compare(aFach, bFach);
+			if (tmp != 0)
+				return tmp;
+			return Integer.compare(a.kursartID, b.kursartID);
 		};
 		return comp;
 	}
