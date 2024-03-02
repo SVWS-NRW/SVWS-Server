@@ -400,6 +400,7 @@
         <class>de.svws_nrw.db.dto.current.schule.DTOKAoAZusatzmerkmalKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTONationalitaetenKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOReligionKeys</class>
+        <class>de.svws_nrw.db.dto.current.schule.DTOSchuleEmail</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen</class>

@@ -211,6 +211,7 @@ import de.svws_nrw.db.dto.current.schule.DTOKAoASBOEB4Keys;
 import de.svws_nrw.db.dto.current.schule.DTOKAoAZusatzmerkmalKeys;
 import de.svws_nrw.db.dto.current.schule.DTONationalitaetenKeys;
 import de.svws_nrw.db.dto.current.schule.DTOReligionKeys;
+import de.svws_nrw.db.dto.current.schule.DTOSchuleEmail;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
@@ -458,6 +459,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOKAoAZusatzmerkmalKeys.class.getSimpleName(), DTOKAoAZusatzmerkmalKeys.class);
              mapDTOName2DTOClass.put(DTONationalitaetenKeys.class.getSimpleName(), DTONationalitaetenKeys.class);
              mapDTOName2DTOClass.put(DTOReligionKeys.class.getSimpleName(), DTOReligionKeys.class);
+             mapDTOName2DTOClass.put(DTOSchuleEmail.class.getSimpleName(), DTOSchuleEmail.class);
              mapDTOName2DTOClass.put(DTOCredentials.class.getSimpleName(), DTOCredentials.class);
              mapDTOName2DTOClass.put(DTOCredentialsLernplattformen.class.getSimpleName(), DTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(DTOLernplattformen.class.getSimpleName(), DTOLernplattformen.class);
@@ -708,6 +710,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("KAoA_Zusatzmerkmal_Keys", DTOKAoAZusatzmerkmalKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten_Keys", DTONationalitaetenKeys.class);
              mapTablename2DTOClass.put("Religionen_Keys", DTOReligionKeys.class);
+             mapTablename2DTOClass.put("EigeneSchule_Email", DTOSchuleEmail.class);
              mapTablename2DTOClass.put("Credentials", DTOCredentials.class);
              mapTablename2DTOClass.put("CredentialsLernplattformen", DTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen", DTOLernplattformen.class);

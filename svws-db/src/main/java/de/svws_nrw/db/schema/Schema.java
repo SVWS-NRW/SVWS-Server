@@ -29,6 +29,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_DavSyncTokenSchueler;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Abt_Kl;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Abteilungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Email;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_FachTeilleistungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Fachklassen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Faecher;
@@ -931,11 +932,11 @@ public final class Schema {
     /** Tabelle Gost_Klausuren_Aufsichten */
     public static final Tabelle_Gost_Klausuren_Raumstunden_Aufsichten tab_Gost_Klausuren_Raumstunden_Aufsichten = add(new Tabelle_Gost_Klausuren_Raumstunden_Aufsichten());
 
-//    /** Tabelle Gost_Klausuren_Entfall */
-//    public static final Tabelle_Gost_Klausuren_Entfall tab_Gost_Klausuren_Entfall = add(new Tabelle_Gost_Klausuren_Entfall());
-
     /** Tabelle Gost_Klausuren_Kalenderinformationen */
     public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen = add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
+
+    /** Tabelle EigeneSchule_Email */
+    public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
 
 
     /**
