@@ -3688,7 +3688,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
 	public regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3720,7 +3719,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
 	 */
 	public regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID) {
@@ -3742,7 +3740,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
 	 */
 	public regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3761,7 +3758,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
 	 */
 	public regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			const u2 : GostBlockungRegelUpdate = this.regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
@@ -3782,7 +3778,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3822,7 +3817,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3850,7 +3844,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
 	 */
 	public regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3890,7 +3883,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
 	 */
 	public regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs1 of setKursID)
 			for (const idKurs2 of setKursID)
@@ -3918,12 +3910,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 */
 	public regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
 			if (idKurs === rAlt.parameter.get(0)) {
 				u.listEntfernen.add(rAlt);
-				console.log(JSON.stringify("Lösche " + rAlt));
 			}
 		if (anzahl > 0) {
 			const rNeu : GostBlockungRegel = new GostBlockungRegel();
@@ -3932,7 +3922,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			rNeu.parameter.add(idKurs);
 			rNeu.parameter.add(anzahl as number);
 			u.listHinzuzufuegen.add(rNeu);
-			console.log(JSON.stringify("Erzeuge " + rNeu));
 		}
 		return u;
 	}
@@ -3947,7 +3936,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
 	public regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen : boolean) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN (" + erstellen + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const keyDummyAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ]);
 		const regelDummyAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
@@ -3978,7 +3966,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zusammen zu setzen.
 	 */
 	public regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -4042,7 +4029,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
 	public regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -4104,7 +4090,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
 	public regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -4145,7 +4130,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
 	public regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchueler1 : number, idSchueler2 : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
@@ -4183,7 +4167,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
 	public regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs : number, anzahl : number) : GostBlockungRegelUpdate {
-		console.log(JSON.stringify("called regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL (" + idKurs + ", " + anzahl + ")"));
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
 			if (idKurs === rAlt.parameter.get(0))

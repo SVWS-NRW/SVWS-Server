@@ -3982,7 +3982,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID)
@@ -4018,7 +4017,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_05_SCHUELER_VERBIETEN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID)
@@ -4043,7 +4041,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -4065,7 +4062,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -4090,7 +4086,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID)
@@ -4136,7 +4131,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_07_KURS_VERBIETEN_MIT_KURS (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID)
@@ -4168,7 +4162,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID)
@@ -4214,7 +4207,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_08_KURS_ZUSAMMEN_MIT_KURS (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID)
@@ -4246,14 +4238,12 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(final long idKurs, final int anzahl) {
-		System.out.println("called regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN (" + idKurs + ", " + anzahl + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
 		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
 			if (idKurs == rAlt.parameter.get(0)) {
 				u.listEntfernen.add(rAlt);
-				System.out.println("Lösche " + rAlt);
 			}
 
 		// (2)
@@ -4264,7 +4254,6 @@ public class GostBlockungsergebnisManager {
 			rNeu.parameter.add(idKurs);
 			rNeu.parameter.add((long) anzahl);
 			u.listHinzuzufuegen.add(rNeu);
-			System.out.println("Erzeuge " + rNeu);
 		}
 
 		return u;
@@ -4280,7 +4269,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(final boolean erstellen) {
-		System.out.println("called regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN (" + erstellen + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ});
@@ -4317,7 +4305,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zusammen zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(final long idSchueler1, final long idSchueler2, final long idFach) {
-		System.out.println("called regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4400,7 +4387,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(final long idSchueler1, final long idSchueler2, final long idFach) {
-		System.out.println("called regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH (" + idSchueler1 + ", " + idSchueler2 + ", " + idFach + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4481,7 +4467,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
-		System.out.println("called regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4533,7 +4518,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
-		System.out.println("called regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER (" + idSchueler1 + ", " + idSchueler2 + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4571,7 +4555,6 @@ public class GostBlockungsergebnisManager {
 		return u;
 	}
 
-	// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
@@ -4583,7 +4566,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final long idKurs, final int anzahl) {
-		System.out.println("called regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL (" + idKurs + ", " + anzahl + ")");
+		// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
