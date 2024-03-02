@@ -119,6 +119,15 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
     }
 
+
+	void addEmail() {
+		def version = "2.0.2";
+		project.configurations.create('email');
+		project.dependencies.add('email', 'org.eclipse.angus:angus-mail:' + version);
+    }
+
+
+
   	void apply(Project project) {
     	this.project = project;
     	project.pluginManager.apply "java"
@@ -147,6 +156,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();
+		this.addEmail();
     }
 
 }
