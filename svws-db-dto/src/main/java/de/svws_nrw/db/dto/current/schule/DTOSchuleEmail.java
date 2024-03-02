@@ -77,7 +77,7 @@ public final class DTOSchuleEmail {
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean SMTPStartTLS;
 
-	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost)  */
+	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost) */
 	@Column(name = "SMTPUseTLS")
 	@JsonProperty
 	@Convert(converter = Boolean01Converter.class)

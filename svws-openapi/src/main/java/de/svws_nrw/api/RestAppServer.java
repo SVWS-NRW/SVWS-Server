@@ -10,6 +10,7 @@ import de.svws_nrw.api.server.APIClientConfig;
 import de.svws_nrw.api.server.APIConfig;
 import de.svws_nrw.api.server.APIDatabase;
 import de.svws_nrw.api.server.APIENM;
+import de.svws_nrw.api.server.APIEmail;
 import de.svws_nrw.api.server.APIErzieher;
 import de.svws_nrw.api.server.APIFaecher;
 import de.svws_nrw.api.server.APIGesamtschule;
@@ -70,6 +71,7 @@ public final class RestAppServer extends Application {
 		APISchild.class,
 		APIKAOA.class,
 		APIENM.class,
+		APIEmail.class,
 		APIGostKlausuren.class,
 
 		OpenAPICorsFilter.class,

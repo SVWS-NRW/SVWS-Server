@@ -153,6 +153,7 @@ import { SchulgliederungKatalogEintrag } from '../core/data/schule/Schulgliederu
 import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
+import { SMTPServerKonfiguration } from '../core/data/email/SMTPServerKonfiguration';
 import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../core/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
@@ -1756,6 +1757,53 @@ export class ApiServer extends BaseApi {
 			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSMTPServerKonfiguration für den Zugriff auf die URL https://{hostname}/db/{schema}/email/smtp/server/konfiguration
+	 *
+	 * Gibt die SMTP-Server-Konfiguration der Schule zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die SMTP-Server-Konfiguration
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SMTPServerKonfiguration
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die SMTP-Server-Konfiguration
+	 */
+	public async getSMTPServerKonfiguration(schema : string) : Promise<SMTPServerKonfiguration> {
+		const path = "/db/{schema}/email/smtp/server/konfiguration"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SMTPServerKonfiguration.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSMTPServerKonfiguration für den Zugriff auf die URL https://{hostname}/db/{schema}/email/smtp/server/konfiguration
+	 *
+	 * Passt die SMTP-Server-Konfiguration an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich in die SMTP-Server-Konfiguration integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SMTPServerKonfiguration>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchSMTPServerKonfiguration(data : Partial<SMTPServerKonfiguration>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/email/smtp/server/konfiguration"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SMTPServerKonfiguration.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

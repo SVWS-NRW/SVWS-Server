@@ -44,7 +44,7 @@ public class Tabelle_EigeneSchule_Email extends SchemaTabelle {
 		.setDefault("0")
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost) ");
+		.setJavaComment("Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost)");
 
 	/** Die Definition der Tabellenspalte SMTPTrustTLSHost */
 	public SchemaTabelleSpalte col_SMTPTrustTLSHost = add("SMTPTrustTLSHost", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)

@@ -112,6 +112,7 @@ export { BKLernfeld } from './core/data/bk/BKLernfeld';
 export { DBSchemaListeEintrag } from './core/data/db/DBSchemaListeEintrag';
 export { MigrateBody } from './core/data/db/MigrateBody';
 export { SchemaListeEintrag } from './core/data/db/SchemaListeEintrag';
+export { SMTPServerKonfiguration } from './core/data/email/SMTPServerKonfiguration';
 export { ENMBKAbschluss } from './core/data/enm/ENMBKAbschluss';
 export { ENMBKFach } from './core/data/enm/ENMBKFach';
 export { ENMDaten } from './core/data/enm/ENMDaten';
