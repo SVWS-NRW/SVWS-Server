@@ -3780,6 +3780,25 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_ALLER_LK_UND_AB3() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if ((getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 3))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
 	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 *
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
