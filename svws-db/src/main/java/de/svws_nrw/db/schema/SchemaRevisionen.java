@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.db.schema.revisionen.Revision11Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -180,6 +181,7 @@ public enum SchemaRevisionen {
 	            case REV_3 -> new Revision3Updates();
 	            case REV_4 -> new Revision4Updates();
 	            case REV_6 -> new Revision6Updates();
+	            case REV_11 -> new Revision11Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }
