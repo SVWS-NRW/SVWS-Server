@@ -1998,18 +1998,16 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler den Kurs als LK-Abiturfach gewählt hat.
+	 * Liefert den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idKurs      Die Datenbank-ID des Kurses.
 	 *
-	 * @return TRUE, falls der Schüler den Kurs als LK-Abiturfach gewählt hat.
+	 * @return den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
 	 */
-	public boolean getOfSchuelerOfKursIstLK(final long idSchueler, final long idKurs) {
+	public int getOfSchuelerOfKursAbiturfach(final long idSchueler, final long idKurs) {
 		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-		if (fachwahl.abiturfach == null)
-			return false;
-		return (fachwahl.abiturfach >= 1) && (GostKursart.fromID(fachwahl.kursartID) == GostKursart.LK);
+		return (fachwahl.abiturfach == null) ? 0 : fachwahl.abiturfach;
 	}
 
 	/**
@@ -3756,7 +3754,26 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
-				if (getOfSchuelerOfKursIstLK(schueler.id, kurs.id))
+				if ((getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 2))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_ALLER_AB3() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) == 3)
 					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
