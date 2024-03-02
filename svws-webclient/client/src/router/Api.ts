@@ -299,6 +299,13 @@ class Api {
 	}
 
 
+	/**
+	 * Informiert die Api, dass ihre Daten, z.B. die Stammdaten der Schule im Client angepasst wurden
+	 */
+	updatedApiData = () => {
+		this.conn.updatedApiData();
+	}
+
 	/// --- Methoden für den einfachen Api-Zugriff
 
 	/**

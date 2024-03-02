@@ -48,7 +48,12 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleAppProps {
-		return { schule: api.schuleStammdaten, };
+		return {
+			schule: () => api.schuleStammdaten,
+			patch: this.data.patch,
+			benutzerIstAdmin: api.benutzerIstAdmin,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+		};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {
@@ -57,7 +62,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			child: this.getChild(),
 			children: this.getChildData(),
 			childrenHidden: this.children_hidden().value,
-			schule: api.schuleStammdaten,
+			schule: () => api.schuleStammdaten,
 		};
 	}
 

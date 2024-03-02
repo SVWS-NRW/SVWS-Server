@@ -6,5 +6,5 @@ export interface SchuleAuswahlProps {
 	child: AuswahlChildData;
 	children: AuswahlChildData[];
 	childrenHidden: boolean[];
-	schule: SchuleStammdaten;
+	schule: () => SchuleStammdaten;
 }

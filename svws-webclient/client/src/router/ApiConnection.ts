@@ -45,7 +45,7 @@ export class ApiConnection {
 	protected _config: Ref<Config | undefined> = ref(undefined);
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
-	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
+	protected _stammdaten: ShallowRef<{ stammdaten: SchuleStammdaten | undefined }> = shallowRef({ stammdaten : undefined });
 
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode: Ref<ServerMode> = shallowRef(ServerMode.STABLE)
@@ -139,9 +139,9 @@ export class ApiConnection {
 
 	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
 	get schuleStammdaten(): SchuleStammdaten {
-		if (this._stammdaten.value === undefined)
+		if (this._stammdaten.value.stammdaten === undefined)
 			throw new Error("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
-		return this._stammdaten.value;
+		return this._stammdaten.value.stammdaten;
 	}
 
 	/**
@@ -304,7 +304,7 @@ export class ApiConnection {
 			this._kompetenzen.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
-			this._stammdaten.value = undefined;
+			this._stammdaten.value.stammdaten = undefined;
 			this._serverMode.value = ServerMode.STABLE;
 		}
 	}
@@ -317,10 +317,10 @@ export class ApiConnection {
 	init = async (): Promise<boolean> => {
 		try {
 			if (this._api && this._schema)
-				this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
+				this._stammdaten.value.stammdaten = await this._api.getSchuleStammdaten(this._schema);
 			return true;
 		} catch(error) {
-			this._stammdaten.value = undefined;
+			this._stammdaten.value.stammdaten = undefined;
 		}
 		return false;
 	}
@@ -330,13 +330,20 @@ export class ApiConnection {
 	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
-		this._stammdaten.value = undefined;
+		this._stammdaten.value.stammdaten = undefined;
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;
+	}
+
+	/**
+	 * Informiert die Api-Verbindung, dass ihre Daten, z.B. die Stammdaten der Schule angepasst wurden
+	 */
+	updatedApiData = () => {
+		this._stammdaten.value = { ... this._stammdaten.value };
 	}
 
 }
