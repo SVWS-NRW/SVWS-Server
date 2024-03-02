@@ -1983,6 +1983,57 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als LK gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als LK gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstLK(final long idSchueler, final long idKurs) {
+		final int abiturfach = getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach >= 1) && (abiturfach <= 2);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als AB3 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als AB3 gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstAB3(final long idSchueler, final long idKurs) {
+		final int abiturfach = getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach == 3);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als LK oder AB3 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als LK oder AB3 gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstLKoderAB3(final long idSchueler, final long idKurs) {
+		final int abiturfach = getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach >= 1) && (abiturfach <= 3);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als AB4 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als AB4 gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstAB4(final long idSchueler, final long idKurs) {
+		final int abiturfach = getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach == 4);
+	}
+	/**
 	 * Liefert TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -1991,10 +2042,8 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
 	 */
 	public boolean getOfSchuelerOfKursIstAbiturfach(final long idSchueler, final long idKurs) {
-		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-		if (fachwahl.abiturfach == null)
-			return false;
-		return fachwahl.abiturfach >= 1;
+		final int abiturfach = getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return abiturfach >= 1;
 	}
 
 	/**
@@ -2005,10 +2054,24 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
 	 */
-	public int getOfSchuelerOfKursAbiturfach(final long idSchueler, final long idKurs) {
+	private int getOfSchuelerOfKursAbiturfach(final long idSchueler, final long idKurs) {
 		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 		return (fachwahl.abiturfach == null) ? 0 : fachwahl.abiturfach;
 	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstSchriftlich(final long idSchueler, final long idKurs) {
+		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		return fachwahl.istSchriftlich;
+	}
+
 
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
@@ -3742,19 +3805,19 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_ALLER_LKS() {
 		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
-				if ((getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 2))
+				if (getOfSchuelerOfKursIstLK(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
@@ -3766,33 +3829,90 @@ public class GostBlockungsergebnisManager {
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_ALLER_AB3() {
 		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
-				if (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) == 3)
+				if (getOfSchuelerOfKursIstAB3(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_ALLER_LK_UND_AB3() {
 		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
-				if ((getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 3))
+				if (getOfSchuelerOfKursIstLKoderAB3(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04h_SCHUELER_FIXIEREN_ALLER_AB4() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if (getOfSchuelerOfKursIstAB4(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04i_SCHUELER_FIXIEREN_ALLER_AB() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if (getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_ALLER_SCHRIFTLICHEN() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if (getOfSchuelerOfKursIstSchriftlich(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);

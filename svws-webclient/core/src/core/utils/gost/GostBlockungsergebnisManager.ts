@@ -1871,6 +1871,58 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als LK gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als LK gewählt hat.
+	 */
+	public getOfSchuelerOfKursIstLK(idSchueler : number, idKurs : number) : boolean {
+		const abiturfach : number = this.getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach >= 1) && (abiturfach <= 2);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als AB3 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als AB3 gewählt hat.
+	 */
+	public getOfSchuelerOfKursIstAB3(idSchueler : number, idKurs : number) : boolean {
+		const abiturfach : number = this.getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach === 3);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als LK oder AB3 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als LK oder AB3 gewählt hat.
+	 */
+	public getOfSchuelerOfKursIstLKoderAB3(idSchueler : number, idKurs : number) : boolean {
+		const abiturfach : number = this.getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach >= 1) && (abiturfach <= 3);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als AB4 gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als AB4 gewählt hat.
+	 */
+	public getOfSchuelerOfKursIstAB4(idSchueler : number, idKurs : number) : boolean {
+		const abiturfach : number = this.getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return (abiturfach === 4);
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -1879,10 +1931,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
 	 */
 	public getOfSchuelerOfKursIstAbiturfach(idSchueler : number, idKurs : number) : boolean {
-		const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-		if (fachwahl.abiturfach === null)
-			return false;
-		return fachwahl.abiturfach >= 1;
+		const abiturfach : number = this.getOfSchuelerOfKursAbiturfach(idSchueler, idKurs);
+		return abiturfach >= 1;
 	}
 
 	/**
@@ -1893,9 +1943,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
 	 */
-	public getOfSchuelerOfKursAbiturfach(idSchueler : number, idKurs : number) : number {
+	private getOfSchuelerOfKursAbiturfach(idSchueler : number, idKurs : number) : number {
 		const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 		return (fachwahl.abiturfach === null) ? 0 : fachwahl.abiturfach;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 */
+	public getOfSchuelerOfKursIstSchriftlich(idSchueler : number, idKurs : number) : boolean {
+		const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		return fachwahl.istSchriftlich;
 	}
 
 	/**
@@ -3470,18 +3533,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04e_SCHUELER_FIXIEREN_ALLER_LKS() : GostBlockungRegelUpdate {
 		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
 		for (const schueler of this._parent.schuelerGetListe())
 			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
-				if ((this.getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (this.getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 2))
+				if (this.getOfSchuelerOfKursIstLK(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
 		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
@@ -3492,30 +3555,81 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04f_SCHUELER_FIXIEREN_ALLER_AB3() : GostBlockungRegelUpdate {
 		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
 		for (const schueler of this._parent.schuelerGetListe())
 			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
-				if (this.getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) === 3)
+				if (this.getOfSchuelerOfKursIstAB3(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
 		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3 Schüler zu fixieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04g_SCHUELER_FIXIEREN_ALLER_LK_UND_AB3() : GostBlockungRegelUpdate {
 		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
 		for (const schueler of this._parent.schuelerGetListe())
 			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
-				if ((this.getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) >= 1) && (this.getOfSchuelerOfKursAbiturfach(schueler.id, kurs.id) <= 3))
+				if (this.getOfSchuelerOfKursIstLKoderAB3(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 */
+	public regelupdateCreate_04h_SCHUELER_FIXIEREN_ALLER_AB4() : GostBlockungRegelUpdate {
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		for (const schueler of this._parent.schuelerGetListe())
+			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
+				if (this.getOfSchuelerOfKursIstAB4(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
+	 */
+	public regelupdateCreate_04i_SCHUELER_FIXIEREN_ALLER_AB() : GostBlockungRegelUpdate {
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		for (const schueler of this._parent.schuelerGetListe())
+			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
+				if (this.getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 */
+	public regelupdateCreate_04j_SCHUELER_FIXIEREN_ALLER_SCHRIFTLICHEN() : GostBlockungRegelUpdate {
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		for (const schueler of this._parent.schuelerGetListe())
+			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
+				if (this.getOfSchuelerOfKursIstSchriftlich(schueler.id, kurs.id))
 					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
 		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
