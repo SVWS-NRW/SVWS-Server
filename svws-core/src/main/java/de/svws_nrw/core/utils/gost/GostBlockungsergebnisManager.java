@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.adt.PairNN;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -1997,6 +1998,21 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als LK-Abiturfach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als LK-Abiturfach gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstLK(final long idSchueler, final long idKurs) {
+		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		if (fachwahl.abiturfach == null)
+			return false;
+		return (fachwahl.abiturfach >= 1) && (GostKursart.fromID(fachwahl.kursartID) == GostKursart.LK);
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -3184,7 +3200,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung einer Rechtecks-Auswahl zu realisieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		//System.out.println("called regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT (" + setKursID + ", " + setSchienenNr + ")")
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -3234,7 +3249,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		//System.out.println("called regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT (" + setKursID + ", " + setSchienenNr + ")")
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// Beim Fixieren muss man über die Kurse und dann über die Schienen des Kurses iterieren.
@@ -3263,7 +3277,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID)
@@ -3300,7 +3313,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Fixierung einer Kursmenge komplett zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID)
@@ -3323,7 +3335,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurse komplett in ihrer Lage zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
-		System.out.println("called regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN (" + "" + ")");
 		return regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(_parent.kursmengeGetSetDerIDs());
 	}
 
@@ -3333,7 +3344,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Schienen-Fixierungen zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
-		System.out.println("called regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN (" + "" + ")");
 		return regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(_parent.kursmengeGetSetDerIDs());
 	}
 
@@ -3349,7 +3359,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Fixierung zu realisieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-	    System.out.println("called regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE (" + setKursID + ", " + setSchienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// Beim Fixieren muss man über die Kurse und dann über die Schienen des Kurses iterieren.
@@ -3398,7 +3407,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
-		System.out.println("called regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE (" + idKurs + ", " + schienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -3442,7 +3450,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
-		System.out.println("called regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE (" + idKurs + ", " + schienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -3464,7 +3471,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		System.out.println("called regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE (" + setKursID + ", " + setSchienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID)
@@ -3497,7 +3503,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		System.out.println("called regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE (" + setKursID + ", " + setSchienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID)
@@ -3523,7 +3528,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Sperrung zu realisieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(final @NotNull Set<@NotNull Long> setKursID, final @NotNull Set<@NotNull Integer> setSchienenNr) {
-		System.out.println("called regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE (" + setKursID + ", " + setSchienenNr + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID)
@@ -3568,7 +3572,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID)
@@ -3615,7 +3618,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS (" + setSchuelerID + ", " + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID)
@@ -3642,7 +3644,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -3664,7 +3665,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -3684,7 +3684,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler in ihren aktuellen Kursen zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() {
-		System.out.println("called regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN (" + "" + ")");
 		return regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(_map_kursID_kurs.keySet());
 	}
 
@@ -3695,7 +3694,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() {
-		System.out.println("called regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN (" + "" + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		u.listEntfernen.addAll(_parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
 		return u;
@@ -3712,7 +3710,6 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um ein Schüler-Kurs-Fixierung-Toggle zu realisieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(final @NotNull Set<@NotNull Long> setKursID) {
-		System.out.println("called regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE (" + setKursID + ")");
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID)
@@ -3742,6 +3739,78 @@ public class GostBlockungsergebnisManager {
 							u.listEntfernen.add(rFixierung2);
 					}
 			}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_ALLER_LKS() {
+		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
+				if (getOfSchuelerOfKursIstLK(schueler.id, kurs.id))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+
+		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
+	 *
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @param schuelerKursPaare  Die Menge aller Schüler-Kurs-Paare.
+	 *
+	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
+	 */
+	private @NotNull GostBlockungRegelUpdate regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare) {
+		// TODO Wenn der Schüler gar nicht den Kurs wählen kann --> ignorieren.
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final @NotNull PairNN<@NotNull Long, @NotNull Long> pair : schuelerKursPaare) {
+			final @NotNull Long idSchueler = pair.a;
+			final @NotNull Long idKurs = pair.b;
+			final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(idKurs);
+
+			// (1)
+			final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
+			final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
+			if (regelSperrung != null)
+				u.listEntfernen.add(regelSperrung);
+
+			// (2) (3)
+			for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
+				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id});
+				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
+
+				if (kurs1.id == kurs2.id) {
+					if (regelFixierung == null) {
+						// (2)
+						final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
+						regelHinzufuegen.id = -1;
+						regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+						regelHinzufuegen.parameter.add(idSchueler);
+						regelHinzufuegen.parameter.add(idKurs);
+						u.listHinzuzufuegen.add(regelHinzufuegen);
+					}
+				} else {
+					if (regelFixierung != null) {
+						// (3)
+						u.listEntfernen.add(regelFixierung);
+					}
+				}
+			}
+		}
 
 		return u;
 	}

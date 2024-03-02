@@ -43,6 +43,7 @@ export { Schwerpunkt } from './core/abschluss/gost/belegpruefung/Schwerpunkt';
 export { Sport } from './core/abschluss/gost/belegpruefung/Sport';
 export { LongArrayKey } from './core/adt/LongArrayKey';
 export { Pair } from './core/adt/Pair';
+export { PairNN } from './core/adt/PairNN';
 export { LinkedCollection } from './core/adt/collection/LinkedCollection';
 export { LinkedCollectionDescendingIterator } from './core/adt/collection/LinkedCollectionDescendingIterator';
 export { LinkedCollectionElement } from './core/adt/collection/LinkedCollectionElement';
