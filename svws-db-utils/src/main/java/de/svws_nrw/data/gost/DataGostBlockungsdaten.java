@@ -895,7 +895,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		// Bestimme die Fächer und die Schienen aus der Kurstabelle
 		final HashMap<Long, DTOKurs> mapKurse = new HashMap<>();
-		final HashSet<Integer> setSchienen = new HashSet<>();
+		int maxSchiene = -1;
 		final Set<Long> setFachIDs = new HashSet<>();
 		for (final DTOKurs kurs : listKurse) {
 			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
@@ -910,7 +910,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				if ("".equals(strSchiene.trim()))
 					continue;
 				try {
-					setSchienen.add(Integer.parseInt(strSchiene.trim()));
+					final int schiene = Integer.parseInt(strSchiene.trim());
+					if (schiene > maxSchiene)
+						maxSchiene = schiene;
 				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 					// ignore exception
 				}
@@ -994,7 +996,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final DTOSchemaAutoInkremente lastSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		long idSchiene = lastSchienenID == null ? 0 : lastSchienenID.MaxID + 1;
 		final HashMap<Integer, Long> mapSchienen = new HashMap<>();
-		for (final Integer schienenNr : setSchienen) {
+		for (int schienenNr = 1; schienenNr <= maxSchiene; schienenNr++) {
 			final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(idSchiene, idBlockung, schienenNr, "Schiene " + schienenNr, 3);
 			mapSchienen.put(schienenNr, idSchiene);
 			conn.transactionPersist(schiene);
