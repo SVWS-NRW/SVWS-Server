@@ -10,14 +10,22 @@
 				</div>
 			</div>
 			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td col-span-2" :class="{'opacity-25': !aktuell.fachwahl?.id}">Gesamt im Halbjahr</div>
+				<div role="cell" class="svws-ui-td col-span-2" :class="{'opacity-25': !aktuell.fachwahl?.id}">Fach / Halbjahr / Summe</div>
 				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
 					<i-ri-draft-line class="text-sm -my-0.5" />
-					<span>Schriftlich</span>
+					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
 					<i-ri-speak-line class="text-sm -my-0.5" />
-					<span>Mündlich</span>
+					<span>Grundkurs</span>
+				</div>
+				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
+					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span>Leistungskurs</span>
+				</div>
+				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
+					<i-ri-speak-line class="text-sm -my-0.5" />
+					<span>Zusatzkurs</span>
 				</div>
 			</div>
 		</template>
@@ -48,8 +56,8 @@
 											</span>
 										</div>
 										<div role="cell" class="svws-ui-td">
-											<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK > 0">
-												{{ fws.fachwahlen[halbjahr.id].wahlenGK }}
+											<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK + fws.fachwahlen[halbjahr.id].wahlenLK + fws.fachwahlen[halbjahr.id].wahlenZK > 0">
+												{{ fws.fachwahlen[halbjahr.id].wahlenGK + fws.fachwahlen[halbjahr.id].wahlenLK + fws.fachwahlen[halbjahr.id].wahlenZK }}
 											</template>
 											<span v-else class="opacity-25">—</span>
 										</div>
@@ -65,9 +73,22 @@
 											</template>
 											<span v-else class="opacity-25">—</span>
 										</div>
+										<div role="cell" class="svws-ui-td">
+											<template v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0">
+												{{ fws.fachwahlen[halbjahr.id].wahlenLK }}
+											</template>
+											<span v-else class="opacity-25">—</span>
+										</div>
+										<div role="cell" class="svws-ui-td">
+											<template v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0">
+												{{ fws.fachwahlen[halbjahr.id].wahlenZK }}
+											</template>
+											<span v-else class="opacity-25">—</span>
+										</div>
 									</div>
 									<div class="svws-ui-tr" role="row" v-if="aktuell.halbjahr?.id === halbjahr.id">
-										<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col" :class="{'col-span-2 !pl-4 text-black/50 dark:text-white/50 hover:text-black focus-within:text-black dark:hover:text-white dark:focus-within:text-white': col === 1}">
+										<div role="cell" class="svws-ui-td col-span-2 !pl-4 text-black/50 dark:text-white/50 hover:text-black focus-within:text-black dark:hover:text-white dark:focus-within:text-white" />
+										<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3, 4]" :key="col">
 											<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 												<i-ri-link class="text-sm" />
 												<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
@@ -138,6 +159,8 @@
 		{ key: "GK", label: "GK", span: 1 },
 		{ key: "GKS", label: "GKS", span: 1 },
 		{ key: "GKM", label: "GKM", span: 1 },
+		{ key: "LK", label: "LK", span: 1 },
+		{ key: "ZK", label: "ZK", span: 1 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
@@ -157,10 +180,15 @@
 
 	function getSchuelerListe(idFach : number, halbjahr: GostHalbjahr, col: number) : List<SchuelerListeEintrag> {
 		const result = new ArrayList<SchuelerListeEintrag>();
-		const schuelermenge = col === 1
-			? props.fachwahlenManager.schuelerGetMengeGKByFachAndHalbjahrAsListOrException(idFach, halbjahr) : col === 2
-				? props.fachwahlenManager.schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach, halbjahr)
-				: props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr)
+		let schuelermenge : List<number> = new ArrayList<number>();
+		if (col === 1)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if (col === 2)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if (col === 3)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if (col === 4)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeZKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
 		for (const id of schuelermenge) {
 			const schueler = props.mapSchueler.get(id);
 			if (schueler !== undefined)

@@ -10,11 +10,11 @@
 				<div role="cell" class="svws-ui-td">Halbjahr</div>
 				<div role="cell" class="svws-ui-td">
 					<i-ri-draft-line class="text-sm -my-0.5" />
-					<span>Schriftlich</span>
+					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
 					<i-ri-speak-line class="text-sm -my-0.5" />
-					<span>Mündlich</span>
+					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
 					<i-ri-draft-line class="text-sm -my-0.5" />
