@@ -1,6 +1,5 @@
 <template>
 	<svws-ui-content-card title="Übersicht aller Fachwahlen im Jahrgang">
-		{{ selected().idFach }}, {{ selected().bereich }}
 		<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background :class="{'svws-fachwahlen--has-selection': selected().bereich !== 'Fach' || selected().idFach}">
 			<template #header>
 				<div role="row" class="svws-ui-tr select-none">
