@@ -20,6 +20,10 @@
 					<i-ri-draft-line class="text-sm -my-0.5" />
 					<span>Leistungskurs</span>
 				</div>
+				<div v-if="istZKMoeglich" role="cell" class="svws-ui-td">
+					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span>Zusatzkurs</span>
+				</div>
 			</div>
 		</template>
 		<template #body>
@@ -54,10 +58,16 @@
 								</template>
 								<span v-else class="opacity-25">—</span>
 							</div>
+							<div v-if="istZKMoeglich" role="cell" class="svws-ui-td">
+								<template v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0">
+									{{ fws.fachwahlen[halbjahr.id].wahlenZK }}
+								</template>
+								<span v-else class="opacity-25">—</span>
+							</div>
 						</div>
 						<div v-if="aktuell?.id === halbjahr.id" role="row" class="svws-ui-tr">
 							<div> <!----> </div>
-							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col">
+							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in (istZKMoeglich ? [1, 2, 3, 4] : [1, 2, 3])" :key="col">
 								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 									<i-ri-link class="text-sm" />
 									<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
@@ -84,6 +94,29 @@
 	/*const aktuell = ref<GostHalbjahr | undefined>(GostHalbjahr.EF1);*/
 	const aktuell = ref<GostHalbjahr | undefined>(undefined);
 
+	const istZKMoeglich = computed<boolean>(() => {
+		const fach = props.faecherManager.get(props.fachID);
+		if (fach === null)
+			return false;
+		const zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		if (zfach === null)
+			return false;
+		return (zfach === ZulaessigesFach.GE) || (zfach === ZulaessigesFach.SW);
+	});
+
+	const cols = computed<Array<DataTableColumn>>(() => {
+		const result : DataTableColumn[] = [
+			{ key: "HJ", label: "HJ", fixedWidth: 6 },
+			{ key: "GKS", label: "GKS", span: 1 },
+			{ key: "GKM", label: "GKM", span: 1 },
+			{ key: "LK", label: "LK", span: 1 },
+		];
+		if (istZKMoeglich.value) {
+			result.push({ key: "ZK", label: "ZK", span: 1 });
+		}
+		return result;
+	});
+
 	function onClick(halbjahr: GostHalbjahr): void {
 		aktuell.value = (aktuell.value?.id === halbjahr.id) ? undefined : halbjahr;
 	}
@@ -94,13 +127,6 @@
 				return f;
 		return undefined;
 	});
-
-	const cols: DataTableColumn[] = [
-		{ key: "HJ", label: "HJ", fixedWidth: 6 },
-		{ key: "LK", label: "LK", span: 1 },
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
-	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
 
@@ -126,6 +152,8 @@
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
 		else if (col === 3)
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if ((istZKMoeglich.value) && (col === 4))
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeZKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
 		for (const id of schuelermenge) {
 			const schueler = props.mapSchueler.get(id);
 			if (schueler !== undefined)
