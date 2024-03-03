@@ -16,6 +16,10 @@
 					<i-ri-speak-line class="text-sm -my-0.5" />
 					<span>Mündlich</span>
 				</div>
+				<div role="cell" class="svws-ui-td">
+					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span>Leistungskurs</span>
+				</div>
 			</div>
 		</template>
 		<template #body>
@@ -44,10 +48,16 @@
 								</template>
 								<span v-else class="opacity-25">—</span>
 							</div>
+							<div role="cell" class="svws-ui-td">
+								<template v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0">
+									{{ fws.fachwahlen[halbjahr.id].wahlenLK }}
+								</template>
+								<span v-else class="opacity-25">—</span>
+							</div>
 						</div>
 						<div v-if="aktuell?.id === halbjahr.id" role="row" class="svws-ui-tr">
 							<div> <!----> </div>
-							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2]" :key="col">
+							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col">
 								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 									<i-ri-link class="text-sm" />
 									<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
@@ -87,6 +97,7 @@
 
 	const cols: DataTableColumn[] = [
 		{ key: "HJ", label: "HJ", fixedWidth: 6 },
+		{ key: "LK", label: "LK", span: 1 },
 		{ key: "GKS", label: "GKS", span: 1 },
 		{ key: "GKM", label: "GKM", span: 1 },
 	];
@@ -108,9 +119,13 @@
 
 	function getSchuelerListe(idFach : number, halbjahr: GostHalbjahr, col: number) : List<SchuelerListeEintrag> {
 		const result = new ArrayList<SchuelerListeEintrag>();
-		const schuelermenge = (col === 1)
-			? props.fachwahlenManager.schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach, halbjahr)
-			: props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr)
+		let schuelermenge : List<number> = new ArrayList<number>();
+		if (col === 1)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if (col === 2)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		else if (col === 3)
+			schuelermenge = props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
 		for (const id of schuelermenge) {
 			const schueler = props.mapSchueler.get(id);
 			if (schueler !== undefined)
