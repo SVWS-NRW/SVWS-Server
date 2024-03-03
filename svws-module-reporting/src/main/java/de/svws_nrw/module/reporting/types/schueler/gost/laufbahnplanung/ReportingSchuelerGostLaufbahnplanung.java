@@ -1,13 +1,14 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.</p>
@@ -318,6 +319,7 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 */
 	public void setBeratungslehrkraefte(final List<ReportingLehrer> beratungslehrkraefte) {
 		this.beratungslehrkraefte = beratungslehrkraefte;
+		this.beratungslehrkraefte.sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
 	}
 
 	/**

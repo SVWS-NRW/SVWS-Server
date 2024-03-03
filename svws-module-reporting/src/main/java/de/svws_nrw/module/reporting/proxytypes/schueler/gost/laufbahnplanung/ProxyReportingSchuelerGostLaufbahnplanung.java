@@ -33,10 +33,12 @@ import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLauf
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldungKategorie;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -208,6 +210,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 						this.reportingRepository,
 						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id))));
 			}
+			super.beratungslehrkraefte().sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
 		}
 	}
 
