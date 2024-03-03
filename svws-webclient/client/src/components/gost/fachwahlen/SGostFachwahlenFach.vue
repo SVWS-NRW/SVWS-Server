@@ -21,7 +21,7 @@
 					<span>Leistungskurs</span>
 				</div>
 				<div v-if="istZKMoeglich" role="cell" class="svws-ui-td">
-					<i-ri-draft-line class="text-sm -my-0.5" />
+					<i-ri-speak-line class="text-sm -my-0.5" />
 					<span>Zusatzkurs</span>
 				</div>
 			</div>
