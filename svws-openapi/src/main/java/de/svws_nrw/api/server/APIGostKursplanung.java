@@ -1160,7 +1160,7 @@ public class APIGostKursplanung {
             final List<Long> idsSchueler,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css", false, true, idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css", false, false, true, idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1211,7 +1211,7 @@ public class APIGostKursplanung {
             final List<Long> idsSchueler,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css", false, !(idsSchueler == null || idsSchueler.isEmpty()), idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css", false, false, !(idsSchueler == null || idsSchueler.isEmpty()), idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1263,7 +1263,7 @@ public class APIGostKursplanung {
             final List<Long> idsKurse,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css", !(idsKurse == null || idsKurse.isEmpty()), false, idBlockungsergebnis, idsKurse, new ArrayList<>(), false, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css", false, !(idsKurse == null || idsKurse.isEmpty()), false, idBlockungsergebnis, idsKurse, new ArrayList<>(), false, false, 0))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

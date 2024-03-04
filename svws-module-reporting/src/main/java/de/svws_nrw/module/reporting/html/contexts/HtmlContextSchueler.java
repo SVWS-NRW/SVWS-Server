@@ -1,12 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.data.gost.DBUtilsGost;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
-import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
@@ -19,7 +13,6 @@ import org.thymeleaf.context.Context;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,15 +30,41 @@ public final class HtmlContextSchueler extends HtmlContext {
 	private ArrayList<ProxyReportingSchueler> schueler = new ArrayList<>();
 
 	/**
+	 * Initialisiert einen neuen HtmlContext mit dem übergebenen Context.
+	 *
+	 * @param context	HtmlContext mit allen notwendigen Daten
+	 */
+	public HtmlContextSchueler(final Context context) {
+		super.setContext(context);
+	}
+
+	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Das Repository zur Schuldatenbank.
+	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 * @param schuelerIDs			Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 * @param mitGostDaten 			Legt fest, ob die Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
-	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten, final boolean mitAbiturDaten) {
-		erzeugeContext(reportingRepository, schuelerIDs, mitGostDaten, mitAbiturDaten);
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> schuelerIDs) {
+		erzeugeContext(reportingRepository, schuelerIDs);
+	}
+
+
+	/**
+	 * Teil diesen gesamten Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
+	 * @return	Liste der Einzel-Contexts.
+	 */
+	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
+		final List<HtmlContextSchueler> contexts = new ArrayList<>();
+		for (final ProxyReportingSchueler proxyReportingSchueler : schueler) {
+			final List<ProxyReportingSchueler> einzelschueler = new ArrayList<>();
+			einzelschueler.add(proxyReportingSchueler);
+
+			final Context context = new Context();
+			context.setVariable("Schueler", einzelschueler);
+
+			contexts.add(new HtmlContextSchueler(context));
+		}
+		return contexts;
 	}
 
 	/**
@@ -61,74 +80,21 @@ public final class HtmlContextSchueler extends HtmlContext {
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
 	 *
-	 * @param reportingRepository	Das Repository zur Schuldatenbank.
-	 * @param schuelerIDs   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
-	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
+	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
-	private void erzeugeContext(final ReportingRepository reportingRepository, final List<Long> schuelerIDs, final boolean mitGostDaten, final boolean mitAbiturDaten) throws WebApplicationException {
+	private void erzeugeContext(final ReportingRepository reportingRepository, final List<Long> idsSchueler) throws WebApplicationException {
 
-		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 		final DBEntityManager conn = reportingRepository.conn();
 
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Datenbankverbindung ungültig.");
+			throw OperationError.NOT_FOUND.exception("Keine Datenbankverbindung übergeben.");
 
-		if (schuelerIDs == null)
+		if (idsSchueler == null || idsSchueler.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Schueler-IDs übergeben.");
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
-		final Map<Long, SchuelerStammdaten> mapSchueler = DataSchuelerStammdaten.getListStammdaten(conn, schuelerIDs).stream().collect(Collectors.toMap(s -> s.id, s -> s));
-		for (final Long sID : schuelerIDs)
-			if (mapSchueler.get(sID) == null)
-				throw OperationError.NOT_FOUND.exception("Es wurden ungültige Schüler-IDs übergeben.");
-
-
-		// Nur, wenn Daten zur gymnasialen Oberstufe mit angefordert werden.
-        if (mitGostDaten) {
-			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (WebApplicationException ex) {
-				throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
-			}
-
-            final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(schuelerIDs));
-
-			for (final Long sID : schuelerIDs)
-				if (mapGostBeratungsdaten.get(sID) == null)
-					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-
-			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
-		}
-
-		// Nur, wenn Daten zum Abitur in der gymnasialen Oberstufe mit angefordert werden.
-		if (mitAbiturDaten) {
-			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (WebApplicationException ex) {
-				throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
-			}
-
-			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
-
-			for (final Long sID : schuelerIDs) {
-				try {
-					mapGostSchuelerAbiturdaten.put(sID, DBUtilsGostAbitur.getAbiturdaten(conn, sID));
-				} catch (WebApplicationException ex) {
-					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
-				}
-			}
-
-			reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
-		}
-
-		// ####### Daten sind valide. Bereite nun Daten vor, um den Daten-Context später erzeugen zu können. #################################################################
-
-		// Initialisieren des Repository für das Einlesen der Daten mehrerer Schüler
-		reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
-		reportingRepository.mapAktuelleLernabschnittsdaten().putAll(new DataSchuelerLernabschnittsdaten(conn).getListFromSchuelerIDsUndSchuljahresabschnittID(schuelerIDs, reportingRepository.aktuellerSchuljahresabschnitt().id, false).stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
+		final Map<Long, SchuelerStammdaten> mapSchueler = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
 
 		// Die Schüler bzw. ihre IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe sollten
 		// sie aber in alphabetischer Reihenfolge der Schüler sein.

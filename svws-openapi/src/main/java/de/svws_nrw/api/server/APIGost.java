@@ -919,7 +919,7 @@ public class APIGost {
 		final List<Long> idsSchueler,
 		@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", false, false, null, new ArrayList<>(), idsSchueler, true, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", false, false, false, null, new ArrayList<>(), idsSchueler, true, false, 0))
 					.createPdf(),
 			request, ServerMode.DEV,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
@@ -968,7 +968,7 @@ public class APIGost {
 			@PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1017,7 +1017,7 @@ public class APIGost {
             @PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css", false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css", false, false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
 					.createPdf(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

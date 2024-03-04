@@ -13,6 +13,7 @@ import de.svws_nrw.module.reporting.html.contexts.gost.kursplanung.HtmlContextGo
 import de.svws_nrw.module.reporting.proxytypes.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -51,6 +52,9 @@ public final class PdfFactory {
 
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
 	private final String dateipfadCss;
+
+	// Legt fest, ob pro Schülerdatensatz ein eigener Kontext erzeugt werden soll, bspw. um pro Schüler ein Dokument zu erzeugen.
+	private final boolean erzeugeEinzelkontexteSchueler;
 
 	/** Legt fest, ob die IDs-Liste der Kurse als Filter dient. */
 	private final boolean filterKurse;
@@ -95,6 +99,7 @@ public final class PdfFactory {
 	 * @param conn Die Verbindung zur Datenbank.
 	 * @param dateipfadHtmlTemplate Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird.
 	 * @param dateipfadCss Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren.
+	 * @param erzeugeEinzelkontexteSchueler Legt fest, ob pro Schülerdatensatz ein eigener Kontext erzeugt werden soll, bspw. um pro Schüler ein Dokument zu erzeugen.
 	 * @param filterKurse Legt fest, ob auf die Kurse aus der IDs-Filterliste gefiltert werden soll.
 	 * @param filterSchueler Legt fest, ob auf die Schüler aus der IDs-Filterliste gefiltert werden soll.
 	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses, aus dem die Daten für die PDF_Erzeugung genutzt werden sollen.
@@ -104,10 +109,11 @@ public final class PdfFactory {
 	 * @param ladeSchuelerMitGostDaten Legt fest, ob für die Schüler auch die Laufbahnplanungsdaten der GOSt mit geladen werden sollen.
 	 * @param parameterDetailLevel Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
 	 */
-	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final String dateipfadCss, final boolean filterKurse, final boolean filterSchueler, final Long idBlockungsergebnis, final List<Long> idsKurse, final List<Long> idsSchueler, final boolean ladeSchuelerMitAbiturDaten, final boolean ladeSchuelerMitGostDaten, final int parameterDetailLevel) {
+	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final String dateipfadCss, final boolean erzeugeEinzelkontexteSchueler, final boolean filterKurse, final boolean filterSchueler, final Long idBlockungsergebnis, final List<Long> idsKurse, final List<Long> idsSchueler, final boolean ladeSchuelerMitAbiturDaten, final boolean ladeSchuelerMitGostDaten, final int parameterDetailLevel) {
 		this.conn = conn;
 		this.dateipfadHtmlTemplate = dateipfadHtmlTemplate;
 		this.dateipfadCss = dateipfadCss;
+		this.erzeugeEinzelkontexteSchueler = erzeugeEinzelkontexteSchueler;
 		this.filterKurse = filterKurse;
 		this.filterSchueler = filterSchueler;
 		this.idBlockungsergebnis = idBlockungsergebnis;
@@ -133,8 +139,19 @@ public final class PdfFactory {
 	public Response createPdf() {
 
 		try {
-			final PdfBuilder pdfBuilder = getPdfBuilder();
-			return pdfBuilder.getPdfResponse();
+			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
+			if (!pdfBuilders.isEmpty()) {
+				if (!erzeugeEinzelkontexteSchueler) {
+					return pdfBuilders.getFirst().getPdfResponse();
+				} else {
+					return pdfBuilders.getFirst().getPdfResponse();
+//					for (final PdfBuilder pdfBuilder : pdfBuilders) {
+//						// TODO mehrere PDF erzeugen und dann in ZIP oder ähnliches packen.
+//					}
+				}
+			} else {
+				throw OperationError.INTERNAL_SERVER_ERROR.exception("Es keine PDF-Builder generiert werden.");
+			}
 		} catch (Exception e) {
 			String htmlTemplate = "";
 
@@ -175,10 +192,13 @@ public final class PdfFactory {
 
 
 	/**
-	 * Erzeugt auf Basis der hinterlegten html-Vorlage und der übergebenen Daten den PdfBuilder zur Erzeugung der PDF-Datei.
-	 * @return						Ein PDF-Builder zur Erzeugung der PDF-Datei
+	 * Erzeugt auf Basis der hinterlegten html-Vorlage und der übergebenen Daten die PdfBuilder zur Erzeugung der PDF-Dateien.
+	 * @return Ein oder mehrere PDF-Builder zur Erzeugung der PDF-Dateien.
 	 */
-	private PdfBuilder getPdfBuilder() {
+	private List<PdfBuilder> getPdfBuilders() {
+
+		// Klasse für die Validierung der über die API übergebenen Daten.
+		final ReportingValidierung reportingValidierung = new ReportingValidierung();
 
 		// Ermittele den Namen der übergebenen html-Vorlagendatei, um damit die Dateinamensgenerierung zu steuern.
 		dateinameHtmlTemplate = dateipfadHtmlTemplate.substring(dateipfadHtmlTemplate.lastIndexOf('/') + 1);
@@ -197,7 +217,9 @@ public final class PdfFactory {
 
 		logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben.".formatted(idsSchueler.size()));
 		if (!idsSchueler.isEmpty()) {
-			final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, idsSchueler, ladeSchuelerMitGostDaten, ladeSchuelerMitAbiturDaten);
+			// Validiere die Daten der Schüler und speichere bereits gewonnene Daten aus der DB im Repository.
+			reportingValidierung.validiereSchuelerDaten(reportingRepository, idsSchueler, ladeSchuelerMitGostDaten, ladeSchuelerMitAbiturDaten, true);
+			final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, idsSchueler);
 			mapHtmlContexts.put("Schueler", htmlContextSchueler);
 		} else {
 			if (supportedSchuelerTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
@@ -220,17 +242,43 @@ public final class PdfFactory {
 		final Map<String, Object> variables = new HashMap<>();
 		variables.put("parameterDetailLevel", parameterDetailLevel);
 
-		// Dateiname der PDF-Datei aus den Daten erzeugen.
-		logger.logLn("Erzeuge PDF-Dateiname.");
-		String pdfDateiname = getPdfDateiname(mapHtmlContexts);
+		final List<PdfBuilder> pdfBuilders = new ArrayList<>();
 
-		// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
-		logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html für die PDF-Datei.".formatted(dateipfadHtmlTemplate));
-		final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList(), variables);
-		final String html = htmlBuilder.getHtml();
+		if (erzeugeEinzelkontexteSchueler && !idsSchueler.isEmpty()) {
+			logger.logLn("Erzeuge einzelne Kontexte für jeden Schüler.");
+			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
+			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelSchuelerContexts();
 
-		logger.logLn("Erzeuge PDF-Builder mit finalem html.");
-		return new PdfBuilder(html, dateipfadCss, pdfDateiname);
+			for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
+				mapHtmlContexts.put("Schueler", schuelerContext);
+
+				// Dateiname der PDF-Datei aus den Daten erzeugen.
+				logger.logLn("Erzeuge PDF-Dateiname für den Schüler (Einzeldateien).");
+				String pdfDateiname = getPdfDateiname(mapHtmlContexts);
+
+				// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
+				logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html für die PDF-Datei (Einzeldateien).".formatted(dateipfadHtmlTemplate));
+				final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList(), variables);
+				final String html = htmlBuilder.getHtml();
+
+				logger.logLn("Erzeuge PDF-Builder mit finalem html (Einzeldateien).");
+				pdfBuilders.add(new PdfBuilder(html, dateipfadCss, pdfDateiname));
+			}
+		} else {
+			// Dateiname der PDF-Datei aus den Daten erzeugen.
+			logger.logLn("Erzeuge PDF-Dateiname für die Schüler in einem Gesamtkontext.");
+			String pdfDateiname = getPdfDateiname(mapHtmlContexts);
+
+			// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
+			logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html für die PDF-Datei.".formatted(dateipfadHtmlTemplate));
+			final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList(), variables);
+			final String html = htmlBuilder.getHtml();
+
+			logger.logLn("Erzeuge PDF-Builder mit finalem html.");
+			pdfBuilders.add(new PdfBuilder(html, dateipfadCss, pdfDateiname));
+		}
+
+		return pdfBuilders;
 	}
 
 
