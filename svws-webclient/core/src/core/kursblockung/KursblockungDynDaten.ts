@@ -540,14 +540,14 @@ export class KursblockungDynDaten extends JavaObject {
 		this._kursArr = Array(nKurse).fill(null);
 		let i : number = 0;
 		for (const kurs of input.daten().kurse) {
-			const dynKurs : KursblockungDynKurs = this.schritt08FehlerBeiKursErstellungErzeuge(kurs, nSchienen, i, nSchueler);
+			const dynKurs : KursblockungDynKurs = this.schritt08FehlerBeiKursErstellungErzeuge(input, kurs, nSchienen, i, nSchueler);
 			this._kursArr[i] = dynKurs;
 			DeveloperNotificationException.ifMapPutOverwrites(this._kursMap, kurs.id, dynKurs);
 			i++;
 		}
 	}
 
-	private schritt08FehlerBeiKursErstellungErzeuge(kurs : GostBlockungKurs, nSchienen : number, kursNr : number, nSchueler : number) : KursblockungDynKurs {
+	private schritt08FehlerBeiKursErstellungErzeuge(input : GostBlockungsdatenManager, kurs : GostBlockungKurs, nSchienen : number, kursNr : number, nSchueler : number) : KursblockungDynKurs {
 		DeveloperNotificationException.ifSmaller("kurs.anzahlSchienen", kurs.anzahlSchienen, 1);
 		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", kurs.anzahlSchienen, this._schienenArr.length);
 		const schieneLage : List<KursblockungDynSchiene> = new ArrayList();
@@ -587,7 +587,7 @@ export class KursblockungDynDaten extends JavaObject {
 		const anzahlFixierterSchienen : number = schieneLage.size();
 		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", anzahlFixierterSchienen, kurs.anzahlSchienen);
 		while (schieneLage.size() < kurs.anzahlSchienen) {
-			UserNotificationException.ifTrue("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
+			UserNotificationException.ifTrue(input.toStringKurs(kurs.id)! + " hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
 			const indexLast : number = schieneFrei.size() - 1;
 			const s : KursblockungDynSchiene | null = schieneFrei.get(indexLast);
 			if (s !== null) {

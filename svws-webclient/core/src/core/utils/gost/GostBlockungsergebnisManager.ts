@@ -592,7 +592,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r : GostBlockungRegel) : void {
 		const idKurs : number = r.parameter.get(0).valueOf();
 		const anzahl : number = r.parameter.get(1)!;
-		DeveloperNotificationException.ifTrue("Regel 9 DummySuS-Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
+		DeveloperNotificationException.ifTrue("Regel 9: " + this._parent.toStringKurs(idKurs)! + " mit SuS-Anzahl " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_dummySuS, idKurs, anzahl);
 	}
 
@@ -685,7 +685,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung15_kurs_maximale_schueleranzahl(r : GostBlockungRegel, regelVerletzungen : List<number>, mapRegelVerletzungen : JavaMap<number, List<string>>) : void {
 		const idKurs : number = r.parameter.get(0).valueOf();
 		const maxSuS : number = r.parameter.get(1)!;
-		DeveloperNotificationException.ifTrue("Regel 15 maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
+		DeveloperNotificationException.ifTrue("Regel 15: " + this._parent.toStringKurs(idKurs)! + " maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_maxSuS, idKurs, maxSuS);
 		const sus : number = this.getOfKursAnzahlSchuelerPlusDummy(idKurs);
 		if (sus > maxSuS) {
@@ -833,18 +833,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateSchuelerSchieneEntfernen(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
 		const schieneSchuelerzahl : number = this.getOfSchieneAnzahlSchueler(idSchiene);
-		DeveloperNotificationException.ifTrue("schieneSchuelerzahl == 0 --> Entfernen unmöglich!", schieneSchuelerzahl === 0);
+		DeveloperNotificationException.ifTrue(this._parent.toStringSchueler(idSchueler)! + " entfernen aus " + this._parent.toStringKurs(kurs.id)! + " / " + this._parent.toStringSchiene(idSchiene)! + " unmöglich, da Schienen-SuS-Anzahl = " + schieneSchuelerzahl + "!", schieneSchuelerzahl <= 0);
 		this._map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl - 1);
 		const kursmenge : JavaSet<GostBlockungsergebnisKurs> = this._map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 		kursmenge.remove(kurs);
 		if (!kursmenge.isEmpty()) {
 			const schieneKollisionen : number = this.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene);
-			DeveloperNotificationException.ifTrue("schieneKollisionen == 0 --> Entfernen unmöglich!", schieneKollisionen === 0);
+			DeveloperNotificationException.ifTrue(this._parent.toStringSchiene(idSchiene)! + " hat " + schieneKollisionen + " Kollisionen --> Entfernen unmöglich!", schieneKollisionen <= 0);
 			this._map_schienenID_kollisionen.put(idSchiene, schieneKollisionen - 1);
 			const schuelerKollisionen : number = this.getOfSchuelerAnzahlKollisionen(idSchueler);
-			DeveloperNotificationException.ifTrue("schuelerKollisionen == 0 --> Entfernen unmöglich!", schuelerKollisionen === 0);
+			DeveloperNotificationException.ifTrue(this._parent.toStringSchueler(idSchiene)! + " hat " + schuelerKollisionen + " Kollisionen --> Entfernen unmöglich!", schuelerKollisionen <= 0);
 			this._map_schuelerID_kollisionen.put(idSchueler, schuelerKollisionen - 1);
-			DeveloperNotificationException.ifTrue("Gesamtkollisionen == 0 --> Entfernen unmöglich!", this._ergebnis.bewertung.anzahlSchuelerKollisionen === 0);
+			DeveloperNotificationException.ifTrue("Gesamtkollisionen = " + this._ergebnis.bewertung.anzahlSchuelerKollisionen + " --> Entfernen unmöglich!", this._ergebnis.bewertung.anzahlSchuelerKollisionen <= 0);
 			this._ergebnis.bewertung.anzahlSchuelerKollisionen--;
 		}
 	}
@@ -1851,7 +1851,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				kursS.kursart = kursE.kursart;
 				kursS.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
 				kursS.istFixiert = this.getOfSchuelerOfKursIstFixiert(idSchueler, idKurs) || (fixiereBelegteKurse && this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
-				DeveloperNotificationException.ifTrue("kursS.istGesperrt && kursS.istFixiert", kursS.istGesperrt && kursS.istFixiert);
+				DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " von " + this._parent.toStringSchueler(idSchueler)! + " ist gesperrt und fixiert zugleich!", kursS.istGesperrt && kursS.istFixiert);
 				kursS.anzahlSuS = this.getOfKursAnzahlSchueler(idKurs);
 				kursS.schienen = this.getOfKursSchienenNummern(idKurs);
 				input.kurse.add(kursS);
@@ -2009,7 +2009,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerGeschlechtOrException(idSchueler : number) : Geschlecht {
 		const schueler : Schueler = this.getSchuelerG(idSchueler);
 		const geschlecht : Geschlecht | null = Geschlecht.fromValue(schueler.geschlecht);
-		return DeveloperNotificationException.ifNull("Das Geschlecht des Schülers " + idSchueler + " ist nicht definiert!", geschlecht);
+		return DeveloperNotificationException.ifNull("Das Geschlecht des Schülers " + this._parent.toStringSchueler(idSchueler)! + " ist nicht definiert!", geschlecht);
 	}
 
 	/**
@@ -4568,7 +4568,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddSchieneByID(idSchiene : number) : void {
-		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.schieneGetExistiert(idSchiene));
+		DeveloperNotificationException.ifTrue("Die Schiene " + this._parent.toStringSchiene(idSchiene)! + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.schieneGetExistiert(idSchiene));
 		this.stateRevalidateEverything();
 	}
 
@@ -4581,9 +4581,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *                                         falls die Schiene noch Kurszuordnungen hat.
 	 */
 	public setRemoveSchieneByID(idSchiene : number) : void {
-		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager entfernt werden!", this._parent.schieneGetExistiert(idSchiene));
+		DeveloperNotificationException.ifTrue("Die Schiene " + this._parent.toStringSchiene(idSchiene)! + " muss erst beim Datenmanager entfernt werden!", this._parent.schieneGetExistiert(idSchiene));
 		const nKurse : number = this.getSchieneE(idSchiene).kurse.size();
-		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + idSchiene + " hat noch " + nKurse + " Kurse!", nKurse > 0);
+		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + this._parent.toStringSchiene(idSchiene)! + " hat noch " + nKurse + " Kurse!", nKurse > 0);
 		this.stateRevalidateEverything();
 	}
 
@@ -4595,7 +4595,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddRegelByID(idRegel : number) : void {
-		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(idRegel));
+		DeveloperNotificationException.ifTrue("Die Regel " + this._parent.toStringRegel(idRegel)! + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
@@ -4608,7 +4608,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setAddRegelmenge(regelmenge : List<GostBlockungRegel>) : void {
 		for (const regel of regelmenge)
-			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(regel.id));
+			DeveloperNotificationException.ifTrue("Die Regel " + this._parent.toStringRegel(regel.id)! + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(regel.id));
 		this.stateRevalidateEverything();
 	}
 
@@ -4620,7 +4620,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveRegelByID(idRegel : number) : void {
-		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(idRegel));
+		DeveloperNotificationException.ifTrue("Die Regel " + this._parent.toStringRegel(idRegel)! + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
@@ -4633,7 +4633,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setRemoveRegelmenge(regelmenge : List<GostBlockungRegel>) : void {
 		for (const regel of regelmenge)
-			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(regel.id));
+			DeveloperNotificationException.ifTrue("Die Regel " + this._parent.toStringRegel(regel.id)! + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(regel.id));
 		this.stateRevalidateEverything();
 	}
 
@@ -4645,7 +4645,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
 	public setAddKursByID(idKurs : number) : void {
-		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.kursGetExistiert(idKurs));
+		DeveloperNotificationException.ifTrue("" + this._parent.toStringKurs(idKurs)! + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.kursGetExistiert(idKurs));
 		const kurs : GostBlockungKurs = this._parent.kursGet(idKurs);
 		const nSchienen : number = this._parent.schieneGetAnzahl();
 		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
@@ -4674,7 +4674,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setRemoveKurseByID(idKurse : List<number>) : void {
 		for (const idKurs of idKurse)
-			DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
+			DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
 		for (const idKurs of idKurse) {
 			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 			for (const schienenID of kurs.schienen)
@@ -4745,11 +4745,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursG : GostBlockungKurs = this.getKursG(idKurs);
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const nSchienen : number = this._parent.schieneGetAnzahl();
-		DeveloperNotificationException.ifTrue("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!", !this._parent.getIstBlockungsVorlage());
-		DeveloperNotificationException.ifTrue("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
+		DeveloperNotificationException.ifTrue("Die Schienenanzahl von " + this._parent.toStringKurs(idKurs)! + " darf nur bei der Blockungsvorlage verändert werden!", !this._parent.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " hat als GostBlockungKurs " + kursG.anzahlSchienen + " Schienen, als GostBlockungsergebnisKurs hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen === 0);
-		DeveloperNotificationException.ifTrue("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + anzahlSchienenNeu + " Schienen!", anzahlSchienenNeu <= 0);
-		DeveloperNotificationException.ifTrue("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + anzahlSchienenNeu + " Schienen zugeordnet werden!", anzahlSchienenNeu > nSchienen);
+		DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " muss mindestens einer Schiene zugeordnet sein, statt " + anzahlSchienenNeu + " Schienen!", anzahlSchienenNeu <= 0);
+		DeveloperNotificationException.ifTrue("Es gibt nur " + nSchienen + " Schienen, somit kann " + this._parent.toStringKurs(idKurs)! + " nicht " + anzahlSchienenNeu + " Schienen zugeordnet werden!", anzahlSchienenNeu > nSchienen);
 		while (anzahlSchienenNeu > kursG.anzahlSchienen) {
 			let hinzugefuegt : boolean = false;
 			for (let nr : number = 1; (nr <= this._map_schienenNr_schiene.size()) && (!hinzugefuegt); nr++) {
@@ -4761,7 +4761,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					this.setKursSchiene(idKurs, schiene.id, true);
 				}
 			}
-			DeveloperNotificationException.ifTrue("Es wurde keine freie Schiene für den Kurs " + idKurs + " gefunden!", !hinzugefuegt);
+			DeveloperNotificationException.ifTrue("Es wurde keine freie Schiene für " + this._parent.toStringKurs(idKurs)! + " gefunden!", !hinzugefuegt);
 		}
 		while (anzahlSchienenNeu < kursG.anzahlSchienen) {
 			let entfernt : boolean = false;
@@ -4774,7 +4774,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					this.setKursSchiene(idKurs, schiene.id, false);
 				}
 			}
-			DeveloperNotificationException.ifTrue("Es wurde keine belegte Schiene von Kurs " + idKurs + " gefunden!", !entfernt);
+			DeveloperNotificationException.ifTrue("Es wurde keine belegte Schiene von " + this._parent.toStringKurs(idKurs)! + " gefunden!", !entfernt);
 		}
 	}
 

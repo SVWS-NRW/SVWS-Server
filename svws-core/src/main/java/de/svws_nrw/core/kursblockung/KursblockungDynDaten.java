@@ -629,7 +629,7 @@ public class KursblockungDynDaten {
 		_kursArr = new KursblockungDynKurs[nKurse];
 		int i = 0;
 		for (final @NotNull GostBlockungKurs kurs : input.daten().kurse) {
-			final @NotNull KursblockungDynKurs dynKurs = schritt08FehlerBeiKursErstellungErzeuge(kurs, nSchienen, i, nSchueler);
+			final @NotNull KursblockungDynKurs dynKurs = schritt08FehlerBeiKursErstellungErzeuge(input, kurs, nSchienen, i, nSchueler);
 			_kursArr[i] = dynKurs;
 			DeveloperNotificationException.ifMapPutOverwrites(_kursMap, kurs.id, dynKurs);
 			i++;
@@ -637,7 +637,7 @@ public class KursblockungDynDaten {
 
 	}
 
-	private @NotNull KursblockungDynKurs schritt08FehlerBeiKursErstellungErzeuge(final @NotNull GostBlockungKurs kurs, final int nSchienen, final int kursNr, final int nSchueler) {
+	private @NotNull KursblockungDynKurs schritt08FehlerBeiKursErstellungErzeuge(final @NotNull GostBlockungsdatenManager input, final @NotNull GostBlockungKurs kurs, final int nSchienen, final int kursNr, final int nSchueler) {
 		// Fehler: Kurs belegt zu wenig Schienen.
 		DeveloperNotificationException.ifSmaller("kurs.anzahlSchienen", kurs.anzahlSchienen, 1);
 
@@ -695,7 +695,7 @@ public class KursblockungDynDaten {
 
 		// Fülle "schieneLage" auf, bis die richtige Anzahl erreicht ist.
 		while (schieneLage.size() < kurs.anzahlSchienen) {
-			UserNotificationException.ifTrue("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
+			UserNotificationException.ifTrue(input.toStringKurs(kurs.id) + " hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
 			final int indexLast = schieneFrei.size() - 1;
 			final KursblockungDynSchiene s = schieneFrei.get(indexLast);
 			if (s != null) {
