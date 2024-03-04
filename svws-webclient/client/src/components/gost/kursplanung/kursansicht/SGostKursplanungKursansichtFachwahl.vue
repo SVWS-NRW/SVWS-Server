@@ -124,15 +124,15 @@
 							<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">
 								<template #content>
 									<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('schienen sperren')">Alle Kurse sperren</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('schienen entsperren')">Alle Kurse entsperren</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse fixieren')">Alle Kurse fixieren</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('kurse lösen')">Alle Kurse lösen</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('schüler fixieren')">Alle Schüler fixieren</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('schüler lösen')">Alle Schüler lösen</svws-ui-button>
-									<svws-ui-button size="small" type="transparent" @click="selectedDo('toggle schüler')">Alle Schüler fixieren/lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen sperren')">Alle Kurse sperren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen entsperren')">Alle Kurse entsperren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('kurse fixieren')">Alle Kurse fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('kurse lösen')">Alle Kurse lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler fixieren')">Alle Schüler fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler lösen')">Alle Schüler lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schüler')">Alle Schüler fixieren/lösen</svws-ui-button>
 								</template>
 							</svws-ui-tooltip>
 						</template>
@@ -154,7 +154,7 @@
 	import { ref, computed } from "vue";
 	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene, GostBlockungRegel } from "@core";
-	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils } from "@core";
+	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils, DeveloperNotificationException } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const cellRefs = ref([]);
@@ -339,6 +339,36 @@
 		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
 		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
 	})
+
+	async function rechteckActions(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler' | 'Schüler LK fixieren' | 'Schüler AB3 fixieren' | 'Schüler LK und AB3 fixieren' | 'Schüler AB4 fixieren' | 'Schüler AB fixieren' | 'Schüler schriftlichen fixieren') {
+		if (props.kurseUndSchienenInRechteck === null)
+			return false;
+		const [kurse, schienen] = props.kurseUndSchienenInRechteck;
+		const update = (() => {
+			switch (action) {
+				case 'schüler fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+				case 'schüler lösen':
+					return props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+				case 'toggle schüler':
+					return props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(kurse);
+				case 'kurse fixieren':
+					return props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+				case 'kurse lösen':
+					return props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+				case 'toggle kurse':
+					return props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(kurse, schienen);
+				case 'schienen sperren':
+					return props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+				case 'schienen entsperren':
+					return props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+				case 'toggle schienen':
+					return props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurse, schienen);
+			}
+			throw new DeveloperNotificationException(`Es gibt keine Rechteck-Action mit diesem Titel: ${action}`);
+		})();
+		await props.regelnUpdate(update);
+	}
 
 </script>
 

@@ -140,7 +140,7 @@
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:selected-do="selectedDo" :api-status="apiStatus"
+								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
 								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
@@ -158,7 +158,7 @@
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:selected-do="selectedDo" :api-status="apiStatus"
+								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
 								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
@@ -180,8 +180,8 @@
 	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List } from "@core";
-	import { DeveloperNotificationException, GostBlockungRegelUpdate, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach , GostBlockungKurs, GostBlockungSchiene } from "@core";
+	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List , GostBlockungRegelUpdate} from "@core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach , GostBlockungKurs, GostBlockungSchiene } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -332,48 +332,6 @@
 	const modal_regel_kurse = ref();
 	const modal_combine_kurse = ref();
 
-	async function selectedDo(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') {
-		if (dropSchiene.value === null || dropSchiene2.value === null || kurseInRechteckSet2.value === null)
-			throw new DeveloperNotificationException("Es wurden keine gültigen Daten für diese Aktion gefunden");
-		const s1 = props.getErgebnismanager().getSchieneG(dropSchiene.value.id);
-		const s2 = props.getErgebnismanager().getSchieneG(dropSchiene2.value.id);
-		resetDrop();
-		const schienenSet = new HashSet<number>();
-		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
-			schienenSet.add(i);
-		let update = new GostBlockungRegelUpdate();
-		switch (action) {
-			case 'schüler fixieren':
-				update = props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseInRechteckSet2.value);
-				break;
-			case 'schüler lösen':
-				update = props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurseInRechteckSet2.value);
-				break;
-			case 'toggle schüler':
-				update = props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(kurseInRechteckSet2.value);
-				break;
-			case 'kurse fixieren':
-				update = props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurseInRechteckSet2.value, schienenSet);
-				break;
-			case 'kurse lösen':
-				update = props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurseInRechteckSet2.value, schienenSet);
-				break;
-			case 'toggle kurse':
-				update = props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(kurseInRechteckSet2.value, schienenSet);
-				break;
-			case 'schienen sperren':
-				update = props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(kurseInRechteckSet2.value, schienenSet);
-				break;
-			case 'schienen entsperren':
-				update = props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurseInRechteckSet2.value, schienenSet);
-				break;
-			case 'toggle schienen':
-				update = props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurseInRechteckSet2.value, schienenSet);
-				break;
-		}
-		await props.regelnUpdate(update);
-	}
-
 	/** Dieser Teil organisiert das Drag und Drop von Kursen und Schienen */
 	const dragKurs 				=	ref<GostBlockungKurs|null>(null);
 	const dragSchiene 		= ref<GostBlockungSchiene|null>(null);
@@ -386,7 +344,7 @@
 	const dropSchiene2 		= ref<GostBlockungSchiene|null>(null);
 	const dropFachID			= ref<number|null>(null);
 	const showTooltip 		= ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
-	const kurseInRechteckSet2= ref<JavaSet<number>|null>(null);
+	const kurseUndSchienenInRechteck = ref<[JavaSet<number>, JavaSet<number>] | null>(null);
 
 	/** ist das Drag-Objekt ein Kurs, der auf der Schiene liegt? */
 	const isKursDragging = computed(() => {
@@ -448,11 +406,10 @@
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
 	const highlightRechteckDrop = (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => computed<boolean>(() => {
-		if (dropKurs.value === null || dropSchiene.value === null || dropKurs2.value === null || dropSchiene2.value === null || kurseInRechteckSet2.value === null)
+		if (kurseUndSchienenInRechteck.value === null)
 			return false;
-		if (!kurseInRechteckSet2.value.contains(kurs.id))
-			return false;
-		return ((schiene.nummer <= dropSchiene.value.nummer && schiene.nummer >= dropSchiene2.value.nummer) || (schiene.nummer >= dropSchiene.value.nummer && schiene.nummer <= dropSchiene2.value.nummer))
+		const [kurse, schienen] = kurseUndSchienenInRechteck.value;
+		return (!kurse.contains(kurs.id)) || (!schienen.contains(schiene.nummer));
 	})
 
 	/** Dieses computed ermittelt ein Set von Kursen, die innerhalb des Rechtecks liegen */
@@ -542,10 +499,16 @@
 	function setRechteck() {
 		dropKurs2.value = dragKurs.value;
 		dropSchiene2.value = dragSchiene.value;
-		kurseInRechteckSet2.value = kurseInRechteckSet.value;
 		if (dropKurs.value === null || dropSchiene.value === null || dragKurs.value === null || dragSchiene.value === null)
 			return;
 		showTooltip.value = { kursID: dropKurs.value.id, schieneID: dropSchiene.value.id };
+		const s1 = props.getErgebnismanager().getSchieneG(dropSchiene.value.id);
+		const s2 = props.getErgebnismanager().getSchieneG(dragSchiene.value.id);
+		resetDrop();
+		const schienenSet = new HashSet<number>();
+		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
+			schienenSet.add(i);
+		kurseUndSchienenInRechteck.value = [kurseInRechteckSet.value, schienenSet];
 	}
 
 	function resetDrag() {
@@ -567,6 +530,5 @@
 		dropSchiene2.value = null;
 		showTooltip.value = {kursID: -1, schieneID: -1};
 	}
-
 
 </script>

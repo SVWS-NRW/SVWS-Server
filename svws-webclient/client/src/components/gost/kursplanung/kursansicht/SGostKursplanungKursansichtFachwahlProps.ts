@@ -1,6 +1,6 @@
 import type { ComputedRef } from "vue";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SGostKursplanungKursansichtFachwahlProps {
@@ -27,7 +27,6 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
 	apiStatus: ApiStatus;
-	selectedDo: (action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler') => Promise<void>;
 	// Drag and Drop
 	setDrag: {
     (kurs: GostBlockungKurs): void;
@@ -49,4 +48,5 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	highlightKursAufAnderenKurs: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => ComputedRef<boolean>;
 	isDragging: boolean;
 	showTooltip: {kursID: number, schieneID: number};
+	kurseUndSchienenInRechteck: [JavaSet<number>, JavaSet<number>] | null;
 }
