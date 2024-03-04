@@ -512,7 +512,6 @@ public class GostBlockungsdatenManager {
 		return 1 - 1 / (0.25 * wert + 1);
 	}
 
-	// TODO BAR trennen in "Überprüfen" und "Hinzufügen"
 	private void kursAddKursOhneSortierung(final @NotNull GostBlockungKurs kurs) throws DeveloperNotificationException {
 		final int nSchienen = schieneGetAnzahl();
 
@@ -1014,7 +1013,6 @@ public class GostBlockungsdatenManager {
 	// ##########                Schiene-Anfragen                     ##########
 	// #########################################################################
 
-	// TODO BAR check / add trennen
 	private void schieneAddOhneSortierung(final @NotNull GostBlockungSchiene schiene) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("GostBlockungSchiene.id", schiene.id);

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.Map.Entry;
 
@@ -23,6 +24,8 @@ import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
@@ -138,6 +141,14 @@ public class GostBlockungsergebnisManager {
 
 	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität */
 	private @NotNull String _regelverletzungen_der_faecherparallelitaet = "";
+
+    private static @NotNull BiFunction<@NotNull Long, @NotNull Long, @NotNull GostBlockungsergebnisKursSchuelerZuordnung> newKursSchuelerZuordnung =
+    		(@NotNull final Long idKurs, @NotNull final Long idSchueler) -> {
+    			final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+	            zuordnung.idKurs = idKurs;
+	            zuordnung.idSchueler = idSchueler;
+	            return zuordnung;
+	        };
 
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
@@ -1973,13 +1984,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 */
 	public boolean getOfSchuelerOfKursIstFixiert(final long idSchueler, final long idKurs) {
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			final long schuelerID = r.parameter.get(0);
-			final long kursID = r.parameter.get(1);
-			if ((schuelerID == idSchueler) && (kursID == idKurs))
-				return true;
-		}
-		return false;
+		return _parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	}
 
 	/**
@@ -4598,6 +4603,28 @@ public class GostBlockungsergebnisManager {
 		_parent.regelRemoveListe(update.listEntfernen);
 		_parent.regelAddListe(update.listHinzuzufuegen);
 		stateRevalidateEverything();
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
+	 * <br>(1) Wenn ein Schüler in einem Kurs ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn ein Schüler in einem Kurs ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01_LEERE_ALLE_KURSE(final boolean entferneAuchFixierte) {
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		for (final long idSchueler : _map_schuelerID_kurse.keySet())
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler))
+				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, kurs.id)) {
+					// (1) (2)
+					u.listEntfernen.add(newKursSchuelerZuordnung.apply(kurs.id, idSchueler));
+				}
+
+		return u;
 	}
 
 	// #########################################################################

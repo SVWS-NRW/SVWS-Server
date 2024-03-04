@@ -20,12 +20,14 @@ import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/Schueler
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { PairNN } from '../../../core/adt/PairNN';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisSchiene, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
@@ -42,6 +44,7 @@ import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockun
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
+import type { BiFunction } from '../../../java/util/function/BiFunction';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { ListUtils } from '../../../core/utils/ListUtils';
 
@@ -191,6 +194,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Textuelle Darstellung aller Regelverletzungen der Fächerparallelität
 	 */
 	private _regelverletzungen_der_faecherparallelitaet : string = "";
+
+	private static newKursSchuelerZuordnung : BiFunction<number, number, GostBlockungsergebnisKursSchuelerZuordnung> = { apply : (idKurs: number, idSchueler: number) => {
+		const zuordnung : GostBlockungsergebnisKursSchuelerZuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
+		zuordnung.idKurs = idKurs.valueOf();
+		zuordnung.idSchueler = idSchueler.valueOf();
+		return zuordnung;
+	} };
 
 
 	/**
@@ -1861,13 +1871,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 */
 	public getOfSchuelerOfKursIstFixiert(idSchueler : number, idKurs : number) : boolean {
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			const schuelerID : number = r.parameter.get(0).valueOf();
-			const kursID : number = r.parameter.get(1).valueOf();
-			if ((schuelerID === idSchueler) && (kursID === idKurs))
-				return true;
-		}
-		return false;
+		return this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	}
 
 	/**
@@ -4193,6 +4197,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._parent.regelRemoveListe(update.listEntfernen);
 		this._parent.regelAddListe(update.listHinzuzufuegen);
 		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
+	 * <br>(1) Wenn ein Schüler in einem Kurs ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn ein Schüler in einem Kurs ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
+	 */
+	public kursSchuelerUpdate_01_LEERE_ALLE_KURSE(entferneAuchFixierte : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		for (const idSchueler of this._map_schuelerID_kurse.keySet())
+			for (const kurs of this.getOfSchuelerKursmenge(idSchueler))
+				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, kurs.id)) {
+					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(kurs.id, idSchueler));
+				}
+		return u;
 	}
 
 	/**
