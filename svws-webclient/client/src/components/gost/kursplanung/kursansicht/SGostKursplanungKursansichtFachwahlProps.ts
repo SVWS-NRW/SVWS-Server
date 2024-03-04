@@ -27,6 +27,8 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
 	apiStatus: ApiStatus;
+	kursdetailAnzeigen: number | undefined;
+	setKursdetailAnzeigen: (value: number|undefined) => void;
 	// Drag and Drop
 	setDrag: {
     (kurs: GostBlockungKurs): void;

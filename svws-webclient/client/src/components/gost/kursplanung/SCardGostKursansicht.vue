@@ -133,7 +133,7 @@
 					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
+								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -151,7 +151,7 @@
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 						<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
+								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -249,6 +249,9 @@
 	}
 
 	const cols = computed(() => calculateColumns());
+
+	const kursdetailAnzeigen = ref<number | undefined>(undefined);
+	const setKursdetailAnzeigen = (value: number|undefined) => kursdetailAnzeigen.value = kursdetailAnzeigen.value === value ? undefined : value;
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;

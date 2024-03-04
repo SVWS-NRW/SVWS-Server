@@ -23,16 +23,16 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="svws-ui-tr select-none" :style="{ '--background-color': bgColor }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetail_anzeige === kurs.id}">
+			<div role="row" class="svws-ui-tr select-none" :style="{ '--background-color': bgColor }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
 				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 					<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="getKursauswahl().contains(kurs.id) ? getKursauswahl().remove(kurs.id) : getKursauswahl().add(kurs.id)" headless />
 				</div>
 				<template v-if="allowRegeln">
-					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="toggle_kursdetail_anzeige(kurs.id)"
-						:class="{'text-black/50' : kursdetail_anzeige !== kurs.id}"
+					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="setKursdetailAnzeigen(kurs.id)"
+						:class="{'text-black/50' : kursdetailAnzeigen !== kurs.id}"
 						title="Kursdetails anzeigen">
 						<div class="inline-block -my-0.5">
-							<i-ri-arrow-down-s-line v-if="kursdetail_anzeige === kurs.id" class="relative top-0.5" />
+							<i-ri-arrow-down-s-line v-if="kursdetailAnzeigen === kurs.id" class="relative top-0.5" />
 							<i-ri-arrow-right-s-line v-else class="relative top-0.5" />
 						</div>
 					</div>
@@ -140,7 +140,7 @@
 				</template>
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
-			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
+			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetailAnzeigen === kurs.id && allowRegeln" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager" :api-status="apiStatus"
 				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :regeln-update="regelnUpdate" :add-lehrer-regel="addLehrerRegel"
 				:add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
@@ -178,7 +178,6 @@
 	}
 
 	const editKursID = ref<number | undefined>(undefined);
-	const kursdetail_anzeige = ref<number | undefined>(undefined);
 
 	const listeDerKurse = computed<List<GostBlockungKurs>>(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
@@ -279,8 +278,6 @@
 		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
 		return [filtered_by_kursart(kurs).value.size(), kdiff, wahlen];
 	});
-
-	const toggle_kursdetail_anzeige = (idKurs : number) => kursdetail_anzeige.value = (kursdetail_anzeige.value === idKurs) ? undefined : idKurs;
 
 	const istZugeordnetKursSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id);
