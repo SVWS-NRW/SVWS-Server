@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.klassen;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
+import de.svws_nrw.core.data.klassen.KlassenDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public final class KlassenUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten. */
-	public static final @NotNull Comparator<@NotNull KlassenListeEintrag> comparator = (final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) -> {
+	public static final @NotNull Comparator<@NotNull KlassenDaten> comparator = (final @NotNull KlassenDaten a, final @NotNull KlassenDaten b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;
@@ -25,6 +25,5 @@ public final class KlassenUtils {
 		cmp = a.kuerzel.compareTo(b.kuerzel);
 		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 	};
-
 
 }

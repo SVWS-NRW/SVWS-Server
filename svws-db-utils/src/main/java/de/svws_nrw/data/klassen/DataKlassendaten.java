@@ -12,6 +12,7 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
@@ -23,6 +24,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.json.JsonDaten;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -31,9 +33,11 @@ import jakarta.ws.rs.core.Response.Status;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -54,17 +58,19 @@ public final class DataKlassendaten extends DataManager<Long> {
 	/**
 	 * Mapper zum Erstellen des Core-DTOs aus den Datenbank-DTOs zu den Klassen, Klassenleitungen und Schülern.
 	 *
-	 * @param schulform          die Schulform
-	 * @param klasse			 Klasse
-	 * @param klassenLeitungen	 Leitungen der Klasse
-	 * @param schueler			 Schüler der Klasse
-	 * @param vorgaengerklasse   die Vorgängerklasse, sofern in der DB vorhanden
-	 * @param folgeklasse        die Folgeklasse, sofern in der DB bereits angelegt
+	 * @param schulform                  die Schulform
+	 * @param mapSchuljahresabschnitte   die Map mit den Schuljahresabschnitten der Schule
+	 * @param klasse			         die Klasse
+	 * @param klassenLeitungen	         die Leitungen der Klasse
+	 * @param schueler			         die Schüler der Klasse
+	 * @param mapKlassenVorher           die Klassen im vorigen Schuljahresabschnitt, sofern in der DB vorhanden
+	 * @param mapKlassenNachher          die Klassen im folgenden Schuljahresabschnitt, sofern in der DB bereits angelegt
 	 *
 	 * @return Core-DTO mit allen Klasseninformationen
 	 */
-	private static KlassenDaten dtoMapper(final Schulform schulform, final DTOKlassen klasse, final List<DTOKlassenLeitung> klassenLeitungen,
-			final List<DTOSchueler> schueler, final DTOKlassen vorgaengerklasse, final DTOKlassen folgeklasse) {
+	public static KlassenDaten dtoMapper(final Schulform schulform, final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte,
+			final DTOKlassen klasse, final List<DTOKlassenLeitung> klassenLeitungen,
+			final List<DTOSchueler> schueler, final Map<String, DTOKlassen> mapKlassenVorher, final Map<String, DTOKlassen> mapKlassenNachher) {
 		final KlassenDaten daten = new KlassenDaten();
 		daten.id = klasse.ID;
 		daten.idSchuljahresabschnitt = klasse.Schuljahresabschnitts_ID;
@@ -95,10 +101,28 @@ public final class DataKlassendaten extends DataManager<Long> {
 		daten.idKlassenart = ((klassenart != null) && (klassenart.hasSchulform(schulform))) ? klassenart.daten.id : Klassenart.UNDEFINIERT.daten.id;
 		daten.noteneingabeGesperrt = klasse.NotenGesperrt != null && klasse.NotenGesperrt;
 		daten.verwendungAnkreuzkompetenzen = klasse.Ankreuzzeugnisse != null && klasse.Ankreuzzeugnisse;
-		daten.idVorgaengerklasse = (vorgaengerklasse == null) ? null : vorgaengerklasse.ID;
-		daten.kuerzelVorgaengerklasse = (vorgaengerklasse == null) ? klasse.VKlasse : vorgaengerklasse.Klasse;
-		daten.idFolgeklasse = (folgeklasse == null) ? null : folgeklasse.ID;
-		daten.kuerzelFolgeklasse = (folgeklasse == null) ? klasse.FKlasse : folgeklasse.Klasse;
+		daten.kuerzelVorgaengerklasse = klasse.VKlasse;
+		daten.kuerzelFolgeklasse = klasse.FKlasse;
+		// Bestimme die IDs der Vorgänger- und der Nachfolge-Klassen dieser Klasse, sofern möglich und berücksichtige dabei den Semesterbetrieb i, Weiterbildungskolleg
+		final @NotNull DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(klasse.Schuljahresabschnitts_ID);
+		if ((!mapKlassenVorher.isEmpty()) && (daten.kuerzelVorgaengerklasse != null)) {
+			DTOKlassen klasseVorher = null;
+			if ((schulform != Schulform.WB) && (mapSchuljahresabschnitte.get(schuljahresabschnitt.VorigerAbschnitt_ID).Jahr == schuljahresabschnitt.Jahr))
+				klasseVorher = mapKlassenVorher.get(daten.kuerzel);
+			else
+				klasseVorher = mapKlassenVorher.get(daten.kuerzelVorgaengerklasse);
+			daten.idVorgaengerklasse = (klasseVorher == null) ? null : klasseVorher.ID;
+		} else
+			daten.idVorgaengerklasse = null;
+		if ((!mapKlassenNachher.isEmpty()) && (daten.kuerzelFolgeklasse != null)) {
+			DTOKlassen klasseNachher = null;
+			if ((schulform != Schulform.WB) && (mapSchuljahresabschnitte.get(schuljahresabschnitt.FolgeAbschnitt_ID).Jahr == schuljahresabschnitt.Jahr))
+				klasseNachher = mapKlassenNachher.get(daten.kuerzel);
+			else
+				klasseNachher = mapKlassenNachher.get(daten.kuerzelFolgeklasse);
+			daten.idVorgaengerklasse = (klasseNachher == null) ? null : klasseNachher.ID;
+		} else
+			daten.idFolgeklasse = null;
 		daten.idFachklasse = klasse.Fachklasse_ID;
 		daten.beginnSommersemester = klasse.SommerSem != null && klasse.SommerSem;
 		return daten;
@@ -130,30 +154,25 @@ public final class DataKlassendaten extends DataManager<Long> {
 
 
 	private KlassenDaten getFromDTOInternal(final DTOKlassen klasse, final List<DTOSchueler> dtoSchueler) throws WebApplicationException {
+		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw OperationError.NOT_FOUND.exception("Konnte die Informationen zur Schule nicht einlesen");
-		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
-		// Bestimme den Schuljahresabschnitt der Klasse
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(klasse.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null)
 			throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt mit der ID %d für die Klasse mit der ID %d wurde nicht gefunden.".formatted(klasse.Schuljahresabschnitts_ID, klasse.ID));
-		// Bestimme die Vorgänger-Klasse, falls eine angegeben ist
-		DTOKlassen vorgaengerklasse = null;
-		if ((klasse.VKlasse != null) && (schuljahresabschnitt.VorigerAbschnitt_ID != null)) {
-			final List<DTOKlassen> listKlassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2", DTOKlassen.class, schuljahresabschnitt.VorigerAbschnitt_ID, klasse.VKlasse);
-			if (listKlassen.size() == 1)
-				vorgaengerklasse = listKlassen.get(0);
-		}
-		// Bestimme die Folge-Klasse, falls eine angegeben ist
-		DTOKlassen folgeklasse = null;
-		if ((klasse.FKlasse != null) && (schuljahresabschnitt.FolgeAbschnitt_ID != null)) {
-			final List<DTOKlassen> listKlassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2", DTOKlassen.class, schuljahresabschnitt.FolgeAbschnitt_ID, klasse.FKlasse);
-			if (listKlassen.size() == 1)
-				folgeklasse = listKlassen.get(0);
-		}
+		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
+    	// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
+    	final Map<String, DTOKlassen> klassenVorher = (schuljahresabschnitt.VorigerAbschnitt_ID == null)
+    			? new HashMap<>()
+    			: conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.VorigerAbschnitt_ID, DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
+    	// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
+    	final Map<String, DTOKlassen> klassenNachher = (schuljahresabschnitt.FolgeAbschnitt_ID == null)
+    			? new HashMap<>()
+    			: conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.FolgeAbschnitt_ID, DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Erstelle das Core-DTO-Objekt für die Klasse
-		return dtoMapper(schule.Schulform, klasse, klassenLeitungen, dtoSchueler, vorgaengerklasse, folgeklasse);
+		return dtoMapper(schule.Schulform, mapSchuljahresabschnitte, klasse, klassenLeitungen, dtoSchueler, klassenVorher, klassenNachher);
 	}
 
 

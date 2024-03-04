@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -50,9 +50,9 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsListeEintrag> = new HashMap();
 
-	private readonly _klassen : List<KlassenListeEintrag> = new ArrayList();
+	private readonly _klassen : List<KlassenDaten> = new ArrayList();
 
-	private readonly _mapKlasseByID : JavaMap<number, KlassenListeEintrag> = new HashMap();
+	private readonly _mapKlasseByID : JavaMap<number, KlassenDaten> = new HashMap();
 
 	private readonly _kurse : List<KursListeEintrag> = new ArrayList();
 
@@ -112,7 +112,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenDaten>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
 		super();
 		this._schulform = schulform;
 		this._schueler = schueler;
@@ -159,7 +159,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 			this._mapJahrgangByID.put(j.id, j);
 	}
 
-	private initKlassen(klassen : List<KlassenListeEintrag>) : void {
+	private initKlassen(klassen : List<KlassenDaten>) : void {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
 		this._klassen.sort(KlassenUtils.comparator);
@@ -421,7 +421,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Klassen-Informationen
 	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
 	 */
-	public klasseGetByIdOrException(id : number) : KlassenListeEintrag {
+	public klasseGetByIdOrException(id : number) : KlassenDaten {
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapKlasseByID, id);
 	}
 
@@ -430,7 +430,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @return die Liste der Klassen
 	 */
-	public klasseGetMenge() : List<KlassenListeEintrag> {
+	public klasseGetMenge() : List<KlassenDaten> {
 		return this._klassen;
 	}
 

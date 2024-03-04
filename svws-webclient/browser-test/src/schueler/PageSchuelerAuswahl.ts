@@ -1,4 +1,4 @@
-import type { KlassenListeEintrag, List, SchuelerListeEintrag } from "@core";
+import type { KlassenDaten, List, SchuelerListeEintrag } from "@core";
 import type { Locator, Page} from "@playwright/test";
 import { expect } from "@playwright/test";
 import { api } from "../Api";
@@ -15,7 +15,7 @@ export class SchuelerAuswahlPage {
 	rg_tabellenfoot : Locator;
 	tabelle : Locator;
 	listeSchueler? : List<SchuelerListeEintrag>;
-	listeKlassen? : Map<number, KlassenListeEintrag>;
+	listeKlassen? : Map<number, KlassenDaten>;
 
 
 	constructor(public page: Page) {

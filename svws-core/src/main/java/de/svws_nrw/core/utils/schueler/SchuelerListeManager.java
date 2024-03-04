@@ -9,7 +9,7 @@ import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
-import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
+import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
@@ -51,8 +51,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	private static final @NotNull Function<@NotNull JahrgangsListeEintrag, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsListeEintrag jg) -> jg.id;
 
 	/** Das Filter-Attribut für die Klassen */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KlassenListeEintrag> klassen;
-	private static final @NotNull Function<@NotNull KlassenListeEintrag, @NotNull Long> _klasseToId = (final @NotNull KlassenListeEintrag k) -> k.id;
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KlassenDaten> klassen;
+	private static final @NotNull Function<@NotNull KlassenDaten, @NotNull Long> _klasseToId = (final @NotNull KlassenDaten k) -> k.id;
 
 	/** Das Filter-Attribut für die Kurse */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KursListeEintrag> kurse;
@@ -92,7 +92,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	public SchuelerListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
-			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
+			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
@@ -191,8 +191,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
 			if ("klassen".equals(field)) {
-				final KlassenListeEintrag aKlasse = this.klassen.get(a.idKlasse);
-				final KlassenListeEintrag bKlasse = this.klassen.get(b.idKlasse);
+				final KlassenDaten aKlasse = this.klassen.get(a.idKlasse);
+				final KlassenDaten bKlasse = this.klassen.get(b.idKlasse);
 				if ((aKlasse == null) && (bKlasse == null)) {
 					cmp = 0;
 				} else if (aKlasse == null) {

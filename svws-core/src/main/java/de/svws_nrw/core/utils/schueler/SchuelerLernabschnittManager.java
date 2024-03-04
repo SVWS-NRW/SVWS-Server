@@ -8,7 +8,7 @@ import java.util.Map;
 
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
-import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
+import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
@@ -49,8 +49,8 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull List<@NotNull JahrgangsListeEintrag> _jahrgaenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull JahrgangsListeEintrag> _mapJahrgangByID = new HashMap<>();
 
-	private final @NotNull List<@NotNull KlassenListeEintrag> _klassen = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseByID = new HashMap<>();
+	private final @NotNull List<@NotNull KlassenDaten> _klassen = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull KlassenDaten> _mapKlasseByID = new HashMap<>();
 
 	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull KursListeEintrag> _mapKursByID = new HashMap<>();
@@ -117,7 +117,7 @@ public class SchuelerLernabschnittManager {
 			final @NotNull List<@NotNull FaecherListeEintrag> faecher,
 			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
-			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
+			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		this._schulform = schulform;
@@ -165,12 +165,12 @@ public class SchuelerLernabschnittManager {
 			this._mapJahrgangByID.put(j.id, j);
 	}
 
-	private void initKlassen(final @NotNull List<@NotNull KlassenListeEintrag> klassen) {
+	private void initKlassen(final @NotNull List<@NotNull KlassenDaten> klassen) {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
 		this._klassen.sort(KlassenUtils.comparator);
 		this._mapKlasseByID.clear();
-		for (final @NotNull KlassenListeEintrag k : klassen)
+		for (final @NotNull KlassenDaten k : klassen)
 			this._mapKlasseByID.put(k.id, k);
 	}
 
@@ -441,7 +441,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Klassen-Informationen
 	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
 	 */
-	public @NotNull KlassenListeEintrag klasseGetByIdOrException(final long id) {
+	public @NotNull KlassenDaten klasseGetByIdOrException(final long id) {
 		return DeveloperNotificationException.ifMapGetIsNull(_mapKlasseByID, id);
 	}
 
@@ -450,7 +450,7 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @return die Liste der Klassen
 	 */
-	public @NotNull List<@NotNull KlassenListeEintrag> klasseGetMenge() {
+	public @NotNull List<@NotNull KlassenDaten> klasseGetMenge() {
 		return this._klassen;
 	}
 

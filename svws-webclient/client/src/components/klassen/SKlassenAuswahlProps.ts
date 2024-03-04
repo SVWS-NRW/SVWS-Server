@@ -1,4 +1,4 @@
-import type { KlassenListeEintrag, Schuljahresabschnitt, KlassenListeManager } from "@core";
+import type { KlassenDaten, Schuljahresabschnitt, KlassenListeManager } from "@core";
 
 export interface KlassenAuswahlProps {
 	klassenListeManager: () => KlassenListeManager;
@@ -6,7 +6,7 @@ export interface KlassenAuswahlProps {
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	gotoEintrag: (eintrag: KlassenListeEintrag) => Promise<void>;
+	gotoEintrag: (eintrag: KlassenDaten) => Promise<void>;
 	setFilter: () => Promise<void>;
 	setzeDefaultSortierung: () => Promise<void>;
 }

@@ -24659,11 +24659,11 @@ KlassenDaten {
 exports[`Server > getKlassenFuerAbschnitt 1`] = `
 ArrayList {
   "elementData": [
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 323,
       "idJahrgang": 1,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24671,11 +24671,11 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 50,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 53,
       "idJahrgang": 1,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24683,11 +24683,11 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 51,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 71,
       "idJahrgang": 1,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24695,11 +24695,11 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 52,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 89,
       "idJahrgang": 1,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24707,11 +24707,11 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 53,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 107,
       "idJahrgang": 2,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24719,11 +24719,11 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 60,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 125,
       "idJahrgang": 2,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24731,11 +24731,11 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 61,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 143,
       "idJahrgang": 2,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24743,11 +24743,11 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 62,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 341,
       "idJahrgang": 2,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24755,11 +24755,11 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 63,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 161,
       "idJahrgang": 3,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24767,11 +24767,11 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 70,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 179,
       "idJahrgang": 3,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24779,11 +24779,11 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 71,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 197,
       "idJahrgang": 3,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24791,11 +24791,11 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 72,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 359,
       "idJahrgang": 3,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24803,11 +24803,11 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 73,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 215,
       "idJahrgang": 4,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24815,11 +24815,11 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 80,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 233,
       "idJahrgang": 4,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24827,11 +24827,11 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 81,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 251,
       "idJahrgang": 4,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24839,11 +24839,11 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 82,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 431,
       "idJahrgang": 4,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24851,11 +24851,11 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 83,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 269,
       "idJahrgang": 5,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24863,11 +24863,11 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 90,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 287,
       "idJahrgang": 5,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24875,11 +24875,11 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 91,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 305,
       "idJahrgang": 5,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24887,11 +24887,11 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 92,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 449,
       "idJahrgang": 5,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24899,11 +24899,11 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 93,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 377,
       "idJahrgang": 10,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24911,11 +24911,11 @@ ArrayList {
       "parallelitaet": null,
       "sortierung": 200,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 395,
       "idJahrgang": 11,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },
@@ -24923,11 +24923,11 @@ ArrayList {
       "parallelitaet": null,
       "sortierung": 210,
     },
-    KlassenListeEintrag {
+    KlassenDaten {
       "id": 413,
       "idJahrgang": 12,
       "istSichtbar": true,
-      "klassenLehrer": ArrayList {
+      "klassenLeitungen": ArrayList {
         "elementData": [],
         "modCount": 0,
       },

@@ -9,7 +9,6 @@ import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -25,18 +24,17 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Klassen-Listen.
  */
-public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull KlassenListeEintrag, @NotNull KlassenDaten> {
+public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @NotNull KlassenDaten, @NotNull KlassenDaten> {
 
 	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
-	private static final @NotNull Function<@NotNull KlassenListeEintrag, @NotNull Long> _klasseToId = (final @NotNull KlassenListeEintrag k) -> k.id;
-	private static final @NotNull Function<@NotNull KlassenDaten, @NotNull Long> _klassenDatenToId = (final @NotNull KlassenDaten k) -> k.id;
+	private static final @NotNull Function<@NotNull KlassenDaten, @NotNull Long> _klasseToId = (final @NotNull KlassenDaten k) -> k.id;
 
 	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
-	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseIstSichtbar = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseInJahrgang = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseHatSchueler = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenListeEintrag> _mapKlassenlehrerInKlasse = new HashMap2D<>();
-	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseInSchulgliederung = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Boolean, @NotNull Long, @NotNull KlassenDaten> _mapKlasseIstSichtbar = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenDaten> _mapKlasseInJahrgang = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenDaten> _mapKlasseHatSchueler = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenDaten> _mapKlassenlehrerInKlasse = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KlassenDaten> _mapKlasseInSchulgliederung = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
@@ -66,10 +64,10 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	 * @param lehrer        die Liste der Lehrer
 	 */
 	public KlassenListeManager(final long schuljahresabschnitt, final Schulform schulform,
-			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
+			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
-		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klassenDatenToId,
+		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klasseToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("schueleranzahl", true)));
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
@@ -80,7 +78,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 
 
 	private void initKlassen() {
-		for (final @NotNull KlassenListeEintrag k : this.liste.list()) {
+		for (final @NotNull KlassenDaten k : this.liste.list()) {
 			this._mapKlasseIstSichtbar.put(k.istSichtbar, k.id, k);
 			if (k.idJahrgang != null) {
 				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
@@ -93,7 +91,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 			}
 			for (final Schueler s : k.schueler)
 				this._mapKlasseHatSchueler.put(s.id, k.id, k);
-			for (final Long l : k.klassenLehrer)
+			for (final Long l : k.klassenLeitungen)
 				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
 		}
 	}
@@ -106,7 +104,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
 	@Override
-	protected boolean onSetDaten(final @NotNull KlassenListeEintrag eintrag, final @NotNull KlassenDaten daten) {
+	protected boolean onSetDaten(final @NotNull KlassenDaten eintrag, final @NotNull KlassenDaten daten) {
 		boolean updateEintrag = false;
 		// Passe ggf. die Daten in der Klassenliste an ... (beim Patchen der Daten)
 		if (!daten.kuerzel.equals(eintrag.kuerzel)) {
@@ -162,7 +160,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	@Override
-	protected int compareAuswahl(final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) {
+	protected int compareAuswahl(final @NotNull KlassenDaten a, final @NotNull KlassenDaten b) {
 		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
@@ -182,14 +180,14 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 
 
 	@Override
-	protected boolean checkFilter(final @NotNull KlassenListeEintrag eintrag) {
+	protected boolean checkFilter(final @NotNull KlassenDaten eintrag) {
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
 			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang == null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.lehrer.auswahlExists()) {
 			boolean hatEinenLehrer = false;
-			for (final long idLehrer : eintrag.klassenLehrer)
+			for (final long idLehrer : eintrag.klassenLeitungen)
 				if (this.lehrer.auswahlHasKey(idLehrer))
 					hatEinenLehrer = true;
 			if (!hatEinenLehrer)

@@ -89,7 +89,6 @@ import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStra
 import { KindergartenbesuchKatalogEintrag } from '../core/data/schule/KindergartenbesuchKatalogEintrag';
 import { KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
-import { KlassenListeEintrag } from '../core/data/klassen/KlassenListeEintrag';
 import { KursartKatalogEintrag } from '../core/data/kurse/KursartKatalogEintrag';
 import { KursDaten } from '../core/data/kurse/KursDaten';
 import { KursListeEintrag } from '../core/data/kurse/KursListeEintrag';
@@ -6790,7 +6789,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Klassen-Listen-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KlassenListeEintrag>
+	 *     - Rückgabe-Typ: List<KlassenDaten>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
 	 *   Code 404: Keine Klassen-Einträge gefunden
 	 *
@@ -6799,14 +6798,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Klassen-Listen-Einträgen
 	 */
-	public async getKlassenFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KlassenListeEintrag>> {
+	public async getKlassenFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KlassenDaten>> {
 		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KlassenListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenListeEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KlassenDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 

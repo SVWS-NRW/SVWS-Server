@@ -1,4 +1,4 @@
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursListeEintrag,
 	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from '@core';
 import { Schulform, Schulgliederung, BenutzerTyp } from '@core';
 import { ApiConnection } from "./ApiConnection";
@@ -313,9 +313,9 @@ class Api {
 	 *
 	 * @returns die Map mit den Klassen
 	 */
-	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlassenListeEintrag>> {
+	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlassenDaten>> {
 		const listKlassen = await this.server.getKlassenFuerAbschnitt(this.schema, idSchuljahresabschnitt);
-		const mapKlassen = new Map<number, KlassenListeEintrag>();
+		const mapKlassen = new Map<number, KlassenDaten>();
 		for (const k of listKlassen)
 			mapKlassen.set(k.id, k)
 		return mapKlassen;
@@ -355,7 +355,7 @@ class Api {
 	public async verbinde(){
 		const adrHost = process.env.PLAYWRIGHT_svws_testing_api_host;
 		const adrPort = process.env.PLAYWRIGHT_svws_testing_api_port;
-		const adresse =  (adrHost ?? 'https://localhost') + (adrPort != null ? (':' + adrPort) : '');
+		const adresse =  (adrHost ?? 'https://localhost') + (adrPort !== null ? (':' + adrPort) : '');
 		await this.connectTo(adresse);
 		await this.login('gymabi', 'Admin', '');
 	}

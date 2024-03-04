@@ -67,16 +67,16 @@ public class KlassenDaten {
 	@Schema(description = "die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null", example = "4711")
 	public Long idVorgaengerklasse = null;
 
-	/** Das Kürzel der Vorgängerklasse. */
-	@Schema(description = "das Kürzel der Vorgängerklasse.", example = "08b")
+	/** Das Kürzel der Vorgängerklasse vor der letzen Versetzung. */
+	@Schema(description = "das Kürzel der Vorgängerklasse vor der letzen Versetzung.", example = "08b")
 	public String kuerzelVorgaengerklasse = null;
 
-	/** Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null */
-	@Schema(description = "die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null", example = "4712")
+	/** Die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null */
+	@Schema(description = "die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null", example = "4712")
 	public Long idFolgeklasse = null;
 
-	/** Das Kürzel der Folgeklasse. */
-	@Schema(description = "das Kürzel der Folgeklasse.", example = "10b")
+	/** Das Kürzel der Folgeklasse nach der nächsten Versetzung. */
+	@Schema(description = "das Kürzel der Folgeklasse nach der nächsten Versetzung.", example = "10b")
 	public String kuerzelFolgeklasse = null;
 
 	/** Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich */

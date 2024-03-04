@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
+import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -10,7 +10,7 @@ export class KlassenUtils extends JavaObject {
 	/**
 	 * Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten.
 	 */
-	public static readonly comparator : Comparator<KlassenListeEintrag> = { compare : (a: KlassenListeEintrag, b: KlassenListeEintrag) => {
+	public static readonly comparator : Comparator<KlassenDaten> = { compare : (a: KlassenDaten, b: KlassenDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
 			return cmp;

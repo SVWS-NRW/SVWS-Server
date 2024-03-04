@@ -220,7 +220,6 @@ export { OrtKatalogEintrag } from './core/data/kataloge/OrtKatalogEintrag';
 export { OrtsteilKatalogEintrag } from './core/data/kataloge/OrtsteilKatalogEintrag';
 export { SchulEintrag } from './core/data/kataloge/SchulEintrag';
 export { KlassenDaten } from './core/data/klassen/KlassenDaten';
-export { KlassenListeEintrag } from './core/data/klassen/KlassenListeEintrag';
 export { KlassenartKatalogEintrag } from './core/data/klassen/KlassenartKatalogEintrag';
 export { SchuelerblockungInput } from './core/data/kursblockung/SchuelerblockungInput';
 export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/SchuelerblockungInputFachwahl';

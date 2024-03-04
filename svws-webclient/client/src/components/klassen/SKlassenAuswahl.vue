@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import { computed, ref, shallowRef } from "vue";
 
@@ -101,7 +101,7 @@
 
 	const search = ref<string>("");
 
-	const rowsFiltered = computed<KlassenListeEintrag[]>(() => {
+	const rowsFiltered = computed<KlassenDaten[]>(() => {
 		const arr = [];
 		for (const e of props.klassenListeManager().filtered())
 			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
@@ -123,9 +123,9 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const selectedItems = shallowRef<KlassenListeEintrag[]>([]);
+	const selectedItems = shallowRef<KlassenDaten[]>([]);
 
-	function setAuswahl(items : KlassenListeEintrag[]) {
+	function setAuswahl(items : KlassenDaten[]) {
 		const auswahl = props.klassenListeManager().liste;
 		for (const vorhanden of [ ... auswahl.auswahl() ])
 			if (!items.includes(vorhanden))

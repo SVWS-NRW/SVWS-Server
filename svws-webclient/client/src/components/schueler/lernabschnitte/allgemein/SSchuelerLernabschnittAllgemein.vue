@@ -57,7 +57,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
@@ -68,7 +68,7 @@
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
-	const klasse = computed<KlassenListeEintrag | undefined>(() => {
+	const klasse = computed<KlassenDaten | undefined>(() => {
 		const id = props.manager().lernabschnittGet().klassenID;
 		if (id === null)
 			return undefined;
@@ -98,10 +98,10 @@
 
 	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const k = klasse.value;
-		if ((k === undefined) || (k.klassenLehrer === null))
+		if ((k === undefined) || (k.klassenLeitungen === null))
 			return [];
 		const result: LehrerListeEintrag[] = [];
-		for (const lid of k.klassenLehrer)
+		for (const lid of k.klassenLeitungen)
 			result.push(props.manager().lehrerGetByIdOrException(lid));
 		return result;
 	});

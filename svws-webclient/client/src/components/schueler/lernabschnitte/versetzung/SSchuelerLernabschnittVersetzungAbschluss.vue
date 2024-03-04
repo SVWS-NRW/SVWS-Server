@@ -27,12 +27,12 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { KlassenListeEintrag } from "@core";
+	import type { KlassenDaten } from "@core";
 	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SSchuelerLernabschnittVersetzungAbschlussProps";
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
 
-	const folgeklasse = computed<KlassenListeEintrag | undefined>({
+	const folgeklasse = computed<KlassenDaten | undefined>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().folgeklassenID;
 			if (id === null)

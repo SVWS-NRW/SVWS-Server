@@ -66,17 +66,17 @@ export class KlassenDaten extends JavaObject {
 	public idVorgaengerklasse : number | null = null;
 
 	/**
-	 * Das Kürzel der Vorgängerklasse.
+	 * Das Kürzel der Vorgängerklasse vor der letzen Versetzung.
 	 */
 	public kuerzelVorgaengerklasse : string | null = null;
 
 	/**
-	 * Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null
+	 * Die ID der Folgeklasse, sofern im folgenden Schuljahresabschnitt definiert - ansonsten null
 	 */
 	public idFolgeklasse : number | null = null;
 
 	/**
-	 * Das Kürzel der Folgeklasse.
+	 * Das Kürzel der Folgeklasse nach der nächsten Versetzung.
 	 */
 	public kuerzelFolgeklasse : string | null = null;
 

@@ -4,7 +4,6 @@ import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../java/util/Comparator';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
@@ -21,27 +20,25 @@ import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { Pair } from '../../../core/adt/Pair';
 
-export class KlassenListeManager extends AuswahlManager<number, KlassenListeEintrag, KlassenDaten> {
+export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, KlassenDaten> {
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _klasseToId : JavaFunction<KlassenListeEintrag, number> = { apply : (k: KlassenListeEintrag) => k.id };
-
-	private static readonly _klassenDatenToId : JavaFunction<KlassenDaten, number> = { apply : (k: KlassenDaten) => k.id };
+	private static readonly _klasseToId : JavaFunction<KlassenDaten, number> = { apply : (k: KlassenDaten) => k.id };
 
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, KlassenListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, KlassenDaten> = new HashMap2D();
 
-	private readonly _mapKlasseInJahrgang : HashMap2D<number, number, KlassenListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseInJahrgang : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
 
-	private readonly _mapKlasseHatSchueler : HashMap2D<number, number, KlassenListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseHatSchueler : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
 
-	private readonly _mapKlassenlehrerInKlasse : HashMap2D<number, number, KlassenListeEintrag> = new HashMap2D();
+	private readonly _mapKlassenlehrerInKlasse : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
 
-	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -81,8 +78,8 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, lehrer : List<LehrerListeEintrag>) {
-		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klassenDatenToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenDaten>, jahrgaenge : List<JahrgangsListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KlassenListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, KlassenListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
@@ -104,7 +101,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 			}
 			for (const s of k.schueler)
 				this._mapKlasseHatSchueler.put(s.id, k.id, k);
-			for (const l of k.klassenLehrer)
+			for (const l of k.klassenLeitungen)
 				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
 		}
 	}
@@ -115,7 +112,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	 * @param eintrag   der Auswahl-Eintrag
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
-	protected onSetDaten(eintrag : KlassenListeEintrag, daten : KlassenDaten) : boolean {
+	protected onSetDaten(eintrag : KlassenDaten, daten : KlassenDaten) : boolean {
 		let updateEintrag : boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {
 			eintrag.kuerzel = daten.kuerzel;
@@ -163,7 +160,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected compareAuswahl(a : KlassenListeEintrag, b : KlassenListeEintrag) : number {
+	protected compareAuswahl(a : KlassenDaten, b : KlassenDaten) : number {
 		for (const criteria of this._order) {
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
@@ -182,14 +179,14 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 		return JavaLong.compare(a.id, b.id);
 	}
 
-	protected checkFilter(eintrag : KlassenListeEintrag) : boolean {
+	protected checkFilter(eintrag : KlassenDaten) : boolean {
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
 			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.lehrer.auswahlExists()) {
 			let hatEinenLehrer : boolean = false;
-			for (const idLehrer of eintrag.klassenLehrer)
+			for (const idLehrer of eintrag.klassenLeitungen)
 				if (this.lehrer.auswahlHasKey(idLehrer))
 					hatEinenLehrer = true;
 			if (!hatEinenLehrer)

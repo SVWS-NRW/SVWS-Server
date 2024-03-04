@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt } from "@core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenDaten, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt } from "@core";
 
 import { SchuelerListeManager, ArrayList, DeveloperNotificationException } from "@core";
 import { SchuelerStatus } from "@core";
@@ -18,7 +18,7 @@ interface RouteStateSchueler extends RouteStateInterface {
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: new SchuelerListeManager(-1, null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+	schuelerListeManager: new SchuelerListeManager(-1, null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenDaten>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
 	view: routeSchuelerIndividualdaten,
 };
 

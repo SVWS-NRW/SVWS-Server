@@ -3,7 +3,6 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -59,7 +58,7 @@ public class APIKlassen {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Klassen-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenListeEintrag.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenDaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
     public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {

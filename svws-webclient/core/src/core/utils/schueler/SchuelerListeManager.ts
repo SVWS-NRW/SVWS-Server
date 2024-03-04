@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -63,9 +63,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Das Filter-Attribut für die Klassen
 	 */
-	public readonly klassen : AttributMitAuswahl<number, KlassenListeEintrag>;
+	public readonly klassen : AttributMitAuswahl<number, KlassenDaten>;
 
-	private static readonly _klasseToId : JavaFunction<KlassenListeEintrag, number> = { apply : (k: KlassenListeEintrag) => k.id };
+	private static readonly _klasseToId : JavaFunction<KlassenDaten, number> = { apply : (k: KlassenDaten) => k.id };
 
 	/**
 	 * Das Filter-Attribut für die Kurse
@@ -119,7 +119,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenDaten>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
 		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.klassen = new AttributMitAuswahl(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
@@ -204,8 +204,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 			const asc : boolean = (criteria.b === null) || criteria.b;
 			let cmp : number = 0;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
-				const aKlasse : KlassenListeEintrag | null = this.klassen.get(a.idKlasse);
-				const bKlasse : KlassenListeEintrag | null = this.klassen.get(b.idKlasse);
+				const aKlasse : KlassenDaten | null = this.klassen.get(a.idKlasse);
+				const bKlasse : KlassenDaten | null = this.klassen.get(b.idKlasse);
 				if ((aKlasse === null) && (bKlasse === null)) {
 					cmp = 0;
 				} else

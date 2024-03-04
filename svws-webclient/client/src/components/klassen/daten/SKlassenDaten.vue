@@ -77,8 +77,8 @@
 
 	import { computed } from "vue";
 	import { type DataTableColumn } from "@ui";
-	import { SchuelerStatus, type JahrgangsListeEintrag, type KlassenDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		WeiterbildungskollegOrganisationsformen, type KlassenListeEintrag, type List, ArrayList } from "@core";
+	import { SchuelerStatus, type JahrgangsListeEintrag, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
+		WeiterbildungskollegOrganisationsformen, type KlassenDaten, type List, ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
@@ -116,8 +116,8 @@
 		vorname?: string;
 	}
 
-	const listeFolgeklassen = computed<List<KlassenListeEintrag>>(() => {
-		const result = new ArrayList<KlassenListeEintrag>();
+	const listeFolgeklassen = computed<List<KlassenDaten>>(() => {
+		const result = new ArrayList<KlassenDaten>();
 		if (data.value.idJahrgang === null) {
 			for (const kl of props.mapKlassenFolgenderAbschnitt().values())
 				result.add(kl);
@@ -138,8 +138,8 @@
 		return result;
 	});
 
-	const listeVorgaengerklassen = computed<List<KlassenListeEintrag>>(() => {
-		const result = new ArrayList<KlassenListeEintrag>();
+	const listeVorgaengerklassen = computed<List<KlassenDaten>>(() => {
+		const result = new ArrayList<KlassenDaten>();
 		if (data.value.idJahrgang === null) {
 			for (const kl of props.mapKlassenVorigerAbschnitt().values())
 				result.add(kl);

@@ -1,9 +1,4 @@
-import type { ComputedRef} from "vue";
-import { computed } from "vue";
-
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ApiSchemaPrivileged } from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp } from "@core";
+import type { ApiServer, ServerMode, ApiSchemaPrivileged } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";

@@ -1,4 +1,4 @@
-import type { KlassenListeEintrag, List, SchuelerListeEintrag} from "@core";
+import type { KlassenDaten, List, SchuelerListeEintrag} from "@core";
 import { api } from "~/Api";
 import type { Schueler } from "./DataSchueler";
 
@@ -7,14 +7,14 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 class DataSchuelerAuswahl{
 
 	listeSchueler? : List<SchuelerListeEintrag>;
-	listeKlassen? : Map<number, KlassenListeEintrag>;
+	listeKlassen? : Map<number, KlassenDaten>;
 
 	constructor(){
 
 	}
 
 	async laden () {
-		await api.connectTo(process.env.PLAYWRIGHT_svws_testing_api_host ?? 'https://localhost') + (process.env.PLAYWRIGHT_svws_testing_api_port != null ? ':' + process.env.PLAYWRIGHT_svws_testing_api_port : '');
+		await api.connectTo(process.env.PLAYWRIGHT_svws_testing_api_host ?? 'https://localhost') + (process.env.PLAYWRIGHT_svws_testing_api_port !== null ? ':' + process.env.PLAYWRIGHT_svws_testing_api_port : '');
 		await api.login('gymabi', 'Admin', '');
 		this.listeSchueler = await api.server.getSchuelerAktuell(api.schema);
 		this.listeKlassen = await api.getKlassenListe(1);

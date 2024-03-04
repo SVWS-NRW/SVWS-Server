@@ -4,13 +4,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -63,6 +66,30 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	public Response getList() {
     	final List<Schuljahresabschnitt> daten = this.getAbschnitte();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Gibt die Liste aller Datenbank-DTOs für die Schuljahresabschnitte zurück.
+	 *
+	 * @param conn   die Datenbank-Verbindung für den Zugriff auf die DTOs
+	 *
+	 * @return die Liste der Datenbank-DTOs für die Schuljahresabschnitte
+	 */
+	public static @NotNull List<@NotNull DTOSchuljahresabschnitte> getDTOList(final @NotNull DBEntityManager conn) {
+		return conn.queryAll(DTOSchuljahresabschnitte.class);
+	}
+
+
+	/**
+	 * Gibt die Map für das Mapping der IDs auf alle Datenbank-DTOs der Schuljahresabschnitte zurück.
+	 *
+	 * @param conn   die Datenbank-Verbindung für den Zugriff auf die DTOs
+	 *
+	 * @return die Map für das Mapping der IDs auf alle Datenbank-DTOs der Schuljahresabschnitte
+	 */
+	public static @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> getDTOMap(final @NotNull DBEntityManager conn) {
+		return conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 	}
 
 

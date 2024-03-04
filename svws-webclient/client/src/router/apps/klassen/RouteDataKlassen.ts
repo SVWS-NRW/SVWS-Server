@@ -1,5 +1,5 @@
 
-import type { KlassenDaten, KlassenListeEintrag, Schueler} from "@core";
+import type { KlassenDaten, Schueler} from "@core";
 import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -13,15 +13,15 @@ import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	klassenListeManager: KlassenListeManager;
-	mapKlassenVorigerAbschnitt: Map<number, KlassenListeEintrag>;
-	mapKlassenFolgenderAbschnitt: Map<number, KlassenListeEintrag>;
+	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
+	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 }
 
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
 	klassenListeManager: new KlassenListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList()),
-	mapKlassenVorigerAbschnitt: new Map<number, KlassenListeEintrag>(),
-	mapKlassenFolgenderAbschnitt: new Map<number, KlassenListeEintrag>(),
+	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
+	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
 };
 
@@ -35,11 +35,11 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return this._state.value.klassenListeManager;
 	}
 
-	get mapKlassenVorigerAbschnitt(): Map<number, KlassenListeEintrag> {
+	get mapKlassenVorigerAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenVorigerAbschnitt;
 	}
 
-	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenListeEintrag> {
+	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
 	}
 
@@ -50,10 +50,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		// Lade die Kataloge und erstelle den Manager
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
-			? new Map<number, KlassenListeEintrag>()
+			? new Map<number, KlassenDaten>()
 			: await api.getKlassenListe(schuljahresabschnitt.idVorigerAbschnitt);
 		const mapKlassenFolgenderAbschnitt = schuljahresabschnitt.idFolgeAbschnitt === null
-			? new Map<number, KlassenListeEintrag>()
+			? new Map<number, KlassenDaten>()
 			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
@@ -67,7 +67,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
-	public async setEintrag(klasse: KlassenListeEintrag | null) {
+	public async setEintrag(klasse: KlassenDaten | null) {
 		if ((klasse === null) && (!this.klassenListeManager.hasDaten()))
 			return;
 		if ((klasse === null) || (this.klassenListeManager.liste.list().isEmpty())) {
@@ -105,7 +105,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	gotoEintrag = async (eintrag: KlassenListeEintrag) => {
+	gotoEintrag = async (eintrag: KlassenDaten) => {
 		await RouteManager.doRoute(this.view.getRoute(eintrag.id));
 	}
 
