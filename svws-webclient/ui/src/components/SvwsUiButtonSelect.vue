@@ -36,7 +36,7 @@
 
 	type Item = {
 		text: string;
-		action: () => void | Promise<void>;
+		action: () => void | Promise<any>;
 		default?: boolean;
 		separator?: boolean;
 	}

@@ -177,19 +177,26 @@
 
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
-		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; separator?: true }> = [];
+		const result: Array<{ text: string; action: () => Promise<void|boolean>; default?: boolean; separator?: true }> = [];
 		const kursIdsAlle = new ArrayList<number>();
 		for (const k of props.getErgebnismanager().getKursmenge())
 			kursIdsAlle.add(k.id);
-		result.push({ text: "Leere alle Kurse", action: async () => await props.updateKurseLeeren("leereKurseAlle", kursIdsAlle) });
-		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size()))
-			result.push({ text: "Kursauswahl: Leere Kurse", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
+		result.push({ text: "Leere alle Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(false)) });
+		result.push({ text: "Leere alle Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(true)) });
+		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size())) {
+			// TODO
+			result.push({ text: "Kursauswahl: Leere Kurse, beachte Fixierungen", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
+			result.push({ text: "Kursauswahl: Leere Kurse, ignoriere Fixierungen", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
+		}
 		if (filter.kurs !== undefined) {
+			// TODO
 			const list = new ArrayList<number>();
 			list.add(filter.kurs.id);
-			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, beachte Fixierungen`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, ignoriere Fixierungen`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
 		}
 		if (filter.fach !== undefined) {
+			// TODO
 			const list = new ArrayList<number>();
 			let namen = "";
 			for (const k of props.getErgebnismanager().getOfFachKursmenge(filter.fach)) {
@@ -200,8 +207,11 @@
 				namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
 			}
 			namen = namen.slice(0, -2);
-			if (list.size() > 0)
-				result.push({ text: `${namen}: Leere Kurse`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
+			if (list.size() > 0) {
+				// TODO
+				result.push({ text: `${namen}: Leere Kurse, beachte Fixierungen`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
+				result.push({ text: `${namen}: Leere Kurse, ignoriere Fixierungen`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
+			}
 		}
 		return result;
 	});
