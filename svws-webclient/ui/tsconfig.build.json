@@ -4,15 +4,8 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {
-			"~/*": ["src/*"]
-		},
-		"types": [
-			"vite/client"
-		],
-		"vueCompilerOptions": {
-
-		}
+		"paths": { "~/*": ["src/*"] },
+		"types": [ "vite/client" ]
 	},
 	"include": [
 		"src/**/*.ts",
