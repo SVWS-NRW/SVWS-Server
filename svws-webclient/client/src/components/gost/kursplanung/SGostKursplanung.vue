@@ -19,11 +19,6 @@
 							Tabelle ausblenden
 						</template>
 					</svws-ui-button>
-					<s-card-gost-kursansicht-irrlaeufer-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
-							<i-ri-error-warning-line /> Ungültige Kurszuordnungen
-						</svws-ui-button>
-					</s-card-gost-kursansicht-irrlaeufer-modal>
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
@@ -49,6 +44,9 @@
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
+						<s-card-gost-kursansicht-irrlaeufer-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" :remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können"> <i-ri-error-warning-line /> Ungültige Kurszuordnungen </svws-ui-button>
+						</s-card-gost-kursansicht-irrlaeufer-modal>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:remove-kurs-schueler-zuordnung="removeKursSchuelerZuordnung" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
