@@ -284,6 +284,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		for (final GostFach fach : gostFaecherManager.faecher()) {
+			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
+				continue;
+
 			//final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
