@@ -143,7 +143,7 @@
 								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
-								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
+								:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
 						</template>
 					</template>
 				</template>
@@ -161,7 +161,7 @@
 								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
 								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
 								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
-								:is-dragging="isDragging" :reset-drag="resetDrag" :reset-drag-over="resetDragOver" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
+								:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
 						</template>
 					</template>
 				</template>
@@ -338,14 +338,12 @@
 	/** Dieser Teil organisiert das Drag und Drop von Kursen und Schienen */
 	const dragKurs 				=	ref<GostBlockungKurs|null>(null);
 	const dragSchiene 		= ref<GostBlockungSchiene|null>(null);
-	const dragFachID			= ref<number|null>(null);
 	const dragOverKurs 		= ref<GostBlockungKurs|null>(null);
 	const dragOverSchiene = ref<GostBlockungSchiene|null>(null);
 	const dropKurs 				=	ref<GostBlockungKurs|null>(null);
 	const dropSchiene 		= ref<GostBlockungSchiene|null>(null);
 	const dropKurs2				= ref<GostBlockungKurs|null>(null);
 	const dropSchiene2 		= ref<GostBlockungSchiene|null>(null);
-	const dropFachID			= ref<number|null>(null);
 	const showTooltip 		= ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
 	const kurseUndSchienenInRechteck = ref<[JavaSet<number>, JavaSet<number>] | null>(null);
 
@@ -412,7 +410,7 @@
 		if (kurseUndSchienenInRechteck.value === null)
 			return false;
 		const [kurse, schienen] = kurseUndSchienenInRechteck.value;
-		return (!kurse.contains(kurs.id)) || (!schienen.contains(schiene.nummer));
+		return (kurse.contains(kurs.id)) && (schienen.contains(schiene.nummer));
 	})
 
 	/** Dieses computed ermittelt ein Set von Kursen, die innerhalb des Rechtecks liegen */
@@ -443,14 +441,14 @@
 	const isDragging = computed<boolean>(() => dragSchiene.value !== null && dropSchiene.value === null);
 
 	function setDrag(p1: GostBlockungKurs | GostBlockungSchiene, p2?: GostBlockungSchiene, p3?: number) {
+		dragOverKurs.value = null;
+		dragOverSchiene.value = null;
 		if (p1 instanceof GostBlockungKurs)
 			dragKurs.value = p1;
 		else
 			dragSchiene.value = p1;
-		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number') {
+		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number')
 			dragSchiene.value = p2;
-			dragFachID.value 	= p3;
-		}
 		else
 			throw new Error("Es können keine zwei Schienen übergeben werden");
 	}
@@ -467,10 +465,9 @@
 			dropKurs.value = p1;
 		else
 			dropSchiene.value = p1;
-		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number') {
+		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number')
 			dropSchiene.value = p2;
-			dropFachID.value 	= p3;
-		} else
+		else
 			throw new Error("Es können keine zwei Schienen übergeben werden");
 		if (highlightKursVerschieben(p1).value)
 			await setKursVerschieben();
@@ -507,7 +504,6 @@
 		showTooltip.value = { kursID: dropKurs.value.id, schieneID: dropSchiene.value.id };
 		const s1 = props.getErgebnismanager().getSchieneG(dropSchiene.value.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dragSchiene.value.id);
-		resetDrop();
 		const schienenSet = new HashSet<number>();
 		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
 			schienenSet.add(i);
@@ -517,10 +513,6 @@
 	function resetDrag() {
 		dragKurs.value = null;
 		dragSchiene.value = null;
-		dragFachID.value = null;
-	}
-
-	function resetDragOver() {
 		dragOverKurs.value = null;
 		dragOverSchiene.value = null;
 	}
@@ -528,9 +520,9 @@
 	function resetDrop() {
 		dropKurs.value = null;
 		dropSchiene.value = null;
-		dropFachID.value = null;
 		dropKurs2.value = null;
 		dropSchiene2.value = null;
+		kurseUndSchienenInRechteck.value = null;
 		showTooltip.value = {kursID: -1, schieneID: -1};
 	}
 

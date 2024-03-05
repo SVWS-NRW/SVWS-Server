@@ -42,7 +42,6 @@ export interface SGostKursplanungKursansichtFachwahlProps {
     (kurs: GostBlockungKurs, schiene: GostBlockungSchiene, fachID?: number): void;
 	};
 	resetDrag: () => void;
-	resetDragOver: () => void;
 	resetDrop: () => void;
 	highlightKursVerschieben: (kurs: GostBlockungKurs) => ComputedRef<boolean>;
 	highlightRechteck: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => ComputedRef<boolean>;

@@ -341,6 +341,7 @@
 		if (props.kurseUndSchienenInRechteck === null)
 			return false;
 		const [kurse, schienen] = props.kurseUndSchienenInRechteck;
+		props.resetDrop();
 		const update = (() => {
 			switch (action) {
 				case 'schüler fixieren':
