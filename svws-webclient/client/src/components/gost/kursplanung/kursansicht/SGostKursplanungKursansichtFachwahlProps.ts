@@ -1,6 +1,6 @@
 import type { ComputedRef } from "vue";
 import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
+import type { GostBlockungsergebnisSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SGostKursplanungKursansichtFachwahlProps {
@@ -32,22 +32,22 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	// Drag and Drop
 	setDrag: {
     (kurs: GostBlockungKurs): void;
-    (schiene: GostBlockungSchiene): void;
-    (kurs: GostBlockungKurs, schiene: GostBlockungSchiene, fachID?: number): void;
+    (schiene: GostBlockungsergebnisSchiene): void;
+    (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene): void;
 	};
-	setDragOver: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => void;
+	setDragOver: (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => void;
 	setDrop: {
     (kurs: GostBlockungKurs): void;
-    (schiene: GostBlockungSchiene): void;
-    (kurs: GostBlockungKurs, schiene: GostBlockungSchiene, fachID?: number): void;
+    (schiene: GostBlockungsergebnisSchiene): void;
+    (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene): void;
 	};
 	resetDrag: () => void;
 	resetDrop: () => void;
 	highlightKursVerschieben: (kurs: GostBlockungKurs) => ComputedRef<boolean>;
-	highlightRechteck: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => ComputedRef<boolean>;
-	highlightRechteckDrop: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => ComputedRef<boolean>;
-	highlightKursAufAnderenKurs: (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => ComputedRef<boolean>;
+	highlightRechteck: (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => ComputedRef<boolean>;
+	highlightRechteckDrop: (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => ComputedRef<boolean>;
+	highlightKursAufAnderenKurs: (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => ComputedRef<boolean>;
 	isDragging: boolean;
 	showTooltip: {kursID: number, schieneID: number};
-	kurseUndSchienenInRechteck: [JavaSet<number>, JavaSet<number>] | null;
+	kurseUndSchienenInRechteck: [JavaSet<number>, JavaSet<number>, JavaSet<number>|null] | null;
 }

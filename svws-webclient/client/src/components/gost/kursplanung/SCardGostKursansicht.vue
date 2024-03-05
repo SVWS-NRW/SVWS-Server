@@ -168,7 +168,6 @@
 			</template>
 		</svws-ui-table>
 		<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modalRegelKursartSchienen" />
-		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modal_regel_kurse" />
 		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 	</svws-ui-content-card>
 </template>
@@ -180,8 +179,8 @@
 	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List , GostBlockungRegelUpdate} from "@core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach , GostBlockungKurs, GostBlockungSchiene } from "@core";
+	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungSchiene } from "@core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -335,7 +334,12 @@
 	const modal_regel_kurse = ref();
 	const modal_combine_kurse = ref();
 
-	/** Dieser Teil organisiert das Drag und Drop von Kursen und Schienen */
+	/**
+	 *
+	 * Dieser Teil organisiert das Drag und Drop von Kursen und Schienen
+	 *
+	 **/
+
 	const dragKurs 				=	ref<GostBlockungKurs|null>(null);
 	const dragSchiene 		= ref<GostBlockungSchiene|null>(null);
 	const dragOverKurs 		= ref<GostBlockungKurs|null>(null);
@@ -345,7 +349,7 @@
 	const dropKurs2				= ref<GostBlockungKurs|null>(null);
 	const dropSchiene2 		= ref<GostBlockungSchiene|null>(null);
 	const showTooltip 		= ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
-	const kurseUndSchienenInRechteck = ref<[JavaSet<number>, JavaSet<number>] | null>(null);
+	const kurseUndSchienenInRechteck = ref<[JavaSet<number>, JavaSet<number>, JavaSet<number>|null] | null>(null);
 
 	/** ist das Drag-Objekt ein Kurs, der auf der Schiene liegt? */
 	const isKursDragging = computed(() => {
@@ -374,9 +378,10 @@
 	})
 
 	/** Es soll ein Kurs auf einen anderen Kurs gezogen werden, um gemeinsame Sache zu machen */
-	const highlightKursAufAnderenKurs = (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => computed<boolean>(() => {
+	const highlightKursAufAnderenKurs = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		if (dragKurs.value === null || dragSchiene.value === null || dragOverSchiene.value === null || dragOverKurs.value === null)
 			return false;
+		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		// wenn kein Kurs gezogen wird, dann kann auch kein Highlighting stattfinden
 		if (!isKursDragging.value)
 			return false;
@@ -390,15 +395,17 @@
 	})
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
-	const highlightRechteck = (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => computed<boolean>(() => {
+	const highlightRechteck = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		if (dragKurs.value === null || dragSchiene.value === null || dragOverSchiene.value === null || dragOverKurs.value === null)
 			return false;
+		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		// ein Kurs in der gleichen Zeile, also wenn Kursauswahl = 1, dann nicht erlauben, weil wir verschieben
 		if (isKursDragging.value && kurseInRechteckSet.value.size() === 1)
 			return false;
 		// wenn ich auf einem Kurs lande, dann will ich kein Rechteck, sondern eine Kurs mit Kurs-Aktion, es sei denn ich bin im gleichen Kurs oder ich habe keinen Kurs gezogen
-		if (isKursDragging.value && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id))
-			return false;
+		// aktuell möchte ich das doch...
+		// if (isKursDragging.value && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id))
+		// 	return false;
 		// ist der aktuelle Kurs nicht Teil des Rechtecks, dann nicht highlighten
 		if (!kurseInRechteckSet.value.contains(kurs.id))
 			return false;
@@ -406,9 +413,10 @@
 	})
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
-	const highlightRechteckDrop = (kurs: GostBlockungKurs, schiene: GostBlockungSchiene) => computed<boolean>(() => {
+	const highlightRechteckDrop = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		if (kurseUndSchienenInRechteck.value === null)
 			return false;
+		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		const [kurse, schienen] = kurseUndSchienenInRechteck.value;
 		return (kurse.contains(kurs.id)) && (schienen.contains(schiene.nummer));
 	})
@@ -440,39 +448,37 @@
 
 	const isDragging = computed<boolean>(() => dragSchiene.value !== null && dropSchiene.value === null);
 
-	function setDrag(p1: GostBlockungKurs | GostBlockungSchiene, p2?: GostBlockungSchiene, p3?: number) {
+	function setDrag(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
 		dragOverKurs.value = null;
 		dragOverSchiene.value = null;
 		if (p1 instanceof GostBlockungKurs)
 			dragKurs.value = p1;
 		else
-			dragSchiene.value = p1;
-		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number')
-			dragSchiene.value = p2;
+			dragSchiene.value = props.getErgebnismanager().getSchieneG(p1.id);
+		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
+			dragSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
 		else
 			throw new Error("Es können keine zwei Schienen übergeben werden");
 	}
 
-	function setDragOver(kurs: GostBlockungKurs, schiene: GostBlockungSchiene) {
+	function setDragOver(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (kurs.id === dragOverKurs.value?.id && dragOverSchiene.value?.id === schiene.id)
 			return;
 		dragOverKurs.value = kurs;
-		dragOverSchiene.value = schiene;
+		dragOverSchiene.value = props.getErgebnismanager().getSchieneG(schiene.id);
 	}
 
-	async function setDrop(p1: GostBlockungKurs | GostBlockungSchiene, p2?: GostBlockungSchiene, p3?: number) {
+	async function setDrop(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
 		if (p1 instanceof GostBlockungKurs)
 			dropKurs.value = p1;
 		else
-			dropSchiene.value = p1;
-		if (p2 instanceof GostBlockungSchiene && p1 instanceof GostBlockungKurs && typeof p3 === 'number')
-			dropSchiene.value = p2;
+			dropSchiene.value = props.getErgebnismanager().getSchieneG(p1.id);
+		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
+			dropSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
 		else
 			throw new Error("Es können keine zwei Schienen übergeben werden");
 		if (highlightKursVerschieben(p1).value)
 			await setKursVerschieben();
-		else if (highlightKursAufAnderenKurs(p1, p2).value)
-			setKursAufAnderenKurs();
 		else if (highlightRechteck(p1, p2).value)
 			setRechteck();
 	}
@@ -483,17 +489,6 @@
 		if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
 			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(dragKurs.value.id, dragSchiene.value.id));
 		await props.updateKursSchienenZuordnung(dragKurs.value.id, dragSchiene.value.id, dropSchiene.value.id);
-	}
-
-	function setKursAufAnderenKurs() {
-		if (dropKurs.value === null || dropSchiene.value === null || dragKurs.value === null || dragSchiene.value=== null)
-			return;
-		const schienen = props.getErgebnismanager().getOfKursSchienenmenge(dropKurs.value.id);
-		if (schienen.contains(toRaw(dropSchiene.value)))
-			modal_combine_kurse.value.openModal(dragKurs.value, dropKurs.value);
-		else
-			modal_regel_kurse.value.openModal(dragKurs.value.id, dropKurs.value.id);
-		return;
 	}
 
 	function setRechteck() {
@@ -507,7 +502,10 @@
 		const schienenSet = new HashSet<number>();
 		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) +1); i++)
 			schienenSet.add(i);
-		kurseUndSchienenInRechteck.value = [kurseInRechteckSet.value, schienenSet];
+		const kurseZusammen = props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragSchiene.value.id) && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dropKurs.value.id, dropSchiene.value.id)
+			? SetUtils.create2(dragKurs.value.id, dropKurs.value.id)
+			: null
+		kurseUndSchienenInRechteck.value = [kurseInRechteckSet.value, schienenSet, kurseZusammen];
 	}
 
 	function resetDrag() {

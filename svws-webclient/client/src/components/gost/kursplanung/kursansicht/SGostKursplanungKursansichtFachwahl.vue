@@ -45,7 +45,7 @@
 						</template>
 						<template v-else>
 							<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
-								{{ kursbezeichnung(kurs).value }}
+								{{ kursbezeichnung(kurs.id).value }}
 							</span>
 						</template>
 					</div>
@@ -84,16 +84,16 @@
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 					<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 						:class="{
-							'bg-green-400/50': highlightKursAufAnderenKurs(kurs, getErgebnismanager().getSchieneG(schiene.id)).value || highlightRechteckDrop(kurs, getErgebnismanager().getSchieneG(schiene.id)).value,
-							'bg-yellow-400/50': highlightRechteck(kurs, getErgebnismanager().getSchieneG(schiene.id)).value,
+							'bg-green-400/50': highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value,
+							'bg-yellow-400/50': highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
 							'bg-white/50 text-black/25 font-bold': highlightKursVerschieben(kurs).value,
 							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
 							'cursor-grabbing': isDragging,
 							'cursor-pointer': !isDragging,
 						}"
-						@dragover.prevent="setDragOver(kurs, getErgebnismanager().getSchieneG(schiene.id))"
-						@drop="setDrop(kurs, getErgebnismanager().getSchieneG(schiene.id), fachwahlen.id)">
+						@dragover.prevent="setDragOver(kurs, schiene)"
+						@drop="setDrop(kurs, schiene)">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
 							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black p-px"
@@ -101,8 +101,8 @@
 								'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
 								'cursor-grab': !isDragging,
-							}" ref="cellRefs"
-							@dragstart.stop="setDrag(kurs, getErgebnismanager().getSchieneG(schiene.id), fachwahlen.id)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)">
+							}"
+							@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getSchuelerAnzahl(kurs.id).value }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
@@ -114,7 +114,7 @@
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
 						<div v-else class="w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
-							draggable="true" @dragstart.stop="setDrag(kurs, getErgebnismanager().getSchieneG(schiene.id), fachwahlen.id)" @dragend="resetDrag" ref="cellRefs"
+							draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
 							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
@@ -124,6 +124,8 @@
 							<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">
 								<template #content>
 									<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
+									<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse immer zusammen')">{{ zusammenKursbezeichnung }} immer auf einer Schiene</svws-ui-button>
+									<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse nie zusammen')">{{ zusammenKursbezeichnung }} nie auf einer Schiene</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen sperren')">Alle Kurse sperren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen entsperren')">Alle Kurse entsperren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button>
@@ -157,7 +159,6 @@
 	import { ZulaessigesFach , GostKursart, GostKursblockungRegelTyp, SetUtils, DeveloperNotificationException } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
-	const cellRefs = ref([]);
 	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 
 	const bgColor = computed<string>(() => ZulaessigesFach.getByKuerzelASD(props.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
@@ -183,8 +184,8 @@
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
 	});
 
-	async function setKoop(kurs: GostBlockungKurs, value: boolean) {
-		await props.patchKurs({ istKoopKurs: value }, kurs.id);
+	async function setKoop(kurs: GostBlockungKurs, istKoopKurs: boolean) {
+		await props.patchKurs({ istKoopKurs }, kurs.id);
 	}
 
 	async function onBlur(suffix: string, id: number) {
@@ -192,7 +193,14 @@
 		editKursID.value = undefined;
 	}
 
-	const kursbezeichnung = (kurs: GostBlockungKurs) => computed<string>(() => props.getDatenmanager().kursGetName(kurs.id));
+	const kursbezeichnung = (id: number) => computed<string>(() => props.getDatenmanager().kursGetName(id));
+
+	const zusammenKursbezeichnung = computed<string|null>(() => {
+		if (!props.kurseUndSchienenInRechteck?.[2])
+			return null;
+		const [id1, id2] = props.kurseUndSchienenInRechteck[2];
+		return `${kursbezeichnung(id1).value} und ${kursbezeichnung(id2).value}`;
+	})
 
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
 		const filter = props.schuelerFilter();
@@ -337,13 +345,21 @@
 		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
 	})
 
-	async function rechteckActions(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler' | 'Schüler LK fixieren' | 'Schüler AB3 fixieren' | 'Schüler LK und AB3 fixieren' | 'Schüler AB4 fixieren' | 'Schüler AB fixieren' | 'Schüler schriftlichen fixieren') {
+	async function rechteckActions(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler' | 'Schüler LK fixieren' | 'Schüler AB3 fixieren' | 'Schüler LK und AB3 fixieren' | 'Schüler AB4 fixieren' | 'Schüler AB fixieren' | 'Schüler schriftlichen fixieren' | 'kurse immer zusammen' | 'kurse nie zusammen') {
 		if (props.kurseUndSchienenInRechteck === null)
 			return false;
-		const [kurse, schienen] = props.kurseUndSchienenInRechteck;
+		const [kurse, schienen, set] = props.kurseUndSchienenInRechteck;
 		props.resetDrop();
 		const update = (() => {
 			switch (action) {
+				case 'kurse immer zusammen':
+					if (set === null)
+						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 8 übergeben');
+					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(set);
+				case 'kurse nie zusammen':
+					if (set === null)
+						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 7 übergeben');
+					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(set);
 				case 'schüler fixieren':
 					return props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
 				case 'schüler lösen':

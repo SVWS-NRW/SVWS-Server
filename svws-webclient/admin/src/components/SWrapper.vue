@@ -27,7 +27,7 @@
 	import { onErrorCaptured, ref } from 'vue';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
-	import { api } from '../router/Api.ts'
+	import { api } from '../router/Api'
 
 	type CapturedError = {
 		id: number;
