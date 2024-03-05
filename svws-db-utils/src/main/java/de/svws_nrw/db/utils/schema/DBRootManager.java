@@ -176,7 +176,7 @@ public final class DBRootManager {
 			return false;
 		// TODO Nutze jeweils eine verschlüsselte Form des Kennwortes -> dieses sollte beim Logging nicht erscheinen -> also nicht "IDENTIFIED BY 'USERPASSWORD'"
 		return switch (conn.getDBDriver()) {
-			case MARIA_DB, MYSQL -> conn.executeNativeUpdate("CREATE USER IF NOT EXISTS " + nameUser + " IDENTIFIED BY '" + pwUser + "'") > Integer.MIN_VALUE;
+			case MARIA_DB, MYSQL -> conn.executeNativeUpdate("CREATE USER IF NOT EXISTS `" + nameUser + "` IDENTIFIED BY '" + pwUser + "'") > Integer.MIN_VALUE;
 			case MSSQL -> {
 				conn.transactionBegin();
 				final int c1 = conn.transactionNativeUpdate("CREATE LOGIN " + nameUser + " WITH PASSWORD = '" + pwUser + "'");
@@ -205,8 +205,8 @@ public final class DBRootManager {
 			return false;
 		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
 			conn.transactionBegin();
-			final int c1 = conn.transactionNativeUpdate("GRANT ALL PRIVILEGES ON `" + nameSchema + "`.* TO " + nameUser);
-			final int c2 = conn.transactionNativeUpdate("GRANT GRANT OPTION ON `" + nameSchema + "`.* TO " + nameUser);
+			final int c1 = conn.transactionNativeUpdate("GRANT ALL PRIVILEGES ON `" + nameSchema + "`.* TO `" + nameUser + "`");
+			final int c2 = conn.transactionNativeUpdate("GRANT GRANT OPTION ON `" + nameSchema + "`.* TO `" + nameUser + "`");
 			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
 		}
 		if (conn.getDBDriver() == DBDriver.MSSQL) {
@@ -238,8 +238,8 @@ public final class DBRootManager {
 			return false;
 		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
 			conn.transactionBegin();
-			final int c1 = conn.transactionNativeUpdate("REVOKE GRANT OPTION ON `" + nameSchema + "`.* FROM " + nameUser);
-			final int c2 = conn.transactionNativeUpdate("REVOKE ALL PRIVILEGES ON `" + nameSchema + "`.* FROM " + nameUser);
+			final int c1 = conn.transactionNativeUpdate("REVOKE GRANT OPTION ON `" + nameSchema + "`.* FROM `" + nameUser + "`");
+			final int c2 = conn.transactionNativeUpdate("REVOKE ALL PRIVILEGES ON `" + nameSchema + "`.* FROM `" + nameUser + "`");
 			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
 		}
 		if (conn.getDBDriver() == DBDriver.MSSQL)
@@ -355,7 +355,7 @@ public final class DBRootManager {
 		if (!benutzer.contains(nameUser))
 			return true;
 		return switch (conn.getDBDriver()) {
-			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP USER IF EXISTS " + nameUser) > Integer.MIN_VALUE;
+			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP USER IF EXISTS `" + nameUser + "`") > Integer.MIN_VALUE;
 			case MSSQL -> {
 				conn.transactionBegin();
 				final int c1 = conn.transactionNativeDelete("DROP USER IF EXISTS " + nameUser);
