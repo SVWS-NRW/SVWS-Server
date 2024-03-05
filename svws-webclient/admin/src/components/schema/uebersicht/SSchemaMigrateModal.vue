@@ -17,7 +17,7 @@
 						<svws-ui-text-input v-model="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
 						<svws-ui-text-input v-model="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
 						<svws-ui-text-input v-model="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
-						<svws-ui-text-input v-model="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" />
+						<svws-ui-text-input v-model="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
 					</div>
 					<div v-else class="flex flex-col gap-3 w-128 text-left">
 						<div><b>Quell-Datenbank: </b> Access-Datei auswählen (Endung .mdb)</div>
@@ -27,7 +27,7 @@
 						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
 						<svws-ui-text-input v-model="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
 						<svws-ui-text-input v-model="zielUsername" placeholder="Name des Datenbankbenutzers" />
-						<svws-ui-text-input v-model="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" />
+						<svws-ui-text-input v-model="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 					</div>
 				</div>
 			</div>

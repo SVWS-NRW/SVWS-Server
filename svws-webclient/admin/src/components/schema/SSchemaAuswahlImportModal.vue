@@ -14,7 +14,7 @@
 						<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
 						<svws-ui-spacing />
 						<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-						<svws-ui-text-input v-model="password" required placeholder="Passwort" />
+						<svws-ui-text-input v-model="password" required placeholder="Passwort" type="password" />
 					</div>
 				</div>
 				<svws-ui-spacing />

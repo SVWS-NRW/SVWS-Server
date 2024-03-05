@@ -10,7 +10,7 @@
 				</div>
 				<svws-ui-spacing />
 				<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
-				<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" />
+				<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" type="Password" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
