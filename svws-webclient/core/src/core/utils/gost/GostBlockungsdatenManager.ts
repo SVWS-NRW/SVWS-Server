@@ -259,6 +259,38 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung des Kurses mit der übergebenen ID.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return eine Kurzdarstellung des Kurses mit der übergebenen ID.
+	 */
+	public toStringKursSimple(idKurs : number) : string {
+		const kurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
+		if (kurs === null)
+			return "[Kurs (" + idKurs + ") ohne Mapping]";
+		const gKursart : GostKursart | null = GostKursart.fromIDorNull(kurs.kursart);
+		const sKursart : string = (gKursart === null) ? "Kursart-ID = " + kurs.kursart + " (ohne Mapping)" : gKursart.kuerzel;
+		return this.toStringFachSimple(kurs.fach_id)! + "-" + sKursart! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung des Faches mit der übergebenen ID.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return eine Kurzdarstellung des Faches mit der übergebenen ID.
+	 */
+	public toStringFachSimple(idFach : number) : string {
+		const gFach : GostFach | null = this._faecherManager.get(idFach);
+		if (gFach === null)
+			return "[Fach-ID = " + idFach + " (ohne Mapping)]";
+		if (gFach.kuerzelAnzeige === null)
+			return "[Fach-ID = " + idFach + " (ohne 'kuerzelAnzeige')]";
+		return gFach.kuerzelAnzeige;
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zum Schüler mit der übergebenen ID.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -273,6 +305,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung des Schüler mit der übergebenen ID.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return eine Kurzdarstellung des Schüler mit der übergebenen ID.
+	 */
+	public toStringSchuelerSimple(idSchueler : number) : string {
+		const schueler : Schueler | null = this._map_idSchueler_schueler.get(idSchueler);
+		if (schueler === null)
+			return "[Schüler (" + idSchueler + ") ohne Mapping]";
+		return schueler.nachname + ", " + schueler.vorname;
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zur Schiene mit der übergebenen ID.
 	 *
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
@@ -284,6 +330,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (schiene === null)
 			return "[Schiene (" + idSchiene + ") ohne Mapping]";
 		return "[Schiene (" + schiene.id + ", Nr. " + schiene.nummer + "): " + schiene.bezeichnung + ", " + schiene.wochenstunden + "]";
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung zur Schiene mit der übergebenen ID.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return eine Kurzdarstellung zur Schiene mit der übergebenen ID.
+	 */
+	public toStringSchieneSimple(idSchiene : number) : string {
+		const schiene : GostBlockungSchiene | null = this._map_idSchiene_schiene.get(idSchiene);
+		if (schiene === null)
+			return "[Schiene (" + idSchiene + ") ohne Mapping]";
+		return "Schiene Nr. " + schiene.nummer;
 	}
 
 	/**

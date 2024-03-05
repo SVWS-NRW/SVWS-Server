@@ -191,9 +191,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _list_verletzte_regeltypen_sortiert : List<GostKursblockungRegelTyp> = new ArrayList();
 
 	/**
-	 * Textuelle Darstellung aller Regelverletzungen der Fächerparallelität
+	 * Textuelle Darstellung aller Regelverletzungen der Fächerparallelität.
 	 */
 	private _regelverletzungen_der_faecherparallelitaet : string = "";
+
+	/**
+	 * Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte.
+	 */
+	private _regelverletzungen_der_wahlkonflikte : string = "";
 
 	private static newKursSchuelerZuordnung : BiFunction<number, number, GostBlockungsergebnisKursSchuelerZuordnung> = { apply : (idKurs: number, idSchueler: number) => {
 		const zuordnung : GostBlockungsergebnisKursSchuelerZuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
@@ -347,6 +352,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_fachartID_kurse.clear();
 		this._map_fachartID_kursdifferenz.clear();
 		this._regelverletzungen_der_faecherparallelitaet = "";
+		this._regelverletzungen_der_wahlkonflikte = "";
 		this._ergebnis = new GostBlockungsergebnis();
 		this._ergebnis.id = pGostBlockungsergebnisID;
 		this._ergebnis.blockungID = this._parent.getID();
@@ -421,6 +427,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_regelID_verletzungen.clear();
 		this._list_verletzte_regeltypen_sortiert.clear();
 		this._regelverletzungen_der_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
+		this._regelverletzungen_der_wahlkonflikte = this.stateRegelvalidierungTooltip2();
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
@@ -457,6 +464,41 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				this._list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 		this._parent.ergebnisUpdateBewertung(this._ergebnis);
 		this.updateAll();
+	}
+
+	private stateRegelvalidierungTooltip2() : string {
+		const sb : StringBuilder = new StringBuilder();
+		let wahlkonflikte : number = 0;
+		let wahlkonflikte_ignored : number = 0;
+		for (const idSchueler of this._map2D_schuelerID_fachID_kurs.getKeySet())
+			for (const e of this._map2D_schuelerID_fachID_kurs.getSubMapOrException(idSchueler).entrySet())
+				if (e.getValue() === null) {
+					if (wahlkonflikte < 10) {
+						sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachSimple(e.getKey()!)! + " keinem Kurs zugeordnet.\n");
+					} else {
+						wahlkonflikte_ignored++;
+					}
+					wahlkonflikte++;
+				}
+		for (const idSchueler of this._map2D_schuelerID_schienenID_kurse.getKeySet())
+			for (const e of this._map2D_schuelerID_schienenID_kurse.getSubMapOrException(idSchueler).entrySet()) {
+				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();
+				if (set === null)
+					continue;
+				if (set.size() <= 1)
+					continue;
+				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
+				if (wahlkonflikte < 10) {
+					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist in " + this._parent.toStringSchieneSimple(e.getKey()!)! + " in mehreren Kursen:");
+					for (let i : number = 0; i < list.size(); i++)
+						sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimple(list.get(i).id)!);
+					sb.append("\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+				wahlkonflikte += list.size() - 1;
+			}
+		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString()! + (wahlkonflikte_ignored === 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
 	}
 
 	private stateRegelvalidierungTooltip4() : string {
@@ -1076,7 +1118,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
-	 * @param bewertung   die Bewertung vom Ergebnis
+	 * @param bewertung  die Bewertung vom Ergebnis
 	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
@@ -2957,6 +2999,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	regelGetTooltipFuerFaecherparallelitaet() : string {
 		return this._regelverletzungen_der_faecherparallelitaet;
+	}
+
+	/**
+	 * Liefert einen Tooltip für alle Wahlkonflikte (Kollisionen und Nichtwahlen) ggf. gekürzt.
+	 *
+	 * @return einen Tooltip für alle Wahlkonflikte (Kollisionen und Nichtwahlen) ggf. gekürzt.
+	 */
+	regelGetTooltipFuerWahlkonflikte() : string {
+		return this._regelverletzungen_der_wahlkonflikte;
 	}
 
 	private static regelupdateIsEqualPair(a1 : number, a2 : number, b1 : number, b2 : number) : boolean {

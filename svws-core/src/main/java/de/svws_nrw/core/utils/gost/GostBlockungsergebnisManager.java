@@ -139,8 +139,12 @@ public class GostBlockungsergebnisManager {
 	/** Liste aller Regeltypen, die mindestens eine Regelverletzung haben. */
 	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _list_verletzte_regeltypen_sortiert = new ArrayList<>();
 
-	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität */
+	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität. */
 	private @NotNull String _regelverletzungen_der_faecherparallelitaet = "";
+
+	/** Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte. */
+	private @NotNull String _regelverletzungen_der_wahlkonflikte = "";
+
 
     private static @NotNull BiFunction<@NotNull Long, @NotNull Long, @NotNull GostBlockungsergebnisKursSchuelerZuordnung> newKursSchuelerZuordnung =
     		(@NotNull final Long idKurs, @NotNull final Long idSchueler) -> {
@@ -279,6 +283,7 @@ public class GostBlockungsergebnisManager {
 		_map_fachartID_kurse.clear();
 		_map_fachartID_kursdifferenz.clear();
 		_regelverletzungen_der_faecherparallelitaet = "";
+		_regelverletzungen_der_wahlkonflikte = "";
 
 		// copy attributes
 		_ergebnis = new GostBlockungsergebnis();
@@ -400,6 +405,7 @@ public class GostBlockungsergebnisManager {
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
 		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4(); // Fächerparallelität
+		_regelverletzungen_der_wahlkonflikte = stateRegelvalidierungTooltip2(); // Fächerparallelität
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
@@ -456,6 +462,50 @@ public class GostBlockungsergebnisManager {
 		_parent.ergebnisUpdateBewertung(_ergebnis);
 
 		updateAll();
+	}
+
+	private @NotNull String stateRegelvalidierungTooltip2() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+
+		// Nichtwahlen des Schülers.
+		int wahlkonflikte = 0;
+		int wahlkonflikte_ignored = 0;
+		for (final long idSchueler : _map2D_schuelerID_fachID_kurs.getKeySet())
+			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _map2D_schuelerID_fachID_kurs.getSubMapOrException(idSchueler).entrySet())
+				if (e.getValue() == null) {
+					if (wahlkonflikte < 10) {
+						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachSimple(e.getKey()) + " keinem Kurs zugeordnet.\n");
+					} else {
+						wahlkonflikte_ignored++;
+					}
+					wahlkonflikte++;
+				}
+
+		// Kollisionen des Schülers.
+		for (final long idSchueler : _map2D_schuelerID_schienenID_kurse.getKeySet())
+			for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> e : _map2D_schuelerID_schienenID_kurse.getSubMapOrException(idSchueler).entrySet()) {
+				final Set<@NotNull GostBlockungsergebnisKurs> set = e.getValue();
+				if (set == null)
+					continue;
+				if (set.size() <= 1)
+					continue;
+
+				final @NotNull ArrayList<@NotNull GostBlockungsergebnisKurs> list = new ArrayList<@NotNull GostBlockungsergebnisKurs>(set);
+
+				if (wahlkonflikte < 10) {
+					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in " + _parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
+					for (int i = 0; i < list.size(); i++)
+						sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimple(list.get(i).id));
+					sb.append("\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+
+				wahlkonflikte += list.size() - 1;
+			}
+
+		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString() + (wahlkonflikte_ignored == 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
 	}
 
 	private @NotNull String stateRegelvalidierungTooltip4() {
@@ -1156,7 +1206,7 @@ public class GostBlockungsergebnisManager {
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
-	 * @param bewertung   die Bewertung vom Ergebnis
+	 * @param bewertung  die Bewertung vom Ergebnis
 	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
@@ -3139,6 +3189,15 @@ public class GostBlockungsergebnisManager {
 	 */
 	final @NotNull String regelGetTooltipFuerFaecherparallelitaet() {
 		return _regelverletzungen_der_faecherparallelitaet;
+	}
+
+	/**
+	 * Liefert einen Tooltip für alle Wahlkonflikte (Kollisionen und Nichtwahlen) ggf. gekürzt.
+	 *
+	 * @return einen Tooltip für alle Wahlkonflikte (Kollisionen und Nichtwahlen) ggf. gekürzt.
+	 */
+	final @NotNull String regelGetTooltipFuerWahlkonflikte() {
+		return _regelverletzungen_der_wahlkonflikte;
 	}
 
 	private static boolean regelupdateIsEqualPair(final long a1, final long a2, final long b1, final long b2) {
