@@ -11,6 +11,21 @@ plugins {
 
 def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
 println "Version " + config.project.version
+def gitHASH = null;
+if (file(".git/HEAD").exists()) {
+	def gitHEADFileString = file(".git/HEAD").text
+	if (gitHEADFileString.trim().length() == 40) {
+		gitHASH = gitHEADFileString.trim()
+	} else {
+		def gitHEADRefParts = gitHEADFileString.split(":");
+		if ((gitHEADRefParts.length == 2) && (gitHEADRefParts[0].trim().equals("ref")) && (file(".git/" + gitHEADRefParts[1].trim()).exists())) {
+			def gitHEADHASHFileString = file(".git/" + gitHEADRefParts[1].trim()).text
+			if (gitHEADHASHFileString.trim().length() == 40)
+				gitHASH = gitHEADHASHFileString.trim()
+		}
+	}
+}
+println "Git-Hash: " + gitHASH
 
 String osName = OperatingSystem.current().getName();
 String osVersion = OperatingSystem.current().getVersion();
@@ -154,6 +169,14 @@ def fileVersionTSAdminClient = new File("${rootDir}/svws-webclient/admin/version
 fileVersionTSAdminClient.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 def fileVersionTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/version.ts")
 fileVersionTSLaufbahnplanung.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+
+def tsGitHashStr = (gitHASH == null) ? 'null' : '"' + gitHASH + '"'
+def fileGithashTS = new File("${rootDir}/svws-webclient/client/githash.ts")
+fileGithashTS.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
+def fileGithashTSAdminClient = new File("${rootDir}/svws-webclient/admin/githash.ts")
+fileGithashTSAdminClient.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
+def fileGithashTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/githash.ts")
+fileGithashTSLaufbahnplanung.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
 
 
 task npmPrepare(type: NpmInstall) {
