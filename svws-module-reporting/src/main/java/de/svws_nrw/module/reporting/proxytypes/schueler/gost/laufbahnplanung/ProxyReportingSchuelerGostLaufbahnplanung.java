@@ -91,7 +91,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id()));
 		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr()));
 		if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
-			final GostFaecherManager tempGostFaecherManager = DBUtilsFaecherGost.getNurWaehlbareFaecherListeGost(this.reportingRepository.conn(), super.abiturjahr());
+			final GostFaecherManager tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
 			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(), super.abiturjahr()));
 			this.reportingRepository.mapGostAbiturjahrgangFaecher().put(super.abiturjahr(), tempGostFaecherManager);
 		}
@@ -99,7 +99,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// ##### Grunddaten und Summen setzen ###############
-		var aktuellerLernabschnitt = reportingSchueler.aktuellerLernabschnitt();
+		final var aktuellerLernabschnitt = reportingSchueler.aktuellerLernabschnitt();
 		super.setPruefungsordnung(aktuellerLernabschnitt.pruefungsOrdnung());
 		if (!super.pruefungsordnung().toLowerCase().contains("gost"))
 			super.setPruefungsordnung("APO-GOSt");
