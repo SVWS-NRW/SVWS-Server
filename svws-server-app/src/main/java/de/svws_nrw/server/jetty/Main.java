@@ -11,6 +11,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 
 /**
@@ -68,29 +69,34 @@ public class Main {
 				logger.logLn("-> zu Schema " + schema.name);
 				logger.modifyIndent(2);
 				final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
-				final Benutzer dbUser = Benutzer.create(dbconfig);
 				boolean schemaOK = true;
-				try (DBEntityManager dbConn = dbUser.getEntityManager()) {
-					if (dbConn == null) {
-						logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
-						continue;
+				try {
+					final Benutzer dbUser = Benutzer.create(dbconfig);
+					try (DBEntityManager dbConn = dbUser.getEntityManager()) {
+						if (dbConn == null) {
+							logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
+							continue;
+						}
+						final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
+						if (!dbManager.updater.isUptodate(-1, devMode)) {
+							logger.logLn("Revision veraltet - führe Update aus...");
+							logger.modifyIndent(2);
+							if (!dbManager.updater.update(dbUser, -1, devMode, true))
+								schemaOK = false;
+							logger.modifyIndent(-2);
+						}
+						if (!dbManager.updater.coreTypes.isUptodate()) {
+							logger.logLn("Core-Types veraltet - führe Update aus...");
+							logger.modifyIndent(2);
+							if (!dbManager.updater.coreTypes.update(dbUser, true, -1))
+								schemaOK = false;
+							logger.modifyIndent(-2);
+						}
+					} catch (@SuppressWarnings("unused") final Exception e) {
+						schemaOK = false;
 					}
-					final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
-					if (!dbManager.updater.isUptodate(-1, devMode)) {
-						logger.logLn("Revision veraltet - führe Update aus...");
-						logger.modifyIndent(2);
-						if (!dbManager.updater.update(dbUser, -1, devMode, true))
-							schemaOK = false;
-						logger.modifyIndent(-2);
-					}
-					if (!dbManager.updater.coreTypes.isUptodate()) {
-						logger.logLn("Core-Types veraltet - führe Update aus...");
-						logger.modifyIndent(2);
-						if (!dbManager.updater.coreTypes.update(dbUser, true, -1))
-							schemaOK = false;
-						logger.modifyIndent(-2);
-					}
-				} catch (@SuppressWarnings("unused") final Exception e) {
+				} catch (final DBException e) {
+					logger.logLn(e.getMessage());
 					schemaOK = false;
 				}
 				if (!schemaOK) {
