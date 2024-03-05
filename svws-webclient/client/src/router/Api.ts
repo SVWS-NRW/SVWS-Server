@@ -8,6 +8,7 @@ import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData} from "~/components/ApiStatus";
 import { ApiStatus } from "~/components/ApiStatus";
 import { version } from '../../version';
+import { githash } from "../../githash";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
@@ -55,7 +56,12 @@ class Api {
 
 	/** Gibt die Version des SVWS-Servers zurück */
 	get version(): string {
-		return version
+		return version;
+	}
+
+	/** Gibt den Githash des aktuellen Commits zurück */
+	get githash(): string {
+		return githash;
 	}
 
 	/**
@@ -260,6 +266,7 @@ class Api {
 		return abschnitt;
 	}
 
+	/** Gibt an, ob die aktuell ausgewählte Schule einen Quartalsmodus anwendet */
 	public hatQuartalsModus(): boolean {
 		return (this.schuleStammdaten.schuleAbschnitte.anzahlAbschnitte === 4);
 	}

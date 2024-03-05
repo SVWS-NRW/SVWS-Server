@@ -2,6 +2,8 @@ import type { ApiServer, ServerMode, ApiSchemaPrivileged } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";
+import { version } from '../../version';
+import { githash } from "../../githash";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
@@ -50,6 +52,16 @@ class Api {
 	/** Gibt an, ob der Benutzer Root-Privilegien hat */
 	get hasRootPrivileges() : boolean {
 		return this.conn.hasRootPrivileges;
+	}
+
+	/** Gibt die Version des SVWS-Servers zurück */
+	get version(): string {
+		return version;
+	}
+
+	/** Gibt den Githash des aktuellen Commits zurück */
+	get githash(): string {
+		return githash;
 	}
 
 	/**

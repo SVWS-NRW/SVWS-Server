@@ -33,15 +33,15 @@
 		id: number;
 		name: string;
 		message: string;
-		stack: string;
+		stack: string | string[];
 		log: SimpleOperationResponse | null;
 	};
 
 	const counter = ref(0);
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
-	function copyString(error: Error) {
-		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version }, error }, null, 2);
+	function copyString(error: CapturedError) {
+		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version, "Commit": api.githash }, error }, null, 2);
 		return "```json\n"+json+"\n```";
 	}
 
@@ -102,7 +102,7 @@
 			id: counter.value,
 			name,
 			message,
-			stack: reason.stack || '',
+			stack: reason.stack?.split("\n") || '',
 			log,
 		}
 		errors.value.set(newError.id, newError);
