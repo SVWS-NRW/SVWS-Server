@@ -33,8 +33,8 @@
 	import { onErrorCaptured, ref } from 'vue';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
-	import { githash } from '~/githash';
-	import { version } from '~/version';
+	import { githash } from '../../githash';
+	import { version } from '../../version';
 
 	type CapturedError = {
 		id: number;
