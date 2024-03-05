@@ -459,7 +459,7 @@ public final class DBUtilsGostLaufbahn {
     	final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryAktAbschnitte.setParameter("ids", schuelerIDs).getResultList();
     	final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitteBySchuelerID = listAktAbschnitte.stream().collect(Collectors.toMap(a -> a.Schueler_ID, a -> a));
     	// Bestimme die Leistungsdaten mithilfe der Sprachendaten der Schüler
-    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAlleGostAbschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND e.WechselNr = 0 AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2')", DTOSchuelerLernabschnittsdaten.class);
+    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAlleGostAbschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s ON s.ID IN :ids AND e.Schueler_ID = s.ID AND e.WechselNr = 0 AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2')", DTOSchuelerLernabschnittsdaten.class);
     	final List<DTOSchuelerLernabschnittsdaten> listAlleGostAbschnitte = queryAlleGostAbschnitte.setParameter("ids", schuelerIDs).getResultList();
     	final List<Long> listAlleGostLernabschnittsIDs = listAlleGostAbschnitte.stream().map(l -> l.ID).toList();
     	final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitteBySchuelerID = listAlleGostAbschnitte.stream().collect(Collectors.groupingBy(a -> a.Schueler_ID, Collectors.toList()));
