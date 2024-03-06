@@ -84,8 +84,8 @@
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 					<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 						:class="{
-							'bg-green-400/50': highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value,
-							'bg-yellow-400/50': highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
+							'bg-green-400/50': allowRegeln && (highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value),
+							'bg-yellow-400/50': allowRegeln && highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
 							'bg-white/50 text-black/25 font-bold': highlightKursVerschieben(kurs).value,
 							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),

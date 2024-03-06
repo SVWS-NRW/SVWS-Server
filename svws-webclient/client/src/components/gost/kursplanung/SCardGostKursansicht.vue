@@ -3,7 +3,7 @@
 		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
 				<div role="row" class="svws-ui-tr select-none">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
 						<div class="flex items-center justify-between w-full -my-2">
 							<div class="flex flex-row gap-2">
 								<span>Schiene</span>
@@ -13,7 +13,7 @@
 									<i-ri-text v-if="zeigeSchienenbezeichnungen()" />
 									<i-ri-expand-height-line v-else />
 								</svws-ui-button>
-								<template v-if="allow_regeln">
+								<template v-if="allowRegeln">
 									<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
 										<i-ri-add-line />
 									</svws-ui-button>
@@ -36,21 +36,21 @@
 							</svws-ui-tooltip>
 							<template v-else-if="zeigeSchienenbezeichnungen()">
 								<div>
-									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allow_regeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allow_regeln && (edit_schienenname = s.id)">
+									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allowRegeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">
 										{{ s.bezeichnung }}
 									</span>
 									<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
 								</div>
 							</template>
 							<template v-else>
-								<span :class="{ 'border-b border-dotted hover:border-transparent': allow_regeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allow_regeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
+								<span :class="{ 'border-b border-dotted hover:border-transparent': allowRegeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
 								<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
 							</template>
 						</div>
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr select-none">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
 						Schülerzahl
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr select-none">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
 						Kollisionen
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
@@ -86,7 +86,7 @@
 						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
-					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': kurssortierung.value === 'kursart'}">
+					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allowRegeln, 'col-span-1': !allowRegeln, 'svws-active': kurssortierung.value === 'kursart'}">
 						<span>Kurs</span>
 						<span class="svws-sorting-icon">
 							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
@@ -105,7 +105,7 @@
 					</div>
 					<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 					<!--Schienen-->
-					<template v-if="allow_regeln">
+					<template v-if="allowRegeln">
 						<template v-for="(schiene, index) in schienen" :key="schiene.id">
 							<div @dragover="if (istDropZoneSchiene(schiene).value) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
 								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene).value, 'svws-divider': index + 1 < schienen.size() }">
@@ -135,7 +135,7 @@
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
 								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
@@ -153,7 +153,7 @@
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
 								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
@@ -221,7 +221,7 @@
 
 	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) => computed<boolean>(() => {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
-		return (anzahl > 0) || (allow_regeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
+		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
 	});
 
 	const kurse = computed(() => props.kurssortierung.value === 'fach'
@@ -230,12 +230,12 @@
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
-	const allow_regeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
-		if (allow_regeln.value)
+		if (allowRegeln.value)
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
 		cols.push({ key: "kurs", label: "Kurs", span: 1.75, minWidth: 8 },
 			{ key: "lehrer", label: "Lehrer", span: 1.5, minWidth: 6 },
@@ -446,7 +446,7 @@
 		return range;
 	})
 
-	const isDragging = computed<boolean>(() => dragSchiene.value !== null && dropSchiene.value === null);
+	const isDragging = computed<boolean>(() => (dragSchiene.value !== null && dropSchiene.value === null) && (allowRegeln.value || isKursDragging.value));
 
 	function setDrag(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
 		dragOverKurs.value = null;
@@ -479,14 +479,14 @@
 			throw new Error("Es können keine zwei Schienen übergeben werden");
 		if (highlightKursVerschieben(p1).value)
 			await setKursVerschieben();
-		else if (highlightRechteck(p1, p2).value)
+		else if (highlightRechteck(p1, p2).value && allowRegeln.value)
 			setRechteck();
 	}
 
 	async function setKursVerschieben() {
 		if (dropKurs.value === null || dropSchiene.value === null || dragKurs.value === null || dragSchiene.value === null)
 			return;
-		if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
+		if (allowRegeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
 			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(dragKurs.value.id, dragSchiene.value.id));
 		await props.updateKursSchienenZuordnung(dragKurs.value.id, dragSchiene.value.id, dropSchiene.value.id);
 	}
