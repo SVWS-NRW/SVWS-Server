@@ -128,10 +128,11 @@ public final class DBUtilsSchema {
      * Bestimmt die Liste der über die Datenbankverbindung verfügbaren SVWS-Schemata.
      *
      * @param conn   die Datenbankverbindung
+     * @param nurSVWSSchemas    gibt an, ob nur SVWS-Schema zurückgegeben werden sollen oder alle
      *
      * @return die Liste der SVWS-Schema-Einträge
      */
-    public static List<SchemaListeEintrag> getSVWSSchemaListe(final DBEntityManager conn) {
+    public static List<SchemaListeEintrag> getSVWSSchemaListe(final DBEntityManager conn, final boolean nurSVWSSchemas) {
 		// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 		final List<String> all = DTOInformationSchema.queryNames(conn);
 		final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
@@ -140,14 +141,23 @@ public final class DBUtilsSchema {
 		for (final String schemaname : all) {
 			final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
 			final DBSchemaVersion version = status.getVersion();
-			if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
-				continue;
-			if (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE) {
+			if ((version != null) && (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE)) {
 				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
 				final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
 				schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
+				schemainfo.isSVWS = true;
 				schemainfo.revision = version.getRevisionOrDefault(-1);
 				schemainfo.isTainted = version.isTainted();
+				schemainfo.isInConfig = (schemanameConfig != null);
+				schemainfo.isDeactivated = config.isDeactivatedSchema(schemaname);
+				result.add(schemainfo);
+			} else if (!nurSVWSSchemas) { // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
+				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
+				final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
+				schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
+				schemainfo.isSVWS = false;
+				schemainfo.revision = -1;
+				schemainfo.isTainted = true;
 				schemainfo.isInConfig = (schemanameConfig != null);
 				schemainfo.isDeactivated = config.isDeactivatedSchema(schemaname);
 				result.add(schemainfo);
@@ -207,7 +217,7 @@ public final class DBUtilsSchema {
      * @return der Datenbank-Benutzer für die neue Verbindung
      */
     public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname) {
-    	final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn);
+    	final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn, true);
     	SchemaListeEintrag schema = null;
     	for (final SchemaListeEintrag s : schemata) {
     		if (s.name.equalsIgnoreCase(schemaname)) {

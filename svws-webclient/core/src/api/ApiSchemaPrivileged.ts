@@ -165,22 +165,22 @@ export class ApiSchemaPrivileged extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/liste/alle
 	 *
-	 * Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
+	 * Liefert eine Liste der Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
+	 *   Code 200: Die Liste mit allen sichtbaren Schemas in der Datenbank
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<String>
+	 *     - Rückgabe-Typ: List<SchemaListeEintrag>
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
 	 *
-	 * @returns Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
+	 * @returns Die Liste mit allen sichtbaren Schemas in der Datenbank
 	 */
-	public async getSchemaListe() : Promise<List<string>> {
+	public async getSchemaListe() : Promise<List<SchemaListeEintrag>> {
 		const path = "/api/schema/liste/alle";
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		const ret = new ArrayList<SchemaListeEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchemaListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -265,7 +265,7 @@ export class ApiSchemaPrivileged extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSVWSSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/liste/svws
 	 *
-	 * Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
+	 * Liefert eine Liste der SVWS-Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas

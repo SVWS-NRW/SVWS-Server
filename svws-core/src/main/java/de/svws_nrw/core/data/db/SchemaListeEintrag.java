@@ -18,6 +18,10 @@ public class SchemaListeEintrag {
 	@Schema(description = "der Name des Schemas", example = "svwsdb")
 	public @NotNull String name = "";
 
+	/** Gibt an, ob das Schema ein SVWS-Schema ist oder nicht. */
+	@Schema(description = "gibt an, ob das Schema ein SVWS-Schema ist oder nicht", example = "false")
+	public boolean isSVWS = false;
+
 	/** Die Revisionsnummer des Schemas. */
 	@Schema(description = "die Revisionsnummer des Schemas", example = "3")
 	public long revision = -1;

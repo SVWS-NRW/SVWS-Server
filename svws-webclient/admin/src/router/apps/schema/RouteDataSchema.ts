@@ -132,16 +132,13 @@ export class RouteDataSchema {
 	public async init(schemaname : string | undefined) {
 		api.status.start();
 		const mapSchema = new Map<string, SchemaListeEintrag>();
-		const listSchema : List<string> = await api.privileged.getSchemaListe();
-		listSchema.sort(<Comparator<string>>{ compare(s1 : string, s2 : string) { return JavaString.compareToIgnoreCase(s1, s2); } });
+		const listSchema : List<SchemaListeEintrag> = await api.privileged.getSchemaListe();
+		listSchema.sort(<Comparator<SchemaListeEintrag>>{ compare(s1 : SchemaListeEintrag, s2 : SchemaListeEintrag) { return JavaString.compareToIgnoreCase(s1.name, s2.name); } });
 		for (const s of listSchema)
-			mapSchema.set(s.toLocaleLowerCase(), this.getEmpty(s));
-		const listSVWSSchema : List<SchemaListeEintrag> = await api.privileged.getSVWSSchemaListe();
-		for (const s of listSVWSSchema)
 			mapSchema.set(s.name.toLocaleLowerCase(), s);
 		let auswahl : SchemaListeEintrag | undefined = undefined;
 		if (mapSchema.size > 0) {
-			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname.toLocaleLowerCase());
+			auswahl = schemaname === undefined ? listSchema.get(0) : mapSchema.get(schemaname.toLocaleLowerCase());
 			if (auswahl === undefined)
 				auswahl = mapSchema.values().next().value;
 		}

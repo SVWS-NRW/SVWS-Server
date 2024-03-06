@@ -8,6 +8,11 @@ export class SchemaListeEintrag extends JavaObject {
 	public name : string = "";
 
 	/**
+	 * Gibt an, ob das Schema ein SVWS-Schema ist oder nicht.
+	 */
+	public isSVWS : boolean = false;
+
+	/**
 	 * Die Revisionsnummer des Schemas.
 	 */
 	public revision : number = -1;
@@ -46,6 +51,9 @@ export class SchemaListeEintrag extends JavaObject {
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
+		if (typeof obj.isSVWS === "undefined")
+			 throw new Error('invalid json format, missing attribute isSVWS');
+		result.isSVWS = obj.isSVWS;
 		if (typeof obj.revision === "undefined")
 			 throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;
@@ -64,6 +72,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchemaListeEintrag) : string {
 		let result = '{';
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		result += '"isSVWS" : ' + obj.isSVWS + ',';
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
 		result += '"isInConfig" : ' + obj.isInConfig + ',';
@@ -77,6 +86,9 @@ export class SchemaListeEintrag extends JavaObject {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
 			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		}
+		if (typeof obj.isSVWS !== "undefined") {
+			result += '"isSVWS" : ' + obj.isSVWS + ',';
 		}
 		if (typeof obj.revision !== "undefined") {
 			result += '"revision" : ' + obj.revision + ',';

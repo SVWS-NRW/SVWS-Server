@@ -89,45 +89,45 @@ public class APISchemaPrivileged {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste aller SVWS-Schemata im DBMS.
+     * Die OpenAPI-Methode für die Abfrage der Liste aller SVWS-Schemas im DBMS.
      *
      * @param request   die Informationen zur HTTP-Anfrage
      *
-     * @return die Liste der vorhandenen SVWS-Schemata in der Datenbank
+     * @return die Liste der vorhandenen SVWS-Schemas in der Datenbank
      */
     @GET
     @Path("/api/schema/liste/svws")
-    @Operation(summary = "Liefert eine Liste der SVWS-Schemata.",
-    description = "Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+    @Operation(summary = "Liefert eine Liste der SVWS-Schemas.",
+    description = "Liefert eine Liste der SVWS-Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.")
     @ApiResponse(responseCode = "200", description = "Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas",
     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchemaListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context final HttpServletRequest request) {
     	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	try (DBEntityManager conn = user.getEntityManager()) {
-    		return DBUtilsSchema.getSVWSSchemaListe(conn);
+    		return DBUtilsSchema.getSVWSSchemaListe(conn, true);
     	}
     }
 
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste aller Schemata im DBMS.
+     * Die OpenAPI-Methode für die Abfrage der Liste aller Schemas im DBMS.
      *
      * @param request   die Informationen zur HTTP-Anfrage
      *
-     * @return          die Liste der vorhandenen Schemata in der Datenbank
+     * @return          die Liste der vorhandenen Schemas in der Datenbank
      */
     @GET
     @Path("/api/schema/liste/alle")
-    @Operation(summary = "Liefert eine Liste der Schemata.",
-    description = "Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
-    @ApiResponse(responseCode = "200", description = "Die Liste mit allen sichtbaren Schema-Namen in der Datenbank",
-    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
+    @Operation(summary = "Liefert eine Liste der Schems.",
+    description = "Liefert eine Liste der Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+    @ApiResponse(responseCode = "200", description = "Die Liste mit allen sichtbaren Schemas in der Datenbank",
+    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchemaListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    public List<String> getSchemaListe(@Context final HttpServletRequest request) {
+    public List<SchemaListeEintrag> getSchemaListe(@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-			return DTOInformationSchema.queryNames(conn);
+			return DBUtilsSchema.getSVWSSchemaListe(conn, false);
     	}
     }
 
