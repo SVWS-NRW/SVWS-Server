@@ -32,10 +32,15 @@
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
-				<template #cell(wert2)="{ rowData: row }">
+				<template #cell(wert2)="{ rowData: row, rowIndex }">
 					<div class="table-cell">
-						<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getBewertungWert(row, 2)} Wahlkonflikte`"
-							:style="{'background-color': getBewertungColor(row, 2)}">{{ getBewertungWert(row, 2) }}</span>
+						<svws-ui-tooltip v-if="getBewertungWert(row, 2) > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 2)}">{{ getBewertungWert(row, 2) }}</span>
+							<template #content>
+								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerWahlkonflikte() }}</pre>
+							</template>
+						</svws-ui-tooltip>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
 				<template #cell(wert3)="{ rowData: row }">
