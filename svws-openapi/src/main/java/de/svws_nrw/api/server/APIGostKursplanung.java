@@ -24,7 +24,7 @@ import de.svws_nrw.data.gost.DataGostBlockungSchiene;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostBlockungsliste;
-import de.svws_nrw.module.reporting.pdf.base.PdfFactory;
+import de.svws_nrw.module.reporting.pdf.PdfFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1161,7 +1161,7 @@ public class APIGostKursplanung {
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css", false, false, true, idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
-					.createPdf(),
+					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -1212,7 +1212,7 @@ public class APIGostKursplanung {
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css", false, false, !(idsSchueler == null || idsSchueler.isEmpty()), idBlockungsergebnis, new ArrayList<>(), idsSchueler, false, false, 0))
-					.createPdf(),
+					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -1264,7 +1264,7 @@ public class APIGostKursplanung {
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css", false, !(idsKurse == null || idsKurse.isEmpty()), false, idBlockungsergebnis, idsKurse, new ArrayList<>(), false, false, 0))
-					.createPdf(),
+					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,

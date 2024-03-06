@@ -1,4 +1,4 @@
-package de.svws_nrw.module.reporting.pdf.base;
+package de.svws_nrw.module.reporting.pdf;
 
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;

@@ -41,7 +41,7 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.reporting.pdf.base.PdfFactory;
+import de.svws_nrw.module.reporting.pdf.PdfFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -895,7 +895,7 @@ public class APIGost {
 	@Operation(
 		summary = "Erstellt die Anlage 12 (Abiturzeugnis) zu den Schülern mit den angegebenen IDs.",
 		description = "Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Anlage 12 besitzt.")
 	@ApiResponse(
 		responseCode = "200",
 		description = "Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.",
@@ -920,7 +920,7 @@ public class APIGost {
 		@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", false, false, false, null, new ArrayList<>(), idsSchueler, true, false, 0))
-					.createPdf(),
+					.create(),
 			request, ServerMode.DEV,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN);
@@ -969,7 +969,7 @@ public class APIGost {
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
-					.createPdf(),
+					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -994,7 +994,7 @@ public class APIGost {
 	@Operation(
 		summary = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
 		description = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Ergebnisübersicht besitzt.")
 	@ApiResponse(
 		responseCode = "200",
 		description = "Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.",
@@ -1018,7 +1018,7 @@ public class APIGost {
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css", false, false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
-					.createPdf(),
+					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,

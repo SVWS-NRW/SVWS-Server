@@ -7,6 +7,7 @@ import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.reporting.html.base.HtmlContext;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.ws.rs.WebApplicationException;
 import org.thymeleaf.context.Context;
 
@@ -27,20 +28,18 @@ public final class HtmlContextSchueler extends HtmlContext {
 	/**
 	 * Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht.
 	 */
-	private ArrayList<ProxyReportingSchueler> schueler = new ArrayList<>();
+	private ArrayList<ReportingSchueler> schueler = new ArrayList<>();
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit dem übergebenen Context.
-	 *
-	 * @param context	HtmlContext mit allen notwendigen Daten
+	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextSchueler(final Context context) {
-		super.setContext(context);
+	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler) {
+		erzeugeContext(reportingSchueler);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
-	 *
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 * @param schuelerIDs			Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
@@ -50,36 +49,33 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 
 	/**
-	 * Teil diesen gesamten Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
-	 * @return	Liste der Einzel-Contexts.
+	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
 	 */
-	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
-		final List<HtmlContextSchueler> contexts = new ArrayList<>();
-		for (final ProxyReportingSchueler proxyReportingSchueler : schueler) {
-			final List<ProxyReportingSchueler> einzelschueler = new ArrayList<>();
-			einzelschueler.add(proxyReportingSchueler);
+	private void erzeugeContext(final List<ReportingSchueler> reportingSchueler) throws WebApplicationException {
 
-			final Context context = new Context();
-			context.setVariable("Schueler", einzelschueler);
+		if (reportingSchueler == null || reportingSchueler.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Schueler übergeben.");
 
-			contexts.add(new HtmlContextSchueler(context));
-		}
-		return contexts;
+		// Sortiere die übergebene Liste der Schüler
+		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
+		reportingSchueler.sort(Comparator.comparing(ReportingSchueler::nachname, colGerman)
+			.thenComparing(ReportingSchueler::vorname, colGerman)
+			.thenComparing(ReportingSchueler::id));
+
+		schueler = new ArrayList<>();
+		schueler.addAll(reportingSchueler);
+
+		// Daten-Context für Thymeleaf erzeugen.
+		final Context context = new Context();
+		context.setVariable("Schueler", schueler);
+
+		super.setContext(context);
 	}
-
-	/**
-	 * Eine interne Liste des Contexts mit den Daten der Schüler.
-	 * @return	Liste mit den Daten Schüler.
-	 */
-	public List<ProxyReportingSchueler> getSchueler() {
-		return schueler;
-	}
-
 
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 *
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
@@ -120,5 +116,30 @@ public final class HtmlContextSchueler extends HtmlContext {
 		context.setVariable("Schueler", schueler);
 
 		super.setContext(context);
+	}
+
+	/**
+	 * Eine interne Liste des Contexts mit den Daten der Schüler.
+	 * @return	Liste mit den Daten Schüler.
+	 */
+	public List<ReportingSchueler> getSchueler() {
+		return schueler;
+	}
+
+
+	/**
+	 * Teil diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
+	 * @return	Liste der Einzel-Contexts.
+	 */
+	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
+		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
+
+		for (final ReportingSchueler reportingSchueler : schueler) {
+			final List<ReportingSchueler> einSchueler = new ArrayList<>();
+			einSchueler.add(reportingSchueler);
+			resultContexts.add(new HtmlContextSchueler(einSchueler));
+		}
+
+		return resultContexts;
 	}
 }

@@ -6170,7 +6170,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode pdfGostAnlage12 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/gostanlage12
 	 *
-	 * Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 * Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Anlage 12 besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
@@ -6199,7 +6199,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerErgebnisuebersicht für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \d+}
 	 *
-	 * Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 * Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Ergebnisübersicht besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.
