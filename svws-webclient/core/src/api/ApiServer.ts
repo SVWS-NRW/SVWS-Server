@@ -6168,7 +6168,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode pdfGostAnlage12 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/gostanlage12
+	 * Implementierung der POST-Methode pdfGostAnlage12 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/gostanlage12/{einzelpdfs : \d+}
 	 *
 	 * Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Anlage 12 besitzt.
 	 *
@@ -6184,12 +6184,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} einzelpdfs - der Pfad-Parameter einzelpdfs
 	 *
 	 * @returns Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
 	 */
-	public async pdfGostAnlage12(data : List<number>, schema : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/gostanlage12"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async pdfGostAnlage12(data : List<number>, schema : string, einzelpdfs : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/gostanlage12/{einzelpdfs : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{einzelpdfs\s*(:[^{}]+({[^{}]+})*)?}/g, einzelpdfs.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
@@ -6228,7 +6230,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \d+}
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \d+}/{einzelpdfs : \d+}
 	 *
 	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
 	 *
@@ -6245,13 +6247,15 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
+	 * @param {number} einzelpdfs - der Pfad-Parameter einzelpdfs
 	 *
 	 * @returns Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
 	 */
-	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string, detaillevel : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}"
+	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string, detaillevel : number, einzelpdfs : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}/{einzelpdfs : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{detaillevel\s*(:[^{}]+({[^{}]+})*)?}/g, detaillevel.toString());
+			.replace(/{detaillevel\s*(:[^{}]+({[^{}]+})*)?}/g, detaillevel.toString())
+			.replace(/{einzelpdfs\s*(:[^{}]+({[^{}]+})*)?}/g, einzelpdfs.toString());
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;

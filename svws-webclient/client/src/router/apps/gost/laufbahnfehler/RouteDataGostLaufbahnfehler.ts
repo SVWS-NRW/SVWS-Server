@@ -105,14 +105,14 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		return res;
 	}
 
-	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number) => {
+	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number, einzelpdfs: boolean) => {
 		try {
 			api.status.start();
 			switch (title) {
 				case 'Laufbahnwahlbogen':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel);
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel, einzelpdfs ? 1 : 0 );
 				case 'Laufbahnwahlbogen (nur Belegung)':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel);
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel, einzelpdfs ? 1 : 0);
 				case 'Ergebnisliste Laufbahnwahlen':
 					return await api.server.pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(list, api.schema, detaillevel);
 				default:

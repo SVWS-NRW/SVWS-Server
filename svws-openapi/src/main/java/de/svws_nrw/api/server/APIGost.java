@@ -885,13 +885,14 @@ public class APIGost {
 	 *
 	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param idsSchueler   Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param einzelpdfs 	gibt an, ob bei mehreren Schülern pro Schüler eine eigene PDF-Datei erzeugt werden soll. 0 = false, 1 = true
 	 * @param request     	die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Die zu den übergebenen IDs gehörigen Anlage 12 APO-GOSt (Abiturzeugnis) der gymnasialen Oberstufe
 	 */
 	@POST
 	@Produces("application/pdf")
-	@Path("/schueler/pdf/gostanlage12")
+	@Path("/schueler/pdf/gostanlage12/{einzelpdfs : \\d+}")
 	@Operation(
 		summary = "Erstellt die Anlage 12 (Abiturzeugnis) zu den Schülern mit den angegebenen IDs.",
 		description = "Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
@@ -912,6 +913,7 @@ public class APIGost {
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response pdfGostAnlage12(
 		@PathParam("schema") final String schema,
+		@PathParam("einzelpdfs") final int einzelpdfs,
 		@RequestBody(
 			description = "Schüler-IDs, für die die Anlage 12 erstellt werden soll.",
 			required = true,
@@ -919,7 +921,7 @@ public class APIGost {
 		final List<Long> idsSchueler,
 		@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", false, false, false, null, new ArrayList<>(), idsSchueler, true, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", (einzelpdfs == 1), false, false, null, new ArrayList<>(), idsSchueler, true, false, 0))
 					.create(),
 			request, ServerMode.DEV,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
@@ -933,13 +935,14 @@ public class APIGost {
 	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param idsSchueler   Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
 	 * @param detaillevel	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = nur belegte Fächer, 1 = alle Fächer
+	 * @param einzelpdfs 	gibt an, ob bei mehreren Schülern pro Schüler eine eigene PDF-Datei erzeugt werden soll. 0 = false, 1 = true
 	 * @param request 		die Informationen zur HTTP-Anfrage
 	 *
 	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
 	 */
 	@POST
 	@Produces("application/pdf")
-	@Path("/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}")
+	@Path("/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}/{einzelpdfs : \\d+}")
 	@Operation(
 		summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
 		description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
@@ -960,15 +963,16 @@ public class APIGost {
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response pdfGostLaufbahnplanungSchuelerWahlbogen(
             @PathParam("schema") final String schema,
+			@PathParam("detaillevel") final int detaillevel,
+			@PathParam("einzelpdfs") final int einzelpdfs,
             @RequestBody(
                     description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.",
                     required = true,
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> idsSchueler,
-			@PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", false, false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", (einzelpdfs == 1), false, false, null, new ArrayList<>(), idsSchueler, false, true, detaillevel))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

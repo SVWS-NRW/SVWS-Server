@@ -148,42 +148,32 @@
 	}
 
 	const dropdownList = computed(() => {
-		const textSchuelerfilter = hasFilter.value ? "gefilterte Schüler" : "alle Schüler";
-		const textSchuelerauswahl = auswahl.value.length > 0 ? "markierte Schüler" : "ausgewählter Schüler";
 		return [
-			{ text: `Laufbahnwahlbogen ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen", false, 1), default: true },
-			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerfilter}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
-			{ text: `Ergebnisliste (nur Summen) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
-			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
-			{ text: `Ergebnisliste (vollständig) ${textSchuelerfilter}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
-			{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
-			{ text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 1) },
-			{ text: `Laufbahnwahlbogen (nur Belegung) ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
-			{ text: `Ergebnisliste (nur Summen) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
-			{ text: `Ergebnisliste (nur Summen und Fehler) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },
-			{ text: `Ergebnisliste (vollständig) ${textSchuelerauswahl}`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 2) }
+			{ text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false), default: true },
+			{ text: `Laufbahnwahlbogen (einzeln)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, true) },
+			{ text: `Laufbahnwahlbogen (gesamt, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", 0, false) },
+			{ text: `Laufbahnwahlbogen (einzeln, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", 0, true) },
+			{ text: `Ergebnisliste (nur Summen)`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", 0, false) },
+			{ text: `Ergebnisliste (nur Summen und Fehler)`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", 1, false) },
+			{ text: `Ergebnisliste (vollständig)`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", 2, false) },
 		];
 	});
 
 	const dropdownDefault = computed(() => {
-		const textSchuelerauswahl = auswahl.value.length > 0 ? "markierte Schüler" : "ausgewählter Schüler";
-		return { text: `Laufbahnwahlbogen ${textSchuelerauswahl}`, action: () => downloadPDF("Laufbahnwahlbogen", true, 0) };
+		return { text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false) };
 	});
 
-	async function downloadPDF(title: string, benutzeAuswahl: boolean, detaillevel: number) {
+	async function downloadPDF(title: string, detaillevel: number, einzelpdfs: boolean) {
 		const list = new ArrayList<number>();
-		if (benutzeAuswahl) {
-			if (auswahl.value.length > 0) {
-				for (const e of auswahl.value)
+		if (auswahl.value.length > 0) {
+			for (const e of filtered.value)
+				if (auswahl.value.includes(e))
 					list.add(e.schueler.id);
-			} else {
-				list.add(schueler.value.schueler.id);
-			}
-		} else {
-			for (const s of filtered.value)
-				list.add(s.schueler.id);
 		}
-		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel);
+		if (list.isEmpty())	{
+			list.add(schueler.value.schueler.id);
+		}
+		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel, einzelpdfs);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;
