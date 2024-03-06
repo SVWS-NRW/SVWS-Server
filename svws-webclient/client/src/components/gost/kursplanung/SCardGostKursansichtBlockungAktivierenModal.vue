@@ -1,9 +1,9 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="small" class="hidden">
-		<template #modalTitle>Blockungsergebnis aktivieren</template>
+		<template #modalTitle>Blockungsergebnis übertragen</template>
 		<template #modalDescription>
-			Soll {{ blockungsname }} aktiviert werden?
+			Soll {{ blockungsname }} übertragen werden?
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>

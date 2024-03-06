@@ -26,8 +26,8 @@
 							<i-ri-file-copy-line /> Ableiten
 						</svws-ui-button>
 						<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
-								<i-ri-checkbox-circle-line /> Aktivieren
+							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
+								<i-ri-checkbox-circle-line /> Übertragen
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-aktivieren-modal>
 						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
