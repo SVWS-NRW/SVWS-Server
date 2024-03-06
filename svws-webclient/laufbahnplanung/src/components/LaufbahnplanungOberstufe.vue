@@ -11,7 +11,7 @@
 					<a href="https://www.svws.nrw.de/faq/impressum"> <svws-ui-button type="secondary"> Impressum </svws-ui-button> </a>
 					<a href="#"> <svws-ui-button type="secondary"> Datenschutz </svws-ui-button> </a>
 				</div>
-				<span>{{ version }}</span>
+				<span>{{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span>
 			</div>
 		</div>
 	</div>
@@ -47,10 +47,11 @@
 
 <script setup lang="ts">
 
-	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
 	import { computed, onMounted, ref } from "vue";
-	import { type GostHalbjahr } from "@core";
+	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
+	import type { GostHalbjahr } from "@core";
 	import { version } from '../../version';
+	import { githash } from '../../githash';
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 

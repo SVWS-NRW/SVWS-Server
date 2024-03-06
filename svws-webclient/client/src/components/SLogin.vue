@@ -41,10 +41,11 @@
 								</Transition>
 								<div class="mt-16 text-sm font-medium">
 									<div class="flex gap-3 items-center opacity-50">
-										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="" class="h-8">
+										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
 										<div class="text-left">
 											<p>
-												Powered by SVWS-NRW <span class="font-bold">Version {{ version }}</span>
+												Powered by SVWS-NRW
+												<br><span class="font-bold">Version {{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span>
 											</p>
 											<nav class="flex flex-row items-center gap-2 mt-0.5">
 												<a class="login-footer-link" href="#">Impressum</a>
@@ -77,6 +78,7 @@
 	import { computed, ref, shallowRef, watch } from "vue";
 	import { ArrayList } from "@core";
 	import { version } from '../../version';
+	import { githash } from '../../githash';
 
 	const props = defineProps<LoginProps>();
 

@@ -21,7 +21,7 @@
 						<template #icon> <i-ri-logout-circle-line /> </template>
 					</svws-ui-menu-item>
 				</template>
-				<template #version>{{ version }}</template>
+				<template #version>{{ version }} <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></template>
 				<template #metaNavigation>
 					<a href="https://www.svws.nrw.de/faq/impressum">
 						<svws-ui-button type="transparent">
@@ -84,6 +84,7 @@
 	import type { AppProps } from './SAppProps';
 	import { computed, ref } from "vue";
 	import { version } from '../../version';
+	import { githash } from '../../githash';
 
 	const props = defineProps<AppProps>();
 
