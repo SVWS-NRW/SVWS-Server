@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
+import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 
 export class DTOUtils extends JavaObject {
 
@@ -20,6 +21,21 @@ export class DTOUtils extends JavaObject {
 		const z : GostBlockungsergebnisKursSchuelerZuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
 		z.idKurs = idKurs;
 		z.idSchueler = idSchueler;
+		return z;
+	}
+
+	/**
+	 * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt.
+	 */
+	public static newGostBlockungsergebnisKursSchienenZuordnung(idKurs : number, idSchiene : number) : GostBlockungsergebnisKursSchienenZuordnung {
+		const z : GostBlockungsergebnisKursSchienenZuordnung = new GostBlockungsergebnisKursSchienenZuordnung();
+		z.idKurs = idKurs;
+		z.idSchiene = idSchiene;
 		return z;
 	}
 

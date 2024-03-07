@@ -15,6 +15,8 @@ import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random } from '../../java/util/Random';
+import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 import type { List } from '../../java/util/List';
 import { HashSet } from '../../java/util/HashSet';
 import { GostBlockungKurs } from '../../core/data/gost/GostBlockungKurs';
@@ -780,9 +782,15 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	gibErzeugtesKursblockungOutput(pDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
 		const out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
+		const kursSchienenZuordnungen : JavaSet<GostBlockungsergebnisKursSchienenZuordnung> = new HashSet<GostBlockungsergebnisKursSchienenZuordnung>();
 		for (const dynKurs of this._kursArr)
-			for (const schienenNr of dynKurs.gibSchienenLage())
-				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
+			for (const schienenNr of dynKurs.gibSchienenLage()) {
+				const idKurs : number = dynKurs.gibDatenbankID();
+				const idSchiene : number = out.getOfSchieneID(schienenNr + 1);
+				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
+			}
+		const uKursSchienen : GostBlockungsergebnisKursSchienenZuordnungUpdate = out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+		out.kursSchienenUpdateExecute(uKursSchienen);
 		const kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const dynSchueler of this._schuelerArr)
 			for (const kurs of dynSchueler.gibKurswahlen())

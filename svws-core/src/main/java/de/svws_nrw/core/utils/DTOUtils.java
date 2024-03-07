@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils;
 
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import jakarta.validation.constraints.NotNull;
 
@@ -26,6 +27,22 @@ public final class DTOUtils {
         final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z = new GostBlockungsergebnisKursSchuelerZuordnung();
         z.idKurs = idKurs;
         z.idSchueler = idSchueler;
+        return z;
+    }
+
+    /**
+     * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt.
+     *
+     * @param idKurs     Die Datenbank-ID des Kurses.
+     * @param idSchiene  Die Datenbank-ID der Schiene.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt.
+     *
+     */
+    public static @NotNull GostBlockungsergebnisKursSchienenZuordnung newGostBlockungsergebnisKursSchienenZuordnung(final long idKurs, final long idSchiene) {
+        final @NotNull GostBlockungsergebnisKursSchienenZuordnung z = new GostBlockungsergebnisKursSchienenZuordnung();
+        z.idKurs = idKurs;
+        z.idSchiene = idSchiene;
         return z;
     }
 

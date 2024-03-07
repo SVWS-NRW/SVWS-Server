@@ -15,6 +15,8 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -938,12 +940,20 @@ public class KursblockungDynDaten {
 	@NotNull GostBlockungsergebnisManager gibErzeugtesKursblockungOutput(final @NotNull GostBlockungsdatenManager pDataManager, final long pErgebnisID) {
 		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
 
-		// Erzeuge die Kurs-Schienen-Zuordnungen (Manager hat eine 1-Indizierung der Schiene!)
-		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
-			for (final int schienenNr : dynKurs.gibSchienenLage())
-				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
+		// Erzeuge die Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
+		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
 
-		// Erzeuge die Kurs-Schüler-Zuordnungen.
+		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
+			for (final int schienenNr : dynKurs.gibSchienenLage()) {
+				final long idKurs = dynKurs.gibDatenbankID();
+				final long idSchiene = out.getOfSchieneID(schienenNr + 1); // Manager hat eine 1-Indizierung der Schiene!
+				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
+			}
+
+		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen = out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+		out.kursSchienenUpdateExecute(uKursSchienen);
+
+		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
 		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
 
 		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
@@ -960,7 +970,7 @@ public class KursblockungDynDaten {
 			}
 
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
-		out.kursSchuelerUpdateExecute(uKursSchueler);  // TODO BAR später Multi-Update zusammen mit Kurs-Schiene!
+		out.kursSchuelerUpdateExecute(uKursSchueler);
 
 		return out;
 	}

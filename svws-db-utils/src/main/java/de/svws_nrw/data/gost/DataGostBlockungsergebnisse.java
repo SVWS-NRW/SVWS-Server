@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
@@ -123,17 +124,21 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             final var listSchienenKurse = mapKursSchienen.getOrDefault(erg.ID, Collections.emptyList());
             final var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
 
-            // Kurs-Schienen-Zuordnungen
+            // Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
+            final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
             for (final var ks : listSchienenKurse)
-                manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
+            	kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
+    		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen = manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+    		manager.kursSchienenUpdateExecute(uKursSchienen);
 
-            // Kurs-Schüler-Zuordnungen
+            // Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
         	final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
-            for (final var ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
+            for (final var ks : listKursSchueler) // Fehlerhafte Zuordnungen führen im Manager nicht mehr zu Exceptions!
             	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
             final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
-            manager.kursSchuelerUpdateExecute(uKursSchueler); // TODO BAR später Multi-Update zusammen mit Kurs-Schienen-Zuordnungen!
+            manager.kursSchuelerUpdateExecute(uKursSchueler);
 
+            // Erzeuge das Ergebnis.
             final GostBlockungsergebnis ergebnis = manager.getErgebnisInklusiveUngueltigerWahlen();
             ergebnis.istAktiv = erg.IstAktiv != null && erg.IstAktiv;
             datenManager.daten().ergebnisse.add(ergebnis);
@@ -142,8 +147,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das
-	 * zugehörige Core-DTO
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das zugehörige Core-DTO
 	 *
 	 * @param ergebnis        das Datenbank-DTO des Blockungsergebnisses
 	 * @param datenManager    der Blockungsdaten-Manager
@@ -156,22 +160,27 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	        @NotNull final GostBlockungsdatenManager datenManager) throws WebApplicationException {
         final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
 
-        // Bestimme alle Kurs-Schienen-Zuordnungen
+        // Bestimme alle Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
         final List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
 
-        // Bestimme alle Kurs-Schüler-Zuordnungen
-        final List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
-                .queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
         for (final DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
-            manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
+        	kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
+		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen = manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+		manager.kursSchienenUpdateExecute(uKursSchienen);
+
+        // Bestimme alle Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
+    	final List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
+    			.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
 
         final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
         for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
            	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
         final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
-        manager.kursSchuelerUpdateExecute(uKursSchueler); // TODO BAR später Multi-Update zusammen mit Kurs-Schienen-Zuordnungen!
+        manager.kursSchuelerUpdateExecute(uKursSchueler);
 
+        // Erzeuge das Ergebnis.
         final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();
         daten.istAktiv = ergebnis.IstAktiv != null && ergebnis.IstAktiv;
         return daten;

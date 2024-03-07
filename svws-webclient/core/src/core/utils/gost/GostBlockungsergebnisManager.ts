@@ -36,6 +36,8 @@ import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
+import { GostBlockungsergebnisKursSchienenZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { Pair } from '../../../core/adt/Pair';
@@ -769,7 +771,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, kurs);
 		this.stateKursdifferenzUpdate(fachartID);
 		for (const schieneID of kurs.schienen)
-			this.stateSchuelerSchieneHinzufuegen(idSchueler, schieneID!, kurs);
+			this.stateSchuelerSchieneHinzufuegenOhneRegelvalidierung(idSchueler, schieneID!, kurs);
 	}
 
 	/**
@@ -812,7 +814,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, null);
 		this.stateKursdifferenzUpdate(fachartID);
 		for (const schieneID of kurs.schienen)
-			this.stateSchuelerSchieneEntfernen(idSchueler, schieneID!, kurs);
+			this.stateSchuelerSchieneEntfernenOhneRegelvalidierung(idSchueler, schieneID!, kurs);
 	}
 
 	private stateSchuelerKursUngueltigeWahlHinzufuegen(idSchueler : number, kurs : GostBlockungsergebnisKurs) : void {
@@ -855,7 +857,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		DeveloperNotificationException.ifListAddsDuplicate("schiene.kurse", schiene.kurse, kurs);
 		DeveloperNotificationException.ifSetAddsDuplicate("setSchienenOfKurs", setSchienenOfKurs, schiene);
 		for (const schuelerID of kurs.schueler)
-			this.stateSchuelerSchieneHinzufuegen(schuelerID!, schiene.id, kurs);
+			this.stateSchuelerSchieneHinzufuegenOhneRegelvalidierung(schuelerID!, schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
 		DeveloperNotificationException.ifListAddsDuplicate("kursGruppe", kursGruppe, kurs);
@@ -890,13 +892,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		DeveloperNotificationException.ifListRemoveFailes("schiene.kurse", schiene.kurse, kurs);
 		DeveloperNotificationException.ifSetRemoveFailes("setSchienenOfKurs", setSchienenOfKurs, schiene);
 		for (const schuelerID of kurs.schueler)
-			this.stateSchuelerSchieneEntfernen(schuelerID!, schiene.id, kurs);
+			this.stateSchuelerSchieneEntfernenOhneRegelvalidierung(schuelerID!, schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		DeveloperNotificationException.ifListRemoveFailes("kursGruppe", kursGruppe, kurs);
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
 	}
 
-	private stateSchuelerSchieneHinzufuegen(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
+	private stateSchuelerSchieneHinzufuegenOhneRegelvalidierung(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
 		const schieneSchuelerzahl : number = this.getOfSchieneAnzahlSchueler(idSchiene);
 		this._map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl + 1);
 		const kursmenge : JavaSet<GostBlockungsergebnisKurs> = this._map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
@@ -910,7 +912,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
-	private stateSchuelerSchieneEntfernen(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
+	private stateSchuelerSchieneEntfernenOhneRegelvalidierung(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
 		const schieneSchuelerzahl : number = this.getOfSchieneAnzahlSchueler(idSchiene);
 		DeveloperNotificationException.ifTrue(this._parent.toStringSchueler(idSchueler)! + " entfernen aus " + this._parent.toStringKurs(kurs.id)! + " / " + this._parent.toStringSchiene(idSchiene)! + " unmöglich, da Schienen-SuS-Anzahl = " + schieneSchuelerzahl + "!", schieneSchuelerzahl <= 0);
 		this._map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl - 1);
@@ -4452,8 +4454,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
-	 * <br>(1) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
-	 * <br>(2) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 * <br>(1) Wenn der Schüler den Kurs gar nicht gewählt hat, wird dies ignoriert.
+	 * <br>(2) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
+	 * <br>(3) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
 	 *
 	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
 	 *
@@ -4463,6 +4466,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		for (const z of kursSchuelerZuordnungen) {
 			const kurs1 : GostBlockungKurs = this._parent.kursGet(z.idKurs);
+			if (!this.getOfSchuelerHatFachwahl(z.idSchueler, kurs1.fach_id, kurs1.kursart))
+				continue;
 			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				u.listHinzuzufuegen.add(z);
 			for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
@@ -4492,8 +4497,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Entfernt erst alle Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listEntfernen} und
 	 * fügt dann die neuen Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listHinzuzufuegen} hinzu.
+	 * Macht das selbe für die potentiell enthaltenen RegelUpdates.
 	 *
-	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
+	 * @param update  Das {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt.
 	 */
 	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
 		if (this._parent.getIstBlockungsVorlage())
@@ -4504,6 +4510,44 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const z of update.listHinzuzufuegen)
 			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
 				this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+		if (this._parent.getIstBlockungsVorlage())
+			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse in Schienen zu setzen.
+	 * <br>(1) Wenn der Kurs nicht in der Schiene ist, wird er hinzugefügt.
+	 *
+	 * @param kursSchienenZuordnungen  Alle Kurs-Schienen-Paare, welche angewandt werden sollen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse in Schienen zu setzen.
+	 */
+	public kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen : JavaSet<GostBlockungsergebnisKursSchienenZuordnung>) : GostBlockungsergebnisKursSchienenZuordnungUpdate {
+		const u : GostBlockungsergebnisKursSchienenZuordnungUpdate = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
+		for (const z of kursSchienenZuordnungen) {
+			if (!this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
+				u.listHinzuzufuegen.add(z);
+		}
+		return u;
+	}
+
+	/**
+	 * Entfernt erst alle Regeln aus {@link GostBlockungsergebnisKursSchienenZuordnungUpdate#listEntfernen} und
+	 * fügt dann die neuen Regeln aus {@link GostBlockungsergebnisKursSchienenZuordnungUpdate#listHinzuzufuegen} hinzu.
+	 * Macht das selbe für die potentiell enthaltenen RegelUpdates.
+	 *
+	 * @param update  Das {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt.
+	 */
+	public kursSchienenUpdateExecute(update : GostBlockungsergebnisKursSchienenZuordnungUpdate) : void {
+		if (this._parent.getIstBlockungsVorlage())
+			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		for (const z of update.listEntfernen)
+			if (this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
+				this.stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
+		for (const z of update.listHinzuzufuegen)
+			if (!this.getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
+				this.stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();
@@ -4547,6 +4591,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getSchieneEmitNr(nrSchiene : number) : GostBlockungsergebnisSchiene {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenNr_schiene, nrSchiene);
+	}
+
+	/**
+	 * Liefert die ID einer Schiene mit einer bestimmten Nummer.
+	 *
+	 * @param nrSchiene  Die Nummer der Schiene.
+	 *
+	 * @return die ID einer Schiene mit einer bestimmten Nummer.
+	 * @throws DeveloperNotificationException falls eine solche Schiene nicht existiert.
+	 */
+	public getOfSchieneID(nrSchiene : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenNr_schiene, nrSchiene).id;
 	}
 
 	/**
@@ -4789,6 +4845,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Verknüpft einen Kurs mit einer Schiene.
 	 * Die Schiene wird anhand ihrer Nummer (nicht anhand der Datenbank-ID) identifiziert.
 	 *
+	 * @deprecated  Diese Methode muss in Zukunft über Kurs-Schienen-Updates erfolgen.
+	 *
 	 * @param  kursID      Die Datenbank-ID des Kurses.
 	 * @param  schienenNr  Die Nummer der Schiene (nicht die Datenbank-ID).
 	 *
@@ -4801,6 +4859,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Verknüpft einen Kurs mit einer Schiene oder hebt die Verknüpfung auf.
+	 *
+	 * @deprecated  Diese Methode muss in Zukunft über Kurs-Schienen-Updates erfolgen.
 	 *
 	 * @param  idKurs                    Die Datenbank-ID des Kurses.
 	 * @param  idSchiene                 Die Datenbank-ID der Schiene.
@@ -5051,7 +5111,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					hinzugefuegt = true;
 					kursG.anzahlSchienen++;
 					kursE.anzahlSchienen++;
-					this.setKursSchiene(idKurs, schiene.id, true);
+					this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, schiene.id);
 				}
 			}
 			DeveloperNotificationException.ifTrue("Es wurde keine freie Schiene für " + this._parent.toStringKurs(idKurs)! + " gefunden!", !hinzugefuegt);
@@ -5064,11 +5124,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					entfernt = true;
 					kursG.anzahlSchienen--;
 					kursE.anzahlSchienen--;
-					this.setKursSchiene(idKurs, schiene.id, false);
+					this.stateKursSchieneEntfernenOhneRegelvalidierung(idKurs, schiene.id);
 				}
 			}
 			DeveloperNotificationException.ifTrue("Es wurde keine belegte Schiene von " + this._parent.toStringKurs(idKurs)! + " gefunden!", !entfernt);
 		}
+		this.stateRevalidateEverything();
 	}
 
 	/**
