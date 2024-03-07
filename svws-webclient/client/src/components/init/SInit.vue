@@ -46,6 +46,7 @@
 			</div>
 		</template>
 	</svws-ui-app-layout>
+	<s-notifications :backticks="() => true" />
 </template>
 
 <script setup lang="ts">
