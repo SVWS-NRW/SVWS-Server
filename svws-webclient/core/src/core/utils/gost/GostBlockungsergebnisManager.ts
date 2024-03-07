@@ -4467,7 +4467,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				u.listHinzuzufuegen.add(z);
 			for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
 				if ((kurs1.id !== kurs2.id) && (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, kurs2.id)))
-					u.listEntfernen.add(z);
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs2.id, z.idSchueler));
 		}
 		return u;
 	}
@@ -4496,7 +4496,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
-		console.log(JSON.stringify("kursSchuelerUpdateExecute ksz-" + update.listEntfernen.size() + ", ksz+" + update.listHinzuzufuegen.size()));
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
