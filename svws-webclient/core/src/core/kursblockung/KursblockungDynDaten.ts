@@ -2,6 +2,8 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisManager } from '../../core/utils/gost/GostBlockungsergebnisManager';
 import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
+import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
+import type { JavaSet } from '../../java/util/JavaSet';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
@@ -22,9 +24,11 @@ import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsda
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { ArrayMap } from '../../core/adt/map/ArrayMap';
 import { MapUtils } from '../../core/utils/MapUtils';
+import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../core/data/schueler/Schueler';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { ListUtils } from '../../core/utils/ListUtils';
+import { DTOUtils } from '../../core/utils/DTOUtils';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
@@ -779,17 +783,19 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const dynKurs of this._kursArr)
 			for (const schienenNr of dynKurs.gibSchienenLage())
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
+		const kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const dynSchueler of this._schuelerArr)
 			for (const kurs of dynSchueler.gibKurswahlen())
 				if (kurs !== null)
-					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.gibDatenbankID(), dynSchueler.gibDatenbankID()));
 		for (const gRegel of pDataManager.regelGetListe())
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const idSchueler : number = gRegel.parameter.get(0).valueOf();
 				const idKurs : number = gRegel.parameter.get(1).valueOf();
-				if (!out.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
-					out.setSchuelerKurs(idSchueler, idKurs, true);
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
+		const uKursSchueler : GostBlockungsergebnisKursSchuelerZuordnungUpdate = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+		out.kursSchuelerUpdateExecute(uKursSchueler);
 		return out;
 	}
 

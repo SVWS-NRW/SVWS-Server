@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
@@ -14,6 +15,8 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -22,6 +25,7 @@ import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -939,20 +943,24 @@ public class KursblockungDynDaten {
 			for (final int schienenNr : dynKurs.gibSchienenLage())
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
 
-		// Erzeuge die Schüler-Kurs-Zuordnungen.
+		// Erzeuge die Kurs-Schüler-Zuordnungen.
+		final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+
 		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
 			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
 				if (kurs != null)
-					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.gibDatenbankID(), dynSchueler.gibDatenbankID()));
 
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
 		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				final long idSchueler = gRegel.parameter.get(0);
 				final long idKurs = gRegel.parameter.get(1);
-				if (!out.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
-					out.setSchuelerKurs(idSchueler, idKurs, true); // Kann zu Kollisionen führen!
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler)); // Kann später zu Kollisionen führen!
 			}
+
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+		out.kursSchuelerUpdateExecute(uKursSchueler); 		// TODO BAR später Multi-Update?
 
 		return out;
 	}

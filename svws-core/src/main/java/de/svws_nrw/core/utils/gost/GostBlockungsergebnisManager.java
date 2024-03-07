@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.Map.Entry;
 
@@ -43,6 +42,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.CollectionUtils;
+import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.SetUtils;
@@ -144,15 +144,6 @@ public class GostBlockungsergebnisManager {
 
 	/** Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte. */
 	private @NotNull String _regelverletzungen_der_wahlkonflikte = "";
-
-
-    private static @NotNull BiFunction<@NotNull Long, @NotNull Long, @NotNull GostBlockungsergebnisKursSchuelerZuordnung> newKursSchuelerZuordnung =
-    		(@NotNull final Long idKurs, @NotNull final Long idSchueler) -> {
-    			final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-	            zuordnung.idKurs = idKurs;
-	            zuordnung.idSchueler = idSchueler;
-	            return zuordnung;
-	        };
 
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
@@ -4820,7 +4811,7 @@ public class GostBlockungsergebnisManager {
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 					// (1) (2)
-					u.listEntfernen.add(newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
 
 		return u;
@@ -4846,8 +4837,34 @@ public class GostBlockungsergebnisManager {
 			if (setSchulerOfKurs.contains(idSchueler))
 				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 					// (1) (2)
-					u.listEntfernen.add(newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
+	 * <br>(1) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
+	 * <br>(2) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 *
+	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen) {
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
+			final @NotNull GostBlockungKurs kurs1 = _parent.kursGet(z.idKurs);
+			// (1)
+			if (!getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
+				u.listHinzuzufuegen.add(z);
+			// (2)
+			for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
+				if ((kurs1.id != kurs2.id) && (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)))
+					u.listEntfernen.add(z);
+		}
 
 		return u;
 	}
@@ -4859,17 +4876,22 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
+		System.out.println("kursSchuelerUpdateExecute ks+" + update.listEntfernen.size() + ", ks-" + update.listHinzuzufuegen.size()
+		+ ", r+" + update.regelUpdates.listEntfernen.size() + ", r-" + update.regelUpdates.listHinzuzufuegen.size());
+
 		// Regeln entfernen.
 		if (_parent.getIstBlockungsVorlage())
 			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 
 		// SuS entfernen.
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listEntfernen)
-			stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+			if (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)) // sicherheitshalber!
+				stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
 
 		// SuS hinzufügen
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listHinzuzufuegen)
-			stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+			if (!getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)) // sicherheitshalber!
+				stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
 
 		// Regeln hinzufügen.
 		if (_parent.getIstBlockungsVorlage())

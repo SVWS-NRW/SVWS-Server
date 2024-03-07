@@ -23,6 +23,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { PairNN } from '../../../core/adt/PairNN';
+import { DTOUtils } from '../../../core/utils/DTOUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
@@ -44,7 +45,6 @@ import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockun
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungRegelUpdate';
-import type { BiFunction } from '../../../java/util/function/BiFunction';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { ListUtils } from '../../../core/utils/ListUtils';
 
@@ -199,13 +199,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte.
 	 */
 	private _regelverletzungen_der_wahlkonflikte : string = "";
-
-	private static newKursSchuelerZuordnung : BiFunction<number, number, GostBlockungsergebnisKursSchuelerZuordnung> = { apply : (idKurs: number, idSchueler: number) => {
-		const zuordnung : GostBlockungsergebnisKursSchuelerZuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-		zuordnung.idKurs = idKurs.valueOf();
-		zuordnung.idSchueler = idSchueler.valueOf();
-		return zuordnung;
-	} };
 
 
 	/**
@@ -4406,7 +4399,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
-					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
 		return u;
 	}
@@ -4428,8 +4421,30 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchueler of schuelerIDs)
 			if (setSchulerOfKurs.contains(idSchueler))
 				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
-					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
+	 * <br>(1) Wenn der Schüler nicht im Kurs ist, wird er hinzugefügt.
+	 * <br>(2) Wenn der Schüler in einem Nachbar-Kurs ist, wird er entfernt.
+	 *
+	 * @param kursSchuelerZuordnungen  Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
+	 */
+	public kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung>) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		for (const z of kursSchuelerZuordnungen) {
+			const kurs1 : GostBlockungKurs = this._parent.kursGet(z.idKurs);
+			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
+				u.listHinzuzufuegen.add(z);
+			for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
+				if ((kurs1.id !== kurs2.id) && (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)))
+					u.listEntfernen.add(z);
+		}
 		return u;
 	}
 
@@ -4440,12 +4455,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
+		console.log(JSON.stringify("kursSchuelerUpdateExecute ks+" + update.listEntfernen.size() + ", ks-" + update.listHinzuzufuegen.size() + ", r+" + update.regelUpdates.listEntfernen.size() + ", r-" + update.regelUpdates.listHinzuzufuegen.size()));
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
-			this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+			if (this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
+				this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
 		for (const z of update.listHinzuzufuegen)
-			this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+			if (!this.getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs))
+				this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();

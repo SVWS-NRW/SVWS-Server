@@ -509,6 +509,7 @@ export { AttributMitAuswahl } from './core/utils/AttributMitAuswahl';
 export { AuswahlManager } from './core/utils/AuswahlManager';
 export { BlockungsUtils } from './core/utils/BlockungsUtils';
 export { CollectionUtils } from './core/utils/CollectionUtils';
+export { DTOUtils } from './core/utils/DTOUtils';
 export { DateUtils } from './core/utils/DateUtils';
 export { KursManager } from './core/utils/KursManager';
 export { ListUtils } from './core/utils/ListUtils';
