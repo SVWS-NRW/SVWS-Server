@@ -4472,7 +4472,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
-		console.log(JSON.stringify("kursSchuelerUpdateExecute ks+" + update.listEntfernen.size() + ", ks-" + update.listHinzuzufuegen.size() + ", r+" + update.regelUpdates.listEntfernen.size() + ", r-" + update.regelUpdates.listHinzuzufuegen.size()));
 		if (this._parent.getIstBlockungsVorlage())
 			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)

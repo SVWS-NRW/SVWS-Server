@@ -11,11 +11,11 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpda
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.DataManager;
@@ -122,15 +122,18 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             final var manager = new GostBlockungsergebnisManager(datenManager, erg.ID);
             final var listSchienenKurse = mapKursSchienen.getOrDefault(erg.ID, Collections.emptyList());
             final var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
+
+            // Kurs-Schienen-Zuordnungen
             for (final var ks : listSchienenKurse)
                 manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
-            for (final var ks : listKursSchueler) {
-            	try {
-            		manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
-            	} catch (@SuppressWarnings("unused") final DeveloperNotificationException e) {
-            		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
-            	}
-            }
+
+            // Kurs-Schüler-Zuordnungen
+        	final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+            for (final var ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
+            	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
+            final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+            manager.kursSchuelerUpdateExecute(uKursSchueler); // TODO BAR später Multi-Update zusammen mit Kurs-Schienen-Zuordnungen!
+
             final GostBlockungsergebnis ergebnis = manager.getErgebnisInklusiveUngueltigerWahlen();
             ergebnis.istAktiv = erg.IstAktiv != null && erg.IstAktiv;
             datenManager.daten().ergebnisse.add(ergebnis);
@@ -152,21 +155,23 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	public GostBlockungsergebnis getErgebnis(@NotNull final DTOGostBlockungZwischenergebnis ergebnis,
 	        @NotNull final GostBlockungsdatenManager datenManager) throws WebApplicationException {
         final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
+
         // Bestimme alle Kurs-Schienen-Zuordnungen
         final List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
+
         // Bestimme alle Kurs-Schüler-Zuordnungen
         final List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
         for (final DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
             manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
-        for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) {
-        	try {
-        		manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
-        	} catch (@SuppressWarnings("unused") final DeveloperNotificationException e) {
-        		// Ignoriere die fehlerhafte Kurswahl - z.B. ein nicht in der Blockung vorhandener Schüler. Dies sollte zwar nicht vorkommen, ist aber aufgrund fehlerhafter Daten bei Schülern möglich
-        	}
-        }
+
+        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+        for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
+           	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
+        final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+        manager.kursSchuelerUpdateExecute(uKursSchueler); // TODO BAR später Multi-Update zusammen mit Kurs-Schienen-Zuordnungen!
+
         final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();
         daten.istAktiv = ergebnis.IstAktiv != null && ergebnis.IstAktiv;
         return daten;

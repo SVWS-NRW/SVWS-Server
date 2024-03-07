@@ -960,7 +960,7 @@ public class KursblockungDynDaten {
 			}
 
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
-		out.kursSchuelerUpdateExecute(uKursSchueler); 		// TODO BAR später Multi-Update?
+		out.kursSchuelerUpdateExecute(uKursSchueler);  // TODO BAR später Multi-Update zusammen mit Kurs-Schiene!
 
 		return out;
 	}

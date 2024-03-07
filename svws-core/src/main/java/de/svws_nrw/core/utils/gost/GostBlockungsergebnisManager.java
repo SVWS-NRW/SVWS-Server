@@ -4896,9 +4896,6 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
-		System.out.println("kursSchuelerUpdateExecute ks+" + update.listEntfernen.size() + ", ks-" + update.listHinzuzufuegen.size()
-		+ ", r+" + update.regelUpdates.listEntfernen.size() + ", r-" + update.regelUpdates.listHinzuzufuegen.size());
-
 		// Regeln entfernen.
 		if (_parent.getIstBlockungsVorlage())
 			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
