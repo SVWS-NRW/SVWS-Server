@@ -135,6 +135,12 @@
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler fixieren')">Alle Schüler fixieren</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler lösen')">Alle Schüler lösen</svws-ui-button>
 									<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schüler')">Alle Schüler fixieren/lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB fixieren')">Alle Schüler in Abiturkursen fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler LK fixieren')">Alle Schüler in LK fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler LK und AB3 fixieren')">Alle Schüler in LK und dem 3. Abiturfach fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB3 fixieren')">Alle Schüler im 3. Abiturfach fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB4 fixieren')">Alle Schüler im 4. Abiturfach fixieren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler schriftlichen fixieren')">Alle Schüler im schriftlichen Fächern fixieren</svws-ui-button>
 								</template>
 							</svws-ui-tooltip>
 						</template>
@@ -378,8 +384,19 @@
 					return props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
 				case 'toggle schienen':
 					return props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurse, schienen);
+				case 'Schüler AB fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kurse);
+				case 'Schüler AB3 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kurse);
+				case 'Schüler AB4 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kurse);
+				case 'Schüler LK fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kurse);
+				case 'Schüler LK und AB3 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kurse);
+				case 'Schüler schriftlichen fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kurse);
 			}
-			throw new DeveloperNotificationException(`Es gibt keine Rechteck-Action mit diesem Titel: ${action}`);
 		})();
 		await props.regelnUpdate(update);
 	}

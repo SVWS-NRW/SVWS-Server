@@ -225,7 +225,6 @@
 			return;
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
-		console.log(update)
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
