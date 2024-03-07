@@ -4892,7 +4892,7 @@ public class GostBlockungsergebnisManager {
 				u.listHinzuzufuegen.add(z);
 			// (2)
 			for (final @NotNull GostBlockungKurs kurs2 : _parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart))
-				if ((kurs1.id != kurs2.id) && (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, z.idKurs)))
+				if ((kurs1.id != kurs2.id) && (getOfSchuelerOfKursIstZugeordnet(z.idSchueler, kurs2.id)))
 					u.listEntfernen.add(z);
 		}
 
@@ -4926,6 +4926,8 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
+		System.out.println("kursSchuelerUpdateExecute ksz-" + update.listEntfernen.size() + ", ksz+" + update.listHinzuzufuegen.size());
+
 		// Regeln entfernen.
 		if (_parent.getIstBlockungsVorlage())
 			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
