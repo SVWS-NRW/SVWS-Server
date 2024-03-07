@@ -275,7 +275,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response setPassword(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
-            @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
+            @RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setPassword(id, JSONMapper.toString(is)),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);

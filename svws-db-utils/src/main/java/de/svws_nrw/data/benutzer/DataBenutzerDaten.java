@@ -4,9 +4,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.base.crypto.AES;
+import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
@@ -19,6 +22,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerKompetenz;
+import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerMail;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
@@ -569,6 +573,21 @@ public final class DataBenutzerDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception();
         credential.PasswordHash = hash;
         conn.transactionPersist(credential);
+        // Prüfe, ob es sich bei der ID um die ID des angemeldeten Benutzers handelt. Falls ja, dann aktualisiere ggf. auch das SMTP-Email-Kennwort
+        if (Objects.equals(id, conn.getUser().getId())) {
+        	try {
+	        	final DTOBenutzerMail dtoMail = conn.queryByKey(DTOBenutzerMail.class, id);
+	        	if ((dtoMail != null) && (dtoMail.SMTPPassword != null) && (!dtoMail.SMTPPassword.isBlank())) {
+                	conn.transactionFlush();
+					final byte[] smtpPassword = conn.getUser().getAES().decryptBase64(dtoMail.SMTPPassword);
+					final AES aesneu = Benutzer.getAESInstance(conn.getUser().getUsername(), password);
+					dtoMail.SMTPPassword = aesneu.encryptBase64(smtpPassword);
+					conn.transactionPersist(dtoMail);
+	        	}
+			} catch (@SuppressWarnings("unused") final AESException e) {
+				//
+			}
+        }
         return Response.status(Status.NO_CONTENT).build();
     }
 
