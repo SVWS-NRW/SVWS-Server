@@ -14,6 +14,7 @@ import org.thymeleaf.context.Context;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -89,8 +90,17 @@ public final class HtmlContextSchueler extends HtmlContext {
 		if (idsSchueler == null || idsSchueler.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Schueler-IDs übergeben.");
 
-		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
-		final Map<Long, SchuelerStammdaten> mapSchueler = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
+		// Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
+		final Map<Long, SchuelerStammdaten> mapSchueler = new HashMap<>();
+		final List<Long> fehlendeSchueler = new ArrayList<>();
+		for (final Long idSchueler : idsSchueler) {
+			if (reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
+				mapSchueler.put(idSchueler, reportingRepository.mapSchuelerStammdaten().get(idSchueler));
+			else
+				fehlendeSchueler.add(idSchueler);
+		}
+		if (!fehlendeSchueler.isEmpty())
+			mapSchueler.putAll(DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s)));
 
 		// Die Schüler bzw. ihre IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe sollten
 		// sie aber in alphabetischer Reihenfolge der Schüler sein.
