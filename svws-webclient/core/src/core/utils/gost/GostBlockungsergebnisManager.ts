@@ -3712,12 +3712,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
-	public regelupdateCreate_04h_SCHUELER_FIXIEREN_ALLER_AB4() : GostBlockungRegelUpdate {
+	public regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4() : GostBlockungRegelUpdate {
+		return this.regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(this._map_kursID_schuelerIDs.keySet());
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @param kursIDs  Die Menge der Kurse.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
+	 */
+	public regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
 		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
-		for (const schueler of this._parent.schuelerGetListe())
-			for (const kurs of this.getOfSchuelerKursmenge(schueler.id))
-				if (this.getOfSchuelerOfKursIstAB4(schueler.id, kurs.id))
-					schuelerKursPaare.add(new PairNN<number, number>(schueler.id, kurs.id));
+		for (const idKurs of kursIDs)
+			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
+				if (this.getOfSchuelerOfKursIstAB4(idSchueler, idKurs))
+					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
 		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
 
