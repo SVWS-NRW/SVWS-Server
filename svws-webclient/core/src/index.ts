@@ -94,6 +94,7 @@ export { BenutzerAllgemeinCredentials } from './core/data/benutzer/BenutzerAllge
 export { BenutzerConfig } from './core/data/benutzer/BenutzerConfig';
 export { BenutzerConfigElement } from './core/data/benutzer/BenutzerConfigElement';
 export { BenutzerDaten } from './core/data/benutzer/BenutzerDaten';
+export { BenutzerEMailDaten } from './core/data/benutzer/BenutzerEMailDaten';
 export { BenutzerKompetenzGruppenKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 export { BenutzerKompetenzKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';

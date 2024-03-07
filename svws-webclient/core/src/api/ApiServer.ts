@@ -7,6 +7,7 @@ import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
 import { BenutzerAllgemeinCredentials } from '../core/data/benutzer/BenutzerAllgemeinCredentials';
 import { BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
 import { BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
+import { BenutzerEMailDaten } from '../core/data/benutzer/BenutzerEMailDaten';
 import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
 import { BenutzergruppeListeEintrag } from '../core/data/benutzer/BenutzergruppeListeEintrag';
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
@@ -677,6 +678,56 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBenutzerEmailDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/angemeldet/daten/email
+	 *
+	 * Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen EMail-Daten. Dabei wird geprüft, ob der SVWS-Benutzer angemeldet ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die EMail-Daten des Benutzers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerEMailDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.
+	 *   Code 404: Kein Benutzer-Eintrag gefunden
+	 *   Code 500: Ein interner Fehler ist aus dem Server aufgetreten
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die EMail-Daten des Benutzers
+	 */
+	public async getBenutzerEmailDaten(schema : string) : Promise<BenutzerEMailDaten> {
+		const path = "/db/{schema}/benutzer/angemeldet/daten/email"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return BenutzerEMailDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBenutzerEmailDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/angemeldet/daten/email
+	 *
+	 * Passt die EMail-Daten des angemeldeten Benutzers an.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<BenutzerEMailDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchBenutzerEmailDaten(data : Partial<BenutzerEMailDaten>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/benutzer/angemeldet/daten/email"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = BenutzerEMailDaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

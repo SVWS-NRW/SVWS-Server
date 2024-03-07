@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
+import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
@@ -15,6 +16,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.benutzer.DataBenutzerDaten;
+import de.svws_nrw.data.benutzer.DataBenutzerEMailDaten;
 import de.svws_nrw.data.benutzer.DataBenutzergruppeDaten;
 import de.svws_nrw.data.benutzer.DataBenutzergruppeliste;
 import de.svws_nrw.data.benutzer.DataBenutzerkompetenzGruppenliste;
@@ -33,6 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -728,5 +731,68 @@ public class APIBenutzer {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).remove(bgids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der EMail-Daten des angemeldeten Benutzers, der
+     * die Abfrage ausführt.
+     *
+     * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request die Informationen zur HTTP-Anfrage
+     *
+     * @return die EMail-Daten des angemeldeten Benutzers, der diese Abfrage ausführt.
+     */
+    @GET
+    @Path("/angemeldet/daten/email")
+    @Operation(summary = "Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen EMail-Daten.",
+    	description = "Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen EMail-Daten. "
+            + "Dabei wird geprüft, ob der SVWS-Benutzer angemeldet ist.")
+    @ApiResponse(responseCode = "200", description = "Die EMail-Daten des Benutzers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BenutzerEMailDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag gefunden")
+    @ApiResponse(responseCode = "500", description = "Ein interner Fehler ist aus dem Server aufgetreten")
+    public Response getBenutzerEmailDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
+        	final Benutzer user = conn.getUser();
+        	if (user == null)
+        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+            return (new DataBenutzerEMailDaten(conn).get(user.getId()));
+        }, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen der EMail-Daten des angemeldeten Benutzers, der
+     * die Abfrage ausführt.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/angemeldet/daten/email")
+    @Operation(summary = "Passt die EMail-Daten des angemeldeten Benutzers an.",
+    	description = "Passt die EMail-Daten des angemeldeten Benutzers an.")
+    @ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchBenutzerEmailDaten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Der Patch für die EMail-Daten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerEMailDaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
+        	final Benutzer user = conn.getUser();
+        	if (user == null)
+        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+    		return new DataBenutzerEMailDaten(conn).patch(user.getId(), is);
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    }
+
 
 }
