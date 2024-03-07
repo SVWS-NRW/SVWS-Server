@@ -745,6 +745,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
 	private stateSchuelerKursHinzufuegen(idSchueler : number, idKurs : number) : void {
+		this.stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
+		this.stateRegelvalidierung();
+	}
+
+	/**
+	 * Fügt den Schüler dem Kurs hinzu und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
+	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const fachID : number = kurs.fachID;
 		if (!this.getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
@@ -764,7 +777,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.stateKursdifferenzUpdate(fachartID);
 		for (const schieneID of kurs.schienen)
 			this.stateSchuelerSchieneHinzufuegen(idSchueler, schieneID!, kurs);
-		this.stateRegelvalidierung();
 	}
 
 	/**
@@ -776,6 +788,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
 	private stateSchuelerKursEntfernen(idSchueler : number, idKurs : number) : void {
+		this.stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
+		this.stateRegelvalidierung();
+	}
+
+	/**
+	 * Entfernt den Schüler aus dem Kurs und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
+	 *          Zuordnung aller ungültigen Wahlen gelöscht.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private stateSchuelerKursEntfernenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const fachID : number = kurs.fachID;
 		if (!this.getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
@@ -795,7 +820,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.stateKursdifferenzUpdate(fachartID);
 		for (const schieneID of kurs.schienen)
 			this.stateSchuelerSchieneEntfernen(idSchueler, schieneID!, kurs);
-		this.stateRegelvalidierung();
 	}
 
 	private stateSchuelerKursUngueltigeWahlHinzufuegen(idSchueler : number, kurs : GostBlockungsergebnisKurs) : void {
@@ -4323,6 +4347,46 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(idKurs, idSchueler));
 				}
 		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
+	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param schuelerIDs  Die Menge der Schüler-IDs.
+	 * @param idKurs       Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
+	 */
+	public kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(schuelerIDs : JavaSet<number>, idKurs : number, entferneAuchFixierte : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		const setSchulerOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
+		for (const idSchueler of schuelerIDs)
+			if (setSchulerOfKurs.contains(idSchueler))
+				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
+					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+				}
+		return u;
+	}
+
+	/**
+	 * Entfernt erst alle Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listEntfernen} und
+	 * fügt dann die neuen Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listHinzuzufuegen} hinzu.
+	 *
+	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
+	 */
+	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
+		if (this._parent.getIstBlockungsVorlage())
+			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		for (const z of update.listEntfernen)
+			this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+		for (const z of update.listHinzuzufuegen)
+			this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+		if (this._parent.getIstBlockungsVorlage())
+			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		this.stateRevalidateEverything();
 	}
 
 	/**

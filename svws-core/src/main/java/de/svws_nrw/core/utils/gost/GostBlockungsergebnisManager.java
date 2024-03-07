@@ -774,6 +774,19 @@ public class GostBlockungsergebnisManager {
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
 	private void stateSchuelerKursHinzufuegen(final long idSchueler, final long idKurs) {
+		stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
+		stateRegelvalidierung();
+	}
+
+	/**
+	 * Fügt den Schüler dem Kurs hinzu und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
+	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private void stateSchuelerKursHinzufuegenOhneRevalidierung(final long idSchueler, final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
@@ -800,7 +813,6 @@ public class GostBlockungsergebnisManager {
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneHinzufuegen(idSchueler, schieneID, kurs);
-		stateRegelvalidierung();
 	}
 
 	/**
@@ -812,6 +824,19 @@ public class GostBlockungsergebnisManager {
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
 	private void stateSchuelerKursEntfernen(final long idSchueler, final long idKurs) {
+		stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
+		stateRegelvalidierung();
+	}
+
+	/**
+	 * Entfernt den Schüler aus dem Kurs und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
+	 *          Zuordnung aller ungültigen Wahlen gelöscht.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private void stateSchuelerKursEntfernenOhneRevalidierung(final long idSchueler, final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
@@ -838,7 +863,6 @@ public class GostBlockungsergebnisManager {
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneEntfernen(idSchueler, schieneID, kurs);
-		stateRegelvalidierung();
 	}
 
 	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs kurs) {
@@ -4742,6 +4766,58 @@ public class GostBlockungsergebnisManager {
 				}
 
 		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
+	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param schuelerIDs  Die Menge der Schüler-IDs.
+	 * @param idKurs       Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(final @NotNull Set<@NotNull Long> schuelerIDs, final long idKurs, final boolean entferneAuchFixierte) {
+		// TODO ungültige Zuordnungen überprüfen.
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		final @NotNull Set<@NotNull Long> setSchulerOfKurs = getOfKursSchuelerIDmenge(idKurs);
+		for (final long idSchueler : schuelerIDs)
+			if (setSchulerOfKurs.contains(idSchueler))
+				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
+					// (1) (2)
+					u.listEntfernen.add(newKursSchuelerZuordnung.apply(idKurs, idSchueler));
+				}
+
+		return u;
+	}
+
+	/**
+	 * Entfernt erst alle Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listEntfernen} und
+	 * fügt dann die neuen Regeln aus {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate#listHinzuzufuegen} hinzu.
+	 *
+	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
+	 */
+	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
+		// Regeln entfernen.
+		if (_parent.getIstBlockungsVorlage())
+			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+
+		// SuS entfernen.
+		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listEntfernen)
+			stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
+
+		// SuS hinzufügen
+		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listHinzuzufuegen)
+			stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
+
+		// Regeln hinzufügen.
+		if (_parent.getIstBlockungsVorlage())
+			_parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+
+		stateRevalidateEverything();
 	}
 
 	// #########################################################################
