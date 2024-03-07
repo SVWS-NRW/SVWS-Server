@@ -4260,11 +4260,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
 	 */
 	public kursSchuelerUpdate_01_LEERE_ALLE_KURSE(entferneAuchFixierte : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		return this.kursSchuelerUpdate_01b_LEERE_KURSMENGE(this._map_kursID_schuelerIDs.keySet(), entferneAuchFixierte);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus der übergebenen Kursmenge zu entfernen.
+	 * <br>(1) Wenn ein Schüler in einem Kurs ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn ein Schüler in einem Kurs ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param kursIDs               Die Menge der Kurse.
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus der übergebenen Kursmenge zu entfernen.
+	 */
+	public kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIDs : JavaSet<number>, entferneAuchFixierte : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
-		for (const idSchueler of this._map_schuelerID_kurse.keySet())
-			for (const kurs of this.getOfSchuelerKursmenge(idSchueler))
-				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, kurs.id)) {
-					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(kurs.id, idSchueler));
+		for (const idKurs of kursIDs)
+			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
+				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
+					u.listEntfernen.add(GostBlockungsergebnisManager.newKursSchuelerZuordnung.apply(idKurs, idSchueler));
 				}
 		return u;
 	}

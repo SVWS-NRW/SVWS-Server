@@ -3982,6 +3982,8 @@ public class GostBlockungsergebnisManager {
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
 
+	// TODO regelupdate 4e bis 4j als Selektionsmenge von Set<KursIDs>
+
 	/**
 	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 *
@@ -4674,13 +4676,27 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01_LEERE_ALLE_KURSE(final boolean entferneAuchFixierte) {
+		return kursSchuelerUpdate_01b_LEERE_KURSMENGE(_map_kursID_schuelerIDs.keySet(), entferneAuchFixierte);
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus der übergebenen Kursmenge zu entfernen.
+	 * <br>(1) Wenn ein Schüler in einem Kurs ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn ein Schüler in einem Kurs ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 *
+	 * @param kursIDs               Die Menge der Kurse.
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus der übergebenen Kursmenge zu entfernen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01b_LEERE_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs, final boolean entferneAuchFixierte) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
-		for (final long idSchueler : _map_schuelerID_kurse.keySet())
-			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler))
-				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, kurs.id)) {
+		for (final long idKurs : kursIDs)
+			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
+				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 					// (1) (2)
-					u.listEntfernen.add(newKursSchuelerZuordnung.apply(kurs.id, idSchueler));
+					u.listEntfernen.add(newKursSchuelerZuordnung.apply(idKurs, idSchueler));
 				}
 
 		return u;
