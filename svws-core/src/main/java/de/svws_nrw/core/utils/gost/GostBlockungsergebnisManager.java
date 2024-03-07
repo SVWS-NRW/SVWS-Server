@@ -4065,18 +4065,30 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_ALLER_SCHRIFTLICHEN() {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH() {
+		return regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @param kursIDs  Die Menge der Kurse.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
 		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
-		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
-			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(schueler.id))
-				if (getOfSchuelerOfKursIstSchriftlich(schueler.id, kurs.id))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(schueler.id, kurs.id));
+		for (final long idKurs : kursIDs)
+			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
+				if (getOfSchuelerOfKursIstSchriftlich(idSchueler, idKurs))
+					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
 	}
-
-	// TODO regelupdate 4e bis 4j als Selektionsmenge von Set<KursIDs>
 
 	/**
 	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
