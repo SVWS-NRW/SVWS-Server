@@ -410,10 +410,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursBearbeitet : HashSet<number> | null = new HashSet();
 		for (const schieneOld of pOld.schienen)
 			for (const kursOld of schieneOld.kurse) {
-				this.setKursSchiene(kursOld.id, schieneOld.id, true);
+				this.stateKursSchieneHinzufuegenOhneRegelvalidierung(kursOld.id, schieneOld.id);
 				if (kursBearbeitet.add(kursOld.id))
 					for (const schuelerID of kursOld.schueler)
-						this.setSchuelerKurs(schuelerID!, kursOld.id, true);
+						this.stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID!, kursOld.id);
 			}
 		this._fachartmenge_sortiert.addAll(this._map_fachartID_kurse.keySet());
 		this.stateRegelvalidierung();
@@ -840,6 +840,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 */
 	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : void {
+		this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
+		this.stateRegelvalidierung();
+	}
+
+	/**
+	 * Fügt den Kurs der Schiene hinzu und revalidiert nicht den Zustand.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 */
+	private stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
 		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
@@ -855,7 +866,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
 		DeveloperNotificationException.ifListAddsDuplicate("kursGruppe", kursGruppe, kurs);
-		this.stateRegelvalidierung();
 	}
 
 	/**
@@ -865,6 +875,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idSchiene Die Datenbank-ID der Schiene.
 	 */
 	private stateKursSchieneEntfernen(idKurs : number, idSchiene : number) : void {
+		this.stateKursSchieneEntfernenOhneRegelvalidierung(idKurs, idSchiene);
+		this.stateRegelvalidierung();
+	}
+
+	/**
+	 * Entfernt den Kurs aus der Schiene.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene Die Datenbank-ID der Schiene.
+	 */
+	private stateKursSchieneEntfernenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
 		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
@@ -880,7 +901,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		DeveloperNotificationException.ifListRemoveFailes("kursGruppe", kursGruppe, kurs);
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
-		this.stateRegelvalidierung();
 	}
 
 	private stateSchuelerSchieneHinzufuegen(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {

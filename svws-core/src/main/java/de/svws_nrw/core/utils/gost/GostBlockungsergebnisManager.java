@@ -383,10 +383,10 @@ public class GostBlockungsergebnisManager {
 		final HashSet<@NotNull Long> kursBearbeitet = new HashSet<>();
 		for (final @NotNull GostBlockungsergebnisSchiene schieneOld : pOld.schienen)
 			for (final @NotNull GostBlockungsergebnisKurs kursOld : schieneOld.kurse) {
-				setKursSchiene(kursOld.id, schieneOld.id, true);
+				stateKursSchieneHinzufuegenOhneRegelvalidierung(kursOld.id, schieneOld.id);
 				if (kursBearbeitet.add(kursOld.id)) // Bei Multikursen dürfen SuS nicht doppelt hinzugefügt werden.
 					for (final @NotNull Long schuelerID : kursOld.schueler)
-						setSchuelerKurs(schuelerID, kursOld.id, true);
+						stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID, kursOld.id);
 			}
 
 		// _fachartmenge_sortiert erzeugen.
@@ -883,6 +883,17 @@ public class GostBlockungsergebnisManager {
 	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 */
 	private void stateKursSchieneHinzufuegen(final long idKurs, final long idSchiene) {
+		stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
+		stateRegelvalidierung();
+	}
+
+	/**
+	 * Fügt den Kurs der Schiene hinzu und revalidiert nicht den Zustand.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 */
+	private void stateKursSchieneHinzufuegenOhneRegelvalidierung(final long idKurs, final long idSchiene) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> setSchienenOfKurs = getOfKursSchienenmenge(idKurs);
@@ -900,8 +911,6 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
 		DeveloperNotificationException.ifListAddsDuplicate("kursGruppe", kursGruppe, kurs);  // Muss nach der Bewertung passieren.
-
-		stateRegelvalidierung();
 	}
 
 	/**
@@ -911,6 +920,17 @@ public class GostBlockungsergebnisManager {
 	 * @param  idSchiene Die Datenbank-ID der Schiene.
 	 */
 	private void stateKursSchieneEntfernen(final long idKurs, final long idSchiene) {
+		stateKursSchieneEntfernenOhneRegelvalidierung(idKurs, idSchiene);
+		stateRegelvalidierung();
+	}
+
+	/**
+	 * Entfernt den Kurs aus der Schiene.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene Die Datenbank-ID der Schiene.
+	 */
+	private void stateKursSchieneEntfernenOhneRegelvalidierung(final long idKurs, final long idSchiene) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> setSchienenOfKurs = getOfKursSchienenmenge(idKurs);
@@ -928,8 +948,6 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		DeveloperNotificationException.ifListRemoveFailes("kursGruppe", kursGruppe, kurs); // Muss vor der Bewertung passieren.
 		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
-
-		stateRegelvalidierung();
 	}
 
 	private void stateSchuelerSchieneHinzufuegen(final long idSchueler, final long idSchiene, final @NotNull GostBlockungsergebnisKurs kurs) {
