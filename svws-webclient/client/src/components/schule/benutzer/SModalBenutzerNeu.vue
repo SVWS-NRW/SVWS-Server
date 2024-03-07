@@ -8,9 +8,9 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Name (nur für die Anzeige)" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model="name" type="text" placeholder="Name (zu Anmeldung)" />
-				<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort" />
-				<svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort wiederholen" />
+				<svws-ui-text-input v-model.trim="name" type="text" placeholder="Name (zu Anmeldung)" />
+				<svws-ui-text-input v-model.trim="passwort1" type="password" placeholder="Passwort" />
+				<svws-ui-text-input v-model.trim="passwort2" type="password" placeholder="Passwort wiederholen" />
 			</svws-ui-input-wrapper>
 		</template>
 

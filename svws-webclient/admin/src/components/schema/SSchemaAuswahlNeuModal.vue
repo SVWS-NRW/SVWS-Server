@@ -4,13 +4,13 @@
 		<template #modalTitle>{{ title }}</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input v-if="istModalNeuesSchema" v-model="schemaname" required placeholder="Schemaname" :disabled="loading" />
+				<svws-ui-text-input v-if="istModalNeuesSchema" v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading" />
 				<div v-else>
 					Schemaname: {{ props.schema }}
 				</div>
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model="user" required placeholder="Benutzername" :disabled="loading" />
-				<svws-ui-text-input v-model="password" required placeholder="Passwort" :disabled="loading" type="Password" />
+				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" />
+				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading" type="password" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

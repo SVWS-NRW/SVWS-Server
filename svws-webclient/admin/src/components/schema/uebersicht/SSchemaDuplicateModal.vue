@@ -4,10 +4,10 @@
 		<template #modalTitle>Schema Duplizieren</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input v-model="schema" placeholder="Name des neuen Schemas" />
+				<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-				<svws-ui-text-input v-model="password" required placeholder="Passwort" />
+				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" />
+				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

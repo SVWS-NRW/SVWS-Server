@@ -11,10 +11,10 @@
 					</div>
 					<div class="flex flex-col gap-3 w-128 text-left">
 						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
-						<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
+						<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
 						<svws-ui-spacing />
-						<svws-ui-text-input v-model="user" required placeholder="Benutzername" />
-						<svws-ui-text-input v-model="password" required placeholder="Passwort" type="password" />
+						<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" />
+						<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 					</div>
 				</div>
 				<svws-ui-spacing />

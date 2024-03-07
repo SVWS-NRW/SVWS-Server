@@ -11,8 +11,8 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Passwort ändern">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Erste Eingabe neues Passwort" v-model="erstesPasswort" type="text" />
-				<svws-ui-text-input placeholder="Zweite Eingabe neues Passwort" v-model="zweitesPasswort" type="text" />
+				<svws-ui-text-input placeholder="Erste Eingabe neues Passwort" v-model.trim="erstesPasswort" type="password" />
+				<svws-ui-text-input placeholder="Zweite Eingabe neues Passwort" v-model.trim="zweitesPasswort" type="password" />
 				<svws-ui-button :type="ok === null ? 'secondary': ok === true ? 'primary' : 'danger'" @click="password" :disabled="erstesPasswort !== zweitesPasswort"> Passwort ändern </svws-ui-button>
 				{{ ok === true ? "Das Passwort wurde geändert, bitte melden Sie sich neu an" : ok === false ? 'Es gab einen Fehler bei der Passwortänderung' : '' }}
 			</svws-ui-input-wrapper>

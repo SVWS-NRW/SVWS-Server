@@ -13,7 +13,7 @@
 									<h2 class="text-headline-sm leading-tight opacity-50">Schulverwaltung für<br>Nordrhein-Westfalen</h2>
 								</div>
 								<svws-ui-input-wrapper center>
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
 									<svws-ui-button type="secondary" @click="connect" :disabled="!(inputDBSchemata.size() === 0 || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
@@ -24,8 +24,8 @@
 								<Transition>
 									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
 										<svws-ui-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
-										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
-										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
 										<div class="flex gap-2">
 											<svws-ui-button type="transparent" disabled>

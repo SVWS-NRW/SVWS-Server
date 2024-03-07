@@ -2,7 +2,7 @@
 	<div class="flex flex-col mt-3 gap-4">
 		<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" title="Datenbank" />
 		<div class="flex flex-col gap-8 text-left" v-if="db === 'mdb'">
-			<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
+			<svws-ui-text-input v-model.trim="password" placeholder="Datenbank-Passwort" type="password" />
 			<div class="flex flex-col gap-2 px-2">
 				<span class="font-bold text-button">Access-Datei (.mdb) hochladen</span>
 				<input type="file" @change="migrate" :disabled="loading" accept=".mdb">
@@ -16,10 +16,10 @@
 				</div>
 				<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
 			</div>
-			<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
-			<svws-ui-text-input v-model="schema" placeholder="Datenbank-Schema" />
-			<svws-ui-text-input v-model="user" placeholder="Datenbank-Benutzer" />
-			<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
+			<svws-ui-text-input v-model.trim="location" placeholder="Datenbank-Host" />
+			<svws-ui-text-input v-model.trim="schema" placeholder="Datenbank-Schema" />
+			<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
+			<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
 			<svws-ui-button @click="migrate()" class="mx-auto mt-4">Migration starten</svws-ui-button>
 		</div>
 		<svws-ui-spinner :spinning="loading" />

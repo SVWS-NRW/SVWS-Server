@@ -14,7 +14,7 @@
 									<h2 class="text-headline-sm leading-tight opacity-50">Administrative<br>Verwaltung</h2>
 								</div>
 								<svws-ui-input-wrapper center>
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+									<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
 									<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
 										<span v-if="!connected || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
@@ -24,8 +24,8 @@
 								</svws-ui-input-wrapper>
 								<Transition>
 									<svws-ui-input-wrapper v-if="connected && !connecting" class="mt-10" center>
-										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
-										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
 										<div class="flex gap-2">
 											<svws-ui-button type="transparent" disabled>

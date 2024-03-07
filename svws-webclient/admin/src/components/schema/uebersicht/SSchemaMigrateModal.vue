@@ -14,10 +14,10 @@
 				<div class="flex flex-row gap-16">
 					<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-3 w-128 text-left">
 						<div><b>Quell-Datenbank:</b></div>
-						<svws-ui-text-input v-model="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
-						<svws-ui-text-input v-model="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
-						<svws-ui-text-input v-model="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
-						<svws-ui-text-input v-model="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().location" placeholder="Datenbank-Host (hostname:port) oder (ip:port)" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().schema" placeholder="Datenbank-Schema (z.B. schild_nrw)" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().user" placeholder="Name des Datenbankbenutzers" />
+						<svws-ui-text-input v-model.trim="migrationQuellinformationen().password" placeholder="Passwort des Datenbankbenutzers" type="password" />
 					</div>
 					<div v-else class="flex flex-col gap-3 w-128 text-left">
 						<div><b>Quell-Datenbank: </b> Access-Datei auswählen (Endung .mdb)</div>
@@ -25,9 +25,9 @@
 					</div>
 					<div class="flex flex-col gap-3 w-128 text-left" v-if="targetSchema === undefined">
 						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
-						<svws-ui-text-input v-model="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
-						<svws-ui-text-input v-model="zielUsername" placeholder="Name des Datenbankbenutzers" />
-						<svws-ui-text-input v-model="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
+						<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
+						<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" />
+						<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 					</div>
 				</div>
 			</div>
