@@ -40,7 +40,6 @@ export interface GostKursplanungProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 	apiStatus: ApiStatus;
 	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;

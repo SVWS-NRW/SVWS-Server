@@ -127,7 +127,6 @@
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
-		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		allowRegeln: boolean;
@@ -239,30 +238,16 @@
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
-		// Prüfe, ob der Schüler in dem Kurs fixiert ist -> Dann wird nicht entfernt
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurs.id))
-			return;
-		// Entferne den Kurs
-		const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-		zuordnung.idSchueler = id;
-		zuordnung.idKurs = kurs.id;
-		await props.removeKursSchuelerZuordnung([zuordnung]);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(id), kurs.id, false);
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function leereKurs() {
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
-		const liste = new ArrayList<GostBlockungsergebnisKursSchuelerZuordnung>();
-		for (const s of props.schuelerFilter().filtered.value) {
-			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(s.id, kurs.id))
-				continue;
-			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-			zuordnung.idKurs = kurs.id;
-			zuordnung.idSchueler = s.id;
-			liste.add(zuordnung);
-		}
-		await props.removeKursSchuelerZuordnung(liste);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(SetUtils.create1(kurs.id), false);
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function move(id: number) {
@@ -284,10 +269,8 @@
 			return;
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
 		if (((neuer_kurs === undefined) || (neuer_kurs === null)) && (alter_kurs !== null)) {
-			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-			zuordnung.idSchueler = schueler.id;
-			zuordnung.idKurs = alter_kurs.id;
-			await props.removeKursSchuelerZuordnung([ zuordnung ]);
+			const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(schueler.id), alter_kurs.id, false);
+			await props.updateKursSchuelerZuordnungen(update);
 		} else if (neuer_kurs instanceof GostBlockungsergebnisKurs) {
 			await props.updateKursSchuelerZuordnung(schueler.id, neuer_kurs.id, alter_kurs?.id ?? undefined);
 		}

@@ -141,10 +141,10 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 	import type { DataTableColumn } from "@ui";
-	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List , GostBlockungRegel} from "@core";
-	import { ArrayList, ZulaessigesFach, GostBlockungsergebnisKursSchuelerZuordnung, SetUtils, GostBlockungRegelUpdate } from "@core";
+	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
+	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
+	import { ArrayList, DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
@@ -231,10 +231,9 @@
 		const obj = dragAndDropData.value;
 		if ((schuelerid === undefined) || (obj === undefined) || (obj.id === undefined))
 			return;
-		const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-		zuordnung.idSchueler = schuelerid;
-		zuordnung.idKurs = obj.id;
-		await props.removeKursSchuelerZuordnung([zuordnung]);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(schuelerid, obj.id);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(SetUtils.create1(zuordnung));
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	function bgColor(idKurs : number, idSchueler : number) : string {

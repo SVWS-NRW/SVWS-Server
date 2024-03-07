@@ -23,37 +23,34 @@
 		kurs: GostBlockungsergebnisKurs;
 	}
 
-	import type { GostBlockungsergebnisManager, GostBlockungsergebnisKurs, List } from '@core';
-	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung } from '@core';
 	import { computed, ref } from 'vue';
+	import type { GostBlockungsergebnisKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager , GostBlockungsergebnisKursSchuelerZuordnung} from '@core';
+	import { DTOUtils, HashSet } from '@core';
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
-		removeKursSchuelerZuordnung: (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>) => Promise<boolean>;
+		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 	}>();
 
-	const zuordnungen = computed<Item[]>(()=>{
-		const liste: Item[] = [];
+	const zuordnungen = computed<HashSet<GostBlockungsergebnisKursSchuelerZuordnung>>(()=>{
+		const zuordnungenSet = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const es of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().entrySet())
 			for (const kurs of es.getValue())
-				liste.push({name: es.getKey(), kurs});
-		return liste;
+				zuordnungenSet.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(es.getKey(), kurs.id));
+		return zuordnungenSet;
 	})
 
-	const selected = ref<Item[]>(zuordnungen.value);
+	const selected = ref<GostBlockungsergebnisKursSchuelerZuordnung[]>(zuordnungen.value.toArray() as GostBlockungsergebnisKursSchuelerZuordnung[]);
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
 	async function removeZuordnung() {
 		showModal().value = false;
-		const list: List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();
-		for (const i of selected.value) {
-			const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-			zuordnung.idSchueler = i.name;
-			zuordnung.idKurs = i.kurs.id;
-			list.add(zuordnung);
-		}
-		await props.removeKursSchuelerZuordnung(list);
+		const set = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
+		for (const z of selected.value)
+			set.add(z);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);
+		await props.updateKursSchuelerZuordnungen(update);
 		selected.value = [];
 	}
 

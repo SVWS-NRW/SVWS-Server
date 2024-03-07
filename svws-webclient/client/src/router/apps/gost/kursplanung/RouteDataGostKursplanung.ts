@@ -645,36 +645,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return await this.updateKursSchuelerZuordnungen(update);
 	};
 
-	removeKursSchuelerZuordnung = api.call(async (zuordnungen: Iterable<GostBlockungsergebnisKursSchuelerZuordnung>): Promise<boolean> => {
-		const liste: List<GostBlockungsergebnisKursSchuelerZuordnung> = new ArrayList();
-		for (const zuordnung of zuordnungen) {
-			if (this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(zuordnung.idSchueler, zuordnung.idKurs)) {
-				liste.add(zuordnung);
-				this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
-			} else {
-				const map = this.ergebnismanager.getOfSchuelerMapIDzuUngueltigeKurse();
-				const set = map.get(zuordnung.idSchueler);
-				if (set !== null) {
-					for (const kurs of set) {
-						if (kurs.id === zuordnung.idKurs) {
-							liste.add(zuordnung);
-							this.ergebnismanager.setSchuelerKurs(zuordnung.idSchueler, zuordnung.idKurs, false);
-							break;
-						}
-					}
-				}
-			}
-		}
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined) || liste.size() === 0)
-			return false;
-		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnungen(liste, api.schema, ergebnisid);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
-		this.commit();
-		return true;
-	});
-
 	autoKursSchuelerZuordnung = api.call(async (idSchueler : number) => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
