@@ -3,7 +3,6 @@ import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlock
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-import type { KurseLeerenTypen } from "./KurseLeerenTypen";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -12,7 +11,6 @@ export interface GostKursplanungProps {
 	addBlockung: () => Promise<void>;
 	restoreBlockung: () => Promise<void>;
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
-	updateKurseLeeren: (typ : KurseLeerenTypen, ids?: List<number>) => Promise<void>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 	patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
 	addSchiene: () => Promise<GostBlockungSchiene | undefined>;

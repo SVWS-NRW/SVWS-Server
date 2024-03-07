@@ -881,31 +881,4 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	}, {name: 'gost.regelnUpdate'})
 
-	updateKurseLeeren = api.call(async (typ: KurseLeerenTypen, ids?: List<number>) => {
-		const listKursIDs = ids || this.getListeKursauswahl();
-		switch (typ) {
-			case "leereKurseAlle":
-			case "leereKurseKursauswahl":
-			case "leereKurseFilterFach":
-			case "leereKursFilterKurs": {
-				if (!listKursIDs.isEmpty()) {
-					const list = new ArrayList<GostBlockungsergebnisKursSchuelerZuordnung>();
-					for (const kurs of listKursIDs) {
-						const schueler = this.ergebnismanager.getOfKursSchuelermenge(kurs);
-						for (const s of schueler) {
-							const zuordnung = new GostBlockungsergebnisKursSchuelerZuordnung();
-							zuordnung.idKurs = kurs;
-							zuordnung.idSchueler = s.id;
-							list.add(zuordnung);
-						}
-					}
-					await this.removeKursSchuelerZuordnung(list);
-				}
-				break;
-			}
-			default:
-				throw new DeveloperNotificationException(`Der Typ "${typ}" für die Leerung von Kursen wird noch nicht unterstützt.`);
-		}
-	})
-
 }

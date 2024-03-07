@@ -137,7 +137,7 @@
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { ArrayList, HashSet } from "@core";
+	import { HashSet, SetUtils } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
 
@@ -178,39 +178,34 @@
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void|boolean>; default?: boolean; separator?: true }> = [];
-		const kursIdsAlle = new ArrayList<number>();
+		const kursIdsAlle = new HashSet<number>();
 		for (const k of props.getErgebnismanager().getKursmenge())
 			kursIdsAlle.add(k.id);
 		result.push({ text: "Leere alle Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(false)) });
 		result.push({ text: "Leere alle Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(true)) });
 		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size())) {
-			// TODO
-			result.push({ text: "Kursauswahl: Leere Kurse, beachte Fixierungen", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
-			result.push({ text: "Kursauswahl: Leere Kurse, ignoriere Fixierungen", action: async () => await props.updateKurseLeeren("leereKurseKursauswahl") });
+			result.push({ text: "Kursauswahl: Leere Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIdsAlle, false)) });
+			result.push({ text: "Kursauswahl: Leere Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIdsAlle, true)) });
 		}
 		if (filter.kurs !== undefined) {
-			// TODO
-			const list = new ArrayList<number>();
-			list.add(filter.kurs.id);
-			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, beachte Fixierungen`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
-			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, ignoriere Fixierungen`, action: async () => await props.updateKurseLeeren("leereKursFilterKurs", list) });
+			const idSet = SetUtils.create1(filter.kurs.id);
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, beachte Fixierungen`, action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(idSet, false)) });
+			result.push({ text: `${props.getErgebnismanager().getOfKursName(filter.kurs.id)}: Leere Kurs, ignoriere Fixierungen`, action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(idSet, true)) });
 		}
 		if (filter.fach !== undefined) {
-			// TODO
-			const list = new ArrayList<number>();
+			const idSet = new HashSet<number>();
 			let namen = "";
 			for (const k of props.getErgebnismanager().getOfFachKursmenge(filter.fach)) {
 				const kursart = filter.kursart;
 				if ((kursart !== undefined) && (k.kursart !== kursart.id))
 					continue;
-				list.add(k.id);
+				idSet.add(k.id);
 				namen += props.getErgebnismanager().getOfKursName(k.id) + ', ';
 			}
 			namen = namen.slice(0, -2);
-			if (list.size() > 0) {
-				// TODO
-				result.push({ text: `${namen}: Leere Kurse, beachte Fixierungen`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
-				result.push({ text: `${namen}: Leere Kurse, ignoriere Fixierungen`, action: async () => await props.updateKurseLeeren("leereKurseFilterFach", list) });
+			if (idSet.size() > 0) {
+				result.push({ text: `${namen}: Leere Kurse, beachte Fixierungen`, action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(idSet, false)) });
+				result.push({ text: `${namen}: Leere Kurse, ignoriere Fixierungen`, action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(idSet, true)) });
 			}
 		}
 		return result;
