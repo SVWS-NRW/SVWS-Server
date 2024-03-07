@@ -83,7 +83,8 @@ public final class DataKlassendaten extends DataManager<Long> {
 			for (final DTOKlassenLeitung kl : klassenLeitungen)
 				daten.klassenLeitungen.add(kl.Lehrer_ID);
 		for (final DTOSchueler dto : schueler)
-			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
+			if (Boolean.FALSE.equals(dto.Geloescht))
+				daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		daten.teilstandort = klasse.AdrMerkmal == null ? "" : klasse.AdrMerkmal;
 		daten.beschreibung = klasse.Bezeichnung == null ? "" : klasse.Bezeichnung;
 		daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null
