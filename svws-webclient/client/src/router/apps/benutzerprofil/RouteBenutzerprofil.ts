@@ -4,6 +4,8 @@ import type { RouteApp} from "~/router/apps/RouteApp";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataBenutzerprofil } from "~/router/apps/benutzerprofil/RouteDataBenutzerprofil";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 
 const SBenutzerprofilApp = () => import("~/components/benutzerprofil/SBenutzerprofilApp.vue")
 
@@ -14,6 +16,9 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzerprofil";
+		api.config.addElements([
+			new ConfigElement("benutzerprofil.notifications.backticks", "user", "true"),
+		]);
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -33,6 +38,8 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 			benutzer: this.data.benutzer,
 			patch: this.data.patch,
 			patchPasswort: this.data.patchPasswort,
+			backticks: () => this.data.backticks,
+			setBackticks: this.data.setBackticks,
 		};
 	}
 

@@ -121,6 +121,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
+			backticks: () => routeBenutzerprofil.data.backticks,
 		};
 	}
 

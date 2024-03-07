@@ -14,4 +14,5 @@ export interface AppProps {
 	apps: AuswahlChildData[];
 	appsHidden: boolean[];
 	apiStatus: ApiStatus;
+	backticks: () => boolean;
 }

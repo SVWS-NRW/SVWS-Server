@@ -69,13 +69,19 @@
 			</div>
 		</template>
 	</svws-ui-app-layout>
+	<svws-ui-notifications v-if="error">
+		<svws-ui-notification type="error">
+			<template #header> {{ error.name }} </template>
+			{{ error.message }}
+		</svws-ui-notification>
+	</svws-ui-notifications>
 </template>
 
 <script setup lang="ts">
 
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { computed, ref, shallowRef, watch } from "vue";
+	import { computed, ref, shallowRef } from "vue";
 	import { ArrayList } from "@core";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -86,6 +92,7 @@
 	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
 	const username = ref("Admin");
 	const password = ref("");
+	const error = ref<{name: string; message: string;}|null>(null);
 
 	const connecting = ref(false);
 	const authenticating = ref(false);
@@ -111,14 +118,16 @@
 	async function connect() {
 		connecting.value = true;
 		inputFocus.value = false;
+		error.value = null;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 			if (inputDBSchemata.value.size() <= 0)
-				throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.");
-		} catch (error) {
+				throw new Error();
+		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;
-			throw error;
+			error.value = {name: "Serverfehler", message: "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen."};
+			return;
 		}
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
@@ -139,26 +148,17 @@
 		connecting.value = false;
 	}
 
-	watch(() => props.authenticated, (value) => {
-		if (value) {
-			authentication_success.value = true;
-			document.documentElement.style.backgroundImage = "none";
-			const error = new Error();
-			error.name = 'resetAllErrors';
-			throw error;
-		}
-	});
-
 	async function doLogin() {
 		inputFocus.value = false;
+		error.value = null;
 		if ((schema.value === undefined) || (schema.value.name === null))
-			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
+			return error.value = {name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein."};
 		authenticating.value = true;
 		await props.login(schema.value.name, username.value, password.value);
 		authenticating.value = false;
 		firstauth.value = false;
 		if (!props.authenticated)
-			throw new Error("Passwort oder Benutzername falsch.");
+			error.value = {name: "Eingabefehler", message: "Passwort oder Benutzername falsch."};
 	}
 
 </script>

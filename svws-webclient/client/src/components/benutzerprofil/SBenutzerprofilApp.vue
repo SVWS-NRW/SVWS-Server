@@ -3,8 +3,7 @@
 		<div>
 			<span class="inline-block mr-3">{{ benutzer.anzeigename }}</span>
 			<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-				ID:
-				{{ benutzer.id }}
+				ID: {{ benutzer.id }}
 			</svws-ui-badge>
 		</div>
 	</svws-ui-header>
@@ -17,15 +16,15 @@
 				{{ ok === true ? "Das Passwort wurde geändert, bitte melden Sie sich neu an" : ok === false ? 'Es gab einen Fehler bei der Passwortänderung' : '' }}
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Benutzereinstellungen" class="opacity-50">
-			Hier können die Benutzereinstellungen für den Client angepasst werden, sobald diese implementiert wurden
+		<svws-ui-content-card title="Benutzereinstellungen">
+			<svws-ui-checkbox type="toggle" v-model="toggleBackticks">Fehlermeldungen mit Backticks kopieren</svws-ui-checkbox>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import type { BenutzerprofilAppProps } from "./SBenutzerprofilAppProps";
 
 	const props = defineProps<BenutzerprofilAppProps>();
@@ -37,4 +36,9 @@
 	async function password() {
 		ok.value = await props.patchPasswort(erstesPasswort.value, zweitesPasswort.value);
 	}
+
+	const toggleBackticks = computed<boolean>({
+		get: () => props.backticks(),
+		set: (value) => props.setBackticks(value)
+	});
 </script>
