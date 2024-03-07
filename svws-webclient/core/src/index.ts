@@ -163,6 +163,7 @@ export { GostBlockungsergebnis } from './core/data/gost/GostBlockungsergebnis';
 export { GostBlockungsergebnisBewertung } from './core/data/gost/GostBlockungsergebnisBewertung';
 export { GostBlockungsergebnisKurs } from './core/data/gost/GostBlockungsergebnisKurs';
 export { GostBlockungsergebnisKursSchienenZuordnung } from './core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+export { GostBlockungsergebnisKursSchienenZuordnungUpdate } from './core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 export { GostBlockungsergebnisKursSchuelerZuordnung } from './core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 export { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from './core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 export { GostBlockungsergebnisSchiene } from './core/data/gost/GostBlockungsergebnisSchiene';
