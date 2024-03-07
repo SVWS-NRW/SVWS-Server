@@ -1942,6 +1942,30 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 *
+	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
+	 *
+	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 */
+	public getOfSchuelerNeuzuordnung(idSchueler : number, fixiereBelegteKurse : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const zuordnung : SchuelerblockungOutput = this.getOfSchuelerNeuzuordnungMitFixierung(idSchueler, fixiereBelegteKurse);
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate | null = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		for (const z of zuordnung.fachwahlenZuKurs) {
+			const kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
+			const kursN : GostBlockungsergebnisKurs | null = z.kursID < 0 ? null : this.getKursE(z.kursID);
+			if (kursV as unknown !== kursN as unknown) {
+				if (kursV !== null)
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursV.id, idSchueler));
+				if (kursN !== null)
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursN.id, idSchueler));
+			}
+		}
+		return u;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -4793,6 +4817,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
+	 *
+	 * @deprecated  Die Kurszuordnungen sollen über Update-Objekte erfolgen.
 	 *
 	 * @param  idSchueler                Die Datenbank-ID des Schülers.
 	 * @param  idKurs                    Die Datenbank-ID des Kurses.

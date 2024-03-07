@@ -2059,6 +2059,36 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 *
+	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
+	 *
+	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate getOfSchuelerNeuzuordnung(final long idSchueler, final boolean fixiereBelegteKurse) {
+		final @NotNull SchuelerblockungOutput zuordnung = getOfSchuelerNeuzuordnungMitFixierung(idSchueler, fixiereBelegteKurse);
+
+		final GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs z : zuordnung.fachwahlenZuKurs) {
+			// Kurs des Faches 'vorher'.
+			final GostBlockungsergebnisKurs kursV = getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
+			// Kurs des Faches 'nachher'.
+			final GostBlockungsergebnisKurs kursN = z.kursID < 0 ? null : getKursE(z.kursID);
+			// Bei Ungleichheit wird der Kurs gewechselt.
+			if (kursV != kursN) {
+				if (kursV != null)
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursV.id, idSchueler));
+				if (kursN != null)
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursN.id, idSchueler));
+			}
+		}
+
+		return u;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -5241,12 +5271,15 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
 	 *
+	 * @deprecated  Die Kurszuordnungen sollen über Update-Objekte erfolgen.
+	 *
 	 * @param  idSchueler                Die Datenbank-ID des Schülers.
 	 * @param  idKurs                    Die Datenbank-ID des Kurses.
 	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
 	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
+	@Deprecated(forRemoval = true)
 	public void setSchuelerKurs(final long idSchueler, final long idKurs, final boolean hinzufuegenOderEntfernen) throws DeveloperNotificationException {
 		if (hinzufuegenOderEntfernen)
 			stateSchuelerKursHinzufuegen(idSchueler, idKurs);
