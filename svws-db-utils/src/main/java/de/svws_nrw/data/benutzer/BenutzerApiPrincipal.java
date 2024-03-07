@@ -191,6 +191,9 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			if (!DBBenutzerUtils.pruefePasswort(user, password))
 				return null;
 
+			// Erzeuge nach erfolgreicher Prüfung den Benutzer-spezifischen AES-Schlüssel
+			user.setAES();
+
 			// Lese die Benutzerkompetenzen aus der Datenbank
 			DBBenutzerUtils.leseKompetenzen(user);
 

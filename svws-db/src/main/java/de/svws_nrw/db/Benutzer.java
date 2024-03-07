@@ -6,6 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.crypto.SecretKey;
+
+import de.svws_nrw.base.crypto.AES;
+import de.svws_nrw.base.crypto.AESAlgo;
+import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 
@@ -22,6 +27,9 @@ public final class Benutzer {
 
     /** Das Kennwort des angemeldeten Benutzers */
     private String _password;
+
+    /** Das AES-Objekt, passend zum angemeldeten Benutzer. */
+    private AES _aes;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen SVWS-Benutzers. */
     private Long _id = null;
@@ -57,6 +65,7 @@ public final class Benutzer {
     private Benutzer(final DBConfig config) throws DBException {
     	this._username = "niemand";
     	this._password = "keines";
+    	this._aes = null;
     	this._config = config;
     	this.connectionManager = ConnectionManager.get(config);
     }
@@ -235,6 +244,45 @@ public final class Benutzer {
 	 */
 	public void setPassword(final String password) {
 		this._password = password;
+	}
+
+
+	/**
+	 * Gibt das AES-Objekt zur Verschlüsselung von Benutzerspezifischen
+	 * Daten zurück.
+	 *
+	 * @return das AES-Verschlüsselungsobjekt
+	 */
+	public AES getAES() {
+		return _aes;
+	}
+
+
+	/**
+	 * Setzt das AES-Objekt zur Verschlüsselung von Benuterspezifischen Daten
+	 * in Bezug auf den aktuellen Benutzernamen und seinem Kennwort.
+	 */
+	public void setAES() {
+		this._aes = getAESInstance(_username, _password);
+	}
+
+
+	/**
+	 * Erzeugt eine Instanz für die AES-Verschlüsselung basierend auf dem Benutzernamen und dem
+	 * Kennwort des angemeldeten Benutzers.
+	 *
+	 * @param username   der Benutzername
+	 * @param password   das Anmeldekennwort
+	 *
+	 * @return das AES-Verschlüsselungsobjekt
+	 */
+	public static AES getAESInstance(final String username, final String password) {
+		try {
+			final SecretKey key = AES.getKey256(password, username);
+			return new AES(AESAlgo.CBC_PKCS5PADDING, key);
+		} catch (@SuppressWarnings("unused") final AESException e) {
+			return null;
+		}
 	}
 
 
