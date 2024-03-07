@@ -16,6 +16,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnungUpdate;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
@@ -23,6 +27,7 @@ import de.svws_nrw.core.logger.LogData;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 
@@ -131,21 +136,24 @@ class GostBlockungsergebnisManagerTest {
 		final Random lRandom = new Random(1);
 
 		for (int i = 0; i < 1000; i++) {
+
 			if (lRandom.nextBoolean()) {
-				// Schülerveränderung
+				// Schüler-Kurs-Veränderung
 				final long schuelerID = getRandom(mapScFaKu.keySet(), lRandom);
 				final long fachartID = getRandom(mapScFaKu.get(schuelerID).keySet(), lRandom);
 				final long fachID = GostKursart.getFachID(fachartID);
 				final GostBlockungsergebnisKurs old = out.getOfSchuelerOfFachZugeordneterKurs(schuelerID, fachID);
 				if (old == null) {
-					// Hinzufügen
+					// Hinzufügen (Vorsicht: Hinzufügen nur dann erlaubt, wenn Schienenanzahl des Kurses >= 1!)
 					final long kursID = getRandom(mapFaKu.get(fachartID), lRandom);
-					out.setSchuelerKurs(schuelerID, kursID, true);
-					mapScFaKu.get(schuelerID).put(fachartID, kursID);
+					if (out.getOfKursSchienenmenge(kursID).size() >= 1) {
+						setSchuelerKurs(out, schuelerID, kursID, true);
+						mapScFaKu.get(schuelerID).put(fachartID, kursID);
+					}
 				} else {
 					// Entfernen
-					out.setSchuelerKurs(schuelerID, old.id, false);
-					mapScFaKu.get(schuelerID).put(fachartID, null);
+//					setSchuelerKurs(out, schuelerID, old.id, false);
+//					mapScFaKu.get(schuelerID).put(fachartID, null);
 				}
 			} else {
 				// Kursveränderung
@@ -156,25 +164,51 @@ class GostBlockungsergebnisManagerTest {
 					final List<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
 					final GostBlockungsergebnisSchiene schieneRnd = getRandom(schienenAlle, lRandom);
 					if (kuSchienen.contains(schieneRnd.id)) {
-						// Entfernen
-						out.setKursSchiene(kursID, schieneRnd.id, false);
-						kuSchienen.remove(schieneRnd.id);
+						// Entfernen (Vorsicht: Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!)
+						if (out.getOfKursSchienenmenge(kursID).size() >= 2) {
+							setKursSchiene(out, kursID, schieneRnd.id, false);
+							kuSchienen.remove(schieneRnd.id);
+						}
 					} else {
 						// Hinzufügen
-						out.setKursSchiene(kursID, schieneRnd.id, true);
+						setKursSchiene(out, kursID, schieneRnd.id, true);
 						kuSchienen.add(schieneRnd.id);
 					}
 				} else {
-					// Entfernen
-					final long schieneAlt = getRandom(kuSchienen, lRandom);
-					out.setKursSchiene(kursID, schieneAlt, false);
-					kuSchienen.remove(schieneAlt);
+					// Entfernen (Vorsicht: Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!)
+					if (out.getOfKursSchienenmenge(kursID).size() >= 2) {
+						final long schieneAlt = getRandom(kuSchienen, lRandom);
+						setKursSchiene(out, kursID, schieneAlt, false);
+						kuSchienen.remove(schieneAlt);
+					}
 				}
 			}
 
 			check_conistency(mapFaKu, mapScFaKu, out);
 		}
 
+	}
+
+	private static void setSchuelerKurs(final GostBlockungsergebnisManager manager, final long schuelerID, final long kursID, final boolean hinzufuegen) {
+	 	final Set<GostBlockungsergebnisKursSchuelerZuordnung> z = new HashSet<>();
+     	z.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursID, schuelerID));
+
+     	final GostBlockungsergebnisKursSchuelerZuordnungUpdate update = hinzufuegen
+     			? manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(z)
+     		    : manager.kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(z);
+
+        manager.kursSchuelerUpdateExecute(update);
+	}
+
+	private static void setKursSchiene(final GostBlockungsergebnisManager manager, final long kursID, final long schieneID, final boolean hinzufuegen) {
+	 	final Set<GostBlockungsergebnisKursSchienenZuordnung> z = new HashSet<>();
+     	z.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(kursID, schieneID));
+
+     	final GostBlockungsergebnisKursSchienenZuordnungUpdate update = hinzufuegen
+     			? manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(z)
+     		    : manager.kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(z);
+
+        manager.kursSchienenUpdateExecute(update);
 	}
 
 	private static void check_conistency(final HashMap<Long, HashSet<Long>> mapFaKu, final HashMap<Long, HashMap<Long, Long>> mapScFaKu, final GostBlockungsergebnisManager out) {

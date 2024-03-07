@@ -4960,7 +4960,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse in Schienen zu setzen.
 	 * <br>(1) Wenn der Kurs nicht in der Schiene ist, wird er hinzugefügt.
 	 *
-	 * @param kursSchienenZuordnungen  Alle Kurs-Schienen-Paare, welche angewandt werden sollen.
+	 * @param kursSchienenZuordnungen  Alle Kurs-Schienen-Paare, welche gesetzt werden sollen.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse in Schienen zu setzen.
 	 */
@@ -4971,6 +4971,26 @@ public class GostBlockungsergebnisManager {
 			// (1)
 			if (!getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
 				u.listHinzuzufuegen.add(z);
+		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse aus Schienen zu entfernen.
+	 * <br>(1) Wenn der Kurs nicht in der Schiene ist, wird er hinzugefügt.
+	 *
+	 * @param kursSchienenZuordnungen  Alle Kurs-Schienen-Paare, welche entfernt werden sollen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse aus Schienen zu entfernen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen) {
+		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate u = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
+
+		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : kursSchienenZuordnungen) {
+			// (1)
+			if (getOfKursOfSchieneIstZugeordnet(z.idKurs, z.idSchiene))
+				u.listEntfernen.add(z);
 		}
 
 		return u;
