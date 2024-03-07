@@ -48,7 +48,6 @@
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können"> <i-ri-error-warning-line /> Ungültige Kurszuordnungen </svws-ui-button>
 						</s-card-gost-kursansicht-irrlaeufer-modal>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus"
 							:fixierte-verschieben="fixierteVerschieben" :set-fixierte-verschieben="setFixierteVerschieben"

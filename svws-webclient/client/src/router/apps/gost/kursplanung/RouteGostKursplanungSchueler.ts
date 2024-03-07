@@ -134,7 +134,6 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			hatBlockung: routeGostKursplanung.data.hatBlockung && routeGostKursplanung.data.hatErgebnis,
 			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			regelnUpdate: routeGostKursplanung.data.regelnUpdate,
-			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
 			updateKursSchuelerZuordnungen: routeGostKursplanung.data.updateKursSchuelerZuordnungen,
 			autoKursSchuelerZuordnung:  routeGostKursplanung.data.autoKursSchuelerZuordnung,
 			gotoSchueler: this.gotoSchuelerIndividualdaten,

@@ -5,7 +5,6 @@ export interface GostUmwahlansichtProps {
 	hatBlockung: boolean,
 	hatErgebnis: boolean,
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
-	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 	autoKursSchuelerZuordnung: (idSchueler : number) => Promise<void>;
 	gotoSchueler: (idSchueler: number) => Promise<void>;

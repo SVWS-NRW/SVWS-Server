@@ -14,8 +14,8 @@
 				<template v-if="error.log !== null">
 					<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
 				</template>
-				<template #stack v-if="error.stack !== ''">
-					<pre v-html="error.stack" />
+				<template #stack v-if="error.stack">
+					<pre v-text="error.stack" />
 				</template>
 			</svws-ui-notification>
 		</template>

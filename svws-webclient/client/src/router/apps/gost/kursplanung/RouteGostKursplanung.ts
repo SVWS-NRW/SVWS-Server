@@ -264,7 +264,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			mapLehrer: this.data.mapLehrer,
 			mapFachwahlStatistik: () => this.data.mapFachwahlStatistik,
 			mapSchueler: this.data.mapSchueler,
-			updateKursSchuelerZuordnung: this.data.updateKursSchuelerZuordnung,
 			updateKursSchuelerZuordnungen: this.data.updateKursSchuelerZuordnungen,
 			apiStatus: api.status,
 			//Config

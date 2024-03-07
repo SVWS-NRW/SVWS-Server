@@ -123,10 +123,9 @@
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager } from '@core';
-	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet } from '@core';
+	import { ArrayList, GostBlockungsergebnisKursSchuelerZuordnung, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
 
 	const props = defineProps<{
-		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		allowRegeln: boolean;
@@ -259,8 +258,9 @@
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return;
-		const kurswahl = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(id, kurs.fach_id);
-		await props.updateKursSchuelerZuordnung(id, kurs.id, kurswahl?.id);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, id);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function updateZuordnung(schueler: Schueler, neuer_kurs: GostBlockungsergebnisKurs | undefined | null) {
@@ -272,7 +272,9 @@
 			const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(schueler.id), alter_kurs.id, false);
 			await props.updateKursSchuelerZuordnungen(update);
 		} else if (neuer_kurs instanceof GostBlockungsergebnisKurs) {
-			await props.updateKursSchuelerZuordnung(schueler.id, neuer_kurs.id, alter_kurs?.id ?? undefined);
+			const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(neuer_kurs.id, schueler.id);
+			const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+			await props.updateKursSchuelerZuordnungen(update);
 		}
 	}
 

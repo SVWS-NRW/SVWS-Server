@@ -36,7 +36,7 @@
 		const zuordnungenSet = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const es of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().entrySet())
 			for (const kurs of es.getValue())
-				zuordnungenSet.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(es.getKey(), kurs.id));
+				zuordnungenSet.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, es.getKey()));
 		return zuordnungenSet;
 	})
 

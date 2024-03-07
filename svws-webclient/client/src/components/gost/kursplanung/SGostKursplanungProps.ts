@@ -41,7 +41,6 @@ export interface GostKursplanungProps {
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	apiStatus: ApiStatus;
-	updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined) => Promise<boolean>;
 	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 	// Config
 	zeigeSchienenbezeichnungen: () => boolean;

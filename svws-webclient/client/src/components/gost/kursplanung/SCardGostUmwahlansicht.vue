@@ -223,7 +223,10 @@
 		const kurs_alt = dragAndDropData.value;
 		if ((kurs_alt === undefined) || (!is_drop_zone(kurs_neu).value))
 			return;
-		await props.updateKursSchuelerZuordnung(idSchueler, kurs_neu.id, kurs_alt.id);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler);
+		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+		console.log(update)
+		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function drop_entferne_kurszuordnung(e: DragEvent) {
@@ -231,7 +234,7 @@
 		const obj = dragAndDropData.value;
 		if ((schuelerid === undefined) || (obj === undefined) || (obj.id === undefined))
 			return;
-		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(schuelerid, obj.id);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(obj.id, schuelerid);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
