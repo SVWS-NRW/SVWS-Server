@@ -45,7 +45,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		const eintrag = (id !== undefined) ? this.data.klassenListeManager.liste.get(id) : null;
 		await this.data.setEintrag(eintrag);
 		if (!this.data.klassenListeManager.hasDaten()) {
-			if (to.name === this.name) {
+			if (id === undefined) {
 				const listFiltered = this.data.klassenListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;

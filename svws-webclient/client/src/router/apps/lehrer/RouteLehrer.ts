@@ -49,11 +49,11 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
-		const eintrag = (idLehrer !== undefined) ? this.data.lehrerListeManager.liste.get(idLehrer) : null;
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		const eintrag = (id !== undefined) ? this.data.lehrerListeManager.liste.get(id) : null;
 		await this.data.setLehrer(eintrag);
 		if (!this.data.lehrerListeManager.hasDaten()) {
-			if (to.name === this.name) {
+			if (id === undefined) {
 				const listFiltered = this.data.lehrerListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;
