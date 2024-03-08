@@ -188,6 +188,7 @@ export { GostKlausurenCollectionSkSkt } from './core/data/gost/klausurplanung/Go
 export { GostKlausurenCollectionSkrsKrs } from './core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 export { GostKlausurenDataCollection } from './core/data/gost/klausurplanung/GostKlausurenDataCollection';
 export { GostKlausurenKalenderinformation } from './core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
+export { GostKlausurenUpdate } from './core/data/gost/klausurplanung/GostKlausurenUpdate';
 export { GostKlausurraum } from './core/data/gost/klausurplanung/GostKlausurraum';
 export { GostKlausurraumstunde } from './core/data/gost/klausurplanung/GostKlausurraumstunde';
 export { GostKlausurtermin } from './core/data/gost/klausurplanung/GostKlausurtermin';

@@ -29,7 +29,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined && !termin().istHaupttermin" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurenCollectionSkrsKrs} from "@core";
+	import type { GostKlausurenCollectionSkrsKrs, GostKlausurenUpdate} from "@core";
 	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
@@ -54,6 +54,7 @@
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
 		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,

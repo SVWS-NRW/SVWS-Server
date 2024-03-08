@@ -12,6 +12,7 @@ import java.util.Set;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -2106,6 +2107,40 @@ public class GostKursklausurManager {
 			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.");
 		final GostKlausurtermin termin = terminBySchuelerklausurTermin(vorgaengerSkt);
 		return termin == null ? null : termin.datum;
+	}
+
+	/**
+	 * Erstellt ein GostKlausurenUpdate-Objekt für den API-Call, das beim übergebenen Gost-Klausurtermin die Nachschreiberzulassung entfernt und ggf. schon zugewiesene Schülerklausurtermine aus diesem entfernt.
+	 *
+	 * @param termin der Schülerklausurtermin
+	 *
+	 * @return das GostKlausurenUpdate-Objekt mit den zu patchenden GostSchuelerklausurTermin-Objekten und dem Gost-Klausurtermin
+	 */
+	public @NotNull GostKlausurenUpdate patchKlausurterminNachschreiberZuglassenFalse(final @NotNull GostKlausurtermin termin) {
+		GostKlausurenUpdate update = new GostKlausurenUpdate();
+		update.listKlausurtermineNachschreiberZugelassenFalse.add(termin.id);
+		for (@NotNull GostSchuelerklausurTermin skt : schuelerklausurterminNtByTermin(termin))
+			update.listSchuelerklausurTermineRemoveIdTermin.add(skt.id);
+		return update;
+	}
+
+	/**
+	 * Führt alle Attribut-Patches aller Objekte im übergeben Update-Objekt im Manager durch.
+	 *
+	 * @param update das GostKlausurenUpdate-Objekt mit den zu patchenden
+	 *
+	 */
+	public void updateExecute(final @NotNull GostKlausurenUpdate update) {
+		for (@NotNull Long sktId : update.listSchuelerklausurTermineRemoveIdTermin) {
+			@NotNull GostSchuelerklausurTermin skt = schuelerklausurterminGetByIdOrException(sktId);
+			skt.idTermin = null;
+			schuelerklausurterminPatchAttributes(skt);
+		}
+		for (@NotNull Long ktId : update.listKlausurtermineNachschreiberZugelassenFalse) {
+			@NotNull GostKlausurtermin kt = terminGetByIdOrException(ktId);
+			kt.nachschreiberZugelassen = false;
+			terminPatchAttributes(kt);
+		}
 	}
 
 }

@@ -10,6 +10,7 @@ import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { DateUtils } from '../../../../core/utils/DateUtils';
+import { GostKlausurenUpdate } from '../../../../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { KursManager } from '../../../../core/utils/KursManager';
@@ -2020,6 +2021,39 @@ export class GostKursklausurManager extends JavaObject {
 			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.")
 		const termin : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(vorgaengerSkt);
 		return termin === null ? null : termin.datum;
+	}
+
+	/**
+	 * Erstellt ein GostKlausurenUpdate-Objekt für den API-Call, das beim übergebenen Gost-Klausurtermin die Nachschreiberzulassung entfernt und ggf. schon zugewiesene Schülerklausurtermine aus diesem entfernt.
+	 *
+	 * @param termin der Schülerklausurtermin
+	 *
+	 * @return das GostKlausurenUpdate-Objekt mit den zu patchenden GostSchuelerklausurTermin-Objekten und dem Gost-Klausurtermin
+	 */
+	public patchKlausurterminNachschreiberZuglassenFalse(termin : GostKlausurtermin) : GostKlausurenUpdate {
+		let update : GostKlausurenUpdate | null = new GostKlausurenUpdate();
+		update.listKlausurtermineNachschreiberZugelassenFalse.add(termin.id);
+		for (let skt of this.schuelerklausurterminNtByTermin(termin))
+			update.listSchuelerklausurTermineRemoveIdTermin.add(skt.id);
+		return update;
+	}
+
+	/**
+	 * Führt alle Attribut-Patches aller Objekte im übergeben Update-Objekt im Manager durch.
+	 *
+	 * @param update das GostKlausurenUpdate-Objekt mit den zu patchenden
+	 */
+	public updateExecute(update : GostKlausurenUpdate) : void {
+		for (let sktId of update.listSchuelerklausurTermineRemoveIdTermin) {
+			let skt : GostSchuelerklausurTermin = this.schuelerklausurterminGetByIdOrException(sktId!);
+			skt.idTermin = null;
+			this.schuelerklausurterminPatchAttributes(skt);
+		}
+		for (let ktId of update.listKlausurtermineNachschreiberZugelassenFalse) {
+			let kt : GostKlausurtermin = this.terminGetByIdOrException(ktId!);
+			kt.nachschreiberZugelassen = false;
+			this.terminPatchAttributes(kt);
+		}
 	}
 
 	transpilerCanonicalName(): string {

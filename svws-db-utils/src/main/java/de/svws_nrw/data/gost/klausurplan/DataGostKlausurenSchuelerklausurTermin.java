@@ -212,6 +212,21 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 	}
 
 	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * Datenbank-DTO-Objekte zurück.
+	 *
+	 * @param conn    x
+	 * @param listIds die Liste der IDs der GostSchuelerklausurtermine
+	 *
+	 * @return die Liste der zugehörigen Datenbank-DTOs
+	 */
+	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsById(final DBEntityManager conn, final List<Long> listIds) {
+		if (listIds.isEmpty())
+			return new ArrayList<>();
+		return conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermine.id.multiple", listIds, DTOGostKlausurenSchuelerklausurenTermine.class);
+	}
+
+	/**
 	 * Löscht den angegebenen Gost-Schuelerklausurtermin
 	 *
 	 * @param idSkt   die ID des zu löschenden Schülerklausurtermins

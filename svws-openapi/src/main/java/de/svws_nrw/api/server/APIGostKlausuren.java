@@ -6,6 +6,7 @@ import java.util.List;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
@@ -25,6 +26,8 @@ import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurraumstunde;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenVorgabe;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -974,5 +977,43 @@ public class APIGostKlausuren {
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param schema     das Datenbankschema
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param update     das GostNachschreibterminblockungKonfiguration-Objekt
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/update")
+	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response updateGostKlausuren(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenUpdate.class))) final GostKlausurenUpdate update,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn ->  {
+			List<DTOGostKlausurenSchuelerklausurenTermine> list =  DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurterminDTOsById(conn, update.listSchuelerklausurTermineRemoveIdTermin);
+			for (DTOGostKlausurenSchuelerklausurenTermine skt : list) {
+					skt.Termin_ID = null;
+			}
+			conn.transactionPersistAll(list);
+			List<DTOGostKlausurenTermine> listTermine =  DataGostKlausurenTermin.getKlausurterminDTOsZuIds(conn, update.listKlausurtermineNachschreiberZugelassenFalse);
+			for (DTOGostKlausurenTermine ts : listTermine) {
+					ts.NachschreiberZugelassen = false;
+			}
+			conn.transactionPersistAll(listTermine);
+			return Response.status(Status.NO_CONTENT).build();
+		},
+		request,
+		ServerMode.STABLE,
+		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+	}
+
 
 }

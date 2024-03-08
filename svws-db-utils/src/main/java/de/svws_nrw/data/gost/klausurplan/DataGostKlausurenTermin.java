@@ -174,10 +174,21 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @return der Klausurtermin
 	 */
 	public static List<GostKlausurtermin> getKlausurtermineZuIds(final DBEntityManager conn, final List<Long> listIds) {
+		return getKlausurterminDTOsZuIds(conn, listIds).stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+	}
+
+	/**
+	 * Gibt die Klausurtermin-DTOs zur übergebenen ID-Liste zurück oder eine Exception, falls er nicht in der DB vorhanden ist.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param listIds	 die Liste von IDs der Klausurtermine
+	 *
+	 * @return der Klausurtermin
+	 */
+	public static List<DTOGostKlausurenTermine> getKlausurterminDTOsZuIds(final DBEntityManager conn, final List<Long> listIds) {
 		if (listIds.isEmpty())
 			return new ArrayList<>();
-		final List<DTOGostKlausurenTermine> termine = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", listIds, DTOGostKlausurenTermine.class);
-		return termine.stream().map(DataGostKlausurenTermin.dtoMapper::apply).toList();
+		return conn.queryNamed("DTOGostKlausurenTermine.id.multiple", listIds, DTOGostKlausurenTermine.class);
 	}
 
 

@@ -1,5 +1,5 @@
 
-import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration} from "@core";
+import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate} from "@core";
 import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
@@ -454,6 +454,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		this.kursklausurmanager.terminAddAll(blockungDaten.termine);
 		for (const skt of blockungDaten.schuelerklausurtermine)
 			this.kursklausurmanager.schuelerklausurterminPatchAttributes(skt);
+		this.commit();
+		api.status.stop();
+	}
+
+	updateKlausurblockung = async (update: GostKlausurenUpdate) => {
+		api.status.start();
+		await api.server.updateGostKlausuren(update, api.schema);
+		this.kursklausurmanager.updateExecute(update);
 		this.commit();
 		api.status.stop();
 	}

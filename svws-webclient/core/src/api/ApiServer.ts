@@ -58,6 +58,7 @@ import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { GostKlausurenCollectionSkSkt } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkSkt';
 import { GostKlausurenDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenDataCollection';
+import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
 import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
@@ -5472,6 +5473,28 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurtermin.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateGostKlausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/update
+	 *
+	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostKlausurenUpdate} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async updateGostKlausuren(data : GostKlausurenUpdate, schema : string) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/update"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = GostKlausurenUpdate.transpilerToJSON(data);
+		await super.postJSON(path, body);
+		return;
 	}
 
 
