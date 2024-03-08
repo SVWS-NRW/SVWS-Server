@@ -1,13 +1,15 @@
-import type { BenutzerDaten } from "@core";
+import { BenutzerEMailDaten, type BenutzerDaten } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 
 interface RouteStateBenutzerprofil extends RouteStateInterface {
+	benutzerEMailDaten: BenutzerEMailDaten;
 }
 
 const defaultState = <RouteStateBenutzerprofil> {
+	benutzerEMailDaten: new BenutzerEMailDaten(),
 };
 
 export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil> {
@@ -18,6 +20,10 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 
 	public get benutzer(): BenutzerDaten {
 		return api.benutzerdaten;
+	}
+
+	public get benutzerEMailDaten(): BenutzerEMailDaten {
+		return this._state.value.benutzerEMailDaten;
 	}
 
 	get backticks(): boolean {
@@ -43,5 +49,14 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 		} catch (e) {
 			return false;
 		}
+	}
+
+	public patchBenutzerEMailDaten = async (data: Partial<BenutzerEMailDaten>) => {
+		await api.server.patchBenutzerEmailDaten(data, api.schema);
+	}
+
+	public async ladeDaten() {
+		const benutzerEMailDaten = await api.server.getBenutzerEmailDaten(api.schema);
+		this.setPatchedState({benutzerEMailDaten});
 	}
 }

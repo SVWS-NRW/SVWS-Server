@@ -27,6 +27,9 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		if (this.data.benutzerEMailDaten.id !== id)
+			this.data.ladeDaten();
 	}
 
 	public getRoute() : RouteLocationRaw {
@@ -37,6 +40,8 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 		return {
 			benutzer: this.data.benutzer,
 			patch: this.data.patch,
+			benutzerEMailDaten: this.data.benutzerEMailDaten,
+			patchBenutzerEMailDaten: this.data.patchBenutzerEMailDaten,
 			patchPasswort: this.data.patchPasswort,
 			backticks: () => this.data.backticks,
 			setBackticks: this.data.setBackticks,
