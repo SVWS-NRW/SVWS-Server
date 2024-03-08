@@ -573,6 +573,11 @@ export class KursblockungDynSchueler extends JavaObject {
 					fachart1.regel_schueler_verbieten_mit_schueler(this.internalID, that.internalID);
 	}
 
+	regel16_sperre() : void {
+		for (let i : number = 0; i < this.schieneBelegt.length; i++)
+			this.schieneBelegt[i] = true;
+	}
+
 	private aktionZustandLaden(wahl : Array<KursblockungDynKurs | null>) : void {
 		this.aktionKurseAlleEntfernen();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {

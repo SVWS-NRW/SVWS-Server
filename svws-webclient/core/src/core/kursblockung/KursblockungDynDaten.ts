@@ -140,6 +140,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
 		this.schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
 		this.schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
+		this.schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -767,6 +768,14 @@ export class KursblockungDynDaten extends JavaObject {
 			const maxSuS : number = regel15.parameter.get(1)!;
 			const kurs : KursblockungDynKurs = this.gibKurs(idKurs);
 			kurs.setzeMaxSuS(maxSuS);
+		}
+	}
+
+	private schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN() : void {
+		for (const regel16 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			const idSchueler : number = regel16.parameter.get(0).valueOf();
+			const schueler : KursblockungDynSchueler = this.gibSchueler(idSchueler);
+			schueler.regel16_sperre();
 		}
 	}
 
