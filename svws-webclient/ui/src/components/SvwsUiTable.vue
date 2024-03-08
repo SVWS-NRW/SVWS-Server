@@ -98,7 +98,7 @@
 		</div>
 		<div class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
 			<slot name="body" :rows="sortedRows">
-				<div v-if="noDataCalculated" class="svws-ui-tr" role="row">
+				<div v-if="noDataCalculated && noData" class="svws-ui-tr" role="row">
 					<div class="col-span-full svws-no-data-text svws-ui-td" role="cell">
 						<span class="py-2 font-normal">
 							<slot name="noData">{{ noDataText }}</slot>

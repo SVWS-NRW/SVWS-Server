@@ -1,10 +1,8 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="regelnFilter" :no-data="false" :columns="cols ? [{key: 'information', label: ' ', fixedWidth: 2}, ...cols, {key: 'entfernen', label: ' ', fixedWidth: 2}] : [{key: 'regel'}, {key: 'entfernen', label: ' ', fixedWidth: 3.25}]" scroll clickable :class="{'mb-10': modelValue?.typ === regelTyp.typ && !disabled}">
-			<template #header v-if="cols === undefined">
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td col-span-full" role="columnheader">{{ regelTyp.bezeichnung }}</div>
-				</div>
+		<svws-ui-table :items="regelnFilter" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
+			<template #header(entfernen)>
+				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
 				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
@@ -38,20 +36,17 @@
 					</div>
 				</div>
 			</template>
-			<template #actions>
-				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
-			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { ComputedRef} from "vue";
+	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager , GostBlockungRegel } from "@core";
+	import type { GostBlockungsergebnisManager, GostBlockungRegel } from "@core";
 	import { GostKursblockungRegelTyp } from "@core";
 
 	type DataTableColumnSource = DataTableColumn | string
@@ -61,7 +56,7 @@
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
 		regeln: Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>>;
-		cols?: DataTableColumnSource[];
+		columns: DataTableColumnSource[];
 		disabled: boolean;
 		regelEntfernen: (regel: GostBlockungRegel) => Promise<void>;
 		regelSpeichern: () => Promise<void>;
