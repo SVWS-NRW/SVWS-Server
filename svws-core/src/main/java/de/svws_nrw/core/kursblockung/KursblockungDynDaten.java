@@ -153,6 +153,8 @@ public class KursblockungDynDaten {
 
 		schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 
+		schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+
 		// Zustände Speichern
 		aktionZustandSpeichernS();
 		aktionZustandSpeichernK();
@@ -910,16 +912,21 @@ public class KursblockungDynDaten {
 	}
 
 	private void schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {
-		// Problematisch sind hier im Kurs fixierte SuS. Diese werden im Nachhinein hineingesetzt, falls dies nicht im Algorithmus
-		// geschehen ist. Dadurch kann ganz am Ende die Kurs-Obergrenze überschritten werden. Man kann aber nicht vorher auch nicht
-		// "maxSuS" um die fixierten reduzieren, da diese meistens auch einen Platz im Kurs finden.
-
 		for (final @NotNull GostBlockungRegel regel15 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
 			final long idKurs = regel15.parameter.get(0);
 			final int maxSuS = regel15.parameter.get(1).intValue();
 
 			final @NotNull KursblockungDynKurs kurs = gibKurs(idKurs);
 			kurs.setzeMaxSuS(maxSuS);
+		}
+	}
+
+	private void schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN() {
+		for (final @NotNull GostBlockungRegel regel16 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			final long idSchueler = regel16.parameter.get(0);
+
+			final @NotNull KursblockungDynSchueler schueler = gibSchueler(idSchueler);
+			schueler.regel16_sperre();
 		}
 	}
 

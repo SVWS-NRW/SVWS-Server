@@ -671,6 +671,11 @@ public class KursblockungDynSchueler {
 					fachart1.regel_schueler_verbieten_mit_schueler(this.internalID, that.internalID);
 	}
 
+	void regel16_sperre() {
+		for (int i = 0; i < schieneBelegt.length; i++)
+			schieneBelegt[i] = true;
+	}
+
 	private void aktionZustandLaden(final @NotNull KursblockungDynKurs[] wahl) {
 		aktionKurseAlleEntfernen();
 
