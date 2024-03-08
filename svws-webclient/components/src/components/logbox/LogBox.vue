@@ -1,20 +1,28 @@
 <template>
-	<div v-if="logs != null" class="w-full overflow-x-auto" :class="hfull ? ['h-full','overflow-y-hidden'] : ['mt-4', 'h-84']">
-		<div :class="{ 'text-error': status === false, 'text-success': status === true }">
-			<span class="flex mb-4 text-headline-md gap-4">
-				<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-1" />
-				<i-ri-alert-line v-else-if="(status === false)" class="mr-1" />
-				<svws-ui-button v-if="log !== undefined" type="transparent" @click="copyToClipboard" class="pb-2">
-					<span>Log Kopieren</span>
-					<i-ri-clipboard-line v-if="copied === null" />
-					<i-ri-error-warning-fill v-else-if="copied === false" />
-					<i-ri-check-line v-else class="text-success" />
+	<div v-if="logs != null" class="w-full overflow-x-auto" :class="hfull ? ['h-full','overflow-y-hidden'] : ['mt-4', 'max-h-[24rem]']">
+		<div>
+			<span class="flex mb-2 text-headline-md gap-1 items-center">
+				<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-3 text-success" />
+				<i-ri-alert-fill v-else-if="(status === false)" class="mr-3 text-error" />
+				<svws-ui-button v-if="log !== undefined" type="transparent" @click="copyToClipboard">
+					<template v-if="copied === null">
+						<i-ri-clipboard-line />
+						<span>Log kopieren</span>
+					</template>
+					<template v-else-if="copied === false">
+						<span>Kopieren fehlgeschlagen</span>
+						<i-ri-error-warning-fill />
+					</template>
+					<template v-else>
+						<span>Log kopiert</span>
+						<i-ri-check-line class="text-success" />
+					</template>
 				</svws-ui-button>
+				<slot name="button" />
 			</span>
 		</div>
-		<div :class="hfull ? ['h-full', 'overflow-y-auto'] : []">
-			<pre v-if="(status !== undefined)">{{ log }}</pre>
-			<div class="pt-4" />
+		<div class="bg-black text-white rounded-xl overflow-hidden" :class="hfull ? ['h-full'] : []">
+			<pre class="overflow-auto py-2 px-3" v-if="(status !== undefined)">{{ log }}</pre>
 		</div>
 	</div>
 </template>

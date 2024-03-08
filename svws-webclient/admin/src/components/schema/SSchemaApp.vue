@@ -1,6 +1,6 @@
 <template>
 	<div v-if="auswahl !== undefined" class="page--flex">
-		<header class="svws-ui-header">
+		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
 				<div class="svws-headline-wrapper flex-1">
 					<h2 class="svws-headline">
@@ -12,7 +12,7 @@
 					</span>
 				</div>
 				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3 text-balance">
-					<span><i-ri-school-line class="inline" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span> {{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
+					<span><i-ri-school-line class="inline relative -top-0.5 opacity-75" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span><br>{{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
