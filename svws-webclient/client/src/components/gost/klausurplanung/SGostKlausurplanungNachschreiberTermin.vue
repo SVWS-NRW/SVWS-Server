@@ -7,6 +7,7 @@
 			:on-drag="onDrag"
 			:show-kursschiene="true"
 			:klausur-css-classes="klausurCssClasses"
+			:patch-klausur="patchKlausur"
 			:show-schuelerklausuren="showSchuelerklausuren">
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
@@ -36,6 +37,7 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { GostKlausurenCollectionSkrsKrs} from "@core";
 	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
@@ -51,6 +53,7 @@
 		draggable: (data: GostKlausurplanungDragData) => boolean;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,

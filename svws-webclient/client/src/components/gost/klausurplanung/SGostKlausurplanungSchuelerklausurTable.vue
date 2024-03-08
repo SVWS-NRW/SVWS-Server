@@ -34,15 +34,19 @@
 				</div>
 				<div class="svws-ui-td svws-align-left" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</div>
 				<div class="svws-ui-td svws-align-center" role="cell">{{ kMan().vorgabeBySchuelerklausurTermin(schuelertermin).dauer }}</div>
+				<div class="svws-ui-td svws-align-center" role="cell">
+					<slot name="actions">
+						<svws-ui-button v-if="patchKlausur !== undefined" type="icon" size="small" class="-mr-1" @click="patchKlausur(schuelertermin, {idTermin: null});$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+					</slot>
+				</div>
 			</div>
 		</template>
 	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
-
 	import { DateUtils } from "@core";
-	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet } from "@core";
+	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrs } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import { computed} from "vue";
@@ -54,11 +58,13 @@
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>(), {
 		onDrag: undefined,
 		draggable: () => false,
 		onDrop: undefined,
 		selectedItems: undefined,
+		patchKlausur: undefined,
 	});
 
 
@@ -70,6 +76,7 @@
 			{ key: "datum", label: "Datum", fixedWidth: 8 },
 			{ key: "kuerzel", label: "Lehrkraft", fixedWidth: 4},
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", fixedWidth: 3},
+			{ key: "actions", label: "Aktionen", span: 0.5, align: "right", fixedWidth: 3},
 		];
 
 		return cols;

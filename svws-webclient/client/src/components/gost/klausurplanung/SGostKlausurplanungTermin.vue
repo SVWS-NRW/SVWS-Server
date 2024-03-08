@@ -87,7 +87,8 @@
 						<s-gost-klausurplanung-schuelerklausur-table :schuelerklausuren="schuelerklausurtermine()"
 							:k-man="kMan"
 							:on-drag="onDrag"
-							:draggable="draggable" />
+							:draggable="draggable"
+							:patch-klausur="patchKlausur" />
 					</slot>
 					<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
@@ -107,7 +108,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin} from "@core";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrs} from "@core";
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
@@ -128,6 +129,7 @@
 		showKursschiene? : boolean;
 		showLastKlausurtermin? : boolean;
 		showSchuelerklausuren?: boolean;
+		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>(), {
 		klausurCssClasses: undefined,
 		onDrag: undefined,
@@ -135,6 +137,7 @@
 		//onDrop: undefined,
 		quartalsauswahl: undefined,
 		showSchuelerklausuren: false,
+		patchKlausur: undefined,
 	});
 
 	const kursklausuren = () => props.kMan().kursklausurGetMengeByTerminid(props.termin.id);

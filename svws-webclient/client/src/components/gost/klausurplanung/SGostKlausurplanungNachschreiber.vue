@@ -100,6 +100,7 @@
 						:loesche-klausurtermine="loescheKlausurtermine"
 						:patch-klausurtermin="patchKlausurtermin"
 						:klausur-css-classes="klausurCssClasses"
+						:patch-klausur="patchKlausur"
 						:show-schuelerklausuren="true" />
 				</template>
 				<template v-else>
