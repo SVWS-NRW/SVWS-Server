@@ -9,7 +9,7 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :default-action="dropdownDefault" :disabled="apiStatus.pending">
+			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :disabled="apiStatus.pending">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-printer-line v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
@@ -159,9 +159,9 @@
 		];
 	});
 
-	const dropdownDefault = computed(() => {
-		return { text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false) };
-	});
+	// const dropdownDefault = computed(() => {
+	// 	return { text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false) };
+	// });
 
 	async function downloadPDF(title: string, detaillevel: number, einzelpdfs: boolean) {
 		const list = new ArrayList<number>();
