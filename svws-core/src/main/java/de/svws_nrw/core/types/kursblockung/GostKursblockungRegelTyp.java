@@ -24,8 +24,8 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
  * <br>
  * <br> Aktive Anpassung
- * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
- * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       -->
+ * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> DONE
+ * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       --> DONE
  */
 public enum GostKursblockungRegelTyp {
 

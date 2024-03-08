@@ -382,9 +382,13 @@ public class GostBlockungsergebnisManager {
 						stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID, kursOld.id);
 			}
 
-
-		// TODO ... hier WUNSCH SCHÜLER IGNORIEREN---> Malus--
-
+		// Wenn ein Schüler ignoriert werden soll, dann bewerte nicht zugeordnete Kurse als zugeordnet.
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			final long idSchueler = regel.parameter.get(0);
+			for (@NotNull final GostFachwahl gFachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler))
+				if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) == null)
+					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
+		}
 
 		// _fachartmenge_sortiert erzeugen.
 		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());

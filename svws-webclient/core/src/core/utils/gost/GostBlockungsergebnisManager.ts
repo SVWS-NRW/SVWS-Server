@@ -410,6 +410,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					for (const schuelerID of kursOld.schueler)
 						this.stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID!, kursOld.id);
 			}
+		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			const idSchueler : number = regel.parameter.get(0).valueOf();
+			for (const gFachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler))
+				if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) === null)
+					this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
+		}
 		this._fachartmenge_sortiert.addAll(this._map_fachartID_kurse.keySet());
 		this.stateRegelvalidierung();
 	}
