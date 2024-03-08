@@ -4824,6 +4824,29 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
+	 * <br>(1) Wenn diese Regel existiert, wird sie entfernt.
+	 *
+	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemove_16_SCHUELER_IGNORIEREN(final @NotNull Set<@NotNull Long> setSchuelerID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : setSchuelerID) {
+			final @NotNull LongArrayKey keySchuelerIgnorieren = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler});
+			final GostBlockungRegel regelSchuelerIgnorieren = _parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
+
+			// (1)
+			if (regelSchuelerIgnorieren != null)
+				u.listEntfernen.add(regelSchuelerIgnorieren);
+		}
+
+		return u;
+	}
+
+	/**
 	 * Entfernt erst alle Regeln aus {@link GostBlockungRegelUpdate#listEntfernen} und
 	 * fügt dann die neuen Regeln aus {@link GostBlockungRegelUpdate#listHinzuzufuegen} hinzu.
 	 *

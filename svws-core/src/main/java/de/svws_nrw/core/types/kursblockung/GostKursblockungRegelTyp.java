@@ -21,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
  * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE
+ * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
  * <br>
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
