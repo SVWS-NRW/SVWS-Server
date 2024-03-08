@@ -1,7 +1,9 @@
 package de.svws_nrw.core.utils;
 
+import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -45,5 +47,39 @@ public final class DTOUtils {
         z.idSchiene = idSchiene;
         return z;
     }
+
+    /**
+     * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau einem Parameter.
+     *
+     * @param typ     Der {@link GostKursblockungRegelTyp}.
+     * @param param1  Der 1. Parameter.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau einem Parameter.
+     */
+	public static @NotNull GostBlockungRegel newGostBlockungRegel1(final int typ, final long param1) {
+		final @NotNull GostBlockungRegel r = new GostBlockungRegel();
+		r.id = -1;
+		r.typ = typ;
+		r.parameter.add(param1);
+		return r;
+	}
+
+    /**
+     * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau zwei Parametern.
+     *
+     * @param typ     Der {@link GostKursblockungRegelTyp}.
+     * @param param1  Der 1. Parameter.
+     * @param param2  Der 2. Parameter.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau zwei Parametern.
+     */
+	public static @NotNull GostBlockungRegel newGostBlockungRegel2(final int typ, final long param1, final long param2) {
+		final @NotNull GostBlockungRegel r = new GostBlockungRegel();
+		r.id = -1;
+		r.typ = typ;
+		r.parameter.add(param1);
+		r.parameter.add(param2);
+		return r;
+	}
 
 }

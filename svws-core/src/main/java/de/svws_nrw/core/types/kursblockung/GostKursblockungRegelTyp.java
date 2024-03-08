@@ -199,9 +199,10 @@ public enum GostKursblockungRegelTyp {
 	)),
 
 	/**
-	 * Der Regel-Typ zum forcieren, dass ein Schüler niemals (falls möglich) mit einem anderen Schüler zusammen ist.
-	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
-	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 * Der Regel-Typ zum forcieren, dass ein Schüler beim Blocken nicht auf Kurse verteilt wird,
+	 * also ignoriert wird. Ebenfalls beachtet der Manager, dass nicht erhaltene Fachwahlen nicht
+	 * negativ in die Bewertung einfließen.
+	 * <br>- Parameter A: Datenbank-ID des Schülers (long)
 	 */
 	SCHUELER_IGNORIEREN(16, "Schüler: Ignorieren", Arrays.asList(
 		GostKursblockungRegelParameterTyp.SCHUELER_ID

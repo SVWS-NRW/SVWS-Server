@@ -141,9 +141,10 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	public static readonly KURS_MAXIMALE_SCHUELERANZAHL : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MAXIMALE_SCHUELERANZAHL", 15, 15, "Kurs: Maximale Schüleranzahl", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
-	 *  Der Regel-Typ zum forcieren, dass ein Schüler niemals (falls möglich) mit einem anderen Schüler zusammen ist.
-	 *  <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
-	 *  <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 *  Der Regel-Typ zum forcieren, dass ein Schüler beim Blocken nicht auf Kurse verteilt wird,
+	 *  also ignoriert wird. Ebenfalls beachtet der Manager, dass nicht erhaltene Fachwahlen nicht
+	 *  negativ in die Bewertung einfließen.
+	 *  <br>- Parameter A: Datenbank-ID des Schülers (long)
 	 */
 	public static readonly SCHUELER_IGNORIEREN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_IGNORIEREN", 16, 16, "Schüler: Ignorieren", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID));
 

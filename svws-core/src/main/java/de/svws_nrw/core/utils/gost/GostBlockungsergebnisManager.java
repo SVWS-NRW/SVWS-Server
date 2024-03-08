@@ -4794,13 +4794,30 @@ public class GostBlockungsergebnisManager {
 				u.listEntfernen.add(rAlt);
 
 		// (2)
-		if ((anzahl >= 0) && (anzahl <= 99)) {
-			final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-			rNeu.id = -1;
-			rNeu.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
-			rNeu.parameter.add(idKurs);
-			rNeu.parameter.add((long) anzahl);
-			u.listHinzuzufuegen.add(rNeu);
+		if ((anzahl >= 0) && (anzahl <= 99))
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl));
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
+	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
+	 *
+	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_16_SCHUELER_IGNORIEREN(final @NotNull Set<@NotNull Long> setSchuelerID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : setSchuelerID) {
+			final @NotNull LongArrayKey keySchuelerIgnorieren = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler});
+			final GostBlockungRegel regelSchuelerIgnorieren = _parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
+
+			// (1)
+			if (regelSchuelerIgnorieren == null)
+				u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler));
 		}
 
 		return u;

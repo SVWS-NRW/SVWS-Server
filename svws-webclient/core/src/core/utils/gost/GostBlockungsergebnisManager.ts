@@ -4373,13 +4373,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const rAlt of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
 			if (idKurs === rAlt.parameter.get(0))
 				u.listEntfernen.add(rAlt);
-		if ((anzahl >= 0) && (anzahl <= 99)) {
-			const rNeu : GostBlockungRegel = new GostBlockungRegel();
-			rNeu.id = -1;
-			rNeu.typ = GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ;
-			rNeu.parameter.add(idKurs);
-			rNeu.parameter.add(anzahl as number);
-			u.listHinzuzufuegen.add(rNeu);
+		if ((anzahl >= 0) && (anzahl <= 99))
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
+	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
+	 *
+	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
+	 */
+	public regelupdateCreate_16_SCHUELER_IGNORIEREN(setSchuelerID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const idSchueler of setSchuelerID) {
+			const keySchuelerIgnorieren : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler]);
+			const regelSchuelerIgnorieren : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
+			if (regelSchuelerIgnorieren === null)
+				u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler));
 		}
 		return u;
 	}
