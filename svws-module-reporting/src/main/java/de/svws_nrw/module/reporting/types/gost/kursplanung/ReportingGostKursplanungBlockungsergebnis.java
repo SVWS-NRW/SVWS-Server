@@ -4,7 +4,9 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungBlockungsergebnis.</p>
@@ -35,6 +37,9 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	/** Bezeichnung des Blockungsergebnisses */
 	private String bezeichnung;
 
+	/** Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID */
+	private Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik = new HashMap<>();
+
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
 	private GostHalbjahr gostHalbjahr;
 
@@ -61,13 +66,14 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * @param anzahlSchienen Anzahl der Schienen
 	 * @param anzahlSchueler Anzahl der Schüler im Ergebnis
 	 * @param bezeichnung Bezeichnung des Blockungsergebnisses
+	 * @param fachwahlstatistik Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
 	 * @param gostHalbjahr Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
 	 * @param id ID des Blockungsergebnisses
 	 * @param kurse Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
 	 * @param schienen Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
 	 * @param schueler Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
 	 */
-	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung, final GostHalbjahr gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung, final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
 		this.abiturjahr = abiturjahr;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
@@ -75,6 +81,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 		this.anzahlSchienen = anzahlSchienen;
 		this.anzahlSchueler = anzahlSchueler;
 		this.bezeichnung = bezeichnung;
+		this.fachwahlstatistik = fachwahlstatistik;
 		this.gostHalbjahr = gostHalbjahr;
 		this.id = id;
 		this.kurse = kurse;
@@ -179,6 +186,22 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 */
 	public void setAnzahlSchueler(final int anzahlSchueler) {
 		this.anzahlSchueler = anzahlSchueler;
+	}
+
+	/**
+	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 * @return Inhalt des Feldes fachwahlstatistik
+	 */
+	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
+		return fachwahlstatistik;
+	}
+
+	/**
+	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID wird gesetzt.
+	 * @param fachwahlstatistik Neuer Wert für das Feld fachwahlstatistik
+	 */
+	public void setFachwahlstatistik(final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik) {
+		this.fachwahlstatistik = fachwahlstatistik;
 	}
 
 	/**

@@ -3,11 +3,13 @@ package de.svws_nrw.module.reporting.proxytypes.gost.kursplanung;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
+import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
@@ -17,6 +19,7 @@ import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungFachwahlstatistik;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungSchiene;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -28,6 +31,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -94,7 +98,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * @param id 					Die ID des Blockungsergebnisses aus der Kursplanung der gymnasialen Oberstufe.
 	*/
 	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final long id) {
-		super(0, 0, 0, 0, 0, 0, "", null, id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		super(0, 0, 0, 0, 0, 0, "", null, null, id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		this.reportingRepository = reportingRepository;
 
 		// Initialisiere das Blockungsergebnis und dessen Manager.
@@ -235,6 +239,30 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	public ReportingRepository reportingRepositorySchule() {
 		return reportingRepository;
+	}
+
+
+	/**
+	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 * @return Map mit den Fachwahlstatistiken
+	 */
+	@Override
+	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
+		if (super.fachwahlstatistik() == null || super.fachwahlstatistik().isEmpty()) {
+			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
+			// Lese die Daten des Abiturjahrgangs aus.
+			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
+			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
+				mapFachwahlStatistik.putAll(
+					gostFachwahlenStatistik.stream().collect(
+						Collectors.toMap(
+							f -> f.id,
+							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this, f))));
+			}
+			super.setFachwahlstatistik(mapFachwahlStatistik);
+		}
+		return super.fachwahlstatistik();
 	}
 
 	/**
