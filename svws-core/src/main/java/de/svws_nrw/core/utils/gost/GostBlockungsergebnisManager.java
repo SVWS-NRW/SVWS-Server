@@ -382,6 +382,10 @@ public class GostBlockungsergebnisManager {
 						stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID, kursOld.id);
 			}
 
+
+		// TODO ... hier WUNSCH SCHÜLER IGNORIEREN---> Malus--
+
+
 		// _fachartmenge_sortiert erzeugen.
 		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());
 
@@ -444,6 +448,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
 			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, _map_regelID_verletzungen);
+
+		// stateRegelvalidierung16 ist nicht nötig
 
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
 		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15};

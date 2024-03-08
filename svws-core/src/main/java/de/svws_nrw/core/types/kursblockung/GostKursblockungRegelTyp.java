@@ -17,14 +17,14 @@ import jakarta.validation.constraints.NotNull;
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
  * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE for Issue #1483, #1496
- * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE for Issue #1483, #1496
- * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE for Issue #1483, #1496
- * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE for Issue #1483, #1496
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
+ * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
+ * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
+ * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE
  * <br>
  * <br> Aktive Anpassung
- * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> TODO for Issue #1483
- * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       --> TODO for Issue #1483
+ * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
+ * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       -->
  */
 public enum GostKursblockungRegelTyp {
 
@@ -196,6 +196,15 @@ public enum GostKursblockungRegelTyp {
 	KURS_MAXIMALE_SCHUELERANZAHL(15, "Kurs: Maximale Schüleranzahl", Arrays.asList(
 		GostKursblockungRegelParameterTyp.KURS_ID,
 		GostKursblockungRegelParameterTyp.GANZZAHL
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass ein Schüler niemals (falls möglich) mit einem anderen Schüler zusammen ist.
+	 * <br>- Parameter A: Datenbank-ID des 1. Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des 2. Schülers (long)
+	 */
+	SCHUELER_IGNORIEREN(16, "Schüler: Ignorieren", Arrays.asList(
+		GostKursblockungRegelParameterTyp.SCHUELER_ID
 	));
 
 	/** Die ID des Regel-Typs */
