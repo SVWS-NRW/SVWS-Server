@@ -573,6 +573,9 @@ export class KursblockungDynSchueler extends JavaObject {
 					fachart1.regel_schueler_verbieten_mit_schueler(this.internalID, that.internalID);
 	}
 
+	/**
+	 * Wendet an, dasss der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
+	 */
 	regel16_sperre() : void {
 		for (let i : number = 0; i < this.schieneBelegt.length; i++)
 			this.schieneBelegt[i] = true;

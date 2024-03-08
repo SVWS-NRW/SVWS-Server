@@ -671,6 +671,9 @@ public class KursblockungDynSchueler {
 					fachart1.regel_schueler_verbieten_mit_schueler(this.internalID, that.internalID);
 	}
 
+	/**
+	 * Wendet an, dasss der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
+	 */
 	void regel16_sperre() {
 		for (int i = 0; i < schieneBelegt.length; i++)
 			schieneBelegt[i] = true;
