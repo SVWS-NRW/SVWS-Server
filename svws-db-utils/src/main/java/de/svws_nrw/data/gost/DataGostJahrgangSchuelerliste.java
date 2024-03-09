@@ -56,16 +56,19 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		return DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abijahrgang);
 	}
 
-
-	@Override
-	public Response getAll() {
+	/**
+	 * Ermittelt die Schüler des Abiturjahrgangs
+	 *
+	 * @return die Liste der Schüler
+	 */
+	public List<SchuelerListeEintrag> getAllSchueler() {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
 		if (schuelerListe.isEmpty()) {
 			final List<SchuelerListeEintrag> daten = new ArrayList<>();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			return daten;
 		}
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();
 
@@ -86,7 +89,14 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
         		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
         		.sorted(DataSchuelerliste.dataComparator)
     	    	.toList();
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
+    	return daten;
+	}
+
+
+	@Override
+	public Response getAll() {
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getAllSchueler()).build();
 	}
 
 	@Override

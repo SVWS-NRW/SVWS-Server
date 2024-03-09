@@ -58,6 +58,7 @@ import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { GostKlausurenCollectionSkSkt } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkSkt';
 import { GostKlausurenDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenDataCollection';
+import { GostKlausurenMetaDataCollection } from '../core/data/gost/klausurplanung/GostKlausurenMetaDataCollection';
 import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
@@ -4827,6 +4828,36 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenDataCollection.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenMetaCollectionOberstufe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Schuelerklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenMetaDataCollection
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Schuelerklausuren.
+	 */
+	public async getGostKlausurenMetaCollectionOberstufe(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenMetaDataCollection> {
+		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostKlausurenMetaDataCollection.transpilerFromJSON(text);
 	}
 
 

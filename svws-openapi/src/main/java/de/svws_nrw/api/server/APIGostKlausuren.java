@@ -6,6 +6,7 @@ import java.util.List;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkSkt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenDataCollection;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenMetaDataCollection;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
@@ -19,6 +20,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenKursklausur;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausur;
@@ -504,6 +506,35 @@ public class APIGostKlausuren {
 	public Response getGostKlausurenCollection(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.getKlausurDataCollection(conn, abiturjahr, halbjahr, false)).build(),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Schuelerklausuren zu einem Klausurtermin.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+
+	 *
+	 * @return die Liste der Gost-SchuelerklausurenTermine
+	 */
+	@GET
+	@Path("/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
+	@Operation(summary = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus.", description = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Schuelerklausuren.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenMetaDataCollection.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getGostKlausurenMetaCollectionOberstufe(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausuren.getAllData(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr))).build(),
 			request,
 			ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
