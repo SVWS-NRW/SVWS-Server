@@ -15,7 +15,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<svws-ui-router-tab-bar :routes="[ tab ]" :hidden="[ false ]" :model-value="tab">
-			<s-schule-stammdaten :schule="schule" :patch="patch" :benutzer-kompetenzen="benutzerKompetenzen" :benutzer-ist-admin="benutzerIstAdmin" />
+			<s-schule-stammdaten :schule="schule" :patch="patch" :smpt-server-konfiguration="smptServerKonfiguration" :patch-s-m-t-p-server-konfiguration="patchSMTPServerKonfiguration" :benutzer-kompetenzen="benutzerKompetenzen" :benutzer-ist-admin="benutzerIstAdmin" />
 			<div class="app--content--placeholder flex flex-col items-center">
 				<i-ri-school-line />
 			</div>

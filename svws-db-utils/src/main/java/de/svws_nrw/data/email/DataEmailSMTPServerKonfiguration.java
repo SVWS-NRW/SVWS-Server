@@ -40,7 +40,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
     	daten.id = dto.ID;
     	daten.host = dto.SMTPServer;
     	daten.port = dto.SMTPPort;
-    	daten.useStartTLS = dto.SMTPUseTLS;
+    	daten.useStartTLS = dto.SMTPStartTLS;
     	daten.useTLS = dto.SMTPUseTLS;
     	daten.trustTLSHost = dto.SMTPTrustTLSHost;
 		return daten;

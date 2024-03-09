@@ -25,7 +25,11 @@
 		<!-- TODO Dauer der Unterrichtseinheiten -->
 		<svws-ui-content-card v-if="showSchuldaten" title="E-Mail-Server">
 			<svws-ui-input-wrapper :grid="2">
-				Hier werden zukünftig die Informationen für den SMTP-Server der Schule verwaltet
+				<svws-ui-text-input placeholder="SMTP-Host" :model-value="smptServerKonfiguration().host" @change="host => patchSMTPServerKonfiguration({ host })" type="text" :disabled="!editSchuldaten" />
+				<svws-ui-input-number placeholder="Port" :model-value="smptServerKonfiguration().port" @change="port => (port !== null) && (port !== undefined) && patchSMTPServerKonfiguration({ port })" />
+				<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useStartTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useStartTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze StartTLS</svws-ui-checkbox>
+				<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze TLS</svws-ui-checkbox>
+				<svws-ui-text-input placeholder="Trust TLS Host" :model-value="smptServerKonfiguration().trustTLSHost" @change="trustTLSHost => patchSMTPServerKonfiguration({ trustTLSHost })" type="text" :disabled="!editSchuldaten || !smptServerKonfiguration().useTLS" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

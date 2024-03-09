@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { BenutzerKompetenzGruppe, List} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -43,6 +43,14 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.defaultChild = undefined;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		await this.data.ladeDaten();
+	}
+
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await this.data.entferneDaten();
+	}
+
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { }};
 	}
@@ -51,6 +59,8 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		return {
 			schule: () => api.schuleStammdaten,
 			patch: this.data.patch,
+			smptServerKonfiguration: () => this.data.smtpServerKonfiguration,
+			patchSMTPServerKonfiguration: this.data.patchSMTServerKonfiguration,
 			benutzerIstAdmin: api.benutzerIstAdmin,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
