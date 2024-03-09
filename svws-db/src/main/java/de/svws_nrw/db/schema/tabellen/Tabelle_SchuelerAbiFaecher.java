@@ -14,6 +14,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -339,6 +340,11 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
+
+	/** Die Definition des Non-Unique-Index SchuelerAbiFaecher_IDX_Schueler_ID */
+	public SchemaTabelleIndex index_SchuelerAbiFaecher_IDX_Schueler_ID = addIndex("SchuelerAbiFaecher_IDX_Schueler_ID",
+		col_Schueler_ID
+	).setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

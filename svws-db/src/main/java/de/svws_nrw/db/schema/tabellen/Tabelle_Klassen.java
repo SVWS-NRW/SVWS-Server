@@ -9,6 +9,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -143,9 +144,14 @@ public class Tabelle_Klassen extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index Klassen_UC1 */
 	public SchemaTabelleUniqueIndex unique_Klassen_UC1 = addUniqueIndex("Klassen_UC1",
-			col_Schuljahresabschnitts_ID,
-			col_Klasse
-		);
+		col_Schuljahresabschnitts_ID,
+		col_Klasse
+	);
+
+	/** Die Definition des Non-Unique-Index Klassen_IDX_Schuljahresabschnitts_ID */
+	public SchemaTabelleIndex index_Klassen_IDX_Schuljahresabschnitts_ID = addIndex("Klassen_IDX_Schuljahresabschnitts_ID",
+		col_Schuljahresabschnitts_ID
+	).setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

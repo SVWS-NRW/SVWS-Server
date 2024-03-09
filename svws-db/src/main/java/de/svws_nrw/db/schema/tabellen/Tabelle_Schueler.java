@@ -16,6 +16,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -920,8 +921,16 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index Schueler_UC1 */
 	public SchemaTabelleUniqueIndex unique_Schueler_UC1 = addUniqueIndex("Schueler_UC1",
-			col_GU_ID
-		);
+		col_GU_ID
+	);
+
+
+	/** Die Definition des Non-Unique-Index Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID */
+	public SchemaTabelleIndex index_Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID = addIndex("Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID",
+		col_Geloescht,
+		col_Status,
+		col_Entlassjahrgang_ID
+	).setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

@@ -100,7 +100,12 @@ public enum SchemaRevisionen {
 	/**
 	 * Hinzufügen der Tabelle EigeneSchule_Email für die Verwaltung der schulweiten Email-Konfiguration
 	 */
-	REV_11(11, "2024-03-02");
+	REV_11(11, "2024-03-02"),
+
+	/**
+	 * Ergänzen weitere Indizes zur Optimierung von Datenbankzugriffen
+	 */
+	REV_12(12, "2024-03-09");
 
 
 	/**
@@ -108,14 +113,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_11;
+	public static final SchemaRevisionen maxRevision = REV_12;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_11;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_12;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;

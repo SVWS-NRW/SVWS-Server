@@ -123,7 +123,7 @@ public final class DBUtilsGostLaufbahn {
     	if (dtoAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 
-    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class);
     	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
     			.setParameter("schueler_id", id)
     			.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)

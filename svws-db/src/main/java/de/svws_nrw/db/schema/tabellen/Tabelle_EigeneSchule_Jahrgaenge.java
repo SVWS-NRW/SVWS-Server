@@ -9,6 +9,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -110,8 +111,13 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index EigeneSchule_Jahrgaenge_UC1 */
 	public SchemaTabelleUniqueIndex unique_EigeneSchule_Jahrgaenge_UC1 = addUniqueIndex("EigeneSchule_Jahrgaenge_UC1",
-			col_InternKrz
-		);
+		col_InternKrz
+	);
+
+	/** Die Definition des Non-Unique-Index EigeneSchule_Jahrgaenge_IDX_ASDJahrgang */
+	public SchemaTabelleIndex index_EigeneSchule_Jahrgaenge_IDX_ASDJahrgang = addIndex("EigeneSchule_Jahrgaenge_IDX_ASDJahrgang",
+		col_ASDJahrgang
+	).setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

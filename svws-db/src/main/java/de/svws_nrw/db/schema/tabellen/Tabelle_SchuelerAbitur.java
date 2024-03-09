@@ -285,8 +285,8 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index SchuelerAbitur_UC1 */
 	public SchemaTabelleUniqueIndex unique_SchuelerAbitur_UC1 = addUniqueIndex("SchuelerAbitur_UC1",
-			col_Schueler_ID
-		);
+		col_Schueler_ID
+	);
 
 
 	/**

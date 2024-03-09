@@ -5,6 +5,7 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 
@@ -365,6 +366,13 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			""",
 			Schema.tab_Kurse)
 			.setVeraltet(SchemaRevisionen.REV_1);
+
+	/** Die Definition des Non-Unique-Index Schuljahresabschnitte_IDX_Jahr_Abschnitt */
+	public SchemaTabelleIndex index_Schuljahresabschnitte_IDX_Jahr_Abschnitt = addIndex("Schuljahresabschnitte_IDX_Jahr_Abschnitt",
+		col_Jahr,
+		col_Abschnitt
+	).setRevision(SchemaRevisionen.REV_12);
+
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Schuljahresabschnitte.

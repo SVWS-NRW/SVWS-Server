@@ -11,7 +11,9 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerSprachpruefungen.
@@ -97,12 +99,25 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachpruefungen_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerSprachpruefungen_Schueler_FK = addForeignKey(
-			"SchuelerSprachpruefungen_Schueler_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_1);
+		"SchuelerSprachpruefungen_Schueler_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
+	)
+	.setRevision(SchemaRevisionen.REV_1);
+
+
+	/** Die Definition des Non-Unique-Index SchuelerSprachpruefungen_IDX1 */
+	public SchemaTabelleIndex index_SchuelerSprachpruefungen_IDX1 = addIndex("SchuelerSprachpruefungen_IDX1",
+		col_Schueler_ID
+	).setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Unique-Index SchuelerSprachpruefungen_UC1 */
+	public SchemaTabelleUniqueIndex unique_SchuelerSprachpruefungen_UC1 = addUniqueIndex("SchuelerSprachpruefungen_UC1",
+		col_Schueler_ID,
+		col_Sprache
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

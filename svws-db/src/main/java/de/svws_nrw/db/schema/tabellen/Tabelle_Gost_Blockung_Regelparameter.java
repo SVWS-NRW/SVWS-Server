@@ -50,6 +50,13 @@ public class Tabelle_Gost_Blockung_Regelparameter extends SchemaTabelle {
 		col_Nummer
 	);
 
+	/** Die Definition des Non-Unique-Index Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer_Parameter */
+	public SchemaTabelleIndex index_Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer_Parameter = addIndex("Gost_Blockung_Regelparameter_IDX_Regel_ID_Nummer_Parameter",
+		col_Regel_ID,
+		col_Nummer,
+		col_Parameter
+	).setRevision(SchemaRevisionen.REV_12);
+
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Blockung_Regelparameter.
