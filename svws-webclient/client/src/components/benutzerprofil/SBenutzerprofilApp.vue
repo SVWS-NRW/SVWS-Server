@@ -24,9 +24,8 @@
 				<svws-ui-text-input placeholder="Name" :model-value="benutzerEMailDaten().name" @change="name => patchBenutzerEMailDaten({name})" type="text" />
 				<svws-ui-text-input placeholder="EMail-Adresse" :model-value="benutzerEMailDaten().address" @change="address => patchBenutzerEMailDaten({address})" type="text" />
 				<svws-ui-text-input placeholder="SMTP-Username" :model-value="benutzerEMailDaten().usernameSMTP" @change="usernameSMTP => patchBenutzerEMailDaten({usernameSMTP})" type="text" />
-				<svws-ui-text-input placeholder="SMTP-Passwort" v-model="smtpPassword" type="text" />
-				<svws-ui-textarea-input placeholder="Signatur"	:model-value="benutzerEMailDaten().signatur"
-					@change="signatur => patchBenutzerEMailDaten({ signatur: signatur ?? '' })" resizeable="vertical" autoresize /> :{{ smtpPassword }}
+				<svws-ui-text-input placeholder="SMTP-Passwort" v-model.trim="smtpPassword" type="password" />
+				<svws-ui-textarea-input placeholder="Signatur"	:model-value="benutzerEMailDaten().signatur" @change="signatur => patchBenutzerEMailDaten({ signatur: signatur ?? '' })" resizeable="vertical" autoresize />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -50,7 +49,7 @@
 		set: (passwordSMTP) => void props.patchBenutzerEMailDaten({passwordSMTP})
 	})
 
-	watch(()=>props.benutzerEMailDaten(), async () => await decryptSMTPPassword())
+	watch(() => props.benutzerEMailDaten(), async () => await decryptSMTPPassword());
 
 	async function password() {
 		ok.value = await props.patchPasswort(erstesPasswort.value, zweitesPasswort.value);

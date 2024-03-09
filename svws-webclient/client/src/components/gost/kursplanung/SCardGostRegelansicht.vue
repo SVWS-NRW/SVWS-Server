@@ -15,7 +15,7 @@
 				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 2).value" :items="schienen" :item-text="i => i.nummer.toString()" />
 			</template>
 		</BlockungsregelBase>
-		<!-- Regeltyp 2 			 -->
+		<!-- Regeltyp 6 			 -->
 		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS" :regeln :get-ergebnismanager :api-status
 			:regel-hinzufuegen="regelHinzufuegen_06" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'kursart', label: 'Kursart allein in Schienen', span: 2}, {key: 'von', label: 'von'}, {key: 'bis', label: 'bis'}, ]">
 			<template #regelRead="{regel: r}">
@@ -187,6 +187,16 @@
 				<svws-ui-select v-model="regelParameterSchueler(props.mapSchueler, regel, 0).value" :items="mapSchueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
 			</template>
 		</BlockungsregelBase>
+		<!-- Regeltyp 17  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN" :regeln :get-ergebnismanager :api-status
+			:regel-hinzufuegen="regelHinzufuegen_17" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'kurs', label: 'Kursdifferenz ignorieren'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterKurs(kurse, regel, 0).value" :items="kurseFiltered(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN).value" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+			</template>
+		</BlockungsregelBase>
 		<!-- Regeltyp 10  -->
 		<div class="mt-10 px-6">
 			<svws-ui-checkbox type="toggle" v-model="hatRegel" :disabled> {{ GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.bezeichnung }} </svws-ui-checkbox>
@@ -272,6 +282,8 @@
 	function regelHinzufuegen_02() {
 		const r = new GostBlockungRegel();
 		r.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		if (kurse.value.size() === 0)
+			return;
 		const kurs = kurse.value.getFirst();
 		if (kurs !== null) {
 			r.parameter.add(kurs.id);
@@ -283,6 +295,8 @@
 	function regelHinzufuegen_03() {
 		const r = new GostBlockungRegel();
 		r.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		if (kurse.value.size() === 0)
+			return;
 		const kurs = kurse.value.getFirst();
 		if (kurs !== null) {
 			r.parameter.add(kurs.id);
@@ -293,6 +307,8 @@
 	function regelHinzufuegen_07() {
 		const r = new GostBlockungRegel();
 		r.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
+		if (kurse.value.size() === 0)
+			return;
 		const kurs = kurse.value.getFirst();
 		if (kurs !== null) {
 			r.parameter.add(kurs.id);
@@ -304,6 +320,8 @@
 	function regelHinzufuegen_08() {
 		const r = new GostBlockungRegel();
 		r.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
+		if (kurse.value.size() === 0)
+			return;
 		const kurs = kurse.value.getFirst();
 		if (kurs !== null) {
 			r.parameter.add(kurs.id);
@@ -410,6 +428,15 @@
 		regel.value = r;
 	}
 
+	function regelHinzufuegen_17() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ;
+		if (kurseFiltered(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN).value.isEmpty())
+			return;
+		r.parameter.add(kurseFiltered(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN).value.get(0).id);
+		regel.value = r;
+	}
+
 	const hatRegel = computed<boolean>({
 		get: () => regeln.value.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN)?.value.length === 0 ? false : true,
 		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen))
@@ -461,6 +488,8 @@
 					return props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
 				case GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ:
 					return props.getErgebnismanager().regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(p.get(0)));
+				case GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ:
+					return props.getErgebnismanager().regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(p.get(0)));
 				default:
 					throw new DeveloperNotificationException('Es kann keine leere Regel erstellt werden');
 			}})();
