@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -35,6 +36,7 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
+import de.svws_nrw.core.utils.SetUtils;
 import de.svws_nrw.core.utils.StringUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -2762,13 +2764,19 @@ public class StundenplanManager {
 		update_all();
 	}
 
-	private void kursRemoveOhneUpdateById(final long idKurs) {
-		// Kaskade: StundenplanUnterricht
-		for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idKurs))
-			unterrichtRemoveByIdOhneUpdate(u.id);
+	private void kursRemoveAllOhneUpdate(final @NotNull Set<@NotNull Long> idKurse) {
+		// Überprüfen der Konsistent.
+		for (final long idKurs :  idKurse)
+			DeveloperNotificationException.ifTrue("Es wurde nicht der Kurs (" + idKurs + ") in der Map gefunden!", !_kurs_by_id.containsKey(idKurs));
 
-		// Entfernen
-		DeveloperNotificationException.ifMapRemoveFailes(_kurs_by_id, idKurs);
+		// Kaskade: StundenplanUnterricht
+		for (final long idKurs :  idKurse)
+			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idKurs))
+				unterrichtRemoveByIdOhneUpdate(u.id);
+
+		// Entfernen der Kurse
+		for (final long idKurs :  idKurse)
+			DeveloperNotificationException.ifMapRemoveFailes(_kurs_by_id, idKurs);
 	}
 
 	/**
@@ -2777,8 +2785,7 @@ public class StundenplanManager {
 	 * @param idKurs  Die Datenbank-ID des {@link StundenplanKurs}-Objekts, welches entfernt werden soll.
 	 */
 	public void kursRemoveById(final long idKurs) {
-		kursRemoveOhneUpdateById(idKurs);
-
+		kursRemoveAllOhneUpdate(SetUtils.create1(idKurs));
 		update_all();
 	}
 
@@ -2788,9 +2795,13 @@ public class StundenplanManager {
 	 * @param listKurs  Die Liste der zu entfernenden {@link StundenplanKurs}-Objekte.
 	 */
 	public void kursRemoveAll(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
+		// Umwandeln in IDs.
+		final @NotNull Set<@NotNull Long> idKurse = new HashSet<@NotNull Long>();
 		for (final @NotNull StundenplanKurs kurs : listKurs)
-			kursRemoveOhneUpdateById(kurs.id);
+				idKurse.add(kurs.id);
 
+		// Entfernen und Update
+		kursRemoveAllOhneUpdate(idKurse);
 		update_all();
 	}
 

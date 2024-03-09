@@ -19,6 +19,7 @@ import type { List } from '../../../java/util/List';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
+import { SetUtils } from '../../../core/utils/SetUtils';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
@@ -31,6 +32,7 @@ import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { ListUtils } from '../../../core/utils/ListUtils';
+import { DTOUtils } from '../../../core/utils/DTOUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
@@ -1026,7 +1028,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public kursRemoveByID(idKurs : number) : void {
-		this.kurseRemoveByID(ListUtils.create1(idKurs));
+		this.kurseRemoveByID(SetUtils.create1(idKurs));
 	}
 
 	/**
@@ -1038,7 +1040,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Kurs nicht existiert.
 	 */
 	public kursRemove(kurs : GostBlockungKurs) : void {
-		this.kursRemoveByID(kurs.id);
+		this.kurseRemoveByID(SetUtils.create1(kurs.id));
 	}
 
 	/**
@@ -1048,18 +1050,70 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
 	 */
-	public kurseRemoveByID(idKurse : List<number>) : void {
+	public kurseRemoveByID(idKurse : JavaSet<number>) : void {
 		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		for (const idKurs of idKurse)
 			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", this._map_idKurs_kurs, idKurs);
+		const regelIDs : JavaSet<number> = new HashSet<number>();
 		for (const idKurs of idKurse) {
+			console.log(JSON.stringify("DM: Lösche Kurs " + idKurs));
 			const kurs : GostBlockungKurs = this.kursGet(idKurs);
 			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 			this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
 			Map2DUtils.removeFromListAndTrimOrException(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
 			DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_kurs, idKurs);
 			this._daten.kurse.remove(kurs);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+				if (r.parameter.get(1) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
+				if (r.parameter.get(1) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
+				if ((r.parameter.get(0) === idKurs) || (r.parameter.get(1) === idKurs))
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
+				if ((r.parameter.get(0) === idKurs) || (r.parameter.get(1) === idKurs))
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
 		}
+		this.regelRemoveListeByIDs(regelIDs);
+	}
+
+	/**
+	 * Kombiniert zwei Kurse zu einem Kurs. Die Regel  {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN}
+	 * muss dabei ggf. auch kombiniert werden, wobei eine existierende Regel recycled wird.
+	 *
+	 * @param idKursID1keep    Die Kurs-ID des Ziel-Kurses (wird nicht gelöscht).
+	 * @param idKursID2delete  Die Kurs-ID des Quell-Kurses (wird gelöscht).
+	 */
+	public kursMerge(idKursID1keep : number, idKursID2delete : number) : void {
+		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue("Die ID=" + idKursID1keep + " des Ziel Kurses-gibt es nicht!", !this._map_idKurs_kurs.containsKey(idKursID1keep));
+		DeveloperNotificationException.ifTrue("Die ID=" + idKursID2delete + " des Quell-Kurses gibt es nicht!", !this._map_idKurs_kurs.containsKey(idKursID2delete));
+		const regelKursKeep : GostBlockungRegel | null = this.regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID1keep);
+		const regelKursDelete : GostBlockungRegel | null = this.regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKursID2delete);
+		if (regelKursDelete !== null)
+			if (regelKursKeep !== null) {
+				const summe : number = regelKursDelete.parameter.get(1) + regelKursKeep.parameter.get(1);
+				regelKursKeep.parameter.set(1, summe);
+			} else {
+				this._map_multikey_regeln.remove(GostBlockungsdatenManager.regelToMultikey(regelKursDelete));
+				regelKursDelete.parameter.set(0, idKursID1keep);
+				this._map_multikey_regeln.put(GostBlockungsdatenManager.regelToMultikey(regelKursDelete), regelKursDelete);
+			}
+		this.kurseRemoveByID(SetUtils.create1(idKursID2delete));
 	}
 
 	/**
@@ -1070,7 +1124,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public kurseRemove(kurse : List<GostBlockungKurs>) : void {
-		const idKurse : List<number> = new ArrayList();
+		const idKurse : JavaSet<number> = new HashSet<number>();
 		for (const kursExtern of kurse)
 			idKurse.add(kursExtern.id);
 		this.kurseRemoveByID(idKurse);
@@ -1473,12 +1527,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
 		if (regel !== null)
 			return regel;
-		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
-		regelDummy.id = -1;
-		regelDummy.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
-		regelDummy.parameter.add(idKurs);
-		regelDummy.parameter.add(nrSchiene as number);
-		return regelDummy;
+		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene);
 	}
 
 	/**
@@ -1494,12 +1543,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
 		if (regel !== null)
 			return regel;
-		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
-		regelDummy.id = -1;
-		regelDummy.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-		regelDummy.parameter.add(idKurs);
-		regelDummy.parameter.add(nrSchiene as number);
-		return regelDummy;
+		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene);
 	}
 
 	/**
@@ -1515,12 +1559,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
 		if (regel !== null)
 			return regel;
-		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
-		regelDummy.id = -1;
-		regelDummy.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-		regelDummy.parameter.add(idSchueler);
-		regelDummy.parameter.add(idKurs);
-		return regelDummy;
+		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs);
 	}
 
 	/**
@@ -1547,6 +1586,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return this._map_idRegel_regel.containsKey(idRegel) && this.getIstBlockungsVorlage();
 	}
 
+	private regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number) : GostBlockungRegel | null {
+		for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			if (r.parameter.get(0) === idKurs)
+				return r;
+		return null;
+	}
+
 	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
 	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
@@ -1557,14 +1603,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public regelRemoveByID(idRegel : number) : void {
-		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const regel : GostBlockungRegel = this.regelGet(idRegel);
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
-		this._map_idRegel_regel.remove(idRegel);
-		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
-		this._map_multikey_regeln.remove(multikey);
-		this._daten.regeln.remove(regel);
+		this.regelRemoveListeByIDs(SetUtils.create1(idRegel));
 	}
 
 	/**
@@ -1575,8 +1614,35 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
 	public regelRemoveListe(regelmenge : List<GostBlockungRegel>) : void {
+		const setRegelIDs : JavaSet<number> = new HashSet<number>();
 		for (const regel of regelmenge)
-			this.regelRemoveByID(regel.id);
+			setRegelIDs.add(regel.id);
+		this.regelRemoveListeByIDs(setRegelIDs);
+	}
+
+	/**
+	 * Löscht eines Regelmenge anhand ihrer IDs.
+	 *
+	 * @param regelmenge  Die Menge der IDs der Regeln.
+	 *
+	 * @throws DeveloperNotificationException, falls die Regel nicht gefunden wird.
+	 */
+	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
+		UserNotificationException.ifTrue("Ein Löschen von Regeln ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		for (const idRegel of regelmenge) {
+			const regel : GostBlockungRegel = this.regelGet(idRegel);
+			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+			DeveloperNotificationException.ifTrue("Der Regeltyp ist undefiniert!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		}
+		for (const idRegel of regelmenge) {
+			const regel : GostBlockungRegel = this.regelGet(idRegel);
+			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+			const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
+			this._map_idRegel_regel.remove(idRegel);
+			MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
+			this._map_multikey_regeln.remove(multikey);
+			this._daten.regeln.remove(regel);
+		}
 	}
 
 	private static regelToMultikey(regel : GostBlockungRegel) : LongArrayKey {

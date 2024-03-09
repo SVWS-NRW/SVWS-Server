@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1612,6 +1613,22 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public int getOfFachartKursdifferenz(final long idFachart) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
+	}
+
+	/**
+	 * Liefert die Kursdifferenz der Fachart, übergeben als (Fach, Kursart).
+	 * Die Methode beachtet auch Kurse mit Dummy-SuS. <br>
+	 * Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Kursdifferenz der Fachart, übergeben als (Fach, Kursart).
+	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
+	 */
+	public int getOfFachOfKursartKursdifferenz(final long idFach, final int idKursart) throws DeveloperNotificationException {
+		final long idFachart = GostKursart.getFachartID(idFach, idKursart);
 		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
 	}
 
@@ -5589,29 +5606,6 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
 
-	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
-	 *
-	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
-	 */
-	public void setRemoveKurseByID(final @NotNull List<@NotNull Long> idKurse) throws DeveloperNotificationException {
-		// (1) Datenkonsistenz überprüfen
-		for (final long idKurs : idKurse)
-			DeveloperNotificationException.ifTrue(_parent.toStringKurs(idKurs) + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(idKurs));
-
-		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch SuS).
-		for (final long idKurs : idKurse) {
-			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
-			for (final @NotNull Long schienenID : kurs.schienen)
-				getSchieneE(schienenID).kurse.remove(kurs);
-		}
-
-		// (3) Bewertungen aktualisieren
-		stateRevalidateEverything();
-	}
-
-	/**
-	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
-
 	 * @param kurse  Die Liste der {@link GostBlockungsergebnisKurs}-Objekte.
 	 *
 	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
@@ -5624,6 +5618,35 @@ public class GostBlockungsergebnisManager {
 
 		// Delegieren an die andere Methode.
 		setRemoveKurseByID(idKurse);
+	}
+
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
+
+	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public void setRemoveKurseByID(final @NotNull List<@NotNull Long> idKurse) throws DeveloperNotificationException {
+		// (1) Datenkonsistenz überprüfen
+		for (final long idKurs : idKurse)
+			DeveloperNotificationException.ifTrue(_parent.toStringKurs(idKurs) + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(idKurs));
+
+		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch die SuS des Kurses).
+		for (final long idKurs : idKurse) {
+			System.out.println("EM: Lösche Kurs " + idKurs);
+			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+
+			for (final @NotNull Long schienenID : kurs.schienen) {
+				final @NotNull Iterator<@NotNull GostBlockungsergebnisKurs> i = getSchieneE(schienenID).kurse.iterator();
+				while (i.hasNext())
+					if (i.next().id == kurs.id)
+						i.remove();
+			}
+		}
+
+		// (3) Bewertungen aktualisieren
+		stateRevalidateEverything();
 	}
 
 	/**
@@ -5640,12 +5663,12 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKurs kursKeep = getKursE(idKursID1keep);
 		kursKeep.schueler.addAll(kursDelete.schueler);
 
-		// Lösche den Kurs aus der DTO-Datenstruktur (löscht dadurch auch SuS).
+		// Lösche den Kurs aus der DTO-Datenstruktur (löscht dadurch auch SuS aus dem Kurs).
 		for (final @NotNull Long schienenID : kursDelete.schienen)
 			getSchieneE(schienenID).kurse.remove(kursDelete);
 
 		// Löschen den Kurs beim Parent-Manager.
-		_parent.kursRemoveByID(idKursID2delete);
+		_parent.kursMerge(idKursID1keep, idKursID2delete);
 
 		// Bewertungen aktualisieren
 		stateRevalidateEverything();

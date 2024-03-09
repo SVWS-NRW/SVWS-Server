@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -23,6 +24,7 @@ import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from 
 import { HashSet } from '../../../java/util/HashSet';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
+import { SetUtils } from '../../../core/utils/SetUtils';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
@@ -2635,10 +2637,14 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private kursRemoveOhneUpdateById(idKurs : number) : void {
-		for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idKurs))
-			this.unterrichtRemoveByIdOhneUpdate(u.id);
-		DeveloperNotificationException.ifMapRemoveFailes(this._kurs_by_id, idKurs);
+	private kursRemoveAllOhneUpdate(idKurse : JavaSet<number>) : void {
+		for (const idKurs of idKurse)
+			DeveloperNotificationException.ifTrue("Es wurde nicht der Kurs (" + idKurs + ") in der Map gefunden!", !this._kurs_by_id.containsKey(idKurs));
+		for (const idKurs of idKurse)
+			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idKurs))
+				this.unterrichtRemoveByIdOhneUpdate(u.id);
+		for (const idKurs of idKurse)
+			DeveloperNotificationException.ifMapRemoveFailes(this._kurs_by_id, idKurs);
 	}
 
 	/**
@@ -2647,7 +2653,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param idKurs  Die Datenbank-ID des {@link StundenplanKurs}-Objekts, welches entfernt werden soll.
 	 */
 	public kursRemoveById(idKurs : number) : void {
-		this.kursRemoveOhneUpdateById(idKurs);
+		this.kursRemoveAllOhneUpdate(SetUtils.create1(idKurs));
 		this.update_all();
 	}
 
@@ -2657,8 +2663,10 @@ export class StundenplanManager extends JavaObject {
 	 * @param listKurs  Die Liste der zu entfernenden {@link StundenplanKurs}-Objekte.
 	 */
 	public kursRemoveAll(listKurs : List<StundenplanKurs>) : void {
+		const idKurse : JavaSet<number> = new HashSet<number>();
 		for (const kurs of listKurs)
-			this.kursRemoveOhneUpdateById(kurs.id);
+			idKurse.add(kurs.id);
+		this.kursRemoveAllOhneUpdate(idKurse);
 		this.update_all();
 	}
 

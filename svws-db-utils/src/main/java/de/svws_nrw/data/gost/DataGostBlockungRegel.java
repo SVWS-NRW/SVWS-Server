@@ -632,45 +632,44 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					final DTOGostBlockungRegelParameter param = params.get(0);
 					if (param.Nummer != 0)
 						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
-					if (kursDelete.ID == param.Parameter) {
-						if (kursTo != null)
-							mapRegelDummySuS.put(kursDelete.ID, regel);
+					if (kursTo == null) {
 						conn.transactionRemove(regel);
+					} else {
+						if (kursDelete.ID == param.Parameter)
+							mapRegelDummySuS.put(kursDelete.ID, regel);
+						if (kursTo.ID == param.Parameter)
+							mapRegelDummySuS.put(kursTo.ID, regel);
 					}
-					if ((kursTo != null) && (kursTo.ID == param.Parameter))
-						mapRegelDummySuS.put(kursTo.ID, regel);
 				}
 				default -> throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Regel-Typ wird noch nicht beim Entfernen der Regeln zu einem Kurs unterstützt, obwohl dieser sich (auch) auf Kurse bezieht.");
 			}
 		}
 		conn.transactionFlush();
 		// Füge ggf. Regeln mit Dummy SuS in kursTo ein
-		if (kursTo != null) {
-			if (mapRegelDummySuS.containsKey(kursDelete.ID)) {
-				final DTOGostBlockungRegel regelEntfernt = mapRegelDummySuS.get(kursDelete.ID);
-				if (mapRegelDummySuS.containsKey(kursTo.ID)) {
-					final DTOGostBlockungRegel regelVorhanden = mapRegelDummySuS.get(kursTo.ID);
-					final List<DTOGostBlockungRegelParameter> paramsVorhanden = mapRegelParameter.get(regelVorhanden.ID);
-					final List<DTOGostBlockungRegelParameter> paramsEntfernt = mapRegelParameter.get(regelEntfernt.ID);
-					if ((paramsVorhanden != null) && (paramsEntfernt != null)) {
-						final DTOGostBlockungRegelParameter paramVorhanden = paramsVorhanden.get(1);
-						final DTOGostBlockungRegelParameter paramEntfernt = paramsEntfernt.get(1);
-						if ((paramVorhanden.Nummer != 1) && (paramEntfernt.Nummer != 1))
-							throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelVorhanden.ID));
-						paramVorhanden.Parameter += paramEntfernt.Parameter;
-						conn.transactionPersist(paramVorhanden);
-					}
-				} else {
-					final List<DTOGostBlockungRegelParameter> paramsEntfernt = mapRegelParameter.get(regelEntfernt.ID);
-					if (paramsEntfernt != null) {
-						final long idNextRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
-						final DTOGostBlockungRegel regelNeu = new DTOGostBlockungRegel(idNextRegel, kursDelete.Blockung_ID, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
-						conn.transactionPersist(regelNeu);
-						conn.transactionFlush();
-						conn.transactionPersist(new DTOGostBlockungRegelParameter(idNextRegel, 0, kursTo.ID));
-						conn.transactionPersist(new DTOGostBlockungRegelParameter(idNextRegel, 1, paramsEntfernt.get(1).Parameter));
-						conn.transactionFlush();
-					}
+		if ((kursTo != null) && (mapRegelDummySuS.containsKey(kursDelete.ID))) {
+			final DTOGostBlockungRegel regelEntfernt = mapRegelDummySuS.get(kursDelete.ID);
+			if (mapRegelDummySuS.containsKey(kursTo.ID)) {
+				final DTOGostBlockungRegel regelVorhanden = mapRegelDummySuS.get(kursTo.ID);
+				final List<DTOGostBlockungRegelParameter> paramsVorhanden = mapRegelParameter.get(regelVorhanden.ID);
+				final List<DTOGostBlockungRegelParameter> paramsEntfernt = mapRegelParameter.get(regelEntfernt.ID);
+				if ((paramsVorhanden != null) && (paramsEntfernt != null)) {
+					final DTOGostBlockungRegelParameter paramVorhanden = paramsVorhanden.get(1);
+					final DTOGostBlockungRegelParameter paramEntfernt = paramsEntfernt.get(1);
+					if ((paramVorhanden.Nummer != 1) && (paramEntfernt.Nummer != 1))
+						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelVorhanden.ID));
+					paramVorhanden.Parameter += paramEntfernt.Parameter;
+					conn.transactionPersist(paramVorhanden);
+				}
+				conn.transactionRemove(regelEntfernt);
+			} else {
+				final List<DTOGostBlockungRegelParameter> paramsEntfernt = mapRegelParameter.get(regelEntfernt.ID);
+				if (paramsEntfernt != null) {
+					final DTOGostBlockungRegelParameter paramEntfernt = paramsEntfernt.get(0);
+					if (paramEntfernt.Nummer != 0)
+						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelEntfernt.ID));
+					paramEntfernt.Parameter = kursTo.ID;
+					conn.transactionPersist(paramEntfernt);
+					conn.transactionFlush();
 				}
 			}
 		}

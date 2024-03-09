@@ -39,6 +39,7 @@ import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { Pair } from '../../../core/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -1514,6 +1515,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(idFachart : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, idFachart)!;
+	}
+
+	/**
+	 * Liefert die Kursdifferenz der Fachart, übergeben als (Fach, Kursart).
+	 * Die Methode beachtet auch Kurse mit Dummy-SuS. <br>
+	 * Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Kursdifferenz der Fachart, übergeben als (Fach, Kursart).
+	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
+	 */
+	public getOfFachOfKursartKursdifferenz(idFach : number, idKursart : number) : number {
+		const idFachart : number = GostKursart.getFachartID(idFach, idKursart);
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, idFachart)!;
 	}
 
@@ -5076,24 +5093,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
 	 *
-	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
-	 *
-	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
-	 */
-	public setRemoveKurseByID(idKurse : List<number>) : void {
-		for (const idKurs of idKurse)
-			DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
-		for (const idKurs of idKurse) {
-			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-			for (const schienenID of kurs.schienen)
-				this.getSchieneE(schienenID!).kurse.remove(kurs);
-		}
-		this.stateRevalidateEverything();
-	}
-
-	/**
-	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
-	 *
 	 * @param kurse  Die Liste der {@link GostBlockungsergebnisKurs}-Objekte.
 	 *
 	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
@@ -5103,6 +5102,29 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const kursExtern of kurse)
 			idKurse.add(kursExtern.id);
 		this.setRemoveKurseByID(idKurse);
+	}
+
+	/**
+	 * Löscht alle übergebenen Kurse. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
+	 *
+	 * @param idKurse  Die Liste der Datenbank-IDs der Kurse.
+	 *
+	 * @throws DeveloperNotificationException  Falls mindestens einer der Kurse nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public setRemoveKurseByID(idKurse : List<number>) : void {
+		for (const idKurs of idKurse)
+			DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
+		for (const idKurs of idKurse) {
+			console.log(JSON.stringify("EM: Lösche Kurs " + idKurs));
+			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+			for (const schienenID of kurs.schienen) {
+				const i : JavaIterator<GostBlockungsergebnisKurs> = this.getSchieneE(schienenID!).kurse.iterator();
+				while (i.hasNext())
+					if (i.next().id === kurs.id)
+						i.remove();
+			}
+		}
+		this.stateRevalidateEverything();
 	}
 
 	/**
@@ -5119,7 +5141,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		kursKeep.schueler.addAll(kursDelete.schueler);
 		for (const schienenID of kursDelete.schienen)
 			this.getSchieneE(schienenID!).kurse.remove(kursDelete);
-		this._parent.kursRemoveByID(idKursID2delete);
+		this._parent.kursMerge(idKursID1keep, idKursID2delete);
 		this.stateRevalidateEverything();
 	}
 
