@@ -19,7 +19,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
-	klassenListeManager: new KlassenListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList()),
+	klassenListeManager: new KlassenListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
@@ -55,9 +55,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const mapKlassenFolgenderAbschnitt = schuljahresabschnitt.idFolgeAbschnitt === null
 			? new Map<number, KlassenDaten>()
 			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
+		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schulform, listKlassen, listJahrgaenge, listLehrer);
+		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt });
 	}
 
@@ -121,7 +122,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 				return;
 			}
 		}
-		this.commit();
+		const klassenListeManager = this.klassenListeManager;
+		this.setPatchedState({ klassenListeManager });
 	}
 
 	setzeDefaultSortierung = async () => {

@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils.klassen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -11,13 +12,16 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.lehrer.LehrerUtils;
+import de.svws_nrw.core.utils.schueler.SchuelerUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -44,10 +48,20 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull LehrerListeEintrag> lehrer;
 	private static final @NotNull Function<@NotNull LehrerListeEintrag, @NotNull Long> _lehrerToId = (final @NotNull LehrerListeEintrag l) -> l.id;
 
+	/** Das Filter-Attribut für die Schüler */
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
+	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
+	private @NotNull List<@NotNull Schueler> schuelerListe = new ArrayList<@NotNull Schueler>();
+
 	/** Das Filter-Attribut für die Schulgliederungen */
 	public final @NotNull AttributMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
 	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
 	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
+
+	/** Das Filter-Attribut für den Schüler-Status */
+	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
+	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
+	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut auf nur sichtbare Klassen */
 	private boolean _filterNurSichtbar = true;
@@ -60,20 +74,26 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
 	 * @param schulform     die Schulform der Schule
 	 * @param klassen       die Liste der Klassen
+	 * @param schueler      die Liste der Schüler
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
 	public KlassenListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
+			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klasseToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("schueleranzahl", true)));
+		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
+		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
 		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		initKlassen();
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 	}
 
 
@@ -112,7 +132,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 			updateEintrag = true;
 		}
 		// TODO Liste der Klassenlehrer?
-		// TODO Liste der Schüler?
+		schuelerListe = (daten != null) ? filterSchueler(daten) : new ArrayList<@NotNull Schueler>();
 		return updateEintrag;
 	}
 
@@ -200,8 +220,36 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 			if ((j.kuerzelSchulgliederung == null) || ((j.kuerzelSchulgliederung != null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
 				return false;
 		}
+		if (this.schuelerstatus.auswahlExists())
+			schuelerListe = filterSchueler(_daten);
 		return true;
 	}
+
+
+	protected @NotNull List<@NotNull Schueler> filterSchueler(final KlassenDaten daten) {
+		final @NotNull List<@NotNull Schueler> result = new ArrayList<@NotNull Schueler>();
+		if (daten != null)
+			for (final @NotNull Schueler s : daten.schueler)
+				if (!schuelerstatus.auswahlExists() || schuelerstatus.auswahlHasKey(s.status))
+					result.add(s);
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Schülerliste der aktuelle ausgewählten Klasse zurück. Ist
+	 * keine Klasse ausgewählt, so wird eine leere Liste zurückgegeben.
+	 *
+	 * @return die Liste der Schüler
+	 */
+	public @NotNull List<@NotNull Schueler> getSchuelerListe() {
+		return this.schuelerListe;
+	}
+
+
+	protected final @NotNull Runnable _eventSchuelerAuswahlChanged = () -> {
+		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird
+	};
 
 
 }

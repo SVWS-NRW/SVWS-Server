@@ -7,5 +7,6 @@ export interface KlassenDatenProps {
 	klassenListeManager: () => KlassenListeManager;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
+	setFilter: () => Promise<void>;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>;
 }

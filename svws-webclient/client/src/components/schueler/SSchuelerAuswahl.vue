@@ -61,8 +61,8 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenDaten, Schulgliederung, KursListeEintrag} from "@core";
-	import { SchuelerStatus} from "@core";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenDaten, Schulgliederung, KursListeEintrag } from "@core";
+	import { SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
