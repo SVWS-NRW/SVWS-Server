@@ -21,7 +21,16 @@
 						<template #icon> <i-ri-logout-circle-line /> </template>
 					</svws-ui-menu-item>
 				</template>
-				<template #version>{{ version }} <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></template>
+				<template #version>
+					<div class="flex gap-1">
+						<div class="mt-1">{{ version }} <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
+						<svws-ui-button type="transparent" @click="copyToClipboard">
+							<i-ri-clipboard-line v-if="copied === null" />
+							<i-ri-error-warning-fill v-else-if="copied === false" />
+							<i-ri-check-line v-else class="text-success" />
+						</svws-ui-button>
+					</div>
+				</template>
 				<template #metaNavigation>
 					<a href="https://www.svws.nrw.de/faq/impressum">
 						<svws-ui-button type="transparent">
@@ -95,6 +104,15 @@
 	});
 
 	const pendingSetApp = ref('');
+	const copied = ref<boolean|null>(null);
+	async function copyToClipboard() {
+		try {
+			await navigator.clipboard.writeText(`${version} ${githash}`);
+		} catch(e) {
+			copied.value = false;
+		}
+		copied.value = true;
+	}
 
 	const loadingSkeletonRoutes = [
 		{ path: '/', name: '', component: { render: () => null }, meta: { text: '' } },

@@ -3,8 +3,8 @@ import type { Ref} from "vue";
 import { ref, computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisKursSchuelerZuordnung} from "@core";
-import { DTOUtils, GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, HashSet } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
+import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, HashSet } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -627,6 +627,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const update = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler, false);
+		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
+			return true;
 		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
 		update.regelUpdates.listEntfernen = regelUpdates;
 		this.ergebnismanager.kursSchuelerUpdateExecute(update);

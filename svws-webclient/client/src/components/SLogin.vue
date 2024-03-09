@@ -43,10 +43,15 @@
 									<div class="flex gap-3 items-center opacity-50">
 										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
 										<div class="text-left">
-											<p>
-												Powered by SVWS-NRW
-												<br><span class="font-bold">Version {{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span>
-											</p>
+											<div class="-mb-2">Powered by SVWS-NRW</div>
+											<div class="flex gap-1">
+												<div class="mt-2"><span class="font-bold">Version {{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
+												<svws-ui-button type="transparent" @click="copyToClipboard">
+													<i-ri-clipboard-line v-if="copied === null" />
+													<i-ri-error-warning-fill v-else-if="copied === false" />
+													<i-ri-check-line v-else class="text-success" />
+												</svws-ui-button>
+											</div>
 											<nav class="flex flex-row items-center gap-2 mt-0.5">
 												<a class="login-footer-link" href="#">Impressum</a>
 												<a class="login-footer-link" href="#">Datenschutz</a>
@@ -93,6 +98,16 @@
 	const username = ref("Admin");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
+
+	const copied = ref<boolean|null>(null);
+	async function copyToClipboard() {
+		try {
+			await navigator.clipboard.writeText(`${version} ${githash}`);
+		} catch(e) {
+			copied.value = false;
+		}
+		copied.value = true;
+	}
 
 	const connecting = ref(false);
 	const authenticating = ref(false);
