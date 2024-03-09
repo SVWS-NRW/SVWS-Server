@@ -239,7 +239,7 @@
 
 	const termineOhne = computed(() => {
 		const a = [];
-		for (const termin of props.kMan().terminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true))
+		for (const termin of props.kMan().terminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true))
 			if (termin.datum === null)
 				a.push(termin);
 		return a;

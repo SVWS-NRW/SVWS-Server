@@ -31,7 +31,7 @@
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
+				<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
 							<span>Aktuell keine Klausuren zu planen.</span>
@@ -51,7 +51,7 @@
 						</svws-ui-tooltip>
 					</template>
 					<template #body>
-						<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
+						<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
 							:key="klausur.id"
 							:data="klausur"
 							:draggable="true"
@@ -78,8 +78,8 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button @click="console.log(props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));erzeugeKlausurtermin(quartalsauswahl.value, true)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
 				</div>
 			</div>
@@ -254,7 +254,7 @@
 		"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
-	const termine = computed(() => props.kMan().terminGetHTMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true));
+	const termine = computed(() => props.kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
@@ -268,7 +268,7 @@
 		loading.value = true;
 		showModalAutomatischBlocken().value = false;
 		const daten = new GostKlausurterminblockungDaten();
-		daten.klausuren = props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value);
+		daten.klausuren = props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
 		daten.konfiguration.algorithmus = algMode.value.id;
 		daten.konfiguration.modusKursarten = lkgkMode.value.id;

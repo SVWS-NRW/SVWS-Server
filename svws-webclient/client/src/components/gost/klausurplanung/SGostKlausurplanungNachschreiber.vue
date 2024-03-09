@@ -19,7 +19,7 @@
 				</template>
 
 				<template #body>
-					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(halbjahr, quartalsauswahl.value, true)"
+					<div v-for="termin in kMan().terminGetHTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true)"
 						:key="termin.id"
 						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
 						<div class="svws-ui-td" role="cell">
@@ -64,7 +64,7 @@
 		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man="kMan"
-					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value)"
+					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 					:on-drag="onDrag"
 					:draggable="() => true"
 					:selected-items="selectedNachschreiber">
@@ -149,7 +149,7 @@
 		loading.value = true;
 		const config = new GostNachschreibterminblockungKonfiguration();
 		config.termine = termine.value;
-		selectedNachschreiber.value.retainAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value));
+		selectedNachschreiber.value.retainAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
 		config.schuelerklausurtermine = new ArrayList<GostSchuelerklausurTermin>(selectedNachschreiber.value);
 		config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
 		config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
@@ -175,7 +175,7 @@
 		}
 	};
 
-	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true));
+	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;

@@ -8,10 +8,12 @@ import type {
 	GostNachschreibterminblockungKonfiguration,
 	List,
 	GostKlausurenUpdate,
+	GostJahrgangsdaten,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungNachschreiberProps {
+	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKursklausurManager;
 	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;

@@ -40,6 +40,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<unknown, Rou
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {
 		return {
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList()), new ArrayList(), null, null, null)},
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,

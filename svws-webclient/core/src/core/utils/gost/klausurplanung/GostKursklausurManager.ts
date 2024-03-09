@@ -35,6 +35,8 @@ import { JavaLong } from '../../../../java/lang/JavaLong';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { Wochentag } from '../../../../core/types/Wochentag';
 import type { JavaMap } from '../../../../java/util/JavaMap';
+import { HashMap4D } from '../../../../core/adt/map/HashMap4D';
+import { Map4DUtils } from '../../../../core/utils/Map4DUtils';
 
 export class GostKursklausurManager extends JavaObject {
 
@@ -115,15 +117,15 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _kursklausurmenge : List<GostKursklausur> = new ArrayList();
 
-	private readonly _kursklausurmenge_by_halbjahr_and_quartal : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
+	private readonly _kursklausurmenge_by_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKursklausur>> = new HashMap3D();
 
 	private readonly _kursklausurmenge_by_idTermin : JavaMap<number, List<GostKursklausur>> = new HashMap();
 
 	private readonly _kursklausurmenge_by_idVorgabe : JavaMap<number, List<GostKursklausur>> = new HashMap();
 
-	private readonly _kursklausurmenge_by_halbjahr_and_idTermin_and_quartal : HashMap3D<number, number, number, List<GostKursklausur>> = new HashMap3D();
+	private readonly _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal : HashMap4D<number, number, number, number, List<GostKursklausur>> = new HashMap4D();
 
-	private readonly _kursklausur_by_idKurs_and_halbjahr_and_quartal : HashMap3D<number, number, number, GostKursklausur> = new HashMap3D();
+	private readonly _kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal : HashMap4D<number, number, number, number, GostKursklausur> = new HashMap4D();
 
 	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
 
@@ -133,7 +135,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _terminmenge : List<GostKlausurtermin> = new ArrayList();
 
-	private readonly _terminmenge_by_halbjahr_and_quartal : HashMap2D<number, number, List<GostKlausurtermin>> = new HashMap2D();
+	private readonly _terminmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurtermin>> = new HashMap3D();
 
 	private readonly _terminmenge_by_datum : JavaMap<string, List<GostKlausurtermin>> = new HashMap();
 
@@ -151,7 +153,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
 
-	private readonly _schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin : HashMap3D<number, number, number, List<GostSchuelerklausurTermin>> = new HashMap3D();
+	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D();
 
 
 	/**
@@ -274,7 +276,7 @@ export class GostKursklausurManager extends JavaObject {
 		this._kursklausurmenge_by_halbjahr_and_quartal.clear();
 		for (const kk of this._kursklausurmenge) {
 			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
-			Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(kk);
+			Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_quartal, v.abiJahrgang, v.halbjahr, v.quartal).add(kk);
 		}
 	}
 
@@ -291,25 +293,25 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin() : void {
-		this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.clear();
+		this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.clear();
 		for (const kk of this._kursklausurmenge) {
 			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
-			Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal, v.halbjahr, kk.idTermin !== null ? kk.idTermin : -1, v.quartal).add(kk);
+			Map4DUtils.getOrCreateArrayList(this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal, v.abiJahrgang, v.halbjahr, kk.idTermin !== null ? kk.idTermin : -1, v.quartal).add(kk);
 		}
 	}
 
 	private update_kursklausur_by_idKurs_and_halbjahr_and_quartal() : void {
-		this._kursklausur_by_idKurs_and_halbjahr_and_quartal.clear();
+		this._kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal.clear();
 		for (const kk of this._kursklausurmenge) {
 			let v : GostKlausurvorgabe = this.vorgabeByKursklausur(kk);
-			this._kursklausur_by_idKurs_and_halbjahr_and_quartal.put(kk.idKurs, v.halbjahr, v.quartal, kk);
+			this._kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal.put(kk.idKurs, v.abiJahrgang, v.halbjahr, v.quartal, kk);
 		}
 	}
 
 	private update_terminmenge_by_halbjahr_and_quartal() : void {
-		this._terminmenge_by_halbjahr_and_quartal.clear();
+		this._terminmenge_by_abijahr_and_halbjahr_and_quartal.clear();
 		for (const t of this._terminmenge)
-			Map2DUtils.getOrCreateArrayList(this._terminmenge_by_halbjahr_and_quartal, t.halbjahr, t.quartal).add(t);
+			Map3DUtils.getOrCreateArrayList(this._terminmenge_by_abijahr_and_halbjahr_and_quartal, t.abijahr, t.halbjahr, t.quartal).add(t);
 	}
 
 	private update_terminmenge_by_datum() : void {
@@ -367,12 +369,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
-		this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.clear();
+		this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.clear();
 		for (const sktList of this._schuelerklausurterminmenge_by_idSchuelerklausur.values()) {
 			let sktLast : GostSchuelerklausurTermin = sktList.get(sktList.size() - 1);
 			let v : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(sktLast);
 			if (sktLast.folgeNr > 0)
-				Map3DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
+				Map4DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
 		}
 	}
 
@@ -864,13 +866,14 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal  die Nummer des Quartals
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public kursklausurGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKursklausur> | null {
-		return this._kursklausurmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
+	public kursklausurGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKursklausur> | null {
+		return this._kursklausurmenge_by_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal);
 	}
 
 	/**
@@ -887,18 +890,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKursklausur> {
+	public kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKursklausur> {
 		if (quartal > 0) {
-			const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.getOrNull(halbjahr.id, -1, quartal);
+			const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.getOrNull(abiJahrgang, halbjahr.id, -1, quartal);
 			return klausuren !== null ? klausuren : new ArrayList();
 		}
 		const klausuren : List<GostKursklausur> | null = new ArrayList();
-		for (const kl of this._kursklausurmenge_by_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap3AsList(halbjahr.id, -1)) {
+		for (const kl of this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, -1)) {
 			klausuren.addAll(kl);
 		}
 		return klausuren;
@@ -907,6 +911,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
 	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
@@ -914,17 +919,17 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList();
 		if (quartal > 0) {
-			if (this._terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal) !== null)
-				termine.addAll(this._terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal));
-			if (includeMultiquartal && this._terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, 0) !== null)
-				termine.addAll(this._terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, 0));
+			if (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal) !== null)
+				termine.addAll(this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal));
+			if (includeMultiquartal && this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, 0) !== null)
+				termine.addAll(this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, 0));
 			return termine;
 		}
-		if (this._terminmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
-			for (const qTermine of this._terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+		if (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.containsKey1AndKey2(abiJahrgang, halbjahr.id))
+			for (const qTermine of this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id)) {
 				termine.addAll(qTermine);
 			}
 		return termine;
@@ -933,6 +938,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten, die für Nachschreiber zugelassen sind zum übergebenen Quartal
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
 	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
@@ -940,9 +946,9 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von NT-GostKlausurtermin-Objekten
 	 */
-	public terminGetNTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetNTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList();
-		for (const t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (!t.istHaupttermin || t.nachschreiberZugelassen)
 				termine.add(t);
 		termine.sort(GostKursklausurManager._compTermin);
@@ -952,6 +958,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten, die als Haupttermin angelegt wurden zum übergebenen Quartal
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
 	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
@@ -959,9 +966,9 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
-	public terminGetHTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = new ArrayList();
-		for (const t of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (t.istHaupttermin)
 				termine.add(t);
 		termine.sort(GostKursklausurManager._compTermin);
@@ -987,6 +994,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein
 	 * Datum gesetzt ist
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal             die Nummer des Quartals
 	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
@@ -994,9 +1002,9 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminMitDatumGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminMitDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
-		for (const termin of this.terminGetMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+		for (const termin of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(GostKursklausurManager._compTermin);
@@ -1007,6 +1015,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von HT-GostKlausurtermin-Objekten des Quartals, bei denen ein
 	 * Datum gesetzt ist
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal             die Nummer des Quartals
 	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
@@ -1014,9 +1023,9 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
-	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
-		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(halbjahr, quartal, includeMultiquartal))
+		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(GostKursklausurManager._compTermin);
@@ -1583,13 +1592,14 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert das GostKursklausur-Objekt zu den übergebenen Parametern.
 	 *
 	 * @param idKurs  die ID des Kurses
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal das Quartal der Klausur
 	 *
 	 * @return die Kursklausur
 	 */
-	public kursklausurByKursidAndHalbjahrAndQuartal(idKurs : number, halbjahr : GostHalbjahr, quartal : number) : GostKursklausur | null {
-		return this._kursklausur_by_idKurs_and_halbjahr_and_quartal.getOrNull(idKurs, halbjahr.id, quartal);
+	public kursklausurByKursidAndHalbjahrAndQuartal(idKurs : number, abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : GostKursklausur | null {
+		return this._kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal.getOrNull(idKurs, abiJahrgang, halbjahr.id, quartal);
 	}
 
 	/**
@@ -1717,21 +1727,22 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die ein Termin gesetzt wurde
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
-	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
 		if (quartal > 0) {
-			const skts : JavaMap<number, List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap3OrNull(halbjahr.id, quartal);
+			const skts : JavaMap<number, List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap4OrNull(abiJahrgang, halbjahr.id, quartal);
 			if (skts !== null)
 				for (let entry of skts.entrySet())
 					if (entry.getKey() !== -1)
 						ergebnis.addAll(entry.getValue());
 		} else {
-			const skts : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap2OrNull(halbjahr.id);
+			const skts : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap3OrNull(abiJahrgang, halbjahr.id);
 			if (skts !== null)
 				for (let entry of skts.entrySet())
 					for (let entry2 of entry.getValue().entrySet())
@@ -1745,14 +1756,15 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die ein Termin gesetzt wurde
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
-	public schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+	public schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
-		for (let termin of this.schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(halbjahr, quartal)) {
+		for (let termin of this.schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal)) {
 			let t : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(termin);
 			if (t !== null && t.datum !== null)
 				ergebnis.add(termin);
@@ -1764,18 +1776,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von aktuellen Nachschreib-GostSchuelerklausurTermin-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin gesetzt wurde
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gosthalbjahr
 	 * @param quartal  die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
-	public schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
+	public schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		if (quartal > 0) {
-			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getOrNull(halbjahr.id, quartal, -1);
+			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getOrNull(abiJahrgang, halbjahr.id, quartal, -1);
 			return skts !== null ? skts : new ArrayList();
 		}
 		const skts : List<GostSchuelerklausurTermin> = new ArrayList();
-		const mapHalbjahr : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_halbjahr_and_quartal_and_idTermin.getMap2OrNull(halbjahr.id);
+		const mapHalbjahr : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap3OrNull(abiJahrgang, halbjahr.id);
 		if (mapHalbjahr !== null)
 			for (const sktList of mapHalbjahr.values()) {
 				let listTermine : List<GostSchuelerklausurTermin> | null = sktList.get(-1);

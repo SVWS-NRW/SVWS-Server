@@ -1,5 +1,6 @@
 import type {
 	GostHalbjahr,
+	GostJahrgangsdaten,
 	GostKlausurenCollectionSkrsKrs,
 	GostKlausurtermin,
 	GostKlausurterminblockungDaten,
@@ -10,6 +11,7 @@ import type {
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungSchienenProps {
+	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKursklausurManager;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
