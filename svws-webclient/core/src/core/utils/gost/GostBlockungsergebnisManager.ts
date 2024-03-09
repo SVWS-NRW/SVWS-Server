@@ -939,9 +939,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateKursdifferenzUpdate(idFachart : number) : void {
 		const kursmenge : List<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(idFachart);
-		const kurs1 : GostBlockungsergebnisKurs = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
-		let min : number = kurs1.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs1.id);
-		let max : number = min;
+		let min : number = this._parent.fachwahlGetListeOfFachart(idFachart).size();
+		let max : number = 0;
 		for (const kurs of kursmenge) {
 			const keyIgnoreID : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id]);
 			if (this._parent.regelGetByLongArrayKeyOrNull(keyIgnoreID) !== null)
@@ -950,7 +949,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			min = Math.min(min, size);
 			max = Math.max(max, size);
 		}
-		const newKD : number = max - min;
+		let newKD : number = max - min;
+		if (newKD < 0)
+			newKD = 0;
 		const oldKD : number = this.getOfFachartKursdifferenz(idFachart);
 		if (newKD === oldKD)
 			return;

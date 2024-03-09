@@ -391,6 +391,7 @@ public class GostBlockungsergebnisManager {
 					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		}
 
+
 		// _fachartmenge_sortiert erzeugen.
 		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());
 
@@ -1010,11 +1011,10 @@ public class GostBlockungsergebnisManager {
 	private void stateKursdifferenzUpdate(final long idFachart) {
 		// Den ersten Kurs der Fachart holen.
 		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfFachartKursmenge(idFachart);
-		final @NotNull GostBlockungsergebnisKurs kurs1 = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
 
 		// Neue Kursdifferenz berechnen
-		int min = kurs1.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs1.id);
-		int max = min;
+		int min = _parent.fachwahlGetListeOfFachart(idFachart).size();
+		int max = 0;
 		for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
 			// Wichtig: Kurse die zu ignorieren sind, müssen beachtet werden!
 			final @NotNull LongArrayKey keyIgnoreID = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id});
@@ -1026,7 +1026,11 @@ public class GostBlockungsergebnisManager {
 			min = Math.min(min, size);
 			max = Math.max(max, size);
 		}
-		final int newKD = max - min;
+		int newKD = max - min;
+
+		// Sonderfall: Falls es alle Kursdifferenzen ignoriert werden sollen.
+		if (newKD < 0)
+			newKD = 0;
 
 		// Kursdifferenz ändert sich nicht.
 		final int oldKD = getOfFachartKursdifferenz(idFachart);

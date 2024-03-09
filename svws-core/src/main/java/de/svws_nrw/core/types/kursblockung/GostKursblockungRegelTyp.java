@@ -27,7 +27,10 @@ import jakarta.validation.constraints.NotNull;
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> DONE
  * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       --> DONE
- */
+ *
+ * <br> GUI Anpassung
+ * <br> SCardGostRegelansicht.vue
+*/
 public enum GostKursblockungRegelTyp {
 
 	/**
