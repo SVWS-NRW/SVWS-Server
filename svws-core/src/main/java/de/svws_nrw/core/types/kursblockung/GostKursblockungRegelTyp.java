@@ -22,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
  * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
+ * <br> {@link GostBlockungsergebnisManager}: ggf. Methodenanpassungen                                    -->
  * <br>
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> DONE
@@ -207,7 +208,17 @@ public enum GostKursblockungRegelTyp {
 	 */
 	SCHUELER_IGNORIEREN(16, "Schüler: Ignorieren", Arrays.asList(
 		GostKursblockungRegelParameterTyp.SCHUELER_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass bei Kursdifferenz-Berechnungen der Kurs ignoriert wird.
+	 * Dies bezieht sich nur auf die Visualisierung.
+	 * <br>- Parameter A: Datenbank-ID des Kurses (long)
+	 */
+	KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(17, "Kurs: Kursdifferenz bei der Visualisierung ignorieren", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID
 	));
+
 
 	/** Die ID des Regel-Typs */
 	public final int typ;

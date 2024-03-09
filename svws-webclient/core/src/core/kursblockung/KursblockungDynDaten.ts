@@ -282,6 +282,10 @@ export class KursblockungDynDaten extends JavaObject {
 					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp16(daten, setSchueler);
 					break;
 				}
+				case GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp17(daten, setKurse);
+					break;
+				}
 				default: {
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!")
 				}
@@ -435,6 +439,13 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("SCHUELER_IGNORIEREN daten.length=" + length + ", statt 1!", length !== 1);
 		const schuelerID : number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp17(daten : Array<number>, setKurse : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=" + length + ", statt 1!", length !== 1);
+		const kursID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
 	private schritt02FehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {

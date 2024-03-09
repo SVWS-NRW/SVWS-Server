@@ -943,6 +943,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let min : number = kurs1.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs1.id);
 		let max : number = min;
 		for (const kurs of kursmenge) {
+			const keyIgnoreID : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id]);
+			if (this._parent.regelGetByLongArrayKeyOrNull(keyIgnoreID) !== null)
+				continue;
 			const size : number = kurs.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs.id);
 			min = Math.min(min, size);
 			max = Math.max(max, size);
@@ -4254,7 +4257,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
 	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
 	 *
-	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
 	 */
@@ -4270,20 +4273,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
-	 * <br>(1) Wenn diese Regel existiert, wird sie entfernt.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge von Kursdifferenz-Berechnungen auszuschließen.
+	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
 	 *
-	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge von Kursdifferenz-Berechnungen auszuschließen.
 	 */
-	public regelupdateRemove_16_SCHUELER_IGNORIEREN(setSchuelerID : JavaSet<number>) : GostBlockungRegelUpdate {
+	public regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		for (const idSchueler of setSchuelerID) {
-			const keySchuelerIgnorieren : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler]);
-			const regelSchuelerIgnorieren : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
-			if (regelSchuelerIgnorieren !== null)
-				u.listEntfernen.add(regelSchuelerIgnorieren);
+		for (const idKurs of setKursID) {
+			const keyKurs_KD_ignorieren : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs]);
+			const regelKurs_KD_ignorieren : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyKurs_KD_ignorieren);
+			if (regelKurs_KD_ignorieren === null)
+				u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs));
 		}
 		return u;
 	}

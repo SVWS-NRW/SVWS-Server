@@ -149,6 +149,13 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	public static readonly SCHUELER_IGNORIEREN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_IGNORIEREN", 16, 16, "Schüler: Ignorieren", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID));
 
 	/**
+	 *  Der Regel-Typ zum forcieren, dass bei Kursdifferenz-Berechnungen der Kurs ignoriert wird.
+	 *  Dies bezieht sich nur auf die Visualisierung.
+	 *  <br>- Parameter A: Datenbank-ID des Kurses (long)
+	 */
+	public static readonly KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN", 17, 17, "Kurs: Kursdifferenz bei der Visualisierung ignorieren", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID));
+
+	/**
 	 * Die ID des Regel-Typs
 	 */
 	public readonly typ : number;

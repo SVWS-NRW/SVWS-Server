@@ -455,6 +455,7 @@ public class GostBlockungsergebnisManager {
 			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, _map_regelID_verletzungen);
 
 		// stateRegelvalidierung16 ist nicht nötig
+		// stateRegelvalidierung17 ist nicht nötig
 
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
 		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15};
@@ -1011,10 +1012,16 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfFachartKursmenge(idFachart);
 		final @NotNull GostBlockungsergebnisKurs kurs1 = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
 
-		// Neue Kursdifferenz berechnen (Wichtig: DummySuS müssen beachtet werden)
+		// Neue Kursdifferenz berechnen
 		int min = kurs1.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs1.id);
 		int max = min;
 		for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
+			// Wichtig: Kurse die zu ignorieren sind, müssen beachtet werden!
+			final @NotNull LongArrayKey keyIgnoreID = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id});
+			if (_parent.regelGetByLongArrayKeyOrNull(keyIgnoreID) != null)
+				continue;
+
+			// Wichtig: DummySuS müssen beachtet werden!
 			final int size = kurs.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs.id);
 			min = Math.min(min, size);
 			max = Math.max(max, size);
@@ -4676,7 +4683,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
 	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
 	 *
-	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
 	 */
@@ -4696,27 +4703,28 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
-	 * <br>(1) Wenn diese Regel existiert, wird sie entfernt.
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge von Kursdifferenz-Berechnungen auszuschließen.
+	 * <br>(1) Wenn diese Regel nicht existiert, wird sie hinzugefügt.
 	 *
-	 * @param setSchuelerID  Die Menge der Kurs-IDs.
+	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken nicht mehr zu ignorieren.
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge von Kursdifferenz-Berechnungen auszuschließen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_16_SCHUELER_IGNORIEREN(final @NotNull Set<@NotNull Long> setSchuelerID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(final @NotNull Set<@NotNull Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		for (final long idSchueler : setSchuelerID) {
-			final @NotNull LongArrayKey keySchuelerIgnorieren = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler});
-			final GostBlockungRegel regelSchuelerIgnorieren = _parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
+		for (final long idKurs : setKursID) {
+			final @NotNull LongArrayKey keyKurs_KD_ignorieren = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs});
+			final GostBlockungRegel regelKurs_KD_ignorieren = _parent.regelGetByLongArrayKeyOrNull(keyKurs_KD_ignorieren);
 
 			// (1)
-			if (regelSchuelerIgnorieren != null)
-				u.listEntfernen.add(regelSchuelerIgnorieren);
+			if (regelKurs_KD_ignorieren == null)
+				u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs));
 		}
 
 		return u;
 	}
+
 
 	/**
 	 * Entfernt erst alle Regeln aus {@link GostBlockungRegelUpdate#listEntfernen} und
