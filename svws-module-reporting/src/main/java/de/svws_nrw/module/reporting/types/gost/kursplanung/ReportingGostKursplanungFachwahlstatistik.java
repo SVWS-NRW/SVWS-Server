@@ -18,7 +18,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	private int differenzKursgroessenLK = 0;
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart ZK. */
-	private int differenzKursgroessenZK =0;
+	private int differenzKursgroessenZK = 0;
 
 	/** Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden. */
 	private ReportingFach fach;
