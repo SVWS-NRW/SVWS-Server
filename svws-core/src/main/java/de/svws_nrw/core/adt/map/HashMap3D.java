@@ -153,6 +153,32 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	}
 
 	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public boolean containsKey1(final @NotNull K1 key1) {
+		return _map1.containsKey(key1);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public boolean containsKey1AndKey2(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return false;
+		return map2.containsKey(key2);
+	}
+
+	/**
 	 * Liefert TRUE, falls für das Tripel (key1, key2, key3) ein Mapping existiert.
 	 *
 	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).

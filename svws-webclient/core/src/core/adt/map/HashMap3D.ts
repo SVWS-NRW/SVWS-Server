@@ -131,6 +131,32 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public containsKey1(key1 : K1) : boolean {
+		return this._map1.containsKey(key1);
+	}
+
+	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public containsKey1AndKey2(key1 : K1, key2 : K2) : boolean {
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return false;
+		return map2.containsKey(key2);
+	}
+
+	/**
 	 * Liefert TRUE, falls für das Tripel (key1, key2, key3) ein Mapping existiert.
 	 *
 	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).
