@@ -3141,12 +3141,7 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(kurs.id))
 				if (!getOfKursOfSchieneIstFixiert(kurs.id, schiene.id)) {
 					final long schienenNr = _parent.schieneGet(schiene.id).nummer;
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-					regel.parameter.add(kurs.id);
-					regel.parameter.add(schienenNr);
-					list.add(regel);
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr));
 				}
 
 		return list;
@@ -3167,12 +3162,7 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs))
 				if (!getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
 					final long schienenNr = _parent.schieneGet(schiene.id).nummer;
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-					regel.parameter.add(idKurs);
-					regel.parameter.add(schienenNr);
-					list.add(regel);
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
 				}
 
 		return list;
@@ -3189,14 +3179,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(schueler.id);
-					regel.parameter.add(kurs.id);
-					list.add(regel);
-				}
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, kurs.id));
 
 		return list;
 	}
@@ -3212,14 +3196,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
-				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))) {
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(schueler.id);
-					regel.parameter.add(kurs.id);
-					list.add(regel);
-				}
+				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, kurs.id));
 
 		return list;
 	}
@@ -3237,14 +3215,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull Long idKurs : listeDerKursIDs)
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) {
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(schueler.id);
-					regel.parameter.add(idKurs);
-					list.add(regel);
-				}
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
 
 		return list;
 	}
@@ -3262,14 +3234,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull Long idKurs : listeDerKursIDs)
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
-				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))) {
-					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = -1; // Dummy-ID
-					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(schueler.id);
-					regel.parameter.add(idKurs);
-					list.add(regel);
-				}
+				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
 
 		return list;
 	}
@@ -3337,15 +3303,8 @@ public class GostBlockungsergebnisManager {
 
 		// (3)
 		final @NotNull LongArrayKey keyVonBis = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis});
-		if (_parent.regelGetByLongArrayKeyOrNull(keyVonBis) == null) {
-			final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
-			regelNeu.id = -1;
-			regelNeu.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
-			regelNeu.parameter.add((long) kursart);
-			regelNeu.parameter.add((long) von);
-			regelNeu.parameter.add((long) bis);
-			u.listHinzuzufuegen.add(regelNeu);
-		}
+		if (_parent.regelGetByLongArrayKeyOrNull(keyVonBis) == null)
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis));
 
 		return u;
 	}
@@ -3393,13 +3352,7 @@ public class GostBlockungsergebnisManager {
 			}
 
 		// (4)
-		final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-		rNeu.id = -1;
-		rNeu.typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ;
-		rNeu.parameter.add((long) kursart);
-		rNeu.parameter.add((long) von);
-		rNeu.parameter.add((long) bis);
-		u.listHinzuzufuegen.add(rNeu);
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis));
 
 		return u;
 	}
@@ -3431,14 +3384,8 @@ public class GostBlockungsergebnisManager {
 					// (2)
 					final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr});
 					final GostBlockungRegel rFixierung = _parent.regelGetByLongArrayKeyOrNull(kFixierung);
-					if (rFixierung == null) {
-						final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
-						regelNeu.id = -1;
-						regelNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-						regelNeu.parameter.add(idKurs);
-						regelNeu.parameter.add((long) nr);
-						u.listHinzuzufuegen.add(regelNeu);
-					}
+					if (rFixierung == null)
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
 				}
 
 			// (3) Fixiert + kein Kurs
@@ -3503,14 +3450,8 @@ public class GostBlockungsergebnisManager {
 
 				if (getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
 					// (1)
-					if (rFixierung == null) {
-						final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-						rNeu.id = -1;
-						rNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-						rNeu.parameter.add(idKurs);
-						rNeu.parameter.add((long) nr);
-						u.listHinzuzufuegen.add(rNeu);
-					}
+					if (rFixierung == null)
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
 				} else {
 					// (2)
 					if (rFixierung != null)
@@ -3593,12 +3534,7 @@ public class GostBlockungsergebnisManager {
 					}
 
 					// (2)
-					final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
-					regelNeu.id = -1;
-					regelNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-					regelNeu.parameter.add(idKurs);
-					regelNeu.parameter.add((long) schieneG.nummer);
-					u.listHinzuzufuegen.add(regelNeu);
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer));
 
 					// (3)
 					final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
@@ -3647,12 +3583,8 @@ public class GostBlockungsergebnisManager {
 					u.listEntfernen.add(rFixierungAlt);
 			}
 
-		final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-		rNeu.id = -1;
-		rNeu.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-		rNeu.parameter.add(idKurs);
-		rNeu.parameter.add((long) schienenNr);
-		u.listHinzuzufuegen.add(rNeu);
+		// Hinzufügen
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
 
 		return u;
 	}
@@ -3697,14 +3629,8 @@ public class GostBlockungsergebnisManager {
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
 				final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr});
 				final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-				if ((regelSperrung == null) && (regelFixierung == null)) {
-					final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
-					regelNeu.id = -1;
-					regelNeu.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
-					regelNeu.parameter.add(idKurs);
-					regelNeu.parameter.add((long) schienenNr);
-					u.listHinzuzufuegen.add(regelNeu);
-				}
+				if ((regelSperrung == null) && (regelFixierung == null))
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr));
 			}
 
 		return u;
@@ -3761,14 +3687,8 @@ public class GostBlockungsergebnisManager {
 					// (2)
 					final @NotNull LongArrayKey keyFixierung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer});
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-					if (regelFixierung == null) {
-						final @NotNull GostBlockungRegel regelNeu = new GostBlockungRegel();
-						regelNeu.id = -1;
-						regelNeu.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
-						regelNeu.parameter.add(idKurs);
-						regelNeu.parameter.add((long) schieneG.nummer);
-						u.listHinzuzufuegen.add(regelNeu);
-					}
+					if (regelFixierung == null)
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer));
 				}
 			}
 
@@ -3807,13 +3727,9 @@ public class GostBlockungsergebnisManager {
 					final GostBlockungRegel regelFixierung = _parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 
 					if (kurs1.id == kurs2.id) {
-						if (regelFixierung == null) { // (2)
-							final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-							regelHinzufuegen.id = -1;
-							regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-							regelHinzufuegen.parameter.add(idSchueler);
-							regelHinzufuegen.parameter.add(idKurs);
-							u.listHinzuzufuegen.add(regelHinzufuegen);
+						if (regelFixierung == null) {
+							// (2)
+							u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
 						} // ELSE (3)
 					} else {
 						if (regelFixierung != null) // (4)
@@ -3938,12 +3854,7 @@ public class GostBlockungsergebnisManager {
 					u.listEntfernen.add(rFixierung);
 				} else {
 					// (2)
-					final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-					rNeu.id = -1;
-					rNeu.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					rNeu.parameter.add(idSchueler);
-					rNeu.parameter.add(idKurs1);
-					u.listHinzuzufuegen.add(rNeu);
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs1));
 				}
 
 				// (3)
@@ -4192,12 +4103,7 @@ public class GostBlockungsergebnisManager {
 				if (kurs1.id == kurs2.id) {
 					if (regelFixierung == null) {
 						// (2)
-						final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-						regelHinzufuegen.id = -1;
-						regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-						regelHinzufuegen.parameter.add(idSchueler);
-						regelHinzufuegen.parameter.add(idKurs);
-						u.listHinzuzufuegen.add(regelHinzufuegen);
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
 					}
 				} else {
 					if (regelFixierung != null) {
@@ -4234,14 +4140,8 @@ public class GostBlockungsergebnisManager {
 				// (2)
 				final @NotNull LongArrayKey keySperrung = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs});
 				final GostBlockungRegel regelSperrung = _parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung == null) {
-					final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-					regelHinzufuegen.id = -1;
-					regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
-					regelHinzufuegen.parameter.add(idSchueler);
-					regelHinzufuegen.parameter.add(idKurs);
-					u.listHinzuzufuegen.add(regelHinzufuegen);
-				}
+				if (regelSperrung == null)
+					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs));
 			}
 
 		return u;
@@ -4349,14 +4249,8 @@ public class GostBlockungsergebnisManager {
 					// (3)
 					final @NotNull LongArrayKey keyVerboten12 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2});
 					final GostBlockungRegel regelVerboten12 = _parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
-					if (regelVerboten12 == null) {
-						final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-						regelHinzufuegen.id = -1;
-						regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
-						regelHinzufuegen.parameter.add(idKurs1);
-						regelHinzufuegen.parameter.add(idKurs2);
-						u.listHinzuzufuegen.add(regelHinzufuegen);
-					}
+					if (regelVerboten12 == null)
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2));
 				}
 
 		return u;
@@ -4425,14 +4319,8 @@ public class GostBlockungsergebnisManager {
 					// (3)
 					final @NotNull LongArrayKey keyZusammen12 = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2});
 					final GostBlockungRegel regelZusammen12 = _parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-					if (regelZusammen12 == null) {
-						final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-						regelHinzufuegen.id = -1;
-						regelHinzufuegen.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
-						regelHinzufuegen.parameter.add(idKurs1);
-						regelHinzufuegen.parameter.add(idKurs2);
-						u.listHinzuzufuegen.add(regelHinzufuegen);
-					}
+					if (regelZusammen12 == null)
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2));
 				}
 
 		return u;
@@ -4482,19 +4370,12 @@ public class GostBlockungsergebnisManager {
 
 		// (1)
 		for (final GostBlockungRegel rAlt : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			if (idKurs == rAlt.parameter.get(0)) {
+			if (idKurs == rAlt.parameter.get(0))
 				u.listEntfernen.add(rAlt);
-			}
 
 		// (2)
-		if (anzahl > 0) {
-			final @NotNull GostBlockungRegel rNeu = new GostBlockungRegel();
-			rNeu.id = -1;
-			rNeu.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
-			rNeu.parameter.add(idKurs);
-			rNeu.parameter.add((long) anzahl);
-			u.listHinzuzufuegen.add(rNeu);
-		}
+		if (anzahl > 0)
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl));
 
 		return u;
 	}
@@ -4519,12 +4400,8 @@ public class GostBlockungsergebnisManager {
 			u.listEntfernen.add(regelDummyAlt);
 
 		// (2)
-		if ((erstellen) && (regelDummyAlt == null)) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ;
-			u.listHinzuzufuegen.add(regelHinzufuegen);
-		}
+		if ((erstellen) && (regelDummyAlt == null))
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel0(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ));
 
 		return u;
 	}
@@ -4598,15 +4475,8 @@ public class GostBlockungsergebnisManager {
 		// (5b)
 		final @NotNull LongArrayKey keyZusammenFach12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach});
 		final GostBlockungRegel regelZusammenFach12 = _parent.regelGetByLongArrayKeyOrNull(keyZusammenFach12);
-		if (regelZusammenFach12 == null) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ;
-			regelHinzufuegen.parameter.add(idS1);
-			regelHinzufuegen.parameter.add(idS2);
-			regelHinzufuegen.parameter.add(idFach);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
-		}
+		if (regelZusammenFach12 == null)
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
 
 		return u;
 	}
@@ -4680,15 +4550,8 @@ public class GostBlockungsergebnisManager {
 		// (5b)
 		final @NotNull LongArrayKey keyVerbietenFach12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach});
 		final GostBlockungRegel regelVerbietenFach12 = _parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach12);
-		if (regelVerbietenFach12 == null) {
-			final @NotNull GostBlockungRegel regelHinzufuegen = new GostBlockungRegel();
-			regelHinzufuegen.id = -1;
-			regelHinzufuegen.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ;
-			regelHinzufuegen.parameter.add(idS1);
-			regelHinzufuegen.parameter.add(idS2);
-			regelHinzufuegen.parameter.add(idFach);
-			u.listHinzuzufuegen.add(regelHinzufuegen);
-		}
+		if (regelVerbietenFach12 == null)
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
 
 		return u;
 	}
@@ -4732,14 +4595,8 @@ public class GostBlockungsergebnisManager {
 				u.listEntfernen.add(r14);
 
 		// (5)
-		if ((0 <= idS1) && (idS1 < idS2)) {
-			final @NotNull GostBlockungRegel r13neu = new GostBlockungRegel();
-			r13neu.id = -1;
-			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ;
-			r13neu.parameter.add(idS1);
-			r13neu.parameter.add(idS2);
-			u.listHinzuzufuegen.add(r13neu);
-		}
+		if ((0 <= idS1) && (idS1 < idS2))
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2));
 
 		return u;
 	}
@@ -4783,14 +4640,8 @@ public class GostBlockungsergebnisManager {
 				u.listEntfernen.add(r14);
 
 		// (5)
-		if ((0 <= idS1) && (idS1 < idS2)) {
-			final @NotNull GostBlockungRegel r13neu = new GostBlockungRegel();
-			r13neu.id = -1;
-			r13neu.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ;
-			r13neu.parameter.add(idS1);
-			r13neu.parameter.add(idS2);
-			u.listHinzuzufuegen.add(r13neu);
-		}
+		if ((0 <= idS1) && (idS1 < idS2))
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2));
 
 		return u;
 	}

@@ -49,6 +49,20 @@ public final class DTOUtils {
     }
 
     /**
+     * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit keinem Parameter.
+     *
+     * @param typ     Der {@link GostKursblockungRegelTyp}.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit keinem Parameter.
+     */
+	public static @NotNull GostBlockungRegel newGostBlockungRegel0(final int typ) {
+		final @NotNull GostBlockungRegel r = new GostBlockungRegel();
+		r.id = -1;
+		r.typ = typ;
+		return r;
+	}
+
+    /**
      * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau einem Parameter.
      *
      * @param typ     Der {@link GostKursblockungRegelTyp}.
@@ -79,6 +93,26 @@ public final class DTOUtils {
 		r.typ = typ;
 		r.parameter.add(param1);
 		r.parameter.add(param2);
+		return r;
+	}
+
+    /**
+     * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau drei Parametern.
+     *
+     * @param typ     Der {@link GostKursblockungRegelTyp}.
+     * @param param1  Der 1. Parameter.
+     * @param param2  Der 2. Parameter.
+     * @param param3  Der 3. Parameter.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit genau drei Parametern.
+     */
+	public static @NotNull GostBlockungRegel newGostBlockungRegel3(final int typ, final long param1, final long param2, final long param3) {
+		final @NotNull GostBlockungRegel r = new GostBlockungRegel();
+		r.id = -1;
+		r.typ = typ;
+		r.parameter.add(param1);
+		r.parameter.add(param2);
+		r.parameter.add(param3);
 		return r;
 	}
 
