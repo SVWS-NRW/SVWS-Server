@@ -1,5 +1,6 @@
 import { computed } from "vue";
 
+import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "~/components/Config";
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursListeEintrag, JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse } from "@core";
@@ -52,6 +53,11 @@ class Api {
 	/** Gibt den Benutzernamen für die Verbindung zum SVWS-Server zurück **/
 	get username() : string {
 		return this.conn.username;
+	}
+
+	/** Gibt das AES-Objekt zurück */
+	get aes(): AES {
+		return this.conn.aes;
 	}
 
 	/** Gibt die Version des SVWS-Servers zurück */

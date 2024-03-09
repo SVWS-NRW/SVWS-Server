@@ -309,6 +309,7 @@
 			type: input.type || 'text',
 			divider: input.divider || false,
 			toggle: input.toggle || false
+			// TODO ivisible toggle, statt disabled
 		}
 	}
 

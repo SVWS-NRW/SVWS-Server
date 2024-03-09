@@ -2,9 +2,11 @@ import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode } from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode, DeveloperNotificationException } from "@core";
 
 import { Config } from "~/components/Config";
+import { AES } from "~/utils/crypto/aes";
+import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
 export class ApiConnection {
 
@@ -22,6 +24,9 @@ export class ApiConnection {
 
 	// Das Kennwort für den Login
 	protected _password = "";
+
+	// Das benutzerspezifische AES-Objekt zur Verschlüsselung
+	protected _aes = shallowRef<AES | undefined>(undefined);
 
 	// Der Name des Schemas auf dem SVWS-Server, bei dem der Login stattfindet
 	protected _schema: string | undefined;
@@ -115,6 +120,14 @@ export class ApiConnection {
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
 	get mode(): ServerMode {
 		return this._serverMode.value;
+	}
+
+	// Gibt ein Promise zurück mit einem AES-Schlüssel
+	get aes(): AES {
+		const aes = this._aes.value;
+		if (aes === undefined)
+			throw new DeveloperNotificationException("Das AES-Objekt ist nicht definiert")
+		return aes;
 	}
 
 	/**
@@ -289,6 +302,8 @@ export class ApiConnection {
 			this._schema = schema;
 			this._username = username;
 			this._password = password;
+			const aesKey = await AES.getKey256(password, username);
+			this._aes.value = new AES(AESAlgo.CBC, aesKey);
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
@@ -306,6 +321,7 @@ export class ApiConnection {
 			this.config.mapUser = new Map();
 			this._stammdaten.value.stammdaten = undefined;
 			this._serverMode.value = ServerMode.STABLE;
+			this._aes.value = undefined;
 		}
 	}
 
@@ -337,6 +353,7 @@ export class ApiConnection {
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;
+		this._aes.value = undefined;
 	}
 
 	/**
