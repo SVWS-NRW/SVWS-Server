@@ -10,6 +10,16 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
  */
 public class ReportingGostKursplanungFachwahlstatistik {
 
+
+	/** Die Kursgrößendifferenz des Faches für die Kursart GK. */
+	private int differenzKursgroessenGK = 0;
+
+	/** Die Kursgrößendifferenz des Faches für die Kursart LK. */
+	private int differenzKursgroessenLK = 0;
+
+	/** Die Kursgrößendifferenz des Faches für die Kursart ZK. */
+	private int differenzKursgroessenZK =0;
+
 	/** Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden. */
 	private ReportingFach fach;
 
@@ -37,6 +47,9 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 * @param differenzKursgroessenGK Die Kursgrößendifferenz des Faches für die Kursart GK.
+	 * @param differenzKursgroessenLK Die Kursgrößendifferenz des Faches für die Kursart LK.
+	 * @param differenzKursgroessenZK Die Kursgrößendifferenz des Faches für die Kursart ZK.
 	 * @param fach Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden.
 	 * @param wahlenAB3 Die Anzahl der Wahlen als drittes Abiturfach.
 	 * @param wahlenAB4 Die Anzahl der Wahlen als viertes Abiturfach.
@@ -46,7 +59,10 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * @param wahlenLK Die Gesamtzahl der Wahlen als Leistungskurs.
 	 * @param wahlenZK Die Anzahl der Wahlen als Zusatzkurs.
 	 */
-	public ReportingGostKursplanungFachwahlstatistik(final ReportingFach fach, final int wahlenAB3, final int wahlenAB4, final int wahlenGK, final int wahlenGKMuendlich, final int wahlenGKSchriftlich, final int wahlenLK, final int wahlenZK) {
+	public ReportingGostKursplanungFachwahlstatistik(final int differenzKursgroessenGK, final int differenzKursgroessenLK, final int differenzKursgroessenZK, final ReportingFach fach, final int wahlenAB3, final int wahlenAB4, final int wahlenGK, final int wahlenGKMuendlich, final int wahlenGKSchriftlich, final int wahlenLK, final int wahlenZK) {
+		this.differenzKursgroessenGK = differenzKursgroessenGK;
+		this.differenzKursgroessenLK = differenzKursgroessenLK;
+		this.differenzKursgroessenZK = differenzKursgroessenZK;
 		this.fach = fach;
 		this.wahlenAB3 = wahlenAB3;
 		this.wahlenAB4 = wahlenAB4;
@@ -62,10 +78,58 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	// ##### Getter und Setter #####
 
 	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart GK.
+	 * @return Inhalt des Feldes differenzKursgroessenGK
+	 */
+	public int differenzKursgroessenGK() {
+		return differenzKursgroessenGK;
+	}
+
+	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart GK wird gesetzt.
+	 * @param differenzKursgroessenGK Wert für das Feld differenzKursgroessenGK
+	 */
+	public void setDifferenzKursgroessenGK(final int differenzKursgroessenGK) {
+		this.differenzKursgroessenGK = differenzKursgroessenGK;
+	}
+
+	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart LK.
+	 * @return Inhalt des Feldes differenzKursgroessenLK
+	 */
+	public int differenzKursgroessenLK() {
+		return differenzKursgroessenLK;
+	}
+
+	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart LK wird gesetzt.
+	 * @param differenzKursgroessenLK Wert für das Feld differenzKursgroessenLK
+	 */
+	public void setDifferenzKursgroessenLK(final int differenzKursgroessenLK) {
+		this.differenzKursgroessenLK = differenzKursgroessenLK;
+	}
+
+	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart ZK.
+	 * @return Inhalt des Feldes differenzKursgroessenZK
+	 */
+	public int differenzKursgroessenZK() {
+		return differenzKursgroessenZK;
+	}
+
+	/**
+	 * Die Kursgrößendifferenz des Faches für die Kursart ZK wird gesetzt.
+	 * @param differenzKursgroessenZK Wert für das Feld differenzKursgroessenZK
+	 */
+	public void setDifferenzKursgroessenZK(final int differenzKursgroessenZK) {
+		this.differenzKursgroessenZK = differenzKursgroessenZK;
+	}
+
+	/**
 	 * Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden.
 	 * @return Inhalt des Feldes fach
 	 */
-	public  ReportingFach fach() {
+	public ReportingFach fach() {
 		return fach;
 	}
 
@@ -73,7 +137,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden, wird gesetzt.
 	 * @param fach Neuer Wert für das Feld fach
 	 */
-	public void setFach(final  ReportingFach fach) {
+	public void setFach(final ReportingFach fach) {
 		this.fach = fach;
 	}
 
@@ -81,7 +145,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als drittes Abiturfach.
 	 * @return Inhalt des Feldes wahlenAB3
 	 */
-	public  int wahlenAB3() {
+	public int wahlenAB3() {
 		return wahlenAB3;
 	}
 
@@ -89,7 +153,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als drittes Abiturfach wird gesetzt.
 	 * @param wahlenAB3 Neuer Wert für das Feld wahlenAB3
 	 */
-	public void setWahlenAB3(final  int wahlenAB3) {
+	public void setWahlenAB3(final int wahlenAB3) {
 		this.wahlenAB3 = wahlenAB3;
 	}
 
@@ -97,7 +161,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als viertes Abiturfach.
 	 * @return Inhalt des Feldes wahlenAB4
 	 */
-	public  int wahlenAB4() {
+	public int wahlenAB4() {
 		return wahlenAB4;
 	}
 
@@ -105,7 +169,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als viertes Abiturfach wird gesetzt.
 	 * @param wahlenAB4 Neuer Wert für das Feld wahlenAB4
 	 */
-	public void setWahlenAB4(final  int wahlenAB4) {
+	public void setWahlenAB4(final int wahlenAB4) {
 		this.wahlenAB4 = wahlenAB4;
 	}
 
@@ -113,7 +177,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs.
 	 * @return Inhalt des Feldes wahlenGK
 	 */
-	public  int wahlenGK() {
+	public int wahlenGK() {
 		return wahlenGK;
 	}
 
@@ -121,7 +185,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs wird gesetzt.
 	 * @param wahlenGK Neuer Wert für das Feld wahlenGK
 	 */
-	public void setWahlenGK(final  int wahlenGK) {
+	public void setWahlenGK(final int wahlenGK) {
 		this.wahlenGK = wahlenGK;
 	}
 
@@ -129,7 +193,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs.
 	 * @return Inhalt des Feldes wahlenGKMuendlich
 	 */
-	public  int wahlenGKMuendlich() {
+	public int wahlenGKMuendlich() {
 		return wahlenGKMuendlich;
 	}
 
@@ -137,7 +201,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs wird gesetzt.
 	 * @param wahlenGKMuendlich Neuer Wert für das Feld wahlenGKMuendlich
 	 */
-	public void setWahlenGKMuendlich(final  int wahlenGKMuendlich) {
+	public void setWahlenGKMuendlich(final int wahlenGKMuendlich) {
 		this.wahlenGKMuendlich = wahlenGKMuendlich;
 	}
 
@@ -145,7 +209,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als schriftlicher Grundkurs.
 	 * @return Inhalt des Feldes wahlenGKSchriftlich
 	 */
-	public  int wahlenGKSchriftlich() {
+	public int wahlenGKSchriftlich() {
 		return wahlenGKSchriftlich;
 	}
 
@@ -153,7 +217,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als schriftlicher Grundkurs wird gesetzt.
 	 * @param wahlenGKSchriftlich Neuer Wert für das Feld wahlenGKSchriftlich
 	 */
-	public void setWahlenGKSchriftlich(final  int wahlenGKSchriftlich) {
+	public void setWahlenGKSchriftlich(final int wahlenGKSchriftlich) {
 		this.wahlenGKSchriftlich = wahlenGKSchriftlich;
 	}
 
@@ -161,7 +225,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Gesamtzahl der Wahlen als Leistungskurs.
 	 * @return Inhalt des Feldes wahlenLK
 	 */
-	public  int wahlenLK() {
+	public int wahlenLK() {
 		return wahlenLK;
 	}
 
@@ -169,7 +233,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Gesamtzahl der Wahlen als Leistungskurs wird gesetzt.
 	 * @param wahlenLK Neuer Wert für das Feld wahlenLK
 	 */
-	public void setWahlenLK(final  int wahlenLK) {
+	public void setWahlenLK(final int wahlenLK) {
 		this.wahlenLK = wahlenLK;
 	}
 
@@ -177,7 +241,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als Zusatzkurs.
 	 * @return Inhalt des Feldes wahlenZK
 	 */
-	public  int wahlenZK() {
+	public int wahlenZK() {
 		return wahlenZK;
 	}
 
@@ -185,7 +249,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 	 * Die Anzahl der Wahlen als Zusatzkurs wird gesetzt.
 	 * @param wahlenZK Neuer Wert für das Feld wahlenZK
 	 */
-	public void setWahlenZK(final  int wahlenZK) {
+	public void setWahlenZK(final int wahlenZK) {
 		this.wahlenZK = wahlenZK;
 	}
 }

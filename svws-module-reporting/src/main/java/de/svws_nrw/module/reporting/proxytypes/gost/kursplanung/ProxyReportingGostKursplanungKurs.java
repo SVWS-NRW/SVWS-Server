@@ -48,10 +48,10 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param anzahlAB4					Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist.
 	 * @param anzahlDummy 				Anzahl der Dummy-Schüler.
 	 * @param anzahlExterne				Anzahl der Schülerinnen und Schüler mit Status extern.
-	 * @param anzahlKlausurschreiber	Anzahl der Klausurschreiber.
 	 * @param anzahlSchueler			Anzahl der Schülerinnen und Schüler im Kurs.
+	 * @param anzahlSchuelerSchriftlich	Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben..
 	 * @param bezeichnung				Bezeichnung des Kurses.
-	 * @param fach 			Farbe des Faches des Kurses im Web-Client.
+	 * @param fach 						Das Fach des Kurses.
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
@@ -59,8 +59,8 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
-	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
-		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlKlausurschreiber, anzahlSchueler, bezeichnung, fach, gostHalbjahr, gostKursart, id, lehrkraefte, schienen, schueler);
+	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+		super(anzahlAB12, anzahlAB3, anzahlAB4, anzahlDummy, anzahlExterne, anzahlSchueler, anzahlSchuelerSchriftlich, bezeichnung, fach, gostHalbjahr, gostKursart, id, lehrkraefte, schienen, schueler);
 		this.reportingGostKursplanungBlockungsergebnis = reportingGostKursplanungBlockungsergebnis;
 	}
 

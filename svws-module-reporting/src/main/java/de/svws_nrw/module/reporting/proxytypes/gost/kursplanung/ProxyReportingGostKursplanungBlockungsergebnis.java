@@ -176,8 +176,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id),
 				ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id),
 				ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
-				ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 				ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
+				ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 				datenManager.kursGetName(kurs.id),
 				reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
 				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
@@ -201,6 +201,20 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 			// Füge den neuen Kurs in die Liste der Kurse ein und initialisiere damit schrittweise die Liste der Super-Klasse.
 			super.kurse().add(reportingGostKursplanungKurs);
+
+			// Erstelle die Fachwahlstatistik für dieses Blockungsergebnis, d. h. für dessen GOSt-Halbjahr.
+			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
+			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
+			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
+				mapFachwahlStatistik.putAll(
+					gostFachwahlenStatistik.stream().collect(
+						Collectors.toMap(
+							f -> f.id,
+							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, ergebnisManager))));
+			}
+			super.setFachwahlstatistik(mapFachwahlStatistik);
+
 		}
 
 		// Erstelle eine alphabetisch sortierte Liste der Schülermenge aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
@@ -239,30 +253,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	public ReportingRepository reportingRepositorySchule() {
 		return reportingRepository;
-	}
-
-
-	/**
-	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
-	 * @return Map mit den Fachwahlstatistiken
-	 */
-	@Override
-	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
-		if (super.fachwahlstatistik() == null || super.fachwahlstatistik().isEmpty()) {
-			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			// Lese die Daten des Abiturjahrgangs aus.
-			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
-			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
-			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
-				mapFachwahlStatistik.putAll(
-					gostFachwahlenStatistik.stream().collect(
-						Collectors.toMap(
-							f -> f.id,
-							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this, f))));
-			}
-			super.setFachwahlstatistik(mapFachwahlStatistik);
-		}
-		return super.fachwahlstatistik();
 	}
 
 	/**

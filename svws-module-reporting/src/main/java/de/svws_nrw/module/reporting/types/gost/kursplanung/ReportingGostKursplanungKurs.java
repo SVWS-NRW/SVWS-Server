@@ -32,16 +32,16 @@ public class ReportingGostKursplanungKurs {
 	/** Anzahl der Schülerinnen und Schüler mit Status extern. */
 	private int anzahlExterne;
 
-	/** Anzahl der Klausurschreiber. */
-	private int anzahlKlausurschreiber;
-
 	/** Anzahl der Schülerinnen und Schüler im Kurs. */
 	private int anzahlSchueler;
+
+	/** Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben. */
+	private int anzahlSchuelerSchriftlich;
 
 	/** Bezeichnung des Kurses. */
 	private String bezeichnung;
 
-	/** Fach des Kurses */
+	/** Das Fach des Kurses */
 	private ReportingFach fach;
 
 	/** Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis. */
@@ -71,10 +71,10 @@ public class ReportingGostKursplanungKurs {
 	 * @param anzahlAB4					Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist.
 	 * @param anzahlDummy 				Anzahl der Dummy-Schüler.
 	 * @param anzahlExterne				Anzahl der Schülerinnen und Schüler mit Status extern.
-	 * @param anzahlKlausurschreiber	Anzahl der Klausurschreiber.
+	 * @param anzahlSchuelerSchriftlich	Anzahl der Klausurschreiber.
 	 * @param anzahlSchueler			Anzahl der Schülerinnen und Schüler im Kurs.
 	 * @param bezeichnung				Bezeichnung des Kurses.
-	 * @param fach			 			Farbe des Faches des Kurses im Web-Client.
+	 * @param fach			 			Das Fach des Kurses.
 	 * @param gostHalbjahr				Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 * @param gostKursart				Kursart des Kurses.
 	 * @param id						ID des Kurses.
@@ -82,14 +82,14 @@ public class ReportingGostKursplanungKurs {
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
-	public ReportingGostKursplanungKurs(final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlKlausurschreiber, final int anzahlSchueler, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
+	public ReportingGostKursplanungKurs(final int anzahlAB12, final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final GostKursart gostKursart, final long id, final List<ReportingLehrer> lehrkraefte, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
 		this.anzahlAB12 = anzahlAB12;
 		this.anzahlAB3 = anzahlAB3;
 		this.anzahlAB4 = anzahlAB4;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
-		this.anzahlKlausurschreiber = anzahlKlausurschreiber;
 		this.anzahlSchueler = anzahlSchueler;
+		this.anzahlSchuelerSchriftlich = anzahlSchuelerSchriftlich;
 		this.bezeichnung = bezeichnung;
 		this.fach = fach;
 		this.gostHalbjahr = gostHalbjahr;
@@ -198,22 +198,6 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Anzahl der Klausurschreiber.
-	 * @return Inhalt des Feldes anzahlKlausurschreiber
-	 */
-	public int anzahlKlausurschreiber() {
-		return anzahlKlausurschreiber;
-	}
-
-	/**
-	 * Anzahl der Klausurschreiber wird gesetzt.
-	 * @param anzahlKlausurschreiber Neuer Wert für das Feld anzahlKlausurschreiber
-	 */
-	public void setAnzahlKlausurschreiber(final int anzahlKlausurschreiber) {
-		this.anzahlKlausurschreiber = anzahlKlausurschreiber;
-	}
-
-	/**
 	 * Anzahl der Schülerinnen und Schüler im Kurs.
 	 * @return Inhalt des Feldes anzahlSchueler
 	 */
@@ -227,6 +211,22 @@ public class ReportingGostKursplanungKurs {
 	 */
 	public void setAnzahlSchueler(final int anzahlSchueler) {
 		this.anzahlSchueler = anzahlSchueler;
+	}
+
+	/**
+	 * Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben.
+	 * @return Inhalt des Feldes anzahlSchuelerSchriftlich
+	 */
+	public int anzahlSchuelerSchriftlich() {
+		return anzahlSchuelerSchriftlich;
+	}
+
+	/**
+	 * Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben.
+	 * @param anzahlSchuelerSchriftlich Neuer Wert für das Feld anzahlSchuelerSchriftlich
+	 */
+	public void setAnzahlSchuelerSchriftlich(final int anzahlSchuelerSchriftlich) {
+		this.anzahlSchuelerSchriftlich = anzahlSchuelerSchriftlich;
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Fach des Kurses
+	 * Das Fach des Kurses
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -254,7 +254,7 @@ public class ReportingGostKursplanungKurs {
 	}
 
 	/**
-	 * Fach des Kurses wird gesetzt.
+	 * Das Fach des Kurses wird gesetzt.
 	 * @param fach Neuer Wert für das Feld fach
 	 */
 	public void setFach(final ReportingFach fach) {
