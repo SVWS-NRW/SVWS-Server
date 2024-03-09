@@ -7,17 +7,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.adt.map.HashMap4D;
+import de.svws_nrw.core.adt.map.HashMap5D;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.ListUtils;
-import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
+import de.svws_nrw.core.utils.Map4DUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -53,9 +53,9 @@ public class GostKlausurvorgabenManager {
 	// GostKlausurvorgabe
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostKlausurvorgabe> _vorgabenmenge = new ArrayList<>();
-	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_quartal = new HashMap2D<>();
-	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach = new HashMap4D<>();
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach = new HashMap3D<>();
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_quartal = new HashMap3D<>();
+	private final @NotNull HashMap5D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach = new HashMap5D<>();
+	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach = new HashMap4D<>();
 
 
 	/**
@@ -120,20 +120,20 @@ public class GostKlausurvorgabenManager {
 	private void update_vorgabenmenge_by_halbjahr_and_quartal() {
 		_vorgabenmenge_by_halbjahr_and_quartal.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge) {
-			Map2DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(v);
+			Map3DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.abiJahrgang, v.halbjahr, v.quartal).add(v);
 		}
 	}
 
 	private void update_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach() {
 		_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge)
-			_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.put(v.halbjahr, v.quartal, v.kursart, v.idFach, v);
+			_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.put(v.abiJahrgang, v.halbjahr, v.quartal, v.kursart, v.idFach, v);
 	}
 
 	private void update_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach() {
 		_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge)
-			Map3DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach, v.halbjahr, v.kursart, v.idFach).add(v);
+			Map4DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach, v.abiJahrgang, v.halbjahr, v.kursart, v.idFach).add(v);
 	}
 
 
@@ -258,27 +258,29 @@ public class GostKlausurvorgabenManager {
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten zum übergebenen Gost-Halkbjahr und Quartal
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal die Nummer des Quartals
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal) {
 		if (quartal == 0) {
 			final List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
-			if (_vorgabenmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
-				for (final @NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+			if (_vorgabenmenge_by_halbjahr_and_quartal.containsKey1AndKey2(abiJahrgang, halbjahr.id))
+				for (final @NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id)) {
 					vorgaben.addAll(vQuartal);
 				}
 			return vorgaben;
 		}
-		final List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
+		final List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal);
 		return vorgaben != null ? vorgaben : new ArrayList<>();
 	}
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zu den übergebenen Parametern zurück.
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal     das Quartal
 	 * @param kursartAllg die Kursart
@@ -286,14 +288,15 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
-		return _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, quartal, kursartAllg.kuerzel, idFach);
+	public GostKlausurvorgabe vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+		return _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.getOrNull(abiJahrgang, halbjahr.id, quartal, kursartAllg.kuerzel, idFach);
 	}
 
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param quartal     das Quartal, wenn 0, Vorgaben für alle Quartale
 	 * @param kursartAllg die Kursart
@@ -301,29 +304,30 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new ArrayList<>();
-			final GostKlausurvorgabe vorgabe = vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr, quartal, kursartAllg, idFach);
+			final GostKlausurvorgabe vorgabe = vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(abiJahrgang, halbjahr, quartal, kursartAllg, idFach);
 			if (vorgabe != null)
 				retList.add(vorgabe);
 			return retList;
 		}
-		return vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(halbjahr, kursartAllg, idFach);
+		return vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(abiJahrgang, halbjahr, kursartAllg, idFach);
 	}
 
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
 	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursartAllg, final long idFach) {
-		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, kursartAllg.kuerzel, idFach);
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursartAllg, final long idFach) {
+		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(abiJahrgang, halbjahr.id, kursartAllg.kuerzel, idFach);
 		return list != null ? list : new ArrayList<>();
 	}
 
@@ -335,9 +339,9 @@ public class GostKlausurvorgabenManager {
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe getPrevious(final @NotNull GostKlausurvorgabe vorgabe) {
-		final List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
+		final List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
 		if (vorgabe.halbjahr % 2 == 1) {
-			final List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
+			final List<@NotNull GostKlausurvorgabe> vorgabenVorhalbjahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(vorgabe.abiJahrgang, vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach);
 			if (vorgabenVorhalbjahr != null)
 				vorgabenSchuljahr.addAll(vorgabenVorhalbjahr);
 		}
