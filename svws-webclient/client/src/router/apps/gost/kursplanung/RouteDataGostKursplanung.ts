@@ -505,6 +505,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.datenmanager.kurseRemoveByID(list);
 		this.ergebnismanager.setRemoveKurseByID(list);
 		this.commit();
+		this.kursAuswahl.value.removeAll(list);
 	});
 
 	combineKurs = api.call(async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
