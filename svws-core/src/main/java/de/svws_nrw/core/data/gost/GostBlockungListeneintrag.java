@@ -29,4 +29,7 @@ public class GostBlockungListeneintrag {
 	/** Gibt an, ob diese Blockung als aktiv markiert wurde. */
 	public boolean istAktiv = false;
 
+	/** Gibt die Anzahl der Ergebnisse an, die bei der Blockung vorliegen */
+	public int anzahlErgebnisse = -1;
+
 }

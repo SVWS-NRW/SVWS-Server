@@ -22,6 +22,11 @@ export class GostBlockungListeneintrag extends JavaObject {
 	 */
 	public istAktiv : boolean = false;
 
+	/**
+	 * Gibt die Anzahl der Ergebnisse an, die bei der Blockung vorliegen
+	 */
+	public anzahlErgebnisse : number = -1;
+
 
 	public constructor() {
 		super();
@@ -50,6 +55,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 		if (typeof obj.istAktiv === "undefined")
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
+		if (typeof obj.anzahlErgebnisse === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlErgebnisse');
+		result.anzahlErgebnisse = obj.anzahlErgebnisse;
 		return result;
 	}
 
@@ -59,6 +67,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
+		result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -77,6 +86,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 		}
 		if (typeof obj.istAktiv !== "undefined") {
 			result += '"istAktiv" : ' + obj.istAktiv + ',';
+		}
+		if (typeof obj.anzahlErgebnisse !== "undefined") {
+			result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

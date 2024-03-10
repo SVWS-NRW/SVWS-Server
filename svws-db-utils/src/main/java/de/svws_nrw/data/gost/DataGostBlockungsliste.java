@@ -1,14 +1,17 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
+import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -37,16 +40,23 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostBlockung} in einen Core-DTO {@link GostBlockungListeneintrag}.
+	 * Erstellt einen Blockungslisten-Eintrag mit den übergebenen Daten.
+	 *
+	 * @param blockung   das DB-DTO der Blockung
+	 * @param mapErgebnisse   eine Map mit den Listen von Ergebnissen zugeordnet zu ihren Blockungs-IDs
+	 *
+	 * @return der Blockungs-Listeneintrag
 	 */
-	private final Function<DTOGostBlockung, GostBlockungListeneintrag> dtoMapper = (final DTOGostBlockung blockung) -> {
+	private static GostBlockungListeneintrag dtoMapper(final DTOGostBlockung blockung, final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse) {
+		final List<DTOGostBlockungZwischenergebnis> ergebnisse = mapErgebnisse.computeIfAbsent(blockung.ID, k -> new ArrayList<>());
 		final GostBlockungListeneintrag daten = new GostBlockungListeneintrag();
 		daten.id = blockung.ID;
 		daten.name = blockung.Name;
 		daten.gostHalbjahr = blockung.Halbjahr.id;
 		daten.istAktiv = blockung.IstAktiv;
+		daten.anzahlErgebnisse = ergebnisse.size();
 		return daten;
-	};
+	}
 
 
 	@Override
@@ -55,7 +65,10 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	final var daten = blockungen.stream().map(dtoMapper).toList();
+		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
+		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
+				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
+    	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -75,7 +88,10 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	final var daten = blockungen.stream().map(dtoMapper).toList();
+		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
+		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
+				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
+    	final var daten = blockungen.stream().map(b -> dtoMapper(b, mapErgebnisse)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
