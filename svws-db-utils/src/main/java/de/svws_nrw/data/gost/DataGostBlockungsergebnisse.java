@@ -269,6 +269,29 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
+	 * Entfernt die Zwischenergebniss mit den angegebenen IDs aus der Datenbank.
+	 *
+	 * @param ids   die IDs der zu löschenden Blockungsergebnisse
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Bestimme das Zwischenergebnis
+		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryByKeyList(DTOGostBlockungZwischenergebnis.class, ids);
+		if ((ergebnisse == null) || (ergebnisse.size() != ids.size()))
+			throw OperationError.NOT_FOUND.exception("Mindestens ein Ergebnis wurde nicht gefunden.");
+		final long idBlockung = ergebnisse.get(0).Blockung_ID;
+		for (final DTOGostBlockungZwischenergebnis ergebnis : ergebnisse)
+			if (idBlockung != ergebnis.Blockung_ID)
+				throw OperationError.BAD_REQUEST.exception("Die Ergebnisse gehören zu mehreren Blockungen");
+		// Entferne die Ergebnisse
+		conn.transactionPersistAll(ergebnisse);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ids).build();
+	}
+
+
+	/**
 	 * Markiert das Blockungsergebnis als aktiv und alle anderen Ergebnisse der Blockung als inaktiv, wenn der
 	 * Wert auf true gesetzt ist und ansonsten nur das angegebene Blockungsergebnis auf inaktiv
 	 *

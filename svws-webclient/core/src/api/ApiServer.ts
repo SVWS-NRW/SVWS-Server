@@ -4695,6 +4695,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungsergebnisse für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/multiple
+	 *
+	 * Entfernt die angegebenen Zwischenergebnisse einer Blockung der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Zwischenergebnisse besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Zwischenergebnisse einer Blockung der gymnasialen Oberstufe für die angegebene ID wurden erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *   Code 400: Die Ergebnisse gehören nicht zu einer Blockung.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zwischenergebnisse einer Blockung der Gymnasialen Oberstufe zu löschen.
+	 *   Code 404: Mindestens ein Ergebnis wurde nicht gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Zwischenergebnisse einer Blockung der gymnasialen Oberstufe für die angegebene ID wurden erfolgreich gelöscht.
+	 */
+	public async deleteGostBlockungsergebnisse(data : List<number>, schema : string) : Promise<number | null> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const text = result;
+		return parseFloat(JSON.parse(text));
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombination/{id : \d+}
 	 *
 	 * Passt die Fachkombination mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen besitzt.

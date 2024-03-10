@@ -1363,6 +1363,35 @@ public class APIGostKursplanung {
 
 
     /**
+     * Die OpenAPI-Methode für das Löschen mehrerer Blockungsergebnisse einer Blockung der gymnasialen Oberstufe.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param ergebnisIDs   die IDs der Blockungsergebnisse
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return eine Response mit dem Status-Code und ggf. den IDs der gelöschten Zwischenergebnisses
+     */
+    @DELETE
+    @Path("/blockungen/zwischenergebnisse/multiple")
+    @Operation(summary = "Entfernt die angegebenen Zwischenergebnisse einer Blockung der gymnasialen Oberstufe.",
+               description = "Entfernt die angegebenen Zwischenergebnisse einer Blockung der gymnasialen Oberstufe. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Zwischenergebnisse "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Zwischenergebnisse einer Blockung der gymnasialen Oberstufe für die angegebene ID wurden erfolgreich gelöscht.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
+    @ApiResponse(responseCode = "400", description = "Die Ergebnisse gehören nicht zu einer Blockung.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zwischenergebnisse einer Blockung der Gymnasialen Oberstufe zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Mindestens ein Ergebnis wurde nicht gefunden.")
+    public Response deleteGostBlockungsergebnisse(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Regelns", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ergebnisIDs, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).deleteMultiple(ergebnisIDs),
+        		request, ServerMode.STABLE,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Duplizieren der Definition einer Blockung mit den in der DB
      * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis.
      * Dieses Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat
