@@ -31,7 +31,7 @@
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-aktivieren-modal>
 						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
+							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Gleicht die Daten dieses Blockungsergebnisses mit den Daten der Kurstabelle und den Leistungsdaten der Schüler ab. Dabei werden ggf. nicht vorhandene Kurs in der Kurstabelle angelegt und die Kurs-Schienen-Zuordnung angepasst. Leere Kurse werden nicht entfernt. Außerdem wird die Kurs-Schüler-Zuordnung in den Leistungsdaten des Schüler aktualisiert. Neue Fächer werden in den Leistungsdaten dabei allerdings nicht hinzugefügt.">
 								<i-ri-loop-left-line /> Synchronisieren
 							</svws-ui-button>
 						</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
