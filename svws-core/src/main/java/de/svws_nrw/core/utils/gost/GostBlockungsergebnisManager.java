@@ -2063,8 +2063,12 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
-	public @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnungMitFixierung(final long idSchueler, final boolean fixiereBelegteKurse) {
-
+	private @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnungMitFixierung(final long idSchueler, final boolean fixiereBelegteKurse) {
+		System.out.println("getOfSchuelerNeuzuordnung " + idSchueler + ", " + fixiereBelegteKurse);
+		// SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS
+		// SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
+		// SCHUELER_ZUSAMMEN_MIT_SCHUELER, SCHUELER_VERBIETEN_MIT_SCHUELER
+		// KURS_MAXIMALE_SCHUELERANZAHL
 		// Konstruiere die Eingabedaten "input".
 		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
 		input.schienen = _parent.schieneGetAnzahl();
@@ -5576,7 +5580,7 @@ public class GostBlockungsergebnisManager {
 		final int nSchienen = _parent.schieneGetAnzahl();
 
 		// DeveloperNotificationException
-		DeveloperNotificationException.ifTrue("Schienenanzahl von KursE (" + kursE.anzahlSchienen+") ist ungleich der von KursG (" + kursG.anzahlSchienen + ")!", kursE.anzahlSchienen != kursG.anzahlSchienen);
+		DeveloperNotificationException.ifTrue("Schienenanzahl von KursE (" + kursE.anzahlSchienen + ") ist ungleich der von KursG (" + kursG.anzahlSchienen + ")!", kursE.anzahlSchienen != kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl von " + _parent.toStringKurs(idKurs) + " darf nur bei der Blockungsvorlage verändert werden!", !_parent.getIstBlockungsVorlage());
 		DeveloperNotificationException.ifTrue(_parent.toStringKurs(idKurs) + " hat als GostBlockungKurs " + kursG.anzahlSchienen + " Schienen, als GostBlockungsergebnisKurs hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen != kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen == 0);

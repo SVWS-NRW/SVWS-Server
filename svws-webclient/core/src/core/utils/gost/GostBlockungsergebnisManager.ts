@@ -1944,7 +1944,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
-	public getOfSchuelerNeuzuordnungMitFixierung(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
+	private getOfSchuelerNeuzuordnungMitFixierung(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
+		console.log(JSON.stringify("getOfSchuelerNeuzuordnung " + idSchueler + ", " + fixiereBelegteKurse));
 		const input : SchuelerblockungInput = new SchuelerblockungInput();
 		input.schienen = this._parent.schieneGetAnzahl();
 		for (const fachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler)) {
