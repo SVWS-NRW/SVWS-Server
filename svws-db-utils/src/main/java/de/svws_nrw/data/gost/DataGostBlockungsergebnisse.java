@@ -390,7 +390,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     public Response updateKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
-			return Response.status(Status.NO_CONTENT).build();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
 		if (ergebnis == null)
