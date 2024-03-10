@@ -173,7 +173,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		await this.data.setAuswahlBlockung(undefined);
+		await this.data.setAuswahlBlockung(undefined, true);
+		this.data.unsetHalbjahr();
 	}
 
 	public getRoute() : RouteLocationRaw {

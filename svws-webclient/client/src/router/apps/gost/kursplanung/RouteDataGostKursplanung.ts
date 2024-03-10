@@ -240,6 +240,19 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return result;
 	}
 
+	public unsetHalbjahr() {
+		this.setPatchedState({
+			halbjahrInitialisiert: false,
+			mapBlockungen: new Map(),
+			existiertSchuljahresabschnitt: false,
+			auswahlBlockung: undefined,
+			datenmanager: undefined,
+			auswahlErgebnis: undefined,
+			ergebnismanager: undefined,
+			schuelerFilter: emptySchuelerFilter(),
+		});
+	}
+
 	public get existiertSchuljahresabschnitt() : boolean {
 		return this._state.value.existiertSchuljahresabschnitt;
 	}
