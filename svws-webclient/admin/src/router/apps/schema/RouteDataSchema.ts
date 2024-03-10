@@ -207,6 +207,7 @@ export class RouteDataSchema {
 		api.status.start();
 		const result = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
 		api.status.stop();
+		await this.init(this.auswahl.name);
 		return result;
 	}
 
