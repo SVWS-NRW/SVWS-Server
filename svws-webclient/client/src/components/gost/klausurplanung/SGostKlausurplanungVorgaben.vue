@@ -9,7 +9,7 @@
 		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(klausurvorgabenmanager().getFaecherManager().get(value)?.kuerzel || null) }">{{ klausurvorgabenmanager().getFaecherManager().get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -135,7 +135,7 @@
 	const formQuartale = computed(() => [1, 2]);
 	const inputVorgabeFach: WritableComputedRef<GostFach | undefined> = computed({
 		get() {
-			const fach = props.faecherManager.get(activeVorgabe.value.idFach);
+			const fach = props.klausurvorgabenmanager().getFaecherManager().get(activeVorgabe.value.idFach);
 			return fach === null ? undefined : fach;
 		},
 		set(val) {
@@ -145,7 +145,7 @@
 	});
 
 	const faecherSortiert = computed(() => {
-		const f = new ArrayList(props.faecherManager.faecher());
+		const f = new ArrayList(props.klausurvorgabenmanager().getFaecherManager().faecher());
 		//		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
 		return f;
 	});

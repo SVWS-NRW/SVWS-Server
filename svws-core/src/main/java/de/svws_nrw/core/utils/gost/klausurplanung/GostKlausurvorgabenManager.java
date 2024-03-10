@@ -69,6 +69,19 @@ public class GostKlausurvorgabenManager {
 		initAll(listVorgaben);
 	}
 
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
+	 * @param faecherManager der GostFaecherManager
+	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
+	 *                      und Gost-Halbjahres
+	 */
+	public GostKlausurvorgabenManager(final @NotNull GostFaecherManager faecherManager, final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+		_faecherManager = faecherManager;
+		initAll(listVorgaben);
+	}
+
 	private void initAll(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
 
 		vorgabeAddAll(listVorgaben);

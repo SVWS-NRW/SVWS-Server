@@ -14,7 +14,6 @@ export interface GostKlausurplanungVorgabenProps {
 	halbjahr: GostHalbjahr;
 	klausurvorgabenmanager: () => GostKlausurvorgabenManager;
 	kursklausurmanager?: () => GostKursklausurManager;
-	faecherManager: GostFaecherManager;
 	erzeugeKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>) => Promise<void>;
 	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<void>;
 	loescheKlausurvorgabe: (idVorgabe: number) => Promise<void>;

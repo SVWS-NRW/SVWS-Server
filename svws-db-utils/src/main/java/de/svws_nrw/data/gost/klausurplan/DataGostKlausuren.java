@@ -68,7 +68,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 
 		GostKlausurenMetaDataCollection data = new GostKlausurenMetaDataCollection();
 		for (int jg : jahrgaenge) {
-			GostKlausurenDataCollection klausuren = DataGostKlausurenKursklausur.getKlausurDataCollection(conn, jg, halbjahr.id, true);
+			GostKlausurenDataCollection klausuren = DataGostKlausurenKursklausur.getKlausurDataCollection(conn, jg, GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(jg, schuljahr, halbjahr.halbjahr).id, true);
 			data.klausurdata.kursklausuren.addAll(klausuren.kursklausuren);
 			data.klausurdata.schuelerklausuren.addAll(klausuren.schuelerklausuren);
 			data.klausurdata.schuelerklausurtermine.addAll(klausuren.schuelerklausurtermine);
@@ -81,6 +81,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
 		return data;
 	}
+
 
 
 	@Override

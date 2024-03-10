@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
-import { GostFaecherManager } from '../../../../core/utils/gost/GostFaecherManager';
+import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { JavaString } from '../../../../java/lang/JavaString';
@@ -12,6 +12,7 @@ import { Map3DUtils } from '../../../../core/utils/Map3DUtils';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../../java/util/List';
+import { cast_java_util_List } from '../../../../java/util/List';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import type { JavaMap } from '../../../../java/util/JavaMap';
 import { HashMap5D } from '../../../../core/adt/map/HashMap5D';
@@ -62,9 +63,32 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>) {
+	public constructor(listVorgaben : List<GostKlausurvorgabe>);
+
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
+	 * @param faecherManager der GostFaecherManager
+	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
+	 *                      und Gost-Halbjahres
+	 */
+	public constructor(faecherManager : GostFaecherManager, listVorgaben : List<GostKlausurvorgabe>);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0 : GostFaecherManager | List<GostKlausurvorgabe>, __param1? : List<GostKlausurvorgabe>) {
 		super();
-		this.initAll(listVorgaben);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
+			this.initAll(listVorgaben);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
+			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
+			this._faecherManager = faecherManager;
+			this.initAll(listVorgaben);
+		} else throw new Error('invalid method overload');
 	}
 
 	private initAll(listVorgaben : List<GostKlausurvorgabe>) : void {
