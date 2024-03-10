@@ -64,7 +64,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 	 *
 	 * @return das DTO
 	 */
-	private static DTOSchuleEmail getOrCreate(final DBEntityManager conn) {
+	public static DTOSchuleEmail getOrCreate(final DBEntityManager conn) {
 		DTOSchuleEmail dto = conn.querySingle(DTOSchuleEmail.class);
 		if (dto == null) {
 			dto = new DTOSchuleEmail(1, "", 25, true, false);

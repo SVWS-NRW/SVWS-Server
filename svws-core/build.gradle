@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(jackson, resteasy, validation, swagger)
+	implementation.extendsFrom(jackson, resteasy, validation, swagger, email)
 } 
 
 dependencies {

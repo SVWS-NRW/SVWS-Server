@@ -63,11 +63,11 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
         throw new UnsupportedOperationException();
     }
 
-    private @NotNull DTOBenutzerMail getOrCreateDTO(final Long id) {
+    private static @NotNull DTOBenutzerMail getOrCreateDTO(final DBEntityManager conn, final Long id) {
     	if (id == null)
     		throw OperationError.BAD_REQUEST.exception("Es wurde keine ID angegeben.");
     	// Prüfe, ob die ID mit der ID des Benutzers der Verbindung
-    	if (!Objects.equals(id, this.conn.getUser().getId()))
+    	if (!Objects.equals(id, conn.getUser().getId()))
     		throw OperationError.FORBIDDEN.exception("Nur der angemeldete Benutzer darf seine SMTP-Verbindungsdaten auslesen.");
     	DTOBenutzerMail dto = conn.queryByKey(DTOBenutzerMail.class, id);
     	if (dto == null) {
@@ -81,9 +81,20 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
     	return dto;
     }
 
+    /**
+     * Gib das DB-DTO mit den Benutzer-spezifischen EMail-Daten zurück.
+     *
+     * @param conn   die Datenbank-Verbindung
+     *
+     * @return das DB-DTO
+     */
+    public static DTOBenutzerMail getOrCreateDTO(final DBEntityManager conn) {
+    	return getOrCreateDTO(conn, conn.getUser().getId());
+    }
+
     @Override
     public Response get(final Long id) {
-    	final @NotNull DTOBenutzerMail dto = getOrCreateDTO(id);
+    	final @NotNull DTOBenutzerMail dto = getOrCreateDTO(conn, id);
     	final BenutzerEMailDaten daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
@@ -114,7 +125,7 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 
     @Override
     public Response patch(final Long id, final InputStream is) {
-    	final DTOBenutzerMail dto = getOrCreateDTO(id);
+    	final DTOBenutzerMail dto = getOrCreateDTO(conn, id);
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
