@@ -11,7 +11,7 @@
 				<div class="flex flex-wrap gap-1 mb-4">
 					<svws-ui-button type="secondary" @click="currentAction = 'migrate'" title="Schild2-Schema migrieren"> <i-ri-database-2-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Schild2-Schema migrieren </svws-ui-button>
 					<svws-ui-button type="secondary" @click="currentAction = 'import'" title="Schema aus Backup wiederherstellen"> <i-ri-device-recover-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup wiederherstellen </svws-ui-button>
-					<svws-ui-button @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <i-ri-save-3-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
+					<svws-ui-button v-if="eintrag.isSVWS" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <i-ri-save-3-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
 				<!-- <svws-ui-button type="secondary" :disabled="eintrag.isInConfig" @click="inConfig">In Config setzen</svws-ui-button> -->
 				</div>
 				<svws-ui-input-wrapper v-if="revisionUpToDate">

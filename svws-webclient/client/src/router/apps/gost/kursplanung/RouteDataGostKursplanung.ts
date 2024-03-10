@@ -541,7 +541,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen + 1);
 		const k = this.ergebnismanager.getKursE(kurs.id);
 		await this.patchKurs(k, k.id);
-		this.commit();
 	});
 
 	removeSchieneKurs = api.call(async (kurs: GostBlockungKurs) => {
@@ -550,7 +549,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen - 1);
 		const k = this.ergebnismanager.getKursE(kurs.id);
 		await this.patchKurs(k, k.id);
-		this.commit();
 	});
 
 	addKursLehrer = api.call(async (kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {

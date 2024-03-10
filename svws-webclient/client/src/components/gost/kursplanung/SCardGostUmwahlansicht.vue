@@ -176,7 +176,7 @@
 
 	const cols = computed(() => {
 		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1, align: 'left' }];
-		for (let i = 0; i < maxKurseInSchienen?.value; i++)
+		for (let i = 0; i < maxKurseInSchienen.value; i++)
 			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6, span: 1 });
 		return cols;
 	})
@@ -195,7 +195,8 @@
 	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
 			return false;
-		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)
+		//  && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	});
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() => {

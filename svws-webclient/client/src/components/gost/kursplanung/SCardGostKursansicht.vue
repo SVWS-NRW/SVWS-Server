@@ -282,12 +282,14 @@
 
 	async function add_schiene() {
 		// TODO: Update cols value mit neuer Anzahl von Schienen
-		return await props.addSchiene();
+		if (!props.apiStatus.pending)
+			return await props.addSchiene();
 	}
 
 	async function del_schiene(schiene: GostBlockungSchiene) {
 		// TODO: Update cols value mit neuer Anzahl von Schienen
-		return await props.removeSchiene(schiene);
+		if (!props.apiStatus.pending)
+			return await props.removeSchiene(schiene);
 	}
 
 	const isMounted = ref(false);
