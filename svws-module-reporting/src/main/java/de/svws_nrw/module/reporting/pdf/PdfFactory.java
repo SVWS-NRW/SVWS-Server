@@ -59,41 +59,51 @@ public final class PdfFactory {
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
 	private final String dateipfadCss;
 
-	// Legt fest, ob pro Datensatz des Haupt-Daten-Contexts eine einzelne PDF-Datei erzeugt werden soll.
+	/** Legt fest, ob pro Datensatz des Haupt-Daten-Contexts eine einzelne PDF-Datei erzeugt werden soll. */
 	private final boolean erzeugeEinzelPdfs;
 
-	/** Legt fest, ob die IDs-Liste der Kurse als Filter dient. */
-	private final boolean filterKurse;
+	/** Eine ID der zu druckenden Daten */
+	private Long idDruckdaten;
 
-	/** Legt fest, ob die IDs-Liste der Schüler als Filter dient. */
-	private final boolean filterSchueler;
+	/** Eine Liste von IDs der zu druckenden Daten */
+	private List<Long> idsDruckdaten;
 
-	/** Die ID des Blockungsergebnisses, aus dem die Daten für die PDF_Erzeugung genutzt werden sollen. */
-	private final Long idBlockungsergebnis;
-
-	/** Liste der IDs der Kurse, für die eine Ausgabe erfolgen soll. */
-	private List<Long> idsKurse;
-
-	/** Liste der IDs der Schüler, für die eine Ausgabe erfolgen soll. */
-	private List<Long> idsSchueler;
-
-	/** Legt fest, ob für die Schüler auch die Abiturdaten der GOSt mit geladen werden sollen. */
-	private final boolean ladeSchuelerMitAbiturDaten;
-
-	/** Legt fest, ob für die Schüler auch die Laufbahnplanungsdaten der GOSt mit geladen werden sollen. */
-	private final boolean ladeSchuelerMitGostDaten;
-
+	/** Eine Liste von IDs, auf die bei der Druckausgabe gefiltert werden soll. */
+	private List<Long> idsFilterdaten;
 
 	/** Parameter (>= 0), der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern. */
 	private final int parameterDetailLevel;
 
 
 
+	// Interne Variablen für Stellungen.
+
 	/** Der Dateiname des Templates, der aus dem übergebenen Dateipfad ermittelt wird. */
 	private String dateinameHtmlTemplate = "";
 
 	/** Der Dateiname der ZIP-Datei, wenn Einzel-PDFs erzeugt werden sollen.. */
 	private String dateinameZIP = "";
+
+	/** Legt fest, ob die IDs-Liste der Kurse als Filter dient. */
+	private boolean filterKurse = false;
+
+	/** Legt fest, ob die IDs-Liste der Schüler als Filter dient. */
+	private boolean filterSchueler = false;
+
+	/** Die ID des Blockungsergebnisses, aus dem die Daten für die PDF_Erzeugung genutzt werden sollen. */
+	private Long idBlockungsergebnis;
+
+	/** Liste der IDs der Kurse, für die eine Ausgabe erfolgen soll. */
+	private List<Long> idsKurse = new ArrayList<>();
+
+	/** Liste der IDs der Schüler, für die eine Ausgabe erfolgen soll. */
+	private List<Long> idsSchueler = new ArrayList<>();
+
+	/** Legt fest, ob für die Schüler auch die Abiturdaten der GOSt mit geladen werden sollen. */
+	private boolean ladeSchuelerMitAbiturDaten = false;
+
+	/** Legt fest, ob für die Schüler auch die Laufbahnplanungsdaten der GOSt mit geladen werden sollen. */
+	private boolean ladeSchuelerMitGostDaten = false;
 
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log = new LogConsumerList();
@@ -107,40 +117,33 @@ public final class PdfFactory {
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus einem html-Template zu erzeugen.
 	 * @param conn Die Verbindung zur Datenbank.
 	 * @param dateipfadHtmlTemplate Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird.
-	 * @param dateipfadCss Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren.
+	 * @param idDruckdaten Eine ID der zu druckenden Daten
+	 * @param idsDruckdaten Eine Liste von IDs der zu druckenden Daten
+	 * @param idsFilterdaten Eine Liste von IDs, auf die bei der Druckausgabe gefiltert werden soll
 	 * @param erzeugeEinzelPdfs Legt fest, ob pro Datensatz des Haupt-Daten-Contexts eine einzelne PDF-Datei erzeugt werden soll.
-	 * @param filterKurse Legt fest, ob auf die Kurse aus der IDs-Filterliste gefiltert werden soll.
-	 * @param filterSchueler Legt fest, ob auf die Schüler aus der IDs-Filterliste gefiltert werden soll.
-	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses, aus dem die Daten für die PDF_Erzeugung genutzt werden sollen.
-	 * @param idsKurse Liste der IDs der Kurse, für die eine Ausgabe erfolgen soll.
-	 * @param idsSchueler Liste der IDs der Schüler, für die eine Ausgabe erfolgen soll.
-	 * @param ladeSchuelerMitAbiturDaten Legt fest, ob für die Schüler auch die Abiturdaten der GOSt mit geladen werden sollen.
-	 * @param ladeSchuelerMitGostDaten Legt fest, ob für die Schüler auch die Laufbahnplanungsdaten der GOSt mit geladen werden sollen.
 	 * @param parameterDetailLevel Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
 	 */
-	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final String dateipfadCss, final boolean erzeugeEinzelPdfs, final boolean filterKurse, final boolean filterSchueler, final Long idBlockungsergebnis, final List<Long> idsKurse, final List<Long> idsSchueler, final boolean ladeSchuelerMitAbiturDaten, final boolean ladeSchuelerMitGostDaten, final int parameterDetailLevel) {
+	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final boolean erzeugeEinzelPdfs, final Long idDruckdaten, final List<Long> idsDruckdaten, final List<Long> idsFilterdaten, final int parameterDetailLevel) {
 		this.conn = conn;
 		this.dateipfadHtmlTemplate = dateipfadHtmlTemplate;
-		this.dateipfadCss = dateipfadCss;
 		this.erzeugeEinzelPdfs = erzeugeEinzelPdfs;
-		this.filterKurse = filterKurse;
-		this.filterSchueler = filterSchueler;
-		this.idBlockungsergebnis = idBlockungsergebnis;
-		this.idsKurse = idsKurse;
-		this.idsSchueler = idsSchueler;
-		this.ladeSchuelerMitAbiturDaten = ladeSchuelerMitAbiturDaten;
-		this.ladeSchuelerMitGostDaten = ladeSchuelerMitGostDaten;
+		this.idDruckdaten = idDruckdaten;
+		this.idsDruckdaten = idsDruckdaten;
+		this.idsFilterdaten = idsFilterdaten;
 		this.parameterDetailLevel = parameterDetailLevel;
 
 		logger.addConsumer(log);
 
 		// Evtl. Einträge von null für Listen abfangen.
-		if (idsKurse == null)
-			this.idsKurse = new ArrayList<>();
-		if (idsSchueler == null)
-			this.idsSchueler = new ArrayList<>();
+		if (idsDruckdaten == null)
+			this.idsDruckdaten = new ArrayList<>();
+		if (idsFilterdaten == null)
+			this.idsFilterdaten = new ArrayList<>();
 
+		this.dateipfadCss = dateipfadHtmlTemplate.substring(0, dateipfadHtmlTemplate.lastIndexOf('.') + 1) + "css";
 		this.dateinameHtmlTemplate = dateipfadHtmlTemplate.substring(dateipfadHtmlTemplate.lastIndexOf('/') + 1);
+
+		setReportDatenEinstellungen();
 	}
 
 	/**
@@ -331,6 +334,58 @@ public final class PdfFactory {
 
 		return pdfBuilders;
 	}
+
+
+	/** Setze intern die verschiedenen Parameter für die Erstellung der PDF-Datei auf Basis des html-Template-Namens. */
+	private void setReportDatenEinstellungen() {
+
+		switch (dateinameHtmlTemplate) {
+			case "APOGOStAnlage12.html" :
+				if (idsDruckdaten.isEmpty())
+					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+				this.idsSchueler = idsDruckdaten;
+				this.ladeSchuelerMitGostDaten = false;
+				this.ladeSchuelerMitAbiturDaten = true;
+				break;
+			case "GostLaufbahnplanungWahlbogen.html", "GostLaufbahnplanungErgebnisuebersicht.html" :
+				if (idsDruckdaten.isEmpty())
+					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+				this.idsSchueler = idsDruckdaten;
+				this.ladeSchuelerMitGostDaten = true;
+				this.ladeSchuelerMitAbiturDaten = false;
+				break;
+			case "GostKursplanungSchuelerMitSchienenKursen.html" :
+				if (idDruckdaten < 0)
+					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+				idBlockungsergebnis = idDruckdaten;
+				filterKurse = false;
+				filterSchueler = true;
+				idsKurse = new ArrayList<>();
+				idsSchueler = idsFilterdaten;
+				break;
+			case "GostKursplanungSchuelerMitKursen.html" :
+				if (idDruckdaten < 0)
+					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+				idBlockungsergebnis = idDruckdaten;
+				filterKurse = false;
+				filterSchueler = !(idsFilterdaten == null || idsFilterdaten.isEmpty());
+				idsKurse = new ArrayList<>();
+				idsSchueler = idsFilterdaten;
+				break;
+			case "GostKursplanungKursMitKursschuelern.html" :
+				if (idDruckdaten < 0)
+					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+				idBlockungsergebnis = idDruckdaten;
+				filterKurse = !(idsFilterdaten == null || idsFilterdaten.isEmpty());
+				filterSchueler = false;
+				idsKurse = idsFilterdaten;
+				idsSchueler = new ArrayList<>();
+				break;
+			default :
+				throw OperationError.NOT_FOUND.exception("Die übergebene html-Vorlage konnte nicht in den bekannten Vorlagen gefunden werden.");
+		}
+	}
+
 
 
 	/** Erstellt den Dateinamen der Pdf-Datei auf Basis des html-Templates und evtl. der übergebenen Daten
