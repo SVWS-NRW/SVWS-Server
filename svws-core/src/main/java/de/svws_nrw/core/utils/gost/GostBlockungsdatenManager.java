@@ -180,6 +180,18 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung der Kursart mit der übergebenen ID.
+	 *
+	 * @param kursart  Die ID der Kursart.
+	 *
+	 * @return eine Kurzdarstellung der Kursart mit der übergebenen ID.
+	 */
+	public @NotNull String toStringKursartSimple(final int kursart) {
+		final GostKursart gKursart = GostKursart.fromIDorNull(kursart);
+		return (gKursart == null) ? "[Kursart-ID = " + kursart + " (ohne Mapping)]" : gKursart.kuerzel;
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zum Kurs mit der übergebenen ID.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
@@ -196,10 +208,7 @@ public class GostBlockungsdatenManager {
 		if (gFach != null)
 			sFach = gFach.kuerzelAnzeige == null ? "Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')" : gFach.kuerzelAnzeige;
 
-		final GostKursart gKursart = GostKursart.fromIDorNull(kurs.kursart);
-		final @NotNull String sKursart = (gKursart == null) ? "Kursart-ID = " + kurs.kursart + " (ohne Mapping)" : gKursart.kuerzel;
-
-		return "[Kurs " + sFach + "-" + sKursart + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix + "]";
+		return "[Kurs " + sFach + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix + "]";
 	}
 
 	/**
@@ -234,6 +243,18 @@ public class GostBlockungsdatenManager {
 		if (gFach.kuerzelAnzeige == null)
 			return "[Fach-ID = " + idFach + " (ohne 'kuerzelAnzeige')]";
 		return gFach.kuerzelAnzeige;
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 *
+	 * @param idFach   Die Datenbank-ID des Faches.
+	 * @param kursart  Die Datenbank-ID der Kursart.
+	 *
+	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 */
+	public @NotNull String toStringFachartSimple(final long idFach, final int kursart) {
+		return toStringFachSimple(idFach) + "-" + toStringKursartSimple(kursart);
 	}
 
 	/**
@@ -1044,7 +1065,6 @@ public class GostBlockungsdatenManager {
 		// (2) Entfernen des Kurses.
 		final @NotNull Set<@NotNull Long> regelIDs = new HashSet<@NotNull Long>();
 		for (final long idKurs : idKurse) {
-			System.out.println("DM: Lösche Kurs " + idKurs);
 			final @NotNull GostBlockungKurs kurs = this.kursGet(idKurs);
 			_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 			_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.

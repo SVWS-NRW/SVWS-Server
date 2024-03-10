@@ -476,7 +476,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const e of this._map2D_schuelerID_fachID_kurs.getSubMapOrException(idSchueler).entrySet())
 				if (e.getValue() === null) {
 					if (wahlkonflikte < 10) {
-						sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachSimple(e.getKey()!)! + " keinem Kurs zugeordnet.\n");
+						const idFach : number = e.getKey().valueOf();
+						const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+						sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
 					} else {
 						wahlkonflikte_ignored++;
 					}
@@ -1931,9 +1933,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 */
 	public getOfSchuelerOfKursIstZugeordnet(idSchueler : number, idKurs : number) : boolean {
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(idSchueler);
-		return kurseOfSchueler.contains(kurs);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schuelerIDs, idKurs).contains(idSchueler);
 	}
 
 	/**
@@ -4968,7 +4968,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idKurs of idKurse)
 			DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
 		for (const idKurs of idKurse) {
-			console.log(JSON.stringify("EM: Lösche Kurs " + idKurs));
 			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 			for (const schienenID of kurs.schienen) {
 				const i : JavaIterator<GostBlockungsergebnisKurs> = this.getSchieneE(schienenID!).kurse.iterator();
@@ -5028,6 +5027,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursG : GostBlockungKurs = this.getKursG(idKurs);
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const nSchienen : number = this._parent.schieneGetAnzahl();
+		DeveloperNotificationException.ifTrue("Schienenanzahl von KursE (" + kursE.anzahlSchienen + ") ist ungleich der von KursG (" + kursG.anzahlSchienen + ")!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl von " + this._parent.toStringKurs(idKurs)! + " darf nur bei der Blockungsvorlage verändert werden!", !this._parent.getIstBlockungsVorlage());
 		DeveloperNotificationException.ifTrue(this._parent.toStringKurs(idKurs)! + " hat als GostBlockungKurs " + kursG.anzahlSchienen + " Schienen, als GostBlockungsergebnisKurs hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen === 0);

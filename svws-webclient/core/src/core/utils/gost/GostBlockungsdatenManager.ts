@@ -241,6 +241,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung der Kursart mit der übergebenen ID.
+	 *
+	 * @param kursart  Die ID der Kursart.
+	 *
+	 * @return eine Kurzdarstellung der Kursart mit der übergebenen ID.
+	 */
+	public toStringKursartSimple(kursart : number) : string {
+		const gKursart : GostKursart | null = GostKursart.fromIDorNull(kursart);
+		return (gKursart === null) ? "[Kursart-ID = " + kursart + " (ohne Mapping)]" : gKursart.kuerzel;
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zum Kurs mit der übergebenen ID.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
@@ -255,9 +267,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let sFach : string = "Fach-ID = " + kurs.fach_id + " (ohne Mapping)";
 		if (gFach !== null)
 			sFach = gFach.kuerzelAnzeige === null ? "Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')" : gFach.kuerzelAnzeige;
-		const gKursart : GostKursart | null = GostKursart.fromIDorNull(kurs.kursart);
-		const sKursart : string = (gKursart === null) ? "Kursart-ID = " + kurs.kursart + " (ohne Mapping)" : gKursart.kuerzel;
-		return "[Kurs " + sFach! + "-" + sKursart! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
+		return "[Kurs " + sFach! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
 	}
 
 	/**
@@ -290,6 +300,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (gFach.kuerzelAnzeige === null)
 			return "[Fach-ID = " + idFach + " (ohne 'kuerzelAnzeige')]";
 		return gFach.kuerzelAnzeige;
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 *
+	 * @param idFach   Die Datenbank-ID des Faches.
+	 * @param kursart  Die Datenbank-ID der Kursart.
+	 *
+	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 */
+	public toStringFachartSimple(idFach : number, kursart : number) : string {
+		return this.toStringFachSimple(idFach)! + "-" + this.toStringKursartSimple(kursart)!;
 	}
 
 	/**
@@ -1056,7 +1078,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", this._map_idKurs_kurs, idKurs);
 		const regelIDs : JavaSet<number> = new HashSet<number>();
 		for (const idKurs of idKurse) {
-			console.log(JSON.stringify("DM: Lösche Kurs " + idKurs));
 			const kurs : GostBlockungKurs = this.kursGet(idKurs);
 			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 			this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);

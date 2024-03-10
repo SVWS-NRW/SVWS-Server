@@ -407,8 +407,8 @@ public class GostBlockungsergebnisManager {
 		_map_kursID_maxSuS.clear(); // Wird mit Regel 15 gefüllt.
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
-		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4(); // Fächerparallelität
-		_regelverletzungen_der_wahlkonflikte = stateRegelvalidierungTooltip2(); // Fächerparallelität
+		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4();
+		_regelverletzungen_der_wahlkonflikte = stateRegelvalidierungTooltip2();
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
@@ -473,7 +473,6 @@ public class GostBlockungsergebnisManager {
 	private @NotNull String stateRegelvalidierungTooltip2() {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
-
 		// Nichtwahlen des Schülers.
 		int wahlkonflikte = 0;
 		int wahlkonflikte_ignored = 0;
@@ -481,7 +480,9 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _map2D_schuelerID_fachID_kurs.getSubMapOrException(idSchueler).entrySet())
 				if (e.getValue() == null) {
 					if (wahlkonflikte < 10) {
-						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachSimple(e.getKey()) + " keinem Kurs zugeordnet.\n");
+						final long idFach = e.getKey();
+						final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
 					} else {
 						wahlkonflikte_ignored++;
 					}
@@ -2048,9 +2049,10 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 */
 	public boolean getOfSchuelerOfKursIstZugeordnet(final long idSchueler, final long idKurs) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
-		return kurseOfSchueler.contains(kurs);
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schuelerIDs, idKurs).contains(idSchueler);
+//		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs)
+//		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler)
+//		return kurseOfSchueler.contains(kurs)
 	}
 
 	/**
@@ -5497,7 +5499,6 @@ public class GostBlockungsergebnisManager {
 
 		// (2) Lösche die Kurse aus der DTO-Datenstruktur (löscht dadurch auch die SuS des Kurses).
 		for (final long idKurs : idKurse) {
-			System.out.println("EM: Lösche Kurs " + idKurs);
 			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 
 			for (final @NotNull Long schienenID : kurs.schienen) {
@@ -5575,6 +5576,7 @@ public class GostBlockungsergebnisManager {
 		final int nSchienen = _parent.schieneGetAnzahl();
 
 		// DeveloperNotificationException
+		DeveloperNotificationException.ifTrue("Schienenanzahl von KursE (" + kursE.anzahlSchienen+") ist ungleich der von KursG (" + kursG.anzahlSchienen + ")!", kursE.anzahlSchienen != kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl von " + _parent.toStringKurs(idKurs) + " darf nur bei der Blockungsvorlage verändert werden!", !_parent.getIstBlockungsVorlage());
 		DeveloperNotificationException.ifTrue(_parent.toStringKurs(idKurs) + " hat als GostBlockungKurs " + kursG.anzahlSchienen + " Schienen, als GostBlockungsergebnisKurs hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen != kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen == 0);
