@@ -129,41 +129,19 @@
 			</template>
 
 			<template #body>
-				<template v-if="kurssortierung.value === 'fach'">
-					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
-						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
-								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-								:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
-								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
-								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
-								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
-								:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
-						</template>
-					</template>
-				</template>
-				<template v-else>
-					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-						<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
-							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
-								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-								:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
-								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
-								:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
-								:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
-								:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
-						</template>
-					</template>
+				<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
+					<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart).value"
+						:fachwahlen="fachwahl.fachwahlen" :kursart="fachwahl.kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
+						:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
+						:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
+						:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahl.fachwahlen, fachwahl.kursart)"
+						:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+						:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
+						:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
+						:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
+						:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
+						:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
+						:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -180,7 +158,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungSchiene } from "@core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils } from "@core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -255,6 +233,27 @@
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;
 	}
+
+	const fachwahlListe = computed<List<{ kursart : GostKursart, fachwahlen : GostStatistikFachwahl }>>(() => {
+		const result = new ArrayList<{ kursart : GostKursart, fachwahlen : GostStatistikFachwahl }>();
+		if (props.kurssortierung.value === 'fach') {
+			for (const fachwahlen of props.mapFachwahlStatistik().values())
+				for (const kursart of GostKursart.values())
+					result.add({ kursart, fachwahlen });
+		} else {
+			for (const kursart of GostKursart.values()) {
+				for (const fachwahlen of props.mapFachwahlStatistik().values()) {
+					if (kursart === GostKursart.GK) {
+						result.add({ kursart, fachwahlen });
+						result.add({ kursart : GostKursart.ZK, fachwahlen });
+					} else if (kursart !== GostKursart.ZK) {
+						result.add({ kursart, fachwahlen });
+					}
+				}
+			}
+		}
+		return result;
+	});
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
 		if (!props.hatErgebnis)
