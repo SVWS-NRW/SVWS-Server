@@ -39,7 +39,7 @@
 				<template #actions>
 					<svws-ui-button type="transparent" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1"><i-ri-upload-2-line />Aus Vorlage importieren</svws-ui-button>
 					<svws-ui-button type="transparent" @click="erzeugeDefaultKlausurvorgaben(quartalsauswahl.value)" v-else><i-ri-upload-2-line />Standard-Vorlagen anlegen</svws-ui-button>
-					<svws-ui-button type="icon" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><i-ri-add-line /></svws-ui-button>
+					<svws-ui-button type="icon" @click="console.log(props.klausurvorgabenmanager());neueVorgabe" :disabled="selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><i-ri-add-line /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>

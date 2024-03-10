@@ -4783,7 +4783,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *     - Rückgabe-Typ: GostKlausurenDataCollection
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4792,13 +4792,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<boolean | null> {
+	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenDataCollection> {
 		const path = "/db/{schema}/gost/klausuren/blocken/kursklausuren"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return (text === "true");
+		return GostKlausurenDataCollection.transpilerFromJSON(text);
 	}
 
 

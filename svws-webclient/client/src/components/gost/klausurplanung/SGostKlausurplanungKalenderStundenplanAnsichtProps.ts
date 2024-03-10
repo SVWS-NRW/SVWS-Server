@@ -1,9 +1,10 @@
-import type { GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
+import type { GostJahrgangsdaten, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
+	jahrgangsdaten: GostJahrgangsdaten;
 	ignoreEmpty?: boolean;
 	id: number;
 	kwAuswahl: StundenplanKalenderwochenzuordnung;

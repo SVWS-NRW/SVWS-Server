@@ -213,19 +213,20 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * @return true, wenn die Blockung erstellt werden konnte, false, wenn nicht.
 	 *
 	 */
-	public static boolean blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) {
+	public static GostKlausurenDataCollection blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) {
+		final GostKlausurenDataCollection blockung = new GostKlausurenDataCollection();
 		blockungDaten.richKlausuren = enrichKursklausuren(conn, blockungDaten.klausuren);
 		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
 
 		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
 
 		for (final GostKlausurterminblockungErgebnisTermin ergebnisTermin : ergebnis.termine) {
-			bearbeiteTermin(conn, ergebnisTermin, idNextTermin++);
+			bearbeiteTermin(conn, ergebnisTermin, idNextTermin++, blockung);
 		}
-		return true;
+		return blockung;
 	}
 
-	private static void bearbeiteTermin(final DBEntityManager conn, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId) {
+	private static void bearbeiteTermin(final DBEntityManager conn, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId, final GostKlausurenDataCollection blockung) {
 		DTOGostKlausurenTermine termin = null;
 		final List<DTOGostKlausurenKursklausuren> listKlausuren = getKursklausurenDTOsZuIds(conn, ergebnisTermin.kursklausuren);
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausurDTOs(conn, listKlausuren);
@@ -235,12 +236,14 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			if (termin == null) {
 				termin = new DTOGostKlausurenTermine(terminId, vorgabe.abiJahrgang, GostHalbjahr.fromIDorException(vorgabe.halbjahr), vorgabe.quartal, true, false);
 				conn.transactionPersist(termin);
+				blockung.termine.add(DataGostKlausurenTermin.dtoMapper.apply(termin));
 				conn.transactionFlush();
 			}
 			if (termin.Abi_Jahrgang != vorgabe.abiJahrgang || termin.Halbjahr != GostHalbjahr.fromIDorException(vorgabe.halbjahr) || termin.Quartal != vorgabe.quartal)
 				throw OperationError.CONFLICT.exception("Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
 			klausur.Termin_ID = termin.ID;
 			conn.transactionPersist(klausur);
+			blockung.kursklausuren.add(dtoMapper.apply(klausur));
 		}
 	}
 

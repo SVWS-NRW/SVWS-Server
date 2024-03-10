@@ -80,43 +80,19 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			api.status.start();
 			// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
 			const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
-			// const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
-			// const faecherManager = new GostFaecherManager(listFaecher);
-			// const mapSchueler = new Map<number, SchuelerListeEintrag>();
-			// const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 			let view: RouteNode<any, any> = this.view;
-			// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
-			// const listKurse = await api.server.getKurse(api.schema);
-			// const kursManager = new KursManager(listKurse);
 
-			if (abiturjahr !== -1) {
-				// const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
-				// // Lade die Schülerliste des Abiturjahrgangs
-				// for (const s of listSchueler)
-				// 	mapSchueler.set(s.id, s);
-				// // Lade die Lehrerliste
-				// const listLehrer = await api.server.getLehrer(api.schema);
-				// for (const l of listLehrer)
-				// 	mapLehrer.set(l.id, l);
-			} else {
+			if (abiturjahr === -1) {
 				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorgaben))
 					view = routeGostKlausurplanungVorgaben;
 			}
-			// const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, abiturjahr);
-			// const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
-			// klausurvorgabenmanager.setFaecherManager(faecherManager);
 
 			// Setze den State neu
 			this.setPatchedDefaultState({
 				abiturjahr: abiturjahr,
 				jahrgangsdaten: jahrgangsdaten,
-				// mapSchueler: mapSchueler,
-				// faecherManager: faecherManager,
-				// mapLehrer: mapLehrer,
 				halbjahr: this._state.value.halbjahr,
-				// kursmanager: kursManager,
 				view: view,
-				// klausurvorgabenmanager: undefined,
 			});
 		} finally {
 			api.status.stop();
@@ -168,6 +144,12 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				stundenplanmanager: undefined,
 			}
 			if (this._state.value.abiturjahr === -1) {
+				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
+				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
+				const faecherManager = new GostFaecherManager(listFaecher);
+				const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
+				klausurvorgabenmanager.setFaecherManager(faecherManager);
+				Object.assign(result, {klausurvorgabenmanager});
 				this.setPatchedState(result);
 				return true;
 			}
@@ -179,12 +161,10 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			Object.assign(result, {abschnitt});
 			const klausurdaten = await api.server.getGostKlausurenMetaCollectionOberstufe(api.schema, this.abiturjahr, halbjahr.id);
-			// const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr, this.klausurvorgabenmanager);
 			const faecherManager = new GostFaecherManager(klausurdaten.faecher);
 			const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, klausurdaten.klausurdata.vorgaben);
 			const kursklausurmanager = new GostKursklausurManager(klausurvorgabenmanager, klausurdaten.klausurdata.kursklausuren, klausurdaten.klausurdata.termine, klausurdaten.klausurdata.schuelerklausuren, klausurdaten.klausurdata.schuelerklausurtermine);
 			kursklausurmanager.setKursManager(new KursManager(klausurdaten.kurse));
-			// klausurvorgabenmanager.setFaecherManager(faecherManager);
 			const mapLehrer = new HashMap<number, LehrerListeEintrag>();
 			for (const l of klausurdaten.lehrer)
 				mapLehrer.put(l.id, l);
@@ -194,7 +174,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			kursklausurmanager.setLehrerMap(mapLehrer);
 			kursklausurmanager.setSchuelerMap(mapSchueler);
 			Object.assign(result, {kursklausurmanager, klausurvorgabenmanager});
-			console.log(result);
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
 				this.setPatchedState(result);
@@ -215,24 +194,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		} finally {
 			api.status.stop();
 		}
-	}
-
-	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
-		const klausurCollection = await api.server.getGostKlausurenCollection(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		const manager = new GostKursklausurManager(vorgabenmanager, klausurCollection.kursklausuren, klausurCollection.termine, klausurCollection.schuelerklausuren, klausurCollection.schuelerklausurtermine);
-		manager.setKursManager(this._state.value.kursmanager);
-		const mapLehrer = new HashMap<number, LehrerListeEintrag>();
-		for (const k of this._state.value.mapLehrer.entries()) {
-			mapLehrer.put(k[0], k[1]);
-		}
-		manager.setLehrerMap(mapLehrer);
-		const mapSchueler = new HashMap<number, SchuelerListeEintrag>();
-		for (const s of this._state.value.mapSchueler.entries()) {
-			mapSchueler.put(s[0], s[1]);
-		}
-		manager.setSchuelerMap(mapSchueler);
-
-		return manager;
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -452,15 +413,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return collectionSkrsKrs;
 	}
 
-	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten): Promise<boolean> => {
+	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten) => {
 		api.status.start();
-		await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
-		this.setPatchedState({
-			kursklausurmanager: await this.reloadKursklausurmanager(null, this.klausurvorgabenmanager),
-		});
+		const blockung = await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
+		this.kursklausurmanager.terminAddAll(blockung.termine);
+		this.kursklausurmanager.kursklausurMengePatchAttributes(blockung.kursklausuren);
 		this.commit();
 		api.status.stop();
-		return true;
 	}
 
 	blockenNachschreiber = async (config: GostNachschreibterminblockungKonfiguration) => {

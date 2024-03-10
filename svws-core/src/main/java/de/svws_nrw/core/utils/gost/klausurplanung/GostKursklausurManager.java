@@ -132,7 +132,7 @@ public class GostKursklausurManager {
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurtermin> _termin_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostKlausurtermin> _terminmenge = new ArrayList<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurtermin>> _terminmenge_by_abijahr_and_halbjahr_and_quartal = new HashMap3D<>();
-	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _terminmenge_by_datum = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull String, @NotNull Integer, @NotNull List<@NotNull GostKlausurtermin>> _terminmenge_by_datum_and_abijahr = new HashMap2D<>();
 
 	// GostSchuelerklausur
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausur> _schuelerklausur_by_id = new HashMap<>();
@@ -316,9 +316,9 @@ public class GostKursklausurManager {
 	}
 
 	private void update_terminmenge_by_datum() {
-		_terminmenge_by_datum.clear();
+		_terminmenge_by_datum_and_abijahr.clear();
 		for (final @NotNull GostKlausurtermin t : _terminmenge)
-			MapUtils.getOrCreateArrayList(_terminmenge_by_datum, t.datum).add(t);
+			Map2DUtils.getOrCreateArrayList(_terminmenge_by_datum_and_abijahr, t.datum, t.abijahr).add(t);
 	}
 
 	private void update_schuelerklausurmenge_by_idKursklausur() {
@@ -459,11 +459,34 @@ public class GostKursklausurManager {
 	 * @param kursklausur Das neue {@link GostKursklausur}-Objekt.
 	 */
 	public void kursklausurPatchAttributes(final @NotNull GostKursklausur kursklausur) {
+		kursklausurPatchAttributesOhneUpdate(kursklausur);
+		update_all();
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKursklausur}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param kursklausur Das neue {@link GostKursklausur}-Objekt.
+	 */
+	public void kursklausurPatchAttributesOhneUpdate(final @NotNull GostKursklausur kursklausur) {
 		kursklausurCheck(kursklausur);
 
 		// Altes Objekt durch neues Objekt ersetzen
 		DeveloperNotificationException.ifMapRemoveFailes(_kursklausur_by_id, kursklausur.id);
 		DeveloperNotificationException.ifMapPutOverwrites(_kursklausur_by_id, kursklausur.id, kursklausur);
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKursklausur}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param kursklausurMenge Das neue {@link GostKursklausur}-Objekt.
+	 */
+	public void kursklausurMengePatchAttributes(final @NotNull List<@NotNull GostKursklausur> kursklausurMenge) {
+
+		for (@NotNull GostKursklausur kursklausur : kursklausurMenge)
+			kursklausurPatchAttributesOhneUpdate(kursklausur);
 
 		update_all();
 	}
@@ -878,22 +901,59 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByDatum(final @NotNull String datum) {
-		final List<@NotNull GostKlausurtermin> termine = _terminmenge_by_datum.get(datum);
+		@NotNull List<@NotNull GostKlausurtermin> ergebnis = new ArrayList<>();
+		if (!_terminmenge_by_datum_and_abijahr.containsKey1(datum))
+			return ergebnis;
+		for (@NotNull List<@NotNull GostKlausurtermin> termine : _terminmenge_by_datum_and_abijahr.getNonNullValuesOfKey1AsList(datum))
+			ergebnis.addAll(termine);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByDatumAndAbijahr(final @NotNull String datum, final int abiJahrgang) {
+		final List<@NotNull GostKlausurtermin> termine = _terminmenge_by_datum_and_abijahr.getOrNull(datum, abiJahrgang);
 		return termine != null ? termine : new ArrayList<>();
 	}
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum   das Datum der Klausurtermine
-	 * @param zr      Zeitraster
-	 * @param manager Manager
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByDatumAndZeitraster(final @NotNull String datum, final @NotNull StundenplanZeitraster zr,
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetFremdmengeByDatumAndAbijahr(final @NotNull String datum, final int abiJahrgang) {
+		@NotNull List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+		Map<@NotNull Integer, List<@NotNull GostKlausurtermin>> jgDatumMap = _terminmenge_by_datum_and_abijahr.getSubMapOrNull(datum);
+		if (jgDatumMap != null)
+			for (@NotNull Entry<@NotNull Integer, @NotNull List<@NotNull GostKlausurtermin>> entry : jgDatumMap.entrySet())
+				if (entry.getKey() != abiJahrgang)
+					if (entry.getValue() != null)
+						termine.addAll(entry.getValue());
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum   das Datum der Klausurtermine
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param zr      Zeitraster
+	 * @param manager der StundenplanManager
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByDatumAndAbijahrAndZeitraster(final @NotNull String datum, final int abiJahrgang, final @NotNull StundenplanZeitraster zr,
 			final @NotNull StundenplanManager manager) {
-		final List<@NotNull GostKlausurtermin> termine = terminGetMengeByDatum(datum);
+		final List<@NotNull GostKlausurtermin> termine = terminGetMengeByDatumAndAbijahr(datum, abiJahrgang);
 		final List<@NotNull GostKlausurtermin> retList = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : termine) {
 			final int maxKlausurDauer = maxKlausurdauerGetByTerminid(termin.id);

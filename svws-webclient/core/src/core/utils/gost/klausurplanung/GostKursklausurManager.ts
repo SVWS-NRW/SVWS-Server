@@ -137,7 +137,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _terminmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurtermin>> = new HashMap3D();
 
-	private readonly _terminmenge_by_datum : JavaMap<string, List<GostKlausurtermin>> = new HashMap();
+	private readonly _terminmenge_by_datum_and_abijahr : HashMap2D<string, number, List<GostKlausurtermin>> = new HashMap2D();
 
 	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap();
 
@@ -315,9 +315,9 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private update_terminmenge_by_datum() : void {
-		this._terminmenge_by_datum.clear();
+		this._terminmenge_by_datum_and_abijahr.clear();
 		for (const t of this._terminmenge)
-			MapUtils.getOrCreateArrayList(this._terminmenge_by_datum, t.datum).add(t);
+			Map2DUtils.getOrCreateArrayList(this._terminmenge_by_datum_and_abijahr, t.datum, t.abijahr).add(t);
 	}
 
 	private update_schuelerklausurmenge_by_idKursklausur() : void {
@@ -450,9 +450,31 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param kursklausur Das neue {@link GostKursklausur}-Objekt.
 	 */
 	public kursklausurPatchAttributes(kursklausur : GostKursklausur) : void {
+		this.kursklausurPatchAttributesOhneUpdate(kursklausur);
+		this.update_all();
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKursklausur}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param kursklausur Das neue {@link GostKursklausur}-Objekt.
+	 */
+	public kursklausurPatchAttributesOhneUpdate(kursklausur : GostKursklausur) : void {
 		GostKursklausurManager.kursklausurCheck(kursklausur);
 		DeveloperNotificationException.ifMapRemoveFailes(this._kursklausur_by_id, kursklausur.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._kursklausur_by_id, kursklausur.id, kursklausur);
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKursklausur}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param kursklausurMenge Das neue {@link GostKursklausur}-Objekt.
+	 */
+	public kursklausurMengePatchAttributes(kursklausurMenge : List<GostKursklausur>) : void {
+		for (let kursklausur of kursklausurMenge)
+			this.kursklausurPatchAttributesOhneUpdate(kursklausur);
 		this.update_all();
 	}
 
@@ -825,21 +847,58 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminGetMengeByDatum(datum : string) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = this._terminmenge_by_datum.get(datum);
+		let ergebnis : List<GostKlausurtermin> = new ArrayList();
+		if (!this._terminmenge_by_datum_and_abijahr.containsKey1(datum))
+			return ergebnis;
+		for (let termine of this._terminmenge_by_datum_and_abijahr.getNonNullValuesOfKey1AsList(datum))
+			ergebnis.addAll(termine);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public terminGetMengeByDatumAndAbijahr(datum : string, abiJahrgang : number) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = this._terminmenge_by_datum_and_abijahr.getOrNull(datum, abiJahrgang);
 		return termine !== null ? termine : new ArrayList();
 	}
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum   das Datum der Klausurtermine
-	 * @param zr      Zeitraster
-	 * @param manager Manager
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminGetMengeByDatumAndZeitraster(datum : string, zr : StundenplanZeitraster, manager : StundenplanManager) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = this.terminGetMengeByDatum(datum);
+	public terminGetFremdmengeByDatumAndAbijahr(datum : string, abiJahrgang : number) : List<GostKlausurtermin> {
+		let termine : List<GostKlausurtermin> = new ArrayList();
+		let jgDatumMap : JavaMap<number, List<GostKlausurtermin> | null> | null = this._terminmenge_by_datum_and_abijahr.getSubMapOrNull(datum);
+		if (jgDatumMap !== null)
+			for (let entry of jgDatumMap.entrySet())
+				if (entry.getKey() !== abiJahrgang)
+					if (entry.getValue() !== null)
+						termine.addAll(entry.getValue());
+		return termine;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum   das Datum der Klausurtermine
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param zr      Zeitraster
+	 * @param manager der StundenplanManager
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public terminGetMengeByDatumAndAbijahrAndZeitraster(datum : string, abiJahrgang : number, zr : StundenplanZeitraster, manager : StundenplanManager) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = this.terminGetMengeByDatumAndAbijahr(datum, abiJahrgang);
 		const retList : List<GostKlausurtermin> | null = new ArrayList();
 		for (const termin of termine) {
 			const maxKlausurDauer : number = this.maxKlausurdauerGetByTerminid(termin.id);

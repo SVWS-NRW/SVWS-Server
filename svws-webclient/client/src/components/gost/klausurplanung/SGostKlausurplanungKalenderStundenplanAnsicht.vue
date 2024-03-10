@@ -72,12 +72,12 @@
 					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] text-center z-10 border-transparent"
 						:style="posKlausurtermin(termin)"
 						:data="termin"
-						:draggable="true"
+						:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
 						@dragstart="onDrag(termin)"
 						@dragend="onDrag(undefined)">
 						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
 							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
-							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
+							<i-ri-draggable v-if="termin.abijahr === jahrgangsdaten.abiturjahr" class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
 							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
 								<span class="z-10 relative p-2 leading-tight font-medium">{{ terminBezeichnung(termin) }}</span>
