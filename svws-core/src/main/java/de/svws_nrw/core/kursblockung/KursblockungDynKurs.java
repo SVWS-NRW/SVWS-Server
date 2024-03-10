@@ -24,7 +24,7 @@ public class KursblockungDynKurs {
 	private final long databaseID;
 
 	/** Die interne ID des Kurses. */
-	private final int internalID;
+	private final int internalKursID;
 
 	/** Die Fachart die zu diesem Kurs gehört. */
 	private final @NotNull KursblockungDynFachart fachart;
@@ -103,7 +103,7 @@ public class KursblockungDynKurs {
 		schuelerAnz = 0;
 		schuelerAnzDummy = 0;
 		logger = pLogger;
-		internalID = pInternalID;
+		internalKursID = pInternalID;
 		schuelerAnzMax = MAX_SUS_DEFAULT;
 		schuelerVerboten = new int[pSchuelerAnzahl];
 
@@ -140,7 +140,7 @@ public class KursblockungDynKurs {
 	 */
 	@Override
 	public @NotNull String toString() {
-		return "Kurs (dbID=" + databaseID + ", intiD=" + internalID + ")";
+		return "Kurs (dbID=" + databaseID + ", intiD=" + internalKursID + ")";
 	}
 
 	// ########################################
@@ -283,7 +283,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Die interne ID des Kurses. */
 	int gibInternalID() {
-		return internalID;
+		return internalKursID;
 	}
 
 	/**
@@ -301,13 +301,12 @@ public class KursblockungDynKurs {
 	/**
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
-	 * @param kursGesperrt  Die Kurssperrung des Schülers.
-	 * @param pSchuelerNr   Die interne ID des Schülers.
+	 * @param s  Das  {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
-	boolean gibIstErlaubtFuerSchueler(final @NotNull boolean[] kursGesperrt, final int pSchuelerNr) {
-		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !kursGesperrt[internalID] && (schuelerVerboten[pSchuelerNr] <= 0);
+	boolean gibIstErlaubtFuerSchueler(final @NotNull KursblockungDynSchueler s) {
+		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !s.kursGesperrt[internalKursID] && (schuelerVerboten[s.internalSchuelerID] <= 0);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode

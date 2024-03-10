@@ -170,15 +170,14 @@ public class KursblockungDynFachart {
 	 * <br>Ignoriert Kurse, die für den aktuellen Schüler gesperrt sind.
 	 *
 	 * @param  pSchiene      Die Schiene, in der gesucht wird.
-	 * @param  kursGesperrt  Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
-	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
+	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (int i = 0; i < kursArr.length; i++) {
 			final @NotNull KursblockungDynKurs kurs = kursArr[i];
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID))
+			if (kurs.gibIstErlaubtFuerSchueler(s))
 				for (final int c : kurs.gibSchienenLage()) // Suche passende Schiene.
 					if (c == pSchiene)
 						return kurs;
@@ -203,14 +202,13 @@ public class KursblockungDynFachart {
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
-	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
-	boolean gibHatSchuelerKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
+	boolean gibHatSchuelerKursInSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) &&  kurs.gibIstInSchiene(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) &&  kurs.gibIstInSchiene(pSchiene))
 				return true;
 
 		return false;
@@ -220,14 +218,13 @@ public class KursblockungDynFachart {
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
-	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
-	boolean gibHatSchuelerKursMitFreierSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt, final int pInterneID) {
+	boolean gibHatSchuelerKursMitFreierSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) &&  kurs.gibIstSchieneFrei(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) &&  kurs.gibIstSchieneFrei(pSchiene))
 				return true;
 
 		return false;

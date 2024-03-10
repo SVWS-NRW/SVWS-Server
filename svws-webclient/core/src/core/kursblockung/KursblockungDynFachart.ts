@@ -177,15 +177,14 @@ export class KursblockungDynFachart extends JavaObject {
 	 * <br>Ignoriert Kurse, die für den aktuellen Schüler gesperrt sind.
 	 *
 	 * @param  pSchiene      Die Schiene, in der gesucht wird.
-	 * @param  kursGesperrt  Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene vorkommt.
 	 */
-	gibKleinstenKursInSchieneFuerSchueler(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : KursblockungDynKurs | null {
+	gibKleinstenKursInSchieneFuerSchueler(pSchiene : number, s : KursblockungDynSchueler) : KursblockungDynKurs | null {
 		for (let i : number = 0; i < this.kursArr.length; i++) {
 			const kurs : KursblockungDynKurs = this.kursArr[i];
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID))
+			if (kurs.gibIstErlaubtFuerSchueler(s))
 				for (const c of kurs.gibSchienenLage())
 					if (c === pSchiene)
 						return kurs;
@@ -209,14 +208,13 @@ export class KursblockungDynFachart extends JavaObject {
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
-	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
-	gibHatSchuelerKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : boolean {
+	gibHatSchuelerKursInSchiene(pSchiene : number, s : KursblockungDynSchueler) : boolean {
 		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) && kurs.gibIstInSchiene(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene))
 				return true;
 		return false;
 	}
@@ -225,14 +223,13 @@ export class KursblockungDynFachart extends JavaObject {
 	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 *
 	 * @param  pSchiene      Die Schiene, die angefragt wurde.
-	 * @param  kursGesperrt  Alle Kurssperrungen des Schülers.
-	 * @param  pInterneID    Die interne ID des Schülers.
+	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
-	gibHatSchuelerKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>, pInterneID : number) : boolean {
+	gibHatSchuelerKursMitFreierSchiene(pSchiene : number, s : KursblockungDynSchueler) : boolean {
 		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(kursGesperrt, pInterneID) && kurs.gibIstSchieneFrei(pSchiene))
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene))
 				return true;
 		return false;
 	}

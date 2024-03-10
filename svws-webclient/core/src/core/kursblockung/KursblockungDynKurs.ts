@@ -28,7 +28,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Die interne ID des Kurses.
 	 */
-	private readonly internalID : number;
+	private readonly internalKursID : number;
 
 	/**
 	 * Die Fachart die zu diesem Kurs gehört.
@@ -130,7 +130,7 @@ export class KursblockungDynKurs extends JavaObject {
 		this.schuelerAnz = 0;
 		this.schuelerAnzDummy = 0;
 		this.logger = pLogger;
-		this.internalID = pInternalID;
+		this.internalKursID = pInternalID;
 		this.schuelerAnzMax = KursblockungDynKurs.MAX_SUS_DEFAULT;
 		this.schuelerVerboten = Array(pSchuelerAnzahl).fill(0);
 		this.schienenLageSaveS = Array(this.schienenLage.length).fill(null);
@@ -159,7 +159,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return die String-Repräsentation des Kurses
 	 */
 	public toString() : string {
-		return "Kurs (dbID=" + this.databaseID + ", intiD=" + this.internalID + ")";
+		return "Kurs (dbID=" + this.databaseID + ", intiD=" + this.internalKursID + ")";
 	}
 
 	/**
@@ -307,7 +307,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Die interne ID des Kurses.
 	 */
 	gibInternalID() : number {
-		return this.internalID;
+		return this.internalKursID;
 	}
 
 	/**
@@ -324,13 +324,12 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
-	 * @param kursGesperrt  Die Kurssperrung des Schülers.
-	 * @param pSchuelerNr   Die interne ID des Schülers.
+	 * @param s  Das  {@link KursblockungDynSchueler}-Objekt.
 	 *
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
-	gibIstErlaubtFuerSchueler(kursGesperrt : Array<boolean>, pSchuelerNr : number) : boolean {
-		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !kursGesperrt[this.internalID] && (this.schuelerVerboten[pSchuelerNr] <= 0);
+	gibIstErlaubtFuerSchueler(s : KursblockungDynSchueler) : boolean {
+		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !s.kursGesperrt[this.internalKursID] && (this.schuelerVerboten[s.internalSchuelerID] <= 0);
 	}
 
 	/**
