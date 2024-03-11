@@ -88,6 +88,8 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
+		if (blockungen.isEmpty())
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
 				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
