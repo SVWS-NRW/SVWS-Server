@@ -655,25 +655,27 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	});
 
-	removeErgebnisse = api.call(async (ergebnisse: GostBlockungsergebnis[]): Promise<void> => {
-		if ((ergebnisse.length <= 0) || (!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
+	removeErgebnisse = api.call(async (ergebnisse: Iterable<GostBlockungsergebnis>): Promise<void> => {
+		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
+		const liste = new ArrayList<number>();
+		const liste2 = new ArrayList<GostBlockungsergebnis>();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		const reselect = ergebnisse.some(e => e.id === ergebnisid);
-		const liste = new ArrayList<GostBlockungsergebnis>();
 		for (const ergebnis of ergebnisse) {
-			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
-			liste.add(ergebnis);
+			liste2.add(ergebnis);
+			liste.add(ergebnis.id);
 		}
-		this.datenmanager.ergebnisRemoveListe(liste);
-		this.commit();
+		const reselect = liste.contains(ergebnisid);
+		await api.server.deleteGostBlockungsergebnisse(liste, api.schema);
+		this.datenmanager.ergebnisRemoveListe(liste2);
 		if (reselect) {
 			for (const e of this.ergebnisse)
-				if (!ergebnisse.includes(e)) {
+				if (!liste2.contains(e)) {
 					await this.gotoErgebnis(e);
 					break;
 				}
-		}
+		} else
+			this.commit();
 	});
 
 	rechneGostBlockung = async (): Promise<List<number>> => {
