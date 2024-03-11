@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
+import type { List } from '../../java/util/List';
 import { HashSet } from '../../java/util/HashSet';
 
 export class SetUtils extends JavaObject {
@@ -18,9 +19,9 @@ export class SetUtils extends JavaObject {
 	 * @return ein Set, welches mit einem Element gefüllt wurde.
 	 */
 	public static create1<E>(element : E) : JavaSet<E> {
-		const list : HashSet<E> = new HashSet();
-		list.add(element);
-		return list;
+		const set : HashSet<E> = new HashSet();
+		set.add(element);
+		return set;
 	}
 
 	/**
@@ -33,10 +34,24 @@ export class SetUtils extends JavaObject {
 	 * @return ein Set, welches mit einem Element gefüllt wurde.
 	 */
 	public static create2<E>(element1 : E, element2 : E) : JavaSet<E> {
-		const list : HashSet<E> = new HashSet();
-		list.add(element1);
-		list.add(element2);
-		return list;
+		const set : HashSet<E> = new HashSet();
+		set.add(element1);
+		set.add(element2);
+		return set;
+	}
+
+	/**
+	 * Liefert ein Set (HashSet), welches mit den Elementen der Liste gefüllt wurde.
+	 *
+	 * @param <E>   Der Inhaltstyp der Liste.
+	 * @param list  Die Liste der Elemente.
+	 *
+	 * @return ein Set (HashSet), welches mit den Elementen der Liste gefüllt wurde.
+	 */
+	public static createFromList<E>(list : List<E>) : JavaSet<E> {
+		const set : HashSet<E> = new HashSet();
+		set.addAll(list);
+		return set;
 	}
 
 	transpilerCanonicalName(): string {

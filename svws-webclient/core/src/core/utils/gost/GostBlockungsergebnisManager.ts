@@ -12,8 +12,8 @@ import type { Predicate } from '../../../java/util/function/Predicate';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import type { List } from '../../../java/util/List';
-import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
+import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { SetUtils } from '../../../core/utils/SetUtils';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
@@ -62,6 +62,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt.
 	 */
 	private _ergebnis : GostBlockungsergebnis = new GostBlockungsergebnis();
+
+	/**
+	 * Liste aller Fehlermeldungen.
+	 */
+	private readonly _fehlermeldungen : List<string> = new ArrayList();
+
+	/**
+	 * Set aller Schienen-IDs.
+	 */
+	private readonly _schienenIDset : JavaSet<number> = new HashSet<number>();
 
 	/**
 	 * Schienen-Nummer --> GostBlockungsergebnisSchiene
@@ -358,6 +368,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = this._parent.daten().fachwahlen.size();
+		this._fehlermeldungen.clear();
+		if (this.update_schienenIDset())
+			return;
 		for (const gSchiene of this._parent.daten().schienen) {
 			const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
@@ -419,6 +432,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		this._fachartmenge_sortiert.addAll(this._map_fachartID_kurse.keySet());
 		this.stateRegelvalidierung();
+	}
+
+	private update_schienenIDset() : boolean {
+		this._schienenIDset.clear();
+		for (const gSchiene of this._parent.daten().schienen)
+			if (!this._schienenIDset.add(gSchiene.id)) {
+				this._fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist doppelt!");
+				return true;
+			}
+		return false;
 	}
 
 	private stateRegelvalidierung() : void {
@@ -1017,15 +1040,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
-	 *
-	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
-	 */
-	public getParent() : GostBlockungsdatenManager | null {
-		return this._parent;
-	}
-
-	/**
 	 * Liefert die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
 	 *
 	 * @return die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
@@ -1059,6 +1073,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 						if (kurs1.id === kurs2.id)
 							kurs2.schueler.add(entry.getKey());
 		return copy;
+	}
+
+	/**
+	 * Liefert die Menge (meistens eine) aller Fehlermeldungen.
+	 * <br>Falls die Liste nicht leer ist, sollte die GUI den Benutzer warnen, dass die Blockung nicht vollständig geladen wurde!
+	 *
+	 * @return die Menge (meistens eine) aller Fehlermeldungen.
+	 */
+	public getFehlermeldungen() : List<string> {
+		return this._fehlermeldungen;
+	}
+
+	/**
+	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
+	 *
+	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
+	 */
+	public getParent() : GostBlockungsdatenManager | null {
+		return this._parent;
 	}
 
 	/**

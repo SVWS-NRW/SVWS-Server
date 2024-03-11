@@ -64,6 +64,17 @@ public class GostBlockungsergebnisManager {
 	/** Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. */
 	private @NotNull GostBlockungsergebnis _ergebnis = new GostBlockungsergebnis();
 
+	// ############################## UPDATE ##############################
+
+	/** Liste aller Fehlermeldungen. */
+	private final @NotNull List<@NotNull String> _fehlermeldungen = new ArrayList<>();
+
+	/** Set aller Schienen-IDs. */
+	private final @NotNull Set<@NotNull Long> _schienenIDset = new HashSet<@NotNull Long>();
+
+
+	// ####################################################################
+
 	/** Schienen-Nummer --> GostBlockungsergebnisSchiene */
 	private final @NotNull Map<@NotNull Integer, @NotNull GostBlockungsergebnisSchiene> _map_schienenNr_schiene = new HashMap<>();
 
@@ -294,6 +305,12 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = _parent.daten().fachwahlen.size();
 
+		// Update Prozess.
+		_fehlermeldungen.clear();
+		if (update_schienenIDset())
+			return;
+
+
 		// Schienen von '_parent' kopieren und hinzufügen.
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
@@ -397,6 +414,18 @@ public class GostBlockungsergebnisManager {
 
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
+	}
+
+	private boolean update_schienenIDset() {
+		_schienenIDset.clear();
+
+		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
+			if (!_schienenIDset.add(gSchiene.id)) {
+				_fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist doppelt!");
+				return true;
+			}
+
+		return false;
 	}
 
 	private void stateRegelvalidierung() {
@@ -1115,15 +1144,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
-	 *
-	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
-	 */
-	public GostBlockungsdatenManager getParent() {
-		return _parent;
-	}
-
-	/**
 	 * Liefert die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
 	 *
 	 * @return die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
@@ -1161,6 +1181,25 @@ public class GostBlockungsergebnisManager {
 							kurs2.schueler.add(entry.getKey());
 
 		return copy;
+	}
+
+	/**
+	 * Liefert die Menge (meistens eine) aller Fehlermeldungen.
+	 * <br>Falls die Liste nicht leer ist, sollte die GUI den Benutzer warnen, dass die Blockung nicht vollständig geladen wurde!
+	 *
+	 * @return die Menge (meistens eine) aller Fehlermeldungen.
+	 */
+	public @NotNull List<@NotNull String> getFehlermeldungen() {
+		return _fehlermeldungen;
+	}
+
+	/**
+	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
+	 *
+	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
+	 */
+	public GostBlockungsdatenManager getParent() {
+		return _parent;
 	}
 
 	/**
