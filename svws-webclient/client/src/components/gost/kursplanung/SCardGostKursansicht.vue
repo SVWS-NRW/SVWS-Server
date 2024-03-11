@@ -369,8 +369,8 @@
 		// befindet sich der Kurs außerhalb der eigenen Zeile, false
 		if (dragKurs.value.id !== dragOverKurs.value.id)
 			return false;
-		// kurs auf Kurs und gleiche Schiene ist ungültig
-		if (dragOverKurs.value.id === dragKurs.value.id && dragOverSchiene.value.id === dragSchiene.value.id)
+		// kurs auf Kurs und gleiche Schiene ist ungültig (auch bei Kultikursen)
+		if (dragOverKurs.value.id === dragKurs.value.id && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragOverSchiene.value.id))
 			return false;
 		// kurs auf kurs aber andere Schiene ist ok, Kurs fixierteVerschieben
 		if (dragOverKurs.value.id === dragKurs.value.id && dragOverSchiene.value.id !== dragSchiene.value.id && kurs.id === dragOverKurs.value.id)
