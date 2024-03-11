@@ -35,7 +35,7 @@
 					</svws-ui-button>
 					<svws-ui-button type="transparent" @click="copyToClipboard" v-if="toCopy !== undefined">
 						<span>Meldung Kopieren</span>
-						<i-ri-clipboard-line v-if="copied === null" />
+						<i-ri-file-copy-line v-if="copied === null" />
 						<i-ri-error-warning-fill v-else-if="copied === false" />
 						<i-ri-check-line v-else class="text-success" />
 					</svws-ui-button>

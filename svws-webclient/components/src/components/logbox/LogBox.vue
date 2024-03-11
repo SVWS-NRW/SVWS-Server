@@ -6,7 +6,7 @@
 				<i-ri-alert-fill v-else-if="(status === false)" class="mr-3 text-error" />
 				<svws-ui-button v-if="log !== undefined" type="transparent" @click="copyToClipboard">
 					<template v-if="copied === null">
-						<i-ri-clipboard-line />
+						<i-ri-file-copy-line />
 						<span>Log kopieren</span>
 					</template>
 					<template v-else-if="copied === false">
