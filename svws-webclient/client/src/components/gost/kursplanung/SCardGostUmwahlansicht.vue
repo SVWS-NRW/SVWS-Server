@@ -123,7 +123,7 @@
 							</div>
 
 							<!-- Auffüllen mit leeren Zellen, falls in der Schiene nicht die maximale Anzahl von Kursen vorliegt. -->
-							<div v-for="n in (maxKurseInSchienen - schiene.kurse.size())" :key="n" role="cell" class="svws-ui-td svws-divider last:!border-r-0" />
+							<div v-for="n in (maxKurseInSchienen() - schiene.kurse.size())" :key="n" role="cell" class="svws-ui-td svws-divider last:!border-r-0" />
 						</div>
 					</template>
 				</svws-ui-table>
@@ -170,13 +170,13 @@
 			void props.gotoLaufbahnplanung(props.schueler.id);
 	}
 
-	const maxKurseInSchienen = computed<number>(() => {
+	function maxKurseInSchienen() : number {
 		return props.getErgebnismanager().getOfSchieneMaxKursanzahl();
-	});
+	}
 
 	const cols = computed(() => {
 		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1, align: 'left' }];
-		for (let i = 0; i < maxKurseInSchienen.value; i++)
+		for (let i = 0; i < maxKurseInSchienen(); i++)
 			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6, span: 1 });
 		return cols;
 	})
