@@ -8,28 +8,28 @@
 				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" removable />
 			</template>
 			<template #filterAdvanced>
-				<svws-ui-radio-group class="radio--row col-span-full">
+				<div class="radio radio--row col-span-full">
 					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="&ZeroWidthSpace;">
 						<i-ri-filter-off-line />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="schuelerFilter().fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
-				</svws-ui-radio-group>
-				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter().kurs_toggle.value === 'kurs'">
+				</div>
+				<div class="input-wrapper col-span-full" v-if="schuelerFilter().kurs_toggle.value === 'kurs'">
 					<svws-ui-select v-model="schuelerFilter().kurs" :items="schuelerFilter().getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
-					<svws-ui-spacing />
-				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="schuelerFilter().fach_toggle.value === 'fach'">
+					<div class="svws-ui-spacing" />
+				</div>
+				<div :grid="2" class="input-wrapper input-wrapper--2 col-span-full" v-if="schuelerFilter().fach_toggle.value === 'fach'">
 					<svws-ui-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
 					<svws-ui-select title="Kursart" v-model="schuelerFilter().kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" removable />
-					<svws-ui-spacing />
-				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter().alle_toggle.value === 'alle'">
+					<div class="svws-ui-spacing" />
+				</div>
+				<div class="input-wrapper col-span-full" v-if="schuelerFilter().alle_toggle.value === 'alle'">
 					<svws-ui-select disabled :model-value="[]" :items="[]" :item-text="() => ''" />
-					<svws-ui-spacing />
-				</svws-ui-input-wrapper>
-				<svws-ui-radio-group class="radio--row col-span-full">
+					<div class="svws-ui-spacing" />
+				</div>
+				<div class="radio radio--row col-span-full">
 					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="AlleA" label="Alle" :icon="false" />
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen" name="Kollisionen" label="K">
@@ -55,7 +55,7 @@
 							Kollision und Nichtverteilt
 						</template>
 					</svws-ui-tooltip>
-				</svws-ui-radio-group>
+				</div>
 			</template>
 			<template #header>
 				<div class="svws-ui-tr" role="row">
