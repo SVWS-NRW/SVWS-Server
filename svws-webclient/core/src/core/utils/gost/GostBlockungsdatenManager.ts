@@ -514,7 +514,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return result;
 	}
 
-	private ergebnisRemoveListeByIDs(listeDerErgebnisIDs : List<number>) : void {
+	/**
+	 * Entfernt die Menge an {@link GostBlockungsergebnis}-Objekten anhand ihrer ID.
+	 *
+	 * @param listeDerErgebnisIDs  Die IDs der Ergebnisse.
+	 *
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
+	 */
+	public ergebnisRemoveListeByIDs(listeDerErgebnisIDs : JavaSet<number>) : void {
 		for (const idErgebnis of listeDerErgebnisIDs) {
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", this._map_idErgebnis_Ergebnis, idErgebnis);
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_ErgebnisManager", this._map_idErgebnis_ErgebnisManager, idErgebnis);
@@ -528,6 +535,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Entfernt die Menge an {@link GostBlockungsergebnis}-Objekten.
+	 *
+	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
+	 */
+	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnis>) : void {
+		const listIDs : JavaSet<number> = new HashSet<number>();
+		for (const e of ergebnismenge)
+			listIDs.add(e.id);
+		this.ergebnisRemoveListeByIDs(listIDs);
+	}
+
+	/**
 	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des zu entfernenden Ergebnisses.
@@ -535,7 +556,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisRemoveByID(idErgebnis : number) : void {
-		this.ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
+		this.ergebnisRemoveListeByIDs(SetUtils.create1(idErgebnis));
 	}
 
 	/**
@@ -546,21 +567,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public ergebnisRemove(ergebnis : GostBlockungsergebnis) : void {
-		this.ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
-	}
-
-	/**
-	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
-	 *
-	 * @param ergebnismenge Die Menge an Ergebnissen.
-	 *
-	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
-	 */
-	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnis>) : void {
-		const listIDs : List<number> = new ArrayList();
-		for (const e of ergebnismenge)
-			listIDs.add(e.id);
-		this.ergebnisRemoveListeByIDs(listIDs);
+		this.ergebnisRemoveListeByIDs(SetUtils.create1(ergebnis.id));
 	}
 
 	/**

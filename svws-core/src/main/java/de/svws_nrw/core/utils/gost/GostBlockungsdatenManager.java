@@ -45,7 +45,6 @@ public class GostBlockungsdatenManager {
 	/** Der Fächermanager mit den Fächern der gymnasialen Oberstufe. */
 	private final @NotNull GostFaecherManager _faecherManager;
 
-
 	/** Ein Comparator für Kurse der Blockung. Dieser vergleicht nur die Kursnummern! */
 	private static final @NotNull Comparator<@NotNull GostBlockungKurs> _compKursnummer = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> Integer.compare(a.nummer, b.nummer);
 
@@ -468,7 +467,14 @@ public class GostBlockungsdatenManager {
 		return result;
 	}
 
-	private void ergebnisRemoveListeByIDs(final @NotNull List<@NotNull Long> listeDerErgebnisIDs) throws DeveloperNotificationException {
+	/**
+	 * Entfernt die Menge an {@link GostBlockungsergebnis}-Objekten anhand ihrer ID.
+	 *
+	 * @param listeDerErgebnisIDs  Die IDs der Ergebnisse.
+	 *
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
+	 */
+	public void ergebnisRemoveListeByIDs(final @NotNull Set<@NotNull Long> listeDerErgebnisIDs) throws DeveloperNotificationException {
 		// Überprüfen
 		for (final long idErgebnis : listeDerErgebnisIDs) {
 			DeveloperNotificationException.ifMapNotContains("_map_idErgebnis_Ergebnis", _map_idErgebnis_Ergebnis, idErgebnis);
@@ -487,6 +493,22 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Entfernt die Menge an {@link GostBlockungsergebnis}-Objekten.
+	 *
+	 * @param ergebnismenge Die Menge an Ergebnissen.
+	 *
+	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
+	 */
+	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnis> ergebnismenge) throws DeveloperNotificationException {
+		// ID kopieren, da Löschen über Objektidentität nicht funktioniert!
+		final @NotNull Set<@NotNull Long> listIDs = new HashSet<@NotNull Long>();
+		for (final @NotNull GostBlockungsergebnis e : ergebnismenge)
+			listIDs.add(e.id);
+
+		ergebnisRemoveListeByIDs(listIDs);
+	}
+
+	/**
 	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idErgebnis  Die Datenbank-ID des zu entfernenden Ergebnisses.
@@ -494,7 +516,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public void ergebnisRemoveByID(final long idErgebnis) throws DeveloperNotificationException {
-		ergebnisRemoveListeByIDs(ListUtils.create1(idErgebnis));
+		ergebnisRemoveListeByIDs(SetUtils.create1(idErgebnis));
 	}
 
 	/**
@@ -505,23 +527,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es kein Ergebnis mit dieser ID gibt.
 	 */
 	public void ergebnisRemove(final @NotNull GostBlockungsergebnis ergebnis) throws DeveloperNotificationException {
-		ergebnisRemoveListeByIDs(ListUtils.create1(ergebnis.id));
-	}
-
-	/**
-	 * Entfernt die Menge an Ergebnissen {@link GostBlockungsergebnis} hinzu.
-	 *
-	 * @param ergebnismenge Die Menge an Ergebnissen.
-	 *
-	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
-	 */
-	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnis> ergebnismenge) throws DeveloperNotificationException {
-		// ID kopieren, da Löschen über Objektidentität nicht funktioniert!
-		final @NotNull List<@NotNull Long> listIDs = new ArrayList<>();
-		for (final @NotNull GostBlockungsergebnis e : ergebnismenge)
-			listIDs.add(e.id);
-
-		ergebnisRemoveListeByIDs(listIDs);
+		ergebnisRemoveListeByIDs(SetUtils.create1(ergebnis.id));
 	}
 
 	/**
