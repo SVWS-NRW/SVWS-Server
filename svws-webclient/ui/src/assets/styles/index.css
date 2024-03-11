@@ -50,119 +50,134 @@ hr {
 	margin: -0.125rem auto -0.125rem -0.125rem;
 }
 
-/** Icons - Beispiel zur Verwendung: <span class="icon-alert-line" /> */
-.icon-add-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/add-line.svg)] bg-no-repeat bg-center }
-.icon-alert-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/alert-line.svg)] bg-no-repeat bg-center }
-.icon-alert-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/alert-fill.svg)] bg-no-repeat bg-center }
-.icon-archive-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/archive-line.svg)] bg-no-repeat bg-center }
-.icon-archive-stack-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/archive-stack-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-down-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-down-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-down-s-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-down-s-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-go-back-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-go-back-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-left-s-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-left-s-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-right-circle-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-right-circle-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-right-s-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-right-s-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-turn-back-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-turn-back-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-up-down-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-up-down-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-up-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-up-line.svg)] bg-no-repeat bg-center }
-.icon-arrow-up-s-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/arrow-up-s-line.svg)] bg-no-repeat bg-center }
-.icon-at-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/at-line.svg)] bg-no-repeat bg-center }
-.icon-bar-chart-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/bar-chart-2-line.svg)] bg-no-repeat bg-center }
-.icon-briefcase-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/briefcase-line.svg)] bg-no-repeat bg-center }
-.icon-book-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/book-2-line.svg)] bg-no-repeat bg-center }
-.icon-box-3-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Others/box-3-line.svg)] bg-no-repeat bg-center }
-.icon-calculator-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/calculator-line.svg)] bg-no-repeat bg-center }
-.icon-calendar-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/calendar-2-line.svg)] bg-no-repeat bg-center }
-.icon-calendar-event-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/calendar-event-line.svg)] bg-no-repeat bg-center }
-.icon-camera-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/camera-fill.svg)] bg-no-repeat bg-center }
-.icon-camera-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/camera-line.svg)] bg-no-repeat bg-center }
-.icon-camera-off-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/camera-off-line.svg)] bg-no-repeat bg-center }
-.icon-chat-1-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Communication/chat-1-line.svg)] bg-no-repeat bg-center }
-.icon-check-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/check-line.svg)] bg-no-repeat bg-center }
-.icon-checkbox-blank-circle-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/checkbox-blank-circle-line.svg)] bg-no-repeat bg-center }
-.icon-checkbox-circle-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/checkbox-circle-line.svg)] bg-no-repeat bg-center }
-.icon-checkbox-circle-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/checkbox-circle-fill.svg)] bg-no-repeat bg-center }
-.icon-close-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/close-line.svg)] bg-no-repeat bg-center }
-.icon-corner-right-up-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/corner-right-up-line.svg)] bg-no-repeat bg-center }
-.icon-cup-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Food/cup-line.svg)] bg-no-repeat bg-center }
-.icon-database-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Device/database-2-line.svg)] bg-no-repeat bg-center }
-.icon-delete-bin-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/delete-bin-fill.svg)] bg-no-repeat bg-center }
-.icon-delete-bin-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/delete-bin-line.svg)] bg-no-repeat bg-center }
-.icon-bug-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Development/bug-fill.svg)] bg-no-repeat bg-center }
-.icon-device-recover-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Device/device-recover-line.svg)] bg-no-repeat bg-center }
-.icon-download-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/download-2-line.svg)] bg-no-repeat bg-center }
-.icon-draft-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/draft-line.svg)] bg-no-repeat bg-center }
-.icon-draggable { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Editor/draggable.svg)] bg-no-repeat bg-center }
-.icon-edit-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Design/edit-2-line.svg)] bg-no-repeat bg-center }
-.icon-error-warning-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/error-warning-line.svg)] bg-no-repeat bg-center }
-.icon-error-warning-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/error-warning-fill.svg)] bg-no-repeat bg-center }
-.icon-expand-height-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/expand-height-line.svg)] bg-no-repeat bg-center }
-.icon-expand-up-down-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/expand-up-down-fill.svg)] bg-no-repeat bg-center }
-.icon-expand-up-down-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Arrows/expand-up-down-line.svg)] bg-no-repeat bg-center }
-.icon-eye-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/eye-line.svg)] bg-no-repeat bg-center }
-.icon-file-copy-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/file-copy-line.svg)] bg-no-repeat bg-center }
-.icon-file-damage-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/file-damage-line.svg)] bg-no-repeat bg-center }
-.icon-file-close-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/file-close-line.svg)] bg-no-repeat bg-center }
-.icon-filter-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/filter-fill.svg)] bg-no-repeat bg-center }
-.icon-filter-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/filter-line.svg)] bg-no-repeat bg-center }
-.icon-filter-off-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/filter-off-line.svg)] bg-no-repeat bg-center }
-.icon-folder-open-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Document/folder-open-line.svg)] bg-no-repeat bg-center }
-.icon-forbid-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/forbid-line.svg)] bg-no-repeat bg-center }
-.icon-forbid-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/forbid-fill.svg)] bg-no-repeat bg-center }
-.icon-fullscreen-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/fullscreen-line.svg)] bg-no-repeat bg-center }
-.icon-graduation-cap-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Others/graduation-cap-line.svg)] bg-no-repeat bg-center }
-.icon-group-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/User%20&%20Faces/group-line.svg)] bg-no-repeat bg-center }
-.icon-headphone-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/headphone-line.svg)] bg-no-repeat bg-center }
-.icon-information-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/information-fill.svg)] bg-no-repeat bg-center }
-.icon-information-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/information-line.svg)] bg-no-repeat bg-center }
-.icon-lightbulb-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Others/lightbulb-line.svg)] bg-no-repeat bg-center }
-.icon-link { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Editor/link.svg)] bg-no-repeat bg-center }
-.icon-loader-4-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/loader-4-line.svg)] bg-no-repeat bg-center }
-.icon-lock-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/lock-2-line.svg)] bg-no-repeat bg-center }
-.icon-lock-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/lock-line.svg)] bg-no-repeat bg-center }
-.icon-lock-unlock-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/lock-unlock-line.svg)] bg-no-repeat bg-center }
-.icon-login-circle-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/login-circle-line.svg)] bg-no-repeat bg-center }
-.icon-logout-circle-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/logout-circle-line.svg)] bg-no-repeat bg-center }
-.icon-loop-left-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/loop-left-line.svg)] bg-no-repeat bg-center }
-.icon-loop-right-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/loop-right-line.svg)] bg-no-repeat bg-center }
-.icon-mail-send-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/mail-send-line.svg)] bg-no-repeat bg-center }
-.icon-menu-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/menu-line.svg)] bg-no-repeat bg-center }
-.icon-menu-fold-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/menu-fold-line.svg)] bg-no-repeat bg-center }
-.icon-menu-unfold-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/menu-unfold-line.svg)] bg-no-repeat bg-center }
-.icon-moon-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Weather/moon-line.svg)] bg-no-repeat bg-center }
-.icon-palette-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Design/palette-line.svg)] bg-no-repeat bg-center }
-.icon-phone-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Device/phone-line.svg)] bg-no-repeat bg-center }
-.icon-presentation-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/presentation-line.svg)] bg-no-repeat bg-center }
-.icon-printer-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/printer-line.svg)] bg-no-repeat bg-center }
-.icon-prohibited-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/prohibited-line.svg)] bg-no-repeat bg-center }
-.icon-prohibited-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/prohibited-fill.svg)] bg-no-repeat bg-center }
-.icon-pushpin-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Map/pushpin-line.svg)] bg-no-repeat bg-center }
-.icon-pushpin-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Map/pushpin-fill.svg)] bg-no-repeat bg-center }
-.icon-question-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/question-line.svg)] bg-no-repeat bg-center }
-.icon-refresh-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/refresh-line.svg)] bg-no-repeat bg-center }
-.icon-restart-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Device/restart-line.svg)] bg-no-repeat bg-center }
-.icon-save-3-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Device/save-3-line.svg)] bg-no-repeat bg-center }
-.icon-school-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Buildings/school-line.svg)] bg-no-repeat bg-center }
-.icon-search-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/search-line.svg)] bg-no-repeat bg-center }
-.icon-send-plane-fill { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Business/send-plane-fill.svg)] bg-no-repeat bg-center }
-.icon-settings-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/settings-2-line.svg)] bg-no-repeat bg-center }
-.icon-settings-3-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/settings-3-line.svg)] bg-no-repeat bg-center }
-.icon-share-forward-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/share-forward-line.svg)] bg-no-repeat bg-center }
-.icon-share-forward-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/share-forward-2-line.svg)] bg-no-repeat bg-center }
-.icon-shield-star-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/shield-star-line.svg)] bg-no-repeat bg-center }
-.icon-spam-3-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/spam-3-line.svg)] bg-no-repeat bg-center }
-.icon-sparkling-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Weather/sparkling-line.svg)] bg-no-repeat bg-center }
-.icon-speed-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/speed-line.svg)] bg-no-repeat bg-center }
-.icon-speak-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Communication/speak-line.svg)] bg-no-repeat bg-center }
-.icon-subtract-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/subtract-line.svg)] bg-no-repeat bg-center }
-.icon-sun-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Weather/sun-line.svg)] bg-no-repeat bg-center }
-.icon-table-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Design/table-line.svg)] bg-no-repeat bg-center }
-.icon-team-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/User%20&%20Faces/team-line.svg)] bg-no-repeat bg-center }
-.icon-text { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Editor/text.svg)] bg-no-repeat bg-center }
-.icon-time-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/time-line.svg)] bg-no-repeat bg-center }
-.icon-upload-2-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/upload-2-line.svg)] bg-no-repeat bg-center }
-.icon-user-add-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/User%20&%20Faces/user-add-line.svg)] bg-no-repeat bg-center }
-.icon-user-forbid-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/User%20&%20Faces/user-forbid-line.svg)] bg-no-repeat bg-center }
-.icon-vidicon-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/Media/vidicon-line.svg)] bg-no-repeat bg-center }
-.icon-zoom-in-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/zoom-in-line.svg)] bg-no-repeat bg-center }
-.icon-zoom-out-line { @apply w-[1.2rem] h-[1.2rem] bg-[url(remixicon/icons/System/zoom-out-line.svg)] bg-no-repeat bg-center }
+/** Icons - Beispiel zur Verwendung: <span class="icon i-ri-alert-line" /> */
+.icon-xxs { @apply w-2 h-2 }
+.icon-xs { @apply w-3 h-3 }
+.icon-sm { @apply w-4 h-4 }
+.icon { @apply w-[1.2rem] h-[1.2rem] }
+.icon-lg { @apply w-6 h-6 }
+.icon-xl { @apply w-8 h-8 }
+.icon-xxl { @apply w-16 h-16 }
+
+.icon-white {
+	filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+}
+.icon-error {
+	filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+}
+
+.i-ri-add-line {@apply bg-[url(remixicon/icons/System/add-line.svg)] bg-no-repeat bg-center }
+.i-ri-alert-line { @apply bg-[url(remixicon/icons/System/alert-line.svg)] bg-no-repeat bg-center }
+.i-ri-alert-fill {@apply bg-[url(remixicon/icons/System/alert-fill.svg)] bg-no-repeat bg-center }
+.i-ri-archive-line {@apply bg-[url(remixicon/icons/Business/archive-line.svg)] bg-no-repeat bg-center }
+.i-ri-archive-stack-line {@apply bg-[url(remixicon/icons/Business/archive-stack-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-down-line {@apply bg-[url(remixicon/icons/Arrows/arrow-down-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-down-s-line {@apply bg-[url(remixicon/icons/Arrows/arrow-down-s-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-go-back-line {@apply bg-[url(remixicon/icons/Arrows/arrow-go-back-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-left-s-line {@apply bg-[url(remixicon/icons/Arrows/arrow-left-s-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-right-circle-line {@apply bg-[url(remixicon/icons/Arrows/arrow-right-circle-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-right-s-line {@apply bg-[url(remixicon/icons/Arrows/arrow-right-s-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-turn-back-line {@apply bg-[url(remixicon/icons/Arrows/arrow-turn-back-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-up-down-line {@apply bg-[url(remixicon/icons/Arrows/arrow-up-down-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-up-line {@apply bg-[url(remixicon/icons/Arrows/arrow-up-line.svg)] bg-no-repeat bg-center }
+.i-ri-arrow-up-s-line {@apply bg-[url(remixicon/icons/Arrows/arrow-up-s-line.svg)] bg-no-repeat bg-center }
+.i-ri-at-line {@apply bg-[url(remixicon/icons/Business/at-line.svg)] bg-no-repeat bg-center }
+.i-ri-bar-chart-2-line {@apply bg-[url(remixicon/icons/Business/bar-chart-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-briefcase-line {@apply bg-[url(remixicon/icons/Business/briefcase-line.svg)] bg-no-repeat bg-center }
+.i-ri-book-2-line {@apply bg-[url(remixicon/icons/Document/book-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-box-3-line {@apply bg-[url(remixicon/icons/Others/box-3-line.svg)] bg-no-repeat bg-center }
+.i-ri-calculator-line {@apply bg-[url(remixicon/icons/Business/calculator-line.svg)] bg-no-repeat bg-center }
+.i-ri-calendar-2-line {@apply bg-[url(remixicon/icons/Business/calendar-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-calendar-event-line {@apply bg-[url(remixicon/icons/Business/calendar-event-line.svg)] bg-no-repeat bg-center }
+.i-ri-camera-fill {@apply bg-[url(remixicon/icons/Media/camera-fill.svg)] bg-no-repeat bg-center }
+.i-ri-camera-line {@apply bg-[url(remixicon/icons/Media/camera-line.svg)] bg-no-repeat bg-center }
+.i-ri-camera-off-line {@apply bg-[url(remixicon/icons/Media/camera-off-line.svg)] bg-no-repeat bg-center }
+.i-ri-chat-1-line {@apply bg-[url(remixicon/icons/Communication/chat-1-line.svg)] bg-no-repeat bg-center }
+.i-ri-check-line {@apply bg-[url(remixicon/icons/System/check-line.svg)] bg-no-repeat bg-center }
+.i-ri-checkbox-blank-circle-line {@apply bg-[url(remixicon/icons/System/checkbox-blank-circle-line.svg)] bg-no-repeat bg-center }
+.i-ri-checkbox-circle-line {@apply bg-[url(remixicon/icons/System/checkbox-circle-line.svg)] bg-no-repeat bg-center }
+.i-ri-checkbox-circle-fill {@apply bg-[url(remixicon/icons/System/checkbox-circle-fill.svg)] bg-no-repeat bg-center }
+.i-ri-close-line {@apply bg-[url(remixicon/icons/System/close-line.svg)] bg-no-repeat bg-center }
+.i-ri-corner-right-up-line {@apply bg-[url(remixicon/icons/Arrows/corner-right-up-line.svg)] bg-no-repeat bg-center }
+.i-ri-cup-line {@apply bg-[url(remixicon/icons/Food/cup-line.svg)] bg-no-repeat bg-center }
+.i-ri-database-2-line {@apply bg-[url(remixicon/icons/Device/database-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-delete-bin-fill {@apply bg-[url(remixicon/icons/System/delete-bin-fill.svg)] bg-no-repeat bg-center }
+.i-ri-delete-bin-line {@apply bg-[url(remixicon/icons/System/delete-bin-line.svg)] bg-no-repeat bg-center }
+.i-ri-bug-fill {@apply bg-[url(remixicon/icons/Development/bug-fill.svg)] bg-no-repeat bg-center }
+.i-ri-device-recover-line {@apply bg-[url(remixicon/icons/Device/device-recover-line.svg)] bg-no-repeat bg-center }
+.i-ri-download-2-line {@apply bg-[url(remixicon/icons/System/download-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-draft-line {@apply bg-[url(remixicon/icons/Document/draft-line.svg)] bg-no-repeat bg-center }
+.i-ri-draggable {@apply bg-[url(remixicon/icons/Editor/draggable.svg)] bg-no-repeat bg-center }
+.i-ri-edit-2-line {@apply bg-[url(remixicon/icons/Design/edit-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-error-warning-line {@apply bg-[url(remixicon/icons/System/error-warning-line.svg)] bg-no-repeat bg-center }
+.i-ri-error-warning-fill {@apply bg-[url(remixicon/icons/System/error-warning-fill.svg)] bg-no-repeat bg-center }
+.i-ri-expand-height-line {@apply bg-[url(remixicon/icons/Arrows/expand-height-line.svg)] bg-no-repeat bg-center }
+.i-ri-expand-up-down-fill {@apply bg-[url(remixicon/icons/Arrows/expand-up-down-fill.svg)] bg-no-repeat bg-center }
+.i-ri-expand-up-down-line {@apply bg-[url(remixicon/icons/Arrows/expand-up-down-line.svg)] bg-no-repeat bg-center }
+.i-ri-eye-line {@apply bg-[url(remixicon/icons/System/eye-line.svg)] bg-no-repeat bg-center }
+.i-ri-file-copy-line {@apply bg-[url(remixicon/icons/Document/file-copy-line.svg)] bg-no-repeat bg-center }
+.i-ri-file-damage-line {@apply bg-[url(remixicon/icons/Document/file-damage-line.svg)] bg-no-repeat bg-center }
+.i-ri-file-close-line {@apply bg-[url(remixicon/icons/Document/file-close-line.svg)] bg-no-repeat bg-center }
+.i-ri-filter-fill {@apply bg-[url(remixicon/icons/System/filter-fill.svg)] bg-no-repeat bg-center }
+.i-ri-filter-line {@apply bg-[url(remixicon/icons/System/filter-line.svg)] bg-no-repeat bg-center }
+.i-ri-filter-off-line {@apply bg-[url(remixicon/icons/System/filter-off-line.svg)] bg-no-repeat bg-center }
+.i-ri-folder-open-line {@apply bg-[url(remixicon/icons/Document/folder-open-line.svg)] bg-no-repeat bg-center }
+.i-ri-forbid-line {@apply bg-[url(remixicon/icons/System/forbid-line.svg)] bg-no-repeat bg-center }
+.i-ri-forbid-fill {@apply bg-[url(remixicon/icons/System/forbid-fill.svg)] bg-no-repeat bg-center }
+.i-ri-fullscreen-line {@apply bg-[url(remixicon/icons/Media/fullscreen-line.svg)] bg-no-repeat bg-center }
+.i-ri-graduation-cap-line {@apply bg-[url(remixicon/icons/Others/graduation-cap-line.svg)] bg-no-repeat bg-center }
+.i-ri-group-line {@apply bg-[url(remixicon/icons/User%20&%20Faces/group-line.svg)] bg-no-repeat bg-center }
+.i-ri-headphone-line {@apply bg-[url(remixicon/icons/Media/headphone-line.svg)] bg-no-repeat bg-center }
+.i-ri-information-fill {@apply bg-[url(remixicon/icons/System/information-fill.svg)] bg-no-repeat bg-center }
+.i-ri-information-line {@apply bg-[url(remixicon/icons/System/information-line.svg)] bg-no-repeat bg-center }
+.i-ri-lightbulb-line {@apply bg-[url(remixicon/icons/Others/lightbulb-line.svg)] bg-no-repeat bg-center }
+.i-ri-link {@apply bg-[url(remixicon/icons/Editor/link.svg)] bg-no-repeat bg-center }
+.i-ri-loader-4-line {@apply bg-[url(remixicon/icons/System/loader-4-line.svg)] bg-no-repeat bg-center }
+.i-ri-lock-2-line {@apply bg-[url(remixicon/icons/System/lock-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-lock-line {@apply bg-[url(remixicon/icons/System/lock-line.svg)] bg-no-repeat bg-center }
+.i-ri-lock-unlock-line {@apply bg-[url(remixicon/icons/System/lock-unlock-line.svg)] bg-no-repeat bg-center }
+.i-ri-login-circle-line {@apply bg-[url(remixicon/icons/System/login-circle-line.svg)] bg-no-repeat bg-center }
+.i-ri-logout-circle-line {@apply bg-[url(remixicon/icons/System/logout-circle-line.svg)] bg-no-repeat bg-center }
+.i-ri-loop-left-line {@apply bg-[url(remixicon/icons/System/loop-left-line.svg)] bg-no-repeat bg-center }
+.i-ri-loop-right-line {@apply bg-[url(remixicon/icons/System/loop-right-line.svg)] bg-no-repeat bg-center }
+.i-ri-mail-send-line {@apply bg-[url(remixicon/icons/Business/mail-send-line.svg)] bg-no-repeat bg-center }
+.i-ri-menu-line {@apply bg-[url(remixicon/icons/System/menu-line.svg)] bg-no-repeat bg-center }
+.i-ri-menu-fold-line {@apply bg-[url(remixicon/icons/System/menu-fold-line.svg)] bg-no-repeat bg-center }
+.i-ri-menu-unfold-line {@apply bg-[url(remixicon/icons/System/menu-unfold-line.svg)] bg-no-repeat bg-center }
+.i-ri-moon-line {@apply bg-[url(remixicon/icons/Weather/moon-line.svg)] bg-no-repeat bg-center }
+.i-ri-palette-line {@apply bg-[url(remixicon/icons/Design/palette-line.svg)] bg-no-repeat bg-center }
+.i-ri-phone-line {@apply bg-[url(remixicon/icons/Device/phone-line.svg)] bg-no-repeat bg-center }
+.i-ri-presentation-line {@apply bg-[url(remixicon/icons/Business/presentation-line.svg)] bg-no-repeat bg-center }
+.i-ri-printer-line {@apply bg-[url(remixicon/icons/Business/printer-line.svg)] bg-no-repeat bg-center }
+.i-ri-prohibited-line {@apply bg-[url(remixicon/icons/System/prohibited-line.svg)] bg-no-repeat bg-center }
+.i-ri-prohibited-fill {@apply bg-[url(remixicon/icons/System/prohibited-fill.svg)] bg-no-repeat bg-center }
+.i-ri-pushpin-line {@apply bg-[url(remixicon/icons/Map/pushpin-line.svg)] bg-no-repeat bg-center }
+.i-ri-pushpin-fill {@apply bg-[url(remixicon/icons/Map/pushpin-fill.svg)] bg-no-repeat bg-center }
+.i-ri-question-line {@apply bg-[url(remixicon/icons/System/question-line.svg)] bg-no-repeat bg-center }
+.i-ri-refresh-line {@apply bg-[url(remixicon/icons/System/refresh-line.svg)] bg-no-repeat bg-center }
+.i-ri-restart-line {@apply bg-[url(remixicon/icons/Device/restart-line.svg)] bg-no-repeat bg-center }
+.i-ri-save-3-line {@apply bg-[url(remixicon/icons/Device/save-3-line.svg)] bg-no-repeat bg-center }
+.i-ri-school-line {@apply bg-[url(remixicon/icons/Buildings/school-line.svg)] bg-no-repeat bg-center }
+.i-ri-search-line {@apply bg-[url(remixicon/icons/System/search-line.svg)] bg-no-repeat bg-center }
+.i-ri-send-plane-fill {@apply bg-[url(remixicon/icons/Business/send-plane-fill.svg)] bg-no-repeat bg-center }
+.i-ri-settings-2-line {@apply bg-[url(remixicon/icons/System/settings-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-settings-3-line {@apply bg-[url(remixicon/icons/System/settings-3-line.svg)] bg-no-repeat bg-center }
+.i-ri-share-forward-line {@apply bg-[url(remixicon/icons/System/share-forward-line.svg)] bg-no-repeat bg-center }
+.i-ri-share-forward-2-line {@apply bg-[url(remixicon/icons/System/share-forward-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-shield-star-line {@apply bg-[url(remixicon/icons/System/shield-star-line.svg)] bg-no-repeat bg-center }
+.i-ri-spam-3-line {@apply bg-[url(remixicon/icons/System/spam-3-line.svg)] bg-no-repeat bg-center }
+.i-ri-sparkling-line {@apply bg-[url(remixicon/icons/Weather/sparkling-line.svg)] bg-no-repeat bg-center }
+.i-ri-speed-line {@apply bg-[url(remixicon/icons/Media/speed-line.svg)] bg-no-repeat bg-center }
+.i-ri-speak-line {@apply bg-[url(remixicon/icons/Communication/speak-line.svg)] bg-no-repeat bg-center }
+.i-ri-subtract-line {@apply bg-[url(remixicon/icons/System/subtract-line.svg)] bg-no-repeat bg-center }
+.i-ri-sun-line {@apply bg-[url(remixicon/icons/Weather/sun-line.svg)] bg-no-repeat bg-center }
+.i-ri-table-line {@apply bg-[url(remixicon/icons/Design/table-line.svg)] bg-no-repeat bg-center }
+.i-ri-team-line {@apply bg-[url(remixicon/icons/User%20&%20Faces/team-line.svg)] bg-no-repeat bg-center }
+.i-ri-text {@apply bg-[url(remixicon/icons/Editor/text.svg)] bg-no-repeat bg-center }
+.i-ri-time-line {@apply bg-[url(remixicon/icons/System/time-line.svg)] bg-no-repeat bg-center }
+.i-ri-upload-2-line {@apply bg-[url(remixicon/icons/System/upload-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-user-add-line {@apply bg-[url(remixicon/icons/User%20&%20Faces/user-add-line.svg)] bg-no-repeat bg-center }
+.i-ri-user-forbid-line {@apply bg-[url(remixicon/icons/User%20&%20Faces/user-forbid-line.svg)] bg-no-repeat bg-center }
+.i-ri-vidicon-line {@apply bg-[url(remixicon/icons/Media/vidicon-line.svg)] bg-no-repeat bg-center }
+.i-ri-zoom-in-line {@apply bg-[url(remixicon/icons/System/zoom-in-line.svg)] bg-no-repeat bg-center }
+.i-ri-zoom-out-line {@apply bg-[url(remixicon/icons/System/zoom-out-line.svg)] bg-no-repeat bg-center }

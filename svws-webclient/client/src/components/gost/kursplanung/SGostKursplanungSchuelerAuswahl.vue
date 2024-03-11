@@ -10,7 +10,7 @@
 			<template #filterAdvanced>
 				<div class="radio radio--row col-span-full">
 					<svws-ui-radio-option v-model="schuelerFilter().alle_toggle.value" value="alle" name="Alle" label="&ZeroWidthSpace;">
-						<i-ri-filter-off-line />
+						<span class="icon ml-0.5 -mt-0.5 inline-block i-ri-filter-off-line" />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="schuelerFilter().fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter().kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter" :icon="false" />
@@ -33,7 +33,7 @@
 					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="AlleA" label="Alle" :icon="false" />
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen" name="Kollisionen" label="K">
-							<i-ri-alert-line />
+							<span class="icon-sm inline-block i-ri-alert-line" />
 						</svws-ui-radio-option>
 						<template #content>
 							Kollision
@@ -41,7 +41,7 @@
 					</svws-ui-tooltip>
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="nichtwahlen" name="Nichtwahlen" label="NV">
-							<i-ri-spam-3-line />
+							<span class="icon-sm inline-block i-ri-spam-3-line" />
 						</svws-ui-radio-option>
 						<template #content>
 							Nichtverteilt
@@ -49,7 +49,7 @@
 					</svws-ui-tooltip>
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/NV">
-							<i-ri-error-warning-fill />
+							<span class="icon-sm inline-block i-ri-error-warning-fill" />
 						</svws-ui-radio-option>
 						<template #content>
 							Kollision und Nichtverteilt
@@ -61,14 +61,14 @@
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td col-span-full" role="columnheader">
 						<svws-ui-tooltip v-if="schuelerFilter().filtered.value.length > 0">
-							<i-ri-information-line class="-my-0.5 -ml-0.5" />
+							<span class="icon-sm i-ri-information-line" />
 							<template #content>
 								<ul class="flex flex-col gap-3 py-1">
 									<li class="flex flex-col">
-										<span class="text-sm font-bold mb-0.5">Status</span>
-										<span class="inline-flex gap-0.5 items-center"><i-ri-alert-line /> Kollision</span>
-										<span class="inline-flex gap-0.5 items-center"><i-ri-spam3-line /> Nichtverteilung</span>
-										<span class="inline-flex gap-0.5 items-center"><i-ri-error-warning-fill /> Kollision und Nichtverteilung</span>
+										<span class="font-bold mb-0.5">Status</span>
+										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-alert-line" /> Kollision</span>
+										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-spam-3-line" /> Nichtverteilung</span>
+										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-error-warning-fill" /> Kollision und Nichtverteilung</span>
 									</li>
 								</ul>
 							</template>
@@ -83,7 +83,7 @@
 					<div role="cell" class="svws-ui-td svws-align-center pr-0">
 						<div class="leading-none w-5 -mb-1" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value && selected !== s, }">
 							<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value" color="danger">
-								<i-ri-alert-line />
+								<span class="icon icon-error i-ri-alert-line" />
 								<template #content>
 									Kollisionen:
 									<ul>
@@ -92,7 +92,7 @@
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
-								<i-ri-spam-3-line class="opacity-75" /> <template #content>
+								<span class="icon i-ri-spam-3-line" /> <template #content>
 									Nichtverteilt
 									<ul>
 										<li v-for="f of getErgebnismanager().getOfSchuelerFachwahlmengeOhneKurszuordnung(s.id).toArray(new Array<GostFachwahl>())" :key="f.fachID" class="pl-2">{{ getErgebnismanager().getFach(f.fachID).bezeichnung }}</li>
@@ -100,7 +100,7 @@
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
-								<i-ri-error-warning-fill /> <template #content>
+								<span class="icon icon-error i-ri-error-warning-fill" /> <template #content>
 									<b>Kollision und Nichtverteilt:</b>
 									<br>Kollisionen:
 									<ul>
@@ -116,19 +116,19 @@
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
 						<template v-if="fixierRegeln.get(s.id) === undefined">
-							<i-ri-pushpin-line v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined)) && allowRegeln" class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined)) && allowRegeln" />
 						</template>
 						<template v-else>
 							<template v-if="fach !== undefined">
-								<i-ri-pushpin-fill v-if="fixierRegelFach(fach?.id, s.id).value" class="w-5 -my-0.5 hover:opacity-75" />
-								<i-ri-pushpin-line v-else class="w-5 -my-0.5 opacity-50 hover:opacity-75" />
+								<span v-if="fixierRegelFach(fach?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
+								<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
 							</template>
 							<template v-else-if="schuelerFilter().kurs !== undefined">
-								<i-ri-pushpin-fill v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value" class="w-5 -my-0.5 hover:opacity-75" />
-								<i-ri-pushpin-line v-else class="w-5 -my-0.5 opacity-50 hover:opacity-75" />
+								<span v-if="fixierRegelKurs(schuelerFilter().kurs?.id, s.id).value" class="icon i-ri-pushpin-fill -my-0.5 hover:opacity-75" />
+								<span v-else class="icon i-ri-pushpin-line -my-0.5 opacity-50 hover:opacity-75" />
 							</template>
 							<template v-else>
-								<i-ri-pushpin-line class="w-5 -my-0.5 opacity-50" />
+								<span class="icon i-ri-pushpin-line -my-0.5 opacity-50" />
 							</template>
 						</template>
 					</div>
@@ -145,8 +145,8 @@
 					</div>
 					<div v-if="istSchriftlich(s.id)" role="cell" class="svws-ui-td svws-align-center">
 						<span>
-							<i-ri-draft-line v-if="istSchriftlich(s.id) === 's'" class="w-5 -my-0.5" />
-							<i-ri-chat1-line v-else class="w-5 -my-0.5 opacity-75" />
+							<span v-if="istSchriftlich(s.id) === 's'" class="icon inline-block i-ri-draft-line -my-0.5" />
+							<span v-else class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
 						</span>
 					</div>
 				</div>
@@ -157,10 +157,10 @@
 						<div class="grid grid-cols-4 w-full gap-y-2 text-button font-medium py-1 normal-nums pl-5" :class="fach !== undefined || schuelerFilter().kurs !== undefined ? 'pt-2' : 'py-1'">
 							<template v-if="fach !== undefined || schuelerFilter().kurs !== undefined">
 								<span class="col-span-2 inline-flex gap-0.5" :class="{'opacity-50 font-medium': !schuelerFilter().statistics.value.schriftlich}">
-									<i-ri-draft-line class="w-5 -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.schriftlich }} schriftlich
+									<span class="icon i-ri-draft-line -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.schriftlich }} schriftlich
 								</span>
 								<span class="col-span-2 inline-flex gap-0.5" :class="{'opacity-50 font-medium': !schuelerFilter().statistics.value.muendlich}">
-									<i-ri-chat1-line class="w-5 opacity-75 -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.muendlich }} mündlich
+									<span class="icon i-ri-chat-1-line opacity-75 -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.muendlich }} mündlich
 								</span>
 							</template>
 							<div class="col-span-full flex items-center gap-1">

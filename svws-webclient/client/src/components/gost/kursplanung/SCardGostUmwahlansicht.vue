@@ -25,8 +25,8 @@
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
 											<div class="flex flex-row flex-grow">
 												<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null">
-													<span class="rounded-sm w-3 -my-0.5 group-hover:bg-white/50">
-														<i-ri-draggable class="w-4 -ml-0.5 -mr-1 text-black opacity-50 group-hover:opacity-100" />
+													<span class="rounded-sm group-hover:bg-white/50 w-3 -my-0.5 flex">
+														<span class="icon-sm i-ri-draggable text-black -ml-0.5 -mr-1 opacity-50 group-hover:opacity-100" />
 													</span>
 												</template>
 												<template v-else>
@@ -40,8 +40,8 @@
 													</template>
 												</span>
 											</div>
-											<span v-if="fach.istSchriftlich"> <i-ri-draft-line class="w-5 -my-0.5" /> </span>
-											<span v-else> <i-ri-chat1-line class="w-5 -my-0.5" /> </span>
+											<span v-if="fach.istSchriftlich" class="icon i-ri-draft-line -my-0.5" />
+											<span v-else class="icon i-ri-chat-1-line -my-0.5" />
 										</div>
 									</div>
 								</div>
@@ -52,7 +52,7 @@
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
 						<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
 							<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
-								<i-ri-delete-bin-line class="text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
+								<span class="icon i-ri-delete-bin-line text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
 								<span class="text-sm w-2/3">
 									<template v-if="dragAndDropData === undefined">Kurse hier zum<br>Löschen ablegen</template>
 									<template v-else>Kurs-Zuordnung<br>aufheben</template>
@@ -73,7 +73,7 @@
 							<div role="cell" class="svws-ui-td svws-divider">
 								<div class="flex flex-col py-1" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
 									<div class="inline-flex items-center" :class="{'text-error': hatSchieneKollisionen(schiene.id, schueler.id).value}">
-										<i-ri-alert-line class="-mt-0.5" v-if="hatSchieneKollisionen(schiene.id, schueler.id).value" />
+										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id, schueler.id).value" />
 										<span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span>
 									</div>
 									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
@@ -89,11 +89,11 @@
 								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
 								@dragend="drag_ended()">
 								<div class="w-full h-full flex flex-col justify-center items-center rounded border border-black/10 py-1 px-0.5"
-									:style="{ 'background-color': hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'rgb(var(--color-error))' : bgColor(kurs.id, schueler.id) }"
-									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value}"
+									:style="{ 'background-color': hatSchieneKollisionen(schiene.id, schueler.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'rgb(var(--color-error))' : bgColor(kurs.id, schueler.id) }"
+									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id, schueler.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
 									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs, schueler.id)">
-									<span class="rounded-sm w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value" :class="[hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
-										<i-ri-draggable class="w-4 -ml-0.5 opacity-50 group-hover:opacity-100" />
+									<span class="rounded-sm w-3 absolute top-1 left-1 flex" v-if="is_draggable(kurs.id, schueler.id).value" :class="[hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
+										<span class="icon-sm i-ri-draggable -ml-0.5 opacity-50 group-hover:opacity-100" />
 									</span>
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
@@ -106,17 +106,19 @@
 										</span>
 										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
 											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
-												<i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" />
-												<i-ri-prohibited-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" class="inline-block" />
+												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id, schueler.id).value" />
+												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
 											</span>
 											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id, schueler.id)" :title="fixier_regel(kurs.id, schueler.id).value ? 'Fixiert' : 'Fixieren'">
-												<i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
-												<i-ri-pushpin-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
+												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id, schueler.id).value"
+													:class="[hatSchieneKollisionen(schiene.id, schueler.id).value ? 'icon-white' : '']" />
+												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value"
+													:class="[hatSchieneKollisionen(schiene.id, schueler.id).value ? 'icon-white' : '']" />
 											</span>
 										</span>
 										<span v-else>
-											<span class="icon" title="Verboten"> <i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" /> </span>
-											<span class="icon" title="Fixiert"> <i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" /> </span>
+											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id, schueler.id).value" title="Verboten" />
+											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id, schueler.id).value" title="Fixiert" />
 										</span>
 									</span>
 								</div>
