@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import jakarta.validation.constraints.NotNull;
 
@@ -49,6 +50,20 @@ public final class DTOUtils {
     }
 
     /**
+     * Liefert ein neues {@link GostBlockungsergebnisSchiene}-Objekt.
+     *
+     * @param idSchiene  Die Datenbank-ID der Schiene.
+     *
+     * @return ein neues {@link GostBlockungsergebnisSchiene}-Objekt.
+     *
+     */
+    public static @NotNull GostBlockungsergebnisSchiene newGostBlockungsergebnisSchiene(final long idSchiene) {
+		final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
+		eSchiene.id = idSchiene;
+		return eSchiene;
+	}
+
+	/**
      * Liefert ein neues {@link GostBlockungsergebnisKursSchienenZuordnung}-Objekt eines bestimmten Typs, mit keinem Parameter.
      *
      * @param typ     Der {@link GostKursblockungRegelTyp}.

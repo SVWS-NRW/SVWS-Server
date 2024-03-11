@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { GostBlockungsergebnisSchiene } from '../../core/data/gost/GostBlockungsergebnisSchiene';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
@@ -38,6 +39,19 @@ export class DTOUtils extends JavaObject {
 		z.idKurs = idKurs;
 		z.idSchiene = idSchiene;
 		return z;
+	}
+
+	/**
+	 * Liefert ein neues {@link GostBlockungsergebnisSchiene}-Objekt.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return ein neues {@link GostBlockungsergebnisSchiene}-Objekt.
+	 */
+	public static newGostBlockungsergebnisSchiene(idSchiene : number) : GostBlockungsergebnisSchiene {
+		const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
+		eSchiene.id = idSchiene;
+		return eSchiene;
 	}
 
 	/**
