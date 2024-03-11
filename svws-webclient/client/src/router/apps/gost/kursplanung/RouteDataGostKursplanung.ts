@@ -493,7 +493,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			this.datenmanager.kursSetSuffix(kurs_id, data.suffix);
 		if (data.istKoopKurs !== undefined)
 			this.datenmanager.kursGet(kurs_id).istKoopKurs = data.istKoopKurs;
-		this.commit();
+		this.setPatchedState({ datenmanager: this.datenmanager, ergebnismanager: this.ergebnismanager });
 	});
 
 	addKurs = api.call(async (fach_id : number, kursart_id : number): Promise<GostBlockungKurs | undefined> => {
