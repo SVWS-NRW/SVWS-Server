@@ -195,8 +195,7 @@
 	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
 			return false;
-		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)
-		//  && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	});
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() => {
