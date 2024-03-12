@@ -609,12 +609,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	updateKursSchienenZuordnung = api.call(async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
-		// TODO wie in updateKursSchuelerZuordnungen sollten die regelupdates von der Api zurückkommen
 		await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
-		this.ergebnismanager.setKursSchiene(idKurs, idSchieneAlt, false);
-		this.ergebnismanager.setKursSchiene(idKurs, idSchieneNeu, true);
-		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
+		const update = this.ergebnismanager.kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(idKurs, idSchieneAlt, idSchieneNeu);
+		this.ergebnismanager.kursSchienenUpdateExecute(update);
 		this.commit();
 		return true;
 	});
