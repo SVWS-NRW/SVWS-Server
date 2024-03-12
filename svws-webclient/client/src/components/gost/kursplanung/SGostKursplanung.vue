@@ -2,7 +2,7 @@
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': blockungstabelleHidden()}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
-				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-printer-line v-else /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -11,11 +11,11 @@
 				<svws-ui-sub-nav>
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
 						<template v-if="blockungstabelleHidden()">
-							<i-ri-menu-unfold-line />
+							<span class="icon-sm i-ri-menu-unfold-line" />
 							Tabelle einblenden
 						</template>
 						<template v-else>
-							<i-ri-menu-fold-line />
+							<span class="icon-sm i-ri-menu-fold-line" />
 							Tabelle ausblenden
 						</template>
 					</svws-ui-button>
@@ -23,21 +23,21 @@
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
-							<i-ri-file-copy-line /> Ableiten
+							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
 						<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
-								<i-ri-arrow-right-circle-line /> Übertragen
+								<span class="icon-sm i-ri-arrow-right-circle-line" /> Übertragen
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-aktivieren-modal>
 						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Gleicht die Daten dieses Blockungsergebnisses mit den Daten der Kurstabelle und den Leistungsdaten der Schüler ab. Dabei werden ggf. nicht vorhandene Kurs in der Kurstabelle angelegt und die Kurs-Schienen-Zuordnung angepasst. Leere Kurse werden nicht entfernt. Außerdem wird die Kurs-Schüler-Zuordnung in den Leistungsdaten des Schüler aktualisiert. Neue Fächer werden in den Leistungsdaten dabei allerdings nicht hinzugefügt.">
-								<i-ri-loop-left-line /> Synchronisieren
+								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
 						<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
-								<i-ri-corner-right-up-line /> Hochschreiben
+								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
 							</svws-ui-button>
 						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 					</div>
@@ -45,30 +45,34 @@
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-card-gost-kursansicht-irrlaeufer-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :get-ergebnismanager="getErgebnismanager" v-slot="{ openModal }">
-							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können"> <i-ri-error-warning-line /> Ungültige Kurszuordnungen </svws-ui-button>
+							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
+								<span class="icon-sm icon-error i-ri-error-warning-line" /> Ungültige Kurszuordnungen
+							</svws-ui-button>
 						</s-card-gost-kursansicht-irrlaeufer-modal>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus"
 							:fixierte-verschieben="fixierteVerschieben" :set-fixierte-verschieben="setFixierteVerschieben"
 							:in-zielkurs-fixieren="inZielkursFixieren" :set-in-zielkurs-fixieren="setInZielkursFixieren">
-							<svws-ui-button size="small" type="transparent" @click="openModal"><i-ri-group-line /> Schülerzuordnung </svws-ui-button>
+							<svws-ui-button size="small" type="transparent" @click="openModal">
+								<span class="icon-sm i-ri-group-line" /> Schülerzuordnung
+							</svws-ui-button>
 						</s-gost-kursplanung-schueler-auswahl-umkursen-modal>
 						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung">
-							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-delete-bin-line v-else /> </template>
+							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-delete-bin-line" v-else /> </template>
 						</svws-ui-button-select>
 						<template v-if="allowRegeln">
 							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln">
-								<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-pushpin-line v-else /> </template>
+								<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-pushpin-line" v-else /> </template>
 							</svws-ui-button-select>
 							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
-								<i-ri-delete-bin-line /> Entfernen
+								<span class="icon-sm i-ri-delete-bin-line" /> Entfernen
 							</svws-ui-button>
 						</template>
 						<template v-else>
 							<div class="pl-2">
 								<svws-ui-tooltip>
-									<span><i-ri-prohibited-line /></span>
+									<span class="icon-sm i-ri-prohibited-line" />
 									<template #content>
 										Derzeit können nur die Kurse-Schienen-Zuordnung und die Kurs-Schüler-Zuordnung bearbeitet werden.
 										Die grundlegenden Daten und die Regeldefinitionen der Blockung können derzeit nicht bearbeitet werden, da mehr als
@@ -83,7 +87,7 @@
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl > 0}">
-							<i-ri-settings3-line /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
 					</div>
 				</svws-ui-sub-nav>
@@ -119,11 +123,15 @@
 				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
 				<div class="opacity-75 leading-tight flex flex-col gap-2">
 					<div>
-						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung"> <i-ri-add-line /> </svws-ui-button>
+						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
+							<span class="icon inline-block i-ri-add-line" />
+						</svws-ui-button>
 						<span class="align-middle">Neue Blockung erstellen</span>
 					</div>
 					<div v-if="persistiert">
-						<svws-ui-button :disabled="apiStatus.pending" type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung"> <i-ri-arrow-turn-back-line class="-mb-0.5" /> </svws-ui-button>
+						<svws-ui-button :disabled="apiStatus.pending" type="icon" class="inline align-middle" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten" @click.stop="restoreBlockung">
+							<span class="icon-sm inline-block i-ri-arrow-turn-back-line -mb-0.5" />
+						</svws-ui-button>
 						<span class="align-middle">Wiederherstellen einer Blockung aus den bestehenden Leistungsdaten</span>
 					</div>
 				</div>

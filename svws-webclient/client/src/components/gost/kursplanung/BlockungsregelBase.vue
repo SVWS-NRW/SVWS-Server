@@ -2,13 +2,15 @@
 	<svws-ui-content-card has-background>
 		<svws-ui-table :items="regelnFilter" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
 			<template #header(entfernen)>
-				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1"><i-ri-add-line /></svws-ui-button>
+				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1">
+					<span class="icon i-ri-add-line" />
+				</svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
 				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
 					<svws-ui-tooltip v-if="regelverletzung(r)" autosize>
 						<div class="svws-ui-td" role="cell">
-							<i-ri-information-line />
+							<span class="icon i-ri-information-line" />
 						</div>
 						<template #content>
 							<template v-for="text in getErgebnismanager().regelGetMengeAnVerletzungen(GostKursblockungRegelTyp.fromTyp(r.typ))" :key="text">
@@ -19,7 +21,9 @@
 					<div v-else class="svws-ui-td" role="cell" />
 					<slot name="regelRead" :regel="r" />
 					<div class="svws-ui-td" role="cell">
-						<svws-ui-button type="icon" @click.stop="regelEntfernen(r)" v-if="!disabled" :disabled="apiStatus.pending"><i-ri-delete-bin-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click.stop="regelEntfernen(r)" v-if="!disabled" :disabled="apiStatus.pending">
+							<span class="icon i-ri-delete-bin-line" />
+						</svws-ui-button>
 					</div>
 				</div>
 				<span />

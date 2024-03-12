@@ -65,15 +65,15 @@
 					<div class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
 							<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
-								<i-ri-delete-bin-line class="-mx-0.5" />
+								<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 							</svws-ui-button>
 						</template>
 						<svws-ui-tooltip v-if="row.istAktiv">
-							<span @click="patchErgebnis({ istAktiv: false }, row.id)"><i-ri-checkbox-circle-fill class="text-svws text-headline-md relative -my-0.5 ml-2 hover:opacity-75" /></span>
+							<span @click="patchErgebnis({ istAktiv: false }, row.id)" class="icon icon-primary i-ri-checkbox-circle-fill relative -my-0.5 ml-2 hover:opacity-50" />
 							<template #content>Aktiviertes Ergebnis</template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else>
-							<span @click="patchErgebnis({ istAktiv: true }, row.id)"><i-ri-checkbox-circle-line class="text-svws text-headline-md relative -my-0.5 ml-2 opacity-25 hover:opacity-75" /></span>
+							<span @click="patchErgebnis({ istAktiv: true }, row.id)" class="icon icon-primary i-ri-checkbox-circle-line relative -my-0.5 ml-2 opacity-25 hover:opacity-75" />
 							<template #content> Ergebnis als aktiv markieren </template>
 						</svws-ui-tooltip>
 					</div>
@@ -81,7 +81,7 @@
 			</template>
 			<template #actions v-if="selected_ergebnisse.length">
 				<svws-ui-button @click="remove_ergebnisse" type="transparent" :disabled="getErgebnisse().size() === 0 || selected_ergebnisse.length >= getErgebnisse().size() || selected_ergebnisse.length === 0" class="text-error">
-					<i-ri-delete-bin-line />
+					<span class="icon-sm icon-error i-ri-delete-bin-line" />
 					<span>{{ selected_ergebnisse.length }} {{ selected_ergebnisse.length > 1 ? 'Ergebnisse' : 'Ergebnis' }} löschen</span>
 				</svws-ui-button>
 			</template>

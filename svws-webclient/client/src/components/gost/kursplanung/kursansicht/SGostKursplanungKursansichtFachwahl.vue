@@ -13,8 +13,8 @@
 			<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
 				<svws-ui-button type="transparent" @click="add_kurs(kursart)" title="Kurs anlegen">
 					<span class="inline-flex items-center text-button -mr-0.5">
-						<i-ri-book2-line />
-						<i-ri-add-line class="-ml-0.5 text-sm" />
+						<span class="icon i-ri-book-2-line" />
+						<span class="icon-sm i-ri-add-line -ml-0.5 text-sm" />
 					</span>
 					Kurs anlegen
 				</svws-ui-button>
@@ -31,10 +31,8 @@
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="setKursdetailAnzeigen(kurs.id)"
 						:class="{'text-black/50' : kursdetailAnzeigen !== kurs.id}"
 						title="Kursdetails anzeigen">
-						<div class="inline-block -my-0.5">
-							<i-ri-arrow-down-s-line v-if="kursdetailAnzeigen === kurs.id" class="relative top-0.5" />
-							<i-ri-arrow-right-s-line v-else class="relative top-0.5" />
-						</div>
+						<span v-if="kursdetailAnzeigen === kurs.id" class="icon i-ri-arrow-down-s-line relative" />
+						<span v-else class="icon i-ri-arrow-right-s-line relative" />
 					</div>
 				</template>
 				<div role="cell" class="svws-ui-td py-0">
@@ -65,7 +63,7 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+						<span class="icon-sm i-ri-filter-fill absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] <= 1}">{{ kursdifferenz(kurs).value[1] }}</span>
@@ -105,11 +103,11 @@
 							@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getSchuelerAnzahl(kurs.id).value }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
-								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
+								<span class="icon-sm inline-block i-ri-draggable -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
 							<div class="icon group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
-								<i-ri-pushpin-fill v-if="istKursFixiertInSchiene(kurs, schiene).value" class="inline-block group-hover:opacity-75" />
-								<i-ri-pushpin-line v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="inline-block opacity-25 group-hover:opacity-100" />
+								<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-fill inline-block group-hover:opacity-75" />
+								<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100" />
 							</div>
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
@@ -117,8 +115,8 @@
 							draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
-							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
-							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
+							<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-100" />
+							<span v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
 						</div>
 						<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
 							<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">

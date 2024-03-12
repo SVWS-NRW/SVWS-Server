@@ -4,7 +4,9 @@
 			<div class="flex flex-col gap-2 my-auto">
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Kurs:</span>
-					<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1" :disabled="apiStatus.pending"><i-ri-delete-bin-line /></svws-ui-button>
+					<svws-ui-button type="icon" @click="removeKurse([kurs.id])" title="Kurs entfernen" class="ml-1" :disabled="apiStatus.pending">
+						<span class="icon i-ri-delete-bin-line" />
+					</svws-ui-button>
 					<svws-ui-button type="secondary" @click="addKurs(kurs.fach_id, kurs.kursart)" title="Kurs hinzufügen" :disabled="apiStatus.pending">Hinzufügen</svws-ui-button>
 					<svws-ui-button type="secondary" @click="splitKurs(kurs)" :disabled="apiStatus.pending">Aufteilen</svws-ui-button>
 					<template v-if="andereKurse.size > 0">
@@ -21,9 +23,13 @@
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Schienen:</span>
 					<div class="flex gap-1">
-						<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="(kurs.anzahlSchienen <= 1) || (apiStatus.pending)"><i-ri-subtract-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="removeSchieneKurs(kurs)" size="small" :disabled="(kurs.anzahlSchienen <= 1) || (apiStatus.pending)">
+							<span class="icon-sm i-ri-subtract-line" />
+						</svws-ui-button>
 						<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending"><i-ri-add-line /></svws-ui-button>
+						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending">
+							<span class="icon-sm i-ri-add-line" />
+						</svws-ui-button>
 					</div>
 				</div>
 			</div>

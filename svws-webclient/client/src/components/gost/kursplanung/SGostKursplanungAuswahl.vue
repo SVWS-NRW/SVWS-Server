@@ -7,7 +7,7 @@
 					<div class="flex w-fit">
 						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
 							<svws-ui-button :disabled="apiStatus.pending" type="transparent" @click="openModal()" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten">
-								<i-ri-arrow-turn-back-line class="-mb-0.5" /> Wiederherstellen
+								<span class="icon-sm i-ri-arrow-turn-back-line -mb-0.5" /> Wiederherstellen
 							</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
 					</div>
@@ -21,7 +21,7 @@
 			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :mode="mode" :get-ergebnismanager="getErgebnismanager">
 			<template #blockungAuswahlActions>
 				<svws-ui-button type="icon" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
-					<i-ri-add-line class="-mx-0.5" />
+					<span class="icon-sm i-ri-add-line -mx-0.5" />
 				</svws-ui-button>
 			</template>
 		</s-gost-kursplanung-blockung-auswahl>

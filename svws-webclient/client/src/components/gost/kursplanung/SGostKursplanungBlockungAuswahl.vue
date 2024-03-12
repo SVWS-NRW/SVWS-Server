@@ -2,7 +2,7 @@
 	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen" :columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor.">
 		<template #noData v-if="istBlockungPersistiert">
 			<span class="inline-flex gap-1 leading-tight">
-				<i-ri-error-warning-line class="flex-shrink-0" />
+				<span class="icon-sm icon-error i-ri-error-warning-line flex-shrink-0" />
 				<span>Es liegt bereits eine persistierte Blockung vor, die wiederhergestellt werden kann.</span>
 			</span>
 		</template>
@@ -27,12 +27,14 @@
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
 							<template v-if="allow_berechne_blockung">
 								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
-									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Ausführlich </svws-ui-button>
+									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
+										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
+									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
 								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Schnell </svws-ui-button>
 							</template>
 							<svws-ui-tooltip position="top" v-else>
-								<svws-ui-button type="transparent" disabled> <i-ri-calculator-line class="-mx-0.5" />Berechnen</svws-ui-button>
+								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Berechnen</svws-ui-button>
 								<template #content>
 									<div class="normal-case text-base rich-text">
 										Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
@@ -41,16 +43,16 @@
 							</svws-ui-tooltip>
 							<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
 								<svws-ui-button type="icon" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
-									<i-ri-delete-bin-line class="-mx-0.5" />
+									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
 						<svws-ui-tooltip v-if="row.istAktiv">
-							<span @click="patchBlockung({ istAktiv: false }, row.id)"><i-ri-checkbox-circle-fill class="text-svws text-headline-md ml-2 hover:opacity-75" /></span>
+							<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, row.id)" />
 							<template #content> Aktivierte Blockung </template>
 						</svws-ui-tooltip>
 						<svws-ui-tooltip v-else>
-							<span @click="patchBlockung({ istAktiv: true }, row.id)"><i-ri-checkbox-circle-line class="text-svws text-headline-md ml-2 opacity-25 hover:opacity-75" /></span>
+							<span class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, row.id)" />
 							<template #content> Blockung als aktiv markieren </template>
 						</svws-ui-tooltip>
 					</div>

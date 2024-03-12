@@ -10,9 +10,17 @@
 			</div>
 			<div v-if="workerManager !== undefined" class="text-left pb-4 flex flex-row">
 				Anzahl der parallelen Berechnungen:
-				<div class="pl-4 pr-2"><svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1"> <i-ri-subtract-line /> </svws-ui-button></div>
+				<div class="pl-4 pr-2">
+					<svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1">
+						<span class="icon-xs i-ri-subtract-line" />
+					</svws-ui-button>
+				</div>
 				{{ workerManager.threads }}
-				<div class="pl-2"><svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> <i-ri-add-line /> </svws-ui-button></div>
+				<div class="pl-2">
+					<svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER">
+						<span class="icon-xs i-ri-add-line" />
+					</svws-ui-button>
+				</div>
 				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
 			</div>
 			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative" :columns="cols" :items="liste" :count="!liste.isEmpty()">
@@ -74,7 +82,7 @@
 					<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager.isInitialized() === false) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
 					<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
 					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
-						<i-ri-download-2-line />
+						<span class="icon i-ri-download-2-line" />
 						<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
 					</svws-ui-button>
 					<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>

@@ -20,13 +20,13 @@
 							</div>
 							<div v-else @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
-									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
 								<template v-else-if="kursSchuelerFixierungen === null">
-									<i-ri-pushpin-line class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
 								<template v-else-if="allowRegeln">
-									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 								<template v-else>
 									&nbsp;
@@ -36,10 +36,10 @@
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(schuelerFilter().kurs?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelKurs(rowData.id).value">
-									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
 								<template v-else-if="allowRegeln">
-									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
 						</template>
@@ -51,7 +51,7 @@
 						</template>
 						<template #actions>
 							<svws-ui-button type="transparent" @click="leereKurs" :disabled="(schuelerFilter().filtered.value.length === 0) || (apiStatus.pending)">
-								<i-ri-delete-bin-line /> Kurs leeren
+								<span class="icon-sm i-ri-delete-bin-line" /> Kurs leeren
 							</svws-ui-button>
 						</template>
 					</svws-ui-table>
@@ -67,10 +67,10 @@
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
-									<i-ri-pushpin-fill class="w-5 -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
 								</template>
 								<template v-else-if="allowRegeln && (getKurs(rowData) !== undefined)">
-									<i-ri-pushpin-line class="w-5 -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
 						</template>

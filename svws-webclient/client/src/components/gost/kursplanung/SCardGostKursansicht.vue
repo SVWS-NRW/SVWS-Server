@@ -10,12 +10,12 @@
 							</div>
 							<div class="flex flex-row gap-2">
 								<svws-ui-button type="transparent" size="small" @click="setZeigeSchienenbezeichnungen(!zeigeSchienenbezeichnungen())" :title="zeigeSchienenbezeichnungen() ? 'Zeige nur die Schienenummer':'Zeige den vollständigen Schienennamen'">
-									<i-ri-text v-if="zeigeSchienenbezeichnungen()" />
-									<i-ri-expand-height-line v-else />
+									<span v-if="zeigeSchienenbezeichnungen()" class="icon i-ri-text" />
+									<span v-else class="icon i-ri-expand-height-line" />
 								</svws-ui-button>
 								<template v-if="allowRegeln">
 									<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
-										<i-ri-add-line />
+										<span class="icon i-ri-add-line" />
 									</svws-ui-button>
 								</template>
 							</div>
@@ -39,12 +39,12 @@
 									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allowRegeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">
 										{{ s.bezeichnung }}
 									</span>
-									<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
+									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 								</div>
 							</template>
 							<template v-else>
 								<span :class="{ 'border-b border-dotted hover:border-transparent': allowRegeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
-								<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
+								<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 							</template>
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
 						<svws-ui-tooltip v-if="getAnzahlKollisionenSchiene(s.id) > 0" autosize>
-							<span class="inline-flex items-center"><i-ri-alert-line />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
+							<span class="inline-flex items-center"><span class="icon-sm icon-error i-ri-alert-line" />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
 							<template #content>
 								<template v-for="list, indexTooltip of getErgebnismanager().getOfSchieneTooltipKurskollisionenAsData(s.id)" :key="indexTooltip">
 									<p>
@@ -86,11 +86,10 @@
 						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
-					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allowRegeln, 'col-span-1': !allowRegeln, 'svws-active': kurssortierung.value === 'kursart'}">
+					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allowRegeln, 'col-span-1': !allowRegeln}">
 						<span>Kurs</span>
 						<span class="svws-sorting-icon">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
+							<span class="icon-sm i-ri-arrow-up-down-line" :class="{'opacity-75': kurssortierung.value === 'kursart'}" />
 						</span>
 					</div>
 					<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
@@ -111,18 +110,16 @@
 								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene).value, 'svws-divider': index + 1 < schienen.size() }">
 								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none cursor-pointer text-center" :class="{'cursor-grabbing': dragSperreSchiene !== undefined}" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem] cursor-grab">
-										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
+										<span class="icon-sm inline-block i-ri-draggable -ml-0.5 opacity-25 group-hover:opacity-100" />
 									</span>
-									<i-ri-lock-unlock-line class="inline-block" />
+									<span class="icon inline-block i-ri-lock-unlock-line opacity-25 group-hover:opacity-100" />
 								</div>
 							</div>
 						</template>
 					</template>
 					<template v-else>
-						<div v-for="(schiene, index) in schienen" :key="schiene.id" role="columnheader" class="svws-ui-td !px-0 svws-align-center font-normal text-black/10 dark:text-white/10" :class="{'svws-divider': index + 1 < schienen.size() }">
-							<span>
-								<i-ri-lock-unlock-line class="inline-block" />
-							</span>
+						<div v-for="(schiene, index) in schienen" :key="schiene.id" role="columnheader" class="svws-ui-td !px-0 svws-align-center" :class="{'svws-divider': index + 1 < schienen.size() }">
+							<span class="icon inline-block i-ri-lock-unlock-line opacity-10" />
 						</div>
 					</template>
 				</div>

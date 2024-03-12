@@ -9,7 +9,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="regel_hinzufuegen(true)"><i-ri-lock-line /> Sperren</svws-ui-button>
+			<svws-ui-button type="secondary" @click="regel_hinzufuegen(true)"><span class="icon-sm i-ri-lock-line" /> Sperren</svws-ui-button>
 			<svws-ui-button type="secondary" @click="regel_hinzufuegen(false)">Alleine</svws-ui-button>
 		</template>
 	</svws-ui-modal>

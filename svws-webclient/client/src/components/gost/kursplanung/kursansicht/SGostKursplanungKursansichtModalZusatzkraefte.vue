@@ -24,7 +24,7 @@
 				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer?.kuerzel).join(", ") }}</div>
 				<svws-ui-button :type="anzahl_zusatzkraefte ? 'transparent' : 'secondary'" @click="toggle_zusatzkraefte_modal">
 					<template v-if="anzahl_zusatzkraefte">
-						<i-ri-edit2-line />
+						<span class="icon-sm i-ri-edit-2-line" />
 					</template>
 					<template v-else>
 						Anlegen
