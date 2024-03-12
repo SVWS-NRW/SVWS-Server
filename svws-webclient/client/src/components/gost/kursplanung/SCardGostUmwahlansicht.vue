@@ -14,17 +14,17 @@
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-table :items="[]" :no-data="false" :disable-header="true" type="navigation" has-background class="mt-1">
 							<template #body>
-								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === null) }">
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
 									<div role="cell"
-										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === null)"
-										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
+										:draggable="(fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
+										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
 										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
-										:class="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null ? 'cursor-grab' : 'opacity-50'"
-										:style="{ '--background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
+										:class="fachwahlKurszuordnungen.get(fach.fachID) === undefined ? 'cursor-grab' : 'opacity-50'"
+										:style="{ '--background-color': bgColorFachwahl(fach.fachID) }">
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
 											<div class="flex flex-row flex-grow">
-												<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === null">
+												<template v-if="fachwahlKurszuordnungen.get(fach.fachID) === undefined">
 													<span class="rounded-sm group-hover:bg-white/50 w-3 -my-0.5 flex">
 														<span class="icon-sm i-ri-draggable text-black -ml-0.5 -mr-1 opacity-50 group-hover:opacity-100" />
 													</span>
@@ -33,7 +33,7 @@
 													<span class="w-3 text-sm">&nbsp;</span>
 												</template>
 												<span class="ml-0.5">
-													{{ getFachwahlKursname(fach.fachID, schueler.id) }}
+													{{ getFachwahlKursname(fach.fachID) }}
 													<template v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
 														<span class="text-sm ml-2 mr-2">—</span>
 														<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
@@ -72,8 +72,8 @@
 							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
 							<div role="cell" class="svws-ui-td svws-divider">
 								<div class="flex flex-col py-1" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
-									<div class="inline-flex items-center" :class="{'text-error': hatSchieneKollisionen(schiene.id, schueler.id).value}">
-										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id, schueler.id).value" />
+									<div class="inline-flex items-center" :class="{'text-error': hatSchieneKollisionen(schiene.id).value}">
+										<span class="icon icon-error i-ri-alert-line -mt-0.5" v-if="hatSchieneKollisionen(schiene.id).value" />
 										<span class="mb-0.5 text-button">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span>
 									</div>
 									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
@@ -84,15 +84,15 @@
 							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
 							<div role="cell" v-for="kurs of getErgebnismanager().getOfSchieneKursmengeSortiert(schiene.id)" :key="kurs.id"
 								class="svws-ui-td svws-align-center svws-no-padding select-none group relative !p-[2px] svws-divider last:!border-r-0"
-								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id, schueler.id).value }"
-								:draggable="is_draggable(kurs.id, schueler.id).value"
+								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id).value }"
+								:draggable="is_draggable(kurs.id).value"
 								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
 								@dragend="drag_ended()">
 								<div class="w-full h-full flex flex-col justify-center items-center rounded border border-black/10 py-1 px-0.5"
-									:style="{ 'background-color': hatSchieneKollisionen(schiene.id, schueler.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'rgb(var(--color-error))' : bgColor(kurs.id, schueler.id) }"
-									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id, schueler.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
-									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs, schueler.id)">
-									<span class="rounded-sm w-3 absolute top-1 left-1 flex" v-if="is_draggable(kurs.id, schueler.id).value" :class="[hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
+									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'rgb(var(--color-error))' : bgColor(kurs.id) }"
+									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
+									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs)">
+									<span class="rounded-sm w-3 absolute top-1 left-1 flex" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
 										<span class="icon-sm i-ri-draggable -ml-0.5 opacity-50 group-hover:opacity-100" />
 									</span>
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
@@ -100,25 +100,25 @@
 									</span>
 									<span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
 									<span class="inline-flex items-center gap-1">
-										<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getAbiturfach(kurs.id, schueler.id).value !== null"
+										<span v-if="getDatenmanager().getHalbjahr().istQualifikationsphase() && getAbiturfach(kurs.id).value !== null"
 											class="opacity-75 inline-block w-3 text-sm mr-2">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
-										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
-											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
-												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id, schueler.id).value" />
-												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
+										<span v-if="(allow_regeln && fach_gewaehlt(kurs).value)">
+											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id).value ? 'Verboten' : 'Verbieten'">
+												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id).value" />
+												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id).value && !fixier_regel(kurs.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
 											</span>
-											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id, schueler.id)" :title="fixier_regel(kurs.id, schueler.id).value ? 'Fixiert' : 'Fixieren'">
-												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id, schueler.id).value"
-													:class="[hatSchieneKollisionen(schiene.id, schueler.id).value ? 'icon-white' : '']" />
-												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value"
-													:class="[hatSchieneKollisionen(schiene.id, schueler.id).value ? 'icon-white' : '']" />
+											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id).value ? 'Fixiert' : 'Fixieren'">
+												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id).value"
+													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
+												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id).value && !fixier_regel(kurs.id).value"
+													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
 											</span>
 										</span>
 										<span v-else>
-											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id, schueler.id).value" title="Verboten" />
-											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id, schueler.id).value" title="Fixiert" />
+											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id).value" title="Verboten" />
+											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id).value" title="Fixiert" />
 										</span>
 									</span>
 								</div>
@@ -146,11 +146,13 @@
 	import type { DataTableColumn } from "@ui";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
-	import { ArrayList, DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
+	import { DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostUmwahlansichtProps>();
+
+	const idSchueler = computed<number>(() => props.schueler === undefined ? -1 : props.schueler.id);
 
 	const dragAndDropData = ref<DndData | undefined>(undefined);
 
@@ -162,19 +164,15 @@
 	})
 
 	async function auto_verteilen() {
-		if (props.schueler !== undefined)
-			await props.autoKursSchuelerZuordnung(props.schueler.id);
+		await props.autoKursSchuelerZuordnung(idSchueler.value);
 	}
 
 	const fachbelegungen = computed<List<GostFachwahl>>(() => {
-		if (props.schueler === undefined)
-			return new ArrayList<GostFachwahl>();
-		return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
+		return props.getDatenmanager().schuelerGetListeOfFachwahlen(idSchueler.value);
 	});
 
 	function routeLaufbahnplanung() {
-		if (props.schueler !== undefined)
-			void props.gotoLaufbahnplanung(props.schueler.id);
+		void props.gotoLaufbahnplanung(idSchueler.value);
 	}
 
 	const cols = computed(() => {
@@ -184,21 +182,21 @@
 		return cols;
 	})
 
-	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) => computed<boolean>(() =>
-		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)
+	const hatSchieneKollisionen = (idSchiene: number) => computed<boolean>(() =>
+		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler.value, idSchiene)
 	);
 
-	const getAbiturfach = (idKurs: number, idSchueler: number) => computed<number | null>(() => {
-		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+	const getAbiturfach = (idKurs: number) => computed<number | null>(() => {
+		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs))
 			return null;
-		const fachwahl = props.getErgebnismanager().getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		const fachwahl = props.getErgebnismanager().getOfSchuelerOfKursFachwahl(idSchueler.value, idKurs);
 		return fachwahl.abiturfach;
 	});
 
-	const is_draggable = (idKurs: number, idSchueler: number) => computed<boolean>(() => {
+	const is_draggable = (idKurs: number) => computed<boolean>(() => {
 		if (props.apiStatus.pending)
 			return false;
-		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs);
 	});
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() => {
@@ -209,7 +207,7 @@
 			return false;
 		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
 			return false;
-		if (props.schueler && props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(props.schueler.id, kurs.id))
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(idSchueler.value, kurs.id))
 			return false;
 		return true;
 	});
@@ -222,27 +220,26 @@
 		dragAndDropData.value = undefined;
 	}
 
-	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs, idSchueler : number) {
+	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs) {
 		const kurs_alt = dragAndDropData.value;
 		if ((kurs_alt === undefined) || (!is_drop_zone(kurs_neu).value))
 			return;
-		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler.value);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function drop_entferne_kurszuordnung(e: DragEvent) {
-		const schuelerid = props.schueler?.id;
 		const obj = dragAndDropData.value;
-		if ((schuelerid === undefined) || (obj === undefined) || (obj.id === undefined))
+		if ((obj === undefined) || (obj.id === undefined))
 			return;
-		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(obj.id, schuelerid);
+		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(obj.id, idSchueler.value);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
-	function bgColor(idKurs : number, idSchueler : number) : string {
-		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
+	function bgColor(idKurs : number) : string {
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs)) {
 			const k = props.getDatenmanager().kursGet(idKurs);
 			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
 			const zf = ZulaessigesFach.getByKuerzelASD(f?.kuerzel || null)
@@ -251,67 +248,83 @@
 		return "";
 	}
 
-	const fach_gewaehlt = (idSchueler: number, kurs: GostBlockungsergebnisKurs) => computed<boolean>(() =>
-		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler, kurs.fachID, kurs.kursart)
+	const fach_gewaehlt = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() =>
+		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler.value, kurs.fachID, kurs.kursart)
 	);
 
-	const fixier_regel = (idKurs: number, idSchueler: number) => computed<GostBlockungRegel | null>(() => {
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
-			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs);
+	const fixier_regel = (idKurs: number) => computed<GostBlockungRegel | null>(() => {
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs))
+			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler.value, idKurs);
 		return null;
 	});
 
-	const verbieten_regel = (idKurs: number, idSchueler: number) => computed<GostBlockungRegel | null>(() => {
-		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler, idKurs))
-			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs);
+	const verbieten_regel = (idKurs: number) => computed<GostBlockungRegel | null>(() => {
+		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler.value, idKurs))
+			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler.value, idKurs);
 		return null;
 	});
 
-	async function fixieren_regel_toggle(idKurs: number, idSchueler: number) {
+	async function fixieren_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
-		const regel = fixier_regel(idKurs, idSchueler).value;
+		const regel = fixier_regel(idKurs).value;
 		if (regel !== null)
 			update.listEntfernen.add(regel);
 		else
-			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
 		await props.regelnUpdate(update);
 	}
 
-	async function verbieten_regel_toggle(idKurs: number, idSchueler: number) {
+	async function verbieten_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
-		const regel = verbieten_regel(idKurs, idSchueler).value;
+		const regel = verbieten_regel(idKurs).value;
 		if (regel !== null)
 			update.listEntfernen.add(regel);
 		else
-			update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+			update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
 		await props.regelnUpdate(update);
 	}
 
-	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() =>
-		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach)
-	);
+	const fachwahlKurszuordnungen = computed<Map<number, GostBlockungsergebnisKurs>>(() => {
+		const zuordnungen = new Map<number, GostBlockungsergebnisKurs>();
+		if (props.schueler === undefined)
+			return zuordnungen;
+		for (const belegung of fachbelegungen.value) {
+			const z = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler.value, belegung.fachID);
+			if (z !== null)
+				zuordnungen.set(belegung.fachID, z);
+		}
+		return zuordnungen;
+	});
 
-	const fachwahlKursart = (idFach: number, idSchueler: number) => computed<GostKursart>(() =>
-		props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler, idFach)
-	);
+	const fachwahlKursarten = computed<Map<number, GostKursart>>(() => {
+		const kursarten = new Map<number, GostKursart>();
+		if (props.schueler === undefined)
+			return kursarten;
+		for (const belegung of fachbelegungen.value) {
+			const z = props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler.value, belegung.fachID);
+			if (z !== null)
+				kursarten.set(belegung.fachID, z);
+		}
+		return kursarten;
+	});
 
-	const bgColorFachwahl = (idFach: number, idSchueler: number) =>  computed<string>(() => {
-		const fwKurszuordnung = fachwahlKurszuordnung(idFach, idSchueler).value;
-		if (fwKurszuordnung !== null)
+	function bgColorFachwahl(idFach: number) : string {
+		const fwKurszuordnung = fachwahlKurszuordnungen.value.get(idFach);
+		if (fwKurszuordnung !== undefined)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
 		const zulfach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 		if (!zulfach)
 			return "#ffffff";
 		return zulfach.getHMTLFarbeRGB();
-	});
+	}
 
-	function getFachwahlKursname(idFach: number, idSchueler: number): string {
-		const fw = fachwahlKurszuordnung(idFach, idSchueler).value;
-		if (fw === null) {
+	function getFachwahlKursname(idFach: number): string {
+		const fw = fachwahlKurszuordnungen.value.get(idFach);
+		if (fw === undefined) {
 			const f = props.getErgebnismanager().getFach(idFach);
-			const fwKursart = fachwahlKursart(idFach, idSchueler).value;
-			return `${f.kuerzelAnzeige}-${fwKursart.kuerzel}`;
+			const fwKursart = fachwahlKursarten.value.get(idFach);
+			return `${f.kuerzelAnzeige}-${(fwKursart === undefined) ? '??' : fwKursart.kuerzel}`;
 		}
 		return props.getErgebnismanager().getOfKursName(fw.id);
 	}
