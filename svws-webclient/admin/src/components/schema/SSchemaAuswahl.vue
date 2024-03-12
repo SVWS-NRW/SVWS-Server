@@ -7,8 +7,8 @@
 			</div>
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchema" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="mapSchema().values()"
-				:columns="cols" clickable :selectable="hasRootPrivileges" count scroll-into-view scroll>
+			<svws-ui-table :items="mapSchema().values()" :columns="cols" :model-value="selectedItems" @update:model-value="setAuswahlGruppe"
+				:clickable="!auswahlGruppe.length" :clicked="auswahlGruppe.length ? undefined : auswahl" @update:clicked="gotoSchema" :selectable="hasRootPrivileges" count scroll-into-view scroll>
 				<template #header(isTainted)>
 					<svws-ui-tooltip>
 						<i-ri-file-damage-line class="w-[1.4em] h-[1.4em] -my-1" />
@@ -39,8 +39,7 @@
 						<svws-ui-button @click="openModal" type="icon" class="ml-auto" title="Schema in die Konfiguration übernehmen"> <i-ri-share-forward-2-line /> </svws-ui-button>
 					</s-schema-auswahl-neu-modal>
 				</template>
-				<template v-if="hasRootPrivileges" #actions>
-					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" class="mr-auto" title="Entfernt die ausgewählten SVWS-Schemata. Die jeweiligen Datenbank-Benutzer verlieren ihre Rechte auf das Schema, bleiben allerdings in der Datenbank angelegt." :disabled="apiStatus.pending" />
+				<template v-if="hasRootPrivileges && auswahlGruppe.length === 0" #actions>
 					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen">
 						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-database-2-line class="!w-[1.5em] !h-[1.5em]" />  </svws-ui-button>
 					</s-schema-migrate-modal>

@@ -10,7 +10,6 @@ export interface SchemaAuswahlProps {
 	mapSchema: () => Map<string, SchemaListeEintrag>;
 	gotoSchema: (value: SchemaListeEintrag | undefined) => Promise<void>;
 	setAuswahlGruppe: (value: SchemaListeEintrag[]) => void;
-	removeSchemata: () => Promise<void>;
 	addSchema: (data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>;
 	importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;

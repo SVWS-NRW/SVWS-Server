@@ -7,6 +7,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
+import { routeApp } from "../RouteApp";
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
 import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
@@ -199,7 +200,13 @@ export class RouteDataSchema {
 		this.setPatchedState({auswahl});
 	}
 
-	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	this.setPatchedState({ auswahlGruppe });
+	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	{
+		this.setPatchedState({ auswahlGruppe });
+		if (auswahlGruppe.length > 0 && routeApp.selectedChild?.name === 'schema')
+			RouteManager.doRoute('/schemagruppe');
+		else if (auswahlGruppe.length === 0 && routeApp.selectedChild?.name === 'schemagruppe')
+			RouteManager.doRoute('schema');
+	}
 
 	upgradeSchema = async () => {
 		if (this.auswahl === undefined)
@@ -412,9 +419,8 @@ export class RouteDataSchema {
 		api.status.start();
 		await api.privileged.importExistingSchema(data, schema);
 		const eintrag = this.mapSchema.get(schema);
-		if (eintrag !== undefined) {
+		if (eintrag !== undefined)
 			eintrag.isInConfig = true;
-		}
 		api.status.stop();
 		this.commit();
 	}

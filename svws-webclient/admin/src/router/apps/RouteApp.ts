@@ -14,6 +14,7 @@ import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeLogin } from "~/router/login/RouteLogin";
 
 import SApp from "~/components/SApp.vue";
+import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -25,6 +26,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.text = "SVWS-Client";
 		super.children = [
 			routeSchema,
+			routeSchemagruppe,
 		];
 		super.menu = [
 			routeSchema,

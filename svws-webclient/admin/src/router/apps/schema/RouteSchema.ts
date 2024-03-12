@@ -63,7 +63,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 
 	public getRoute(schema?: string) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { schema: schema } };
+		return { name: this.defaultChild!.name, params: { schema } };
 	}
 
 	public getChildRoute(schema: string) : RouteLocationRaw {
@@ -79,7 +79,6 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 			mapSchema: () => this.data.mapSchema,
 			gotoSchema: this.data.gotoSchema,
 			setAuswahlGruppe: this.data.setAuswahlGruppe,
-			removeSchemata: this.data.removeSchemata,
 			addSchema: this.data.addSchema,
 			importSchema: this.data.importSchema,
 			migrateSchema: this.data.migrateSchema,
