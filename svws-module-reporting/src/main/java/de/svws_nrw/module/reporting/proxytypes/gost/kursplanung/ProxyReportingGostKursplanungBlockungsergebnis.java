@@ -66,31 +66,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-	/** Legt fest, ob die Schülermenge gefiltert werden soll. */
+    /** Ergebnismanager des Blockunsgergebnisses. */
 	@JsonIgnore
-	private boolean filterSchueler = false;
-
-	/** Liste von Schüler-Ids, die als Filter für die Gesamtliste der Schüler genutzt werden soll. */
-	@JsonIgnore
-	private List<Long> filterIdsSchueler = new ArrayList<>();
-
-	/** Liste mit Schülern des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Schüler mit einer ID-Liste ergibt. */
-	 @JsonIgnore
-	private List<ReportingSchueler> schuelerGefiltert = new ArrayList<>();
-
-	/** Legt fest, ob die Kursmenge gefiltert werden soll. */
-	@JsonIgnore
-	private boolean filterKurse = false;
-
-	/** Liste von Kurs-Ids, die als Filter für die Gesamtliste der Kurse genutzt werden soll. */
-	@JsonIgnore
-	private List<Long> filterIdsKurse = new ArrayList<>();
-
-	/** Liste mit Kursen des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Kurse mit einer ID-Liste ergibt. */
-	@JsonIgnore
-	private List<ReportingGostKursplanungKurs> kurseGefiltert = new ArrayList<>();
-
-
+	private final GostBlockungsergebnisManager ergebnisManager;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt anhand der Blockungsergebnis-ID.
@@ -103,24 +81,40 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 		// Initialisiere das Blockungsergebnis und dessen Manager.
 		final GostBlockungsergebnis blockungsergebnis = (new DataGostBlockungsergebnisse(this.reportingRepository.conn())).getErgebnisFromID(id);
-		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
-		final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
+        final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
+		ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
 
 		// Sortierungen definieren.
 		ergebnisManager.kursSetSortierungKursartFachNummer();
 		final Collator colGerman = java.text.Collator.getInstance(Locale.GERMAN);
 
-		// Maps für den weiteren Verlauf definieren.
-		final HashMap<Long, ReportingGostKursplanungSchiene> mapBlockungsergebnisSchienenmenge = new HashMap<>();
-		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
+		// Grundwerte des Blockungsergebnisses setzen.
+		super.setAbiturjahr(datenManager.daten().abijahrgang);
+		super.setAnzahlDummy(ergebnisManager.getAnzahlSchuelerDummy());
+		super.setAnzahlExterne(ergebnisManager.getAnzahlSchuelerExterne());
+		super.setAnzahlMaxKurseProSchiene(ergebnisManager.getOfSchieneMaxKursanzahl());
+		super.setAnzahlSchienen(super.schienen().size());
+		super.setAnzahlSchueler(datenManager.schuelerGetAnzahl());
+		super.setBezeichnung(datenManager.daten().name);
+		super.setGostHalbjahr(GostHalbjahr.fromID(datenManager.daten().gostHalbjahr));
 
-		// Lese alle Schüler-IDs der Blockung aus dem Datenmanager aus und lese damit die Stammdaten aller Schüler aus der DB.
-		final List<SchuelerStammdaten> schuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), datenManager.schuelerGetListe().stream().map(s -> s.id).toList());
-
-		// Lege die Stammdaten im Repository ab.
-		schuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
+		// Schülerstammdaten ermitteln und in Listen und Maps einfügen
+		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
+		final List<Long> fehlendeSchueler = new ArrayList<>();
+		for (final Long idSchueler : datenManager.schuelerGetListe().stream().map(s -> s.id).toList()) {
+			if (reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
+				schuelerStammdaten.add(reportingRepository.mapSchuelerStammdaten().get(idSchueler));
+			else
+				fehlendeSchueler.add(idSchueler);
+		}
+		if (!fehlendeSchueler.isEmpty()) {
+			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler);
+			schuelerStammdaten.addAll(fehlendeSchuelerStammdaten);
+			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
+		}
 
 		// Füge die neu erzeugten Reporting-Objekte der Schüler der internen Map hinzu, um auf die Schüler im Folgenden direkt zugreifen zu können.
+		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
 		mapBlockungsergebnisSchuelermenge.putAll(schuelerStammdaten
 			.stream()
 			.map(s -> (ReportingSchueler) new ProxyReportingSchueler(
@@ -131,6 +125,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			.collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 
 		// Liste der Schienen aus der Blockung einlesen und diese einer internen Map hinzufügen. Dabei werden Schienen ohne Kurse nicht berücksichtigt.
+		final HashMap<Long, ReportingGostKursplanungSchiene> mapBlockungsergebnisSchienenmenge = new HashMap<>();
 		mapBlockungsergebnisSchienenmenge.putAll(datenManager.schieneGetListe()
 			.stream()
 			.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
@@ -149,7 +144,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			.toList()
 			.stream()
 			.collect(Collectors.toMap(ReportingGostKursplanungSchiene::id, s -> s)));
-
 
 		// Liste der Kurse aus der Blockung einlesen.
 		// Dabei werden auch die Kursbelegungen der Schüler und die Kurse bei den Schienen ergänzt.
@@ -201,21 +195,14 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 			// Füge den neuen Kurs in die Liste der Kurse ein und initialisiere damit schrittweise die Liste der Super-Klasse.
 			super.kurse().add(reportingGostKursplanungKurs);
-
-			// Erstelle die Fachwahlstatistik für dieses Blockungsergebnis, d. h. für dessen GOSt-Halbjahr.
-			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
-			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
-			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
-				mapFachwahlStatistik.putAll(
-					gostFachwahlenStatistik.stream().collect(
-						Collectors.toMap(
-							f -> f.id,
-							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, ergebnisManager))));
-			}
-			super.setFachwahlstatistik(mapFachwahlStatistik);
-
 		}
+
+		// Erstelle eine Liste von Schienen aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
+		datenManager.schieneGetListe()
+			.stream()
+			.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
+			.toList()
+			.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
 
 		// Erstelle eine alphabetisch sortierte Liste der Schülermenge aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
 		super.schueler().addAll(mapBlockungsergebnisSchuelermenge.values()
@@ -225,23 +212,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				.thenComparing(ReportingSchueler::vornamen, colGerman)
 				.thenComparing(ReportingSchueler::id))
 			.toList());
-
-		// Erstelle eine Liste von Schienen aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
-		datenManager.schieneGetListe()
-			.stream()
-			.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
-			.toList()
-			.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
-
-		// Grundwerte des Blockungsergebnisses setzen.
-		super.setAbiturjahr(datenManager.daten().abijahrgang);
-		super.setAnzahlDummy(ergebnisManager.getAnzahlSchuelerDummy());
-		super.setAnzahlExterne(ergebnisManager.getAnzahlSchuelerExterne());
-		super.setAnzahlMaxKurseProSchiene(ergebnisManager.getOfSchieneMaxKursanzahl());
-		super.setAnzahlSchienen(super.schienen().size());
-		super.setAnzahlSchueler(datenManager.schuelerGetAnzahl());
-		super.setBezeichnung(datenManager.daten().name);
-		super.setGostHalbjahr(GostHalbjahr.fromID(datenManager.daten().gostHalbjahr));
 	}
 
 
@@ -251,151 +221,30 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * @return Repository für die Reporting
 	 */
 	@JsonIgnore
-	public ReportingRepository reportingRepositorySchule() {
+	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
 
-	/**
-	 * Legt fest, ob die Kursmenge gefiltert werden soll.
-	 * @return Inhalt des Feldes filterKurse = false
-	 */
-	@JsonIgnore
-	public boolean filterKurse() {
-		return filterKurse;
-	}
 
 	/**
-	 * Legt fest, ob die Kursmenge gefiltert werden soll wird gesetzt.
-	 * @param filterKurse Neuer Wert für das Feld filterKurse
+	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 * @return Map mit den Fachwahlstatistiken zu den Fächern.
 	 */
-	@JsonIgnore
-	public void setFilterKurse(final boolean filterKurse) {
-		this.filterKurse = filterKurse;
-	}
-
-	/**
-	 * Liste von Kurs-Ids, die als Filter für die Gesamtliste der Kurse genutzt werden soll.
-	 * @return Inhalt des Feldes filterIdsKurse
-	 */
-	@JsonIgnore
-	public List<Long> filterIdsKurse() {
-		return filterIdsKurse;
-	}
-
-	/**
-	 * Liste von Kurs-Ids, die als Filter für die Gesamtliste der Kurse genutzt werden soll wird gesetzt.
-	 * Wenn die Liste gleich viele oder mehr IDs enthält, als es Kurse in der Blockung gibt, so wird die Filterliste
-	 * ignoriert und eine Filterliste erstellt, die alle Kurs-IDs der Blockung enthält.
-	 * @param filterIdsKurse Neuer Wert für das Feld filterIdsKurse
-	 */
-	@JsonIgnore
-	public void setFilterIdsKurse(final List<Long> filterIdsKurse) {
-		this.filterIdsKurse = new ArrayList<>();
-		this.kurseGefiltert = new ArrayList<>();
-		if (filterIdsKurse != null && !filterIdsKurse.isEmpty()) {
-			if (filterIdsKurse.size() < super.kurse().size()) {
-				this.filterIdsKurse = filterIdsKurse;
-				this.kurseGefiltert = new ArrayList<>();
-				this.kurseGefiltert.addAll(
-					super.kurse()
-						.stream()
-						.filter(k -> this.filterIdsKurse.contains(k.id()))
-						.toList());
-			} else {
-				this.filterIdsKurse.addAll(super.kurse().stream().map(ReportingGostKursplanungKurs::id).toList());
-				this.kurseGefiltert.addAll(super.kurse());
+	@Override
+	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
+		if (super.fachwahlstatistik() == null || super.fachwahlstatistik().isEmpty()) {
+			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
+			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
+			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
+				mapFachwahlStatistik.putAll(
+					gostFachwahlenStatistik.stream().collect(
+						Collectors.toMap(
+							f -> f.id,
+							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
 			}
+			super.setFachwahlstatistik(mapFachwahlStatistik);
 		}
-	}
-
-	/**
-	 * Liste mit Kursen des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Kurse mit einer ID-Liste ergibt.
-	 * Ist die Filterung deaktiviert, wird die Gesamtliste der Kurse zurückgegeben.
-	 * @return Inhalt des Feldes kurseGefiltert
-	 */
-	@JsonIgnore
-	public List<ReportingGostKursplanungKurs> kurseGefiltert() {
-		return this.filterKurse ? this.kurseGefiltert : super.kurse();
-	}
-
-	/**
-	 * Liste mit Kursen des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Kurse mit einer ID-Liste ergibt, wird gesetzt.
-	 * @param kurseGefiltert Neuer Wert für das Feld kurseGefiltert
-	 */
-	@JsonIgnore
-	public void setKurseGefiltert(final List<ReportingGostKursplanungKurs> kurseGefiltert) {
-		this.kurseGefiltert = kurseGefiltert;
-	}
-
-	/**
-	 * Legt fest, ob die Schülermenge gefiltert werden soll.
-	 * @return Inhalt des Feldes filterSchueler = false
-	 */
-	@JsonIgnore
-	public boolean filterSchueler() {
-		return filterSchueler;
-	}
-
-	/**
-	 * Legt fest, ob die Schülermenge gefiltert werden soll wird gesetzt.
-	 * @param filterSchueler Neuer Wert für das Feld filterSchueler
-	 */
-	@JsonIgnore
-	public void setFilterSchueler(final boolean filterSchueler) {
-		this.filterSchueler = filterSchueler;
-	}
-
-	/**
-	 * Liste von Schüler-Ids, die als Filter für die Gesamtliste der Schüler genutzt werden soll.
-	 * @return Inhalt des Feldes filterIdsSchueler
-	 */
-	@JsonIgnore
-	public List<Long> filterIdsSchueler() {
-		return filterIdsSchueler;
-	}
-
-	/**
-	 * Liste von Schüler-Ids, die als Filter für die Gesamtliste der Schüler genutzt werden soll, wird gesetzt.
-	 * Wenn die Liste gleich viele oder mehr IDs enthält, als es Schüler in der Blockung gibt, so wird die Filterliste
-	 * ignoriert und eine Filterliste erstellt, die alle Schüler-IDs der Blockung enthält.
-	 * @param filterIdsSchueler Neuer Wert für das Feld filterIdsSchueler
-	 */
-	@JsonIgnore
-	public void setFilterIdsSchueler(final List<Long> filterIdsSchueler) {
-		this.filterIdsSchueler = new ArrayList<>();
-		this.schuelerGefiltert = new ArrayList<>();
-		if (filterIdsSchueler != null && !filterIdsSchueler.isEmpty()) {
-			if (filterIdsSchueler.size() < super.schueler().size()) {
-				this.filterIdsSchueler = filterIdsSchueler;
-				this.schuelerGefiltert = new ArrayList<>();
-				this.schuelerGefiltert.addAll(
-					super.schueler()
-						.stream()
-						.filter(s -> this.filterIdsSchueler.contains(s.id()))
-						.toList());
-			} else {
-				this.filterIdsSchueler.addAll(super.schueler().stream().map(ReportingSchueler::id).toList());
-				this.schuelerGefiltert.addAll(super.schueler());
-			}
-		}
-	}
-
-	/**
-	 * Liste mit Schülern des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Schüler mit einer ID-Liste ergibt.
-	 * Ist die Filterung deaktiviert, wird die Gesamtliste der Schüler zurückgegeben.
-	 * @return Inhalt des Feldes schuelerGefiltert
-	 */
-	@JsonIgnore
-	public List<ReportingSchueler> schuelerGefiltert() {
-		return this.filterSchueler ? this.schuelerGefiltert : super.schueler();
-	}
-
-	/**
-	 * Liste mit Schülern des Blockungsergebnisses, die sich als Ergebnis der Filterung der Gesamtliste der Schüler mit einer ID-Liste ergibt, wird gesetzt.
-	 * @param schuelerGefiltert Neuer Wert für das Feld schuelerGefiltert
-	 */
-	@JsonIgnore
-	public void setSchuelerGefiltert(final List<ReportingSchueler> schuelerGefiltert) {
-		this.schuelerGefiltert = schuelerGefiltert;
+		return super.fachwahlstatistik();
 	}
 }

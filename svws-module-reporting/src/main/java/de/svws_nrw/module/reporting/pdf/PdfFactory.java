@@ -7,6 +7,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.reporting.html.base.HtmlBuilder;
 import de.svws_nrw.module.reporting.html.base.HtmlContext;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextDruckparameter;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
 import de.svws_nrw.module.reporting.html.contexts.gost.kursplanung.HtmlContextGostKursplanungBlockungsergebnis;
@@ -33,6 +34,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung einer pdf-Datei auf Basis der hinterlegten html-Vorlage und den übergebenen Daten.
+ * Sie setzt voraus, dass zum übergebenen html-Template eine css-Datei mit gleichem Pfad und Namen existiert.
  */
 public final class PdfFactory {
 
@@ -59,17 +61,20 @@ public final class PdfFactory {
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
 	private final String dateipfadCss;
 
-	/** Legt fest, ob pro Datensatz des Haupt-Daten-Contexts eine einzelne PDF-Datei erzeugt werden soll. */
-	private final boolean erzeugeEinzelPdfs;
+	/** Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll. */
+	private final boolean einzelausgabeDetaildaten;
 
-	/** Eine ID der zu druckenden Daten */
-	private Long idDruckdaten;
+	/** Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll. */
+	private final boolean einzelausgabeHauptdaten;
 
-	/** Eine Liste von IDs der zu druckenden Daten */
-	private List<Long> idsDruckdaten;
+	/** Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten. */
+	private final List<Long> idsDetaildaten;
 
-	/** Eine Liste von IDs, auf die bei der Druckausgabe gefiltert werden soll. */
-	private List<Long> idsFilterdaten;
+	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
+	private final List<Long> idsHauptdaten;
+
+	/** Eine Map zum Sammeln der erstellten html-Contexts. */
+	final Map<String, HtmlContext> mapHtmlContexts = new HashMap<>();
 
 	/** Parameter (>= 0), der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern. */
 	private final int parameterDetailLevel;
@@ -81,29 +86,8 @@ public final class PdfFactory {
 	/** Der Dateiname des Templates, der aus dem übergebenen Dateipfad ermittelt wird. */
 	private String dateinameHtmlTemplate = "";
 
-	/** Der Dateiname der ZIP-Datei, wenn Einzel-PDFs erzeugt werden sollen.. */
+	/** Der Dateiname der ZIP-Datei, wenn Einzel-PDFs erzeugt werden sollen. */
 	private String dateinameZIP = "";
-
-	/** Legt fest, ob die IDs-Liste der Kurse als Filter dient. */
-	private boolean filterKurse = false;
-
-	/** Legt fest, ob die IDs-Liste der Schüler als Filter dient. */
-	private boolean filterSchueler = false;
-
-	/** Die ID des Blockungsergebnisses, aus dem die Daten für die PDF_Erzeugung genutzt werden sollen. */
-	private Long idBlockungsergebnis;
-
-	/** Liste der IDs der Kurse, für die eine Ausgabe erfolgen soll. */
-	private List<Long> idsKurse = new ArrayList<>();
-
-	/** Liste der IDs der Schüler, für die eine Ausgabe erfolgen soll. */
-	private List<Long> idsSchueler = new ArrayList<>();
-
-	/** Legt fest, ob für die Schüler auch die Abiturdaten der GOSt mit geladen werden sollen. */
-	private boolean ladeSchuelerMitAbiturDaten = false;
-
-	/** Legt fest, ob für die Schüler auch die Laufbahnplanungsdaten der GOSt mit geladen werden sollen. */
-	private boolean ladeSchuelerMitGostDaten = false;
 
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log = new LogConsumerList();
@@ -112,39 +96,100 @@ public final class PdfFactory {
 	private final Logger logger = new Logger();
 
 
-
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus einem html-Template zu erzeugen.
 	 * @param conn Die Verbindung zur Datenbank.
 	 * @param dateipfadHtmlTemplate Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird.
-	 * @param idDruckdaten Eine ID der zu druckenden Daten
-	 * @param idsDruckdaten Eine Liste von IDs der zu druckenden Daten
-	 * @param idsFilterdaten Eine Liste von IDs, auf die bei der Druckausgabe gefiltert werden soll
-	 * @param erzeugeEinzelPdfs Legt fest, ob pro Datensatz des Haupt-Daten-Contexts eine einzelne PDF-Datei erzeugt werden soll.
+	 * @param idsHauptdaten Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.
+	 * @param einzelausgabeHauptdaten Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.
+	 * @param idsDetaildaten Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.
+	 * @param einzelausgabeDetaildaten Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.
 	 * @param parameterDetailLevel Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
 	 */
-	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final boolean erzeugeEinzelPdfs, final Long idDruckdaten, final List<Long> idsDruckdaten, final List<Long> idsFilterdaten, final int parameterDetailLevel) {
-		this.conn = conn;
-		this.dateipfadHtmlTemplate = dateipfadHtmlTemplate;
-		this.erzeugeEinzelPdfs = erzeugeEinzelPdfs;
-		this.idDruckdaten = idDruckdaten;
-		this.idsDruckdaten = idsDruckdaten;
-		this.idsFilterdaten = idsFilterdaten;
-		this.parameterDetailLevel = parameterDetailLevel;
+	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final List<Long> idsHauptdaten, final boolean einzelausgabeHauptdaten, final List<Long> idsDetaildaten, final boolean einzelausgabeDetaildaten, final int parameterDetailLevel) {
 
 		logger.addConsumer(log);
 
-		// Evtl. Einträge von null für Listen abfangen.
-		if (idsDruckdaten == null)
-			this.idsDruckdaten = new ArrayList<>();
-		if (idsFilterdaten == null)
-			this.idsFilterdaten = new ArrayList<>();
+		// Validiere Datenbankverbindung
+		if (conn == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde keine Verbindung zur Datenbank übergeben.");
 
-		this.dateipfadCss = dateipfadHtmlTemplate.substring(0, dateipfadHtmlTemplate.lastIndexOf('.') + 1) + "css";
+		this.conn = conn;
+
+		// Validiere html-Template-Angabe
+		if (dateipfadHtmlTemplate == null || dateipfadHtmlTemplate.isEmpty() || dateipfadHtmlTemplate.isBlank() || !dateipfadHtmlTemplate.toLowerCase().endsWith(".html"))
+			throw OperationError.NOT_FOUND.exception("Es wurde kein gültiger Pfad zu einem html-Template übergeben.");
+
+		this.dateipfadHtmlTemplate = dateipfadHtmlTemplate;
 		this.dateinameHtmlTemplate = dateipfadHtmlTemplate.substring(dateipfadHtmlTemplate.lastIndexOf('/') + 1);
 
-		setReportDatenEinstellungen();
+		if (supportedSchuelerTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)) && supportedGostKursplanungTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)))
+			throw OperationError.NOT_FOUND.exception("Keine für die Erstellung der PDF-Datei unterstützte Vorlage gefunden.");
+
+		this.dateipfadCss = dateipfadHtmlTemplate.substring(0, dateipfadHtmlTemplate.lastIndexOf('.') + 1) + "css";
+
+		// Validiere Hauptdaten-Angabe
+		if (idsHauptdaten == null || idsHauptdaten.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+
+		this.idsHauptdaten = idsHauptdaten;
+
+		// Setze weitere Werte.
+		this.einzelausgabeHauptdaten = einzelausgabeHauptdaten;
+		this.idsDetaildaten = (idsDetaildaten == null) ? new ArrayList<>() : idsDetaildaten;
+		this.einzelausgabeDetaildaten = einzelausgabeDetaildaten;
+		this.parameterDetailLevel = parameterDetailLevel;
+
+		getContexts();
 	}
+
+
+	/** Erzeugte die Contexts für die html-Erstellung. */
+	private void getContexts() {
+		// Klasse für die Validierung der über die API übergebenen Daten.
+		final ReportingValidierung reportingValidierung = new ReportingValidierung();
+
+		logger.logLn("Erzeuge Repository");
+		final ReportingRepository reportingRepository = new ReportingRepository(conn);
+
+		logger.logLn("Erzeuge Datenkontext Schule");
+		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
+		mapHtmlContexts.put("Schule", htmlContextSchule);
+
+		logger.logLn("Erzeuge Datenkontext Druckparameter");
+		final HtmlContextDruckparameter htmlContextDruckparameter = new HtmlContextDruckparameter(this.parameterDetailLevel, this.idsDetaildaten);
+		mapHtmlContexts.put("Druckparameter", htmlContextDruckparameter);
+
+		if (supportedSchuelerTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
+			logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s.".formatted(idsHauptdaten.size(), this.dateinameHtmlTemplate));
+			switch (dateinameHtmlTemplate) {
+				case "APOGOStAnlage12.html" :
+					reportingValidierung.validiereSchuelerDaten(reportingRepository, idsHauptdaten, false, true, true);
+					break;
+				case "GostLaufbahnplanungWahlbogen.html", "GostLaufbahnplanungErgebnisuebersicht.html" :
+					reportingValidierung.validiereSchuelerDaten(reportingRepository, idsHauptdaten, true, false, true);
+					break;
+				default :
+					throw OperationError.NOT_FOUND.exception("Keine für die Erstellung der PDF-Datei notwendigen Schüler angegeben.");
+			}
+			final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, idsHauptdaten);
+			mapHtmlContexts.put("Schueler", htmlContextSchueler);
+		}
+
+		if (supportedGostKursplanungTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
+			logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s.".formatted(idsHauptdaten.getFirst(), this.dateinameHtmlTemplate));
+			final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung;
+            if (dateinameHtmlTemplate.equals("GostKursplanungSchuelerMitSchienenKursen.html") || dateinameHtmlTemplate.equals("GostKursplanungSchuelerMitKursen.html") || dateinameHtmlTemplate.equals("GostKursplanungKursMitKursschuelern.html")) {
+                htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, idsHauptdaten.getFirst());
+                mapHtmlContexts.put("Blockungsergebnis", htmlContextBlockung);
+            } else {
+                throw OperationError.NOT_FOUND.exception("Kein für die Erstellung der PDF-Datei notwendiges Blockungsergebnis angegeben.");
+            }
+		}
+
+		logger.logLn("Erzeugung der Kontexte abgeschlossen.");
+	}
+
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen PDF-Datei oder ZIP-Datei mit den mehreren generierten PDF-Dateien.
@@ -154,9 +199,8 @@ public final class PdfFactory {
 
 		try {
 			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
-
 			if (!pdfBuilders.isEmpty()) {
-				if (!erzeugeEinzelPdfs || pdfBuilders.size() == 1) {
+				if (!einzelausgabeHauptdaten || pdfBuilders.size() == 1) {
 					return pdfBuilders.getFirst().getPdfResponse();
 				} else {
 					if (dateinameZIP.isEmpty())
@@ -173,76 +217,8 @@ public final class PdfFactory {
 				throw OperationError.INTERNAL_SERVER_ERROR.exception("Es sind keine PDF-Builder generiert worden.");
 			}
 		} catch (Exception e) {
-			String htmlTemplate = "";
-			String webAppExBody = "";
-
-			logger.logLn("###  FEHLER  ####################################");
-
-			if (e instanceof TemplateProcessingException tPE) {
-				// Wenn ein Fehler in der Template-Verarbeitung auftritt, speichere das verwendete html-Template für einen späteren Log-Eintrag.
-				htmlTemplate = tPE.getTemplateName();
-			}
-
-			// Sammle alle Fehlerursachen im Log.
-			for (Throwable cause = e; cause != null; cause = cause.getCause()) {
-				String message = cause.getMessage();
-				// Entferne das html-Template, falls es in der Message enthalten ist.
-				if (e instanceof TemplateProcessingException && !htmlTemplate.isEmpty())
-					message = message.replace("(template: \"" + htmlTemplate + "\"", "(");
-				logger.logLn(4, message);
-			}
-
-			// Hänge das html-Template als weiteren Eintrag hinten an, wenn ein Fehler bei der Template-Verarbeitung aufgetreten ist.
-			if (e instanceof TemplateProcessingException && !htmlTemplate.isEmpty()) {
-				logger.logLn(0, "");
-				logger.logLn(0, "###  Verwendetes html-Template  #################");
-				logger.logLn(0, htmlTemplate);
-			}
-
-			// Erstelle eine SimpleOperationResponse mit dem Log zum Fehler und gebe diese zurück.
-			SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
-			simpleOperationResponse.success = false;
-			simpleOperationResponse.log = log.getStrings();
-
-			int code = OperationError.INTERNAL_SERVER_ERROR.getCode();
-			if (e instanceof WebApplicationException wAE) {
-				code = wAE.getResponse().getStatus();
-				// Wenn eine WebApplicationException auftritt, gebe den Body der Response als Text aus.
-				webAppExBody = wAE.getResponse().readEntity(String.class);
-				if (webAppExBody != null)
-					logger.logLn(4, "WebApplicationException - Code: %d - Message: %s".formatted(wAE.getResponse().getStatus(), webAppExBody));
-				else
-					logger.logLn(4, "WebApplicationException - Code: %d".formatted(wAE.getResponse().getStatus()));
-			}
-
-			return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();
+			return errorResponse(e);
 		}
-	}
-
-
-	/**
-	 * Erstellt eine ZIP-Datei, die alle PDF-Dateien der übergebenen PDF-Builder enthält.
-	 * @param pdfBuilders Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
-	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
-	 */
-	private byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws WebApplicationException {
-		final byte[] zipData;
-		try {
-			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-					for (final PdfBuilder pdfBuilder : pdfBuilders) {
-						zos.putNextEntry(new ZipEntry(pdfBuilder.getPdfDateiname()));
-						zos.write(pdfBuilder.getPdfByteArray());
-						zos.closeEntry();
-					}
-					baos.flush();
-				}
-				zipData = baos.toByteArray();
-			}
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die erzeugten PDF-Dateien konnten nicht als ZIP-Datei zusammengestellt werden.");
-		}
-		return zipData;
 	}
 
 
@@ -252,53 +228,9 @@ public final class PdfFactory {
 	 */
 	private List<PdfBuilder> getPdfBuilders() {
 
-		// Klasse für die Validierung der über die API übergebenen Daten.
-		final ReportingValidierung reportingValidierung = new ReportingValidierung();
-
-		// Ermittele den Namen der übergebenen html-Vorlagendatei, um damit die Dateinamensgenerierung zu steuern.
-		if (supportedSchuelerTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)) && supportedGostKursplanungTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)))
-			throw OperationError.NOT_FOUND.exception("Keine für die Erstellung der PDF-Datei unterstützte Vorlage gefunden.");
-
-		// html-Daten-Contexts erstellen und in Liste sammeln.
-		final Map<String, HtmlContext> mapHtmlContexts = new HashMap<>();
-
-		logger.logLn("Erzeuge Repository");
-		final ReportingRepository reportingRepository = new ReportingRepository(conn);
-
-		logger.logLn("Erzeuge Datenkontext Schule");
-		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(reportingRepository);
-		mapHtmlContexts.put("Schule", htmlContextSchule);
-
-		logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben.".formatted(idsSchueler.size()));
-		if (!idsSchueler.isEmpty()) {
-			// Validiere die Daten der Schüler und speichere bereits gewonnene Daten aus der DB im Repository.
-			reportingValidierung.validiereSchuelerDaten(reportingRepository, idsSchueler, ladeSchuelerMitGostDaten, ladeSchuelerMitAbiturDaten, true);
-			final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository, idsSchueler);
-			mapHtmlContexts.put("Schueler", htmlContextSchueler);
-		} else {
-			if (supportedSchuelerTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
-				throw OperationError.NOT_FOUND.exception("Keine für die Erstellung der PDF-Datei notwendigen Schüler angegeben.");
-			}
-		}
-
-		if (idBlockungsergebnis != null) {
-			logger.logLn("Erzeuge Datenkontext Blockungsergebnis für Erg.-ID " +  idBlockungsergebnis);
-			final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, idBlockungsergebnis, filterSchueler, idsSchueler, filterKurse, idsKurse);
-			mapHtmlContexts.put("Blockungsergebnis", htmlContextBlockung);
-		} else {
-			if (supportedGostKursplanungTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
-				throw OperationError.NOT_FOUND.exception("Kein für die Erstellung der PDF-Datei notwendiges Blockungsergebnis angegeben.");
-			}
-		}
-
-		// Einzelne Variablen für den finalen html-Daten-Context sammeln
-		logger.logLn("Füge Parameter für den Druck hinzu.");
-		final Map<String, Object> variables = new HashMap<>();
-		variables.put("parameterDetailLevel", parameterDetailLevel);
-
 		final List<PdfBuilder> pdfBuilders = new ArrayList<>();
 
-		if (erzeugeEinzelPdfs && !idsSchueler.isEmpty()) {
+		if (einzelausgabeHauptdaten && (mapHtmlContexts.containsKey("Schueler") && !(((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getSchueler().isEmpty()))) {
 			logger.logLn("Erzeuge einzelne Kontexte für jeden Schüler, da Einzel-PDFs angefordert wurden.");
 			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
 			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelSchuelerContexts();
@@ -312,7 +244,7 @@ public final class PdfFactory {
 
 				// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
 				logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html für die PDF-Dateien.".formatted(dateipfadHtmlTemplate));
-				final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList(), variables);
+				final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList());
 				final String html = htmlBuilder.getHtml();
 
 				logger.logLn("Erzeuge PDF-Builder mit finalem html für die PDF-Dateien");
@@ -325,7 +257,7 @@ public final class PdfFactory {
 
 			// html-Builder erstellen und damit das html mit Daten für die PDF-Datei erzeugen
 			logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html für die PDF-Datei.".formatted(dateipfadHtmlTemplate));
-			final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList(), variables);
+			final HtmlBuilder htmlBuilder = new HtmlBuilder(dateipfadHtmlTemplate, mapHtmlContexts.values().stream().toList());
 			final String html = htmlBuilder.getHtml();
 
 			logger.logLn("Erzeuge PDF-Builder mit finalem html für die PDF-Datei.");
@@ -334,58 +266,6 @@ public final class PdfFactory {
 
 		return pdfBuilders;
 	}
-
-
-	/** Setze intern die verschiedenen Parameter für die Erstellung der PDF-Datei auf Basis des html-Template-Namens. */
-	private void setReportDatenEinstellungen() {
-
-		switch (dateinameHtmlTemplate) {
-			case "APOGOStAnlage12.html" :
-				if (idsDruckdaten.isEmpty())
-					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
-				this.idsSchueler = idsDruckdaten;
-				this.ladeSchuelerMitGostDaten = false;
-				this.ladeSchuelerMitAbiturDaten = true;
-				break;
-			case "GostLaufbahnplanungWahlbogen.html", "GostLaufbahnplanungErgebnisuebersicht.html" :
-				if (idsDruckdaten.isEmpty())
-					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
-				this.idsSchueler = idsDruckdaten;
-				this.ladeSchuelerMitGostDaten = true;
-				this.ladeSchuelerMitAbiturDaten = false;
-				break;
-			case "GostKursplanungSchuelerMitSchienenKursen.html" :
-				if (idDruckdaten < 0)
-					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
-				idBlockungsergebnis = idDruckdaten;
-				filterKurse = false;
-				filterSchueler = true;
-				idsKurse = new ArrayList<>();
-				idsSchueler = idsFilterdaten;
-				break;
-			case "GostKursplanungSchuelerMitKursen.html" :
-				if (idDruckdaten < 0)
-					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
-				idBlockungsergebnis = idDruckdaten;
-				filterKurse = false;
-				filterSchueler = !(idsFilterdaten == null || idsFilterdaten.isEmpty());
-				idsKurse = new ArrayList<>();
-				idsSchueler = idsFilterdaten;
-				break;
-			case "GostKursplanungKursMitKursschuelern.html" :
-				if (idDruckdaten < 0)
-					throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
-				idBlockungsergebnis = idDruckdaten;
-				filterKurse = !(idsFilterdaten == null || idsFilterdaten.isEmpty());
-				filterSchueler = false;
-				idsKurse = idsFilterdaten;
-				idsSchueler = new ArrayList<>();
-				break;
-			default :
-				throw OperationError.NOT_FOUND.exception("Die übergebene html-Vorlage konnte nicht in den bekannten Vorlagen gefunden werden.");
-		}
-	}
-
 
 
 	/** Erstellt den Dateinamen der Pdf-Datei auf Basis des html-Templates und evtl. der übergebenen Daten
@@ -499,4 +379,82 @@ public final class PdfFactory {
 	}
 
 
+
+	/**
+	 * Erstellt eine ZIP-Datei, die alle PDF-Dateien der übergebenen PDF-Builder enthält.
+	 * @param pdfBuilders Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
+	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
+	 */
+	private byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws WebApplicationException {
+		final byte[] zipData;
+		try {
+			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+					for (final PdfBuilder pdfBuilder : pdfBuilders) {
+						zos.putNextEntry(new ZipEntry(pdfBuilder.getPdfDateiname()));
+						zos.write(pdfBuilder.getPdfByteArray());
+						zos.closeEntry();
+					}
+					baos.flush();
+				}
+				zipData = baos.toByteArray();
+			}
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die erzeugten PDF-Dateien konnten nicht als ZIP-Datei zusammengestellt werden.");
+		}
+		return zipData;
+	}
+
+
+
+	/**
+	 *  Erzeugt eine Fehlerausgabe im Logger und eine SimpleOperationResponse mit den Fehlerinformationen
+	 * @param e Die aufgetretene Exception
+	 * @return Die Response mit der Fehlerdaten.
+	 */
+	private Response errorResponse(final Exception e) {
+		String htmlTemplate = "";
+		String webAppExBody = "";
+
+		logger.logLn("###  FEHLER  ####################################");
+
+		if (e instanceof TemplateProcessingException tPE) {
+			// Wenn ein Fehler in der Template-Verarbeitung auftritt, speichere das verwendete html-Template für einen späteren Log-Eintrag.
+			htmlTemplate = tPE.getTemplateName();
+		}
+
+		// Sammle alle Fehlerursachen im Log.
+		for (Throwable cause = e; cause != null; cause = cause.getCause()) {
+			String message = cause.getMessage();
+			// Entferne das html-Template, falls es in der Message enthalten ist.
+			if (e instanceof TemplateProcessingException && !htmlTemplate.isEmpty())
+				message = message.replace("(template: \"" + htmlTemplate + "\"", "(");
+			logger.logLn(4, message);
+		}
+
+		// Hänge das html-Template als weiteren Eintrag hinten an, wenn ein Fehler bei der Template-Verarbeitung aufgetreten ist.
+		if (e instanceof TemplateProcessingException && !htmlTemplate.isEmpty()) {
+			logger.logLn(0, "");
+			logger.logLn(0, "###  Verwendetes html-Template  #################");
+			logger.logLn(0, htmlTemplate);
+		}
+
+		// Erstelle eine SimpleOperationResponse mit dem Log zum Fehler und gebe diese zurück.
+		SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
+		simpleOperationResponse.success = false;
+		simpleOperationResponse.log = log.getStrings();
+
+		int code = OperationError.INTERNAL_SERVER_ERROR.getCode();
+		if (e instanceof WebApplicationException wAE) {
+			code = wAE.getResponse().getStatus();
+			// Wenn eine WebApplicationException auftritt, gebe den Body der Response als Text aus.
+			webAppExBody = wAE.getResponse().readEntity(String.class);
+			if (webAppExBody != null)
+				logger.logLn(4, "WebApplicationException - Code: %d - Message: %s".formatted(wAE.getResponse().getStatus(), webAppExBody));
+			else
+				logger.logLn(4, "WebApplicationException - Code: %d".formatted(wAE.getResponse().getStatus()));
+		}
+
+		return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();
+	}
 }

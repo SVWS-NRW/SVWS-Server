@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
@@ -22,30 +23,37 @@ import java.util.stream.Collectors;
 
 
 /**
- * Ein ThymeLeaf-Html-Daten-Context zum Bereich "Laufbahnplanung", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
+ * Ein ThymeLeaf-Html-Daten-Context zum Bereich "Schüler", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
  */
 public final class HtmlContextSchueler extends HtmlContext {
 
-	/**
-	 * Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht.
-	 */
+	/** Repository für die Reporting. */
+	@JsonIgnore
+	private final ReportingRepository reportingRepository;
+
+
+	/** Liste, die die im Context ermitteln Daten speichert und den Zugriff auf die Daten abseits des html-Templates ermöglicht. */
+	@JsonIgnore
 	private ArrayList<ReportingSchueler> schueler = new ArrayList<>();
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
+	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 */
-	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler) {
-		erzeugeContext(reportingSchueler);
+	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler, final ReportingRepository reportingRepository) {
+        this.reportingRepository = reportingRepository;
+        erzeugeContextFromSchueler(reportingSchueler);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 * @param schuelerIDs			Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 * @param idsSchueler			Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> schuelerIDs) {
-		erzeugeContext(reportingRepository, schuelerIDs);
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler) {
+		this.reportingRepository = reportingRepository;
+		erzeugeContextFromIds(idsSchueler);
 	}
 
 
@@ -53,7 +61,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	 * Erzeugt den Context zum Füllen eines html-Templates.
 	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
 	 */
-	private void erzeugeContext(final List<ReportingSchueler> reportingSchueler) throws WebApplicationException {
+	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) throws WebApplicationException {
 
 		if (reportingSchueler == null || reportingSchueler.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Schueler übergeben.");
@@ -77,12 +85,11 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
-	private void erzeugeContext(final ReportingRepository reportingRepository, final List<Long> idsSchueler) throws WebApplicationException {
+	private void erzeugeContextFromIds(final List<Long> idsSchueler) throws WebApplicationException {
 
-		final DBEntityManager conn = reportingRepository.conn();
+		final DBEntityManager conn = this.reportingRepository.conn();
 
 		if (conn == null)
 			throw OperationError.NOT_FOUND.exception("Keine Datenbankverbindung übergeben.");
@@ -99,8 +106,11 @@ public final class HtmlContextSchueler extends HtmlContext {
 			else
 				fehlendeSchueler.add(idSchueler);
 		}
-		if (!fehlendeSchueler.isEmpty())
-			mapSchueler.putAll(DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s)));
+		if (!fehlendeSchueler.isEmpty()) {
+			final List<SchuelerStammdaten> fehlendeSchuelerStammdaten = DataSchuelerStammdaten.getListStammdaten(reportingRepository.conn(), fehlendeSchueler);
+			fehlendeSchuelerStammdaten.forEach(s -> this.reportingRepository.mapSchuelerStammdaten().putIfAbsent(s.id, s));
+			mapSchueler.putAll(fehlendeSchuelerStammdaten.stream().collect(Collectors.toMap(s -> s.id, s -> s)));
+		}
 
 		// Die Schüler bzw. ihre IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe sollten
 		// sie aber in alphabetischer Reihenfolge der Schüler sein.
@@ -147,7 +157,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		for (final ReportingSchueler reportingSchueler : schueler) {
 			final List<ReportingSchueler> einSchueler = new ArrayList<>();
 			einSchueler.add(reportingSchueler);
-			resultContexts.add(new HtmlContextSchueler(einSchueler));
+			resultContexts.add(new HtmlContextSchueler(einSchueler, this.reportingRepository));
 		}
 
 		return resultContexts;

@@ -6,10 +6,9 @@ import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.reporting.html.base.HtmlContext;
 import de.svws_nrw.module.reporting.proxytypes.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import jakarta.ws.rs.WebApplicationException;
 import org.thymeleaf.context.Context;
-
-import java.util.List;
 
 
 /**
@@ -22,13 +21,9 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 *
 	 * @param conn         			Datenbank-Verbindung
 	 * @param idBlockungsergebnis	ID des Blockungsergebnisses, aus der Context erstellt werden soll.
-	 * @param filterSchueler 		Legt fest, ob im Blockungsergebnis eine zusätzliche gefilterte Liste der Schüler erzeugt werden soll.
-	 * @param filterIdsSchueler 	Liste von Schüler-IDs zur Filterung.
-	 * @param filterKurse 			Legt fest, ob im Blockungsergebnis eine zusätzliche gefilterte Liste der Kurse erzeugt werden soll.
-	 * @param filterIdsKurse	 	Liste von Kurs-IDs zur Filterung.
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnis(final DBEntityManager conn, final Long idBlockungsergebnis, final boolean filterSchueler, final List<Long> filterIdsSchueler, final boolean filterKurse, final List<Long> filterIdsKurse) {
-		erzeugeContext(conn, idBlockungsergebnis, filterSchueler, filterIdsSchueler, filterKurse, filterIdsKurse);
+	public HtmlContextGostKursplanungBlockungsergebnis(final DBEntityManager conn, final Long idBlockungsergebnis) {
+		erzeugeContext(conn, idBlockungsergebnis);
 	}
 
 	/**
@@ -36,12 +31,8 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 *
 	 * @param conn         			Datenbank-Verbindung
 	 * @param idBlockungsergebnis	ID des Blockungsergebnisses, aus dem der Context erstellt werden soll.
-	 * @param filterSchueler 		Legt fest, ob im Blockungsergebnis eine zusätzliche gefilterte Liste der Schüler erzeugt werden soll.
-	 * @param filterIdsSchueler 	Liste von Schüler-IDs zur Filterung.
-	 * @param filterKurse 			Legt fest, ob im Blockungsergebnis eine zusätzliche gefilterte Liste der Kurse erzeugt werden soll.
-	 * @param filterIdsKurse	 	Liste von Kurs-IDs zur Filterung.
 	 */
-	private void erzeugeContext(final DBEntityManager conn, final Long idBlockungsergebnis, final boolean filterSchueler, final List<Long> filterIdsSchueler, final boolean filterKurse, final List<Long> filterIdsKurse) throws WebApplicationException {
+	private void erzeugeContext(final DBEntityManager conn, final Long idBlockungsergebnis) throws WebApplicationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 
@@ -59,11 +50,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 		}
 
 		final ReportingRepository reportingRepository = new ReportingRepository(conn);
-		final ProxyReportingGostKursplanungBlockungsergebnis blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, idBlockungsergebnis);
-		blockungsergebnis.setFilterIdsSchueler(filterIdsSchueler);
-		blockungsergebnis.setFilterSchueler(filterSchueler);
-		blockungsergebnis.setFilterIdsKurse(filterIdsKurse);
-		blockungsergebnis.setFilterKurse(filterKurse);
+		final ReportingGostKursplanungBlockungsergebnis blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, idBlockungsergebnis);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

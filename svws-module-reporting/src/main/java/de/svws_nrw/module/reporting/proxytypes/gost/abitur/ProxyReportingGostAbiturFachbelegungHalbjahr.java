@@ -71,7 +71,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
 	 */
-	public ReportingRepository reportingRepositorySchule() {
+	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
 

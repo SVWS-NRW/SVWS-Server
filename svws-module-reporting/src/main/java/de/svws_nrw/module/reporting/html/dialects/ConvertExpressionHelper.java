@@ -12,12 +12,12 @@ import java.util.Date;
  * Die Klasse stellt Hilfsmethoden zur Datumsverarbeitung zur Verfügung, die über einen Thymeleaf-Dialect
  * und dessen ExpressionFactory in HTML-Templates verwendet werden können.
  */
-public class SVWSDateExpressionHelper {
+public class ConvertExpressionHelper {
 
 	/**
 	 * Erstellt einen neuen SVWSDateExpressionHelper
 	 */
-	public SVWSDateExpressionHelper() {
+	public ConvertExpressionHelper() {
 		// leerer Konstruktor, um diesen mit einem JavaDoc-Kommentar versehen zu können.
 	}
 
@@ -36,7 +36,7 @@ public class SVWSDateExpressionHelper {
 	 * @param dateISO8601		Der String, der das im ISO-Format yyyy-MM-dd vorliegende Datum enthält.
 	 * @return					Das übergebene Datum im deutschen Format.
 	 */
-	public String toDE(final String dateISO8601) {
+	public String toDateDE(final String dateISO8601) {
 		if (dateISO8601 == null || dateISO8601.isEmpty())
 			return "";
 		try {
@@ -51,7 +51,7 @@ public class SVWSDateExpressionHelper {
 	 * @param dateISO8601		Der String, der das im ISO-Format yyyy-MM-dd vorliegende Datum enthält.
 	 * @return					Das übergebene Datum im deutschen Format mit ausgeschriebenem Monat.
 	 */
-	public String toDELang(final String dateISO8601) {
+	public String toDateDELong(final String dateISO8601) {
 		if (dateISO8601 == null || dateISO8601.isEmpty())
 			return "";
 		try {

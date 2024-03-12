@@ -125,7 +125,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
 	 */
-	public ReportingRepository reportingRepositorySchule() {
+	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
 
@@ -202,7 +202,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
 		if (super.schuljahresabschnitt() == null && super.idSchuljahresabschnitt()  >= 0) {
 			super.setSchuljahresabschnitt(
-				new ProxyReportingSchuljahresabschnitt(reportingRepositorySchule().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt())));
+				new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt())));
 		}
 		return super.schuljahresabschnitt();
 	}

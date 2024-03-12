@@ -126,7 +126,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
 	 */
-	public ReportingRepository reportingRepositorySchule() {
+	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
 
@@ -197,7 +197,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte().isEmpty()) {
-			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new DataSchuelerLernabschnittsdaten(this.reportingRepositorySchule().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true);
+			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true);
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
 			if (schuelerLernabschnittsdaten.isEmpty())
 				return super.lernabschnitte();

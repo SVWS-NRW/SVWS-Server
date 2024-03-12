@@ -7,13 +7,13 @@ import org.thymeleaf.expression.IExpressionObjectFactory;
 /**
  * Ein Dialect des SVWS-Servers für Thymeleaf um Datumsmethoden zur Verfügung zu stellen.
  */
-public class SVWSDateExpressionDialect extends AbstractDialect implements IExpressionObjectDialect {
+public class ConvertExpressionDialect extends AbstractDialect implements IExpressionObjectDialect {
 
 	/**
 	 * Ein Dialect für Thymeleaf, um SVWS spezifische Funktionen zum Datum zu implementieren.
 	 */
-	public SVWSDateExpressionDialect() {
-		super("svwsDate");
+	public ConvertExpressionDialect() {
+		super("convert");
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class SVWSDateExpressionDialect extends AbstractDialect implements IExpre
 	 */
 	@Override
 	public IExpressionObjectFactory getExpressionObjectFactory() {
-		return new SVWSDateExpressionFactory();
+		return new ConvertExpressionFactory();
 	}
 
 }

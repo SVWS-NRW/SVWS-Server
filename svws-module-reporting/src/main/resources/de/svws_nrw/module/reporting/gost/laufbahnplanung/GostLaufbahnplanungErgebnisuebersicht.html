@@ -69,14 +69,14 @@
 				</tr>
 				<tr class="tc-grey ta-c" style="font-size: 7pt;">
 					<td></td>
-					<td class="ta-l" th:with="beratungsdatum = ${#svwsDate.toDE(schueler.gostLaufbahnplanung().letzteBeratungDatum())}" th:text="'Beratungsdatum: ' + ${#strings.isEmpty(beratungsdatum) ? '-----' : beratungsdatum}">Beratungsdatum: 16.05.2022</td>
+					<td class="ta-l" th:with="beratungsdatum = ${#convert.toDateDE(schueler.gostLaufbahnplanung().letzteBeratungDatum())}" th:text="'Beratungsdatum: ' + ${#strings.isEmpty(beratungsdatum) ? '-----' : beratungsdatum}">Beratungsdatum: 16.05.2022</td>
 					<td colspan="7">anrechenbare Kurse</td>
 					<td></td>
 					<td colspan="9">Wochenstunden (gesamt und Durchschnitt EF + QPh)</td>
 					<td></td>
 					<td>Fehler</td>
 				</tr>
-				<tr th:if="${(parameterDetailLevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
+				<tr th:if="${(DruckparameterDetaillevel >= 1) && !(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Fehler und Kommentare zur Gesamtlaufbahn:</u></p>
 						<ul th:if="${!(#strings.isEmpty(schueler.gostLaufbahnplanung().kommentar()) && #lists.isEmpty(schueler.gostLaufbahnplanung().fehler()))}">
@@ -86,7 +86,7 @@
 					</td>
 					<td></td>
 				</tr>
-				<tr th:if="${parameterDetailLevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
+				<tr th:if="${DruckparameterDetaillevel >= 2 && !#lists.isEmpty(schueler.gostLaufbahnplanung().hinweise())}">
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 						<ul>

@@ -14,7 +14,6 @@ public final class HtmlContextSchule extends HtmlContext {
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
-	 *
 	 * @param reportingRepository	Das Repository der Schuldatenbank.
 	 */
 	public HtmlContextSchule(final ReportingRepository reportingRepository) {
@@ -24,7 +23,6 @@ public final class HtmlContextSchule extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 *
 	 *  @param reportingRepository	Das Repository der Schuldatenbank.
 	 */
 	private void erzeugeContext(final ReportingRepository reportingRepository) {

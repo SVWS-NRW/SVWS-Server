@@ -8,12 +8,12 @@ import java.util.Set;
 /**
  * Klasse für eine Expression in Thymeleaf zur Ergänzung von Datumsfunktionen aus dem SVWS-Server
  */
-public class SVWSDateExpressionFactory implements IExpressionObjectFactory {
+public class ConvertExpressionFactory implements IExpressionObjectFactory {
 
 	/**
 	 * Name der Expression
 	 */
-	private static final String expressionName = "svwsDate";
+	private static final String expressionName = "convert";
 
 	/**
 	 * Liste, die alle Expression-Namen dieser Klasse enthält
@@ -23,7 +23,7 @@ public class SVWSDateExpressionFactory implements IExpressionObjectFactory {
 	/**
 	 * Erstellt einen neue SVWSDateExpressionFactory
 	 */
-	public SVWSDateExpressionFactory() {
+	public ConvertExpressionFactory() {
 		// leerer Konstruktor, um diesen mit einem JavaDoc-Kommentar versehen zu können.
 	}
 
@@ -45,7 +45,7 @@ public class SVWSDateExpressionFactory implements IExpressionObjectFactory {
 	@Override
 	public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
 		if (expressionName.equals(expressionObjectName)) {
-			return new SVWSDateExpressionHelper();
+			return new ConvertExpressionHelper();
 		}
 		return null;
 	}

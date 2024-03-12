@@ -7,7 +7,7 @@
 	</head>
 
 	<body>
-		<div th:switch="${Blockungsergebnis.schuelerGefiltert().size()}">
+		<div th:switch="${DruckparameterIdsListe.size()}">
 			<div th:case="0">
 				<div th:with="zeigeExtDummy = ${(Blockungsergebnis.anzahlExterne() > 0 || Blockungsergebnis.anzahlDummy() > 0)}">
 
@@ -62,7 +62,8 @@
 			<div th:case="*">
 				<div class="start-new-page"
 					th:with="zeigeExtDummy = ${(Blockungsergebnis.anzahlExterne() > 0 || Blockungsergebnis.anzahlDummy() > 0)}"
-					th:each="schueler,iterStatSchueler : ${Blockungsergebnis.schuelerGefiltert()}">
+					th:each="schueler,iterStatSchueler : ${Blockungsergebnis.schueler()}"
+					th:if="${DruckparameterIdsListe.contains(schueler.id())}">
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>

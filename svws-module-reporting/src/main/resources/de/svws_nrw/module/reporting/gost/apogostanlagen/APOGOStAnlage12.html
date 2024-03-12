@@ -37,7 +37,7 @@
 								<td style="width: 100%; height: 5mm" class="ta-ct pad-4l pad-4r" th:text="${'(' + schueler.religion().textZeugnis + ')'}">(Konfession)</td>
 							</tr>
 							<tr>
-								<td style="width: 100%; height: 15mm; font-size: 12pt; " class="ta-cb" th:text="${'geboren am ' + #svwsDate.toDELang(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
+								<td style="width: 100%; height: 15mm; font-size: 12pt; " class="ta-cb" th:text="${'geboren am ' + #convert.toDateDELong(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
 							</tr>
 							<tr>
 								<td style="width: 100%; height: 13mm; font-size: 12pt; " class="ta-cb" th:text="${'wohnhaft in ' + schueler.geburtsort()}">wohnhaft in Musterstadt am Rhein</td>
