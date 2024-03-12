@@ -144,13 +144,13 @@
 
 	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
+	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
 	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
 	import { DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
-	const props = defineProps<GostUmwahlansichtProps>();
+	const props = defineProps<GostKursplanungUmwahlansichtProps>();
 
 	const idSchueler = computed<number>(() => props.schueler === undefined ? -1 : props.schueler.id);
 

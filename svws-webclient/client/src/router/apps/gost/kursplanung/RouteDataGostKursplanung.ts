@@ -636,7 +636,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const update = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler, false);
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
-			return true;
+			return;
 		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
 		update.regelUpdates.listEntfernen = regelUpdates;
 		this.ergebnismanager.kursSchuelerUpdateExecute(update);

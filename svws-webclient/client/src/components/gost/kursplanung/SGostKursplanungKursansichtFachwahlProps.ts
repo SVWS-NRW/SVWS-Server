@@ -1,6 +1,7 @@
 import type { ComputedRef } from "vue";
-import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-import type { GostBlockungsergebnisSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
+import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+import type { GostBlockungsergebnisSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate,  GostBlockungsdatenManager,
+	GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostKursart, GostStatistikFachwahl, JavaSet, LehrerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SGostKursplanungKursansichtFachwahlProps {

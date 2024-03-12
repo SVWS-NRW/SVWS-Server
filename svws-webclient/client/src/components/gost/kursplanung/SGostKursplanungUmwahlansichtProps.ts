@@ -1,7 +1,7 @@
 import type { GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, SchuelerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
-export interface GostUmwahlansichtProps {
+export interface GostKursplanungUmwahlansichtProps {
 	hatBlockung: boolean,
 	hatErgebnis: boolean,
 	regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;

@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
+import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
@@ -13,13 +13,13 @@ import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/g
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 
-const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
+const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
 
 export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
@@ -129,13 +129,13 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): GostUmwahlansichtProps {
+	public getProps(to: RouteLocationNormalized): GostKursplanungUmwahlansichtProps {
 		return {
 			hatBlockung: routeGostKursplanung.data.hatBlockung && routeGostKursplanung.data.hatErgebnis,
 			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			regelnUpdate: routeGostKursplanung.data.regelnUpdate,
 			updateKursSchuelerZuordnungen: routeGostKursplanung.data.updateKursSchuelerZuordnungen,
-			autoKursSchuelerZuordnung:  routeGostKursplanung.data.autoKursSchuelerZuordnung,
+			autoKursSchuelerZuordnung: routeGostKursplanung.data.autoKursSchuelerZuordnung,
 			gotoSchueler: this.gotoSchuelerIndividualdaten,
 			gotoLaufbahnplanung: this.gotoLaufbahnplanung,
 			getDatenmanager: () => routeGostKursplanung.data.datenmanager,

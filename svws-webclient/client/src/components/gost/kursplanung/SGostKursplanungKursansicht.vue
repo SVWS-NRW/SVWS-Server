@@ -107,8 +107,8 @@
 					<!--Schienen-->
 					<template v-if="allowRegeln">
 						<template v-for="(schiene, index) in schienen" :key="schiene.id">
-							<div @dragover="if (istDropZoneSchiene(schiene).value) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
-								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene).value, 'svws-divider': index + 1 < schienen.size() }">
+							<div @dragover="if (istDropZoneSchiene(schiene)) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
+								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene), 'svws-divider': index + 1 < schienen.size() }">
 								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none cursor-pointer text-center" :class="{'cursor-grabbing': dragSperreSchiene !== undefined}" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem] cursor-grab">
 										<span class="icon-sm inline-block i-ri-draggable -ml-0.5 opacity-25 group-hover:opacity-100" />
@@ -128,7 +128,7 @@
 
 			<template #body>
 				<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
-					<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart).value"
+					<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)"
 						:fachwahlen="fachwahl.fachwahlen" :kursart="fachwahl.kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
 						:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 						:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
@@ -195,12 +195,7 @@
 
 	const edit_schienenname = ref<number|undefined>(undefined);
 
-	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) => computed<boolean>(() => {
-		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
-		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
-	});
-
-	const kurse = computed(() => props.kurssortierung.value === 'fach'
+	const kurse = computed(() => (props.kurssortierung.value === 'fach')
 		? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
 		: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer())
 
@@ -208,7 +203,7 @@
 
 	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
-	function calculateColumns() {
+	const cols = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
 		if (allowRegeln.value)
@@ -221,9 +216,7 @@
 		for (let i = 0; i < schienen.value.size(); i++)
 			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3.75, align: 'center' });
 		return cols;
-	}
-
-	const cols = computed(() => calculateColumns());
+	});
 
 	const kursdetailAnzeigen = ref<number | undefined>(undefined);
 	const setKursdetailAnzeigen = (value: number|undefined) => kursdetailAnzeigen.value = kursdetailAnzeigen.value === value ? undefined : value;
@@ -253,6 +246,39 @@
 		return result;
 	});
 
+	const fachwahlenAnzahl = computed<Map<{ fachwahlen: GostStatistikFachwahl, kursart: GostKursart }, number>>(() => {
+		const result = new Map<{ fachwahlen: GostStatistikFachwahl, kursart: GostKursart }, number>();
+		for (const fachwahlen of props.mapFachwahlStatistik().values()) {
+			for (const kursart of GostKursart.values()) {
+				let anzahl = 0;
+				const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
+				const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
+				if (gostfach !== null) {
+					const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
+					switch (kursart) {
+						case GostKursart.LK: { anzahl = fach_halbjahr.wahlenLK; break; }
+						case GostKursart.GK: { anzahl = (zulFach === ZulaessigesFach.PX) || (zulFach === ZulaessigesFach.VX) ? 0 : fach_halbjahr.wahlenGK; break; }
+						case GostKursart.ZK: { anzahl = fach_halbjahr.wahlenZK; break; }
+						case GostKursart.PJK: { anzahl = (zulFach === ZulaessigesFach.PX) ? fach_halbjahr.wahlenGK : 0; break; }
+						case GostKursart.VTF: { anzahl = (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0; break; }
+					}
+				}
+				result.set({ fachwahlen, kursart }, anzahl);
+			}
+		}
+		return result;
+	});
+
+	function getAnzahlFachwahlen(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : number {
+		const anzahl = fachwahlenAnzahl.value.get({ fachwahlen, kursart });
+		return (anzahl === undefined) ? 0 : anzahl;
+	}
+
+	function istFachwahlVorhanden(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : boolean {
+		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
+		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
+	}
+
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
 		if (!props.hatErgebnis)
 			return false;
@@ -279,13 +305,11 @@
 	}
 
 	async function add_schiene() {
-		// TODO: Update cols value mit neuer Anzahl von Schienen
 		if (!props.apiStatus.pending)
 			return await props.addSchiene();
 	}
 
 	async function del_schiene(schiene: GostBlockungSchiene) {
-		// TODO: Update cols value mit neuer Anzahl von Schienen
 		if (!props.apiStatus.pending)
 			return await props.removeSchiene(schiene);
 	}
@@ -293,29 +317,13 @@
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	function getAnzahlFachwahlen(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : number {
-		const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
-		const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
-		if (gostfach === null)
-			return 0;
-		const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
-		switch (kursart) {
-			case GostKursart.LK: return fach_halbjahr.wahlenLK;
-			case GostKursart.GK: return (zulFach === ZulaessigesFach.PX) || (zulFach === ZulaessigesFach.VX) ? 0 : fach_halbjahr.wahlenGK;
-			case GostKursart.ZK: return fach_halbjahr.wahlenZK;
-			case GostKursart.PJK: return (zulFach === ZulaessigesFach.PX) ? fach_halbjahr.wahlenGK : 0;
-			case GostKursart.VTF: return (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0;
-			default: return 0;
-		}
-	}
-
 	const dragSperreSchiene = ref<GostBlockungSchiene | undefined>(undefined);
 
 	const modalRegelKursartSchienen = ref();
 
-	const istDropZoneSchiene = (schiene: GostBlockungSchiene) => computed<boolean>(() => {
+	function istDropZoneSchiene(schiene: GostBlockungSchiene) : boolean {
 		return (dragSperreSchiene.value !== undefined && (dragSperreSchiene.value.id !== schiene.id));
-	});
+	}
 
 	function openModalRegelKursartSchiene(schiene: GostBlockungSchiene) {
 		const andereSchiene = (dragSperreSchiene.value === undefined) ? schiene : dragSperreSchiene.value;
@@ -330,7 +338,6 @@
 		dragSperreSchiene.value = undefined;
 	}
 
-	const modal_regel_kurse = ref();
 	const modal_combine_kurse = ref();
 
 	/**
@@ -339,15 +346,15 @@
 	 *
 	 **/
 
-	const dragKurs 				=	ref<GostBlockungKurs|null>(null);
-	const dragSchiene 		= ref<GostBlockungSchiene|null>(null);
-	const dragOverKurs 		= ref<GostBlockungKurs|null>(null);
+	const dragKurs = ref<GostBlockungKurs|null>(null);
+	const dragSchiene  = ref<GostBlockungSchiene|null>(null);
+	const dragOverKurs = ref<GostBlockungKurs|null>(null);
 	const dragOverSchiene = ref<GostBlockungSchiene|null>(null);
-	const dropKurs 				=	ref<GostBlockungKurs|null>(null);
-	const dropSchiene 		= ref<GostBlockungSchiene|null>(null);
-	const dropKurs2				= ref<GostBlockungKurs|null>(null);
-	const dropSchiene2 		= ref<GostBlockungSchiene|null>(null);
-	const showTooltip 		= ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
+	const dropKurs  = ref<GostBlockungKurs|null>(null);
+	const dropSchiene  = ref<GostBlockungSchiene|null>(null);
+	const dropKurs2 = ref<GostBlockungKurs|null>(null);
+	const dropSchiene2 = ref<GostBlockungSchiene|null>(null);
+	const showTooltip = ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
 	const kurseUndSchienenInRechteck = ref<[JavaSet<number>, JavaSet<number>, JavaSet<number>|null] | null>(null);
 
 	/** ist das Drag-Objekt ein Kurs, der auf der Schiene liegt? */

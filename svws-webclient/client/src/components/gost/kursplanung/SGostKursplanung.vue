@@ -25,30 +25,30 @@
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
-						<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
 								<span class="icon-sm i-ri-arrow-right-circle-line" /> Übertragen
 							</svws-ui-button>
-						</s-card-gost-kursansicht-blockung-aktivieren-modal>
-						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						</s-gost-kursplanung-kursansicht-modal-blockung-aktivieren>
+						<s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Gleicht die Daten dieses Blockungsergebnisses mit den Daten der Kurstabelle und den Leistungsdaten der Schüler ab. Dabei werden ggf. nicht vorhandene Kurs in der Kurstabelle angelegt und die Kurs-Schienen-Zuordnung angepasst. Leere Kurse werden nicht entfernt. Außerdem wird die Kurs-Schüler-Zuordnung in den Leistungsdaten des Schüler aktualisiert. Neue Fächer werden in den Leistungsdaten dabei allerdings nicht hinzugefügt.">
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
-						</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
-						<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
+						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
 								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
 							</svws-ui-button>
-						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+						</s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben>
 					</div>
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
-						<s-card-gost-kursansicht-irrlaeufer-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :get-ergebnismanager="getErgebnismanager" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :get-ergebnismanager="getErgebnismanager" v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 								<span class="icon-sm icon-error i-ri-error-warning-line" /> Ungültige Kurszuordnungen
 							</svws-ui-button>
-						</s-card-gost-kursansicht-irrlaeufer-modal>
+						</s-gost-kursplanung-kursansicht-modal-irrlaeufer>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
 							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus"
@@ -92,7 +92,7 @@
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
-			<s-card-gost-kursansicht :zeige-schienenbezeichnungen="zeigeSchienenbezeichnungen" :set-zeige-schienenbezeichnungen="setZeigeSchienenbezeichnungen"
+			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen="zeigeSchienenbezeichnungen" :set-zeige-schienenbezeichnungen="setZeigeSchienenbezeichnungen"
 				:halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
@@ -113,7 +113,7 @@
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
-						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler" :regeln-update="regelnUpdate" :get-ergebnismanager="getErgebnismanager" :api-status="apiStatus" />
+						<s-gost-kursplanung-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler" :regeln-update="regelnUpdate" :get-ergebnismanager="getErgebnismanager" :api-status="apiStatus" />
 					</div>
 				</aside>
 			</Teleport>
