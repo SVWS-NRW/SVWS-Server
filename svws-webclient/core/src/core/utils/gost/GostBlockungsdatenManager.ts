@@ -281,9 +281,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
 		if (kurs === null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
-		const gKursart : GostKursart | null = GostKursart.fromIDorNull(kurs.kursart);
-		const sKursart : string = (gKursart === null) ? "Kursart-ID = " + kurs.kursart + " (ohne Mapping)" : gKursart.kuerzel;
-		return this.toStringFachSimple(kurs.fach_id)! + "-" + sKursart! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
+		return this.toStringFachSimple(kurs.fach_id)! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
 	}
 
 	/**

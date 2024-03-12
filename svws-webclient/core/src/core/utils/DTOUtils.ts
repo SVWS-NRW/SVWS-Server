@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene } from '../../core/data/gost/GostBlockungsergebnisSchiene';
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+import { GostBlockungsergebnisKurs } from '../../core/data/gost/GostBlockungsergebnisKurs';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 
 export class DTOUtils extends JavaObject {
@@ -52,6 +53,24 @@ export class DTOUtils extends JavaObject {
 		const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 		eSchiene.id = idSchiene;
 		return eSchiene;
+	}
+
+	/**
+	 * Liefert ein neues {@link GostBlockungsergebnisKurs}-Objekt.
+	 * @param idKurs          Die Datenbank-ID des Kurses.
+	 * @param idFach          Die Datenbank-ID des Faches.
+	 * @param idKursart       Die ID der Kursart.
+	 * @param anzahlSchienen  Die Anzahl an Schienen, die der Kurs belegt.
+	 *
+	 * @return ein neues {@link GostBlockungsergebnisKurs}-Objekt.
+	 */
+	public static newGostBlockungsergebnisKurs(idKurs : number, idFach : number, idKursart : number, anzahlSchienen : number) : GostBlockungsergebnisKurs {
+		const eKurs : GostBlockungsergebnisKurs = new GostBlockungsergebnisKurs();
+		eKurs.id = idKurs;
+		eKurs.fachID = idFach;
+		eKurs.kursart = idKursart;
+		eKurs.anzahlSchienen = anzahlSchienen;
+		return eKurs;
 	}
 
 	/**

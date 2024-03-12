@@ -222,10 +222,7 @@ public class GostBlockungsdatenManager {
 		if (kurs == null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
 
-		final GostKursart gKursart = GostKursart.fromIDorNull(kurs.kursart);
-		final @NotNull String sKursart = (gKursart == null) ? "Kursart-ID = " + kurs.kursart + " (ohne Mapping)" : gKursart.kuerzel;
-
-		return toStringFachSimple(kurs.fach_id) + "-" + sKursart + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
+		return toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
 	}
 
 	/**

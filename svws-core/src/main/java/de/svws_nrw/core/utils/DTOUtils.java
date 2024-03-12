@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils;
 
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
+import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
@@ -55,12 +56,29 @@ public final class DTOUtils {
      * @param idSchiene  Die Datenbank-ID der Schiene.
      *
      * @return ein neues {@link GostBlockungsergebnisSchiene}-Objekt.
-     *
      */
     public static @NotNull GostBlockungsergebnisSchiene newGostBlockungsergebnisSchiene(final long idSchiene) {
 		final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
 		eSchiene.id = idSchiene;
 		return eSchiene;
+	}
+
+    /**
+     * Liefert ein neues {@link GostBlockungsergebnisKurs}-Objekt.
+     * @param idKurs          Die Datenbank-ID des Kurses.
+     * @param idFach          Die Datenbank-ID des Faches.
+     * @param idKursart       Die ID der Kursart.
+     * @param anzahlSchienen  Die Anzahl an Schienen, die der Kurs belegt.
+     *
+     * @return ein neues {@link GostBlockungsergebnisKurs}-Objekt.
+     */
+	public static @NotNull GostBlockungsergebnisKurs newGostBlockungsergebnisKurs(final long idKurs, final long idFach, final int idKursart, final int anzahlSchienen) {
+		final @NotNull GostBlockungsergebnisKurs eKurs = new GostBlockungsergebnisKurs();
+		eKurs.id = idKurs;
+		eKurs.fachID = idFach;
+		eKurs.kursart = idKursart;
+		eKurs.anzahlSchienen = anzahlSchienen;
+		return eKurs;
 	}
 
 	/**
