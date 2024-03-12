@@ -25,6 +25,7 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<div class="inline-flex flex-wrap w-full gap-x-1 gap-y-2.5">
 					<span class="flex gap-1 items-center ml-0.5" :class="{'filter saturate-200': auswahlErgebnis === row}">
+						<!-- Wert 1  -->
 						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung1Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 							<template #content>
@@ -37,13 +38,15 @@
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
+						<!-- Wert 2-->
 						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung2Wert(row.id) > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
 							<template #content>
 								<pre>{{ getErgebnismanager(row).regelGetTooltipFuerWahlkonflikte() }}</pre>
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Wahlkonflikte" :style="{'background-color': color2(row)}">0</span>
+						<!-- Wert 3-->
 						<svws-ui-tooltip>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 							<template #content>
@@ -54,6 +57,7 @@
 								</template>
 							</template>
 						</svws-ui-tooltip>
+						<!-- Wert 4-->
 						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung4Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 							<template #content>
@@ -61,6 +65,7 @@
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+						<!-- Ende Wertanzeige-->
 					</span>
 					<div class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
