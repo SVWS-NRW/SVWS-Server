@@ -659,18 +659,18 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
 		const liste = new ArrayList<number>();
-		const liste2 = new ArrayList<GostBlockungsergebnis>();
+		const set = new HashSet<number>();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		for (const ergebnis of ergebnisse) {
-			liste2.add(ergebnis);
+			set.add(ergebnis.id);
 			liste.add(ergebnis.id);
 		}
 		const reselect = liste.contains(ergebnisid);
 		await api.server.deleteGostBlockungsergebnisse(liste, api.schema);
-		this.datenmanager.ergebnisRemoveListe(liste2);
+		this.datenmanager.ergebnisRemoveListeByIDs(set);
 		if (reselect) {
 			for (const e of this.ergebnisse)
-				if (!liste2.contains(e)) {
+				if (!set.contains(e.id)) {
 					await this.gotoErgebnis(e);
 					break;
 				}
