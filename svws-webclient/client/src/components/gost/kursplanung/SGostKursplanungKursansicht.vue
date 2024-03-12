@@ -128,18 +128,162 @@
 
 			<template #body>
 				<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
-					<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)"
-						:fachwahlen="fachwahl.fachwahlen" :kursart="fachwahl.kursart" :get-kursauswahl="getKursauswahl" :kursdetail-anzeigen="kursdetailAnzeigen" :set-kursdetail-anzeigen="setKursdetailAnzeigen"
-						:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-						:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
-						:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahl.fachwahlen, fachwahl.kursart)"
-						:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-						:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
-						:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-						:kurse-und-schienen-in-rechteck="kurseUndSchienenInRechteck" :api-status="apiStatus"
-						:set-drag="setDrag" :set-drop="setDrop" :highlight-kurs-auf-anderen-kurs="highlightKursAufAnderenKurs"
-						:highlight-kurs-verschieben="highlightKursVerschieben" :highlight-rechteck="highlightRechteck" :highlight-rechteck-drop="highlightRechteckDrop"
-						:is-dragging="isDragging" :reset-drag="resetDrag" :set-drag-over="setDragOver" :reset-drop="resetDrop" :show-tooltip="showTooltip" />
+					<template v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)">
+						<template v-if="listeDerKurse(fachwahl).isEmpty() && getAnzahlFachwahlen(fachwahl) !== 0 && allowRegeln">
+							<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="{ '--background-color': bgColor(fachwahl) }" :key="fachwahl.kursart.id">
+								<div role="cell" class="svws-ui-td" />
+								<div role="cell" class="svws-ui-td" />
+								<div role="cell" class="svws-ui-td text-black/50">{{ fachwahl.fachwahlen.kuerzel }}-{{ fachwahl.kursart.kuerzel }}</div>
+								<div role="cell" class="svws-ui-td" />
+								<div role="cell" class="svws-ui-td" />
+								<div role="cell" class="svws-ui-td svws-align-center text-black/50" @click="toggleSchuelerFilterFachwahl(fachwahl)">
+									{{ getAnzahlFachwahlen(fachwahl) }}
+								</div>
+								<div role="cell" class="svws-ui-td" />
+								<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
+									<svws-ui-button type="transparent" @click="add_kurs(fachwahl)" title="Kurs anlegen">
+										<span class="inline-flex items-center text-button -mr-0.5">
+											<span class="icon i-ri-book-2-line" />
+											<span class="icon-sm i-ri-add-line -ml-0.5 text-sm" />
+										</span>
+										Kurs anlegen
+									</svws-ui-button>
+								</div>
+							</div>
+						</template>
+						<template v-else>
+							<template v-for="kurs in listeDerKurse(fachwahl)" :key="kurs.id">
+								<div role="row" class="svws-ui-tr select-none" :style="{ '--background-color': bgColor(fachwahl) }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
+									<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
+										<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="getKursauswahl().contains(kurs.id) ? getKursauswahl().remove(kurs.id) : getKursauswahl().add(kurs.id)" headless />
+									</div>
+									<template v-if="allowRegeln">
+										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="setKursdetailAnzeigen(kurs.id)"
+											:class="{'text-black/50' : kursdetailAnzeigen !== kurs.id}"
+											title="Kursdetails anzeigen">
+											<span v-if="kursdetailAnzeigen === kurs.id" class="icon i-ri-arrow-down-s-line relative" />
+											<span v-else class="icon i-ri-arrow-right-s-line relative" />
+										</div>
+									</template>
+									<div role="cell" class="svws-ui-td py-0">
+										<div class="flex flex-grow items-center -my-auto h-full">
+											<template v-if="kurs.id === editKursID">
+												<span class="flex-shrink-0 -my-0.5">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
+												<svws-ui-text-input :model-value="kurs.suffix" @blur="suffix => editKursOnBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless class="-my-1" />
+											</template>
+											<template v-else>
+												<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
+													{{ props.getDatenmanager().kursGetName(kurs.id) }}
+												</span>
+											</template>
+										</div>
+									</div>
+									<div role="cell" class="svws-ui-td">
+										<template v-if="allowRegeln">
+											<svws-ui-select v-model="kurslehrer(kurs).value" autocomplete :item-filter="lehrer_filter" removable headless
+												:items="kurslehrer_liste(kurs).value" :item-text="l=> l.kuerzel" title="Lehrkraft" />
+										</template>
+										<template v-else>
+											<span :class="{'opacity-25': !kurslehrer(kurs).value?.kuerzel}">{{ kurslehrer(kurs).value?.kuerzel || '—' }}</span>
+										</template>
+									</div>
+									<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
+										<svws-ui-checkbox headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
+									</div>
+									<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
+										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
+											{{ kursdifferenz(kurs).value[2] }}
+											<span class="icon-sm i-ri-filter-fill absolute right-0 top-1" :class="(schuelerFilter().fach === kurs.fach_id) && (schuelerFilter().kursart?.id === kurs.kursart) ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+										</div>
+										<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+											<span :class="{'opacity-25': kursdifferenz(kurs).value[1] <= 1}">{{ kursdifferenz(kurs).value[1] }}</span>
+										</div>
+									</template>
+									<template v-else>
+										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer" @click="toggle_active_fachwahl(kurs)">
+											<span class="opacity-25">{{ kursdifferenz(kurs).value[2] }}</span>
+										</div>
+										<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+											<span class="opacity-25">{{ kursdifferenz(kurs).value[1] }}</span>
+										</div>
+									</template>
+									<!-- Es folgen die einzelnen Tabellenzellen für die Schienen der Blockung -->
+									<template v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
+										<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
+										<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
+											:class="{
+												'bg-green-400/50': allowRegeln && (highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value),
+												'bg-yellow-400/50': allowRegeln && highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
+												'bg-white/50 text-black/25 font-bold': highlightKursVerschieben(kurs).value,
+												'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
+												'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
+												'cursor-grabbing': isDragging,
+												'cursor-pointer': !isDragging,
+											}"
+											@dragover.prevent="setDragOver(kurs, schiene)"
+											@drop="setDrop(kurs, schiene)">
+											<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
+											<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
+												class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black p-px"
+												:class="{
+													'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
+													'bg-white/50': !istKursAusgewaehlt(kurs).value,
+													'cursor-grab': !isDragging,
+												}"
+												@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)">
+												{{ getSchuelerAnzahl(kurs.id).value }}
+												<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
+													<span class="icon-sm inline-block i-ri-draggable -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
+												</span>
+												<div class="icon group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
+													<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-fill inline-block group-hover:opacity-75" />
+													<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100" />
+												</div>
+											</div>
+											<!-- ... ansonsten ist er nicht draggable -->
+											<div v-else class="w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
+												draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
+												:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
+												<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
+												<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-100" />
+												<span v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
+											</div>
+											<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
+												<svws-ui-tooltip :show-arrow="false" init-open :click-outside="resetDrop">
+													<template #content>
+														<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
+														<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse immer zusammen')">{{ zusammenKursbezeichnung }} immer auf einer Schiene</svws-ui-button>
+														<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse nie zusammen')">{{ zusammenKursbezeichnung }} nie auf einer Schiene</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen sperren')">Alle Kurse sperren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen entsperren')">Alle Kurse entsperren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schienen')">Alle Kurse sperren/entsperren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('kurse fixieren')">Alle Kurse fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('kurse lösen')">Alle Kurse lösen</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle kurse')">Alle Kurse fixieren/lösen</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler fixieren')">Alle Schüler fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('schüler lösen')">Alle Schüler lösen</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('toggle schüler')">Alle Schüler fixieren/lösen</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB fixieren')">Alle Schüler in Abiturkursen fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler LK fixieren')">Alle Schüler in LK fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler LK und AB3 fixieren')">Alle Schüler in LK und dem 3. Abiturfach fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB3 fixieren')">Alle Schüler im 3. Abiturfach fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler AB4 fixieren')">Alle Schüler im 4. Abiturfach fixieren</svws-ui-button>
+														<svws-ui-button size="small" type="transparent" @click="rechteckActions('Schüler schriftlichen fixieren')">Alle Schüler im schriftlichen Fächern fixieren</svws-ui-button>
+													</template>
+												</svws-ui-tooltip>
+											</template>
+										</div>
+									</template>
+								</div>
+								<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
+								<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetailAnzeigen === kurs.id && allowRegeln" :bg-color="bgColor(fachwahl)" :anzahl-spalten="6 + getDatenmanager().schieneGetAnzahl()"
+									:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager" :api-status="apiStatus"
+									:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :regeln-update="regelnUpdate" :add-lehrer-regel="addLehrerRegel"
+									:add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
+									:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
+							</template>
+						</template>
+					</template>
 				</template>
 			</template>
 		</svws-ui-table>
@@ -155,8 +299,12 @@
 	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungSchiene } from "@core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils, ArrayList } from "@core";
+	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
+		GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate,
+		GostBlockungSchiene, GostBlockungRegel} from "@core";
+	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene,
+		SetUtils, ArrayList, GostKursblockungRegelTyp, DeveloperNotificationException } from "@core";
+	import { lehrer_filter } from "~/utils/helfer";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -246,8 +394,8 @@
 		return result;
 	});
 
-	const fachwahlenAnzahl = computed<Map<{ fachwahlen: GostStatistikFachwahl, kursart: GostKursart }, number>>(() => {
-		const result = new Map<{ fachwahlen: GostStatistikFachwahl, kursart: GostKursart }, number>();
+	const fachwahlenAnzahl = computed<HashMap2D<number, number, number>>(() => {
+		const result = new HashMap2D<number, number, number>();
 		for (const fachwahlen of props.mapFachwahlStatistik().values()) {
 			for (const kursart of GostKursart.values()) {
 				let anzahl = 0;
@@ -263,20 +411,20 @@
 						case GostKursart.VTF: { anzahl = (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0; break; }
 					}
 				}
-				result.set({ fachwahlen, kursart }, anzahl);
+				result.put(fachwahlen.id, kursart.id, anzahl);
 			}
 		}
 		return result;
 	});
 
-	function getAnzahlFachwahlen(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : number {
-		const anzahl = fachwahlenAnzahl.value.get({ fachwahlen, kursart });
-		return (anzahl === undefined) ? 0 : anzahl;
+	function getAnzahlFachwahlen(fachwahl : { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) : number {
+		const anzahl = fachwahlenAnzahl.value.getOrNull(fachwahl.fachwahlen.id, fachwahl.kursart.id);
+		return (anzahl === null) ? 0 : anzahl;
 	}
 
 	function istFachwahlVorhanden(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : boolean {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
-		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
+		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen({ fachwahlen, kursart }) > 0);
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
@@ -452,6 +600,13 @@
 		return range;
 	})
 
+	const zusammenKursbezeichnung = computed<string|null>(() => {
+		if (!kurseUndSchienenInRechteck.value?.[2])
+			return null;
+		const [id1, id2] = kurseUndSchienenInRechteck.value[2];
+		return `${props.getDatenmanager().kursGetName(id1)} und ${props.getDatenmanager().kursGetName(id2)}`;
+	})
+
 	const isDragging = computed<boolean>(() => (dragSchiene.value !== null && dropSchiene.value === null) && (allowRegeln.value || isKursDragging.value));
 
 	function setDrag(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
@@ -530,4 +685,252 @@
 		showTooltip.value = {kursID: -1, schieneID: -1};
 	}
 
+	async function rechteckActions(action: 'kurse fixieren'| 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler' | 'Schüler LK fixieren' | 'Schüler AB3 fixieren' | 'Schüler LK und AB3 fixieren' | 'Schüler AB4 fixieren' | 'Schüler AB fixieren' | 'Schüler schriftlichen fixieren' | 'kurse immer zusammen' | 'kurse nie zusammen') {
+		if (kurseUndSchienenInRechteck.value === null)
+			return false;
+		const [kurse, schienen, set] = kurseUndSchienenInRechteck.value;
+		resetDrop();
+		const update = (() => {
+			switch (action) {
+				case 'kurse immer zusammen':
+					if (set === null)
+						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 8 übergeben');
+					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(set);
+				case 'kurse nie zusammen':
+					if (set === null)
+						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 7 übergeben');
+					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(set);
+				case 'schüler fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+				case 'schüler lösen':
+					return props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+				case 'toggle schüler':
+					return props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(kurse);
+				case 'kurse fixieren':
+					return props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+				case 'kurse lösen':
+					return props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+				case 'toggle kurse':
+					return props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(kurse, schienen);
+				case 'schienen sperren':
+					return props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+				case 'schienen entsperren':
+					return props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+				case 'toggle schienen':
+					return props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurse, schienen);
+				case 'Schüler AB fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kurse);
+				case 'Schüler AB3 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kurse);
+				case 'Schüler AB4 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kurse);
+				case 'Schüler LK fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kurse);
+				case 'Schüler LK und AB3 fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kurse);
+				case 'Schüler schriftlichen fixieren':
+					return props.getErgebnismanager().regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kurse);
+			}
+		})();
+		await props.regelnUpdate(update);
+	}
+
+
+	//
+	// Unterstützung der Anzeige der einzelnen Kurse bzw. Fachwahlen in der Tabelle
+	//
+
+	const editKursID = ref<number | undefined>(undefined);
+
+	function listeDerKurse(fachwahl : { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) : List<GostBlockungKurs> {
+		const liste = listenDerKurse.value.getOrNull(fachwahl.fachwahlen.id, fachwahl.kursart.id);
+		return (liste === null) ? new ArrayList() : liste;
+	}
+
+	const listenDerKurse = computed<HashMap2D<number, number, List<GostBlockungKurs>>>(() => {
+		const result = new HashMap2D<number, number, List<GostBlockungKurs>>();
+		for (const fachwahlen of props.mapFachwahlStatistik().values())
+			for (const kursart of GostKursart.values())
+				result.put(fachwahlen.id, kursart.id, props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id));
+		return result;
+	});
+
+	function bgColor(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) : string {
+		return ZulaessigesFach.getByKuerzelASD(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	}
+
+	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
+			return;
+		if (filter.fach !== fachwahl.fachwahlen.id) {
+			filter.kursart = fachwahl.kursart;
+			filter.fach = fachwahl.fachwahlen.id;
+		} else
+			filter.reset();
+	}
+
+	async function add_kurs(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
+		await props.addKurs(fachwahl.fachwahlen.id, fachwahl.kursart.id);
+	}
+
+	async function editKursOnBlur(suffix: string, id: number) {
+		await props.patchKurs({ suffix }, id);
+		editKursID.value = undefined;
+	}
+
+	const kurslehrer = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag | undefined>({
+		get: () => {
+			const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id);
+			return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
+		},
+		set: (value) => void setKurslehrer(kurs, value ?? undefined)
+	});
+
+	const kurslehrer_liste = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag[]>(() => {
+		const vergeben = new Set();
+		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
+			vergeben.add(l.id);
+		const id = kurslehrer(kurs).value?.id;
+		if (id)
+			vergeben.delete(id);
+		const result = [];
+		for (const l of props.mapLehrer.values())
+			if ((!vergeben.has(l.id)) && (l.istSichtbar))
+				result.push(l);
+		return result;
+	})
+
+	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
+		const lehrer = kurslehrer(kurs).value
+		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)))
+			return;
+		if (value !== undefined) {
+			await props.addKursLehrer(kurs.id, value.id);
+			await addLehrerRegel();
+		}
+		if (lehrer !== undefined)
+			await props.removeKursLehrer(kurs.id, lehrer.id);
+	}
+
+	const lehrer_regel = computed<GostBlockungRegel | undefined>(()=> {
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
+		const regeln = props.getDatenmanager().regelGetListeOfTyp(regel_typ);
+		if (regeln.isEmpty())
+			return undefined;
+		return regeln.get(0);
+	})
+
+	async function addLehrerRegel() {
+		if (lehrer_regel.value !== undefined)
+			return;
+		const update = props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(true);
+		await props.regelnUpdate(update);
+	}
+
+	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
+			return;
+		if (filter.fach !== kurs.fach_id || filter.kursart?.id !== kurs.kursart) {
+			filter.kursart = GostKursart.fromID(kurs.kursart);
+			filter.fach = kurs.fach_id;
+		}
+		else
+			filter.reset();
+	}
+
+	async function setKoop(kurs: GostBlockungKurs, istKoopKurs: boolean) {
+		await props.patchKurs({ istKoopKurs }, kurs.id);
+	}
+
+	const kurs_blockungsergebnis = (kurs: GostBlockungKurs) => computed<GostBlockungsergebnisKurs | undefined>(() => {
+		return props.hatErgebnis ? props.getErgebnismanager().getKursE(kurs.id) : undefined;
+	});
+
+	const filtered_by_kursart = (kurs: GostBlockungKurs) => computed<List<GostBlockungsergebnisKurs>>(() => {
+		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
+		return props.getErgebnismanager().getOfFachartKursmenge(fachart_id);
+	})
+
+	const setze_kursdifferenz = (kurs: GostBlockungKurs) => computed<boolean>(() => {
+		return filtered_by_kursart(kurs).value.get(0) === kurs_blockungsergebnis(kurs).value;
+	});
+
+	const kursdifferenz = (kurs: GostBlockungKurs) => computed<[number, number, number]>(() => {
+		if (filtered_by_kursart(kurs).value.isEmpty())
+			return [-1,-1, -1];
+		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
+		const wahlen = props.getDatenmanager().fachwahlGetListeOfFachart(fachart_id).size() || 0;
+		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
+		return [filtered_by_kursart(kurs).value.size(), kdiff, wahlen];
+	});
+
+	const istZugeordnetKursSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
+		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id);
+	})
+
+	const istKursFixiertInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
+		return props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id);
+	})
+
+	const istKursAusgewaehlt = (kurs: GostBlockungKurs) => computed<boolean>(() => {
+		const k = props.getErgebnismanager().getKursE(kurs.id);
+		const filter_kurs_id = props.schuelerFilter().kurs?.id;
+		return (k !== undefined) && (k.id === filter_kurs_id);
+	});
+
+	function toggleKursAusgewaehlt(kurs : GostBlockungKurs) {
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
+			return;
+		if (filter.kurs?.id !== kurs.id)
+			filter.kurs = kurs;
+		else
+			filter.reset();
+	}
+
+	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
+		return props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id);
+	})
+
+	async function toggleRegelSperreKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
+		if (!allowRegeln.value)
+			return;
+		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		const update = (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
+			? props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+			: props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+		await props.regelnUpdate(update);
+	}
+
+	const istKursVerbotenInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
+		return props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id);
+	})
+
+	async function toggleRegelFixiereKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
+		if (!allowRegeln.value)
+			return;
+		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		const update = (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
+			? props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
+			: props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
+		await props.regelnUpdate(update);
+	}
+
+	const getSchuelerAnzahl = (idKurs: number) => computed(() => {
+		const aktive = props.getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(idKurs);
+		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
+		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
+	})
+
+
 </script>
+
+<style lang="postcss" scoped>
+
+	.svws-expanded + .svws-ui-tr:not(.svws-expanded) {
+		@apply border-t border-black/50;
+	}
+
+</style>
