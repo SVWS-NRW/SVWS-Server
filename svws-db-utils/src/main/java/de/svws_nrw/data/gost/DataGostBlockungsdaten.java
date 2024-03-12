@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
+import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
@@ -255,14 +256,19 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	}
 
 
-	@Override
-	public Response get(final Long id) {
+	private static GostBlockungsdaten getBlockungsdaten(final DBEntityManager conn, final Long id) {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstellen den Manager mit den Blockungsdaten
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 		final GostBlockungsdaten daten = manager.daten();
 		// Ergänze Blockungsliste
 		(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+		final GostBlockungsdaten daten = getBlockungsdaten(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -404,8 +410,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		conn.transactionFlush();
 		conn.transactionPersist(erg);
 		conn.transactionFlush();
-		final GostBlockungsdaten daten = dtoMapper.apply(blockung);
-		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(daten, faecherManager);
+		final GostBlockungsdaten blockungsdaten = dtoMapper.apply(blockung);
+		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(blockungsdaten, faecherManager);
 		// Schienen anlegen
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		final long schienenID = dbSchienenID == null ? 0 : dbSchienenID.MaxID;
@@ -474,11 +480,17 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
 		conn.transactionFlush();
         // Bestimme die Fachwahlen aus der DB
-        daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
+        blockungsdaten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, blockungsdaten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
         // Ergänze Blockungsliste
         conn.transactionFlush();
         (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+        final GostBlockungListeneintrag blockungListeneintrag = new GostBlockungListeneintrag();
+        blockungListeneintrag.id = blockungsdaten.id;
+        blockungListeneintrag.name = blockungsdaten.name;
+        blockungListeneintrag.gostHalbjahr = blockungsdaten.gostHalbjahr;
+        blockungListeneintrag.istAktiv = blockungsdaten.istAktiv;
+        blockungListeneintrag.anzahlErgebnisse = blockungsdaten.ergebnisse.size();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(blockungListeneintrag).build();
 	}
 
 	/**
@@ -699,7 +711,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			conn.transactionPersist(zuordnungKursSchuelerDuplikat);
 		}
 		conn.transactionFlush();
-		return get(idBlockungDuplikat);
+		final GostBlockungsdaten blockungsdaten = getBlockungsdaten(conn, idBlockungDuplikat);
+        final GostBlockungListeneintrag blockungListeneintrag = new GostBlockungListeneintrag();
+        blockungListeneintrag.id = blockungsdaten.id;
+        blockungListeneintrag.name = blockungsdaten.name;
+        blockungListeneintrag.gostHalbjahr = blockungsdaten.gostHalbjahr;
+        blockungListeneintrag.istAktiv = blockungsdaten.istAktiv;
+        blockungListeneintrag.anzahlErgebnisse = blockungsdaten.ergebnisse.size();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(blockungListeneintrag).build();
 	}
 
 
@@ -1088,7 +1107,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 		}
 		conn.transactionFlush();
-		return get(idBlockung);
+		final GostBlockungsdaten blockungsdaten = getBlockungsdaten(conn, idBlockung);
+        final GostBlockungListeneintrag blockungListeneintrag = new GostBlockungListeneintrag();
+        blockungListeneintrag.id = blockungsdaten.id;
+        blockungListeneintrag.name = blockungsdaten.name;
+        blockungListeneintrag.gostHalbjahr = blockungsdaten.gostHalbjahr;
+        blockungListeneintrag.istAktiv = blockungsdaten.istAktiv;
+        blockungListeneintrag.anzahlErgebnisse = blockungsdaten.ergebnisse.size();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(blockungListeneintrag).build();
 	}
 
 

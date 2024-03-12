@@ -103,13 +103,13 @@ public class APIGostKursplanung {
      */
     @POST
     @Path("/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen/new")
-    @Operation(summary = "Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück.",
-    description = "Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück."
+    @Operation(summary = "Erstellt eine neue Blockung und gibt den Listeneintrag für die Blockung zurück.",
+    description = "Erstellt eine neue Blockung und gibt den Listeneintrag für die Blockung zurück."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Blockungen "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Blockung wurde erfolgreich angelegt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = GostBlockungsdaten.class)))
+            schema = @Schema(implementation = GostBlockungListeneintrag.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Blockung anzulegen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlinformationen zum Anlegen einer Blockung gefunden")
     @ApiResponse(responseCode = "409", description = "Das Abiturjahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
@@ -1410,9 +1410,9 @@ public class APIGostKursplanung {
                	+ "Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln",
+    @ApiResponse(responseCode = "200", description = "Der Blockungslisteneintrag des Duplikats",
     	content = @Content(mediaType = "application/json",
-    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    	schema = @Schema(implementation = GostBlockungListeneintrag.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angegebenen ID gefunden.")
     public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
@@ -1474,9 +1474,9 @@ public class APIGostKursplanung {
                description = "Restauriert die Blockung aus den Leistungsdaten. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung",
+    @ApiResponse(responseCode = "200", description = "Der Listeneintrag zu der restaurierten Blockung",
     	content = @Content(mediaType = "application/json",
-    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    	schema = @Schema(implementation = GostBlockungListeneintrag.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.")
     @ApiResponse(responseCode = "404", description = "Keine Daten für das Abiturjahr und das Halbjahr gefunden.")
     public Response restauriereGostBlockung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,

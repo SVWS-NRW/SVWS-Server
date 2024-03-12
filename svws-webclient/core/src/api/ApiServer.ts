@@ -3223,12 +3223,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createGostAbiturjahrgangBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/{halbjahr : \d+}/blockungen/new
 	 *
-	 * Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Blockungen besitzt.
+	 * Erstellt eine neue Blockung und gibt den Listeneintrag für die Blockung zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Blockungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Blockung wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *     - Rückgabe-Typ: GostBlockungListeneintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Blockung anzulegen.
 	 *   Code 404: Keine Fachwahlinformationen zum Anlegen einer Blockung gefunden
 	 *   Code 409: Das Abiturjahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
@@ -3240,14 +3240,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockung wurde erfolgreich angelegt.
 	 */
-	public async createGostAbiturjahrgangBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
+	public async createGostAbiturjahrgangBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
-		return GostBlockungsdaten.transpilerFromJSON(text);
+		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
 
 
@@ -3286,9 +3286,9 @@ export class ApiServer extends BaseApi {
 	 * Restauriert die Blockung aus den Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung
+	 *   Code 200: Der Listeneintrag zu der restaurierten Blockung
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *     - Rückgabe-Typ: GostBlockungListeneintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.
 	 *   Code 404: Keine Daten für das Abiturjahr und das Halbjahr gefunden.
 	 *
@@ -3296,16 +3296,16 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
-	 * @returns Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung
+	 * @returns Der Listeneintrag zu der restaurierten Blockung
 	 */
-	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
+	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostBlockungsdaten.transpilerFromJSON(text);
+		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
 
 
@@ -4374,24 +4374,24 @@ export class ApiServer extends BaseApi {
 	 * Dupliziert zu dem angegebenen Zwischenergebnis gehörende Blockung der gymnasialen Oberstufe. Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln
+	 *   Code 200: Der Blockungslisteneintrag des Duplikats
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *     - Rückgabe-Typ: GostBlockungListeneintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.
 	 *   Code 404: Kein Blockungsergebnis mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 *
-	 * @returns Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln
+	 * @returns Der Blockungslisteneintrag des Duplikats
 	 */
-	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
+	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostBlockungsdaten.transpilerFromJSON(text);
+		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
 
 
