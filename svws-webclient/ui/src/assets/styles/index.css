@@ -63,14 +63,39 @@ hr {
 	-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 	filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 }
+.icon-gray {
+	-webkit-filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
+	filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
+}
 .icon-primary {
 	-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 	filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+}
+.icon-light {
+	-webkit-filter: invert(91%) sepia(3%) saturate(126%) hue-rotate(7deg) brightness(108%) contrast(94%);
+	filter: invert(91%) sepia(3%) saturate(126%) hue-rotate(7deg) brightness(108%) contrast(94%);
+}
+.icon-dark-20 {
+	-webkit-filter: invert(87%) sepia(7%) saturate(231%) hue-rotate(163deg) brightness(97%) contrast(87%);
+	filter: invert(87%) sepia(7%) saturate(231%) hue-rotate(163deg) brightness(97%) contrast(87%);
+}
+.icon-dark {
+	-webkit-filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
+	filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
 }
 .icon-error {
 	-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 }
+.icon-success {
+	-webkit-filter: invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);
+	filter: invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);
+}
+.icon-highlight {
+	-webkit-filter: invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);
+	filter: invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);
+}
+
 
 .i-ri-add-line {@apply bg-[url(remixicon/icons/System/add-line.svg)] bg-no-repeat bg-center }
 .i-ri-alert-line { @apply bg-[url(remixicon/icons/System/alert-line.svg)] bg-no-repeat bg-center }
