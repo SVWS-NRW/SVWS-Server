@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-content-card overflow-scroll :class="{'mr-16': blockungstabelleVisible}">
+	<svws-ui-content-card v-if="!blockungstabelleVisible" />
+	<svws-ui-content-card v-else overflow-scroll class="mr-16">
 		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
 				<div role="row" class="svws-ui-tr select-none">
