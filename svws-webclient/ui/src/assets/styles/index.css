@@ -169,6 +169,7 @@ hr {
 .i-ri-link {@apply bg-[url(remixicon/icons/Editor/link.svg)] bg-no-repeat bg-center }
 .i-ri-loader-4-line {@apply bg-[url(remixicon/icons/System/loader-4-line.svg)] bg-no-repeat bg-center }
 .i-ri-lock-2-line {@apply bg-[url(remixicon/icons/System/lock-2-line.svg)] bg-no-repeat bg-center }
+.i-ri-lock-fill {@apply bg-[url(remixicon/icons/System/lock-fill.svg)] bg-no-repeat bg-center }
 .i-ri-lock-line {@apply bg-[url(remixicon/icons/System/lock-line.svg)] bg-no-repeat bg-center }
 .i-ri-lock-unlock-line {@apply bg-[url(remixicon/icons/System/lock-unlock-line.svg)] bg-no-repeat bg-center }
 .i-ri-login-circle-line {@apply bg-[url(remixicon/icons/System/login-circle-line.svg)] bg-no-repeat bg-center }

@@ -21,7 +21,7 @@
 							@change="name => patch_blockung(name, row.id)" class="-my-0.5 w-full" />
 					</div>
 					<div v-else>
-						<span>{{ row.name }}</span>
+						<span>{{ row.name }}&nbsp;</span>
 					</div>
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
@@ -47,6 +47,20 @@
 								</svws-ui-button>
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
+						<div v-else class="mr-2 ml-auto inline-flex">
+							<svws-ui-tooltip v-if="row.anzahlErgebnisse > 1">
+								<span class="icon-sm i-ri-lock-fill -mx-0.5" />
+								<template #content>
+									<span>{{ row.anzahlErgebnisse }} Ergebnisse vorhanden, es können keine weiteren Regeln angelegt werden.</span>
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-else autosize>
+								<span class="icon-sm i-ri-lock-unlock-line -mx-0.5" />
+								<template #content>
+									<span>In dieser Blockung können Regeln erstellt werden.</span>
+								</template>
+							</svws-ui-tooltip>
+						</div>
 						<svws-ui-tooltip v-if="row.istAktiv">
 							<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, row.id)" />
 							<template #content> Aktivierte Blockung </template>
