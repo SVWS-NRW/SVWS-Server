@@ -104,21 +104,21 @@
 											class="opacity-75 inline-block w-3 text-sm mr-2">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
-										<span v-if="(allow_regeln && fach_gewaehlt(kurs).value)">
-											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id).value ? 'Verboten' : 'Verbieten'">
-												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id).value" />
-												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id).value && !fixier_regel(kurs.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
+										<span v-if="(allow_regeln && fach_gewaehlt(kurs))">
+											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
+												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
+												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
 											</span>
-											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id).value ? 'Fixiert' : 'Fixieren'">
-												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id).value"
+											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
+												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
 													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
-												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id).value && !fixier_regel(kurs.id).value"
+												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
 													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
 											</span>
 										</span>
 										<span v-else>
-											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id).value" title="Verboten" />
-											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id).value" title="Fixiert" />
+											<span class="icon inline-block i-ri-forbid-fill" v-if="verbieten_regel(kurs.id)" title="Verboten" />
+											<span class="icon inline-block i-ri-pushpin-fill" v-if="fixier_regel(kurs.id)" title="Fixiert" />
 										</span>
 									</span>
 								</div>
@@ -248,25 +248,25 @@
 		return "";
 	}
 
-	const fach_gewaehlt = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() =>
-		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler.value, kurs.fachID, kurs.kursart)
-	);
+	function fach_gewaehlt(kurs: GostBlockungsergebnisKurs) : boolean {
+		return props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler.value, kurs.fachID, kurs.kursart);
+	}
 
-	const fixier_regel = (idKurs: number) => computed<GostBlockungRegel | null>(() => {
+	function fixier_regel(idKurs: number) : GostBlockungRegel | null {
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs))
 			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler.value, idKurs);
 		return null;
-	});
+	}
 
-	const verbieten_regel = (idKurs: number) => computed<GostBlockungRegel | null>(() => {
+	function verbieten_regel(idKurs: number) : GostBlockungRegel | null {
 		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler.value, idKurs))
 			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler.value, idKurs);
 		return null;
-	});
+	}
 
 	async function fixieren_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
-		const regel = fixier_regel(idKurs).value;
+		const regel = fixier_regel(idKurs);
 		if (regel !== null)
 			update.listEntfernen.add(regel);
 		else
@@ -276,7 +276,7 @@
 
 	async function verbieten_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
-		const regel = verbieten_regel(idKurs).value;
+		const regel = verbieten_regel(idKurs);
 		if (regel !== null)
 			update.listEntfernen.add(regel);
 		else
