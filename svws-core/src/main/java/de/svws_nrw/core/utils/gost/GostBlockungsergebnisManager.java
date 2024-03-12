@@ -4986,6 +4986,37 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 *
+	 * <br>(1) Wenn der Kurs nicht in der Quell-Schiene ist, passiert nichts.
+	 * <br>(2) Wenn der Kurs bereits in der Ziel-Schiene ist, passiert nichts.
+	 * <br>(3) Andernfalls, wird der Kurs aus der Quell-Schiene entfernt und der Ziel-Schiene hinzugefügt.
+	 *
+	 *
+	 * @param idKurs           Die Datenbank-ID des Kurses.
+	 * @param idSchieneQuelle  Die Quell-Schiene, aus der der Kurs entfernt wird.
+	 * @param idSchieneZiel    Die Ziel-Schiene, zu welcher der Kurs hinzugefügt wird.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu uverschieben.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(final long idKurs, final long idSchieneQuelle, final long idSchieneZiel) {
+		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate u = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
+
+		// (1)
+		if (!getOfKursOfSchieneIstZugeordnet(idKurs, idSchieneQuelle))
+			return u;
+
+		// (2)
+		if (getOfKursOfSchieneIstZugeordnet(idKurs, idSchieneZiel))
+			return u;
+
+		u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchieneQuelle));
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchieneZiel));
+
+		return u;
+	}
+
+	/**
 	 * Entfernt erst alle Regeln aus {@link GostBlockungsergebnisKursSchienenZuordnungUpdate#listEntfernen} und
 	 * fügt dann die neuen Regeln aus {@link GostBlockungsergebnisKursSchienenZuordnungUpdate#listHinzuzufuegen} hinzu.
 	 * Macht das selbe für die potentiell enthaltenen RegelUpdates.
