@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -249,17 +250,28 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			conn.queryList("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
 					+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		final List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = listSchuljahresabschnitteIDs.isEmpty()
+		final List<Long> listAktSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
+		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte = listAktSchuljahresabschnitteIDs.isEmpty()
 				? new ArrayList<>()
-				: conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
-		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = listSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+				: conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listAktSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
+		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte = listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
+		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte =
+			conn.queryList("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
+					+ " AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapGewaehlteAbschnitte = listGewaehlteAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		// Führe die beiden Maps zusammen und bevorzuge dabei die gewählten Abschnitte
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = new HashMap<>();
+		for (final long id : schuelerIDs) {
+			final DTOSchuelerLernabschnittsdaten a = mapGewaehlteAbschnitte.get(id);
+			mapAbschnitte.put(id, (a == null) ? mapAktAbschnitte.get(id) : a);
+		}
 		// Bestimme die Jahrgänge der Schule
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
     	// Erstelle die Schüler-Liste und sortiere sie
     	final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
-    		.map(s -> erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+    		.map(s -> erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
     		.sorted(dataComparator)
 	    	.toList();
     	// Ermittle die Kurse, welche von den Schülern belegt wurden.
@@ -267,7 +279,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
     	if (schule.Schulform.daten.hatGymOb) {
     		for (final SchuelerListeEintrag s : schuelerListe) {
-    			final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
+    			final DTOSchuljahresabschnitte schuljahresabschnitt = mapAktSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
     			if (schuljahresabschnitt == null)
     				continue;
     			s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung), schuljahresabschnitt.Jahr, s.jahrgang);

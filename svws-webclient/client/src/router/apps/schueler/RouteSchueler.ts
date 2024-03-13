@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -51,16 +51,19 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
 		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
 		if (idSchuljahresabschnitt instanceof Error)
 			return routeError.getRoute(idSchuljahresabschnitt);
+		if (idSchuljahresabschnitt === undefined)
+			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gülriger Schuljahresabschnitt gesetzt."));
 		const id = RouteNode.getIntParam(to_params, "id");
 		if (id instanceof Error)
 			return routeError.getRoute(id);
+		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt)
+			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.liste.get(id) : null;
 		await this.data.setSchueler(eintrag);
 		if (!this.data.schuelerListeManager.hasDaten()) {

@@ -68,6 +68,15 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+	/**
 	 * Setzt den ausgewählten Schueler und lädt dessen Stammddaten.
 	 *
 	 * @param schueler   der ausgewählte Schüler
