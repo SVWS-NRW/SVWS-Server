@@ -8,7 +8,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager, routerManager } from "../RouteManager";
-import { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 
 
 interface RouteStateApp extends RouteStateInterface {
