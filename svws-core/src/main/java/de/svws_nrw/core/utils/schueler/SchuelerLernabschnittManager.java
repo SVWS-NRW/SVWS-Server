@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.data.fach.FaecherListeEintrag;
+import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
@@ -40,8 +40,8 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull Schuljahresabschnitt _schuljahresabschnitt;
 	private final @NotNull Map<@NotNull Long, @NotNull SchuelerLeistungsdaten> _mapLeistungById = new HashMap<>();
 
-	private final @NotNull List<@NotNull FaecherListeEintrag> _faecher = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull FaecherListeEintrag> _mapFachByID = new HashMap<>();
+	private final @NotNull List<@NotNull FachDaten> _faecher = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull FachDaten> _mapFachByID = new HashMap<>();
 
 	private final @NotNull List<@NotNull FoerderschwerpunktEintrag> _foerderschwerpunkte = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull FoerderschwerpunktEintrag> _mapFoerderschwerpunktByID = new HashMap<>();
@@ -59,7 +59,7 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull Map<@NotNull Long, @NotNull LehrerListeEintrag> _mapLehrerByID = new HashMap<>();
 
 
-	private static final @NotNull Comparator<@NotNull FaecherListeEintrag> _compFach = (final @NotNull FaecherListeEintrag a, final @NotNull FaecherListeEintrag b) -> {
+	private static final @NotNull Comparator<@NotNull FachDaten> _compFach = (final @NotNull FachDaten a, final @NotNull FachDaten b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;
@@ -89,8 +89,8 @@ public class SchuelerLernabschnittManager {
 	};
 
 	private final @NotNull Comparator<@NotNull SchuelerLeistungsdaten> _compLeistungenByFach = (final @NotNull SchuelerLeistungsdaten a, final @NotNull SchuelerLeistungsdaten b) -> {
-		final @NotNull FaecherListeEintrag aFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, a.fachID);
-		final @NotNull FaecherListeEintrag bFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, b.fachID);
+		final @NotNull FachDaten aFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, a.fachID);
+		final @NotNull FachDaten bFach = DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, b.fachID);
 		return _compFach.compare(aFach, bFach);
 	};
 
@@ -114,7 +114,7 @@ public class SchuelerLernabschnittManager {
 			final @NotNull SchuelerListeEintrag schueler,
 			final @NotNull SchuelerLernabschnittsdaten lernabschnittsdaten,
 			final @NotNull Schuljahresabschnitt schuljahresabschnitt,
-			final @NotNull List<@NotNull FaecherListeEintrag> faecher,
+			final @NotNull List<@NotNull FachDaten> faecher,
 			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
 			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
@@ -138,12 +138,12 @@ public class SchuelerLernabschnittManager {
 			this.leistungAddInternal(leistung);
 	}
 
-	private void initFaecher(final @NotNull List<@NotNull FaecherListeEintrag> faecher) {
+	private void initFaecher(final @NotNull List<@NotNull FachDaten> faecher) {
 		this._faecher.clear();
 		this._faecher.addAll(faecher);
 		this._faecher.sort(_compFach);
 		this._mapFachByID.clear();
-		for (final @NotNull FaecherListeEintrag f : faecher)
+		for (final @NotNull FachDaten f : faecher)
 			this._mapFachByID.put(f.id, f);
 	}
 
@@ -349,7 +349,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Fach-Informationen
 	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
 	 */
-	public @NotNull FaecherListeEintrag fachGetByIdOrException(final long id) {
+	public @NotNull FachDaten fachGetByIdOrException(final long id) {
 		return DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, id);
 	}
 
@@ -361,7 +361,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Fach-Informationen.
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
-	public @NotNull FaecherListeEintrag fachGetByLeistungIdOrException(final long idLeistung) {
+	public @NotNull FachDaten fachGetByLeistungIdOrException(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		return DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, leistung.fachID);
 	}
@@ -375,7 +375,7 @@ public class SchuelerLernabschnittManager {
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
 	public @NotNull String fachFarbeGetByLeistungsIdOrException(final long idLeistung) {
-		final @NotNull FaecherListeEintrag fach = fachGetByLeistungIdOrException(idLeistung);
+		final @NotNull FachDaten fach = fachGetByLeistungIdOrException(idLeistung);
 		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB();
 	}
 
@@ -384,7 +384,7 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @return die Liste der Fächer
 	 */
-	public @NotNull List<@NotNull FaecherListeEintrag> fachGetMenge() {
+	public @NotNull List<@NotNull FachDaten> fachGetMenge() {
 		return this._faecher;
 	}
 

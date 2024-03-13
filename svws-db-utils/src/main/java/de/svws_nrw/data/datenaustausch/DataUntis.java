@@ -14,7 +14,7 @@ import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.fach.FaecherListeEintrag;
+import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
@@ -70,7 +70,7 @@ public final class DataUntis {
 		// Bestimme die Lehrer
 		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = DataLehrerliste.getLehrerListe(conn).stream().collect(Collectors.toMap(l -> l.kuerzel, l -> l));
 		// Bestimme die Fächer
-		final Map<String, FaecherListeEintrag> mapFaecherByKuerzel = DataFaecherliste.getFaecherListe(conn).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
+		final Map<String, FachDaten> mapFaecherByKuerzel = DataFaecherliste.getFaecherListe(conn).stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
 		// Bestimme die Klassen des Schuljahresabschnitts
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.id, DTOKlassen.class);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
@@ -133,7 +133,7 @@ public final class DataUntis {
 			final KursDaten kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
 			if (kurs == null) {
 				// Bestimme das Fach
-				final FaecherListeEintrag fach = mapFaecherByKuerzel.get(u.fachKuerzel);
+				final FachDaten fach = mapFaecherByKuerzel.get(u.fachKuerzel);
 				if (fach == null) {
 					logger.logLn(2, "[Fehler] - Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
 					throw OperationError.NOT_FOUND.exception("Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));

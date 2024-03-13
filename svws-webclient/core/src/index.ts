@@ -142,7 +142,6 @@ export { BilingualeSpracheKatalogEintrag } from './core/data/fach/BilingualeSpra
 export { FachDaten } from './core/data/fach/FachDaten';
 export { FachKatalogEintrag } from './core/data/fach/FachKatalogEintrag';
 export { FachgruppenKatalogEintrag } from './core/data/fach/FachgruppenKatalogEintrag';
-export { FaecherListeEintrag } from './core/data/fach/FaecherListeEintrag';
 export { SprachpruefungsniveauKatalogEintrag } from './core/data/fach/SprachpruefungsniveauKatalogEintrag';
 export { SprachreferenzniveauKatalogEintrag } from './core/data/fach/SprachreferenzniveauKatalogEintrag';
 export { AbiturFachbelegung } from './core/data/gost/AbiturFachbelegung';

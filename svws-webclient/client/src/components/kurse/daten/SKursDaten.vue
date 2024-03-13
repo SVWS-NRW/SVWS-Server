@@ -9,7 +9,7 @@
 				<svws-ui-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="l => l.kuerzel" />
 				<svws-ui-select title="Fach" :model-value="mapFaecher.get(data().idFach)"
 					@update:model-value="value => patch({ idFach: value?.id ?? -1 })"
-					:items="mapFaecher" :item-text="(f: FaecherListeEintrag) => f.kuerzel + ' (' + f.bezeichnung + ')'" />
+					:items="mapFaecher" :item-text="(f: FachDaten) => f.kuerzel + ' (' + f.bezeichnung + ')'" />
 				<svws-ui-select title="Kursart" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
 					:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" />
 				<svws-ui-input-number placeholder="Wochenstunden" :model-value="data().wochenstunden" @change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FaecherListeEintrag, JahrgangsDaten, LehrerListeEintrag } from "@core";
+	import type { FachDaten, JahrgangsDaten, LehrerListeEintrag } from "@core";
 	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";

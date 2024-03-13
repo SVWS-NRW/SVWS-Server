@@ -24,10 +24,10 @@
 
 	import { computed } from "vue";
 	import type { FaecherAppProps } from "./SFaecherAppProps";
-	import { type FaecherListeEintrag } from "@core";
+	import { type FachDaten } from "@core";
 
 	const props = defineProps<FaecherAppProps>();
 
-	const fach = computed<FaecherListeEintrag | undefined>(() => props.auswahl());
+	const fach = computed<FachDaten | undefined>(() => props.auswahl());
 
 </script>

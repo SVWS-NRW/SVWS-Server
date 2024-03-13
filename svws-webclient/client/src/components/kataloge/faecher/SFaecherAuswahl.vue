@@ -31,7 +31,7 @@
 
 	import { computed } from "vue";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
-	import type { FaecherListeEintrag } from "@core";
+	import type { FachDaten } from "@core";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
@@ -40,8 +40,8 @@
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 
-	const faecher = computed<FaecherListeEintrag[]>(() => {
-		const result : FaecherListeEintrag[] = [];
+	const faecher = computed<FachDaten[]>(() => {
+		const result : FachDaten[] = [];
 		for (const fach of props.mapKatalogeintraege().values()) {
 			result.push(fach);
 		}

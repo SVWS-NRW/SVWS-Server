@@ -1,4 +1,4 @@
-import type { FachDaten, FaecherListeEintrag } from "@core";
+import type { FachDaten, FachDaten } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -8,9 +8,9 @@ import { routeKatalogFachDaten } from "./RouteKatalogFachDaten";
 import { routeKatalogFaecher } from "./RouteKatalogFaecher";
 
 interface RouteStateKatalogFaecher extends RouteStateInterface {
-	auswahl: FaecherListeEintrag | undefined;
+	auswahl: FachDaten | undefined;
 	daten: FachDaten | undefined;
-	mapKatalogeintraege: Map<number, FaecherListeEintrag>;
+	mapKatalogeintraege: Map<number, FachDaten>;
 }
 
 const defaultState = <RouteStateKatalogFaecher> {
@@ -26,11 +26,11 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 		super(defaultState);
 	}
 
-	get auswahl(): FaecherListeEintrag | undefined {
+	get auswahl(): FachDaten | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, FaecherListeEintrag> {
+	get mapKatalogeintraege(): Map<number, FachDaten> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
@@ -42,7 +42,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 
 	private async ladeListeIntern() {
 		const listKatalogeintraege = await api.server.getFaecher(api.schema);
-		const mapKatalogeintraege = new Map<number, FaecherListeEintrag>();
+		const mapKatalogeintraege = new Map<number, FachDaten>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		const daten = auswahl !== undefined ? await this.getDatenInternal(auswahl) : undefined;
 		for (const l of listKatalogeintraege)
@@ -55,16 +55,16 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, daten });
 	}
 
-	private async getDatenInternal(auswahl: FaecherListeEintrag) {
+	private async getDatenInternal(auswahl: FachDaten) {
 		return await api.server.getFach(api.schema, auswahl.id);
 	}
 
-	setEintrag = async (auswahl: FaecherListeEintrag) => {
+	setEintrag = async (auswahl: FachDaten) => {
 		const daten = await this.getDatenInternal(auswahl);
 		this.setPatchedState({ auswahl, daten });
 	}
 
-	gotoEintrag = async (eintrag: FaecherListeEintrag) => {
+	gotoEintrag = async (eintrag: FachDaten) => {
 		await RouteManager.doRoute(routeKatalogFaecher.getRoute(eintrag.id));
 	}
 

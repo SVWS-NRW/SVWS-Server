@@ -27,7 +27,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
 								:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-								@update:model-value="(value : FaecherListeEintrag) => void patchFach(value, leistung)"
+								@update:model-value="(value : FachDaten) => void patchFach(value, leistung)"
 								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
@@ -114,7 +114,7 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
-	import type { SchuelerLeistungsdaten, List, KursDaten, FaecherListeEintrag} from "@core";
+	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten} from "@core";
 	import { Note, ZulaessigeKursart, ArrayList, ZulaessigesFach } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
@@ -196,7 +196,7 @@
 		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
 	});
 
-	async function patchFach(fach: FaecherListeEintrag, leistung: SchuelerLeistungsdaten) {
+	async function patchFach(fach: FachDaten, leistung: SchuelerLeistungsdaten) {
 		// Fach-Eintrag bei den Leistungsdaten wird entfernt
 		if ((fach === null) || (fach === undefined)) {
 			await props.patchLeistung({ fachID: -1, kursID: null }, leistung.id);

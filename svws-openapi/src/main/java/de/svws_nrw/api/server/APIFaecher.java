@@ -6,7 +6,6 @@ import de.svws_nrw.core.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.fach.FachKatalogEintrag;
 import de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag;
-import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag;
 import de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
@@ -67,7 +66,7 @@ public class APIFaecher {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Fächerdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Fächer-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FaecherListeEintrag.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachDaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden")
     public Response getFaecher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {

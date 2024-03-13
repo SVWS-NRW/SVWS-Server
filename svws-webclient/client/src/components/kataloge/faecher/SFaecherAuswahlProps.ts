@@ -1,10 +1,10 @@
-import type { FaecherListeEintrag, Schulform, Schuljahresabschnitt } from "@core";
+import type { FachDaten, Schulform, Schuljahresabschnitt } from "@core";
 
 export interface FaecherAuswahlProps {
 	schulform: Schulform;
-	auswahl: FaecherListeEintrag | undefined;
-	mapKatalogeintraege: () => Map<number, FaecherListeEintrag>;
-	gotoEintrag: (eintrag: FaecherListeEintrag) => Promise<void>;
+	auswahl: FachDaten | undefined;
+	mapKatalogeintraege: () => Map<number, FachDaten>;
+	gotoEintrag: (eintrag: FachDaten) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;

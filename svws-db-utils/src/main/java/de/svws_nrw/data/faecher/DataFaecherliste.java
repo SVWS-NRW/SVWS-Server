@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.core.adt.map.ArrayMap;
-import de.svws_nrw.core.data.fach.FaecherListeEintrag;
+import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -23,12 +23,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link FaecherListeEintrag}.
+ * Core-DTO {@link FachDaten}.
  */
 public final class DataFaecherliste extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FaecherListeEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FachDaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -37,10 +37,10 @@ public final class DataFaecherliste extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FaecherListeEintrag}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FachDaten}.
 	 */
-	private static final Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (final DTOFach f) -> {
-		final FaecherListeEintrag daten = new FaecherListeEintrag();
+	private static final Function<DTOFach, FachDaten> dtoMapperFach = (final DTOFach f) -> {
+		final FachDaten daten = new FachDaten();
 		daten.id = f.ID;
 		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
 		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
@@ -60,7 +60,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 	 *
 	 * @return die Liste der Fächer
 	 */
-	public static List<FaecherListeEintrag> getFaecherListe(final DBEntityManager conn) {
+	public static List<FachDaten> getFaecherListe(final DBEntityManager conn) {
     	final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
     	if (faecher == null)
     		throw OperationError.NOT_FOUND.exception("Es wurden keine Fächer in der Datenbank gefunden.");
@@ -70,7 +70,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-    	final List<FaecherListeEintrag> daten = getFaecherListe(conn);
+    	final List<FachDaten> daten = getFaecherListe(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

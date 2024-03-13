@@ -1,4 +1,4 @@
-import type { FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, Schueler} from "@core";
+import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, Schueler} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -16,7 +16,7 @@ interface RouteStateKurse extends RouteStateInterface {
 	mapKatalogeintraege: Map<number, KursDaten>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsDaten>;
-	mapFaecher: Map<number, FaecherListeEintrag>;
+	mapFaecher: Map<number, FachDaten>;
 }
 
 const defaultState = <RouteStateKurse> {
@@ -51,7 +51,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		return this._state.value.mapJahrgaenge;
 	}
 
-	get mapFaecher(): Map<number, FaecherListeEintrag> {
+	get mapFaecher(): Map<number, FachDaten> {
 		return this._state.value.mapFaecher;
 	}
 
@@ -79,7 +79,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 			mapLehrer.set(l.id, l);
 		// Laden des Fächer-Katalogs
 		const listFaecher = await api.server.getFaecher(api.schema);
-		const mapFaecher = new Map<number, FaecherListeEintrag>();
+		const mapFaecher = new Map<number, FachDaten>();
 		for (const l of listFaecher)
 			mapFaecher.set(l.id, l);
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge, mapFaecher })

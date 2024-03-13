@@ -11,12 +11,12 @@ import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
+import { FachDaten } from '../../../core/data/fach/FachDaten';
 import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
-import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
@@ -38,9 +38,9 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap();
 
-	private readonly _faecher : List<FaecherListeEintrag> = new ArrayList();
+	private readonly _faecher : List<FachDaten> = new ArrayList();
 
-	private readonly _mapFachByID : JavaMap<number, FaecherListeEintrag> = new HashMap();
+	private readonly _mapFachByID : JavaMap<number, FachDaten> = new HashMap();
 
 	private readonly _foerderschwerpunkte : List<FoerderschwerpunktEintrag> = new ArrayList();
 
@@ -62,7 +62,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap();
 
-	private static readonly _compFach : Comparator<FaecherListeEintrag> = { compare : (a: FaecherListeEintrag, b: FaecherListeEintrag) => {
+	private static readonly _compFach : Comparator<FachDaten> = { compare : (a: FachDaten, b: FachDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
 			return cmp;
@@ -92,8 +92,8 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	} };
 
 	private readonly _compLeistungenByFach : Comparator<SchuelerLeistungsdaten> = { compare : (a: SchuelerLeistungsdaten, b: SchuelerLeistungsdaten) => {
-		const aFach : FaecherListeEintrag = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, a.fachID);
-		const bFach : FaecherListeEintrag = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, b.fachID);
+		const aFach : FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, a.fachID);
+		const bFach : FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, b.fachID);
 		return SchuelerLernabschnittManager._compFach.compare(aFach, bFach);
 	} };
 
@@ -112,7 +112,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsDaten>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FachDaten>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsDaten>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, lehrer : List<LehrerListeEintrag>) {
 		super();
 		this._schulform = schulform;
 		this._schueler = schueler;
@@ -132,7 +132,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 			this.leistungAddInternal(leistung);
 	}
 
-	private initFaecher(faecher : List<FaecherListeEintrag>) : void {
+	private initFaecher(faecher : List<FachDaten>) : void {
 		this._faecher.clear();
 		this._faecher.addAll(faecher);
 		this._faecher.sort(SchuelerLernabschnittManager._compFach);
@@ -332,7 +332,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Fach-Informationen
 	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
 	 */
-	public fachGetByIdOrException(id : number) : FaecherListeEintrag {
+	public fachGetByIdOrException(id : number) : FachDaten {
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, id);
 	}
 
@@ -344,7 +344,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Fach-Informationen.
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
-	public fachGetByLeistungIdOrException(idLeistung : number) : FaecherListeEintrag {
+	public fachGetByLeistungIdOrException(idLeistung : number) : FachDaten {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, leistung.fachID);
 	}
@@ -358,7 +358,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
 	public fachFarbeGetByLeistungsIdOrException(idLeistung : number) : string {
-		const fach : FaecherListeEintrag = this.fachGetByLeistungIdOrException(idLeistung);
+		const fach : FachDaten = this.fachGetByLeistungIdOrException(idLeistung);
 		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB();
 	}
 
@@ -367,7 +367,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @return die Liste der Fächer
 	 */
-	public fachGetMenge() : List<FaecherListeEintrag> {
+	public fachGetMenge() : List<FachDaten> {
 		return this._faecher;
 	}
 

@@ -8586,7 +8586,7 @@ FachDaten {
 exports[`Server > getFaecher 1`] = `
 ArrayList {
   "elementData": [
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Deutsch",
       "id": 16,
       "istAenderbar": true,
@@ -8596,7 +8596,7 @@ ArrayList {
       "kuerzelStatistik": "D",
       "sortierung": 10,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Französisch ab Klasse 6",
       "id": 30,
       "istAenderbar": true,
@@ -8606,7 +8606,7 @@ ArrayList {
       "kuerzelStatistik": "F6",
       "sortierung": 30,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Spanisch ab Klasse 8",
       "id": 165,
       "istAenderbar": true,
@@ -8616,7 +8616,7 @@ ArrayList {
       "kuerzelStatistik": "S8",
       "sortierung": 40,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Spanisch ab EF",
       "id": 223,
       "istAenderbar": true,
@@ -8626,7 +8626,7 @@ ArrayList {
       "kuerzelStatistik": "S0",
       "sortierung": 40,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Englisch",
       "id": 17,
       "istAenderbar": true,
@@ -8636,7 +8636,7 @@ ArrayList {
       "kuerzelStatistik": "E",
       "sortierung": 50,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Lateinisch ab Klasse 6",
       "id": 72,
       "istAenderbar": true,
@@ -8646,7 +8646,7 @@ ArrayList {
       "kuerzelStatistik": "L6",
       "sortierung": 60,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Kunsterziehung",
       "id": 71,
       "istAenderbar": true,
@@ -8656,7 +8656,7 @@ ArrayList {
       "kuerzelStatistik": "KU",
       "sortierung": 70,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Musik",
       "id": 81,
       "istAenderbar": true,
@@ -8666,7 +8666,7 @@ ArrayList {
       "kuerzelStatistik": "MU",
       "sortierung": 80,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Vokalpraktischer Grundkurs",
       "id": 239,
       "istAenderbar": true,
@@ -8676,7 +8676,7 @@ ArrayList {
       "kuerzelStatistik": "VO",
       "sortierung": 100,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Instrumentalpraktischer Grundkurs",
       "id": 55,
       "istAenderbar": true,
@@ -8686,7 +8686,7 @@ ArrayList {
       "kuerzelStatistik": "IN",
       "sortierung": 101,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Literatur",
       "id": 244,
       "istAenderbar": true,
@@ -8696,7 +8696,7 @@ ArrayList {
       "kuerzelStatistik": "LI",
       "sortierung": 111,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Erdkunde",
       "id": 24,
       "istAenderbar": true,
@@ -8706,7 +8706,7 @@ ArrayList {
       "kuerzelStatistik": "EK",
       "sortierung": 120,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Erdkunde bilingual",
       "id": 228,
       "istAenderbar": true,
@@ -8716,7 +8716,7 @@ ArrayList {
       "kuerzelStatistik": "EK",
       "sortierung": 121,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Geschichte",
       "id": 37,
       "istAenderbar": true,
@@ -8726,7 +8726,7 @@ ArrayList {
       "kuerzelStatistik": "GE",
       "sortierung": 130,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Geschichte bilingual",
       "id": 225,
       "istAenderbar": true,
@@ -8736,7 +8736,7 @@ ArrayList {
       "kuerzelStatistik": "GE",
       "sortierung": 131,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Sozialwissenschaften",
       "id": 164,
       "istAenderbar": true,
@@ -8746,7 +8746,7 @@ ArrayList {
       "kuerzelStatistik": "SW",
       "sortierung": 150,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Politik",
       "id": 129,
       "istAenderbar": true,
@@ -8756,7 +8756,7 @@ ArrayList {
       "kuerzelStatistik": "PK",
       "sortierung": 160,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Philosophie",
       "id": 127,
       "istAenderbar": true,
@@ -8766,7 +8766,7 @@ ArrayList {
       "kuerzelStatistik": "PL",
       "sortierung": 170,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Praktische Philosophie",
       "id": 144,
       "istAenderbar": true,
@@ -8776,7 +8776,7 @@ ArrayList {
       "kuerzelStatistik": "PP",
       "sortierung": 171,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Erziehungswissenschaft",
       "id": 26,
       "istAenderbar": true,
@@ -8786,7 +8786,7 @@ ArrayList {
       "kuerzelStatistik": "PA",
       "sortierung": 180,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Ev. Religionslehre",
       "id": 27,
       "istAenderbar": true,
@@ -8796,7 +8796,7 @@ ArrayList {
       "kuerzelStatistik": "ER",
       "sortierung": 185,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Kath. Religionslehre",
       "id": 70,
       "istAenderbar": true,
@@ -8806,7 +8806,7 @@ ArrayList {
       "kuerzelStatistik": "KR",
       "sortierung": 186,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Mathematik",
       "id": 79,
       "istAenderbar": true,
@@ -8816,7 +8816,7 @@ ArrayList {
       "kuerzelStatistik": "M",
       "sortierung": 190,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Naturwissenschaften",
       "id": 191,
       "istAenderbar": true,
@@ -8826,7 +8826,7 @@ ArrayList {
       "kuerzelStatistik": "BI",
       "sortierung": 195,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Biologie",
       "id": 192,
       "istAenderbar": true,
@@ -8836,7 +8836,7 @@ ArrayList {
       "kuerzelStatistik": "BI",
       "sortierung": 200,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Biologie bilingual",
       "id": 224,
       "istAenderbar": true,
@@ -8846,7 +8846,7 @@ ArrayList {
       "kuerzelStatistik": "BI",
       "sortierung": 201,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Chemie",
       "id": 8,
       "istAenderbar": true,
@@ -8856,7 +8856,7 @@ ArrayList {
       "kuerzelStatistik": "CH",
       "sortierung": 210,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Physik",
       "id": 128,
       "istAenderbar": true,
@@ -8866,7 +8866,7 @@ ArrayList {
       "kuerzelStatistik": "PH",
       "sortierung": 220,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Informatik",
       "id": 193,
       "istAenderbar": true,
@@ -8876,7 +8876,7 @@ ArrayList {
       "kuerzelStatistik": "IF",
       "sortierung": 230,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Sport",
       "id": 172,
       "istAenderbar": true,
@@ -8886,7 +8886,7 @@ ArrayList {
       "kuerzelStatistik": "SP",
       "sortierung": 260,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Vertiefungsfach Deutsch",
       "id": 210,
       "istAenderbar": true,
@@ -8896,7 +8896,7 @@ ArrayList {
       "kuerzelStatistik": "VX",
       "sortierung": 280,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Vertiefungsfach Englisch",
       "id": 212,
       "istAenderbar": true,
@@ -8906,7 +8906,7 @@ ArrayList {
       "kuerzelStatistik": "VX",
       "sortierung": 290,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Vertiefungsfach Mathematik",
       "id": 213,
       "istAenderbar": true,
@@ -8916,7 +8916,7 @@ ArrayList {
       "kuerzelStatistik": "VX",
       "sortierung": 300,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs Englisch",
       "id": 233,
       "istAenderbar": true,
@@ -8926,7 +8926,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2001,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs Biologie",
       "id": 234,
       "istAenderbar": true,
@@ -8936,7 +8936,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2005,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs Informatik",
       "id": 235,
       "istAenderbar": true,
@@ -8946,7 +8946,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2009,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs",
       "id": 240,
       "istAenderbar": true,
@@ -8956,7 +8956,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2010,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs Tanz",
       "id": 236,
       "istAenderbar": true,
@@ -8966,7 +8966,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2020,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Projektkurs Sport",
       "id": 237,
       "istAenderbar": true,
@@ -8976,7 +8976,7 @@ ArrayList {
       "kuerzelStatistik": "PX",
       "sortierung": 2030,
     },
-    FaecherListeEintrag {
+    FachDaten {
       "bezeichnung": "Herkunftssprache anstelle einer Pflichtfremdsprache - Arabisch",
       "id": 4,
       "istAenderbar": true,

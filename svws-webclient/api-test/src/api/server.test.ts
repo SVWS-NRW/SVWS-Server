@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import type {  LehrerListeEintrag,  List} from "@core";
-import { ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag, FaecherListeEintrag, GostFach } from "@core";
+import { ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag, FachDaten, GostFach } from "@core";
 
 const username = "Admin";
 const password = "";
@@ -173,7 +173,7 @@ describe("Server", () => {
 		const res = await server.getFaecher(schema);
 		expect(res).matchSnapshot();
 		const array = res.toArray();
-		expect(array[0]).toBeInstanceOf(FaecherListeEintrag);
+		expect(array[0]).toBeInstanceOf(FachDaten);
 	});
 	test.skip("getFach", async () => {
 		const res = await server.getFach(schema, 16);
