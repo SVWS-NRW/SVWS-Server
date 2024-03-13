@@ -15,7 +15,7 @@ import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
@@ -75,9 +75,9 @@ public final class DataUntis {
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.id, DTOKlassen.class);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme die Kurse des Schuljahresabschnitts
-		final List<KursListeEintrag> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
-		final HashMap2D<String, Long, KursListeEintrag> mapKurseByKuerzelUndJahrgang = new HashMap2D<>();
-		for (final KursListeEintrag kurs : kurse)
+		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+		final HashMap2D<String, Long, KursDaten> mapKurseByKuerzelUndJahrgang = new HashMap2D<>();
+		for (final KursDaten kurs : kurse)
 			for (final long idJahrgang : kurs.idJahrgaenge)
 				mapKurseByKuerzelUndJahrgang.put(kurs.kuerzel, idJahrgang, kurs);
 		// Prüfe den Beginn des Stundenplan - ist dieser evtl. nach dem Schuljahr des angegebenen Schuljahresabschnitts?
@@ -130,7 +130,7 @@ public final class DataUntis {
 				throw OperationError.NOT_FOUND.exception("Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
 			}
 			// Prüfe, ob es sich um Kursunterricht handelt
-			final KursListeEintrag kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
+			final KursDaten kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
 			if (kurs == null) {
 				// Bestimme das Fach
 				final FaecherListeEintrag fach = mapFaecherByKuerzel.get(u.fachKuerzel);

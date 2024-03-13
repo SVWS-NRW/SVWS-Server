@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.kurse;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public final class KursUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten. */
-	public static final @NotNull Comparator<@NotNull KursListeEintrag> comparator = (final @NotNull KursListeEintrag a, final @NotNull KursListeEintrag b) -> {
+	public static final @NotNull Comparator<@NotNull KursDaten> comparator = (final @NotNull KursDaten a, final @NotNull KursDaten b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;

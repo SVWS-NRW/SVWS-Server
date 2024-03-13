@@ -10,8 +10,8 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
+import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
-import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
@@ -70,9 +70,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Das Filter-Attribut für die Kurse
 	 */
-	public readonly kurse : AttributMitAuswahl<number, KursListeEintrag>;
+	public readonly kurse : AttributMitAuswahl<number, KursDaten>;
 
-	private static readonly _kursToId : JavaFunction<KursListeEintrag, number> = { apply : (k: KursListeEintrag) => k.id };
+	private static readonly _kursToId : JavaFunction<KursDaten, number> = { apply : (k: KursDaten) => k.id };
 
 	/**
 	 * Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt
@@ -119,7 +119,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenDaten>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
 		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.klassen = new AttributMitAuswahl(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);

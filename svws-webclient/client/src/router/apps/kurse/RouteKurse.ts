@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { KursListeEintrag } from "@core";
+import type { KursDaten } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -43,7 +43,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
-		let eintrag: KursListeEintrag | undefined;
+		let eintrag: KursDaten | undefined;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {

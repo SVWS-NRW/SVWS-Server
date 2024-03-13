@@ -1,5 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { KursListeEintrag } from '../../core/data/kurse/KursListeEintrag';
+import { KursDaten } from '../../core/data/kurse/KursDaten';
 import { HashMap } from '../../java/util/HashMap';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
@@ -12,12 +12,12 @@ export class KursManager extends JavaObject {
 	/**
 	 * Die Kurse, die im Manager vorhanden sind
 	 */
-	private readonly _kurse : List<KursListeEintrag> = new ArrayList();
+	private readonly _kurse : List<KursDaten> = new ArrayList();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private readonly _map : HashMap<number, KursListeEintrag> = new HashMap();
+	private readonly _map : HashMap<number, KursDaten> = new HashMap();
 
 
 	/**
@@ -30,17 +30,17 @@ export class KursManager extends JavaObject {
 	 *
 	 * @param kurse die Liste mit den Kursen
 	 */
-	public constructor(kurse : List<KursListeEintrag>);
+	public constructor(kurse : List<KursDaten>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : List<KursListeEintrag>) {
+	public constructor(__param0? : List<KursDaten>) {
 		super();
 		if ((typeof __param0 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
-			const kurse : List<KursListeEintrag> = cast_java_util_List(__param0);
+			const kurse : List<KursDaten> = cast_java_util_List(__param0);
 			this.addAll(kurse);
 		} else throw new Error('invalid method overload');
 	}
@@ -54,10 +54,10 @@ export class KursManager extends JavaObject {
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 * @throws DeveloperNotificationException Falls die ID des Kurses nagativ ist.
 	 */
-	private addInternal(kurs : KursListeEintrag) : boolean {
+	private addInternal(kurs : KursDaten) : boolean {
 		if (kurs.id < 0)
 			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!")
-		const old : KursListeEintrag | null = this._map.put(kurs.id, kurs);
+		const old : KursDaten | null = this._map.put(kurs.id, kurs);
 		if (old !== null)
 			return false;
 		return this._kurse.add(kurs);
@@ -78,7 +78,7 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 */
-	public add(kurs : KursListeEintrag) : boolean {
+	public add(kurs : KursDaten) : boolean {
 		const result : boolean = this.addInternal(kurs);
 		this.sort();
 		return result;
@@ -91,7 +91,7 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return true, falls <i>alle</i> Kurse eingefügt wurden, sonst false
 	 */
-	public addAll(kurse : Collection<KursListeEintrag>) : boolean {
+	public addAll(kurse : Collection<KursDaten>) : boolean {
 		let result : boolean = true;
 		for (const kurs of kurse)
 			if (!this.addInternal(kurs))
@@ -108,7 +108,7 @@ export class KursManager extends JavaObject {
 	 * @return Der Kurs mit der angegebenen ID oder null, falls es den Kurs nicht
 	 *         gibt.
 	 */
-	public get(id : number) : KursListeEintrag | null {
+	public get(id : number) : KursDaten | null {
 		return this._map.get(id);
 	}
 
@@ -120,10 +120,10 @@ export class KursManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls ein Kurs mit der ID nicht
 	 *                                        bekannt ist
 	 */
-	public getOrException(pKursID : number) : KursListeEintrag {
-		const kurs : KursListeEintrag | null = this._map.get(pKursID);
+	public getOrException(pKursID : number) : KursDaten {
+		const kurs : KursDaten | null = this._map.get(pKursID);
 		if (kurs === null)
-			throw new DeveloperNotificationException("KursListeEintrag mit id=" + pKursID + " gibt es nicht.")
+			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.")
 		return kurs;
 	}
 
@@ -141,7 +141,7 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return die interne Liste der Kurse
 	 */
-	public kurse() : List<KursListeEintrag> {
+	public kurse() : List<KursDaten> {
 		return this._kurse;
 	}
 
@@ -150,7 +150,7 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return ein Array mit den Kursen
 	 */
-	public values() : Array<KursListeEintrag> {
+	public values() : Array<KursDaten> {
 		return this._kurse.toArray(Array(0).fill(null));
 	}
 
@@ -159,8 +159,8 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return ein Vector mit den Kursen
 	 */
-	public toList() : List<KursListeEintrag> {
-		const result : List<KursListeEintrag> = new ArrayList();
+	public toList() : List<KursDaten> {
+		const result : List<KursDaten> = new ArrayList();
 		for (const kurs of this._kurse)
 			result.add(kurs);
 		return result;

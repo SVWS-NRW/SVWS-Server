@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { KursDaten } from '../../../../core/data/kurse/KursDaten';
 import { GostFach } from '../../../../core/data/gost/GostFach';
-import { KursListeEintrag } from '../../../../core/data/kurse/KursListeEintrag';
 import { SchuelerListeEintrag } from '../../../../core/data/schueler/SchuelerListeEintrag';
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
 import { ArrayList } from '../../../../java/util/ArrayList';
@@ -27,7 +27,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public kurse : List<KursListeEintrag> = new ArrayList();
+	public kurse : List<KursDaten> = new ArrayList();
 
 	/**
 	 * Die Liste der Schülerklausuren.
@@ -67,7 +67,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 		}
 		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(KursListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse?.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (typeof obj.klausurdata === "undefined")
@@ -120,7 +120,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 			result += '"kurse" : [ ';
 			for (let i = 0; i < obj.kurse.size(); i++) {
 				const elem = obj.kurse.get(i);
-				result += KursListeEintrag.transpilerToJSON(elem);
+				result += KursDaten.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
 					result += ',';
 			}
@@ -183,7 +183,7 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 				result += '"kurse" : [ ';
 				for (let i = 0; i < obj.kurse.size(); i++) {
 					const elem = obj.kurse.get(i);
-					result += KursListeEintrag.transpilerToJSON(elem);
+					result += KursDaten.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
 						result += ',';
 				}

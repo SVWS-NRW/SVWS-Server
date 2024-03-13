@@ -232,7 +232,6 @@ export { SchuelerblockungInputKurs } from './core/data/kursblockung/Schuelerbloc
 export { SchuelerblockungOutput } from './core/data/kursblockung/SchuelerblockungOutput';
 export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 export { KursDaten } from './core/data/kurse/KursDaten';
-export { KursListeEintrag } from './core/data/kurse/KursListeEintrag';
 export { KursartKatalogEintrag } from './core/data/kurse/KursartKatalogEintrag';
 export { LehrerFachrichtungEintrag } from './core/data/lehrer/LehrerFachrichtungEintrag';
 export { LehrerKatalogAbgangsgrundEintrag } from './core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';

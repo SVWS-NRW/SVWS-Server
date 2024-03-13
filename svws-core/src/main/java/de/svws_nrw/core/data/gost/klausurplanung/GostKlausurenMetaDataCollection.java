@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -35,7 +35,7 @@ public class GostKlausurenMetaDataCollection {
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<@NotNull KursListeEintrag> kurse = new ArrayList<>();
+	public @NotNull List<@NotNull KursDaten> kurse = new ArrayList<>();
 
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")

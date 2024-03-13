@@ -61,7 +61,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenDaten, Schulgliederung, KursListeEintrag } from "@core";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenDaten, Schulgliederung, KursDaten } from "@core";
 	import { SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
@@ -162,7 +162,7 @@
 		}
 	});
 
-	const filterKurse = computed<KursListeEintrag[]>({
+	const filterKurse = computed<KursDaten[]>({
 		get: () => [...props.schuelerListeManager().kurse.auswahl()],
 		set: (value) => {
 			props.schuelerListeManager().kurse.auswahlClear();
@@ -194,7 +194,7 @@
 			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)))
 	}
 
-	function textKurs(kurs: KursListeEintrag): string {
+	function textKurs(kurs: KursDaten): string {
 		let jahrgaenge = "";
 		let index = 0;
 		for (const j of kurs.idJahrgaenge) {
@@ -217,7 +217,7 @@
 		return list;
 	}
 
-	function findKurs(items: Iterable<KursListeEintrag>, search: string) {
+	function findKurs(items: Iterable<KursDaten>, search: string) {
 		const list = [];
 		for (const i of items)
 			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))

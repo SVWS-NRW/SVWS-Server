@@ -10,7 +10,7 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
@@ -55,8 +55,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	private static final @NotNull Function<@NotNull KlassenDaten, @NotNull Long> _klasseToId = (final @NotNull KlassenDaten k) -> k.id;
 
 	/** Das Filter-Attribut für die Kurse */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KursListeEintrag> kurse;
-	private static final @NotNull Function<@NotNull KursListeEintrag, @NotNull Long> _kursToId = (final @NotNull KursListeEintrag k) -> k.id;
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KursDaten> kurse;
+	private static final @NotNull Function<@NotNull KursDaten, @NotNull Long> _kursToId = (final @NotNull KursDaten k) -> k.id;
 
 	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
@@ -93,7 +93,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
-			final @NotNull List<@NotNull KursListeEintrag> kurse,
+			final @NotNull List<@NotNull KursDaten> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
 		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,

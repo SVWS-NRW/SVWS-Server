@@ -1,4 +1,4 @@
-import type { FaecherListeEintrag, JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import type { FaecherListeEintrag, JahrgangsListeEintrag, KursDaten, LehrerListeEintrag, Schueler} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -11,9 +11,9 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 
 
 interface RouteStateKurse extends RouteStateInterface {
-	auswahl: KursListeEintrag | undefined;
+	auswahl: KursDaten | undefined;
 	daten: KursDaten | undefined;
-	mapKatalogeintraege: Map<number, KursListeEintrag>;
+	mapKatalogeintraege: Map<number, KursDaten>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapFaecher: Map<number, FaecherListeEintrag>;
@@ -35,11 +35,11 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		super(defaultState);
 	}
 
-	get auswahl(): KursListeEintrag | undefined {
+	get auswahl(): KursDaten | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, KursListeEintrag> {
+	get mapKatalogeintraege(): Map<number, KursDaten> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
@@ -85,7 +85,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge, mapFaecher })
 	}
 
-	setEintrag = async (auswahl: KursListeEintrag) => {
+	setEintrag = async (auswahl: KursDaten) => {
 		const daten = await api.server.getKurs(api.schema, auswahl.id);
 		this.setPatchedState({ auswahl, daten })
 	}

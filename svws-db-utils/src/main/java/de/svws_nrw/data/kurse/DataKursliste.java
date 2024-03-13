@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
@@ -23,14 +23,14 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KursListeEintrag}.
+ * Core-DTO {@link KursDaten}.
  */
 public final class DataKursliste extends DataManager<Long> {
 
 	private final Long abschnitt;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KursListeEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KursDaten}.
 	 *
 	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abschnitt   der Lernabschnitt für die Liste der Kurse
@@ -41,10 +41,10 @@ public final class DataKursliste extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursListeEintrag}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link KursDaten}.
 	 */
-	private static Function<DTOKurs, KursListeEintrag> dtoMapper = k -> {
-		final KursListeEintrag eintrag = new KursListeEintrag();
+	private static Function<DTOKurs, KursDaten> dtoMapper = k -> {
+		final KursDaten eintrag = new KursDaten();
 		eintrag.id = k.ID;
 		eintrag.idSchuljahresabschnitt = k.Schuljahresabschnitts_ID;
 		eintrag.kuerzel = k.KurzBez;
@@ -84,7 +84,7 @@ public final class DataKursliste extends DataManager<Long> {
 	 *
 	 * @return die Liste der Kurse
 	 */
-	public static @NotNull List<@NotNull KursListeEintrag> getKursListenFuerAbschnitt(final DBEntityManager conn,
+	public static @NotNull List<@NotNull KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn,
 			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) {
     	final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
     		? conn.queryAll(DTOKurs.class)
@@ -92,7 +92,7 @@ public final class DataKursliste extends DataManager<Long> {
     	if (kurse.isEmpty())
     		return new ArrayList<>();
     	// Erstelle die Liste der Kurse
-    	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+    	final List<KursDaten> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
     	if (!mitSchuelerInfo)
     		return daten;
     	// Ergänze die Liste der Schüler in den Kursen
@@ -114,7 +114,7 @@ public final class DataKursliste extends DataManager<Long> {
     		}
     		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
     	}
-    	for (final KursListeEintrag eintrag : daten) {
+    	for (final KursDaten eintrag : daten) {
     		final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
     		if (listSchueler != null)
     			eintrag.schueler.addAll(listSchueler);
@@ -125,7 +125,7 @@ public final class DataKursliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final @NotNull List<@NotNull KursListeEintrag> daten = getKursListenFuerAbschnitt(conn, abschnitt, true);
+		final @NotNull List<@NotNull KursDaten> daten = getKursListenFuerAbschnitt(conn, abschnitt, true);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

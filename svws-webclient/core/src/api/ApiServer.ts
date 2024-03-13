@@ -94,7 +94,6 @@ import { KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalog
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
 import { KursartKatalogEintrag } from '../core/data/kurse/KursartKatalogEintrag';
 import { KursDaten } from '../core/data/kurse/KursDaten';
-import { KursListeEintrag } from '../core/data/kurse/KursListeEintrag';
 import { LehrerKatalogAbgangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';
 import { LehrerKatalogAnrechnungsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
 import { LehrerKatalogBeschaeftigungsartEintrag } from '../core/data/lehrer/LehrerKatalogBeschaeftigungsartEintrag';
@@ -7032,7 +7031,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Kurs-Listen-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KursListeEintrag>
+	 *     - Rückgabe-Typ: List<KursDaten>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.
 	 *   Code 404: Keine Kurs-Einträge gefunden
 	 *
@@ -7040,13 +7039,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kurs-Listen-Einträgen
 	 */
-	public async getKurse(schema : string) : Promise<List<KursListeEintrag>> {
+	public async getKurse(schema : string) : Promise<List<KursDaten>> {
 		const path = "/db/{schema}/kurse/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KursListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursListeEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KursDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7136,7 +7135,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Kurs-Listen-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KursListeEintrag>
+	 *     - Rückgabe-Typ: List<KursDaten>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.
 	 *   Code 404: Keine Kurs-Einträge gefunden
 	 *
@@ -7145,14 +7144,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kurs-Listen-Einträgen
 	 */
-	public async getKurseFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KursListeEintrag>> {
+	public async getKurseFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KursDaten>> {
 		const path = "/db/{schema}/kurse/abschnitt/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KursListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursListeEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KursDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 

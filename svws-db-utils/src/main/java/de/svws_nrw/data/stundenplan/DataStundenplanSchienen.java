@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.Pair;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.data.DataBasicMapper;
@@ -131,9 +131,9 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 * @param kurse           die Liste der Kurse
 	 */
-	public static void addSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursListeEintrag> kurse) {
+	public static void addSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse) {
 		final Set<Pair<Long, Integer>> setJahrgangsSchienen = new HashSet<>();
-		for (final KursListeEintrag kurs : kurse)
+		for (final KursDaten kurs : kurse)
 			for (final long idJahrgang : kurs.idJahrgaenge)
 				for (final int schiene : kurs.schienen)
 					setJahrgangsSchienen.add(new Pair<>(idJahrgang, schiene));

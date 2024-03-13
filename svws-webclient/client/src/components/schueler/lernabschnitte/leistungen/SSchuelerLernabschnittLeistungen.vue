@@ -33,7 +33,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
 								:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="(value : KursListeEintrag) => void patchKurs(value, leistung)"
+								@update:model-value="(value : KursDaten) => void patchKurs(value, leistung)"
 								class="w-full" headless removable />
 						</div>
 						<div class="svws-ui-td" role="cell">
@@ -114,7 +114,7 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
-	import type { SchuelerLeistungsdaten, List, KursListeEintrag, FaecherListeEintrag} from "@core";
+	import type { SchuelerLeistungsdaten, List, KursDaten, FaecherListeEintrag} from "@core";
 	import { Note, ZulaessigeKursart, ArrayList, ZulaessigesFach } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
@@ -216,7 +216,7 @@
 		}
 	}
 
-	async function patchKurs(kurs: KursListeEintrag, leistung: SchuelerLeistungsdaten) {
+	async function patchKurs(kurs: KursDaten, leistung: SchuelerLeistungsdaten) {
 		if ((kurs === null) || (kurs === undefined)) {
 			await props.patchLeistung({ kursID: null }, leistung.id);
 			return;

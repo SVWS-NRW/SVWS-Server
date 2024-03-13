@@ -9,7 +9,7 @@ import java.util.Map;
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
@@ -52,8 +52,8 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull List<@NotNull KlassenDaten> _klassen = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull KlassenDaten> _mapKlasseByID = new HashMap<>();
 
-	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull KursListeEintrag> _mapKursByID = new HashMap<>();
+	private final @NotNull List<@NotNull KursDaten> _kurse = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull KursDaten> _mapKursByID = new HashMap<>();
 
 	private final @NotNull List<@NotNull LehrerListeEintrag> _lehrer = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull LehrerListeEintrag> _mapLehrerByID = new HashMap<>();
@@ -118,7 +118,7 @@ public class SchuelerLernabschnittManager {
 			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
-			final @NotNull List<@NotNull KursListeEintrag> kurse,
+			final @NotNull List<@NotNull KursDaten> kurse,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		this._schulform = schulform;
 		this._schueler = schueler;
@@ -174,12 +174,12 @@ public class SchuelerLernabschnittManager {
 			this._mapKlasseByID.put(k.id, k);
 	}
 
-	private void initKurse(final @NotNull List<@NotNull KursListeEintrag> kurse) {
+	private void initKurse(final @NotNull List<@NotNull KursDaten> kurse) {
 		this._kurse.clear();
 		this._kurse.addAll(kurse);
 		this._kurse.sort(KursUtils.comparator);
 		this._mapKursByID.clear();
-		for (final @NotNull KursListeEintrag k : kurse)
+		for (final @NotNull KursDaten k : kurse)
 			this._mapKursByID.put(k.id, k);
 	}
 
@@ -463,7 +463,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Kurs-Informationen
 	 * @throws DeveloperNotificationException falls kein Kurs mit der ID existiert
 	 */
-	public @NotNull KursListeEintrag kursGetByIdOrException(final long id) {
+	public @NotNull KursDaten kursGetByIdOrException(final long id) {
 		return DeveloperNotificationException.ifMapGetIsNull(_mapKursByID, id);
 	}
 
@@ -475,7 +475,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Kurs-Informationen oder null, falls kein Kurs zugeordnet ist.
 	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
 	 */
-	public KursListeEintrag kursGetByLeistungIdOrNull(final long idLeistung) {
+	public KursDaten kursGetByLeistungIdOrNull(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		return _mapKursByID.get(leistung.kursID);
 	}
@@ -488,7 +488,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Kurs-Informationen
 	 * @throws DeveloperNotificationException falls kein Kurs zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
-	public @NotNull KursListeEintrag kursGetByLeistungIdOrException(final long idLeistung) {
+	public @NotNull KursDaten kursGetByLeistungIdOrException(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		return DeveloperNotificationException.ifMapGetIsNull(_mapKursByID, leistung.kursID);
 	}
@@ -498,7 +498,7 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @return die Liste der Kurse
 	 */
-	public @NotNull List<@NotNull KursListeEintrag> kursGetMenge() {
+	public @NotNull List<@NotNull KursDaten> kursGetMenge() {
 		return this._kurse;
 	}
 
@@ -511,10 +511,10 @@ public class SchuelerLernabschnittManager {
 	 * @return die gefilterte Liste der Kurse
 	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
 	 */
-	public @NotNull List<@NotNull KursListeEintrag> kursGetMengeFilteredByLeistung(final long idLeistung) {
+	public @NotNull List<@NotNull KursDaten> kursGetMengeFilteredByLeistung(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
-		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
-		for (final @NotNull KursListeEintrag k : this._kurse) {
+		final @NotNull List<@NotNull KursDaten> result = new ArrayList<>();
+		for (final @NotNull KursDaten k : this._kurse) {
 			if ((k.idFach == leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID)))
 				result.add(k);
 		}

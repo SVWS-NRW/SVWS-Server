@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,10 +17,10 @@ import jakarta.validation.constraints.NotNull;
 public class KursManager {
 
 	/** Die Kurse, die im Manager vorhanden sind */
-	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
+	private final @NotNull List<@NotNull KursDaten> _kurse = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull KursListeEintrag> _map = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull KursDaten> _map = new HashMap<>();
 
 	/**
 	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
@@ -34,7 +34,7 @@ public class KursManager {
 	 *
 	 * @param kurse die Liste mit den Kursen
 	 */
-	public KursManager(final @NotNull List<@NotNull KursListeEintrag> kurse) {
+	public KursManager(final @NotNull List<@NotNull KursDaten> kurse) {
 		addAll(kurse);
 	}
 
@@ -47,10 +47,10 @@ public class KursManager {
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 * @throws DeveloperNotificationException Falls die ID des Kurses nagativ ist.
 	 */
-	private boolean addInternal(final @NotNull KursListeEintrag kurs) throws DeveloperNotificationException {
+	private boolean addInternal(final @NotNull KursDaten kurs) throws DeveloperNotificationException {
 		if (kurs.id < 0)
 			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!");
-		final KursListeEintrag old = _map.put(kurs.id, kurs);
+		final KursDaten old = _map.put(kurs.id, kurs);
 		if (old != null)
 			return false;
 		return _kurse.add(kurs);
@@ -71,7 +71,7 @@ public class KursManager {
 	 *
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 */
-	public boolean add(final @NotNull KursListeEintrag kurs) {
+	public boolean add(final @NotNull KursDaten kurs) {
 		final boolean result = addInternal(kurs);
 		sort();
 		return result;
@@ -84,9 +84,9 @@ public class KursManager {
 	 *
 	 * @return true, falls <i>alle</i> Kurse eingefügt wurden, sonst false
 	 */
-	public boolean addAll(final @NotNull Collection<@NotNull KursListeEintrag> kurse) {
+	public boolean addAll(final @NotNull Collection<@NotNull KursDaten> kurse) {
 		boolean result = true;
-		for (final @NotNull KursListeEintrag kurs : kurse)
+		for (final @NotNull KursDaten kurs : kurse)
 			if (!addInternal(kurs))
 				result = false;
 		sort();
@@ -101,7 +101,7 @@ public class KursManager {
 	 * @return Der Kurs mit der angegebenen ID oder null, falls es den Kurs nicht
 	 *         gibt.
 	 */
-	public KursListeEintrag get(final long id) {
+	public KursDaten get(final long id) {
 		return _map.get(id);
 	}
 
@@ -113,10 +113,10 @@ public class KursManager {
 	 * @throws DeveloperNotificationException falls ein Kurs mit der ID nicht
 	 *                                        bekannt ist
 	 */
-	public @NotNull KursListeEintrag getOrException(final long pKursID) throws DeveloperNotificationException {
-		final KursListeEintrag kurs = _map.get(pKursID);
+	public @NotNull KursDaten getOrException(final long pKursID) throws DeveloperNotificationException {
+		final KursDaten kurs = _map.get(pKursID);
 		if (kurs == null)
-			throw new DeveloperNotificationException("KursListeEintrag mit id=" + pKursID + " gibt es nicht.");
+			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.");
 		return kurs;
 	}
 
@@ -134,7 +134,7 @@ public class KursManager {
 	 *
 	 * @return die interne Liste der Kurse
 	 */
-	public @NotNull List<@NotNull KursListeEintrag> kurse() {
+	public @NotNull List<@NotNull KursDaten> kurse() {
 		return _kurse;
 	}
 
@@ -143,8 +143,8 @@ public class KursManager {
 	 *
 	 * @return ein Array mit den Kursen
 	 */
-	public @NotNull KursListeEintrag @NotNull [] values() {
-		return _kurse.toArray(new KursListeEintrag[0]);
+	public @NotNull KursDaten @NotNull [] values() {
+		return _kurse.toArray(new KursDaten[0]);
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class KursManager {
 	 *
 	 * @return ein Vector mit den Kursen
 	 */
-	public @NotNull List<@NotNull KursListeEintrag> toList() {
-		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
-		for (final @NotNull KursListeEintrag kurs : _kurse)
+	public @NotNull List<@NotNull KursDaten> toList() {
+		final @NotNull List<@NotNull KursDaten> result = new ArrayList<>();
+		for (final @NotNull KursDaten kurs : _kurse)
 			result.add(kurs);
 		return result;
 	}

@@ -1,4 +1,4 @@
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursListeEintrag,
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten,
 	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from '@core';
 import { Schulform, Schulgliederung, BenutzerTyp } from '@core';
 import { ApiConnection } from "./ApiConnection";
@@ -329,9 +329,9 @@ class Api {
 	 *
 	 * @returns die Map mit den Kursen
 	 */
-	public async getKursListe(idSchuljahresabschnitt: number): Promise<Map<number, KursListeEintrag>> {
+	public async getKursListe(idSchuljahresabschnitt: number): Promise<Map<number, KursDaten>> {
 		const listKurse = await this.server.getKurseFuerAbschnitt(this.schema, idSchuljahresabschnitt);
-		const mapKurse: Map<number, KursListeEintrag> = new Map();
+		const mapKurse: Map<number, KursDaten> = new Map();
 		for (const k of listKurse)
 			mapKurse.set(k.id, k)
 		return mapKurse;

@@ -3,7 +3,6 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
-import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.kurse.KursartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -60,7 +59,7 @@ public class APIKurse {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Kurs-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursListeEintrag.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursDaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
     public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -87,7 +86,7 @@ public class APIKurse {
     		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten "
     		       + "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Kurs-Listen-Einträgen",
-	      content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursListeEintrag.class))))
+	      content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursDaten.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
     public Response getKurseFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
