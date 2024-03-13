@@ -14,6 +14,7 @@ Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breakin
 	** `row` ist bereits in ein `tr` gewrappt und liefert nur die `td`.
 	** `rowSelectable` hat zusätzlich als erstes `td` eine Checkbox für die Zeilenauswahl.
 	** `rowCustom` hat kein `tr` und muss vollständig implementiert werden.
+* Das Select kann nun ein Vorgabe-Item hervorheben. Wird z.B. bei dem aktuellen Schulabschnitt genutzt. `:highlightItem`
 ## ab 0.8.9
 * Die Checkbox hat das Attribut `color = 'success' | 'error' | 'warning';` dazubekommen.
 ## ab 0.7.8

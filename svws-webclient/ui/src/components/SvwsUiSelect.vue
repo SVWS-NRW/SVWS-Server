@@ -38,7 +38,7 @@
 	<Teleport to="body">
 		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :filtered-list="filteredList" :item-text="itemText"
 			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
-			:select-item="selectItem" ref="refList" :search-text="searchText" />
+			:select-item="selectItem" ref="refList" :search-text="searchText" :highlight-item="(highlightItem as Item|undefined)" />
 	</Teleport>
 </template>
 
@@ -73,6 +73,7 @@
 		removable?: boolean;
 		required?: boolean;
 		indeterminate?: boolean;
+		highlightItem?: Item;
 	}>(), {
 		label: '',
 		title: '',
@@ -87,6 +88,7 @@
 		headless: false,
 		removable: false,
 		indeterminate: false,
+		highlightItem: undefined,
 	})
 
 	const emit = defineEmits<{
@@ -170,7 +172,7 @@
 	const selectedItemList = computed<Set<Item>>(() => {
 		const set = new Set<Item>();
 		if ((data.value !== null) && (data.value !== undefined))
-			set.add(data.value);
+			set.add(toRaw(data.value));
 		return set;
 	});
 

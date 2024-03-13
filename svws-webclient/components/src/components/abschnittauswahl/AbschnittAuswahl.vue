@@ -13,7 +13,9 @@
 				</span>
 			</template>
 		</svws-ui-tooltip>
-		<svws-ui-select :headless="!disableHeadless" :model-value="aktAbschnitt" @update:model-value="abschnitt => setAbschnitt(abschnitt!)" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" :class="{'opacity-50 hover:opacity-100 focus-within:opacity-100': aktSchulabschnitt === aktAbschnitt.id}" />
+		<svws-ui-select :headless="!disableHeadless" :model-value="aktAbschnitt" @update:model-value="abschnitt => setAbschnitt(abschnitt!)"
+			:items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id"
+			:class="{'opacity-50 hover:opacity-100 focus-within:opacity-100': aktSchulabschnitt === aktAbschnitt.id}" :highlight-item="abschnitt" />
 	</div>
 </template>
 

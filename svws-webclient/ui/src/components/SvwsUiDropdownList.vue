@@ -29,7 +29,7 @@
 						@mousedown.prevent
 						@click="selectItem(item)">
 						<span v-if="itemText(item).length === 0" class="opacity-25">—</span>
-						<span v-else>{{ itemText(item) }}</span>
+						<span v-else :class="{'font-bold': highlightItem === item}">{{ itemText(item) }}</span>
 						<i-ri-check-line v-if="selectedItemList.has(item)" class="w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" />
 					</li>
 				</slot>
@@ -56,6 +56,7 @@
 		floatingLeft: string;
 		floatingTop: string;
 		searchText?: string;
+		highlightItem?: Item;
 	}>(),{
 		statistics: false,
 		tags: false,
@@ -63,7 +64,9 @@
 		selectItem: (item: Item | undefined | null) => undefined,
 		searchText: "",
 		selectedItemList: () => new Set<Item>(),
+		highlightItem: undefined,
 	})
+
 	const floating = ref(null);
 	const tags = toRef(props, 'tags');
 
