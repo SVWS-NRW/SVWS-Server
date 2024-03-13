@@ -524,6 +524,7 @@ export { StringUtils } from './core/utils/StringUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
+export { FachUtils } from './core/utils/fach/FachUtils';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisBewertungComparator } from './core/utils/gost/GostBlockungsergebnisBewertungComparator';
@@ -562,6 +563,7 @@ export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
 export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
+export { KursListeManager } from './core/utils/kurse/KursListeManager';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
