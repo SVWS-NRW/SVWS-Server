@@ -7,6 +7,8 @@ import { Schuljahresabschnitt } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteManager, routerManager } from "../RouteManager";
+import { RouteLocationRaw } from "vue-router";
 
 
 interface RouteStateApp extends RouteStateInterface {
@@ -62,6 +64,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		set: (abschnitt: Schuljahresabschnitt) => {
 			void api.config.setObjectValue("app.akt_abschnitt", abschnitt, Schuljahresabschnitt.transpilerToJSON);
 			// TODO was tun, wenn das akt Halbjahr neu gesetzt wurde?
+			const node = routerManager.getRouteNode();
+			const params = { ... routerManager.getRouteParams()};
+			params.idSchuljahresabschnitt = String(abschnitt.id);
+			const locationRaw : RouteLocationRaw = {};
+			locationRaw.name = node!.name;
+			locationRaw.params = params;
+			void RouteManager.doRoute(locationRaw);
 		}
 	})
 

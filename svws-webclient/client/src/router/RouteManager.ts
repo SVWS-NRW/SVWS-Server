@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -29,16 +29,20 @@ export class RouteManager {
 	/** Die Routing-Node, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
 	protected _node : RouteNode<unknown, any> | undefined = undefined;
 
+	/** Die Route-Location, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
+	protected _routeLocation: RouteLocationNormalized | undefined = undefined;
+
+	/** Der aktuelle Fehlerstatus der Route */
 	private _errorstate = reactive<RouteStateError>({
 		code: undefined,
 		error: undefined
 	});
 
 	/**
-     * Erstellt die Instanz des Managers für die übergebene Route
-     *
-     * @param router   der Router, welcher dem Manager zugeordnet wird
-     */
+	 * Erstellt die Instanz des Managers für die übergebene Route
+	 *
+	 * @param router   der Router, welcher dem Manager zugeordnet wird
+	 */
 	private constructor(router: Router) {
 		this.router = router;
 		this.active = false;
@@ -90,12 +94,12 @@ export class RouteManager {
 	}
 
 	/**
-     * Erstellt die Instanz des Managers für den übergebenen Route
-     *
-     * @param router   der Router, welcher dem Manager zugeordnet wird
-     *
-     * @returns die Instanz des Managers
-     */
+	 * Erstellt die Instanz des Managers für den übergebenen Route
+	 *
+	 * @param router   der Router, welcher dem Manager zugeordnet wird
+	 *
+	 * @returns die Instanz des Managers
+	 */
 	public static create(router: Router): RouteManager {
 		if (RouteManager._instance !== undefined)
 			throw new Error("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
@@ -294,6 +298,7 @@ export class RouteManager {
 		try {
 			const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 			this._node = to_node;
+			this._routeLocation = to;
 			const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
 				if (api.mode !== ServerMode.STABLE)
@@ -342,6 +347,18 @@ export class RouteManager {
 	 */
 	public getRouteNode() : RouteNode<unknown, any> | undefined {
 		return this._node;
+	}
+
+	/**
+	 * Gibt die Parameter zur aktuellen Route zurück. Diese werden immer neu gesetzt,
+	 * wenn ein Routing abgeschlossen wird.
+	 *
+	 * @returns die Parameter zur aktuellen Route
+	 */
+	public getRouteParams() : RouteParams | undefined {
+		if (this._routeLocation === undefined)
+			return undefined;
+		return this._routeLocation.params;
 	}
 
 }
