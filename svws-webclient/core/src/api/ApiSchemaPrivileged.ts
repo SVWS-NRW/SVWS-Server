@@ -265,15 +265,15 @@ export class ApiSchemaPrivileged extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSVWSSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/liste/svws
 	 *
-	 * Liefert eine Liste der SVWS-Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.
+	 * Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
+	 *   Code 200: Die Schema-Liste mit den Namen und den Versionsinformationen der Schemata
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SchemaListeEintrag>
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
 	 *
-	 * @returns Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
+	 * @returns Die Schema-Liste mit den Namen und den Versionsinformationen der Schemata
 	 */
 	public async getSVWSSchemaListe() : Promise<List<SchemaListeEintrag>> {
 		const path = "/api/schema/liste/svws";

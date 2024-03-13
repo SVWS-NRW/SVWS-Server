@@ -89,17 +89,17 @@ public class APISchemaPrivileged {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste aller SVWS-Schemas im DBMS.
+     * Die OpenAPI-Methode für die Abfrage der Liste aller SVWS-Schemata im DBMS.
      *
      * @param request   die Informationen zur HTTP-Anfrage
      *
-     * @return die Liste der vorhandenen SVWS-Schemas in der Datenbank
+     * @return die Liste der vorhandenen SVWS-Schemata in der Datenbank
      */
     @GET
     @Path("/api/schema/liste/svws")
-    @Operation(summary = "Liefert eine Liste der SVWS-Schemas.",
-    description = "Liefert eine Liste der SVWS-Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.")
-    @ApiResponse(responseCode = "200", description = "Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas",
+    @Operation(summary = "Liefert eine Liste der SVWS-Schemata.",
+    description = "Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+    @ApiResponse(responseCode = "200", description = "Die Schema-Liste mit den Namen und den Versionsinformationen der Schemata",
     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchemaListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context final HttpServletRequest request) {
