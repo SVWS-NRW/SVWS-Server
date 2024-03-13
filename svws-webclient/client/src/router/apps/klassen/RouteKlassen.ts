@@ -1,9 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
+import { RouteManager, routerManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
@@ -35,13 +35,30 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+		if (idSchuljahresabschnitt instanceof Error)
+			return routeError.getRoute(idSchuljahresabschnitt);
+		if (idSchuljahresabschnitt === undefined)
+			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
+		const id = RouteNode.getIntParam(to_params, "id");
+		if (id instanceof Error)
+			return routeError.getRoute(id);
+		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
+			const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if (id !== undefined) {
+				if (neueID === null)
+					return this.getRoute();
+				const params = { ... to_params};
+				params.id = String(neueID);
+				const locationRaw : RouteLocationRaw = {};
+				locationRaw.name = to.name;
+				locationRaw.params = params;
+				return locationRaw;
+			}
+		}
 		const eintrag = (id !== undefined) ? this.data.klassenListeManager.liste.get(id) : null;
 		await this.data.setEintrag(eintrag);
 		if (!this.data.klassenListeManager.hasDaten()) {

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -44,6 +45,8 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	private readonly _mapKlassenlehrerInKlasse : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
 
 	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D();
+
+	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -135,6 +138,8 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 				this._mapKlasseHatSchueler.put(s.id, k.id, k);
 			for (const l of k.klassenLeitungen)
 				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
+			if (k.kuerzel !== null)
+				this._mapKlasseByKuerzel.put(k.kuerzel, k);
 		}
 	}
 
@@ -254,6 +259,18 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	public getSchuelerListe() : List<Schueler> {
 		return this.schuelerListe;
+	}
+
+	/**
+	 * Gibt die Klassendaten anhand des übergebenen Kürzels zurück.
+	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
+	 *
+	 * @param kuerzel  das Kürzel
+	 *
+	 * @return die Klassendaten oder null
+	 */
+	public getByKuerzelOrNull(kuerzel : string) : KlassenDaten | null {
+		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
 	transpilerCanonicalName(): string {

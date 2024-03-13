@@ -43,10 +43,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
 	}
 
-	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) {
+	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
-			return;
+			return null;
+		// Bestimme die Klassendaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
+		const hatteAuswahl = (this.klassenListeManager.auswahlID() !== null) ? this.klassenListeManager.auswahl() : null;
 		// Lade die Kataloge und erstelle den Manager
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
@@ -59,13 +61,26 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+		// Wählen nun eine Klasse aus, dabei wird sich ggf. an der alten Auswahl orientiert
+		let result : number | null = null;
+		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
+			let auswahl = klassenListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
+			if ((auswahl === null) && (klassenListeManager.liste.size() > 0))
+				auswahl = klassenListeManager.liste.list().get(0);
+			if (auswahl !== null) {
+				klassenListeManager.setDaten(auswahl);
+				result = auswahl.id;
+			}
+		}
+		// Aktualisiere den State
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt });
+		return result;
 	}
 
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) {
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			 return;
-		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
+			 return null;
+		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
 	/**

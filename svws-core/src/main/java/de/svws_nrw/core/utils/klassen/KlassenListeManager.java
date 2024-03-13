@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.klassen;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -39,6 +40,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenDaten> _mapKlasseHatSchueler = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KlassenDaten> _mapKlassenlehrerInKlasse = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KlassenDaten> _mapKlasseInSchulgliederung = new HashMap2D<>();
+	private final @NotNull HashMap<@NotNull String, @NotNull KlassenDaten> _mapKlasseByKuerzel = new HashMap<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
@@ -113,6 +115,8 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 				this._mapKlasseHatSchueler.put(s.id, k.id, k);
 			for (final Long l : k.klassenLeitungen)
 				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
+			if (k.kuerzel != null)
+				this._mapKlasseByKuerzel.put(k.kuerzel, k);
 		}
 	}
 
@@ -251,5 +255,17 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird
 	};
 
+
+	/**
+	 * Gibt die Klassendaten anhand des übergebenen Kürzels zurück.
+	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
+	 *
+	 * @param kuerzel  das Kürzel
+	 *
+	 * @return die Klassendaten oder null
+	 */
+	public KlassenDaten getByKuerzelOrNull(final @NotNull String kuerzel) {
+		return this._mapKlasseByKuerzel.get(kuerzel);
+	}
 
 }
