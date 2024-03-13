@@ -57,7 +57,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
@@ -75,7 +75,7 @@
 		return props.manager().klasseGetByIdOrException(id);
 	});
 
-	const jahrgang = computed<JahrgangsListeEintrag | undefined>(() => {
+	const jahrgang = computed<JahrgangsDaten | undefined>(() => {
 		const id = props.manager().lernabschnittGet().jahrgangID;
 		if (id === null)
 			return undefined;

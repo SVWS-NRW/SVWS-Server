@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -43,8 +43,8 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	private final @NotNull HashMap<@NotNull String, @NotNull KlassenDaten> _mapKlasseByKuerzel = new HashMap<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
-	private static final @NotNull Function<@NotNull JahrgangsListeEintrag, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsListeEintrag jg) -> jg.id;
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsDaten> jahrgaenge;
+	private static final @NotNull Function<@NotNull JahrgangsDaten, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
 
 	/** Das Filter-Attribut für die Lehrer */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull LehrerListeEintrag> lehrer;
@@ -83,7 +83,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	public KlassenListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
-			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
+			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, _klasseToId, _klasseToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("schueleranzahl", true)));
@@ -104,7 +104,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 			this._mapKlasseIstSichtbar.put(k.istSichtbar, k.id, k);
 			if (k.idJahrgang != null) {
 				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
-				final JahrgangsListeEintrag j = this.jahrgaenge.getOrException(k.idJahrgang);
+				final JahrgangsDaten j = this.jahrgaenge.getOrException(k.idJahrgang);
 				if (j.kuerzelSchulgliederung != null) {
 					final Schulgliederung gliederung = this.schulgliederungen.get(j.kuerzelSchulgliederung);
 					if (gliederung != null)
@@ -149,7 +149,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 	public Schulgliederung datenGetSchulgliederung() {
 		if ((this._daten == null) || (this._daten.idJahrgang == null))
 			return null;
-		final JahrgangsListeEintrag j = this.jahrgaenge.getOrException(this._daten.idJahrgang);
+		final JahrgangsDaten j = this.jahrgaenge.getOrException(this._daten.idJahrgang);
 		return (j.kuerzelSchulgliederung == null) ? null : this.schulgliederungen.get(j.kuerzelSchulgliederung);
 	}
 
@@ -220,7 +220,7 @@ public final class KlassenListeManager extends AuswahlManager<@NotNull Long, @No
 		if (this.schulgliederungen.auswahlExists()) {
 			if (eintrag.idJahrgang == null)
 				return false;
-			final JahrgangsListeEintrag j = this.jahrgaenge.getOrException(eintrag.idJahrgang);
+			final JahrgangsDaten j = this.jahrgaenge.getOrException(eintrag.idJahrgang);
 			if ((j.kuerzelSchulgliederung == null) || ((j.kuerzelSchulgliederung != null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
 				return false;
 		}

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
@@ -46,8 +46,8 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull List<@NotNull FoerderschwerpunktEintrag> _foerderschwerpunkte = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull FoerderschwerpunktEintrag> _mapFoerderschwerpunktByID = new HashMap<>();
 
-	private final @NotNull List<@NotNull JahrgangsListeEintrag> _jahrgaenge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull JahrgangsListeEintrag> _mapJahrgangByID = new HashMap<>();
+	private final @NotNull List<@NotNull JahrgangsDaten> _jahrgaenge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull JahrgangsDaten> _mapJahrgangByID = new HashMap<>();
 
 	private final @NotNull List<@NotNull KlassenDaten> _klassen = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull KlassenDaten> _mapKlasseByID = new HashMap<>();
@@ -116,7 +116,7 @@ public class SchuelerLernabschnittManager {
 			final @NotNull Schuljahresabschnitt schuljahresabschnitt,
 			final @NotNull List<@NotNull FaecherListeEintrag> faecher,
 			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
-			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
+			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull KursDaten> kurse,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
@@ -156,12 +156,12 @@ public class SchuelerLernabschnittManager {
 			this._mapFoerderschwerpunktByID.put(f.id, f);
 	}
 
-	private void initJahrgaenge(final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge) {
+	private void initJahrgaenge(final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge) {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
 		this._jahrgaenge.sort(JahrgangsUtils.comparator);
 		this._mapJahrgangByID.clear();
-		for (final @NotNull JahrgangsListeEintrag j : jahrgaenge)
+		for (final @NotNull JahrgangsDaten j : jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);
 	}
 
@@ -225,7 +225,7 @@ public class SchuelerLernabschnittManager {
 	public Jahrgaenge lernabschnittGetStatistikJahrgang() {
 		if (this._lernabschnittsdaten.jahrgangID == null)
 			return null;
-		final JahrgangsListeEintrag eintrag = _mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
+		final JahrgangsDaten eintrag = _mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
 		if ((eintrag == null) || (eintrag.kuerzelStatistik == null))
 			return null;
 		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
@@ -419,7 +419,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Jahrgangs-Informationen
 	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
 	 */
-	public @NotNull JahrgangsListeEintrag jahrgangGetByIdOrException(final long id) {
+	public @NotNull JahrgangsDaten jahrgangGetByIdOrException(final long id) {
 		return DeveloperNotificationException.ifMapGetIsNull(_mapJahrgangByID, id);
 	}
 
@@ -428,7 +428,7 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @return die Liste der Jahrgänge
 	 */
-	public @NotNull List<@NotNull JahrgangsListeEintrag> jahrgangGetMenge() {
+	public @NotNull List<@NotNull JahrgangsDaten> jahrgangGetMenge() {
 		return this._jahrgaenge;
 	}
 

@@ -208,7 +208,6 @@ export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurpla
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
 export { JahrgangsKatalogEintragBezeichnung } from './core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
-export { JahrgangsListeEintrag } from './core/data/jahrgang/JahrgangsListeEintrag';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';
 export { KAOAAnschlussoptionEintrag } from './core/data/kaoa/KAOAAnschlussoptionEintrag';

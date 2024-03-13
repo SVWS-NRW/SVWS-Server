@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import { computed, ref, shallowRef } from "vue";
 
@@ -45,11 +45,11 @@
 		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
 	];
 
-	function text(klasse: LehrerListeEintrag | JahrgangsListeEintrag): string {
+	function text(klasse: LehrerListeEintrag | JahrgangsDaten): string {
 		return klasse.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsListeEintrag>, search: string) => {
+	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) => {
 		const list = [];
 		for (const i of items)
 			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -79,7 +79,7 @@
 		}
 	});
 
-	const filterJahrgaenge = computed<JahrgangsListeEintrag[]>({
+	const filterJahrgaenge = computed<JahrgangsDaten[]>({
 		get: () => [...props.klassenListeManager().jahrgaenge.auswahl()],
 		set: (value) => {
 			props.klassenListeManager().jahrgaenge.auswahlClear();

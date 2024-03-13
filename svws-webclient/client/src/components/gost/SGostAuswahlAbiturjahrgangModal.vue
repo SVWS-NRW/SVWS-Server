@@ -20,11 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsListeEintrag } from "@core";
+	import type { JahrgangsDaten } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsListeEintrag>;
+		mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsDaten>;
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
 		getAbiturjahrFuerJahrgang: (idJahrgang: number) => number;
 	}>();

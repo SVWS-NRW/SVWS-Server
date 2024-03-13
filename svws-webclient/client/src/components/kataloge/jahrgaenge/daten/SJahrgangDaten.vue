@@ -16,16 +16,16 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { UserNotificationException, type JahrgangsListeEintrag, Schulgliederung, Jahrgaenge, DeveloperNotificationException } from "@core";
+	import { UserNotificationException, type JahrgangsDaten, Schulgliederung, Jahrgaenge, DeveloperNotificationException } from "@core";
 	import type { JahrgangDatenProps } from "./SJahrgangDatenProps";
 
 	const props = defineProps<JahrgangDatenProps>();
 
-	const inputJahrgaenge = computed<JahrgangsListeEintrag[]>(() =>
+	const inputJahrgaenge = computed<JahrgangsDaten[]>(() =>
 		[...props.mapJahrgaenge.values()].filter(j => j.id !== props.data().id)
 	);
 
-	const inputIdFolgejahrgang = computed<JahrgangsListeEintrag | undefined>({
+	const inputIdFolgejahrgang = computed<JahrgangsDaten | undefined>({
 		get: () => {
 			const idFolgejahrgang = props.data().idFolgejahrgang;
 			return idFolgejahrgang === null ? undefined : props.mapJahrgaenge.get(idFolgejahrgang);

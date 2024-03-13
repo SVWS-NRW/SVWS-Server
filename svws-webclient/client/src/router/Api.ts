@@ -2,7 +2,7 @@ import { computed } from "vue";
 
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "~/components/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
@@ -389,10 +389,10 @@ class Api {
 	 *
 	 * @returns die Map mit den Jahrgängen
 	 */
-	public async getJahrgangsListe(): Promise<Map<number, JahrgangsListeEintrag>> {
+	public async getJahrgangsListe(): Promise<Map<number, JahrgangsDaten>> {
 		// aktualisiere die Jahrgänge und erstelle Map
 		const listJahrgaenge = await this.server.getJahrgaenge(this.schema);
-		const mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map()
+		const mapJahrgaenge: Map<number, JahrgangsDaten> = new Map()
 		for (const j of listJahrgaenge)
 			mapJahrgaenge.set(j.id, j)
 		return mapJahrgaenge;

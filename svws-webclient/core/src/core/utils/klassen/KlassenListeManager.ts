@@ -7,12 +7,12 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
+import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Pair } from '../../../core/adt/Pair';
@@ -51,9 +51,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
 	 */
-	public readonly jahrgaenge : AttributMitAuswahl<number, JahrgangsListeEintrag>;
+	public readonly jahrgaenge : AttributMitAuswahl<number, JahrgangsDaten>;
 
-	private static readonly _jahrgangToId : JavaFunction<JahrgangsListeEintrag, number> = { apply : (jg: JahrgangsListeEintrag) => jg.id };
+	private static readonly _jahrgangToId : JavaFunction<JahrgangsDaten, number> = { apply : (jg: JahrgangsDaten) => jg.id };
 
 	/**
 	 * Das Filter-Attribut für die Lehrer
@@ -109,7 +109,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>) {
 		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), KlassenListeManager._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
@@ -127,7 +127,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			this._mapKlasseIstSichtbar.put(k.istSichtbar, k.id, k);
 			if (k.idJahrgang !== null) {
 				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
-				const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(k.idJahrgang);
+				const j : JahrgangsDaten | null = this.jahrgaenge.getOrException(k.idJahrgang);
 				if (j.kuerzelSchulgliederung !== null) {
 					const gliederung : Schulgliederung | null = this.schulgliederungen.get(j.kuerzelSchulgliederung);
 					if (gliederung !== null)
@@ -167,7 +167,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	public datenGetSchulgliederung() : Schulgliederung | null {
 		if ((this._daten === null) || (this._daten.idJahrgang === null))
 			return null;
-		const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(this._daten.idJahrgang);
+		const j : JahrgangsDaten | null = this.jahrgaenge.getOrException(this._daten.idJahrgang);
 		return (j.kuerzelSchulgliederung === null) ? null : this.schulgliederungen.get(j.kuerzelSchulgliederung);
 	}
 
@@ -233,7 +233,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		if (this.schulgliederungen.auswahlExists()) {
 			if (eintrag.idJahrgang === null)
 				return false;
-			const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
+			const j : JahrgangsDaten | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
 			if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
 				return false;
 		}

@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.jahrgang;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
@@ -19,7 +19,7 @@ public final class JahrgangsUtils {
 
 
 	/** Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten. */
-	public static final @NotNull Comparator<@NotNull JahrgangsListeEintrag> comparator = (final @NotNull JahrgangsListeEintrag a, final @NotNull JahrgangsListeEintrag b) -> {
+	public static final @NotNull Comparator<@NotNull JahrgangsDaten> comparator = (final @NotNull JahrgangsDaten a, final @NotNull JahrgangsDaten b) -> {
 		int cmp = a.sortierung - b.sortierung;
 		if (cmp != 0)
 			return cmp;

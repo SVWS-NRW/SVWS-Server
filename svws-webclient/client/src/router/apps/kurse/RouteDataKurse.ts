@@ -1,4 +1,4 @@
-import type { FaecherListeEintrag, JahrgangsListeEintrag, KursDaten, LehrerListeEintrag, Schueler} from "@core";
+import type { FaecherListeEintrag, JahrgangsDaten, KursDaten, LehrerListeEintrag, Schueler} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -15,7 +15,7 @@ interface RouteStateKurse extends RouteStateInterface {
 	daten: KursDaten | undefined;
 	mapKatalogeintraege: Map<number, KursDaten>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	mapJahrgaenge: Map<number, JahrgangsDaten>;
 	mapFaecher: Map<number, FaecherListeEintrag>;
 }
 
@@ -47,7 +47,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		return this._state.value.mapLehrer;
 	}
 
-	get mapJahrgaenge(): Map<number, JahrgangsListeEintrag> {
+	get mapJahrgaenge(): Map<number, JahrgangsDaten> {
 		return this._state.value.mapJahrgaenge;
 	}
 
@@ -90,7 +90,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: JahrgangsListeEintrag) => {
+	gotoEintrag = async (eintrag: JahrgangsDaten) => {
 		await RouteManager.doRoute(routeKurse.getRoute(eintrag.id));
 	}
 

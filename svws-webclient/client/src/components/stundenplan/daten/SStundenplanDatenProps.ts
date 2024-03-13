@@ -1,4 +1,4 @@
-import type { JahrgangsListeEintrag, List, Raum, Stundenplan, StundenplanManager, StundenplanRaum } from "@core";
+import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanManager, StundenplanRaum } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;
@@ -8,7 +8,7 @@ export interface StundenplanDatenProps {
 	removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 	listRaeume: () => List<Raum>;
 	importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
-	listJahrgaenge: List<JahrgangsListeEintrag>;
+	listJahrgaenge: List<JahrgangsDaten>;
 	addJahrgang: (id: number) => Promise<void>;
 	removeJahrgang: (id: number) => Promise<void>;
 	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;

@@ -43,14 +43,14 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FaecherListeEintrag, JahrgangsListeEintrag, LehrerListeEintrag } from "@core";
+	import type { FaecherListeEintrag, JahrgangsDaten, LehrerListeEintrag } from "@core";
 	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 
 	const props = defineProps<KursDatenProps>();
 
-	const jahrgaenge = computed<JahrgangsListeEintrag[]>({
+	const jahrgaenge = computed<JahrgangsDaten[]>({
 		get: () => {
 			const arr = [];
 			for (const id of props.data().idJahrgaenge) {

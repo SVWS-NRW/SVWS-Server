@@ -15297,7 +15297,7 @@ GostLeistungen {
 exports[`Server > getJahrgaenge 1`] = `
 ArrayList {
   "elementData": [
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "  5. Jahrgang",
       "id": 1,
       "idFolgejahrgang": 2,
@@ -15307,7 +15307,7 @@ ArrayList {
       "kuerzelStatistik": "05",
       "sortierung": 10,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "  6. Jahrgang",
       "id": 2,
       "idFolgejahrgang": 3,
@@ -15317,7 +15317,7 @@ ArrayList {
       "kuerzelStatistik": "06",
       "sortierung": 20,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "  7. Jahrgang",
       "id": 3,
       "idFolgejahrgang": 4,
@@ -15327,7 +15327,7 @@ ArrayList {
       "kuerzelStatistik": "07",
       "sortierung": 30,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "  8. Jahrgang",
       "id": 4,
       "idFolgejahrgang": 5,
@@ -15337,7 +15337,7 @@ ArrayList {
       "kuerzelStatistik": "08",
       "sortierung": 40,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "  9. Jahrgang",
       "id": 5,
       "idFolgejahrgang": 10,
@@ -15347,7 +15347,7 @@ ArrayList {
       "kuerzelStatistik": "09",
       "sortierung": 50,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "Einführungsphase",
       "id": 10,
       "idFolgejahrgang": 11,
@@ -15357,7 +15357,7 @@ ArrayList {
       "kuerzelStatistik": "EF",
       "sortierung": 60,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "Qualifikationsphase 1",
       "id": 11,
       "idFolgejahrgang": 12,
@@ -15367,7 +15367,7 @@ ArrayList {
       "kuerzelStatistik": "Q1",
       "sortierung": 70,
     },
-    JahrgangsListeEintrag {
+    JahrgangsDaten {
       "bezeichnung": "Qualifikationsphase 2",
       "id": 12,
       "idFolgejahrgang": null,

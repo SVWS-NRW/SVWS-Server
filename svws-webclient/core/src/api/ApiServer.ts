@@ -78,7 +78,6 @@ import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKata
 import { HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
 import { JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
 import { JahrgangsKatalogEintrag } from '../core/data/jahrgang/JahrgangsKatalogEintrag';
-import { JahrgangsListeEintrag } from '../core/data/jahrgang/JahrgangsListeEintrag';
 import { KAOAAnschlussoptionEintrag } from '../core/data/kaoa/KAOAAnschlussoptionEintrag';
 import { KAOABerufsfeldEintrag } from '../core/data/kaoa/KAOABerufsfeldEintrag';
 import { KAOAEbene4Eintrag } from '../core/data/kaoa/KAOAEbene4Eintrag';
@@ -6491,7 +6490,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Jahrgangs-Listen-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<JahrgangsListeEintrag>
+	 *     - Rückgabe-Typ: List<JahrgangsDaten>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.
 	 *   Code 404: Keine Jahrgangs-Einträge gefunden
 	 *
@@ -6499,13 +6498,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Listen-Einträgen
 	 */
-	public async getJahrgaenge(schema : string) : Promise<List<JahrgangsListeEintrag>> {
+	public async getJahrgaenge(schema : string) : Promise<List<JahrgangsDaten>> {
 		const path = "/db/{schema}/jahrgaenge/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<JahrgangsListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsListeEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<JahrgangsDaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
 		return ret;
 	}
 

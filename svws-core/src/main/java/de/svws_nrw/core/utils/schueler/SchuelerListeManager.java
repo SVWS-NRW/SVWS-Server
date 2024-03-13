@@ -8,7 +8,7 @@ import java.util.function.Function;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
@@ -47,8 +47,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInSchulgliederung = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
-	private static final @NotNull Function<@NotNull JahrgangsListeEintrag, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsListeEintrag jg) -> jg.id;
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsDaten> jahrgaenge;
+	private static final @NotNull Function<@NotNull JahrgangsDaten, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
 
 	/** Das Filter-Attribut für die Klassen */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KlassenDaten> klassen;
@@ -91,7 +91,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	 */
 	public SchuelerListeManager(final long schuljahresabschnitt, final Schulform schulform,
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
-			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
+			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
 			final @NotNull List<@NotNull KlassenDaten> klassen,
 			final @NotNull List<@NotNull KursDaten> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,

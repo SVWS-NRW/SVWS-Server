@@ -1,4 +1,4 @@
-import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
+import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen, GostSchuelerklausurTermin} from "@core";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurvorgabenManager, GostKursklausurManager, HashMap, KursManager, SchuelerLernabschnittManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -15,7 +15,7 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
 	listFaecher: List<FaecherListeEintrag>;
 	listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
-	listJahrgaenge: List<JahrgangsListeEintrag>;
+	listJahrgaenge: List<JahrgangsDaten>;
 	listLehrer: List<LehrerListeEintrag>;
 	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;

@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
-import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -13,7 +13,7 @@ export class JahrgangsUtils extends JavaObject {
 	/**
 	 * Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten.
 	 */
-	public static readonly comparator : Comparator<JahrgangsListeEintrag> = { compare : (a: JahrgangsListeEintrag, b: JahrgangsListeEintrag) => {
+	public static readonly comparator : Comparator<JahrgangsDaten> = { compare : (a: JahrgangsDaten, b: JahrgangsDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
 		if (cmp !== 0)
 			return cmp;

@@ -1,5 +1,5 @@
 import type { RouteParams } from "vue-router";
-import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, GostFach } from "@core";
 import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
@@ -17,8 +17,8 @@ interface RouteStateGost extends RouteStateInterface {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	faecherManager: GostFaecherManager;
 	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
-	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
-	mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
+	mapJahrgaenge: Map<number, JahrgangsDaten>;
+	mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsDaten>;
 }
 
 const defaultState = <RouteStateGost> {
@@ -53,11 +53,11 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return mapAbiturjahrgaenge;
 	}
 
-	private ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>, mapJahrgaenge: Map<number, JahrgangsListeEintrag>): Map<number, JahrgangsListeEintrag> {
+	private ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>, mapJahrgaenge: Map<number, JahrgangsDaten>): Map<number, JahrgangsDaten> {
 		const jahrgaengeMitAbiturjahrgang = new Set();
 		for (const j of mapAbiturjahrgaenge.values())
 			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
-		const map = new Map<number, JahrgangsListeEintrag>();
+		const map = new Map<number, JahrgangsDaten>();
 		for (const j of mapJahrgaenge.values()) {
 			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel)) {
 				const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(j.id, mapJahrgaenge);
@@ -68,10 +68,10 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return map;
 	}
 
-	private async ladeJahrgaenge(): Promise<Map<number, JahrgangsListeEintrag>> {
+	private async ladeJahrgaenge(): Promise<Map<number, JahrgangsDaten>> {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
+		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
 			const jg : Jahrgaenge | null = Jahrgaenge.getByKuerzel(j.kuerzelStatistik);
 			if ((jg !== null) && (jg.hasSchulform(api.schulform)))
@@ -233,7 +233,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: value.abiturjahr } });
 	}
 
-	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsListeEintrag>) : number | null {
+	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsDaten>) : number | null {
 		const jahrgang = mapJahrgaenge.get(idJahrgang);
 		if (jahrgang === undefined)
 			throw new DeveloperNotificationException("Konnte den Jahrgang für die ID " + idJahrgang + " nicht bestimmen.");

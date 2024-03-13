@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
 
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
@@ -15,12 +15,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link JahrgangsListeEintrag}.
+ * Core-DTO {@link JahrgangsDaten}.
  */
 public final class DataJahrgangsliste extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link JahrgangsListeEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link JahrgangsDaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -29,10 +29,10 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsListeEintrag}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.
 	 */
-	private final Function<DTOJahrgang, JahrgangsListeEintrag> dtoMapperJahrgang = (final DTOJahrgang j) -> {
-		final JahrgangsListeEintrag eintrag = new JahrgangsListeEintrag();
+	private final Function<DTOJahrgang, JahrgangsDaten> dtoMapperJahrgang = (final DTOJahrgang j) -> {
+		final JahrgangsDaten eintrag = new JahrgangsDaten();
 		eintrag.id = j.ID;
 		eintrag.kuerzel = j.InternKrz;
 		eintrag.kuerzelStatistik = j.ASDJahrgang;
@@ -52,7 +52,7 @@ public final class DataJahrgangsliste extends DataManager<Long> {
     	final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
     	if (jahrgaenge == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<JahrgangsListeEintrag> daten = jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+    	final List<JahrgangsDaten> daten = jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

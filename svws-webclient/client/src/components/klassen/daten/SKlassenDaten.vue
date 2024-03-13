@@ -78,7 +78,7 @@
 
 	import { computed } from "vue";
 	import { type DataTableColumn } from "@ui";
-	import { SchuelerStatus, type JahrgangsListeEintrag, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
+	import { SchuelerStatus, type JahrgangsDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
 		WeiterbildungskollegOrganisationsformen, type KlassenDaten, type List, ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
@@ -86,7 +86,7 @@
 
 	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
 
-	function textJahrgang(jg : JahrgangsListeEintrag) : string {
+	function textJahrgang(jg : JahrgangsDaten) : string {
 		if (jg.kuerzel === null)
 			return 'JU - Jahrgangsübergreifend';
 		if (jg.kuerzel === 'E1')
@@ -96,13 +96,13 @@
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
-	const jahrgang = computed<JahrgangsListeEintrag | null>({
+	const jahrgang = computed<JahrgangsDaten | null>({
 		get: () => ((data.value === undefined) || (data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
 		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
 	});
 
-	const jahrgaenge = computed<List<JahrgangsListeEintrag>>(() => {
-		const result = new ArrayList<JahrgangsListeEintrag>();
+	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
+		const result = new ArrayList<JahrgangsDaten>();
 		for (const jg of props.klassenListeManager().jahrgaenge.list()) {
 			if (jg.kuerzel !== "E3")  // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);

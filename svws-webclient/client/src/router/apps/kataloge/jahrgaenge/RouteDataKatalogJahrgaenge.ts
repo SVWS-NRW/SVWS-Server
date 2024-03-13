@@ -1,4 +1,4 @@
-import type { JahrgangsDaten, JahrgangsListeEintrag } from "@core";
+import type { JahrgangsDaten } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -8,9 +8,9 @@ import { routeKatalogJahrgaenge } from "./RouteKatalogJahrgaenge";
 import { routeKatalogJahrgaengeDaten } from "./RouteKatalogJahrgaengeDaten";
 
 interface RouteStateKatalogJahrgaenge extends RouteStateInterface {
-	auswahl: JahrgangsListeEintrag | undefined;
+	auswahl: JahrgangsDaten | undefined;
 	daten: JahrgangsDaten | undefined;
-	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
+	mapKatalogeintraege: Map<number, JahrgangsDaten>;
 }
 
 const defaultState = <RouteStateKatalogJahrgaenge> {
@@ -27,11 +27,11 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 		super(defaultState);
 	}
 
-	get auswahl(): JahrgangsListeEintrag | undefined {
+	get auswahl(): JahrgangsDaten | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, JahrgangsListeEintrag> {
+	get mapKatalogeintraege(): Map<number, JahrgangsDaten> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
@@ -43,19 +43,19 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getJahrgaenge(api.schema);
-		const mapKatalogeintraege = new Map<number, JahrgangsListeEintrag>();
+		const mapKatalogeintraege = new Map<number, JahrgangsDaten>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
 	}
 
-	setEintrag = async (auswahl: JahrgangsListeEintrag) => {
+	setEintrag = async (auswahl: JahrgangsDaten) => {
 		const daten = await api.server.getJahrgang(api.schema, auswahl.id)
 		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: JahrgangsListeEintrag) => {
+	gotoEintrag = async (eintrag: JahrgangsDaten) => {
 		await RouteManager.doRoute(routeKatalogJahrgaenge.getRoute(eintrag.id));
 	}
 

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { JahrgangsListeEintrag } from "@core";
+import type { JahrgangsDaten } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -43,7 +43,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
-		let eintrag: JahrgangsListeEintrag | undefined;
+		let eintrag: JahrgangsDaten | undefined;
 		if (!to_params.id && this.data.auswahl !== undefined)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {

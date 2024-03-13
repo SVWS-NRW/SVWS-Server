@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsListeEintrag, LehrerListeEintrag} from "@core";
+import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag} from "@core";
 import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager,
 	DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -20,7 +20,7 @@ interface RouteStateStundenplan extends RouteStateInterface {
 	listRaeume: List<Raum>;
 	listPausenzeiten: List<StundenplanPausenzeit>;
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
-	listJahrgaenge: List<JahrgangsListeEintrag>;
+	listJahrgaenge: List<JahrgangsDaten>;
 	listLehrer: List<LehrerListeEintrag>;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 }
@@ -77,7 +77,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		return this._state.value.listAufsichtsbereiche;
 	}
 
-	get listJahrgaenge(): List<JahrgangsListeEintrag> {
+	get listJahrgaenge(): List<JahrgangsDaten> {
 		return this._state.value.listJahrgaenge;
 	}
 

@@ -5,12 +5,12 @@ import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
@@ -46,9 +46,9 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _mapFoerderschwerpunktByID : JavaMap<number, FoerderschwerpunktEintrag> = new HashMap();
 
-	private readonly _jahrgaenge : List<JahrgangsListeEintrag> = new ArrayList();
+	private readonly _jahrgaenge : List<JahrgangsDaten> = new ArrayList();
 
-	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsListeEintrag> = new HashMap();
+	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsDaten> = new HashMap();
 
 	private readonly _klassen : List<KlassenDaten> = new ArrayList();
 
@@ -112,7 +112,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schulform : Schulform, schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, schuljahresabschnitt : Schuljahresabschnitt, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsDaten>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, lehrer : List<LehrerListeEintrag>) {
 		super();
 		this._schulform = schulform;
 		this._schueler = schueler;
@@ -150,7 +150,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 			this._mapFoerderschwerpunktByID.put(f.id, f);
 	}
 
-	private initJahrgaenge(jahrgaenge : List<JahrgangsListeEintrag>) : void {
+	private initJahrgaenge(jahrgaenge : List<JahrgangsDaten>) : void {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
 		this._jahrgaenge.sort(JahrgangsUtils.comparator);
@@ -216,7 +216,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public lernabschnittGetStatistikJahrgang() : Jahrgaenge | null {
 		if (this._lernabschnittsdaten.jahrgangID === null)
 			return null;
-		const eintrag : JahrgangsListeEintrag | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
+		const eintrag : JahrgangsDaten | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
 		if ((eintrag === null) || (eintrag.kuerzelStatistik === null))
 			return null;
 		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
@@ -400,7 +400,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Jahrgangs-Informationen
 	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
 	 */
-	public jahrgangGetByIdOrException(id : number) : JahrgangsListeEintrag {
+	public jahrgangGetByIdOrException(id : number) : JahrgangsDaten {
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapJahrgangByID, id);
 	}
 
@@ -409,7 +409,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @return die Liste der Jahrgänge
 	 */
-	public jahrgangGetMenge() : List<JahrgangsListeEintrag> {
+	public jahrgangGetMenge() : List<JahrgangsDaten> {
 		return this._jahrgaenge;
 	}
 

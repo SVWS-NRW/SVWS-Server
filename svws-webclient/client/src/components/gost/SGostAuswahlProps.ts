@@ -1,11 +1,11 @@
-import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Schuljahresabschnitt } from "@core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, Schuljahresabschnitt } from "@core";
 import type { ApiStatus } from "../ApiStatus";
 
 export interface GostAuswahlProps {
 	auswahl: GostJahrgang | undefined;
 	jahrgangsdaten: () => GostJahrgangsdaten | undefined;
 	mapAbiturjahrgaenge: () => Map<number, GostJahrgang>;
-	mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsListeEintrag>;
+	mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsDaten>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;

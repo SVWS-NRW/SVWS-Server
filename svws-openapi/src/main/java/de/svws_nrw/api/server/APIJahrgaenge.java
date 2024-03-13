@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag;
-import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -61,7 +60,7 @@ public class APIJahrgaenge {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Jahrgangsdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsListeEintrag.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
     public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
