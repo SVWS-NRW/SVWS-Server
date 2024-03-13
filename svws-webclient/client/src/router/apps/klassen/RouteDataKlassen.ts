@@ -68,6 +68,15 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
+	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
 	public async setEintrag(klasse: KlassenDaten | null) {
 		if ((klasse === null) && (!this.klassenListeManager.hasDaten()))
 			return;

@@ -1,12 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
 import { routeApp } from "../RouteApp";
+import { routeError } from "~/router/error/RouteError";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
@@ -22,10 +23,10 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (!routeLehrer.data.lehrerListeManager.hasDaten())
 			return routeLehrer.getRoute();
-		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
-		if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (idLehrer !== routeLehrer.data.lehrerListeManager.personalDaten().id))
+		const id = RouteNode.getIntParam(to_params, "id");
+		if (id instanceof Error)
+			return routeError.getRoute(id);
+		if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (id !== routeLehrer.data.lehrerListeManager.personalDaten().id))
 			await routeLehrer.data.loadPersonaldaten();
 	}
 

@@ -58,7 +58,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (idSchuljahresabschnitt instanceof Error)
 			return routeError.getRoute(idSchuljahresabschnitt);
 		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gülriger Schuljahresabschnitt gesetzt."));
+			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
 		const id = RouteNode.getIntParam(to_params, "id");
 		if (id instanceof Error)
 			return routeError.getRoute(id);

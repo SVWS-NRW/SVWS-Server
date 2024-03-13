@@ -28,13 +28,6 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		super(defaultState);
 	}
 
-	private async ladePersonaldaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerPersonaldaten | undefined> {
-		if (eintrag === undefined)
-			return undefined;
-		return await api.server.getLehrerPersonaldaten(api.schema, eintrag.id);
-	}
-
-
 	get lehrerListeManager(): LehrerListeManager {
 		return this._state.value.lehrerListeManager;
 	}
@@ -47,12 +40,31 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
 			 return;
+		// Prüfe, mit welchen Daten der Manager ausgstattet war, so dass diese für die aktuelle Ansicht wieder geladen werden können
+		const hatteAuswahlID = this.lehrerListeManager.auswahlID();
+		const hatteDaten = this.lehrerListeManager.hasDaten();
+		const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
+		// Lade die Lehrerliste
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schulform, listLehrer);
+		// Lade ggf. die Daten für die Ansichten nach
+		if (hatteDaten && (hatteAuswahlID !== null)) {
+			lehrerListeManager.setDaten(await api.server.getLehrerStammdaten(api.schema, hatteAuswahlID));
+			if (hattePersonaldaten)
+				lehrerListeManager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, hatteAuswahlID));
+		}
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, lehrerListeManager });
 	}
 
+	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
 
 	/**
 	 * Setzt den ausgewählten Lehrer und lädt dessen Stammdaten.
