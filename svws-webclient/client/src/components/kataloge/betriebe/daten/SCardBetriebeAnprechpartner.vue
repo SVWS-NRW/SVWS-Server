@@ -19,7 +19,7 @@
 			<template #actions>
 				<svws-ui-button @click="removeBetriebAnsprechpartner(selected)" type="trash" :disabled="!selected.length" />
 				<s-card-betriebe-add-anprechpartner-modal v-slot="{ openModal }" :add-betrieb-ansprechpartner="addBetriebAnsprechpartner">
-					<svws-ui-button @click="openModal()" type="icon" title="Anpsrechpartner hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+					<svws-ui-button @click="openModal()" type="icon" title="Anpsrechpartner hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</s-card-betriebe-add-anprechpartner-modal>
 			</template>
 		</svws-ui-table>

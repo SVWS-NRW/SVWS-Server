@@ -42,7 +42,7 @@
 						</s-card-stundenplan-import-raeume-modal>
 						<svws-ui-button @click="removeRaeume(selected)" type="trash" :disabled="!selected.length" />
 						<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum="addRaum">
-							<svws-ui-button @click="openModal()" type="icon" title="Raum hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+							<svws-ui-button @click="openModal()" type="icon" title="Raum hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 						</s-card-stundenplan-add-raum-modal>
 					</template>
 				</svws-ui-table>

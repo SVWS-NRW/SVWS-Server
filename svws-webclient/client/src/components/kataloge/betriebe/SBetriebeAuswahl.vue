@@ -16,7 +16,7 @@
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag" :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten="mapBeschaeftigungsarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile">
 						<svws-ui-button type="icon" @click="openModal()">
-							<i-ri-add-line />
+							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 					</s-betriebe-neu-modal>
 				</template>

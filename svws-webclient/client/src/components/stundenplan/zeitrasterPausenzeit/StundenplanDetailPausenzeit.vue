@@ -22,7 +22,7 @@
 			<template #actions>
 				<svws-ui-button @click="remove" type="trash" :disabled="selected.length === 0" />
 				<stundenplan-detail-pausenzeit-modal v-slot="{ openModal }" :pausenzeit="item" :list-lehrer="listLehrer" :list-aufsichtsbereiche="listAufsichtsbereiche" :add-aufsicht-und-bereich="addAufsichtUndBereich" :wochentypen="stundenplanManager().getWochenTypModell()">
-					<svws-ui-button @click="openModal()" type="icon" title="Pausenaufsicht hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+					<svws-ui-button @click="openModal()" type="icon" title="Pausenaufsicht hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</stundenplan-detail-pausenzeit-modal>
 			</template>
 		</svws-ui-table>

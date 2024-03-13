@@ -23,7 +23,7 @@
 	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzerAllgemein()" />
 
 	<svws-ui-button type="icon" @click="showModal().value = true">
-		<i-ri-add-line />
+		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
 

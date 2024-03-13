@@ -45,7 +45,7 @@
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
 					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
 					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><i-ri-calculator-line /></svws-ui-button>
-					<svws-ui-button v-if="verfuegbareSprachen.length" @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+					<svws-ui-button v-if="verfuegbareSprachen.length" @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -53,7 +53,7 @@
 			<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
 				<template #actions>
 					<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
-					<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+					<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 				<!-- -->
 			</svws-ui-table>

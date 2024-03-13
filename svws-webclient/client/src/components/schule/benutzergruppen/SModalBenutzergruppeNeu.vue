@@ -20,7 +20,7 @@
 	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppe_n" />
 
 	<svws-ui-button type="icon" @click="showModal().value = true">
-		<i-ri-add-line />
+		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
 

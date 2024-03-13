@@ -13,7 +13,7 @@
 				<s-row-gost-fachkombination :typ="typ" :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 			</template>
 			<template #actions>
-				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><i-ri-add-line /> </svws-ui-button>
+				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><span class="icon i-ri-add-line" /> </svws-ui-button>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>

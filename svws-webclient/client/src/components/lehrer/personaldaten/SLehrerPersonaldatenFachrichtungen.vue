@@ -9,7 +9,7 @@
 		</template>
 		<template #actions>
 			<svws-ui-button @click="removeFachrichtungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
-			<svws-ui-button @click="showModal().value = true" type="icon" title="Fachrichtung hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+			<svws-ui-button @click="showModal().value = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
 	<s-lehrer-personaldaten-fachrichtungen-modal-add :show="showModal" :id-lehrer="personaldaten.id" :add-fachrichtung="addFachrichtung" />

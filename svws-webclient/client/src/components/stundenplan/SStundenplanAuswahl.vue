@@ -9,7 +9,7 @@
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer" :disabled="selected.length === 0" />
 					<svws-ui-button type="icon" @click="addEintrag">
-						<i-ri-add-line />
+						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
 				</template>
 			</svws-ui-table>

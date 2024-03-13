@@ -17,7 +17,7 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="liste.length === 0" />
-					<svws-ui-button @click="add" type="icon" title="Eine neue Schule hinzufügen"><i-ri-add-line /></svws-ui-button>
+					<svws-ui-button @click="add" type="icon" title="Eine neue Schule hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</template>

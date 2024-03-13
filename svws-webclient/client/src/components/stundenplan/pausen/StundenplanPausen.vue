@@ -19,7 +19,7 @@
 						</s-card-stundenplan-import-pausenzeiten-modal>
 						<svws-ui-button @click="removePausenzeiten(selectedPausenzeiten)" type="trash" :disabled="!selectedPausenzeiten.length" />
 						<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
-							<svws-ui-button @click="openModal()" type="icon" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+							<svws-ui-button @click="openModal()" type="icon" title="Pausenzeit hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 						</s-card-stundenplan-add-pausenzeit-modal>
 					</template>
 				</svws-ui-table>
@@ -41,7 +41,7 @@
 						</s-card-stundenplan-import-aufsichtsbereiche-modal>
 						<svws-ui-button @click="removeAufsichtsbereiche(selectedAufsichtsbereiche)" type="trash" :disabled="!selectedAufsichtsbereiche.length" />
 						<s-card-stundenplan-add-aufsichtsbereich-modal v-slot="{ openModal }" :add-aufsichtsbereich="addAufsichtsbereich">
-							<svws-ui-button @click="openModal()" type="icon" title="Aufsichtsbereich hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+							<svws-ui-button @click="openModal()" type="icon" title="Aufsichtsbereich hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 						</s-card-stundenplan-add-aufsichtsbereich-modal>
 					</template>
 				</svws-ui-table>

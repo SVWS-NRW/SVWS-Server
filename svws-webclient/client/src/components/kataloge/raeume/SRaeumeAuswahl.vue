@@ -17,7 +17,7 @@
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
 							<svws-ui-button type="icon" @click="openModal()">
-								<i-ri-add-line />
+								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 						</s-raum-neu-modal>
 					</template>

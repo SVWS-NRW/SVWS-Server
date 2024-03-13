@@ -31,7 +31,7 @@
 				<!-- <template #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="transparent" @click="showModalGruppenaktionen().value = true">
 					<svws-ui-button type="icon" @click="addLine()">
-						<i-ri-add-line />
+						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
 				</template> -->
 			</svws-ui-table>
