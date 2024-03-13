@@ -13,6 +13,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
+import { routeApp } from "../../RouteApp";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -441,7 +442,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	gotoVorgaben = async () => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}
 
 

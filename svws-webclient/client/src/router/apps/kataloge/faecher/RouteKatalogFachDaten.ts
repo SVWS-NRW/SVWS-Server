@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 
 import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
+import { routeApp } from "../../RouteApp";
 
 const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 
@@ -26,7 +27,7 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 
 	public getRoute(id: number) : RouteLocationRaw {
 		api.schulform
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): FachDatenProps {

@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschSchulbewerbungProps } from "~/components/schule/datenaustausch/schulbewerbung/SSchuleDatenaustauschSchulbewerbungProps";
+import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschSchulbewerbung = () => import("~/components/schule/datenaustausch/schulbewerbung/SSchuleDatenaustauschSchulbewerbung.vue");
 
@@ -18,8 +19,8 @@ export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<unknown, 
 		super.text = "Schulbewerbung.de";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschSchulbewerbungProps {

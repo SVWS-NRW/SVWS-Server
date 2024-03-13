@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuleDatenaustausch, type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
+import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENM.vue");
 
@@ -18,8 +19,8 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<unknown, RouteSchule
 		super.text = "ENM Notenmanager";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschENMProps {

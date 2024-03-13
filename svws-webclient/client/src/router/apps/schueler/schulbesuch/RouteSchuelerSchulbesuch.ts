@@ -8,6 +8,7 @@ import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
+import { routeApp } from "../../RouteApp";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -30,7 +31,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {

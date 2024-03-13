@@ -9,6 +9,7 @@ import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~
 
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausurenProps";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausuren.vue");
 
@@ -40,7 +41,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 	}
 
 	public getRoute(id: number, abschnitt: number, wechselNr: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittGostKlausurenProps {

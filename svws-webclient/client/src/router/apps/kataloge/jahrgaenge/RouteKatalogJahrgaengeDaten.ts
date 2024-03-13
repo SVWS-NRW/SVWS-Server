@@ -7,6 +7,7 @@ import { routeKatalogJahrgaenge, type RouteKatalogJahrgaenge } from "~/router/ap
 
 import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJahrgangDaten.vue");
 
@@ -25,7 +26,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<unknown, RouteKatalog
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {

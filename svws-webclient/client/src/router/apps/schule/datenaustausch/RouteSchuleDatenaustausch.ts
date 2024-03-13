@@ -26,7 +26,7 @@ const SSchuleDatenaustauschAuswahl = () => import("~/components/schule/datenaust
 export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaustausch, RouteSchule> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "/schule/datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "schule/datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Datenaustausch";
@@ -58,7 +58,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 	}
 
 	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: {}};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleDatenaustauschAuswahlProps {
@@ -94,7 +94,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {} });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, this.children);
 	}
 

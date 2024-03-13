@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogAufsichtsbereiche, type RouteKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 
 import type { AufsichtsbereichDatenProps } from "~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDatenProps";
+import { routeApp } from "../../RouteApp";
 
 const SAufsichtsbereichDaten = () => import("~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDaten.vue");
 
@@ -25,7 +26,7 @@ export class RouteKatalogAufsichtsbereichDaten extends RouteNode<unknown, RouteK
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): AufsichtsbereichDatenProps {

@@ -4,6 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFoerderschwerpunkte, type RouteKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeApp } from "../../RouteApp";
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
@@ -22,7 +23,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<unknown, Rout
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

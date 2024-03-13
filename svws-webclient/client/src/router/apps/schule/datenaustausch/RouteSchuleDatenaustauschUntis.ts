@@ -20,8 +20,8 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<unknown, RouteSchu
 		super.text = "Untis";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisProps {

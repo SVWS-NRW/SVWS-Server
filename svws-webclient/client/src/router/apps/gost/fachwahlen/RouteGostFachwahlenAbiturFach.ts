@@ -9,6 +9,7 @@ import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFach
 
 import type { GostFachwahlenAbiturFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenAbiturFachProps";
 import { ref } from "vue";
+import { routeApp } from "../../RouteApp";
 
 
 const SGostFachwahlenAbiturFach = () => import("~/components/gost/fachwahlen/SGostFachwahlenAbiturFach.vue");
@@ -32,7 +33,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<unknown, RouteGost>
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 		return false;
 	}
 
@@ -45,7 +46,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<unknown, RouteGost>
 	}
 
 	public getRoute(abiturjahr: number, idfach: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr, idfach }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, idfach }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenAbiturFachProps {

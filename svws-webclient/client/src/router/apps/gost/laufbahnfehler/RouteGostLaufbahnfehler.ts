@@ -10,6 +10,7 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteDataGostLaufbahnfehler";
 
 import { ConfigElement } from "~/components/Config";
+import { routeApp } from "../../RouteApp";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
@@ -34,7 +35,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
 		return false;
 	}
 
@@ -46,7 +47,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 				throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			const abiturjahr = parseInt(to_params.abiturjahr);
 			if (abiturjahr === undefined || abiturjahr === -1)
-				return { name: this.parent.defaultChild!.name, params: { abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
+				return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
 		}
 		return true;
 	}
@@ -64,7 +65,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {

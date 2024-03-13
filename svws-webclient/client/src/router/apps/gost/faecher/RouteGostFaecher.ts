@@ -8,6 +8,7 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFaecher";
 
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
+import { routeApp } from "../../RouteApp";
 
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
@@ -40,7 +41,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFaecherProps {

@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
 import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungenProps";
+import { routeApp } from "../../RouteApp";
 
 const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungen.vue");
 
@@ -25,7 +26,7 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, Rou
 	}
 
 	public getRoute(id: number, abschnitt: number, wechselNr: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittLeistungenProps {

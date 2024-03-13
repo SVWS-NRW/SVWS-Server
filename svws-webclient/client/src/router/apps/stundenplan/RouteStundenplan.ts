@@ -26,7 +26,7 @@ const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.v
 export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "/stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -68,12 +68,12 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getChildRoute(id: number | undefined) : RouteLocationRaw {
 		const redirect_name = (routeStundenplan.selectedChild === undefined) ? routeStundenplanDaten.name : routeStundenplan.selectedChild.name;
-		return { name: redirect_name, params: { id }};
+		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
@@ -118,7 +118,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, routeStundenplan.children);
 	}
 }

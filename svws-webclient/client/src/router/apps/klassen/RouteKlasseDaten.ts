@@ -6,6 +6,7 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import type { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
+import { routeApp } from "../RouteApp";
 
 const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue");
 
@@ -19,7 +20,7 @@ export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenDatenProps {

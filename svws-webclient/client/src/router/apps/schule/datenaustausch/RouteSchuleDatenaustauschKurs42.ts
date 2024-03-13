@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuleDatenaustausch, type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschKurs42Props } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Props";
+import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42.vue");
 
@@ -18,8 +19,8 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<unknown, RouteSch
 		super.text = "Kurs42 Blockungen";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42Props {

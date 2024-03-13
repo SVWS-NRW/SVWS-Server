@@ -22,7 +22,7 @@ const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "/klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
@@ -62,14 +62,14 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
-			return { name: routeKlassenStundenplan.name, params: { id } };
+			return { name: routeKlassenStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
-		return { name: redirect_name, params: { id } };
+		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
@@ -114,7 +114,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.klassenListeManager.auswahlID() } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.klassenListeManager.auswahlID() } });
 		this.data.setView(node, this.children);
 	}
 

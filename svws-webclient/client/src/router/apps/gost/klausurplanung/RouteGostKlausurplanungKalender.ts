@@ -5,6 +5,7 @@ import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, Server
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungKalenderProps } from "~/components/gost/klausurplanung/SGostKlausurplanungKalenderProps";
+import { routeApp } from "../../RouteApp";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -27,7 +28,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungKalenderProps {

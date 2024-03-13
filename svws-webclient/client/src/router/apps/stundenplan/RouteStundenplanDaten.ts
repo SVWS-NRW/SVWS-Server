@@ -5,6 +5,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
+import { routeApp } from "../RouteApp";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
 
@@ -21,7 +22,7 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {

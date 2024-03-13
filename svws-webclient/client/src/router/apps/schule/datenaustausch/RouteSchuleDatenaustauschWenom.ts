@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschWenomProps } from "~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenomProps";
+import { routeApp } from "../../RouteApp";
 
 const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenom.vue");
 
@@ -18,8 +19,8 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<unknown, RouteSchu
 		super.text = "Webnotenmanager";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {

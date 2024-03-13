@@ -23,7 +23,7 @@ const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse", "/kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse", "kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
@@ -62,7 +62,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KurseAuswahlProps {
@@ -109,7 +109,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, this.children);
 	}
 

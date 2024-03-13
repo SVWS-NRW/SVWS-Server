@@ -8,6 +8,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerLaufbahninfo } from "~/router/apps/schueler/laufbahninfo/RouteDataSchuelerLaufbahninfo";
 import { type SchuelerLaufbahninfoProps } from "~/components/schueler/laufbahninfo/SchuelerLaufbahninfoProps";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 const SSchuelerLaufbahninfo = () => import("~/components/schueler/laufbahninfo/SSchuelerLaufbahninfo.vue");
 
@@ -42,7 +43,7 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahninfoProps {

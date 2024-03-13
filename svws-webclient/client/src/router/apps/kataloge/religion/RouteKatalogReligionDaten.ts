@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogReligion, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 
 import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
+import { routeApp } from "../../RouteApp";
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
 
@@ -24,7 +25,7 @@ export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogRe
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): ReligionDatenProps {

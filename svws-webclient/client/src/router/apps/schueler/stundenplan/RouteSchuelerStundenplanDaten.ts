@@ -8,6 +8,7 @@ import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/route
 
 import { StundenplanAnsicht } from "@comp";
 import type { StundenplanAnsichtProps } from "@comp";
+import { routeApp } from "../../RouteApp";
 
 export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchuelerStundenplan> {
 
@@ -60,7 +61,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchue
 
 	public getRoute(id: number, idStundenplan: number, wochentyp: number, kwjahr?: number | undefined, kw?: number | undefined) : RouteLocationRaw {
 		const tmpKW = ((kwjahr === undefined) || (kw === undefined)) ? undefined : kwjahr + "." + kw;
-		return { name: this.name, params: { id, idStundenplan, wochentyp, kw: tmpKW }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, idStundenplan, wochentyp, kw: tmpKW }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {

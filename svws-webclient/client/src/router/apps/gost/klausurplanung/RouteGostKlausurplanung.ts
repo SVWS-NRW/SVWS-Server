@@ -50,7 +50,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public checkHidden(params?: RouteParams) {
 		const abiturjahr = params?.abiturjahr === undefined ? null : Number(params.abiturjahr);
 		if (abiturjahr === null)
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
 		return false;
 	}
 
@@ -93,8 +93,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
 		if (halbjahr === undefined)
-			return { name: this.name, params: { abiturjahr: abiturjahr }};
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostKlausurplanungAuswahlProps {
@@ -130,7 +130,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		this.data.setView(node, this.children);
 	}
 

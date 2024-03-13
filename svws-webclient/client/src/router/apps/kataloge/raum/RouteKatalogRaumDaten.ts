@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogRaeume, type RouteKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 
 import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
+import { routeApp } from "../../RouteApp";
 
 const SRaumDaten = () => import("~/components/kataloge/raeume/daten/SRaumDaten.vue");
 
@@ -24,7 +25,7 @@ export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): RaumDatenProps {

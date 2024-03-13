@@ -26,6 +26,9 @@ export class RouteManager {
 	/** Gibt an, ob aktuell ein Routing stattfindet und eine Ereignisbehandlung durchgeführt wird. */
 	protected active = false;
 
+	/** Die Routing-Node, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
+	protected _node : RouteNode<unknown, any> | undefined = undefined;
+
 	private _errorstate = reactive<RouteStateError>({
 		code: undefined,
 		error: undefined
@@ -290,6 +293,7 @@ export class RouteManager {
 	protected async afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): Promise<any> {
 		try {
 			const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+			this._node = to_node;
 			const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
 				if (api.mode !== ServerMode.STABLE)
@@ -328,6 +332,16 @@ export class RouteManager {
 			api.status.stop();
 			this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 		}
+	}
+
+	/**
+	 * Gibt die RouteNode zur aktuellen Route zurück. Diese wird immer neu gesetzt,
+	 * wenn ein Routing abgeschlossen wird und afterEach ausgeführt wird.
+	 *
+	 * @returns die RouteNode zur aktuellen Route
+	 */
+	public getRouteNode() : RouteNode<unknown, any> | undefined {
+		return this._node;
 	}
 
 }

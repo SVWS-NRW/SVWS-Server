@@ -28,6 +28,28 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		super(defaultState);
 	}
 
+	public async init() {
+		// Lade den Katalog der Orte
+		const orte = await api.server.getOrte(api.schema);
+		const mapOrte = new Map();
+		for (const o of orte)
+			mapOrte.set(o.id, o);
+		// Lade den Katalog der Ortsteile
+		const ortsteile = await api.server.getOrtsteile(api.schema);
+		const mapOrtsteile = new Map();
+		for (const o of ortsteile)
+			mapOrtsteile.set(o.id, o);
+		// Und aktualisiere den internen State
+		this.setPatchedDefaultStateKeepView({
+			mapOrte,
+			mapOrtsteile
+		});
+	}
+
+	public async leave() {
+		this._state.value = this._defaultState;
+	}
+
 	aktAbschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
 		get: () => {
 			let abschnitt = api.config.getObjectValue("app.akt_abschnitt", Schuljahresabschnitt.transpilerFromJSON);
@@ -52,25 +74,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt?: number) {
-		if (idSchuljahresabschnitt === undefined) {
-			this._state.value = this._defaultState;
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
+		// Prüfe, ob sich der Schuljahresabschnitt geändert hat.
+		if (this._state.value.idSchuljahresabschnitt === idSchuljahresabschnitt)
 			return;
-		}
-		// Lade den Katalog der Orte
-		const orte = await api.server.getOrte(api.schema);
-		const mapOrte = new Map();
-		for (const o of orte)
-			mapOrte.set(o.id, o);
-		// Lade den Katalog der Ortsteile
-		const ortsteile = await api.server.getOrtsteile(api.schema);
-		const mapOrtsteile = new Map();
-		for (const o of ortsteile)
-			mapOrtsteile.set(o.id, o);
-		this.setPatchedDefaultStateKeepView({
+		// Setze den Schuljahresabschnitt
+		this.setPatchedState({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
-			mapOrte,
-			mapOrtsteile
 		});
 	}
 
@@ -80,6 +90,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	public get mapOrtsteile() {
 		return this._state.value.mapOrtsteile;
+	}
+
+	public get idSchuljahresabschnitt() {
+		return this._state.value.idSchuljahresabschnitt;
 	}
 
 }

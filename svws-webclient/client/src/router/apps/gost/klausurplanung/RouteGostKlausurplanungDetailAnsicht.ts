@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungDetailAnsichtProps } from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsichtProps";
 import SGostKlausurplanungDetailAnsichtVue from "~/components/gost/klausurplanung/SGostKlausurplanungDetailAnsicht.vue";
+import { routeApp } from "../../RouteApp";
 
 export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, RouteGostKlausurplanung> {
 
@@ -26,7 +27,7 @@ export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<unknown, Rou
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungDetailAnsichtProps {

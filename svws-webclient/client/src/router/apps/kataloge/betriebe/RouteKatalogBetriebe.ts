@@ -23,7 +23,7 @@ const SBetriebeApp = () => import("~/components/kataloge/betriebe/SBetriebeApp.v
 export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, RouteApp>{
 
 	public constructor(){
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe", "/kataloge/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataKatalogBetriebe());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe", "kataloge/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataKatalogBetriebe());
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
@@ -64,7 +64,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BetriebeAuswahlProps {
@@ -110,7 +110,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		await this.data.setView(node, this.children);
 	}
 

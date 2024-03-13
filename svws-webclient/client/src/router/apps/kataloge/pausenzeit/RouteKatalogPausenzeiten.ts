@@ -23,7 +23,7 @@ const SPausenzeitenApp = () => import("~/components/kataloge/pausenzeiten/SPause
 export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenzeiten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten", "/kataloge/pausenzeiten/:id(\\d+)?", SPausenzeitenApp, new RouteDataKatalogPausenzeiten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten", "kataloge/pausenzeiten/:id(\\d+)?", SPausenzeitenApp, new RouteDataKatalogPausenzeiten());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Pausenzeiten";
@@ -64,7 +64,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 		const name = this.data.mapKatalogeintraege.size === 0
 			? this.name
 			: this.defaultChild!.name;
-		return { name, params: { id }};
+		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
@@ -111,7 +111,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, this.children);
 	}
 

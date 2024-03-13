@@ -23,7 +23,7 @@ const SReligionenApp = () => import("~/components/kataloge/religionen/SReligione
 export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen", "kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
@@ -58,7 +58,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 	}
 
 	public getRoute(id: number|undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): ReligionenAuswahlProps {
@@ -105,7 +105,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, this.children);
 	}
 }

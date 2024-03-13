@@ -608,4 +608,22 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		return RouteNode.mapNodesByName.get(name);
 	}
 
+	/**
+	 * Versucht bei den angegebenen Parametern den Parameter mit dem
+	 * angegebenen Namen zu bestimmen und als Integer-Wert zu interpretieren.
+	 *
+	 * @param params   die Parameter der Route
+	 * @param name     der Name des Parameters
+	 *
+	 * @returns der Integer-Wert, undefined oder ein Error
+	 */
+	protected static getIntParam(params: RouteParams, name: string) : number | undefined | Error {
+		const value = params[name];
+		if (value === undefined)
+			return undefined;
+		if (value instanceof Array)
+			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		return parseInt(value);
+	}
+
 }

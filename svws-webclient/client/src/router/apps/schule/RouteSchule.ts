@@ -7,7 +7,7 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 
-import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
@@ -24,7 +24,7 @@ const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "/schule", SSchuleApp, new RouteDataSchule());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "schule", SSchuleApp, new RouteDataSchule());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
@@ -51,8 +51,8 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		await this.data.entferneDaten();
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { }};
+	public getRoute() : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleAppProps {
@@ -92,11 +92,11 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {} });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, routeSchule.menu);
 	}
 
-	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: {} });
+	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
 	public benutzerKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
 		return BenutzerKompetenz.getKompetenzenMitSchulform(gruppe, api.schulform)

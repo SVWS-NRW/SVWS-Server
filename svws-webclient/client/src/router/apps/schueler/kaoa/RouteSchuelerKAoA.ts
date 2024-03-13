@@ -8,6 +8,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchuelerKAoA";
 
 import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
+import { routeApp } from "../../RouteApp";
 
 
 const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue");
@@ -44,7 +45,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerKAoAProps {

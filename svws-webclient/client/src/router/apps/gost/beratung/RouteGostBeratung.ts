@@ -8,6 +8,7 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
 import { RouteDataGostBeratung } from "~/router/apps/gost/beratung/RouteDataGostBeratung";
 import { routeError } from "~/router/error/RouteError";
+import { routeApp } from "../../RouteApp";
 
 const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 
@@ -37,7 +38,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 	}
 
 

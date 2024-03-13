@@ -7,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppeDaten";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
+import { routeApp } from "../../RouteApp";
 
 
 interface RoutStateSchuleBenutzergruppe extends RouteStateInterface {
@@ -90,11 +91,11 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 
 	gotoBenutzergruppe = async (value: BenutzergruppeListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeSchuleBenutzergruppe.name, params: { } });
+			await RouteManager.doRoute({ name: routeSchuleBenutzergruppe.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
 		}
 		const redirect_name: string = (routeSchuleBenutzergruppe.selectedChild === undefined) ? routeSchuleBenutzergruppe.name : routeSchuleBenutzergruppe.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
+		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: value.id } });
 	}
 
 	getBenutzergruppenManager = () => {

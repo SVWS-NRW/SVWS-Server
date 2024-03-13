@@ -8,6 +8,7 @@ import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzergruppe, type RouteSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 
 import type { BenutzergruppeProps } from "~/components/schule/benutzergruppen/daten/SBenutzergruppeProps";
+import { routeApp } from "../../RouteApp";
 
 const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
 
@@ -26,7 +27,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzergruppeProps {
@@ -50,7 +51,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 		};
 	}
 
-	public gotToBenutzer = async (b_id: number) => await RouteManager.doRoute({ name: "benutzer_daten", params: { id: b_id} });
+	public gotToBenutzer = async (b_id: number) => await RouteManager.doRoute({ name: "benutzer_daten", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: b_id } });
 
 }
 

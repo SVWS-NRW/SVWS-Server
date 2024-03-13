@@ -10,6 +10,7 @@ import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenpla
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
@@ -53,7 +54,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id, wochentyp: 0 }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, wochentyp: 0 }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {

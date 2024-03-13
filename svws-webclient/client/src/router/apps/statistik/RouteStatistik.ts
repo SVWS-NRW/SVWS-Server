@@ -6,7 +6,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 
 import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
 import {api} from "~/router/Api";
@@ -17,7 +17,7 @@ const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
 export class RouteStatistik extends RouteNode<unknown, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "statistik", "/statistik", SStatistikApp);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "statistik", "statistik", SStatistikApp);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Statistik";
@@ -32,7 +32,7 @@ export class RouteStatistik extends RouteNode<unknown, RouteApp> {
 	}
 
 	public getRoute() : RouteLocationRaw {
-		return { name: this.name };
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } };
 	}
 
 	public getProps(to: RouteLocationNormalized): StatistikAppProps {

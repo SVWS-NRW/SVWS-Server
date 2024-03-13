@@ -32,7 +32,7 @@ const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
 export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge", "/kataloge", SKatalogeApp, new RouteDataKataloge());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge", "kataloge", SKatalogeApp, new RouteDataKataloge());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Kataloge";
@@ -55,7 +55,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KatalogeAuswahlProps {
@@ -87,11 +87,11 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {} });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		await this.data.setView(node);
 	}
 
-	returnToKataloge = async () => await RouteManager.doRoute({ name: this.name, params: {} });
+	returnToKataloge = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 }
 
 export const routeKataloge = new RouteKataloge();

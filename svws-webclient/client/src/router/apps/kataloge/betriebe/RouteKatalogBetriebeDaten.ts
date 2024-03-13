@@ -27,7 +27,7 @@ export class RouteKatalogBetriebeDaten extends RouteNode<unknown, RouteKatalogBe
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): BetriebeDatenProps {

@@ -12,6 +12,7 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { routeApp } from "../../RouteApp";
 
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -36,7 +37,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 	public checkHidden(params?: RouteParams) {
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : Number(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
 		return false;
 	}
 
@@ -99,8 +100,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined) || (idergebnis === undefined))
 			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
 		if (idschueler === undefined)
-			return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis }};
-		return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
+			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
 	}
 
 	gotoSchuelerIndividualdaten = async (idSchueler: number) => {

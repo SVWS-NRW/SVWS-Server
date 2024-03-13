@@ -27,7 +27,7 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "/gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
@@ -68,7 +68,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			return;
 		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
-			return { name: this.defaultChild!.name, params: { abiturjahr: String(abiturjahr) }};
+			return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: String(abiturjahr) }};
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
@@ -79,7 +79,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
 			redirect = this.defaultChild!;
-		return { name: redirect.name, params: { abiturjahr: abiturjahr || -1 }};
+		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr || -1 }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
@@ -132,7 +132,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { abiturjahr: this.data.auswahl?.abiturjahr || -1 } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr || -1 } });
 		this.data.setView(node, this.children);
 	}
 

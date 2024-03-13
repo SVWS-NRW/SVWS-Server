@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKurse, type RouteKurse } from "~/router/apps/kurse/RouteKurse";
 
 import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
+import { routeApp } from "../RouteApp";
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 
@@ -25,7 +26,7 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): KursDatenProps {

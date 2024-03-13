@@ -32,12 +32,13 @@ import { routeLogin } from "~/router/login/RouteLogin";
 import { ConfigElement } from "~/components/Config";
 import SApp from "~/components/SApp.vue";
 import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
+import { routeError } from "../error/RouteError";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/", SApp, new RouteDataApp());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/:idSchuljahresabschnitt(\\d+)?", SApp, new RouteDataApp());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
@@ -87,11 +88,20 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.setSchuljahresabschnitt(this.data.aktAbschnitt.value.id);
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<void | RouteLocationRaw | Error> {
+		await this.data.init();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+		if (idSchuljahresabschnitt instanceof Error)
+			return routeError.getRoute(idSchuljahresabschnitt);
+		// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
+		if (idSchuljahresabschnitt === undefined)
+			return this.getRoute(this.data.aktAbschnitt.value.id);
+		// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
+		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+		// Prüfe, ob die View aktualisiert werden muss
 		let cur: RouteNode<unknown, any> = to;
 		while (cur.parent !== this)
 		  cur = cur.parent;
@@ -100,11 +110,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		await this.data.setSchuljahresabschnitt();
+		await this.data.leave();
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.defaultChild!.name };
+	public getRoute(idSchuljahresabschnitt?: number): RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt } };
 	}
 
 	public getProps(): AppProps {
@@ -144,7 +154,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {  } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, this.children);
 	}
 

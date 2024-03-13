@@ -31,7 +31,7 @@ const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
 export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "/schueler/:id(\\d+)?", SSchuelerApp, new RouteDataSchueler());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "schueler/:id(\\d+)?", SSchuelerApp, new RouteDataSchueler());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
@@ -55,9 +55,9 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		const id = RouteNode.getIntParam(to_params, "id");
+		if (id instanceof Error)
+			return routeError.getRoute(id);
 		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.liste.get(id) : null;
 		await this.data.setSchueler(eintrag);
 		if (!this.data.schuelerListeManager.hasDaten()) {
@@ -79,14 +79,14 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 
 	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
-			return { name: routeSchuelerStundenplan.name, params: { id } };
+			return { name: routeSchuelerStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 		const redirect_name: string = (routeSchueler.selectedChild === undefined) ? routeSchuelerIndividualdaten.name : routeSchueler.selectedChild.name;
-		return { name: redirect_name, params: { id } };
+		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
@@ -130,7 +130,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
 		this.data.setView(node, this.children);
 	}
 

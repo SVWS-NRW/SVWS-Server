@@ -48,7 +48,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
 		return false;
 	}
 
@@ -178,23 +178,23 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 	public getRoute() : RouteLocationRaw {
-		return { name: routeGost.name, params: { abiturjahr: -1 }};
+		return { name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: -1 }};
 	}
 
 	public getRouteHalbjahr(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr, halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr }};
 	}
 
 	public getRouteBlockung(abiturjahr: number, halbjahr: number, idblockung: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr, halbjahr, idblockung }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung }};
 	}
 
 	public getRouteErgebnis(abiturjahr: number, halbjahr: number, idblockung: number, idergebnis: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr, halbjahr, idblockung, idergebnis }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis }};
 	}
 
 	public getRouteSchueler(abiturjahr: number, halbjahr: number, idblockung: number, idergebnis: number, idschueler: number) : RouteLocationRaw {
-		return { name: routeGostKursplanungSchueler.name, params: { abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
+		return { name: routeGostKursplanungSchueler.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};
 	}
 
 

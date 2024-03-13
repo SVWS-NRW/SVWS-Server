@@ -18,7 +18,7 @@ const SZeitrasterApp = () => import("~/components/kataloge/zeitraster/SZeitraste
 export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.zeitraster", "/kataloge/zeitraster", SZeitrasterApp, new RouteDataKatalogZeitraster());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.zeitraster", "kataloge/zeitraster", SZeitrasterApp, new RouteDataKatalogZeitraster());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeitraster";
@@ -38,7 +38,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 	}
 
 	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): ZeitrasterAuswahlProps {
@@ -79,7 +79,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, this.children);
 	}
 }

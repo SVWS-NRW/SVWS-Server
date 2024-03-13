@@ -226,11 +226,11 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
 		if (value === undefined || value === null) {
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
-			// await RouteManager.doRoute({ name: routeGost.name, params: { } });
+			// await RouteManager.doRoute({ name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
 		}
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostBeratung.name : routeGost.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
+		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: value.abiturjahr } });
 	}
 
 	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsListeEintrag>) : number | null {

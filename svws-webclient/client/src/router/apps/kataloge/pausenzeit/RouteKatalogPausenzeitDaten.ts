@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogPausenzeiten, type RouteKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
 
 import type { PausenzeitDatenProps } from "~/components/kataloge/pausenzeiten/daten/SPausenzeitDatenProps";
+import { routeApp } from "../../RouteApp";
 
 const SPausenzeitDaten = () => import("~/components/kataloge/pausenzeiten/daten/SPausenzeitDaten.vue");
 
@@ -25,7 +26,7 @@ export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalog
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): PausenzeitDatenProps {

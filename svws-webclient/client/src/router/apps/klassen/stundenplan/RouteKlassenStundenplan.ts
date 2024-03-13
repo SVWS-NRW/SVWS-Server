@@ -11,6 +11,7 @@ import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/R
 import { type StundenplanAuswahlProps } from "@comp";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlassenStundenplan.vue");
 
@@ -57,7 +58,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 
 	public getRoute(id: number) : RouteLocationRaw {
 		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ id: String(id) }))
+		if (redirect.hidden({ idSchuljahresabschnitt: String(routeApp.data.idSchuljahresabschnitt), id: String(id) }))
 			redirect = this.defaultChild!;
 		return redirect.getRoute(id);
 	}

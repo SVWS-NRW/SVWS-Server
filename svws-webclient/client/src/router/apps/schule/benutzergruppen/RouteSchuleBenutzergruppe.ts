@@ -7,7 +7,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
-import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppeDaten";
 import { RouteDataSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteDataSchuleBenutzergruppe";
@@ -22,7 +22,7 @@ const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBe
 export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzergruppe, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppen", "schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
@@ -64,7 +64,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzergruppeAuswahlProps {
@@ -94,7 +94,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			get: () => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+				void RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 			}
 		});
 	}
@@ -117,7 +117,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 		if (node === undefined) throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({
 			name: value.name,
-			params: { id: this.data.auswahl?.id },
+			params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id },
 		});
 		this.data.setView(node, routeSchule.children);
 	};

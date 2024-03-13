@@ -11,6 +11,7 @@ import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbah
 
 import { ConfigElement } from "~/components/Config";
 import { SSchuelerLaufbahnplanung } from "@comp";
+import { routeApp } from "../../RouteApp";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
@@ -66,7 +67,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {

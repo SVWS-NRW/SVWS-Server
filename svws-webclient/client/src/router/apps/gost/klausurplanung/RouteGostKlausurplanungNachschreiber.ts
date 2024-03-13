@@ -7,6 +7,7 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 
 import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreiberProps";
 import { routeError } from "~/router/error/RouteError";
+import { routeApp } from "../../RouteApp";
 
 const SGostKlausurplanungNachschreiber = () => import("~/components/gost/klausurplanung/SGostKlausurplanungNachschreiber.vue");
 
@@ -35,7 +36,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<unknown, Rou
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {

@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerUnterrichtsdatenProps } from "~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdatenProps";
+import { routeApp } from "../RouteApp";
 
 const SLehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdaten.vue");
 
@@ -19,7 +20,7 @@ export class RouteLehrerUnterrichtsdaten extends RouteNode<unknown, RouteLehrer>
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): LehrerUnterrichtsdatenProps {

@@ -7,7 +7,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
-import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteSchuleBenutzerDaten";
 import { RouteDataSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteDataSchuleBenutzer";
@@ -22,7 +22,7 @@ const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue
 export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "benutzer", "schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
@@ -56,7 +56,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 	}
 
 	public getRoute(id?: number): RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id } };
+		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzerAuswahlProps {
@@ -86,7 +86,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 			get: () => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id }, });
+				void RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id }, });
 			},
 		});
 	}
@@ -107,7 +107,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		await this.data.setView(node, routeSchule.children);
 	};
 }

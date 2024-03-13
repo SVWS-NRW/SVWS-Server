@@ -7,6 +7,7 @@ import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzer, type RouteSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 
 import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
+import { routeApp } from "../../RouteApp";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
 
@@ -20,7 +21,7 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzerProps {

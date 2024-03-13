@@ -7,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
+import { routeApp } from "../RouteApp";
 
 interface RouteStateLehrer extends RouteStateInterface {
 	// Daten, allgemein
@@ -211,7 +212,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 
 	gotoEintrag = async (eintrag: LehrerListeEintrag) => {
 		const redirect_name: string = (routeLehrer.selectedChild === undefined) ? routeLehrerIndividualdaten.name : routeLehrer.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: eintrag.id } });
+		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
 	}
 
 	setFilter = async () => {

@@ -16,6 +16,7 @@ import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabsc
 
 import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
+import { routeApp } from "../../RouteApp";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
 
@@ -61,11 +62,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 	}
 
 	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
-		return { name: this.data.view.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
+		return { name: this.data.view.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
-		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnitteProps {

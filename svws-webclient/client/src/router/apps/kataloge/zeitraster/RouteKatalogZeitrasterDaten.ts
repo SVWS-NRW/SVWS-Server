@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteKatalogZeitraster} from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
 import { api } from "~/router/Api";
+import { routeApp } from "../../RouteApp";
 
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
 
@@ -19,7 +20,7 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalog
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanZeitrasterPausenzeitProps {
