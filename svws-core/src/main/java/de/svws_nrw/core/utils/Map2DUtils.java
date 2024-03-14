@@ -1,7 +1,9 @@
 package de.svws_nrw.core.utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -37,6 +39,28 @@ public final class Map2DUtils {
 		final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
 		map2D.put(key1, key2, listNeu);
 		return listNeu;
+	}
+
+    /**
+     * Liefert die "HashSet of V" des Schlüssels. Erstellt eine leere "HashSet of V", falls eine solche Zuordnung nicht existierte.
+     *
+     * @param <K1>   Der Typ des 1. Schlüssels.
+     * @param <K2>   Der Typ des 2. Schlüssels.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     * @param map2D  Die Map, welche (K1, K2) auf "HashSet of V" abbildet.
+     * @param key1   Der 1. Schlüssel.
+     * @param key2   Der 2. Schlüssel.
+     *
+     * @return die "HashSet of V" des Schlüssels. Erstellt eine leere "HashSet of V", falls eine solche Zuordnung nicht existierte.
+     */
+	public static <@NotNull K1, @NotNull K2, @NotNull V>  @NotNull Set<@NotNull V> getOrCreateHashSet(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull Set<@NotNull V>> map2D, final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Set<@NotNull V> set = map2D.getOrNull(key1, key2);
+		if (set != null)
+			return set;
+
+		final @NotNull HashSet<@NotNull V> setNeu = new HashSet<>();
+		map2D.put(key1, key2, setNeu);
+		return setNeu;
 	}
 
     /**
