@@ -9,19 +9,19 @@
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td">Halbjahr</div>
 				<div role="cell" class="svws-ui-td">
-					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span class="icon i-ri-draft-line -my-0.5" />
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
-					<i-ri-speak-line class="text-sm -my-0.5" />
+					<span class="icon i-ri-speak-line -my-0.5" />
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
-					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span class="icon i-ri-draft-line -my-0.5" />
 					<span>Leistungskurs</span>
 				</div>
 				<div v-if="istZKMoeglich" role="cell" class="svws-ui-td">
-					<i-ri-speak-line class="text-sm -my-0.5" />
+					<span class="icon i-ri-speak-line -my-0.5" />
 					<span>Zusatzkurs</span>
 				</div>
 			</div>
@@ -69,7 +69,7 @@
 							<div> <!----> </div>
 							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in (istZKMoeglich ? [1, 2, 3, 4] : [1, 2, 3])" :key="col">
 								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
-									<i-ri-link class="text-sm" />
+									<span class="icon i-ri-link" />
 									<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 								</div>
 							</div>

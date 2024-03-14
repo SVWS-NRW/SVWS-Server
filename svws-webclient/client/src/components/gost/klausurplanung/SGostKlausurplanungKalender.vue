@@ -51,9 +51,9 @@
 						:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
+								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
 								<svws-ui-select class="flex-grow svws-kw-auswahl bg-svws text-white rounded-md h-7" title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><i-ri-arrow-right-s-line class="-m-0.5" /></svws-ui-button>
+								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><span class="icon i-ri-arrow-right-s-line -m-0.5" /></svws-ui-button>
 							</div>
 						</template>
 					</s-gost-klausurplanung-kalender-stundenplan-ansicht>
@@ -68,11 +68,11 @@
 					<template #title>
 						<span class="text-headline-md leading-none inline-flex gap-1">
 							<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
-								<i-ri-checkbox-circle-fill class="text-success -my-1" />
+								<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
 								<span>Keine Konflikte</span>
 							</template>
 							<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-								<i-ri-alert-fill class="text-error -my-0.5" />
+								<span class="icon i-ri-alert-fill icon-error -my-0.5" />
 								<span> Konflikte</span>
 							</template>
 						</span>
@@ -99,11 +99,11 @@
 					<template #title>
 						<span class="text-headline-md leading-none inline-flex gap-1">
 							<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
-								<i-ri-checkbox-circle-fill class="text-success -my-1" />
+								<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
 								<span>Keine Warnungen</span>
 							</template>
 							<template v-else-if="anzahlProKwKonflikte2(3, true).length > 0">
-								<i-ri-alert-fill class="text-highlight -my-0.5" />
+								<span class="icon i-ri-alert-fill text-highlight -my-0.5" />
 								<span> Warnungen</span>
 							</template>
 						</span>

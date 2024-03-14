@@ -30,21 +30,21 @@
 								'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0
 							}">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1 break-all" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
-								<span v-if="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
+								<span v-if="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0" class="leading-none ml-auto"><span class="icon i-ri-check-line inline-block icon-success" /></span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 									:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" @dragstart="wochentyp = 0" draggable="true">
-									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+									<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+										<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 									</span>
 									<span class="pl-2 line-clamp-1 break-all py-1 -my-1" :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">Allgemein</span>
 								</div>
 								<template v-if="stundenplanManager().getWochenTypModell() > 0">
 									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) <= 0 }" draggable="true">
-										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+										<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+											<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 										</span>
 										<span class="pl-2 pr-1" :class="{'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0}">{{ String.fromCharCode(64 + i) }}</span>
 									</div>
@@ -71,16 +71,16 @@
 									<div role="cell" class="select-none svws-ui-td">
 										<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 											:class="{ 'cursor-grabbing': dragData !== undefined }" @dragstart="wochentyp = 0" draggable="true">
-											<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-												<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+											<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+												<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 											</span>
 											<span class="pl-2 line-clamp-1 break-all py-1 -my-1">Allgemein</span>
 										</div>
 										<template v-if="stundenplanManager().getWochenTypModell() > 0">
 											<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 												:class="{ 'cursor-grabbing': dragData !== undefined }" draggable="true">
-												<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-													<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+												<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+													<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 												</span>
 												<span class="pl-2 pr-1">{{ String.fromCharCode(64 + i) }}</span>
 											</div>
@@ -97,21 +97,21 @@
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 									}">
 										<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all pl-3" :title="kurs.bezeichnung">{{ kurs.bezeichnung }}</span>
-										<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
+										<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="leading-none ml-auto"><span class="icon i-ri-check-line inline-block icon-success" /></span>
 									</div>
 									<div role="cell" class="select-none svws-ui-td">
 										<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 											:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" @dragstart="wochentyp = 0" draggable="true">
-											<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-												<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+											<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+												<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 											</span>
 											<span class="pl-2 line-clamp-1 break-all py-1 -my-1" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">Allgemein</span>
 										</div>
 										<template v-if="stundenplanManager().getWochenTypModell() > 0">
 											<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 												:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
-												<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-													<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+												<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+													<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 												</span>
 												<span class="pl-2 pr-1" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ String.fromCharCode(64 + i) }}</span>
 											</div>
@@ -136,21 +136,21 @@
 									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 								}">
 									<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all">{{ kurs.bezeichnung }}</span>
-									<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
+									<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line inline-block icon-success" /></span>
 								</div>
 								<div role="cell" class="select-none svws-ui-td">
 									<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 										:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" @dragstart="wochentyp = 0" draggable="true">
-										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+										<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+											<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 										</span>
 										<span class="pl-2 line-clamp-1 break-all py-1 -my-1" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">Allgemein</span>
 									</div>
 									<template v-if="stundenplanManager().getWochenTypModell() > 0">
 										<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
 											:class="{ 'cursor-grabbing': dragData !== undefined, '!border-black/5': stundenplanManager().kursGetWochenstundenREST(kurs.id) <= 0 }" draggable="true">
-											<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-												<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+											<span class="rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+												<span class="icon i-ri-draggable inline-block w-4 -ml-0.5 icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
 											</span>
 											<span class="pl-2 pr-1" :class="{'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0}">{{ String.fromCharCode(64 + i) }}</span>
 										</div>

@@ -31,7 +31,7 @@
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <i-ri-calculator-line class="-mx-0.5" /> Schnell </svws-ui-button>
+								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button>
 							</template>
 							<svws-ui-tooltip position="top" v-else>
 								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Berechnen</svws-ui-button>

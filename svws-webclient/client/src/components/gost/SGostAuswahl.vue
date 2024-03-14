@@ -28,7 +28,7 @@
 						<div v-if="isRemovable(rowData)" class="-my-1 ml-auto inline-flex">
 							<s-gost-auswahl-abiturjahrgang-remove-modal :remove-abiturjahrgang="removeAbiturjahrgang" :gost-jahrgang="rowData" v-slot="{ openModal : openRemoveModal }">
 								<svws-ui-button type="icon" @click.stop="openRemoveModal()" title="Abiturjahrgang löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
-									<i-ri-delete-bin-line class="-mx-0.5" />
+									<span class="icon i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</s-gost-auswahl-abiturjahrgang-remove-modal>
 						</div>

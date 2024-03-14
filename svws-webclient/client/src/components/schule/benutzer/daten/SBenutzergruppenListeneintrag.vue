@@ -12,7 +12,7 @@
 	</div>
 	<div class="svws-ui-td" role="cell">
 		<svws-ui-tooltip v-if="row.istAdmin">
-			<i-ri-shield-star-line class="h-5 w-5 -m-0.5" />
+			<span class="icon i-ri-shield-star-line h-5 w-5 -m-0.5" />
 			<template #content>Administrative Gruppe</template>
 		</svws-ui-tooltip>
 	</div>

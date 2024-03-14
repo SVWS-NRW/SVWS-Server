@@ -22,15 +22,15 @@
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
 				<template #cell(istMdlPruefung)="{ value }">
-					<i-ri-chat1-line v-if="value" class="-my-0.5" />
+					<span class="icon i-ri-chat1-line -my-0.5" v-if="value" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(istAudioNotwendig)="{ value }">
-					<i-ri-headphone-line v-if="value" class="-my-0.5" />
+					<span class="icon i-ri-headphone-line -my-0.5" v-if="value" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(istVideoNotwendig)="{ value }">
-					<i-ri-vidicon-line v-if="value" class="-my-0.5" />
+					<span class="icon i-ri-vidicon-line -my-0.5" v-if="value" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(bemerkungVorgabe)="{ value }">
@@ -48,7 +48,7 @@
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
-				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <i-ri-add-line class="inline-block text-button -mt-1" /> eine neue erstellen.</span>
+				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -mt-1" /> eine neue erstellen.</span>
 			</template>
 			<template v-else>
 				<div class="flex flex-col gap-4">
@@ -68,10 +68,10 @@
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-chat1-line"  v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-chat1-line" v-if="value.name === 'Ja'" />
 									<template v-else>
-										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
-										<i-ri-checkbox-circle-line class="radio--indicator-icon--checked" />
+										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
+										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
 									</template>
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -80,10 +80,10 @@
 							<label class="sr-only" for="rbgAudioNotwendig">Audio notwendig: </label>
 							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-headphone-line"  v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-headphone-line" v-if="value.name === 'Ja'" />
 									<template v-else>
-										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
-										<i-ri-checkbox-circle-line class="radio--indicator-icon--checked" />
+										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
+										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
 									</template>
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -92,10 +92,10 @@
 							<label class="sr-only" for="rbgVideoNotwendig">Video notwendig: </label>
 							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-vidicon-line"  v-if="value.name === 'Ja'" />
+									<span class="icon i-ri-vidicon-line" v-if="value.name === 'Ja'" />
 									<template v-else>
-										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
-										<i-ri-checkbox-circle-line class="radio--indicator-icon--checked" />
+										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
+										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
 									</template>
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -105,7 +105,7 @@
 					</svws-ui-input-wrapper>
 				</div>
 				<div v-if="activeVorgabe.idVorgabe === 0" class="flex gap-1 flex-wrap justify-start mt-9">
-					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mb-3 leading-tight opacity-50"><i-ri-information-line class="inline align-text-top mr-0.5" />Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
+					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mb-3 leading-tight opacity-50"><span class="icon i-ri-information-line inline align-text-top mr-0.5" />Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1">Speichern</svws-ui-button>
 				</div>

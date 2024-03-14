@@ -21,15 +21,15 @@
 			<template #actions>
 				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
 					<template v-if="termin().quartal > 0">
-						<i-ri-lock-line class="opacity-25 text-sm group-hover:opacity-75" />{{ termin().quartal }}. Quartal
+						<span class="icon i-ri-lock-line opacity-25 group-hover:opacity-75" />{{ termin().quartal }}. Quartal
 					</template>
 					<template v-else>
-						<i-ri-lock-unlock-line class="opacity-25 text-sm group-hover:opacity-75" /> Alle
+						<span class="icon i-ri-lock-unlock-line opacity-25 group-hover:opacity-75" /> Alle
 					</template>
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>

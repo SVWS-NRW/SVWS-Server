@@ -49,7 +49,7 @@
 												<svws-ui-button type="transparent" @click="copyToClipboard">
 													<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 													<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-													<i-ri-check-line v-else class="text-success" />
+													<span class="icon i-ri-check-line icon-primary" v-else />
 												</svws-ui-button>
 											</div>
 											<nav class="flex flex-row items-center gap-2 mt-0.5">

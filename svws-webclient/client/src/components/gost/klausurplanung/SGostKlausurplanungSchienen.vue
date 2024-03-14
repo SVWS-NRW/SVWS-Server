@@ -59,7 +59,7 @@
 							@dragend="onDrag(undefined)"
 							:class="klausurCssClasses(klausur, undefined)">
 							<div class="svws-ui-td">
-								<i-ri-draggable class="-m-0.5 -ml-4 -mr-1" />
+								<span class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
 								<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 							</div>
 							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
@@ -78,7 +78,7 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="console.log(props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));erzeugeKlausurtermin(quartalsauswahl.value, true)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
+					<svws-ui-button @click="console.log(props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
@@ -111,15 +111,15 @@
 			<template #title>
 				<span class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="klausurKonflikte().size() > 0">
-						<i-ri-alert-fill class="text-error -my-0.5" />
+						<span class="icon i-ri-alert-fill text-error -my-0.5" />
 						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
 					</template>
 					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
-						<i-ri-alert-fill class="text-error -my-0.5" />
+						<span class="icon i-ri-alert-fill text-error -my-0.5" />
 						<span> Konflikte</span>
 					</template>
 					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
-						<i-ri-checkbox-circle-fill class="text-success -my-1" />
+						<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else>

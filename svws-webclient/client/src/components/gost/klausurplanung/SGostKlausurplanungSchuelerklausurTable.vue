@@ -16,7 +16,7 @@
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row">
 				<div class="svws-ui-td" role="cell">
-					<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
+					<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
 					{{ kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
@@ -36,7 +36,7 @@
 				<div class="svws-ui-td svws-align-center" role="cell">{{ kMan().vorgabeBySchuelerklausurTermin(schuelertermin).dauer }}</div>
 				<div class="svws-ui-td svws-align-center" role="cell">
 					<slot name="actions">
-						<svws-ui-button v-if="patchKlausur !== undefined" type="icon" size="small" class="-mr-1" @click="patchKlausur(schuelertermin, {idTermin: null});$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+						<svws-ui-button v-if="patchKlausur !== undefined" type="icon" size="small" class="-mr-1" @click="patchKlausur(schuelertermin, {idTermin: null});$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
 					</slot>
 				</div>
 			</div>

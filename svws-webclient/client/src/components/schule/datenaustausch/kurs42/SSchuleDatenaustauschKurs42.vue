@@ -2,7 +2,7 @@
 	<div class="page--content page--content--full">
 		<svws-ui-content-card title="Blockung aus Kurs42 hochladen">
 			<div class="flex flex-col gap-2 mb-16 lg:mb-20">
-				<p><i-ri-information-line class="inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs42 exportiert werden müssen: </p>
+				<p><span class="icon i-ri-information-line inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs42 exportiert werden müssen: </p>
 				<ul class="list-disc list-inside">
 					<li> Blockung.txt </li>
 					<li> Schueler.txt </li>

@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<div class="flex items-center">
 						<div>
-							<span class="inline-flex gap-2"><i-ri-alert-fill class="text-error" />{{ error?.name }}</span>
+							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name }}</span>
 							<br>
 							<span class="opacity-40">
 								<template v-if="code !== undefined">

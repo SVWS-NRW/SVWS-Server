@@ -11,7 +11,7 @@
 					<slot name="title">
 						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
 							<span v-if="dragIcon && !compact" class="group-hover:bg-black/10 dark:group-hover:bg-white/10 -ml-1 mr-0.5 rounded">
-								<i-ri-draggable :class="{'text-sm': compact, '-mx-0.5': !compact}" />
+								<span class="icon i-ri-draggable" :class="{'-mx-0.5': !compact}" />
 							</span>
 							<span class="line-clamp-1 break-all">{{ terminBezeichnung() }}</span>
 						</span>
@@ -70,7 +70,7 @@
 										}
 									]">
 									<div class="svws-ui-td" role="cell">
-										<i-ri-draggable v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" class="i-ri-draggable -m-0.5 -ml-3" />
+										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" />
 										<span class="svws-ui-badge" :class="{'!ml-2': draggable !== undefined && !draggable(klausur)}" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>

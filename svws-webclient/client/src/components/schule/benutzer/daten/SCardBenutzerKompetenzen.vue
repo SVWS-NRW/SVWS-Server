@@ -3,7 +3,7 @@
 		<template #actions>
 			<template v-if="getBenutzerManager().istInAdminGruppe()">
 				<span class="inline-flex gap-1 leading-none">
-					<i-ri-shield-star-line class="flex-shrink-0 -mt-0.5" />
+					<span class="icon i-ri-shield-star-line flex-shrink-0 -mt-0.5" />
 					<span>Administrator mit allen Kompetenzen</span>
 				</span>
 			</template>

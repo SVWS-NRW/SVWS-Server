@@ -52,7 +52,7 @@
 						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20">
 							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
-								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><i-ri-group-line class="text-sm" />{{ sumSchreiber(wochentag, stunde) }}</span>
+								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag, stunde) }}</span>
 							</div>
 						</div>
 					</div>
@@ -77,7 +77,7 @@
 						@dragend="onDrag(undefined)">
 						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
 							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
-							<i-ri-draggable v-if="termin.abijahr === jahrgangsdaten.abiturjahr" class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
+							<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
 							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
 								<span class="z-10 relative p-2 leading-tight font-medium">{{ terminBezeichnung(termin) }}</span>

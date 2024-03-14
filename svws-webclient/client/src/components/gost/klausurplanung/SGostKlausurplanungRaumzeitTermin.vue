@@ -8,7 +8,7 @@
 			</div>
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
-			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><i-ri-add-line class="-ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
+			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<template v-if="raummanager()?.raumGetMengeAsList().size()">

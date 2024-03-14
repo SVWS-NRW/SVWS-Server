@@ -10,7 +10,7 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
-							<template #label> {{ item.text }} </template>
+							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							<template #icon>
 								<span class="inline-block icon-lg icon i-ri-team-line" v-if="item.name === 'klassen'" />
 								<span class="inline-block icon-lg icon i-ri-group-line" v-else-if="item.name === 'schueler'" />
@@ -28,7 +28,7 @@
 				<template #footer>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <span class="icon i-ri-logout-circle-line" /> </template>
+						<template #icon> <span class="icon i-ri-logout-circle-line inline-block icon-lg" /> </template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>
@@ -37,7 +37,7 @@
 						<svws-ui-button type="transparent" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<i-ri-check-line v-else class="text-success" />
+							<span class="icon i-ri-check-line icon-primary" v-else />
 						</svws-ui-button>
 					</div>
 				</template>

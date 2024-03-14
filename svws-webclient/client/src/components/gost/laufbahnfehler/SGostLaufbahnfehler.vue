@@ -28,7 +28,7 @@
 				</template>
 				<template #header(ergebnis)>
 					<svws-ui-tooltip class="w-6">
-						<i-ri-alert-line class="text-headline-md -my-1 -mx-0.5" />
+						<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
 						<template #content>
 							Anzahl der Fehler insgesamt
 						</template>

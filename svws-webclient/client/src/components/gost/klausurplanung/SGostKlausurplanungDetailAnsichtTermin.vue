@@ -25,7 +25,7 @@
 								<tr class="" v-for="klausur in raummanager.kursklausurGetMengeByRaumid(raum.id)" :key="klausur.id">
 									<td class="text-right pr-1">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</td>
 									<td class="pl-1">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</td>
-									<td class="text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getKursklausurManager().startzeitByKursklausur(klausur)!) }} Uhr <i-ri-alert-fill class="ml-2 text-yellow-500" v-if="raummanager.getKursklausurManager().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
+									<td class="text-center" v-if="raummanager.getGemeinsamerKursklausurstartByKlausurraum(raum) === null"><span class="inline-flex">{{ DateUtils.getStringOfUhrzeitFromMinuten(raummanager.getKursklausurManager().startzeitByKursklausur(klausur)!) }} Uhr <span class="icon i-ri-alert-fill ml-2 icon-highlight" v-if="raummanager.getKursklausurManager().hatAbweichendeStartzeitByKursklausur(klausur)" /></span></td>
 									<td class="text-center" v-if="raummanager.getGemeinsameKursklausurdauerByKlausurraum(raum) === null">{{ raummanager.getKursklausurManager().vorgabeByKursklausur(klausur).dauer }} Min.</td>
 								</tr>
 							</table>
