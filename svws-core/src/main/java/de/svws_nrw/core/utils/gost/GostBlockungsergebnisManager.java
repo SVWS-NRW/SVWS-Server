@@ -64,15 +64,19 @@ public class GostBlockungsergebnisManager {
 	/** Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. */
 	private @NotNull GostBlockungsergebnis _ergebnis = new GostBlockungsergebnis();
 
-	// ############################## UPDATE ##############################
 
 	/** Liste aller Fehlermeldungen. */
 	private final @NotNull List<@NotNull String> _fehlermeldungen = new ArrayList<>();
 
-	// ############################## UPDATE LEVEL 0 - SETS ##############################
+	// ################################# UPDATE 0 #################################
+
+	// Sets der Objekte.
 
 	/** Set aller Schienen-IDs. */
 	private final @NotNull Set<@NotNull Long> _schienenIDset = new HashSet<@NotNull Long>();
+
+	/** Set aller Kurs-IDs. */
+	private final @NotNull Set<@NotNull Long> _kursIDset = new HashSet<@NotNull Long>();
 
 	/** Set aller Schienen-Nummern. */
 	private final @NotNull Set<@NotNull Integer> _schienenNRset = new HashSet<@NotNull Integer>();
@@ -83,23 +87,51 @@ public class GostBlockungsergebnisManager {
 	/** Set aller Schüler-IDs. */
 	private final @NotNull Set<@NotNull Long> _schuelerIDset = new HashSet<@NotNull Long>();
 
-	// ############################## UPDATE LEVEL 0 - MAPS ##############################
-
 	/** Map von Schienen-ID nach {@link GostBlockungsergebnisSchiene}. */
 	private final @NotNull Map<@NotNull Long, @NotNull GostBlockungsergebnisSchiene> _schienenID_to_schiene = new HashMap<>();
 
 	/** Map von Schienen-NR nach {@link GostBlockungsergebnisSchiene}. */
 	private final @NotNull Map<@NotNull Integer, @NotNull GostBlockungsergebnisSchiene> _schienenNR_to_schiene = new HashMap<>();
 
-	/** Kurs-ID --> GostBlockungsergebnisKurs */
+	/** Map von Kurs-ID nach {@link GostBlockungsergebnisKurs}. */
 	private final @NotNull Map<@NotNull Long, @NotNull GostBlockungsergebnisKurs> _kursID_to_kurs = new HashMap<>();
+
+	/** Map von Schueler-ID nach {@link Schueler}. */
+	private final @NotNull Map<@NotNull Long, @NotNull Schueler> _schuelerID_to_schueler = new HashMap<>();
+
+	/** Map von Schienen-ID nach Long-Set (von Kursen). */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _schienenID_to_kursIDSet = new HashMap<>();
+
+	/** Map von Kurs-ID nach Long-Set (von Schülern). */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _kursID_to_schuelerIDSet = new HashMap<>();
+
+	// ################################# UPDATE 3 #################################
+
+	/** Map von Schienen-ID nach Integer (Anzahl der SuS in der Schiene). */
+	private final @NotNull Map<@NotNull Long, @NotNull Integer> _schienenID_to_susAnzahl = new HashMap<>();
 
 	// ############################################################################
 
 
+	// TODO BAR
+	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
 
-	/** Map von Schienen-ID nach Integer (Anzahl der SuS in der Schiene). */
-	private final @NotNull Map<@NotNull Long, @NotNull Integer> _schienenID_to_susAnzahl = new HashMap<>();
+	// TODO BAR
+	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> = Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind.*/
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_ungueltige_kurse = new HashMap<>();
+
+	/** Kurs-ID --> Set<GostBlockungsergebnisSchiene> */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisSchiene>> _map_kursID_schienen = new HashMap<>();
+
+	/** Fach-ID --> ArrayList<GostBlockungsergebnisKurs> */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachID_kurse = new HashMap<>();
+
+	/** Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart. */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachartID_kurse = new HashMap<>();
+
+
+
 
 	/** Map von Schienen-ID nach Integer (Anzahl an Kollisionen in der Schiene). */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _schienenID_to_kollisionen = new HashMap<>();
@@ -107,12 +139,6 @@ public class GostBlockungsergebnisManager {
 
 	/** (Schienen-ID, Fachart-ID) --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart. */
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map2D_schienenID_fachartID_kurse = new HashMap2D<>();
-
-	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
-
-	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> = Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind.*/
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_ungueltige_kurse = new HashMap<>();
 
 	/** Schüler-ID --> Integer (Kollisionen) */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_schuelerID_kollisionen = new HashMap<>();
@@ -123,20 +149,11 @@ public class GostBlockungsergebnisManager {
 	/** Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.*/
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map2D_schuelerID_schienenID_kurse = new HashMap2D<>();
 
-	/** Kurs-ID --> Set<GostBlockungsergebnisSchiene> */
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisSchiene>> _map_kursID_schienen = new HashMap<>();
-
 	/** Kurs-ID --> Anzahl an Dummy-SuS */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_dummySuS = new HashMap<>();
 
 	/** Kurs-ID --> Maximale Anzahl an SuS */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_maxSuS = new HashMap<>();
-
-	/** Kurs-ID --> Set<SchuelerID> */
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _map_kursID_schuelerIDs = new HashMap<>();
-
-	/** Fach-ID --> ArrayList<GostBlockungsergebnisKurs> */
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachID_kurse = new HashMap<>();
 
 	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
@@ -146,9 +163,6 @@ public class GostBlockungsergebnisManager {
 
 	/** Entscheidet, welcher Comparator verwendet wird mit 1 = (KURSART, FACH) andernfalls (FACH, KURSART). */
 	private int _fachartmenge_sortierung = 1;
-
-	/** Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachartID_kurse = new HashMap<>();
 
 	/** Regeltyp --> Liste aller Regelverletzungen. */
 	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _map_regelID_verletzungen = new HashMap<>();
@@ -221,7 +235,6 @@ public class GostBlockungsergebnisManager {
 		_map2D_schuelerID_fachID_kurs.clear();
 		_map2D_schuelerID_schienenID_kurse.clear();
 		_map_kursID_schienen.clear();
-		_map_kursID_schuelerIDs.clear();
 		_map_kursID_dummySuS.clear();
 		_map_kursID_maxSuS.clear();
 		_map_fachID_kurse.clear();
@@ -245,25 +258,37 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = _parent.daten().fachwahlen.size();
 
+		final long t1 = System.currentTimeMillis();
+
 		// Update aller internen Datenstrukturen.
 		_fehlermeldungen.clear();
 
-		// _schienenIDset
-		// _schienenNRset
-		// _fachIDset
-		// _schuelerIDset
-		update_level_0_sets();
+		update_0_schienenIDset_schienenNRset();
+		update_0_kursIDset();
+		update_0_fachIDset();
+		update_0_schuelerIDset();
 
-		// _schienenID_to_schiene
-		// _schienenNR_to_schiene
-		// _kursID_to_kurs
-		update_level_0_maps();
+		update_0_schienenID_to_schiene_schienenNR_to_schiene();
+		update_0_kursID_to_kurs();
+		update_0_schuelerID_to_schueler();
+
+		update_0_schienenID_to_kursIDSet(pOld);
+		update_0_kursID_to_schuelerIDSet(pOld);
 
 
-		if (udpdate_schienenID_to_susAnzahl()) // TODO BAR später aufrufen und direkt berechnen (nicht mehr dynamisch).
-			return;
-		if (update_schienenID_to_kollisionen()) // TODO BAR später aufrufen und direkt berechnen (nicht mehr dynamisch).
-			return;
+
+		update_3_schienenID_to_kollisionen();		// TODO BAR später nicht mehr dynamisch
+
+		if (!_fehlermeldungen.isEmpty()) {
+			System.out.println("Es sind Fehler aufgetreten: ");
+			for (final @NotNull String meldung : _fehlermeldungen)
+				System.out.println("    " + meldung);
+		}
+
+		final long t2 = System.currentTimeMillis();
+		if (t2 - t1 > 10) {
+			System.out.println("Update Time = " + (t2 - t1));
+		}
 
 		// Update aller DTOs.
 		_ergebnis.schienen.addAll(_schienenID_to_schiene.values());
@@ -278,9 +303,6 @@ public class GostBlockungsergebnisManager {
 
 			// Map: kursID --> Schienen des Kurses
 			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schienen, eKurs.id, new HashSet<@NotNull GostBlockungsergebnisSchiene>());
-
-			// Map: kursID --> Schüler des Kurses
-			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schuelerIDs, eKurs.id, new HashSet<@NotNull Long>());
 
 			// Map: fachID --> Kursliste
 			MapUtils.getOrCreateArrayList(_map_fachID_kurse, eKurs.fachID).add(eKurs);
@@ -351,11 +373,13 @@ public class GostBlockungsergebnisManager {
 		// _fachartmenge_sortiert erzeugen.
 		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());
 
+		update_3_schienenID_to_susAnzahl();
+
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
 	}
 
-	private void update_level_0_sets() {
+	private void update_0_schienenIDset_schienenNRset() {
 		_schienenIDset.clear();
 		_schienenNRset.clear();
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
@@ -371,7 +395,19 @@ public class GostBlockungsergebnisManager {
 		for (int schienenNr = 1; schienenNr <= _schienenNRset.size(); schienenNr++)
 			if (!_schienenNRset.contains(schienenNr))
 				_fehlermeldungen.add("Es gibt " + _schienenNRset.size() + " Schienen, aber es fehlt die Schienen-Nr. " + schienenNr + "!");
+	}
 
+	private void update_0_kursIDset() {
+		_kursIDset.clear();
+		for (final @NotNull GostBlockungKurs gKurs: _parent.daten().kurse) {
+			if (gKurs.id < 0)
+				_fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist ungültig!");
+			if (!_kursIDset.add(gKurs.id))
+				_fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist doppelt!");
+		}
+	}
+
+	private void update_0_fachIDset() {
 		_fachIDset.clear();
 		for (final @NotNull GostFach gFach: _parent.faecherManager().faecher()) {
 			if (gFach.id < 0)
@@ -379,7 +415,9 @@ public class GostBlockungsergebnisManager {
 			if (!_fachIDset.add(gFach.id))
 				_fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist doppelt!");
 		}
+	}
 
+	private void update_0_schuelerIDset() {
 		_schuelerIDset.clear();
 		for (final @NotNull Schueler schueler : _parent.daten().schueler) {
 			if (schueler.id < 0)
@@ -390,8 +428,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 
-
-	private void update_level_0_maps() {
+	private void update_0_schienenID_to_schiene_schienenNR_to_schiene() {
 		_schienenID_to_schiene.clear();
 		_schienenNR_to_schiene.clear();
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
@@ -399,7 +436,9 @@ public class GostBlockungsergebnisManager {
 			_schienenID_to_schiene.put(gSchiene.id, eSchiene);
 			_schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
 		}
+	}
 
+	private void update_0_kursID_to_kurs() {
 		_kursID_to_kurs.clear();
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
 			final @NotNull GostBlockungsergebnisKurs eKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
@@ -407,22 +446,57 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-	private boolean udpdate_schienenID_to_susAnzahl() {
-		_schienenID_to_susAnzahl.clear();
-
-		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
-			_schienenID_to_susAnzahl.put(gSchiene.id, 0);
-
-		return false;
+	private void update_0_schuelerID_to_schueler() {
+		_schuelerID_to_schueler.clear();
+		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
+			_schuelerID_to_schueler.put(gSchueler.id, gSchueler);
+		}
 	}
 
-	private boolean update_schienenID_to_kollisionen() {
-		_schienenID_to_kollisionen.clear();
+	private void update_0_schienenID_to_kursIDSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+		_schienenID_to_kursIDSet.clear();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
+				MapUtils.getOrCreateHashSet(_schienenID_to_kursIDSet, eSchiene.id).add(eKurs.id);
 
+		// Schienen ohne Kurse ergänzen.
+		for (final long idSchiene : _schienenIDset)
+			if (!_schienenID_to_kursIDSet.containsKey(idSchiene))
+				MapUtils.getOrCreateHashSet(_schienenID_to_kursIDSet, idSchiene);
+
+	}
+
+	private void update_0_kursID_to_schuelerIDSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+		_kursID_to_schuelerIDSet.clear();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
+				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, eKurs.id).addAll(eKurs.schueler);
+
+		// Kurse ohne Schüler ergänzen.
+		for (final long idKurs : _kursIDset)
+			if (!_kursID_to_schuelerIDSet.containsKey(idKurs))
+				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, idKurs);
+	}
+
+	private void update_3_schienenID_to_susAnzahl() {
+		_schienenID_to_susAnzahl.clear();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
+			int anzahlDerSchuelerInDerSchiene = 0;
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
+				anzahlDerSchuelerInDerSchiene += eKurs.schueler.size();
+			_schienenID_to_susAnzahl.put(eSchiene.id, anzahlDerSchuelerInDerSchiene);
+		}
+		for (final long idSchiene : _schienenIDset)
+			if (!_schienenID_to_susAnzahl.containsKey(idSchiene)) {
+				_schienenID_to_susAnzahl.put(idSchiene, 0);
+				_fehlermeldungen.add("Es gibt im Blockungsergebnis die Schiene ID (" + idSchiene + "), der kein einziger Kurszugeordnet ist.");
+			}
+	}
+
+	private void update_3_schienenID_to_kollisionen() {
+		_schienenID_to_kollisionen.clear();
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
 			_schienenID_to_kollisionen.put(gSchiene.id, 0);
-
-		return false;
 	}
 
 	private void stateRegelvalidierung() {
@@ -984,10 +1058,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void stateSchuelerSchieneHinzufuegenOhneRegelvalidierung(final long idSchueler, final long idSchiene, final @NotNull GostBlockungsergebnisKurs kurs) {
-		// Schiene --> Integer (erhöhen)
-		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(idSchiene);
-		_schienenID_to_susAnzahl.put(idSchiene, schieneSchuelerzahl + 1);
-
 		// Schiene --> Schüler --> Kurse (erhöhen)
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 		kursmenge.add(kurs);
@@ -1008,11 +1078,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void stateSchuelerSchieneEntfernenOhneRegelvalidierung(final long idSchueler, final long idSchiene, final @NotNull GostBlockungsergebnisKurs kurs) {
-		// // Schiene --> Integer (verringern)
-		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(idSchiene);
-		DeveloperNotificationException.ifTrue(_parent.toStringSchueler(idSchueler) + " entfernen aus " + _parent.toStringKurs(kurs.id) + " / " + _parent.toStringSchiene(idSchiene) +  " unmöglich, da Schienen-SuS-Anzahl = " + schieneSchuelerzahl + "!", schieneSchuelerzahl <= 0);
-		_schienenID_to_susAnzahl.put(idSchiene, schieneSchuelerzahl - 1);
-
 		// Schiene --> Schüler --> Integer (verringern)
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 		kursmenge.remove(kurs);
@@ -2085,10 +2150,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 */
 	public boolean getOfSchuelerOfKursIstZugeordnet(final long idSchueler, final long idKurs) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schuelerIDs, idKurs).contains(idSchueler);
-//		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs)
-//		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler)
-//		return kurseOfSchueler.contains(kurs)
+		return DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs).contains(idSchueler);
 	}
 
 	/**
@@ -2589,7 +2651,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
 	 */
 	public @NotNull Set<@NotNull Long> getOfKursSchuelerIDmenge(final long idKurs) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schuelerIDs, idKurs);
+		return DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs);
 	}
 
 	/**
@@ -2930,7 +2992,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> getMappingKursIDSchuelerIDs() {
-		return _map_kursID_schuelerIDs;
+		return _kursID_to_schuelerIDSet;
 	}
 
 	/**
@@ -3933,7 +3995,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK() {
-		return regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -3966,7 +4028,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3() {
-		return regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -3999,7 +4061,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3() {
-		return regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -4032,7 +4094,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4() {
-		return regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -4065,7 +4127,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB() {
-		return regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -4098,7 +4160,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH() {
-		return regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(_map_kursID_schuelerIDs.keySet());
+		return regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(_kursIDset);
 	}
 
 	/**
@@ -4795,7 +4857,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01_LEERE_ALLE_KURSE(final boolean entferneAuchFixierte) {
-		return kursSchuelerUpdate_01b_LEERE_KURSMENGE(_map_kursID_schuelerIDs.keySet(), entferneAuchFixierte);
+		return kursSchuelerUpdate_01b_LEERE_KURSMENGE(_kursIDset, entferneAuchFixierte);
 	}
 
 	/**
