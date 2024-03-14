@@ -102,10 +102,13 @@ public class GostBlockungsergebnisManager {
 	/** Map von Schienen-ID nach Long-Set (von Kursen). */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _schienenID_to_kursIDSet = new HashMap<>();
 
-	/** Map von Kurs-ID nach Long-Set (von Schülern). */
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _kursID_to_schuelerIDSet = new HashMap<>();
+	/** Map von Schueler-ID nach {@link GostBlockungsergebnisKurs}-Set (Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind).*/
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _schuelerID_to_ungueltigeKurseSet = new HashMap<>();
 
 	// ################################# UPDATE 1 #################################
+
+	/** Map von Kurs-ID nach Long-Set (von Schülern). */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _kursID_to_schuelerIDSet = new HashMap<>();
 
 	/** Map von Fach-ID nach {@link GostBlockungsergebnisKurs}-List. */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _fachID_to_kurseList = new HashMap<>();
@@ -116,6 +119,17 @@ public class GostBlockungsergebnisManager {
 	/** Map von Kurs-ID nach Integer (Anzahl an externen SuS). */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _kursID_to_dummySuS = new HashMap<>();
 
+	/**  Map von Fachart-ID nach {@link GostBlockungsergebnisKurs}-List (Alle Kurse der selben Fachart). */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _fachartID_to_kurseList = new HashMap<>();
+
+	// ################################# UPDATE 2 #################################
+
+	/** Map von Schüler-ID nach {@link GostBlockungsergebnisKurs}-Set. */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _schuelerID_to_kurseSet = new HashMap<>();
+
+	/** Menge aller Fachart-IDs sortiert nach der aktuellen Sortiervariante. */
+	private final @NotNull List<@NotNull Long> _fachartIDList_sortiert = new ArrayList<>();
+
 	// ################################# UPDATE 3 #################################
 
 	/** Map von Schienen-ID nach Integer (Anzahl der SuS in der Schiene). */
@@ -123,18 +137,8 @@ public class GostBlockungsergebnisManager {
 
 	// ############################################################################
 
-	// TODO BAR
-	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
-
-	// TODO BAR
-	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> = Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind.*/
-	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_ungueltige_kurse = new HashMap<>();
-
-	/** Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachartID_kurse = new HashMap<>();
-
-
+	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
+	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
 
 
 	/** Map von Schienen-ID nach Integer (Anzahl an Kollisionen in der Schiene). */
@@ -153,17 +157,6 @@ public class GostBlockungsergebnisManager {
 	/** Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.*/
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map2D_schuelerID_schienenID_kurse = new HashMap2D<>();
 
-	/** Kurs-ID --> Maximale Anzahl an SuS */
-	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_maxSuS = new HashMap<>();
-
-	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
-
-	/** Menge aller Fachart-IDs sortiert nach der aktuellen Sortiervariante. */
-	private final @NotNull List<@NotNull Long> _fachartmenge_sortiert = new ArrayList<>();
-
-	/** Entscheidet, welcher Comparator verwendet wird mit 1 = (KURSART, FACH) andernfalls (FACH, KURSART). */
-	private int _fachartmenge_sortierung = 1;
 
 	/** Regeltyp --> Liste aller Regelverletzungen. */
 	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _map_regelID_verletzungen = new HashMap<>();
@@ -176,6 +169,9 @@ public class GostBlockungsergebnisManager {
 
 	/** Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte. */
 	private @NotNull String _regelverletzungen_der_wahlkonflikte = "";
+
+	/** Entscheidet, welcher Comparator verwendet wird mit 1 = (KURSART, FACH) andernfalls (FACH, KURSART). */
+	private int _fachartmenge_sortierung = 1;
 
 	/** Comparator für die Facharten nach (KURSART, FACH). */
 	private final @NotNull Comparator<@NotNull Long> _fachartComparator_kursart_fach;
@@ -230,13 +226,9 @@ public class GostBlockungsergebnisManager {
 	private void stateClear(final @NotNull GostBlockungsergebnis pOld, final long pGostBlockungsergebnisID) {
 		// clear maps
 		_map2D_schienenID_fachartID_kurse.clear();
-		_map_schuelerID_kurse.clear();
-		_map_schuelerID_ungueltige_kurse.clear();
 		_map_schuelerID_kollisionen.clear();
 		_map2D_schuelerID_fachID_kurs.clear();
 		_map2D_schuelerID_schienenID_kurse.clear();
-		_map_kursID_maxSuS.clear();
-		_map_fachartID_kurse.clear();
 		_map_fachartID_kursdifferenz.clear();
 		_regelverletzungen_der_faecherparallelitaet = "";
 		_regelverletzungen_der_wahlkonflikte = "";
@@ -265,19 +257,19 @@ public class GostBlockungsergebnisManager {
 		update_0_kursIDset();
 		update_0_fachIDset();
 		update_0_schuelerIDset();
-
 		update_0_schienenID_to_schiene_schienenNR_to_schiene();
 		update_0_kursID_to_kurs();
 		update_0_schuelerID_to_schueler();
-
 		update_0_schienenID_to_kursIDSet(pOld);
-		update_0_kursID_to_schuelerIDSet(pOld);
 
-		update_1_map_kursID_dummySuS();
-		update_1_map_fachID_kurse();
-		update_1_kursID_to_schienenSet();
+		update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(pOld);  	// _kursIDset, _kursID_to_kurs
+		update_1_kursID_to_dummySuS(); 												// _kursIDset
+		update_1_fachID_to_kurseList();												// _fachIDset, _kursID_to_kurs
+		update_1_kursID_to_schienenSet();           								// _kursIDset, _schienenID_to_kursIDSet
+		update_1_fachartID_to_kurseList();											// _kursID_to_kurs
 
-
+		update_2_schuelerID_to_kurseSet();											// _schuelerIDset, _kursID_to_kurs, _kursID_to_schuelerIDSet,
+		update_2__fachartIDList_sortiert();
 
 		update_3_schienenID_to_kollisionen();		// TODO BAR später nicht mehr dynamisch
 
@@ -310,7 +302,6 @@ public class GostBlockungsergebnisManager {
 
 			// Map: fachartID --> Kursliste
 			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, fachartID).add(eKurs);
 
 			// Map: fachartID --> Kursdifferenz
 			if (!_map_fachartID_kursdifferenz.containsKey(fachartID)) {
@@ -319,10 +310,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
-		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
-		}
+
 
 		// Map: (schienenID, fachartID) --> Kursmenge = Alle Kurse einer Fachart pro Schiene
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
@@ -331,8 +319,6 @@ public class GostBlockungsergebnisManager {
 
 		// Schüler kopieren und hinzufügen.
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
-			// Map: schuelerID --> Kurs-Set
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kurse, gSchueler.id, new HashSet<@NotNull GostBlockungsergebnisKurs>());
 			// Map: schuelerID --> Anzahl Kollisionen
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 			// Map: schuelerID --> (fachID --> Kurs)
@@ -369,9 +355,6 @@ public class GostBlockungsergebnisManager {
 					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		}
 
-
-		// _fachartmenge_sortiert erzeugen.
-		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());
 
 		update_3_schienenID_to_susAnzahl();
 
@@ -474,23 +457,37 @@ public class GostBlockungsergebnisManager {
 
 	}
 
-	private void update_0_kursID_to_schuelerIDSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+	private void update_1_kursID_to_schuelerIDSet_schuelerID_to_ungueltigeKurseSet(final @NotNull GostBlockungsergebnis ergebnisOld) {
+		// Leeren und hinzufügen.
 		_kursID_to_schuelerIDSet.clear();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnisOld.schienen)
 			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
 				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, eKurs.id).addAll(eKurs.schueler);
 
-		// Gibt es Schüler mit ungültigen Fachwahlen? --> Aus dem Kurs entfernen.
-
-
-
 		// Kurse ohne Schüler ergänzen.
 		for (final long idKurs : _kursIDset)
 			if (!_kursID_to_schuelerIDSet.containsKey(idKurs))
 				MapUtils.getOrCreateHashSet(_kursID_to_schuelerIDSet, idKurs);
+
+		// Ungültige Fachwahlen in eine andere Map verschieben.
+		_schuelerID_to_ungueltigeKurseSet.clear();
+		for (final long idKurs : _kursID_to_schuelerIDSet.keySet()) {
+			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs);
+			final @NotNull Set<@NotNull Long> schuelerIDset = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs);
+
+			for (final long idSchueler : new HashSet<>(schuelerIDset))
+				if (!_parent.schuelerGetHatFachart(idSchueler, eKurs.fachID, eKurs.kursart)) {
+					schuelerIDset.remove(idSchueler);
+					MapUtils.getOrCreateHashSet(_schuelerID_to_ungueltigeKurseSet, idSchueler).add(eKurs);
+					// _schuelerID_to_ungueltigeKurseSet darf nur Schüler mit ungültigen Fachwahlen enthalten!
+				}
+		}
+
+		// TODO BAR ungültige Kurswahlen, da es die selbe Fachart ist.
 	}
 
-	private void update_1_map_kursID_dummySuS() {
+	private void update_1_kursID_to_dummySuS() {
+		// Leeren und hinzufügen.
 		_kursID_to_dummySuS.clear();
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			final long idKurs = r.parameter.get(0);
@@ -515,16 +512,19 @@ public class GostBlockungsergebnisManager {
 				_kursID_to_dummySuS.put(idKurs, 0);
 	}
 
-	private void update_1_map_fachID_kurse() {
+	private void update_1_fachID_to_kurseList() {
+		// Leeren und hinzufügen.
 		_fachID_to_kurseList.clear();
 		for (final @NotNull GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values())
 			MapUtils.getOrCreateArrayList(_fachID_to_kurseList, eKurs.fachID).add(eKurs);
+
 		// Fächer ohne Kurse (ggf. von Fachwahlen)
 		for (final long idFach : _fachIDset)
 			MapUtils.getOrCreateArrayList(_fachID_to_kurseList, idFach);
 	}
 
 	private void update_1_kursID_to_schienenSet() {
+		// Leeren und hinzufügen.
 		_kursID_to_schienenSet.clear();
 		for (final long idSchiene : _schienenID_to_kursIDSet.keySet()) {
 			final @NotNull GostBlockungsergebnisSchiene eSchiene = DeveloperNotificationException.ifMapGetIsNull(_schienenID_to_schiene, idSchiene);
@@ -538,7 +538,60 @@ public class GostBlockungsergebnisManager {
 				MapUtils.getOrCreateHashSet(_kursID_to_schienenSet, idKurs);
 	}
 
+	private void update_1_fachartID_to_kurseList() {
+		// Leeren und hinzufügen
+		_fachartID_to_kurseList.clear();
+		for (final @NotNull GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values()) {
+			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
+			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, fachartID).add(eKurs);
+		}
+
+		// Ergänze mit Fachwahlen zu denen es keinen Kurs gibt.
+		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
+			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, GostKursart.getFachartIDByFachwahl(gFachwahl));
+
+		// Zugeordnete Listen sortieren.
+		for (final long idFachart : _fachartID_to_kurseList.keySet()) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kurseList, idFachart);
+			if (_fachartmenge_sortierung == 1) {
+				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
+			}
+		}
+	}
+
+	private void update_2_schuelerID_to_kurseSet() {
+		// Leeren und hinzufügen.
+		_schuelerID_to_kurseSet.clear();
+		for (final long idKurs : _kursID_to_schuelerIDSet.keySet()) {
+			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs);
+			for (final long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs))
+				MapUtils.getOrCreateHashSet(_schuelerID_to_kurseSet, idSchueler).add(eKurs);
+		}
+
+		// Schüler ohne Kurse?
+		for (final long idSchueler : _schuelerIDset)
+			if (!_schuelerID_to_kurseSet.containsKey(idSchueler))
+				MapUtils.getOrCreateHashSet(_schuelerID_to_kurseSet, idSchueler);
+	}
+
+	private void update_2__fachartIDList_sortiert() {
+		// Leeren und hinzufügen.
+		_fachartIDList_sortiert.clear();
+		_fachartIDList_sortiert.addAll(_fachartID_to_kurseList.keySet());
+
+		// Liste sortieren.
+		if (_fachartmenge_sortierung == 1) {
+			_fachartIDList_sortiert.sort(_fachartComparator_kursart_fach);
+		} else {
+			_fachartIDList_sortiert.sort(_fachartComparator_fach_kursart);
+		}
+
+	}
+
 	private void update_3_schienenID_to_susAnzahl() {
+		// Leeren und hinzufügen.
 		_schienenID_to_susAnzahl.clear();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
 			int anzahlDerSchuelerInDerSchiene = 0;
@@ -546,11 +599,11 @@ public class GostBlockungsergebnisManager {
 				anzahlDerSchuelerInDerSchiene += eKurs.schueler.size();
 			_schienenID_to_susAnzahl.put(eSchiene.id, anzahlDerSchuelerInDerSchiene);
 		}
+
+		// Schienen ohne SuS ergänzen.
 		for (final long idSchiene : _schienenIDset)
-			if (!_schienenID_to_susAnzahl.containsKey(idSchiene)) {
+			if (!_schienenID_to_susAnzahl.containsKey(idSchiene))
 				_schienenID_to_susAnzahl.put(idSchiene, 0);
-				_fehlermeldungen.add("Es gibt im Blockungsergebnis die Schiene ID (" + idSchiene + "), der kein einziger Kurszugeordnet ist.");
-			}
 	}
 
 	private void update_3_schienenID_to_kollisionen() {
@@ -563,7 +616,6 @@ public class GostBlockungsergebnisManager {
 		// Clear
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
-		_map_kursID_maxSuS.clear(); // Wird mit Regel 15 gefüllt.
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
 		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4();
@@ -689,7 +741,7 @@ public class GostBlockungsergebnisManager {
 	private @NotNull String stateRegelvalidierungTooltip4proSchiene(final long idSchiene) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
-		for (final long idFachart : _fachartmenge_sortiert) {
+		for (final long idFachart : _fachartIDList_sortiert) {
 			final @NotNull String proFachart = stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene, idFachart);
 			if (!proFachart.isEmpty())
 				sb.append(proFachart + "\n");
@@ -913,7 +965,6 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(0);
 		final int maxSuS = r.parameter.get(1).intValue();
 		DeveloperNotificationException.ifTrue("Regel 15: " + _parent.toStringKurs(idKurs) + " maximale SuS-Anzahl = " + maxSuS + " ist ungültig!", (maxSuS < 0) || (maxSuS > 100));
-		DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_maxSuS, idKurs, maxSuS); // map wird vorher geleert
 		final int sus = getOfKursAnzahlSchuelerPlusDummy(idKurs);
 
 		if (sus > maxSuS) {
@@ -948,23 +999,15 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
-		// Ungültige Wahlen extra behandeln.
-		if (!getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
-			stateSchuelerKursUngueltigeWahlHinzufuegen(idSchueler, kurs);
-			return;
-		}
-
 		// Wurde das Fach bereits einem anderen Kurs zugeordnet?
 		if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) != null) // wirft ggf. Exception
 			return;
 
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.add(idSchueler); // Data-Objekt aktualisieren
-		kurseOfSchueler.add(kurs);
 		schuelerIDsOfKurs.add(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, kurs);
@@ -998,40 +1041,21 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
-		// Ungültige Wahlen extra behandeln.
-		if (!getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
-			stateSchuelerKursUngueltigeWahlEntfernen(idSchueler, kurs);
-			return;
-		}
-
 		// Der Kurs ist derzeit gar nicht zugeordnet!
 		if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) != kurs) // wirft ggf. Exception
 			return;
 
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.remove(idSchueler); // Data-Objekt aktualisieren
-		kurseOfSchueler.remove(kurs);
 		schuelerIDsOfKurs.remove(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, null);
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneEntfernenOhneRegelvalidierung(idSchueler, schieneID, kurs);
-	}
-
-	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs kurs) {
-		MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, idSchueler).add(kurs);
-	}
-
-	private void stateSchuelerKursUngueltigeWahlEntfernen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs kurs) {
-	    final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_ungueltige_kurse, idSchueler);
-		set.remove(kurs);
-		if (set.isEmpty())
-			_map_schuelerID_ungueltige_kurse.remove(idSchueler);
 	}
 
 	/**
@@ -1198,22 +1222,9 @@ public class GostBlockungsergebnisManager {
 	// #########################################################################
 
 	private void updateAll() {
-		// _fachartmenge_sortiert sortieren.
-		if (_fachartmenge_sortierung == 1) {
-			_fachartmenge_sortiert.sort(_fachartComparator_kursart_fach);
-		} else {
-			_fachartmenge_sortiert.sort(_fachartComparator_fach_kursart);
-		}
 
-		// _map_fachartID_kurse: Zugeordnete Listen sortieren.
-		for (final @NotNull Long idFachart : _map_fachartID_kurse.keySet()) {
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, idFachart);
-			if (_fachartmenge_sortierung == 1) {
-				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
-			} else {
-				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
-			}
-		}
+
+
 
 		// Kursmenge pro Schiene sortieren.
 		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
@@ -1278,7 +1289,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnis copy = deepCopyErgebnis(_ergebnis);
 
 		// Ungültige Zuordnungen hinzufügen
-		for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> entry : _map_schuelerID_ungueltige_kurse.entrySet())
+		for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> entry : _schuelerID_to_ungueltigeKurseSet.entrySet())
 			for (final @NotNull @NotNull GostBlockungsergebnisKurs kurs1 : entry.getValue())
 				for (final @NotNull GostBlockungsergebnisSchiene schiene : copy.schienen)
 					for (final @NotNull GostBlockungsergebnisKurs kurs2 : schiene.kurse)
@@ -1754,7 +1765,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(final long idFachart) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, idFachart);
+		return DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kurseList, idFachart);
 	}
 
 	/**
@@ -1880,7 +1891,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Menge aller Facharten (Fach + Kursart) sortiert nach der aktuellen Sortiervariante.
 	 */
 	public @NotNull List<@NotNull Long> getOfFachartMengeSortiert() {
-		return _fachartmenge_sortiert;
+		return _fachartIDList_sortiert;
 	}
 
 	/**
@@ -1939,7 +1950,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Die Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmenge(final long idSchueler) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler);
+		return DeveloperNotificationException.ifMapGetIsNull(_schuelerID_to_kurseSet, idSchueler);
 	}
 
 	/**
@@ -1953,7 +1964,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeSortiert(final long idSchueler) {
 		final List<@NotNull GostBlockungsergebnisKurs> list = new ArrayList<>();
-		list.addAll(DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler));
+		list.addAll(DeveloperNotificationException.ifMapGetIsNull(_schuelerID_to_kurseSet, idSchueler));
 
 		if (_fachartmenge_sortierung == 1)
 			list.sort(_kursComparator_kursart_fach_kursnummer);
@@ -2004,7 +2015,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public boolean getOfSchuelerHatNichtwahl(final long idSchueler) {
-		final int nIst = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler).size();
+		final int nIst = DeveloperNotificationException.ifMapGetIsNull(_schuelerID_to_kurseSet, idSchueler).size();
 		final int nSoll = _map2D_schuelerID_fachID_kurs.getSubMapSizeOrZero(idSchueler);
 		return nIst < nSoll;
 	}
@@ -2548,7 +2559,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet.
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerMapIDzuUngueltigeKurse() {
-		return _map_schuelerID_ungueltige_kurse;
+		return _schuelerID_to_ungueltigeKurseSet;
 	}
 
 	/**
@@ -5808,7 +5819,7 @@ public class GostBlockungsergebnisManager {
 	public void debug(final @NotNull Logger logger) {
 		logger.modifyIndent(+4);
 		logger.logLn("----- Kurse sortiert nach Fachart -----");
-		for (final @NotNull Long fachartID : _map_fachartID_kurse.keySet()) {
+		for (final @NotNull Long fachartID : _fachartID_to_kurseList.keySet()) {
 			logger.logLn("FachartID = " + fachartID + " (KD = " + getOfFachartKursdifferenz(fachartID) + ")");
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfFachartKursmenge(fachartID)) {
 				logger.logLn("    " + getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
