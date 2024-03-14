@@ -4,7 +4,7 @@
 		<template #modalTitle>Schema wiederherstellen</template>
 		<template #modalContent>
 			<div class="flex flex-col items-center gap-3">
-				<div class="flex flex-row"> <i-ri-alert-line class="text-red-500 mr-1" /> Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
+				<div class="flex flex-row"> <span class="icon i-ri-alert-line icon-error mr-1" /> Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
 				<svws-ui-spacing />
 				<div class="flex flex-col gap-3 w-128 text-left">
 					<div class="flex flex-col gap-3 w-128 text-left">

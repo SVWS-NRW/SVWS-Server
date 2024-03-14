@@ -12,7 +12,7 @@
 					</span>
 				</div>
 				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3 text-balance">
-					<span><i-ri-school-line class="inline relative -top-0.5 opacity-75" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span><br>{{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
+					<span><span class="icon i-ri-school-line inline-block relative top-0.5 opacity-75" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span><br>{{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -22,7 +22,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
-		<i-ri-archive-stack-line />
+		<span class="icon i-ri-archive-stack-line" />
 	</div>
 </template>
 

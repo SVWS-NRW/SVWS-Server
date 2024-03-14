@@ -19,7 +19,7 @@
 										<span v-if="!connected || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
 										<svws-ui-spinner :spinning="connecting" />
-										<i-ri-check-line v-if="!connecting && connected && !inputFocus" />
+										<span class="icon i-ri-check-line" v-if="!connecting && connected && !inputFocus" />
 									</svws-ui-button>
 								</svws-ui-input-wrapper>
 								<Transition>
@@ -34,7 +34,7 @@
 											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 												Anmelden
 												<svws-ui-spinner v-if="authenticating" spinning />
-												<i-ri-login-circle-line v-else />
+												<span class="icon i-ri-login-circle-line" v-else />
 											</svws-ui-button>
 										</div>
 									</svws-ui-input-wrapper>

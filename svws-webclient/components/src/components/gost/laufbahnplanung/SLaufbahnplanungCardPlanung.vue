@@ -48,7 +48,7 @@
 					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
 						{{ halbjahr.kuerzel }}
 						<svws-ui-tooltip v-if="gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
-							<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><i-ri-link /></span>
+							<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link inline-block" /></span>
 							<template #content>
 								Zur {{ halbjahr.kuerzel }}-Kursblockung
 							</template>
@@ -73,7 +73,7 @@
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider gap-1">
 					<span>Anrechenbare Kurse</span>
 					<svws-ui-tooltip>
-						<i-ri-question-line class="-m-0.5 mx-0.5" />
+						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
 							Pro Halbjahr sollten <strong>10–11</strong> Kurse gewählt werden. Insgesamt sind <strong>33–36</strong> Kurse als Summe aus der Qualifikationsphase optimal.
 						</template>
@@ -106,7 +106,7 @@
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 					<span>Wochenstunden</span>
 					<svws-ui-tooltip>
-						<i-ri-question-line class="-m-0.5 mx-0.5" />
+						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
 							Pro Halbjahr sollten <strong>33–36</strong> Wochenstunden erreicht werden. Insgesamt sind <strong>102–108</strong> Wochenstunden als Summe aus der Qualifikationsphase optimal.
 						</template>
@@ -139,7 +139,7 @@
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 					<span>Durchschnitt</span>
 					<svws-ui-tooltip>
-						<i-ri-question-line class="-m-0.5 mx-0.5" />
+						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
 							In der EF und Qualifikationsphase sollten jeweils im Durchschnitt <strong>34–36</strong> Wochenstunden erreicht werden.
 						</template>
@@ -167,7 +167,7 @@
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center">
 					<svws-ui-tooltip>
-						<i-ri-information-line class="-m-0.5" />
+						<span class="icon i-ri-information-line -m-0.5" />
 						<template #content>
 							<div class="flex flex-col gap-0.5 text-center">
 								<span class="flex gap-1 items-center">
@@ -198,10 +198,10 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import {computed } from "vue";
-
-	import { GostHalbjahr, type AbiturdatenManager, type GostSchuelerFachwahl, type GostJahrgangsdaten, GostFach, AbiturFachbelegungHalbjahr } from "@core";
+	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
+	import type { GostFach, AbiturFachbelegungHalbjahr, AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
+	import { GostHalbjahr } from "@core";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
@@ -224,7 +224,7 @@
 				return true;
 			case 'nur_waehlbare':
 				return fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22;
-			case 'nur_gewaehlt':
+			case 'nur_gewaehlt': {
 				const fb = props.abiturdatenManager().getFachbelegungByID(fach.id);
 				if (fb === null)
 					return false;
@@ -234,6 +234,7 @@
 						return true;
 				}
 				return false;
+			}
 		}
 	}
 

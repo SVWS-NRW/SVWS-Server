@@ -2,20 +2,20 @@
 	<div v-if="logs != null" class="w-full overflow-x-auto" :class="hfull ? ['h-full','overflow-y-hidden'] : ['mt-4', 'max-h-[24rem]']">
 		<div>
 			<span class="flex mb-2 text-headline-md gap-1 items-center">
-				<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-3 text-success" />
-				<i-ri-alert-fill v-else-if="(status === false)" class="mr-3 text-error" />
+				<span class="icon i-ri-checkbox-circle-fill mr-3 icon-success" v-if="(status === true)" />
+				<span class="icon i-ri-alert-fill mr-3 icon-error" v-else-if="(status === false)" />
 				<svws-ui-button v-if="log !== undefined" type="transparent" @click="copyToClipboard">
 					<template v-if="copied === null">
-						<i-ri-file-copy-line />
+						<span class="icon i-ri-file-copy-line" />
 						<span>Log kopieren</span>
 					</template>
 					<template v-else-if="copied === false">
 						<span>Kopieren fehlgeschlagen</span>
-						<i-ri-error-warning-fill />
+						<span class="icon i-ri-error-warning-fill" />
 					</template>
 					<template v-else>
 						<span>Log kopiert</span>
-						<i-ri-check-line class="text-success" />
+						<span class="icon i-ri-check-line icon-success" />
 					</template>
 				</svws-ui-button>
 				<slot name="button" />

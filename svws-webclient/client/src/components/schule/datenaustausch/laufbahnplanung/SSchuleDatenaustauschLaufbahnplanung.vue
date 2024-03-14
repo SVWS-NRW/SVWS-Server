@@ -7,7 +7,7 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Import aus LuPO</span>
 		<br>
-		<span class="opacity-50"><span class="icon i-ri-download-2-line icon-xl" /></span>
+		<span class="opacity-50"><span class="i-ri-download-2-line icon-xl inline-block" /></span>
 	</Teleport>
 </template>
 

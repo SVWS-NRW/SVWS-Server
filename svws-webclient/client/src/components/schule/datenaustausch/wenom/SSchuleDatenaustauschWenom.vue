@@ -6,8 +6,8 @@
 		<span class="inline-block mr-3">Datenaustausch mit dem Web-Notenmodul</span>
 		<br>
 		<span class="opacity-50 flex">
-			<span class="icon i-ri-download-2-line icon-xl" />
-			<span class="icon i-ri-upload-2-line icon-xl" />
+			<span class="i-ri-download-2-line icon-xl" />
+			<span class="i-ri-upload-2-line icon-xl" />
 		</span>
 	</Teleport>
 </template>

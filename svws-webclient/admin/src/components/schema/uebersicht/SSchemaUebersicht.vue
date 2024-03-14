@@ -9,14 +9,14 @@
 					</div>
 				</template>
 				<div class="flex flex-wrap gap-1 mb-4">
-					<svws-ui-button type="secondary" @click="currentAction = 'migrate'" title="Schild2-Schema migrieren"> <i-ri-database-2-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Schild2-Schema migrieren </svws-ui-button>
-					<svws-ui-button type="secondary" @click="currentAction = 'import'" title="Schema aus Backup wiederherstellen"> <i-ri-device-recover-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup wiederherstellen </svws-ui-button>
-					<svws-ui-button v-if="eintrag.isSVWS" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <i-ri-save-3-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
+					<svws-ui-button type="secondary" @click="currentAction = 'migrate'" title="Schild2-Schema migrieren"> <span class="icon i-ri-database-2-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Schild2-Schema migrieren </svws-ui-button>
+					<svws-ui-button type="secondary" @click="currentAction = 'import'" title="Schema aus Backup wiederherstellen"> <span class="icon i-ri-device-recover-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup wiederherstellen </svws-ui-button>
+					<svws-ui-button v-if="eintrag.isSVWS" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <span class="icon i-ri-save-3-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
 				<!-- <svws-ui-button type="secondary" :disabled="eintrag.isInConfig" @click="inConfig">In Config setzen</svws-ui-button> -->
 				</div>
 				<svws-ui-input-wrapper v-if="revisionUpToDate">
-					<svws-ui-button type="secondary" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <i-ri-speed-line class="h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Revision auf {{ revision }} setzen </svws-ui-button>
-					<div v-if="eintrag.isTainted" class="opacity-50"><i-ri-error-warning-line class="inline relative -top-0.5 -mr-0.5" /> Achtung, auch nach dem Hochsetzen auf die aktuelle Revision bleibt das Schema „Tainted“.</div>
+					<svws-ui-button type="secondary" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <span class="icon i-ri-speed-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Revision auf {{ revision }} setzen </svws-ui-button>
+					<div v-if="eintrag.isTainted" class="opacity-50"><span class="icon i-ri-error-warning-line inline relative -top-0.5 -mr-0.5" /> Achtung, auch nach dem Hochsetzen auf die aktuelle Revision bleibt das Schema „Tainted“.</div>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Admin-Benutzer">

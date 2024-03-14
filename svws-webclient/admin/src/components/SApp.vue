@@ -11,14 +11,14 @@
 					<template v-for="item in apps" :key="item.name">
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
 							<template #label> {{ item.text }} </template>
-							<template #icon> <s-app-icon routename="schema" /> </template>
+							<template #icon> <span class="icon-lg i-ri-archive-stack-line inline-block" /> </template>
 						</svws-ui-menu-item>
 					</template>
 				</template>
 				<template #footer>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <i-ri-logout-circle-line /> </template>
+						<template #icon> <span class="icon-lg i-ri-logout-circle-line inline-block" /> </template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>{{ version }}</template>

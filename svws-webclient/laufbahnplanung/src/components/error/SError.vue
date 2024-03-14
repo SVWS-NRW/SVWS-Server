@@ -7,7 +7,7 @@
 						Zurück
 					</template>
 					<template #icon>
-						<i-ri-arrow-go-back-line />
+						<span class="icon-lg i-ri-arrow-go-back-line inline-block" />
 					</template>
 				</svws-ui-menu-item>
 				<svws-ui-menu-item :active="false" @click="reloadClient">
@@ -15,7 +15,7 @@
 						Neu laden
 					</template>
 					<template #icon>
-						<i-ri-restart-line />
+						<span class="icon-lg i-ri-restart-line inline-block" />
 					</template>
 				</svws-ui-menu-item>
 			</svws-ui-menu>
@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<div class="flex items-center">
 						<div>
-							<span class="inline-flex gap-2"><i-ri-alert-fill class="text-error" />{{ error?.name }}</span>
+							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name }}</span>
 							<br>
 							<span class="opacity-40">
 								<template v-if="code !== undefined">

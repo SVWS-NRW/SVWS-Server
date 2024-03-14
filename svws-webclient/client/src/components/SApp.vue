@@ -12,15 +12,15 @@
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
 							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							<template #icon>
-								<span class="inline-block icon-lg icon i-ri-team-line" v-if="item.name === 'klassen'" />
-								<span class="inline-block icon-lg icon i-ri-group-line" v-else-if="item.name === 'schueler'" />
-								<span class="inline-block icon-lg icon i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
-								<span class="inline-block icon-lg icon i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
-								<span class="inline-block icon-lg icon i-ri-school-line" v-else-if="item.name === 'schule'" />
-								<span class="inline-block icon-lg icon i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
-								<span class="inline-block icon-lg icon i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
-								<span class="inline-block icon-lg icon i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
-								<span class="inline-block icon-lg icon i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
+								<span class="inline-block icon-lg i-ri-team-line" v-if="item.name === 'klassen'" />
+								<span class="inline-block icon-lg i-ri-group-line" v-else-if="item.name === 'schueler'" />
+								<span class="inline-block icon-lg i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
+								<span class="inline-block icon-lg i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
+								<span class="inline-block icon-lg i-ri-school-line" v-else-if="item.name === 'schule'" />
+								<span class="inline-block icon-lg i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
+								<span class="inline-block icon-lg i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
+								<span class="inline-block icon-lg i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
+								<span class="inline-block icon-lg i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
 							</template>
 						</svws-ui-menu-item>
 					</template>
@@ -28,7 +28,7 @@
 				<template #footer>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <span class="icon i-ri-logout-circle-line inline-block icon-lg" /> </template>
+						<template #icon> <span class="icon-lg i-ri-logout-circle-line inline-block" /> </template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>

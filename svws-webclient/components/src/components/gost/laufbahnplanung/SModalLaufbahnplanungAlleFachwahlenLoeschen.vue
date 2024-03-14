@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">
-			<i-ri-delete-bin-line />
+			<span class="icon i-ri-delete-bin-line" />
 			<template v-if="hatFesteWahlen">Nicht feste Schüler-Fachwahlen zurücksetzen</template>
 			<template v-else>Alle Schüler-Fachwahlen zurücksetzen</template>
 		</svws-ui-button>

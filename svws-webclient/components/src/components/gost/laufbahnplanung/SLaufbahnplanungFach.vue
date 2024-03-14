@@ -42,7 +42,7 @@
 					<span class="absolute -right-0 top-0">
 						<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
-								<i-ri-error-warning-line :class="istBewertet(halbjahr) ? 'text-black/50' : 'text-error'" />
+								<span class="icon i-ri-error-warning-line" :class="istBewertet(halbjahr) ? 'icon-dark/50' : 'icon-error'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
 									Fachkombination erforderlich
 								</template>
@@ -57,7 +57,7 @@
 						<template v-else-if="!istMoeglich[halbjahr.id] && wahlen[halbjahr.id] !== ''">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
 								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
-									<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
+									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
 								</svws-ui-button>
 								<template #content>
 									<template v-if="istBewertet(halbjahr)">
@@ -72,7 +72,7 @@
 						<template v-else-if="wahlen[halbjahr.id] !== '' && istBewertet(halbjahr) && noten[halbjahr.id] === null">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small">
-									<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
+									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
 								</svws-ui-button>
 								<template #content>
 									Kurs ist bei den Fachwahlen eingetragen, es liegen aber keine Einträge in den Leistungsdaten vor. <br>
@@ -83,7 +83,7 @@
 						<template v-else-if="wahlen[halbjahr.id] && wahlen[halbjahr.id] === '6'">
 							<svws-ui-tooltip color="danger" position="bottom">
 								<div class="inline-flex items-center">
-									<i-ri-error-warning-line class="text-error ml-0.5" />
+									<span class="icon i-ri-error-warning-line icon-error ml-0.5" />
 								</div>
 								<template #content>
 									Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
@@ -104,7 +104,7 @@
 			<span v-if="abi_wahl && !istMoeglichAbi" class="absolute -right-0">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small">
-						<i-ri-close-line @click="deleteFachwahlAbitur()" />
+						<span class="icon i-ri-close-line" @click="deleteFachwahlAbitur()" />
 					</svws-ui-button>
 					<template #content>
 						Löschen (Nicht als Abiturfach wählbar)

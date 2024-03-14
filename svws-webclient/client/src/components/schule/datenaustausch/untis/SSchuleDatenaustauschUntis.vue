@@ -2,7 +2,7 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Import aus Untis</span>
 		<br>
-		<span class="opacity-50 flex"><span class="icon i-ri-download-2-line icon-xl" /></span>
+		<span class="opacity-50 flex"><span class="i-ri-download-2-line icon-xl" /></span>
 	</Teleport>
 	<div class="page--content overflow-hidden flex flex-col">
 		<div class="flex flex-col items-start gap-2">

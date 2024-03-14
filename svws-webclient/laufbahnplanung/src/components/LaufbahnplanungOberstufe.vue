@@ -16,13 +16,13 @@
 		</div>
 	</div>
 	<svws-ui-sub-nav>
-		<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportieren</svws-ui-button>
-		<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
+		<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
+		<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
 		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
 		<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 		<svws-ui-button type="danger" title="Planung wiederherstellen" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 		<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
-			<i-ri-loop-right-line />
+			<span class="icon-sm i-ri-loop-right-line" />
 			Modus: <span>{{ modus }}</span>
 		</svws-ui-button>
 		<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">
-			<i-ri-delete-bin-line />
+			<span class="icon-sm i-ri-delete-bin-line" />
 			<template v-if="schuelerAnsicht && hatFesteWahlen">Fachwahlen löschen</template>
 			<template v-else-if="schuelerAnsicht">Fachwahlen zurücksetzen</template>
 			<template v-else-if="gostJahrgangsdaten.abiturjahr === -1">Zurücksetzen aus Standardwerte</template>

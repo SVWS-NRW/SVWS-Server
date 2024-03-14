@@ -3,7 +3,7 @@
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">
-					<i-ri-checkbox-circle-fill v-if="belegungsfehler.size() === 0" class="flex-shrink-0 text-success text-headline-md -my-1 -mx-0.5" />
+					<span class="icon i-ri-checkbox-circle-fill flex-shrink-0 icon-success -my-1 -mx-0.5" v-if="belegungsfehler.size() === 0" />
 					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ belegpruefungsArt().kuerzel }}
 				</div>
 			</div>
@@ -12,7 +12,7 @@
 			<div v-for="fehler in belegungsfehler" :key="fehler.code" class="svws-ui-tr" role="row">
 				<div class="svws-ui-td" role="cell">
 					<svws-ui-tooltip>
-						<i-ri-alert-line class="flex-shrink-0 text-error text-button mt-0.5" />
+						<span class="icon i-ri-alert-line flex-shrink-0 icon-error text-button mt-0.5" />
 						<template #content>
 							<span class="font-mono">
 								{{ fehler.code }}

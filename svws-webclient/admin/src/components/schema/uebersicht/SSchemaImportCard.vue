@@ -10,7 +10,7 @@
 					<svws-ui-button @click="add" :disabled="!file || loading"> <svws-ui-spinner :spinning="loading" /> Wiederherstellen </svws-ui-button>
 					<svws-ui-button type="secondary" @click="setCurrentAction('')" :disabled="loading"> Abbrechen </svws-ui-button>
 				</div>
-				<div class="text-base leading-none mt-4 text-error"> <i-ri-alert-line class="inline relative -top-0.5 mr-0.5" />Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
+				<div class="text-base leading-none mt-4 text-error"> <span class="icon i-ri-alert-line inline-block relative icon-error top-0.5 mr-0.5" />Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

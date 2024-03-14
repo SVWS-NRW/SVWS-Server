@@ -9,7 +9,7 @@
 			<div v-for="hinweis in belegungsHinweise" :key="hinweis.code" class="svws-ui-tr" role="row">
 				<div class="svws-ui-td" role="cell">
 					<svws-ui-tooltip>
-						<i-ri-information-line class="flex-shrink-0 text-svws text-button mt-0.5" />
+						<span class="icon i-ri-information-line flex-shrink-0 icon-primary text-button mt-0.5" />
 						<template #content>
 							<span class="font-mono">
 								{{ hinweis.code }}

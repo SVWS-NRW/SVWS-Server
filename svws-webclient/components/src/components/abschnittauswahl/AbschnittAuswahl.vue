@@ -2,7 +2,7 @@
 	<div class="inline-flex gap-3 items-center">
 		<svws-ui-tooltip :indicator="false" v-if="aktSchulabschnitt !== aktAbschnitt.id" position="bottom-start">
 			<span class="cursor-pointer" :class="{'text-error text-headline-md -mr-1': aktSchulabschnitt !== aktAbschnitt.id, 'opacity-50 hover:opacity-100 text-base pt-1': aktSchulabschnitt === aktAbschnitt.id}">
-				<i-ri-alert-line class="-my-1.5 -mr-1 hover:text-error relative -top-0.5" />
+				<span class="icon i-ri-alert-line inline-block icon-error -my-1.5 -mr-1 hover:icon-error relative -top-0.5" />
 			</span>
 			<template #content>
 				<span v-if="aktSchulabschnitt === aktAbschnitt.id">

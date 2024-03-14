@@ -2,7 +2,7 @@
 	<div v-if="manager().getListZeitraster().size()" class="svws-ui-stundenplan" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'} svws-zeitraster-${zeitrasterSteps}`">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
-			<i-ri-time-line class="svws-time-icon print:hidden" v-if="showZeitachse" />
+			<span class="icon i-ri-time-line svws-time-icon print:hidden" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
 			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0, 'font-bold text-headline-md pb-0.5': wochentyp() !== 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
