@@ -380,6 +380,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung zur übergebenen Fachwahl eines Schülers.
+	 *
+	 * @param gFachwahl  Das {@link GostFachwahl}-Objekt.
+	 *
+	 * @return eine Kurzdarstellung zur übergebenen Fachwahl eines Schülers.
+	 */
+	public toStringFachwahlSimple(gFachwahl : GostFachwahl) : string | null {
+		return this.toStringSchuelerSimple(gFachwahl.schuelerID)! + " wählt " + this.toStringFachartSimple(gFachwahl.fachID, gFachwahl.kursartID)!;
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zur Regel mit der übergebenen ID.
 	 *
 	 * @param idRegel  Die Datenbank-ID der Regel.

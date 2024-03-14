@@ -326,6 +326,17 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert eine Kurzdarstellung zur übergebenen Fachwahl eines Schülers.
+	 *
+	 * @param gFachwahl  Das {@link GostFachwahl}-Objekt.
+	 *
+	 * @return eine Kurzdarstellung zur übergebenen Fachwahl eines Schülers.
+	 */
+	public String toStringFachwahlSimple(final @NotNull GostFachwahl gFachwahl) {
+		return toStringSchuelerSimple(gFachwahl.schuelerID) + " wählt " + toStringFachartSimple(gFachwahl.fachID, gFachwahl.kursartID);
+	}
+
+	/**
 	 * Liefert möglichst viele Informationen zur Regel mit der übergebenen ID.
 	 *
 	 * @param idRegel  Die Datenbank-ID der Regel.
@@ -2293,6 +2304,7 @@ public class GostBlockungsdatenManager {
 
 		return sb.toString();
 	}
+
 
 
 }
