@@ -283,7 +283,7 @@ class GostBlockungsergebnisManagerTest {
 		}
 		final int outKD = out.getErgebnis().bewertung.kursdifferenzMax;
 		if (maxKD != outKD)
-			fail("maxKD != outKD");
+			fail("maxKD (" + maxKD + ") != outKD (" + outKD + ")");
 		for (int i = 0; i < kursDiffHisto.length; i++) {
 			final int histo = kursDiffHisto[i];
 			final int outHisto = out.getErgebnis().bewertung.kursdifferenzHistogramm[i];

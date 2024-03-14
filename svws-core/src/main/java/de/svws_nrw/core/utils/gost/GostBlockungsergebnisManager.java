@@ -130,15 +130,15 @@ public class GostBlockungsergebnisManager {
 	/** Menge aller Fachart-IDs sortiert nach der aktuellen Sortiervariante. */
 	private final @NotNull List<@NotNull Long> _fachartIDList_sortiert = new ArrayList<>();
 
+	/** Map von Fachart-ID nach Integer (Kursdifferenz der Fachart). */
+	private final @NotNull Map<@NotNull Long, @NotNull Integer> _fachartID_to_kursdifferenz = new HashMap<>();
+
 	// ################################# UPDATE 3 #################################
 
 	/** Map von Schienen-ID nach Integer (Anzahl der SuS in der Schiene). */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _schienenID_to_susAnzahl = new HashMap<>();
 
 	// ############################################################################
-
-	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
 
 
 	/** Map von Schienen-ID nach Integer (Anzahl an Kollisionen in der Schiene). */
@@ -229,7 +229,6 @@ public class GostBlockungsergebnisManager {
 		_map_schuelerID_kollisionen.clear();
 		_map2D_schuelerID_fachID_kurs.clear();
 		_map2D_schuelerID_schienenID_kurse.clear();
-		_map_fachartID_kursdifferenz.clear();
 		_regelverletzungen_der_faecherparallelitaet = "";
 		_regelverletzungen_der_wahlkonflikte = "";
 
@@ -240,10 +239,6 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.name = pOld.name;
 		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
 		_ergebnis.istAktiv = pOld.istAktiv;
-
-		// Bewertungskriterium 3a und 3b (Kursdifferenzen)
-		_ergebnis.bewertung.kursdifferenzMax = 0;
-		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
 
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = _parent.daten().fachwahlen.size();
@@ -269,7 +264,8 @@ public class GostBlockungsergebnisManager {
 		update_1_fachartID_to_kurseList();											// _kursID_to_kurs
 
 		update_2_schuelerID_to_kurseSet();											// _schuelerIDset, _kursID_to_kurs, _kursID_to_schuelerIDSet,
-		update_2__fachartIDList_sortiert();
+		update_2_fachartIDList_sortiert();											// _fachartID_to_kurseList
+		update_2_fachartID_to_kursdifferenz();						// _fachartID_to_kurseList, _kursID_to_dummySuS
 
 		update_3_schienenID_to_kollisionen();		// TODO BAR später nicht mehr dynamisch
 
@@ -294,27 +290,18 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
 		}
 
-
-		// Kurse von '_parent' kopieren und hinzufügen. Fachart-IDs erzeugen.
-		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
-			// GostBlockungKurs --> GostBlockungsergebnisKurs
-			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, gKurs.id);
-
-			// Map: fachartID --> Kursliste
-			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-
-			// Map: fachartID --> Kursdifferenz
-			if (!_map_fachartID_kursdifferenz.containsKey(fachartID)) {
-				_map_fachartID_kursdifferenz.put(fachartID, 0);
-				_ergebnis.bewertung.kursdifferenzHistogramm[0]++;
-			}
+		// Ergebnis aktualisieren - Bewertungskriterium 3a und 3b (Kursdifferenzen)
+		_ergebnis.bewertung.kursdifferenzMax = 0;
+		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
+		for (final long idFachart : _fachartID_to_kursdifferenz.keySet()) {
+			final int newKD = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
+			_ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
+			_ergebnis.bewertung.kursdifferenzMax = Math.max(_ergebnis.bewertung.kursdifferenzMax, newKD);
 		}
-
-
 
 		// Map: (schienenID, fachartID) --> Kursmenge = Alle Kurse einer Fachart pro Schiene
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
-			for (final @NotNull Long fachartID : _map_fachartID_kursdifferenz.keySet())
+			for (final @NotNull Long fachartID : _fachartID_to_kursdifferenz.keySet())
 				DeveloperNotificationException.ifMap2DPutOverwrites(_map2D_schienenID_fachartID_kurse, gSchiene.id, fachartID, new ArrayList<>());
 
 		// Schüler kopieren und hinzufügen.
@@ -576,7 +563,7 @@ public class GostBlockungsergebnisManager {
 				MapUtils.getOrCreateHashSet(_schuelerID_to_kurseSet, idSchueler);
 	}
 
-	private void update_2__fachartIDList_sortiert() {
+	private void update_2_fachartIDList_sortiert() {
 		// Leeren und hinzufügen.
 		_fachartIDList_sortiert.clear();
 		_fachartIDList_sortiert.addAll(_fachartID_to_kurseList.keySet());
@@ -586,6 +573,39 @@ public class GostBlockungsergebnisManager {
 			_fachartIDList_sortiert.sort(_fachartComparator_kursart_fach);
 		} else {
 			_fachartIDList_sortiert.sort(_fachartComparator_fach_kursart);
+		}
+
+	}
+
+	private void update_2_fachartID_to_kursdifferenz() {
+		// Leeren und hinzufügen.
+		_fachartID_to_kursdifferenz.clear();
+
+		for (final long idFachart : _fachartID_to_kurseList.keySet()) {
+			final List<@NotNull GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kurseList, idFachart);
+
+			// Neue Kursdifferenz berechnen
+			int min = 10000; // Dummy-Wert
+			int max = 0;
+			for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
+				// Wichtig: Kurse die zu ignorieren sind, müssen beachtet werden!
+				final @NotNull LongArrayKey keyIgnoreID = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id});
+				if (_parent.regelGetByLongArrayKeyOrNull(keyIgnoreID) != null)
+					continue;
+
+				// Wichtig: DummySuS müssen beachtet werden!
+				final int size = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, kurs.id).size() + DeveloperNotificationException.ifMapGetIsNull(_kursID_to_dummySuS, kurs.id);
+				min = Math.min(min, size);
+				max = Math.max(max, size);
+			}
+			int newKD = max - min;
+
+			// Sonderfall: Falls alle Kurse ignoriert wurden, oder es gar keine Kurse gab.
+			if (newKD < 0)
+				newKD = 0;
+
+			// Kursdifferenz-Map aktualisieren.
+			_fachartID_to_kursdifferenz.put(idFachart, newKD);
 		}
 
 	}
@@ -669,7 +689,7 @@ public class GostBlockungsergebnisManager {
 		// stateRegelvalidierung17 ist nicht nötig
 
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15};
+		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
 		for (final int regeltyp : regeltypSortierung)
 			if (_map_regelID_verletzungen.containsKey(regeltyp))
 				_list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
@@ -1004,14 +1024,12 @@ public class GostBlockungsergebnisManager {
 			return;
 
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
-		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.add(idSchueler); // Data-Objekt aktualisieren
 		schuelerIDsOfKurs.add(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, kurs);
-		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneHinzufuegenOhneRegelvalidierung(idSchueler, schieneID, kurs);
 	}
@@ -1046,14 +1064,12 @@ public class GostBlockungsergebnisManager {
 			return;
 
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
-		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.remove(idSchueler); // Data-Objekt aktualisieren
 		schuelerIDsOfKurs.remove(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, null);
-		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneEntfernenOhneRegelvalidierung(idSchueler, schieneID, kurs);
 	}
@@ -1167,64 +1183,11 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-	private void stateKursdifferenzUpdate(final long idFachart) {
-		// Den ersten Kurs der Fachart holen.
-		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfFachartKursmenge(idFachart);
-
-		// Neue Kursdifferenz berechnen
-		int min = _parent.fachwahlGetListeOfFachart(idFachart).size();
-		int max = 0;
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
-			// Wichtig: Kurse die zu ignorieren sind, müssen beachtet werden!
-			final @NotNull LongArrayKey keyIgnoreID = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, kurs.id});
-			if (_parent.regelGetByLongArrayKeyOrNull(keyIgnoreID) != null)
-				continue;
-
-			// Wichtig: DummySuS müssen beachtet werden!
-			final int size = kurs.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs.id);
-			min = Math.min(min, size);
-			max = Math.max(max, size);
-		}
-		int newKD = max - min;
-
-		// Sonderfall: Falls es alle Kursdifferenzen ignoriert werden sollen.
-		if (newKD < 0)
-			newKD = 0;
-
-		// Kursdifferenz ändert sich nicht.
-		final int oldKD = getOfFachartKursdifferenz(idFachart);
-		if (newKD == oldKD)
-			return;
-
-		// Kursdifferenz-Map aktualisieren.
-		_map_fachartID_kursdifferenz.put(idFachart, newKD);
-
-		// Kursdifferenz-Histogramm aktualisieren.
-		final int[] kursdifferenzen = _ergebnis.bewertung.kursdifferenzHistogramm;
-		kursdifferenzen[oldKD]--;
-		kursdifferenzen[newKD]++;
-
-		// Kursdifferenz-Max aktualisieren.
-		if (oldKD == _ergebnis.bewertung.kursdifferenzMax) {
-			if (newKD > oldKD) {
-				// Neues Maximum
-				_ergebnis.bewertung.kursdifferenzMax = newKD;
-			} else {
-				// Neues Minimum
-				if (kursdifferenzen[oldKD] == 0)
-					_ergebnis.bewertung.kursdifferenzMax = newKD;
-			}
-		}
-	}
-
 	// #########################################################################
 	// ##########           Allgemeine Anfragen                       ##########
 	// #########################################################################
 
 	private void updateAll() {
-
-
-
 
 		// Kursmenge pro Schiene sortieren.
 		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
@@ -1780,7 +1743,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public int getOfFachartKursdifferenz(final long idFachart) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
+		return DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
 	}
 
 	/**
@@ -1796,7 +1759,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public int getOfFachOfKursartKursdifferenz(final long idFach, final int idKursart) throws DeveloperNotificationException {
 		final long idFachart = GostKursart.getFachartID(idFach, idKursart);
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
+		return DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
 	}
 
 	/**
@@ -1900,7 +1863,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void kursSetSortierungKursartFachNummer() {
 		_fachartmenge_sortierung = 1;
-		updateAll();
+		stateRevalidateEverything();
 	}
 
 	/**
@@ -1909,7 +1872,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void kursSetSortierungFachKursartNummer() {
 		_fachartmenge_sortierung = 2;
-		updateAll();
+		stateRevalidateEverything();
 	}
 
 	// #########################################################################
