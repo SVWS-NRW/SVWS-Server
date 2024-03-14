@@ -32,7 +32,9 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Import aus Kurs42</span>
 		<br>
-		<span class="opacity-50"><i-ri-download2-line /></span>
+		<span class="opacity-50 flex">
+			<span class="icon i-ri-download-2-line icon-xl" />
+		</span>
 	</Teleport>
 </template>
 

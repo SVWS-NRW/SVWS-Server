@@ -1,6 +1,6 @@
 <template>
 	<div class="app--content--placeholder">
-		<i-ri-archive-line />
+		<span class="icon i-ri-archive-line" />
 	</div>
 </template>
 <script setup lang="ts">

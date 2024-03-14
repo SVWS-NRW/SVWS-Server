@@ -3,7 +3,7 @@
 		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns="cols" clickable no-data-text="Noch kein Schülerbetrieb vorhanden.">
 			<template #header(Anschreiben)>
 				<svws-ui-tooltip>
-					<i-ri-mail-send-line />
+					<span class="icon i-ri-mail-send-line" />
 					<template #content>
 						Erhält Anschreiben
 					</template>

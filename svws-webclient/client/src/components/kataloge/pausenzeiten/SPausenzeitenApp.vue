@@ -13,7 +13,7 @@
 		</svws-ui-router-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
-		<i-ri-archive-line />
+		<span class="icon i-ri-archive-line" />
 	</div>
 </template>
 

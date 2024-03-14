@@ -5,7 +5,7 @@
 	<div class="svws-ui-td" role="cell">
 		<div class="flex items-center gap-0.5">
 			<svws-ui-button type="icon" @click="gotoBenutzergruppe(row.id)">
-				<i-ri-link />
+				<span class="icon i-ri-link" />
 			</svws-ui-button>
 			{{ row.bezeichnung }}
 		</div>

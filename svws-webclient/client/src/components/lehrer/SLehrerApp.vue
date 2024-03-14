@@ -21,7 +21,7 @@
 		</svws-ui-router-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
-		<i-ri-briefcase-line />
+		<span class="icon i-ri-briefcase-line" />
 	</div>
 </template>
 

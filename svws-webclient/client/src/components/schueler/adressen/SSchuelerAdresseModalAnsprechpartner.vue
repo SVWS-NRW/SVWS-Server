@@ -20,7 +20,7 @@
 		</template>
 	</svws-ui-modal>
 	<svws-ui-button type="icon" @click="showModal().value = true" title="Ansprechpartner bearbeiten">
-		<i-ri-edit-2-line />
+		<span class="icon i-ri-edit-2-line" />
 	</svws-ui-button>
 </template>
 

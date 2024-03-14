@@ -18,8 +18,8 @@
 							<div role="cell" class="svws-ui-td col-span-full">
 								<div class="-ml-1 mr-0.5">
 									<svws-ui-button type="icon" size="small">
-										<i-ri-arrow-right-s-line v-if="aktuell?.id !== fws.id" />
-										<i-ri-arrow-down-s-line v-else />
+										<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== fws.id" />
+										<span class="icon i-ri-arrow-down-s-line" v-else />
 									</svws-ui-button>
 								</div>
 								<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>

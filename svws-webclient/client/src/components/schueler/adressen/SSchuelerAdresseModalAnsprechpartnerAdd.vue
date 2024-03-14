@@ -19,7 +19,7 @@
 		</template>
 	</svws-ui-modal>
 	<svws-ui-button type="icon" @click="showModal().value = true" title="Ansprechpartner hinzufügen">
-		<i-ri-user-add-line />
+		<span class="icon i-ri-user-add-line" />
 	</svws-ui-button>
 </template>
 

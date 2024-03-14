@@ -22,7 +22,7 @@
 							</div>
 							<div v-if="rowData.anzahlRestabschnitte === null" class="flex-none text-error">
 								<svws-ui-tooltip title="Der Jahrgang hat keine Anzahl für die Restabschnitte definiert.">
-									<i-ri-alert-line />
+									<span class="icon i-ri-alert-line" />
 								</svws-ui-tooltip>
 							</div>
 						</div>

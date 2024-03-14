@@ -4,8 +4,8 @@
 			<div class="flex items-center gap-1">
 				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
-						<i-ri-arrow-right-s-line v-if="collapsed" />
-						<i-ri-arrow-down-s-line v-else />
+						<span class="icon i-ri-arrow-right-s-line" v-if="collapsed" />
+						<span class="icon i-ri-arrow-down-s-line" v-else />
 					</template>
 				</svws-ui-button>
 				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="istAdmin">

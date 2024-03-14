@@ -20,7 +20,7 @@
 		</svws-ui-router-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
-		<i-ri-calendar-event-line />
+		<span class="icon i-ri-calendar-event-line" />
 	</div>
 </template>
 

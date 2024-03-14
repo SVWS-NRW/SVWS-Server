@@ -102,7 +102,7 @@
 									</div>
 									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip>
-											<i-ri-alert-line />
+											<span class="icon i-ri-alert-line" />
 											<template #content>
 												Muss-Fehler
 											</template>
@@ -118,7 +118,7 @@
 									</div>
 									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip>
-											<i-ri-alert-fill />
+											<span class="icon i-ri-alert-fill" />
 											<template #content>
 												Harter Fehler
 											</template>
@@ -135,13 +135,13 @@
 									</div>
 									<div role="cell" class="svws-ui-td svws-align-center">
 										<svws-ui-tooltip v-if="Math.floor(Math.random() * 8) % 2 === 1">
-											<i-ri-information-line />
+											<span class="icon i-ri-information-line" />
 											<template #content>
 												Hinweis
 											</template>
 										</svws-ui-tooltip>
 										<svws-ui-tooltip v-else>
-											<i-ri-alert-fill />
+											<span class="icon i-ri-alert-fill" />
 											<template #content>
 												Harter Fehler
 											</template>
@@ -159,7 +159,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
-		<i-ri-bar-chart-2-line />
+		<span class="icon i-ri-bar-chart-2-line" />
 	</div>
 </template>
 

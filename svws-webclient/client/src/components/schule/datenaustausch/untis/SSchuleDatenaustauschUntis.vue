@@ -2,7 +2,7 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Import aus Untis</span>
 		<br>
-		<span class="opacity-50"><i-ri-download2-line /></span>
+		<span class="opacity-50 flex"><span class="icon i-ri-download-2-line icon-xl" /></span>
 	</Teleport>
 	<div class="page--content overflow-hidden flex flex-col">
 		<div class="flex flex-col items-start gap-2">
@@ -12,7 +12,7 @@
 				<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
 				<div class="col-span-full flex flex-row gap-2">
 					<svws-ui-tooltip>
-						<span class="font-bold flex flex-row gap-1">GPU001.txt: <i-ri-information-line class="mt-0.5" /></span>
+						<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
 						<template #content>
 							Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
 						</template>

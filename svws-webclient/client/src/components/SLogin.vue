@@ -18,7 +18,7 @@
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
 										<svws-ui-spinner :spinning="connecting" />
-										<i-ri-check-line v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
+										<span class="icon i-ri-check-line" v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
 									</svws-ui-button>
 								</svws-ui-input-wrapper>
 								<Transition>
@@ -34,7 +34,7 @@
 											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 												Anmelden
 												<svws-ui-spinner v-if="authenticating" spinning />
-												<i-ri-login-circle-line v-else />
+												<span class="icon i-ri-login-circle-line" v-else />
 											</svws-ui-button>
 										</div>
 									</svws-ui-input-wrapper>
@@ -47,8 +47,8 @@
 											<div class="flex gap-1">
 												<div class="mt-2"><span class="font-bold">Version {{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
 												<svws-ui-button type="transparent" @click="copyToClipboard">
-													<i-ri-file-copy-line v-if="copied === null" />
-													<i-ri-error-warning-fill v-else-if="copied === false" />
+													<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+													<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
 													<i-ri-check-line v-else class="text-success" />
 												</svws-ui-button>
 											</div>

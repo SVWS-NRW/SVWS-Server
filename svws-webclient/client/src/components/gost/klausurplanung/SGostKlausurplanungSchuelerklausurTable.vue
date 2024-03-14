@@ -29,7 +29,7 @@
 						<template #content>
 							{{ kMan().schuelerklausurterminVorgaengerBySchuelerklausurtermin(schuelertermin)!.bemerkung }}
 						</template>
-						<i-ri-eye-line />
+						<span class="icon i-ri-eye-line" />
 					</svws-ui-tooltip>
 				</div>
 				<div class="svws-ui-td svws-align-left" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</div>

@@ -11,22 +11,32 @@
 					<template v-for="item in apps" :key="item.name">
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
 							<template #label> {{ item.text }} </template>
-							<template #icon> <s-app-icon :routename="item.name" /> </template>
+							<template #icon>
+								<span class="inline-block icon-lg icon i-ri-team-line" v-if="item.name === 'klassen'" />
+								<span class="inline-block icon-lg icon i-ri-group-line" v-else-if="item.name === 'schueler'" />
+								<span class="inline-block icon-lg icon i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
+								<span class="inline-block icon-lg icon i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
+								<span class="inline-block icon-lg icon i-ri-school-line" v-else-if="item.name === 'schule'" />
+								<span class="inline-block icon-lg icon i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
+								<span class="inline-block icon-lg icon i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
+								<span class="inline-block icon-lg icon i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
+								<span class="inline-block icon-lg icon i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
+							</template>
 						</svws-ui-menu-item>
 					</template>
 				</template>
 				<template #footer>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
-						<template #icon> <i-ri-logout-circle-line /> </template>
+						<template #icon> <span class="icon i-ri-logout-circle-line" /> </template>
 					</svws-ui-menu-item>
 				</template>
 				<template #version>
 					<div class="flex gap-1">
 						<div class="mt-1">{{ version }} <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
 						<svws-ui-button type="transparent" @click="copyToClipboard">
-							<i-ri-file-copy-line v-if="copied === null" />
-							<i-ri-error-warning-fill v-else-if="copied === false" />
+							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
 							<i-ri-check-line v-else class="text-success" />
 						</svws-ui-button>
 					</div>

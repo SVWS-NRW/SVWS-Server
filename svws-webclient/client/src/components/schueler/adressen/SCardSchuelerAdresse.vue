@@ -3,7 +3,7 @@
 		<template #actions>
 			<svws-ui-checkbox class="mr-3" v-model="anschreiben"> Erhält Anschreiben </svws-ui-checkbox>
 			<svws-ui-button type="error">
-				<i-ri-delete-bin-line />
+				<span class="icon i-ri-delete-bin-line" />
 				<span>Eintrag löschen</span>
 			</svws-ui-button>
 		</template>

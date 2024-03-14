@@ -3,7 +3,7 @@
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<svws-ui-button :type="!istManuellerModus ? 'transparent' : 'danger'" @click="switchManuellerModus" title="Modus wechseln">
-					<i-ri-loop-right-line />
+					<span class="icon i-ri-loop-right-line" />
 					Modus: <span>{{ istManuellerModus ? 'manuell' : 'normal' }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen="resetFachwahlen" />

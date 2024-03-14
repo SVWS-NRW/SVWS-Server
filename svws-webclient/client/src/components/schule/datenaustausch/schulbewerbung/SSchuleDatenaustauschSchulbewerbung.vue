@@ -2,7 +2,7 @@
 	<div class="page--content page--content--full">
 		<svws-ui-content-card title="Import von Schulbewerbung.de">
 			<svws-ui-button type="primary" @click="doImport">
-				<i-ri-download2-line />
+				<span class="icon i-ri-download-2-line" />
 				<span>Import</span>
 			</svws-ui-button>
 			<div class="flex items-start gap-3">
@@ -14,7 +14,7 @@
 				Hier wird zukünftig der Export zu Schulbewerbung.de gehandhabt...
 			</div>
 			<svws-ui-button type="primary" @click="doExport">
-				<i-ri-upload2-line />
+				<span class="icon i-ri-upload-2-line" />
 				<span>Export</span>
 			</svws-ui-button>
 		</svws-ui-content-card>
@@ -22,7 +22,10 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Datenaustausch mit Schulbewerbung.de</span>
 		<br>
-		<span class="opacity-50 flex"><i-ri-download2-line /><i-ri-upload2-line /></span>
+		<span class="opacity-50 flex">
+			<span class="icon i-ri-download-2-line icon-xl" />
+			<span class="icon i-ri-upload-2-line icon-xl" />
+		</span>
 	</Teleport>
 </template>
 

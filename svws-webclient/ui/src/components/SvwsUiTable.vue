@@ -593,7 +593,7 @@
   }
 
   .svws-no-data & {
-    @apply pointer-events-none text-black/25 dark:text-white/25;
+    @apply pointer-events-none text-black dark:text-white opacity-25;
   }
 
 	.svws-ui-td {

@@ -21,7 +21,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
-		<i-ri-group-line />
+		<span class="icon i-ri-group-line" />
 	</div>
 </template>
 

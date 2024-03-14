@@ -43,8 +43,8 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
-					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
-					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><i-ri-calculator-line /></svws-ui-button>
+					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <span class="icon i-ri-search-line" /></svws-ui-button>
+					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><span class="icon i-ri-calculator-line" /></svws-ui-button>
 					<svws-ui-button v-if="verfuegbareSprachen.length" @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 			</svws-ui-table>

@@ -35,7 +35,7 @@
 	<div class="svws-ui-td svws-align-center" role="cell">
 		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
 			<svws-ui-tooltip position="top">
-				<button role="button" class="button button--icon"><i-ri-edit-2-line @click="openModal" /></button>
+				<button role="button" class="button button--icon"><span class="icon i-ri-edit-2-line" @click="openModal" /></button>
 				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><span class="opacity-50">Klicken, um den Text zu bearbeiten</span> </template>
 			</svws-ui-tooltip>
 		</s-row-gost-fachkombination-modal>

@@ -5,7 +5,10 @@
 	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
 		<span class="inline-block mr-3">Datenaustausch mit dem Externen Notenmodul</span>
 		<br>
-		<span class="opacity-50 flex"><i-ri-download2-line /><i-ri-upload2-line /></span>
+		<span class="opacity-50 flex">
+			<span class="icon i-ri-download-2-line icon-xl" />
+			<span class="icon i-ri-upload-2-line icon-xl" />
+		</span>
 	</Teleport>
 </template>
 

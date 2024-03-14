@@ -40,13 +40,13 @@
 					</template>
 					<template #header(schriftlich)>
 						<svws-ui-tooltip>
-							<i-ri-group-line />
+							<span class="icon i-ri-group-line" />
 							<template #content>Schriftlich/Insgesamt im Kurs</template>
 						</svws-ui-tooltip>
 					</template>
 					<template #header(dauer)>
 						<svws-ui-tooltip>
-							<i-ri-time-line />
+							<span class="icon i-ri-time-line" />
 							<template #content>Dauer in Minuten</template>
 						</svws-ui-tooltip>
 					</template>
@@ -70,7 +70,7 @@
 						</div>
 					</template>
 					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><i-ri-upload-2-line />Aus Vorgaben erstellen</svws-ui-button>
+						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
 					</template>
 				</svws-ui-table>
 			</div>
@@ -79,8 +79,8 @@
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button @click="console.log(props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));erzeugeKlausurtermin(quartalsauswahl.value, true)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">

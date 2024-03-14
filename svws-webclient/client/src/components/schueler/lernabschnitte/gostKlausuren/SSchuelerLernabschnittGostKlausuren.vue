@@ -29,7 +29,7 @@
 										<template #content>
 											Klausur nicht mitgeschrieben
 										</template>
-										<i-ri-user-forbid-line />
+										<span class="icon i-ri-user-forbid-line" />
 									</svws-ui-tooltip>
 								</svws-ui-button>
 								<svws-ui-button type="danger" v-if="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData).size() > 1" class="mt-4" @click="deleteSchuelerklausurTermin(termin)">
@@ -37,7 +37,7 @@
 										<template #content>
 											Nachschreibtermin löschen
 										</template>
-										<i-ri-delete-bin-line />
+										<span class="icon i-ri-delete-bin-line" />
 									</svws-ui-tooltip>
 								</svws-ui-button>
 							</div>

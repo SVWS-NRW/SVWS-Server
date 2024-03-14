@@ -27,7 +27,7 @@
 						<slot name="datum">
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
-									<i-ri-calendar-2-line />
+									<span class="icon i-ri-calendar-2-line" />
 									<span>...</span>
 								</span>
 							</template>

@@ -14,7 +14,7 @@
 					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
 				<span v-if="raum.idStundenplanRaum && anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
-					<i-ri-alert-fill />
+					<span class="icon i-ri-alert-fill" />
 				</span>
 			</div>
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
@@ -42,7 +42,7 @@
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
 				</div>
-				<svws-ui-button type="icon" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id, raummanager())"><i-ri-delete-bin-line /></svws-ui-button>
+				<svws-ui-button type="icon" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id, raummanager())"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
 			</span>
 		</div>
 	</div>

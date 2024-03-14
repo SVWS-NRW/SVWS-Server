@@ -1,12 +1,12 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-		<svws-ui-button type="secondary" @click="print"><i-ri-printer-line />Drucken</svws-ui-button>
+		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-klassen-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page--content page--content--flex h-full">
 		<template v-if="stundenplan === undefined">
 			<div class="svws-ui-empty">
-				<i-ri-calendar-event-line />
+				<span class="icon i-ri-calendar-event-line" />
 				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
 			</div>
 		</template>

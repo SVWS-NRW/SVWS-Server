@@ -82,10 +82,19 @@
 	.svws-ui-tfoot & {
 		@apply h-7 min-h-[unset];
 	}
+
+	span.icon {
+		@apply -my-1;
+	}
 }
 
 .button--primary {
 	@apply bg-svws text-white border-svws;
+
+	span.icon {
+		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+	}
 
 	.page--statistik & {
 		@apply bg-violet-500 border-violet-500;
@@ -158,6 +167,11 @@
 
 .button--danger {
 	@apply bg-transparent dark:bg-transparent text-error border-error;
+
+	span.icon {
+		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+	}
 
 	&:hover,
 	&:focus {

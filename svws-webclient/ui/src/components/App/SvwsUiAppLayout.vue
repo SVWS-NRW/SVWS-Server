@@ -367,9 +367,15 @@
 	.app--content--placeholder {
 		@apply w-full h-full flex justify-center items-center;
 
-		svg {
-			@apply w-full h-1/5 text-light dark:text-white/5;
+		span.icon {
+			@apply w-full h-1/5;
 			max-width: 20vw;
+			-webkit-filter: invert(91%) sepia(3%) saturate(126%) hue-rotate(7deg) brightness(108%) contrast(94%);
+			filter: invert(91%) sepia(3%) saturate(126%) hue-rotate(7deg) brightness(108%) contrast(94%);
+			&:dark {
+				-webkit-filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
+				filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
+			}
 		}
 	}
 

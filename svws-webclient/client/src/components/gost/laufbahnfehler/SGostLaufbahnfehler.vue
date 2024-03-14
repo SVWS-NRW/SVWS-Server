@@ -3,14 +3,14 @@
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
-				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
+				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung="importLaufbahnplanung" />
-				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
+				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :disabled="apiStatus.pending">
-				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <i-ri-printer-line v-else /> </template>
+				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
 		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">
@@ -24,7 +24,7 @@
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
 				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols" selectable v-model="auswahl">
 				<template #header(linkToSchueler)>
-					<i-ri-group-line />
+					<span class="icon i-ri-group-line" />
 				</template>
 				<template #header(ergebnis)>
 					<svws-ui-tooltip class="w-6">
@@ -36,7 +36,7 @@
 				</template>
 				<template #cell(linkToSchueler)="{ rowData }">
 					<button type="button" @click.stop="gotoLaufbahnplanung(rowData.schueler.id)" class="button button--icon" title="Zur Laufbahnplanung">
-						<i-ri-link />
+						<span class="icon i-ri-link" />
 					</button>
 				</template>
 				<template #cell(name)="{rowData}">
@@ -44,7 +44,7 @@
 					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold !mt-0 !ml-1 !bg-light dark:!bg-white/5">{{ SchuelerStatus.fromID(rowData.schueler.status)?.bezeichnung || "" }}</span>
 				</template>
 				<template #cell(hinweise)="cell">
-					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><i-ri-information-line /></span>
+					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><span class="icon i-ri-information-line" /></span>
 				</template>
 				<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
@@ -61,7 +61,7 @@
 				</svws-ui-tooltip>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><i-ri-link />Zur Laufbahnplanung</svws-ui-button>
+				<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Laufbahnplanung</svws-ui-button>
 			</template>
 			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 			<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />

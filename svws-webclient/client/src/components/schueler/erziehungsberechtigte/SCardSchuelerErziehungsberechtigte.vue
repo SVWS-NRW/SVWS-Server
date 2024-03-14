@@ -5,7 +5,7 @@
 				Erhält Anschreiben
 			</svws-ui-checkbox>
 			<svws-ui-button type="danger">
-				<i-ri-delete-bin-line />
+				<span class="icon i-ri-delete-bin-line" />
 				Person löschen
 			</svws-ui-button>
 		</template>

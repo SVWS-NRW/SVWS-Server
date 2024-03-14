@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit" overflow-scroll>
 		<template #title>
-			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="-ml-3 mr-0.5"><i-ri-link /></svws-ui-button>
+			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="-ml-3 mr-0.5"><span class="icon i-ri-link" /></svws-ui-button>
 			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
 		</template>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
@@ -48,7 +48,7 @@
 							</template>
 						</svws-ui-table>
 						<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
-						<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><i-ri-sparkling-line />Verteilen</svws-ui-button>
+						<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><span class="icon i-ri-sparkling-line" />Verteilen</svws-ui-button>
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
 						<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
 							<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">

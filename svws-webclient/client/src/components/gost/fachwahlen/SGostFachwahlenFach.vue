@@ -34,8 +34,8 @@
 							<div role="cell" class="svws-ui-td">
 								<span class="flex gap-1 -ml-1">
 									<svws-ui-button type="icon" size="small">
-										<i-ri-arrow-right-s-line v-if="aktuell?.id !== halbjahr.id" />
-										<i-ri-arrow-down-s-line v-else />
+										<span class="icon i-ri-arrow-right-s-line" v-if="aktuell?.id !== halbjahr.id" />
+										<span class="icon i-ri-arrow-down-s-line" v-else />
 									</svws-ui-button>
 									<span>{{ halbjahr.kuerzel }}</span>
 								</span>

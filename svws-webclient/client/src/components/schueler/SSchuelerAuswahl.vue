@@ -21,7 +21,7 @@
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
-						<i-ri-filter-line />
+						<span class="icon i-ri-filter-line" />
 						Erweiterte Filter
 					</svws-ui-button>-->
 				</template>

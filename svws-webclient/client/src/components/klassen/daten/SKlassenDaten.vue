@@ -62,11 +62,11 @@
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 				</template>
 				<template #header(linkToSchueler)>
-					<i-ri-group-line />
+					<span class="icon i-ri-group-line" />
 				</template>
 				<template #cell(linkToSchueler)="{ rowData }">
 					<button type="button" @click.stop="gotoSchueler(rowData)" class="button button--icon" title="Schüler ansehen">
-						<i-ri-link />
+						<span class="icon i-ri-link" />
 					</button>
 				</template>
 			</svws-ui-table>

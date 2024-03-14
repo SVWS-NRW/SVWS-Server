@@ -36,9 +36,9 @@
 						<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung => patchRaum({beschreibung}, rowData.id)" headless />
 					</template>
 					<template #actions>
-						<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
+						<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="raeume">
-							<svws-ui-button @click="openModal()" type="transparent" title="Räume importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+							<svws-ui-button @click="openModal()" type="transparent" title="Räume importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-raeume-modal>
 						<svws-ui-button @click="removeRaeume(selected)" type="trash" :disabled="!selected.length" />
 						<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum="addRaum">

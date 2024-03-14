@@ -22,7 +22,7 @@
 		</svws-ui-router-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
-		<i-ri-team-line />
+		<span class="icon i-ri-team-line" />
 	</div>
 </template>
 

@@ -12,7 +12,7 @@
 				<svws-ui-spacing v-if="fehlendeZeitraster.length" />
 			</div>
 			<div class="col-span-full">
-				<svws-ui-button type="danger" @click="removeZeitraster(zeitraster)"> <i-ri-delete-bin-line /> Stunde entfernen </svws-ui-button>
+				<svws-ui-button type="danger" @click="removeZeitraster(zeitraster)"> <span class="icon i-ri-delete-bin-line" /> Stunde entfernen </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>

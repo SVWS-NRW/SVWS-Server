@@ -30,7 +30,7 @@
 								'font-bold': stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0
 							}">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1 break-all" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
-								<span v-if="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0" class="text-success leading-none text-sm ml-auto"><i-ri-check-line /></span>
+								<span v-if="stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
@@ -97,7 +97,7 @@
 										'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 									}">
 										<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all pl-3" :title="kurs.bezeichnung">{{ kurs.bezeichnung }}</span>
-										<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><i-ri-check-line /></span>
+										<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
 									</div>
 									<div role="cell" class="select-none svws-ui-td">
 										<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"
@@ -136,7 +136,7 @@
 									'font-bold': stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0
 								}">
 									<span :id="`kurs-${kurs.id}`" class="line-clamp-1 break-all">{{ kurs.bezeichnung }}</span>
-									<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><i-ri-check-line /></span>
+									<span v-if="stundenplanManager().kursGetWochenstundenREST(kurs.id) === 0" class="text-success leading-none text-sm ml-auto"><span class="icon i-ri-check-line" /></span>
 								</div>
 								<div role="cell" class="select-none svws-ui-td">
 									<div class="svws-ui-badge select-none flex flex-grow items-center justify-center relative group cursor-grab"

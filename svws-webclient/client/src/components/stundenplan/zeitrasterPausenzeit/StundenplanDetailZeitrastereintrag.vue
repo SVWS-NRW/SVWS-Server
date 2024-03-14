@@ -4,7 +4,7 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="patchBeginn" />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @change="patchEnde" />
 			<div class="col-span-full">
-				<svws-ui-button type="danger" @click="removeZeitraster([item])"><i-ri-delete-bin-line /> Eintrag entfernen </svws-ui-button>
+				<svws-ui-button type="danger" @click="removeZeitraster([item])"><span class="icon i-ri-delete-bin-line" /> Eintrag entfernen </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />

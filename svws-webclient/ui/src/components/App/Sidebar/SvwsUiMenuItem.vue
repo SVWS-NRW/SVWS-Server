@@ -69,6 +69,8 @@
 
 	&--active {
 		@apply bg-svws/10 text-svws dark:bg-svws/20;
+		-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+		filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 
 		&.sidebar--menu-item--statistik {
 			@apply bg-violet-500/20 text-violet-500;

@@ -13,9 +13,9 @@
 						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
 					</template>
 					<template #actions>
-						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
+						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeitenRest">
-							<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+							<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-pausenzeiten-modal>
 						<svws-ui-button @click="removePausenzeiten(selectedPausenzeiten)" type="trash" :disabled="!selectedPausenzeiten.length" />
 						<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
@@ -35,9 +35,9 @@
 						<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
 					</template>
 					<template #actions>
-						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-link /> Katalog bearbeiten</svws-ui-button>
+						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereicheRest" :import-aufsichtsbereiche="importAufsichtsbereiche">
-							<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+							<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-aufsichtsbereiche-modal>
 						<svws-ui-button @click="removeAufsichtsbereiche(selectedAufsichtsbereiche)" type="trash" :disabled="!selectedAufsichtsbereiche.length" />
 						<s-card-stundenplan-add-aufsichtsbereich-modal v-slot="{ openModal }" :add-aufsichtsbereich="addAufsichtsbereich">
