@@ -123,6 +123,7 @@
 			props.kursListeManager().jahrgaenge.auswahlClear();
 			for (const v of value)
 				props.kursListeManager().jahrgaenge.auswahlAdd(v);
+console.log("vor SetFilter JG");
 			void props.setFilter();
 		}
 	});
@@ -143,6 +144,7 @@
 			props.kursListeManager().schueler.auswahlClear();
 			for (const v of value)
 				props.kursListeManager().schueler.auswahlAdd(v);
+console.log("vor SetFilter");
 			void props.setFilter();
 		}
 	});
@@ -155,6 +157,7 @@
 		for (const e of props.kursListeManager().filtered())
 			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
+console.log(arr);
 		return arr;
 	});
 

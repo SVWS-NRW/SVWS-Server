@@ -114,6 +114,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 
 	setFilter = async () => {
 		if (!this.kursListeManager.hasDaten()) {
+console.log("NoData");
 			const listFiltered = this.kursListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
 				await this.gotoEintrag(listFiltered.get(0));
@@ -121,6 +122,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 			}
 		}
 		const kursListeManager = this.kursListeManager;
+console.log("", kursListeManager.filtered().size());
 		this.setPatchedState({ kursListeManager });
 	}
 

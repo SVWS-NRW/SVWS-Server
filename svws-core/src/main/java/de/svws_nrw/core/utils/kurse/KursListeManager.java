@@ -96,7 +96,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
 				Arrays.asList(new Pair<>("idJahrgaenge", true), new Pair<>("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
-		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventSchuelerAuswahlChanged);
+		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
 		this.faecher = new AttributMitAuswahl<>(faecher, _fachToId, FachUtils.comparator, _eventHandlerFilterChanged);
