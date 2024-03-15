@@ -77,6 +77,8 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
+		if (id === undefined)
+			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
