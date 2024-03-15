@@ -122,7 +122,12 @@ public class AES {
 	 * @throws AESException   eine Exception, falls ein Fehler beim Entschlüsseln auftritt
 	 */
 	public byte[] decryptBase64(final String input) throws AESException {
-		return decrypt(Base64.getDecoder().decode(input));
+		try {
+			final byte[] inputDecoded =  Base64.getDecoder().decode(input);
+			return decrypt(inputDecoded);
+		} catch (final IllegalArgumentException e) {
+			throw new AESException("Fehler beim Dekodieren des Base64-Inputs zu einem byte[]", e);
+		}
 	}
 
 
