@@ -8,7 +8,7 @@
 				<svws-ui-text-input v-model="item.name" placeholder="Name" required />
 				<svws-ui-text-input v-model="item.vorname" placeholder="Rufname" />
 				<svws-ui-text-input v-model="item.telefon" placeholder="Telefon" />
-				<svws-ui-text-input v-model="item.email" placeholder="EMail" />
+				<svws-ui-text-input v-model="item.email" placeholder="E-Mail" />
 			</div>
 		</template>
 		<template #modalActions>

@@ -6,7 +6,7 @@
 				<svws-ui-text-input placeholder="Seriennummer" :model-value="personaldaten.identNrTeil2SerNr" @change="identNrTeil2SerNr => patch({identNrTeil2SerNr})" type="text" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel" :model-value="personaldaten.lbvVerguetungsschluessel" @change="lbvVerguetungsschluessel => patch({lbvVerguetungsschluessel})" type="text" />
 				<svws-ui-text-input placeholder="PA-Nummer" :model-value="personaldaten.personalaktennummer" @change="personalaktennummer => patch({personalaktennummer})" type="text" />
-				<svws-ui-text-input placeholder="LBV-Pers.Nummer" :model-value="personaldaten.lbvPersonalnummer" @change="lbvPersonalnummer => patch({lbvPersonalnummer})" type="text" />
+				<svws-ui-text-input placeholder="LBV-Personalnummer" :model-value="personaldaten.lbvPersonalnummer" @change="lbvPersonalnummer => patch({lbvPersonalnummer})" type="text" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Zugangsdatum" :model-value="personaldaten.zugangsdatum" @change="zugangsdatum => patch({zugangsdatum})" type="date" />
 				<svws-ui-text-input placeholder="Abgangsdatum" :model-value="personaldaten.abgangsdatum" @change="abgangsdatum => patch({abgangsdatum})" type="date" />

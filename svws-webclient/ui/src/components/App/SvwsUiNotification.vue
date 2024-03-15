@@ -10,7 +10,7 @@
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
 				<div class="notification--header">
-					<span v-if="icon || type" class="icon notification--icon">
+					<span v-if="icon || type" class="notification--icon">
 						<span class="icon i-ri-lock-2-line" v-if="icon === 'login'" />
 						<span class="icon i-ri-alert-fill" v-else-if="icon === 'error' || type === 'error'" />
 						<span class="icon i-ri-bug-fill" v-else-if="icon === 'bug' || type === 'bug'" />
@@ -37,7 +37,7 @@
 						<span>Meldung Kopieren</span>
 						<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 						<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-						<span class="icon i-ri-check-line text-success" v-else />
+						<span class="icon i-ri-check-line icon-success" v-else />
 					</svws-ui-button>
 				</div>
 				<div v-if="copied === false" class="p-2 bg-white border rounded-md text-error mt-2">{{ "Es gab einen Fehler beim Kopieren in die Zwischenablage. Ist die Zwischenablage gesperrt?" }}</div>
@@ -137,6 +137,11 @@
 
 			.notification--icon {
 				@apply animate-pulse;
+			}
+			span.icon {
+				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				@apply inline-block -my-1;
 			}
 		}
 

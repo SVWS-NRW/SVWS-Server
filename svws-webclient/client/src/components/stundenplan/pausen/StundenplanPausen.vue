@@ -13,7 +13,7 @@
 						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
 					</template>
 					<template #actions>
-						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
+						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeitenRest">
 							<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-pausenzeiten-modal>
@@ -35,7 +35,7 @@
 						<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
 					</template>
 					<template #actions>
-						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
+						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereicheRest" :import-aufsichtsbereiche="importAufsichtsbereiche">
 							<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-aufsichtsbereiche-modal>

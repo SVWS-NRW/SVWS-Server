@@ -19,10 +19,10 @@
 		<svws-ui-content-card title="Benutzereinstellungen">
 			<svws-ui-checkbox type="toggle" v-model="toggleBackticks">Fehlermeldungen mit Backticks kopieren</svws-ui-checkbox>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="EMail-Benutzerdaten">
+		<svws-ui-content-card title="E-Mail-Benutzerdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Name" :model-value="benutzerEMailDaten().name" @change="name => patchBenutzerEMailDaten({name})" type="text" />
-				<svws-ui-text-input placeholder="EMail-Adresse" :model-value="benutzerEMailDaten().address" @change="address => patchBenutzerEMailDaten({address})" type="text" />
+				<svws-ui-text-input placeholder="E-Mail-Adresse" :model-value="benutzerEMailDaten().address" @change="address => patchBenutzerEMailDaten({address})" type="text" />
 				<svws-ui-text-input placeholder="SMTP-Username" :model-value="benutzerEMailDaten().usernameSMTP" @change="usernameSMTP => patchBenutzerEMailDaten({usernameSMTP})" type="text" />
 				<svws-ui-text-input placeholder="SMTP-Passwort" v-model.trim="smtpPassword" type="password" />
 				<svws-ui-textarea-input placeholder="Signatur"	:model-value="benutzerEMailDaten().signatur" @change="signatur => patchBenutzerEMailDaten({ signatur: signatur ?? '' })" resizeable="vertical" autoresize />

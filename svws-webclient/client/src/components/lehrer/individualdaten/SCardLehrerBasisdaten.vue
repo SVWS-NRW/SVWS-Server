@@ -15,7 +15,7 @@
 				:item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 				:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
 			<svws-ui-spacing />
-			<svws-ui-text-input placeholder="Akad.Grad" :model-value="data.titel" @change="titel => patch({titel})" type="text" />
+			<svws-ui-text-input placeholder="Akadademischer Grad" :model-value="data.titel" @change="titel => patch({titel})" type="text" />
 			<svws-ui-text-input placeholder="Amtsbezeichnung" :model-value="data.amtsbezeichnung" @change="amtsbezeichnung => patch({amtsbezeichnung})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
