@@ -61,9 +61,13 @@
 	});
 
 	async function decryptSMTPPassword() {
-		const password = props.benutzerEMailDaten().passwordSMTP;
-		const encoded = await props.aes.decryptBase64(password);
-		_smtpPassword.value = new TextDecoder().decode(encoded);
+		try {
+			const password = props.benutzerEMailDaten().passwordSMTP;
+			const encoded = await props.aes.decryptBase64(password);
+			_smtpPassword.value = new TextDecoder().decode(encoded);
+		} catch(e) {
+			_smtpPassword.value = "";
+		}
 	}
 
 </script>
