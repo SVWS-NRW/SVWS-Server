@@ -35,15 +35,16 @@
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';
-		if (props.klassenListeManager().hasDaten())
+		if (props.klassenListeManager().hasDaten()) {
 			for (const id of props.klassenListeManager().daten().klassenLeitungen) {
 				const lehrer = props.klassenListeManager().lehrer.get(id);
-				if (lehrer) {
+				if (lehrer !== null) {
 					if (s.length)
 						s += `, ${lehrer.kuerzel}`;
 					else s = lehrer.kuerzel;
 				}
 			}
+		}
 		return s;
 	});
 

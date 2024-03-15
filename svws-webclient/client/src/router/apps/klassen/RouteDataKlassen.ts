@@ -102,10 +102,9 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 		if ((klasse !== null) && (this.klassenListeManager.hasDaten() && (klasse.id === this.klassenListeManager.auswahl().id)))
 			return;
-		let auswahl = this.klassenListeManager.liste.get(klasse.id);
-		if (auswahl === null)
-			auswahl = this.klassenListeManager.filtered().isEmpty() ? null : this.klassenListeManager.filtered().get(0);
-		const daten = auswahl === null ? null : await api.server.getKlasse(api.schema, auswahl.id);
+		let daten = this.klassenListeManager.liste.get(klasse.id);
+		if (daten === null)
+			daten = this.klassenListeManager.filtered().isEmpty() ? null : this.klassenListeManager.filtered().get(0);
 		this.klassenListeManager.setDaten(daten);
 		this.commit();
 	}

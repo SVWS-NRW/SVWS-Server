@@ -20,11 +20,6 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 		super.text = "Kurs";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKurse.data.auswahl === undefined)
-			return routeKurse.getRoute(undefined)
-	}
-
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
@@ -33,10 +28,8 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 		return {
 			schulform: api.schulform,
 			patch: routeKurse.data.patch,
-			mapJahrgaenge: routeKurse.data.mapJahrgaenge,
-			mapLehrer: routeKurse.data.mapLehrer,
-			mapFaecher: routeKurse.data.mapFaecher,
-			data: () => routeKurse.data.daten,
+			kursListeManager: () => routeKurse.data.kursListeManager,
+			setFilter: routeKurse.data.setFilter,
 			gotoSchueler: routeKurse.data.gotoSchueler,
 		};
 	}

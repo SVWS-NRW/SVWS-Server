@@ -3,7 +3,6 @@ package de.svws_nrw.core.utils.kurse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -43,7 +42,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapLehrerInKurs = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull KursDaten> _mapKursHatFach = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KursDaten> _mapKursInSchulgliederung = new HashMap2D<>();
-	private final @NotNull HashMap<@NotNull String, @NotNull KursDaten> _mapKursByKuerzel = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull KursDaten> _mapKursByKuerzelAndJahrgang = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull JahrgangsDaten> jahrgaenge;
@@ -128,7 +127,8 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			// TODO Zusatzkräfte ergänzen
 			this._mapKursHatFach.put(k.idFach, k.id, k);
 			if (k.kuerzel != null)
-				this._mapKursByKuerzel.put(k.kuerzel, k);
+				for (final long idJahrgang : k.idJahrgaenge)
+					this._mapKursByKuerzelAndJahrgang.put(k.kuerzel, idJahrgang, k);
 		}
 	}
 
@@ -294,12 +294,13 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * Gibt die Kursdaten anhand des übergebenen Kürzels zurück.
 	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
 	 *
-	 * @param kuerzel  das Kürzel
+	 * @param kuerzel      das Kürzel
+	 * @param idJahrgang   die ID des Jahrgangs
 	 *
 	 * @return die Kursdaten oder null
 	 */
-	public KursDaten getByKuerzelOrNull(final @NotNull String kuerzel) {
-		return this._mapKursByKuerzel.get(kuerzel);
+	public KursDaten getByKuerzelAndJahrgangOrNull(final @NotNull String kuerzel, final long idJahrgang) {
+		return this._mapKursByKuerzelAndJahrgang.getOrNull(kuerzel, idJahrgang);
 	}
 
 }

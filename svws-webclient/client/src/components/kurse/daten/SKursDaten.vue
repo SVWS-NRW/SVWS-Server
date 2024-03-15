@@ -1,19 +1,17 @@
 <template>
-	<div class="page--content">
+	<div v-if="kursListeManager().hasDaten()" class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<template #actions>
 				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :model-value="data().kuerzel" @change="kuerzel=>patch({ kuerzel })" type="text" />
-				<svws-ui-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="l => l.kuerzel" />
-				<svws-ui-select title="Fach" :model-value="mapFaecher.get(data().idFach)"
-					@update:model-value="value => patch({ idFach: value?.id ?? -1 })"
-					:items="mapFaecher" :item-text="(f: FachDaten) => f.kuerzel + ' (' + f.bezeichnung + ')'" />
+				<svws-ui-text-input placeholder="Kürzel" :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
+				<svws-ui-select title="Lehrer" v-model="lehrer" :items="kursListeManager().lehrer.list()" :item-text="l => l.kuerzel" :empty-text="() => '---'" removable />
+				<svws-ui-select title="Fach" v-model="fach" :items="kursListeManager().faecher.list()" :item-text="f => f.kuerzel + ' (' + f.bezeichnung + ')'" />
 				<svws-ui-select title="Kursart" :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
 					:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" />
 				<svws-ui-input-number placeholder="Wochenstunden" :model-value="data().wochenstunden" @change="wstd => patch({ wochenstunden: wstd ?? 0 })" />
-				<svws-ui-multi-select title="Jahrgänge" v-model="jahrgaenge" :items="mapJahrgaenge" :item-text="jg => jg?.kuerzel ?? ''" />
+				<svws-ui-multi-select title="Jahrgänge" v-model="jahrgaenge" :items="jahrgangsListe" :item-text="jg => jg?.kuerzel ?? ''" />
 				<svws-ui-input-number placeholder="Sortierung" :model-value="data().sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
 				<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data().bezeichnungZeugnis" @change="b => patch({ bezeichnungZeugnis : b })" type="text" />
 				<svws-ui-select title="Fortschreibungsart" :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
@@ -38,24 +36,53 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 	</div>
+	<div v-else>
+		<span class="icon i-ri-presentation-line" />
+	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FachDaten, JahrgangsDaten, LehrerListeEintrag } from "@core";
-	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList } from "@core";
+	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
+	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 
 	const props = defineProps<KursDatenProps>();
 
+	const data = () => props.kursListeManager().daten();
+
+	const lehrer = computed<LehrerListeEintrag | null>({
+		get: () => {
+			const idLehrer = data().lehrer;
+			return (idLehrer === null) ? null : props.kursListeManager().lehrer.get(idLehrer);
+		},
+		set: (value) => void props.patch({ lehrer: value?.id ?? null })
+	});
+
+	const fach = computed<FachDaten>({
+		get: () => props.kursListeManager().faecher.get(data().idFach) ?? new FachDaten(),
+		set: (value) => void props.patch({ idFach: value.id })
+	});
+
+
+	const jahrgangsListe = computed<List<JahrgangsDaten>>(() => {
+		const result = new ArrayList<JahrgangsDaten>();
+		for (const jg of props.kursListeManager().jahrgaenge.list()) {
+			if (jg.kuerzel !== "E3")  // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+				result.add(jg);
+		}
+		return result;
+	});
+
+
 	const jahrgaenge = computed<JahrgangsDaten[]>({
 		get: () => {
 			const arr = [];
-			for (const id of props.data().idJahrgaenge) {
-				const e = props.mapJahrgaenge.get(id);
-				if (e !== undefined)
+			for (const id of data().idJahrgaenge) {
+				const e = props.kursListeManager().jahrgaenge.get(id);
+				if (e !== null)
 					arr.push(e);
 			}
 			return arr;
@@ -69,29 +96,21 @@
 
 	const schienen = computed<number[]>({
 		get: () => {
-			return props.data().schienen.toArray(new Array<number>);
+			return data().schienen.toArray(new Array<number>);
 		},
 		set: (value) => {
 			const result = new ArrayList<number>();
 			let changed = false;
 			for (const s of value) {
-				if (!props.data().schienen.contains(s))
+				if (!data().schienen.contains(s))
 					changed = true;
 				result.add(s);
 			}
 			if (!changed)
-				changed = (props.data().schienen.size() !== result.size());
+				changed = (data().schienen.size() !== result.size());
 			if (changed)
 				void props.patch({ schienen : result });
 		}
-	});
-
-	const lehrer = computed<LehrerListeEintrag | undefined>({
-		get: () => {
-			const idLehrer = props.data().lehrer;
-			return (idLehrer === null) ? undefined : props.mapLehrer.get(idLehrer);
-		},
-		set: (value) => void props.patch({ lehrer: value === undefined ? null : value.id })
 	});
 
 	const kursarten = computed<Map<string, string>>(() => {
@@ -110,7 +129,7 @@
 	});
 
 	const istSichtbar = computed<boolean>({
-		get: () => props.data === undefined ? false : props.data().istSichtbar,
+		get: () => data() === undefined ? false : data().istSichtbar,
 		set: (value) => void props.patch({ istSichtbar: value })
 	});
 

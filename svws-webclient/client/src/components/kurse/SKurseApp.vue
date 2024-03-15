@@ -1,17 +1,22 @@
 <template>
-	<template v-if="auswahl() !== undefined">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ auswahl()!.kuerzel }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ auswahl()!.id }}
-				</svws-ui-badge>
+	<template v-if="kursListeManager().hasDaten()">
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<span>{{ kursListeManager().daten().kuerzel }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID:
+							{{ kursListeManager().daten().id }}
+						</svws-ui-badge>
+					</h2>
+					<span class="svws-subline">
+						{{ lehrerkuerzel }}
+					</span>
+				</div>
 			</div>
-			<div v-if="inputFachlehrer">
-				<span class="opacity-40">{{ inputFachlehrer }}</span>
-			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
@@ -28,13 +33,23 @@
 
 	const props = defineProps<KurseAppProps>();
 
-	const inputFachlehrer = computed<string>(() => {
-		const id = props.auswahl()?.lehrer;
-		const leer = "kein Lehrer festgelegt";
-		if (!id)
-			return leer;
-		const lehrer = props.mapLehrer.get(id);
-		return lehrer?.kuerzel ?? leer;
+	const lehrerkuerzel = computed<string>(() => {
+		let s = '';
+		if (props.kursListeManager().hasDaten()) {
+			const idLehrer = props.kursListeManager().daten().lehrer;
+			const lehrer = idLehrer === null ? null : props.kursListeManager().lehrer.get(idLehrer);
+			s = (lehrer === null) ? " " : lehrer.kuerzel;
+			// TODO Zusatzkräfte
+			// for (const idZusatzkraft of props.kursListeManager().daten().zusatzkraefte) {
+			// 	const zusatzkraft = props.kursListeManager().lehrer.get(idZusatzkraft);
+			// 	if (zusatzkraft !== null) {
+			// 		if (s.length)
+			// 			s += `, ${lehrer.kuerzel}`;
+			// 		else s = lehrer.kuerzel;
+			// 	}
+			// }
+		}
+		return s;
 	});
 
 </script>

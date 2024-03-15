@@ -1,20 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { KursDaten } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { type KursDaten , BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { KurseAppProps } from "~/components/kurse/SKurseAppProps";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
+import { routeError } from "~/router/error/RouteError";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")
@@ -35,54 +33,73 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
-			return;
-		let eintrag: KursDaten | undefined;
-		if (!to_params.id && this.data.auswahl)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
-			return this.getRoute(eintrag?.id);
-		}
-		else {
-			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined) {
-				return;
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
+		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+		if (idSchuljahresabschnitt instanceof Error)
+			return routeError.getRoute(idSchuljahresabschnitt);
+		if (idSchuljahresabschnitt === undefined)
+			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
+		const id = RouteNode.getIntParam(to_params, "id");
+		if (id instanceof Error)
+			return routeError.getRoute(id);
+		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
+			const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if (id !== undefined) {
+				if (neueID === null)
+					return this.getRoute();
+				const params = { ... to_params};
+				params.id = String(neueID);
+				const locationRaw : RouteLocationRaw = {};
+				locationRaw.name = to.name;
+				locationRaw.params = params;
+				return locationRaw;
 			}
 		}
-		if (eintrag !== undefined)
-			await this.data.setEintrag(eintrag);
+		const eintrag = (id !== undefined) ? this.data.kursListeManager.liste.get(id) : null;
+		await this.data.setEintrag(eintrag);
+		if (!this.data.kursListeManager.hasDaten()) {
+			if (id === undefined) {
+				const listFiltered = this.data.kursListeManager.filtered();
+				if (listFiltered.isEmpty())
+					return;
+				return this.getChildRoute(listFiltered.get(0).id, from);
+			}
+			return this.getRoute();
+		}
+		if (to.name === this.name)
+			return this.getChildRoute(this.data.kursListeManager.daten().id, from);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					this.data.setView(child, this.children);
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
+	public getRoute(id?: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	}
+
+	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
+		const redirect_name: string = (routeKurse.selectedChild === undefined) ? routeKursDaten.name : routeKurse.selectedChild.name;
+		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KurseAuswahlProps {
 		return {
-			auswahl: () => this.data.auswahl,
-			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
-			mapJahrgaenge: this.data.mapJahrgaenge,
-			mapLehrer: this.data.mapLehrer,
+			kursListeManager: () => this.data.kursListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
+			setFilter: this.data.setFilter,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KurseAppProps {
 		return {
-			auswahl: () => this.data.auswahl,
-			mapLehrer: this.data.mapLehrer,
+			kursListeManager: () => this.data.kursListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
@@ -109,7 +126,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.kursListeManager.auswahlID() } });
 		this.data.setView(node, this.children);
 	}
 

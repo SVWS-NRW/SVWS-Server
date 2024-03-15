@@ -1,4 +1,4 @@
-import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, Schueler} from "@core";
+import { ArrayList, KursListeManager, type FachDaten, type JahrgangsDaten, type KursDaten, type LehrerListeEintrag, type Schueler, DeveloperNotificationException} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -11,21 +11,13 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 
 
 interface RouteStateKurse extends RouteStateInterface {
-	auswahl: KursDaten | undefined;
-	daten: KursDaten | undefined;
-	mapKatalogeintraege: Map<number, KursDaten>;
-	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapJahrgaenge: Map<number, JahrgangsDaten>;
-	mapFaecher: Map<number, FachDaten>;
+	idSchuljahresabschnitt: number;
+	kursListeManager: KursListeManager;
 }
 
 const defaultState = <RouteStateKurse> {
-	auswahl: undefined,
-	daten: undefined,
-	mapKatalogeintraege: new Map(),
-	mapLehrer: new Map(),
-	mapJahrgaenge: new Map(),
-	mapFaecher: new Map(),
+	idSchuljahresabschnitt: -1,
+	kursListeManager: new KursListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
 	view: routeKursDaten,
 };
 
@@ -35,62 +27,84 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		super(defaultState);
 	}
 
-	get auswahl(): KursDaten | undefined {
-		return this._state.value.auswahl;
+	get kursListeManager(): KursListeManager {
+		return this._state.value.kursListeManager;
 	}
 
-	get mapKatalogeintraege(): Map<number, KursDaten> {
-		return this._state.value.mapKatalogeintraege;
-	}
-
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
-	}
-
-	get mapJahrgaenge(): Map<number, JahrgangsDaten> {
-		return this._state.value.mapJahrgaenge;
-	}
-
-	get mapFaecher(): Map<number, FachDaten> {
-		return this._state.value.mapFaecher;
-	}
-
-	get daten(): KursDaten {
-		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
-		return this._state.value.daten;
-	}
-
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getKurseFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
-		const mapKatalogeintraege = new Map();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		// Laden der Jahrgänge
+	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
+		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
+		if (schuljahresabschnitt === undefined)
+			return null;
+		// Bestimme die Klassendaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
+		const hatteAuswahl = (this.kursListeManager.auswahlID() !== null) ? this.kursListeManager.auswahl() : null;
+		// Lade die Kataloge und erstelle den Manager
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const mapJahrgaenge = new Map();
-		for (const j of listJahrgaenge)
-			mapJahrgaenge.set(j.id, j);
-		// Laden des Lehrer-Katalogs
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		// Laden des Fächer-Katalogs
 		const listFaecher = await api.server.getFaecher(api.schema);
-		const mapFaecher = new Map<number, FachDaten>();
-		for (const l of listFaecher)
-			mapFaecher.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge, mapFaecher })
+		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
+		// Wählen nun einen Kurs aus, dabei wird sich ggf. an der alten Auswahl orientiert
+		let result : number | null = null;
+		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null) && (!hatteAuswahl.idJahrgaenge.isEmpty())) {
+			let auswahl = kursListeManager.getByKuerzelAndJahrgangOrNull(hatteAuswahl.kuerzel, hatteAuswahl.idJahrgaenge.get(0));
+			if ((auswahl === null) && (kursListeManager.liste.size() > 0))
+				auswahl = kursListeManager.liste.list().get(0);
+			if (auswahl !== null) {
+				kursListeManager.setDaten(auswahl);
+				result = auswahl.id;
+			}
+		}
+		// Aktualisiere den State
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, kursListeManager });
+		return result;
 	}
 
-	setEintrag = async (auswahl: KursDaten) => {
-		const daten = await api.server.getKurs(api.schema, auswahl.id);
-		this.setPatchedState({ auswahl, daten })
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			 return null;
+		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
-	gotoEintrag = async (eintrag: JahrgangsDaten) => {
+	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+
+	public async setEintrag(kurs: KursDaten | null) {
+		if ((kurs === null) && (!this.kursListeManager.hasDaten()))
+			return;
+		if ((kurs === null) || (this.kursListeManager.liste.list().isEmpty())) {
+			this.kursListeManager.setDaten(null);
+			this.commit();
+			return;
+		}
+		if ((kurs !== null) && (this.kursListeManager.hasDaten() && (kurs.id === this.kursListeManager.auswahl().id)))
+			return;
+		let daten = this.kursListeManager.liste.get(kurs.id);
+		if (daten === null)
+			daten = this.kursListeManager.filtered().isEmpty() ? null : this.kursListeManager.filtered().get(0);
+		this.kursListeManager.setDaten(daten);
+		this.commit();
+	}
+
+	patch = async (data : Partial<KursDaten>) => {
+		if (!this.kursListeManager.hasDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const idKurs = this.kursListeManager.auswahl().id;
+		await api.server.patchKlasse(data, api.schema, idKurs);
+		const daten = this.kursListeManager.daten();
+		Object.assign(daten, data);
+		this.kursListeManager.setDaten(daten);
+		this.commit();
+	}
+
+	gotoEintrag = async (eintrag: KursDaten) => {
 		await RouteManager.doRoute(routeKurse.getRoute(eintrag.id));
 	}
 
@@ -98,24 +112,26 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
 	}
 
-	patch = async (data : Partial<KursDaten>) => {
-		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchKurs(data, api.schema, this.auswahl.id);
-		Object.assign(this.daten, data);
-		if (data.kuerzel !== undefined)
-			this.auswahl.kuerzel = data.kuerzel;
-		if (data.lehrer !== undefined)
-			this.auswahl.lehrer = data.lehrer;
-		if (data.idJahrgaenge !== undefined) {
-			this.auswahl.idJahrgaenge.clear();
-			this.auswahl.idJahrgaenge.addAll(data.idJahrgaenge);
+	setFilter = async () => {
+		if (!this.kursListeManager.hasDaten()) {
+			const listFiltered = this.kursListeManager.filtered();
+			if (!listFiltered.isEmpty()) {
+				await this.gotoEintrag(listFiltered.get(0));
+				return;
+			}
 		}
-		if (data.schueler !== undefined) {
-			this.auswahl.schueler.clear();
-			this.auswahl.schueler.addAll(data.schueler);
-		}
-		this.commit();
+		const kursListeManager = this.kursListeManager;
+		this.setPatchedState({ kursListeManager });
 	}
+
+	/* TODO
+	setzeDefaultSortierung = async () => {
+		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
+		const auswahl_id = this.kursListeManager.auswahl().id;
+		await api.server.setKursSortierungFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
+		await this.setEintrag(this.kursListeManager.liste.get(auswahl_id));
+	}
+	*/
 
 }

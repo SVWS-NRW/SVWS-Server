@@ -1,11 +1,9 @@
-import type { KursDaten, JahrgangsDaten, LehrerListeEintrag, Schueler, FachDaten, Schulform } from "@core";
+import type { KursDaten, Schueler, Schulform, KursListeManager } from "@core";
 
 export interface KursDatenProps {
 	schulform: Schulform;
 	patch: (data : Partial<KursDaten>) => Promise<void>;
-	data: () => KursDaten;
-	mapJahrgaenge: Map<number, JahrgangsDaten>;
-	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapFaecher: Map<number, FachDaten>;
+	kursListeManager: () => KursListeManager;
+	setFilter: () => Promise<void>;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>,
 }

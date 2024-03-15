@@ -1,7 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
-import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
@@ -50,7 +49,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 
 	private readonly _mapKursInSchulgliederung : HashMap2D<string, number, KursDaten> = new HashMap2D();
 
-	private readonly _mapKursByKuerzel : HashMap<string, KursDaten> = new HashMap();
+	private readonly _mapKursByKuerzelAndJahrgang : HashMap2D<string, number, KursDaten> = new HashMap2D();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -153,7 +152,8 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 				this._mapLehrerInKurs.put(k.lehrer, k.id, k);
 			this._mapKursHatFach.put(k.idFach, k.id, k);
 			if (k.kuerzel !== null)
-				this._mapKursByKuerzel.put(k.kuerzel, k);
+				for (const idJahrgang of k.idJahrgaenge)
+					this._mapKursByKuerzelAndJahrgang.put(k.kuerzel, idJahrgang, k);
 		}
 	}
 
@@ -296,12 +296,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * Gibt die Kursdaten anhand des übergebenen Kürzels zurück.
 	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
 	 *
-	 * @param kuerzel  das Kürzel
+	 * @param kuerzel      das Kürzel
+	 * @param idJahrgang   die ID des Jahrgangs
 	 *
 	 * @return die Kursdaten oder null
 	 */
-	public getByKuerzelOrNull(kuerzel : string) : KursDaten | null {
-		return this._mapKursByKuerzel.get(kuerzel);
+	public getByKuerzelAndJahrgangOrNull(kuerzel : string, idJahrgang : number) : KursDaten | null {
+		return this._mapKursByKuerzelAndJahrgang.getOrNull(kuerzel, idJahrgang);
 	}
 
 	transpilerCanonicalName(): string {

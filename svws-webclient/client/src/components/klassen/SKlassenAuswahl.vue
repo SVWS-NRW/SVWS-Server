@@ -114,6 +114,7 @@
 		props.klassenListeManager().schulgliederungen.auswahlClear();
 		props.klassenListeManager().lehrer.auswahlClear();
 		props.klassenListeManager().jahrgaenge.auswahlClear();
+		props.klassenListeManager().setFilterNurSichtbar(true);
 		await props.setFilter();
 	}
 
