@@ -283,6 +283,14 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			if (!hatEinenLehrer)
 				return false;
 		}
+		if (this.schueler.auswahlExists()) {
+			boolean hatEinenSchueler = false;
+			for (final Schueler s : eintrag.schueler)
+				if (this.schueler.auswahlHasKey(s.id))
+					hatEinenSchueler = true;
+			if (!hatEinenSchueler)
+				return false;
+		}
 		if (this.schulgliederungen.auswahlExists()) {
 			if (eintrag.idJahrgaenge.isEmpty())
 				return false;

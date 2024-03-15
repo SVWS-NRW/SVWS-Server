@@ -302,6 +302,14 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			if (!hatEinenLehrer)
 				return false;
 		}
+		if (this.schueler.auswahlExists()) {
+			let hatEinenSchueler : boolean = false;
+			for (const s of eintrag.schueler)
+				if (this.schueler.auswahlHasKey(s.id))
+					hatEinenSchueler = true;
+			if (!hatEinenSchueler)
+				return false;
+		}
 		if (this.schulgliederungen.auswahlExists()) {
 			if (eintrag.idJahrgaenge.isEmpty())
 				return false;
