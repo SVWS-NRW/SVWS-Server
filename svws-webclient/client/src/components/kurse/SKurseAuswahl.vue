@@ -14,10 +14,10 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
-					<div />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kursListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="kursListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="kursListeManager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
+					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="kursListeManager().faecher.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="kursListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kursListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="kursListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 
-	import type { ArrayList, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import type { Ref} from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ref, computed, shallowRef } from "vue";
@@ -71,11 +71,11 @@
 		}
 	})
 
-	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
+	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FachDaten): string {
 		return eintrag.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) => {
+	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) => {
 		const list = [];
 		for (const i of items)
 			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -123,6 +123,16 @@
 			props.kursListeManager().jahrgaenge.auswahlClear();
 			for (const v of value)
 				props.kursListeManager().jahrgaenge.auswahlAdd(v);
+			void props.setFilter();
+		}
+	});
+
+	const filterFaecher = computed<FachDaten[]>({
+		get: () => [...props.kursListeManager().faecher.auswahl()],
+		set: (value) => {
+			props.kursListeManager().faecher.auswahlClear();
+			for (const v of value)
+				props.kursListeManager().faecher.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
