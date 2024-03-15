@@ -21,7 +21,8 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Kursliste">
-			<svws-ui-table :columns="colsSchueler" :items="data().schueler">
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="kursListeManager().schuelerstatus.list()" :item-text="status => status.bezeichnung" class="col-span-full" />
+			<svws-ui-table :columns="colsSchueler" :items="kursListeManager().getSchuelerListe()">
 				<template #cell(status)="{ value }: { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 				</template>
@@ -139,5 +140,15 @@
 		{ key: "vorname", label: "Vorname", sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 }
 	];
+
+	const filterSchuelerStatus = computed<SchuelerStatus[]>({
+		get: () => [...props.kursListeManager().schuelerstatus.auswahl()],
+		set: (value) => {
+			props.kursListeManager().schuelerstatus.auswahlClear();
+			for (const v of value)
+				props.kursListeManager().schuelerstatus.auswahlAdd(v);
+			void props.setFilter();
+		}
+	});
 
 </script>

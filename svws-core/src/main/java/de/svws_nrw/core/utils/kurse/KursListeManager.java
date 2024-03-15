@@ -59,7 +59,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	/** Das Filter-Attribut für die Schüler */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
 	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
-	private @NotNull List<@NotNull Schueler> schuelerListe = new ArrayList<@NotNull Schueler>();
+	private List<@NotNull Schueler> _filteredSchuelerListe = null;
 
 	/** Das Filter-Attribut für die Schulgliederungen */
 	public final @NotNull AttributMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
@@ -148,7 +148,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			updateEintrag = true;
 		}
 		// TODO Liste der Kurslehrer?
-		schuelerListe = (daten != null) ? filterSchueler(daten) : new ArrayList<@NotNull Schueler>();
+		_filteredSchuelerListe = null;
 		return updateEintrag;
 	}
 
@@ -261,6 +261,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 
 	@Override
 	protected boolean checkFilter(final @NotNull KursDaten eintrag) {
+		this._filteredSchuelerListe = null;
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
 			return false;
 		if (this.faecher.auswahlExists() && !this.faecher.auswahlHasKey(eintrag.idFach))
@@ -305,19 +306,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			if (!hatEineSchulglierung)
 				return false;
 		}
-		if (this.schuelerstatus.auswahlExists())
-			schuelerListe = filterSchueler(_daten);
 		return true;
-	}
-
-
-	protected @NotNull List<@NotNull Schueler> filterSchueler(final KursDaten daten) {
-		final @NotNull List<@NotNull Schueler> result = new ArrayList<>();
-		if (daten != null)
-			for (final @NotNull Schueler s : daten.schueler)
-				if (!schuelerstatus.auswahlExists() || schuelerstatus.auswahlHasKey(s.status))
-					result.add(s);
-		return result;
 	}
 
 
@@ -328,7 +317,14 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * @return die Liste der Schüler
 	 */
 	public @NotNull List<@NotNull Schueler> getSchuelerListe() {
-		return this.schuelerListe;
+		if (_filteredSchuelerListe == null) {
+			_filteredSchuelerListe = new ArrayList<>();
+			if (_daten != null)
+				for (final @NotNull Schueler s : _daten.schueler)
+					if (!schuelerstatus.auswahlExists() || schuelerstatus.auswahlHasKey(s.status))
+						_filteredSchuelerListe.add(s);
+		}
+		return this._filteredSchuelerListe;
 	}
 
 
