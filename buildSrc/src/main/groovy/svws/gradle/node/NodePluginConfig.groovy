@@ -34,7 +34,7 @@ abstract class NodePluginConfig {
     	version.convention('20.11.1'); // https://nodejs.org/en/download
     	npmVersion.convention('10.2.4');
     	tsVersion.convention('5.4.2'); // https://github.com/microsoft/TypeScript/releases
-    	tsNodeTypesVersion.convention('20.11.26'); // https://www.npmjs.com/package/@types/node
+    	tsNodeTypesVersion.convention('20.11.28'); // https://www.npmjs.com/package/@types/node
     }
     
     boolean isLinux() {
