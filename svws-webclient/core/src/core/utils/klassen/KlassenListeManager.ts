@@ -5,8 +5,8 @@ import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeE
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
@@ -69,7 +69,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	private static readonly _schuelerToId : JavaFunction<SchuelerListeEintrag, number> = { apply : (s: SchuelerListeEintrag) => s.id };
 
-	private schuelerListe : List<Schueler> = new ArrayList<Schueler>();
+	private _filteredSchuelerListe : List<Schueler> | null = null;
 
 	/**
 	 * Das Filter-Attribut für die Schulgliederungen
@@ -155,7 +155,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
 		}
-		this.schuelerListe = (daten !== null) ? this.filterSchueler(daten) : new ArrayList<Schueler>();
+		this._filteredSchuelerListe = null;
 		return updateEintrag;
 	}
 
@@ -218,6 +218,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	}
 
 	protected checkFilter(eintrag : KlassenDaten) : boolean {
+		this._filteredSchuelerListe = null;
 		if (this._filterNurSichtbar && !eintrag.istSichtbar)
 			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
@@ -237,18 +238,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
 				return false;
 		}
-		if (this.schuelerstatus.auswahlExists())
-			this.schuelerListe = this.filterSchueler(this._daten);
 		return true;
-	}
-
-	protected filterSchueler(daten : KlassenDaten | null) : List<Schueler> {
-		const result : List<Schueler> = new ArrayList<Schueler>();
-		if (daten !== null)
-			for (const s of daten.schueler)
-				if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status))
-					result.add(s);
-		return result;
 	}
 
 	/**
@@ -258,7 +248,14 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @return die Liste der Schüler
 	 */
 	public getSchuelerListe() : List<Schueler> {
-		return this.schuelerListe;
+		if (this._filteredSchuelerListe === null) {
+			this._filteredSchuelerListe = new ArrayList();
+			if (this._daten !== null)
+				for (const s of this._daten.schueler)
+					if (!this.schuelerstatus.auswahlExists() || this.schuelerstatus.auswahlHasKey(s.status))
+						this._filteredSchuelerListe.add(s);
+		}
+		return this._filteredSchuelerListe;
 	}
 
 	/**
