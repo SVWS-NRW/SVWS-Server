@@ -35,7 +35,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
 			return null;
-		// Bestimme die Klassendaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
+		// Bestimme die Kursdaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
 		const hatteAuswahl = (this.kursListeManager.auswahlID() !== null) ? this.kursListeManager.auswahl() : null;
 		// Lade die Kataloge und erstelle den Manager
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
@@ -97,7 +97,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		if (!this.kursListeManager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const idKurs = this.kursListeManager.auswahl().id;
-		await api.server.patchKlasse(data, api.schema, idKurs);
+		await api.server.patchKurs(data, api.schema, idKurs);
 		const daten = this.kursListeManager.daten();
 		Object.assign(daten, data);
 		this.kursListeManager.setDaten(daten);
