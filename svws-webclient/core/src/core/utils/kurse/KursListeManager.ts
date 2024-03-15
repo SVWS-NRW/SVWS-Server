@@ -121,7 +121,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @param faecher       die Liste der Fächer
 	 */
 	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, kurse : List<KursDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>, faecher : List<FachDaten>) {
-		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("kurse", true), new Pair("schueleranzahl", true)));
+		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), KursListeManager._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
@@ -222,13 +222,61 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
 			let cmp : number = 0;
-			if (JavaObject.equalsTranspiler("kurse", (field))) {
+			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
 				cmp = KursUtils.comparator.compare(a, b);
 			} else
-				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
-					cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
+				if (JavaObject.equalsTranspiler("lehrer", (field))) {
+					if ((a.lehrer === null) && (b.lehrer === null)) {
+						cmp = 0;
+					} else
+						if (a.lehrer === null) {
+							cmp = -1;
+						} else
+							if (b.lehrer === null) {
+								cmp = 1;
+							} else {
+								const la : LehrerListeEintrag | null = this.lehrer.get(a.lehrer);
+								const lb : LehrerListeEintrag | null = this.lehrer.get(b.lehrer);
+								if ((la === null) && (lb === null))
+									cmp = 0;
+								else
+									if (la === null)
+										cmp = -1;
+									else
+										if (lb === null)
+											cmp = 1;
+										else
+											cmp = LehrerUtils.comparator.compare(la, lb);
+							}
 				} else
-					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.")
+					if (JavaObject.equalsTranspiler("idJahrgaenge", (field))) {
+						if ((a.idJahrgaenge.isEmpty()) && (b.idJahrgaenge.isEmpty())) {
+							cmp = 0;
+						} else
+							if (a.idJahrgaenge.isEmpty()) {
+								cmp = -1;
+							} else
+								if (b.idJahrgaenge.isEmpty()) {
+									cmp = 1;
+								} else {
+									const ja : JahrgangsDaten | null = this.jahrgaenge.get(a.idJahrgaenge.get(0));
+									const jb : JahrgangsDaten | null = this.jahrgaenge.get(b.idJahrgaenge.get(0));
+									if ((ja === null) && (jb === null))
+										cmp = 0;
+									else
+										if (ja === null)
+											cmp = -1;
+										else
+											if (jb === null)
+												cmp = 1;
+											else
+												cmp = JahrgangsUtils.comparator.compare(ja, jb);
+								}
+					} else
+						if (JavaObject.equalsTranspiler("schueler", (field))) {
+							cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
+						} else
+							throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.")
 			if (cmp === 0)
 				continue;
 			return asc ? cmp : -cmp;

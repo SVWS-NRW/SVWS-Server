@@ -7,13 +7,14 @@
 		<template #content>
 			<svws-ui-table clickable :clicked="kursListeManager().hasDaten() ? kursListeManager().auswahl() : null" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
+				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
-					<div/>
+					<div />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kursListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="kursListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="kursListeManager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" />
@@ -33,7 +34,7 @@
 	import type { Ref} from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ref, computed, shallowRef } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn, SortByAndOrder } from "@ui";
 
 	const props = defineProps<KurseAuswahlProps>();
 
@@ -43,6 +44,32 @@
 		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5, align: "right" },
 	];
+
+	const sortByMulti = computed<Map<string, boolean>>(() => {
+		const map = new Map<string, boolean>();
+		for (const pair of props.kursListeManager().orderGet())
+			if (pair.b !== null)
+				map.set(pair.a === "kuerzel" ? "kurse" : pair.a, pair.b);
+		return map;
+	})
+
+	const sortByAndOrder = computed<SortByAndOrder | undefined>({
+		get: () => {
+			const list = props.kursListeManager().orderGet();
+			if (list.isEmpty())
+				return undefined;
+			else {
+				const { a: key, b: order} = list.get(0);
+				return { key, order };
+			}
+		},
+		set: (value) => {
+			if ((value === undefined) || (value.key === null))
+				return;
+			props.kursListeManager().orderUpdate(value.key, value.order);
+			void props.setFilter();
+		}
+	})
 
 	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
 		return eintrag.kuerzel ?? "";
@@ -128,7 +155,6 @@
 		for (const e of props.kursListeManager().filtered())
 			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
-		arr.sort((a, b) => a.sortierung - b.sortierung);
 		return arr;
 	});
 
@@ -163,12 +189,7 @@
 
 
 	// TODO komma-separierte Liste mit Zusatzkräften
-	function getLehrerKuerzel(list: number[]) {
-		if (!props.kursListeManager().hasDaten())
-			return "---";
-		const idLehrer = props.kursListeManager().daten().lehrer;
-		if (idLehrer === null)
-			return "---";
+	function getLehrerKuerzel(idLehrer: number) {
 		const lehrer = props.kursListeManager().lehrer.get(idLehrer);
 		if (lehrer === null)
 			return "---";

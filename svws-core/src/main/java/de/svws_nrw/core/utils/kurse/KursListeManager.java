@@ -94,7 +94,7 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer,
 			final @NotNull List<@NotNull FachDaten> faecher) {
 		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
-				Arrays.asList(new Pair<>("kurse", true), new Pair<>("schueleranzahl", true)));
+				Arrays.asList(new Pair<>("idJahrgaenge", true), new Pair<>("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
@@ -206,9 +206,48 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
-			if ("kurse".equals(field)) {
+			if ("kuerzel".equals(field)) {
 				cmp = KursUtils.comparator.compare(a, b);
-			} else if ("schueleranzahl".equals(field)) {
+			} else if ("lehrer".equals(field)) {
+				if ((a.lehrer == null) && (b.lehrer == null)) {
+					cmp = 0;
+				} else if (a.lehrer == null) {
+					cmp = -1;
+				} else if (b.lehrer == null) {
+					cmp = 1;
+				} else {
+					final LehrerListeEintrag la = this.lehrer.get(a.lehrer);
+					final LehrerListeEintrag lb = this.lehrer.get(b.lehrer);
+					if ((la == null) && (lb == null))
+						cmp = 0;
+					else if (la == null)
+						cmp = -1;
+					else if (lb == null)
+						cmp = 1;
+					else
+						cmp = LehrerUtils.comparator.compare(la, lb);
+				}
+			} else if ("idJahrgaenge".equals(field)) {
+				// TODO Unterstützung für Kurse mit mehreren Jahrgängen
+				if ((a.idJahrgaenge.isEmpty()) && (b.idJahrgaenge.isEmpty())) {
+					cmp = 0;
+				} else if (a.idJahrgaenge.isEmpty()) {
+					cmp = -1;
+				} else if (b.idJahrgaenge.isEmpty()) {
+					cmp = 1;
+				} else {
+					final JahrgangsDaten ja = this.jahrgaenge.get(a.idJahrgaenge.get(0));
+					final JahrgangsDaten jb = this.jahrgaenge.get(b.idJahrgaenge.get(0));
+					if ((ja == null) && (jb == null))
+						cmp = 0;
+					else if (ja == null)
+						cmp = -1;
+					else if (jb == null)
+						cmp = 1;
+					else
+						cmp = JahrgangsUtils.comparator.compare(ja, jb);
+				}
+			} else if ("schueler".equals(field)) {
 				cmp = Integer.compare(a.schueler.size(), b.schueler.size());
 			} else
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
