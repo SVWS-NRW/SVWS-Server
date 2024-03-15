@@ -180,14 +180,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _schuelerID_schienenID_to_kurseSet : HashMap2D<number, number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap2D();
 
 	/**
+	 * Map von Schienen-ID nach Map von Fachart-ID nach {@link GostBlockungsergebnisKurs}-List (Alle Kurse pro Schiene und Fachart).
+	 */
+	private readonly _schienenID_fachartID_to_kurseList : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D();
+
+	/**
 	 * Map von Schüler-ID Integer (Summe aller Kollisionen des Schülers).
 	 */
 	private readonly _schuelerID_to_kollisionen : JavaMap<number, number> = new HashMap();
-
-	/**
-	 * (Schienen-ID, Fachart-ID) --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart.
-	 */
-	private readonly _map2D_schienenID_fachartID_kurse : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D();
 
 	/**
 	 * (Schüler-ID, Fach-ID) --> GostBlockungsergebnisKurs = Die aktuelle Wahl des Schülers in dem Fach.
@@ -292,7 +292,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateClear(pOld : GostBlockungsergebnis, pGostBlockungsergebnisID : number) : void {
-		this._map2D_schienenID_fachartID_kurse.clear();
 		this._map2D_schuelerID_fachID_kurs.clear();
 		this._regelverletzungen_der_faecherparallelitaet = "";
 		this._regelverletzungen_der_wahlkonflikte = "";
@@ -324,6 +323,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.update_2_schienenID_to_kollisionen();
 		this.update_2_schienenID_to_susAnzahl();
 		this.update_2_schuelerID_schienenID_to_kurseSet();
+		this.update_2_schienenID_fachartID_to_kurseList();
 		this.update_3_schuelerID_to_kollisionen();
 		if (!this._fehlermeldungen.isEmpty()) {
 			console.log(JSON.stringify("Es sind Fehler aufgetreten: "));
@@ -349,13 +349,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const kollisionen : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kollisionen, idSchueler).valueOf();
 			this._ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
+		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
+		for (const idSchiene of this._schienenIDset)
+			for (const idFachart of this._fachartID_to_kurseList.keySet()) {
+				const gleicheKurseInSchiene : number = Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart).size();
+				if (gleicheKurseInSchiene >= 2)
+					this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
+			}
 		const t2 : number = System.currentTimeMillis();
 		if (t2 - t1 > 10) {
 			console.log(JSON.stringify("Update Time = " + (t2 - t1)));
 		}
-		for (const gSchiene of this._parent.daten().schienen)
-			for (const fachartID of this._fachartID_to_kursdifferenz.keySet())
-				DeveloperNotificationException.ifMap2DPutOverwrites(this._map2D_schienenID_fachartID_kurse, gSchiene.id, fachartID, new ArrayList());
 		for (const gFachwahl of this._parent.daten().fachwahlen)
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._map2D_schuelerID_fachID_kurs, gFachwahl.schuelerID, gFachwahl.fachID, null);
 		const kursBearbeitet : HashSet<number> | null = new HashSet();
@@ -633,6 +637,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
+	private update_2_schienenID_fachartID_to_kurseList() : void {
+		this._schienenID_fachartID_to_kurseList.clear();
+		for (const eKurs of this._kursID_to_kurs.values()) {
+			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
+			for (const eSchiene of MapUtils.getOrCreateHashSet(this._kursID_to_schienenSet, eKurs.id))
+				Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, eSchiene.id, fachartID).add(eKurs);
+		}
+		for (const idSchiene of this._schienenIDset)
+			for (const idFachart of this._fachartID_to_kurseList.keySet())
+				Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart);
+	}
+
 	private update_3_schuelerID_to_kollisionen() : void {
 		this._schuelerID_to_kollisionen.clear();
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet()) {
@@ -686,7 +702,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this._map_regelID_verletzungen.containsKey(regeltyp))
 				this._list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 		this._parent.ergebnisUpdateBewertung(this._ergebnis);
-		this.updateAll();
+		for (const schiene of this._ergebnis.schienen) {
+			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
+			if (this._fachartmenge_sortierung === 1) {
+				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
+			}
+		}
 	}
 
 	private stateRegelvalidierungTooltip2() : string {
@@ -749,8 +772,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene : number, idFachart : number) : string {
 		const sb : StringBuilder = new StringBuilder();
-		if (this._map2D_schienenID_fachartID_kurse.contains(idSchiene, idFachart)) {
-			const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
+		if (this._schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
+			const kursGruppe : List<GostBlockungsergebnisKurs> = this._schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
 			const n : number = kursGruppe.size();
 			if (n >= 2) {
 				sb.append("  " + this.getOfFachartName(idFachart)! + " (+" + (n - 1) + "):");
@@ -1039,13 +1062,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		const idFach : number = kurs.fachID;
-		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 		DeveloperNotificationException.ifListAddsDuplicate("kurs.schienen", kurs.schienen, schiene.id);
 		DeveloperNotificationException.ifListAddsDuplicate("schiene.kurse", schiene.kurse, kurs);
-		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
-		DeveloperNotificationException.ifListAddsDuplicate("kursGruppe", kursGruppe, kurs);
 	}
 
 	/**
@@ -1068,24 +1086,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursSchieneEntfernenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		const idFach : number = kurs.fachID;
-		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 		DeveloperNotificationException.ifListRemoveFailes("kurs.schienen", kurs.schienen, schiene.id);
 		DeveloperNotificationException.ifListRemoveFailes("schiene.kurse", schiene.kurse, kurs);
-		DeveloperNotificationException.ifListRemoveFailes("kursGruppe", kursGruppe, kurs);
-		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
-	}
-
-	private updateAll() : void {
-		for (const schiene of this._ergebnis.schienen) {
-			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
-			if (this._fachartmenge_sortierung === 1) {
-				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
-			} else {
-				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
-			}
-		}
 	}
 
 	/**
