@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<svws-ui-button type="secondary" @click="showModal().value = true">
-			<i-ri-question-line />
+			<span class="icon i-ri-question-line" />
 			<span>Hilfe</span>
 		</svws-ui-button>
 		<svws-ui-modal :show="showModal" size="help" class="hidden">
 			<template #modalTitle>
 				<div class="inline-flex items-center gap-1 mr-4">
-					Hilfe <i-ri-question-line />
+					Hilfe <span class="icon i-ri-question-line" />
 				</div>
 			</template>
 			<template #modalDescription>

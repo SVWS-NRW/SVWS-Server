@@ -1,3 +1,68 @@
+<template>
+	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
+		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
+			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
+				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
+			</span>
+
+			<svws-ui-button type="icon" @click="toggleUpload" v-if="src && src.split('data:image/png;base64, /').length > 1" tabindex="0"
+				title="Bild löschen">
+				<span class="icon i-ri-delete-bin-line inline-block" />
+			</svws-ui-button>
+			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage && src.split('data:image/png;base64, /').length < 2" tabindex="0" title="Bild hochladen">
+				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
+				<span class="icon i-ri-upload-2-line inline-block" />
+			</svws-ui-button>
+			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0" title="Bild löschen">
+				<span class="icon i-ri-delete-bin-line inline-block" />
+			</svws-ui-button>
+			<svws-ui-button type="icon" @click="toggleCapturing" v-if="capture && !currentSnapshot" tabindex="0" title="Aufnahme starten">
+				<span class="icon i-ri-camera-fill inline-block" />
+			</svws-ui-button>
+			<svws-ui-button type="icon" @click="toggleSnapshot" v-if="capture && isCapturing && currentSnapshot" tabindex="0" title="Aufnahme löschen">
+				<span class="icon i-ri-delete-bin-line inline-block" />
+			</svws-ui-button>
+		</div>
+		<div class="avatar--capture-control" v-if="isCapturing">
+			<svws-ui-button v-if="currentSnapshot" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
+				<span class="icon i-ri-refresh-line inline-block" />
+			</svws-ui-button>
+			<svws-ui-button v-if="!currentSnapshot" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme abbrechen">
+				<span class="icon i-ri-camera-off-line inline-block" />
+			</svws-ui-button>
+			<svws-ui-button v-if="!currentSnapshot" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
+				<span class="icon i-ri-fullscreen-line inline-block" />
+				<span>Bild aufnehmen</span>
+			</svws-ui-button>
+			<svws-ui-button v-if="currentSnapshot" type="primary" @click="toggleCapturing" tabindex="0" title="Bild speichern">
+				<span>Bild speichern</span>
+				<span class="icon i-ri-check-line inline-block" />
+			</svws-ui-button>
+		</div>
+		<div class="avatar">
+			<template v-if="isCapturing">
+				<span v-if="capturingError">{{ capturingError }}</span>
+				<template v-else>
+					<video playsinline ref="videoEl" autoplay id="video" />
+					<canvas ref="canvasEl" id="canvas" class="hidden" />
+					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
+				</template>
+			</template>
+			<template v-else-if="uploadedImage">
+				<img :src="uploadedImage" :alt="alt">
+			</template>
+			<template v-else>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+				</svg>
+				<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
+				<img :src="src" :alt="alt" @error="onError">
+			</template>
+		</div>
+	</div>
+</template>
+
 <script setup lang='ts'>
 	import useCapturing from "../composables/use-capturing";
 	import useUploading from "../composables/use-uploading";
@@ -34,75 +99,6 @@
 		(e.target as HTMLImageElement).src = imageFile;
 	}
 </script>
-
-<template>
-	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
-		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
-			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
-				<i-ri-camera-line class="w-full h-full opacity-50" />
-			</span>
-
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="src && src.split('data:image/png;base64, /').length > 1" tabindex="0"
-				title="Bild löschen">
-				<i-ri-delete-bin-line />
-			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage && src.split('data:image/png;base64, /').length < 2" tabindex="0"
-				title="Bild hochladen">
-				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
-				<i-ri-upload-2-line />
-			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0"
-				title="Bild löschen">
-				<i-ri-delete-bin-line />
-			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleCapturing" v-if="capture && !currentSnapshot"
-				tabindex="0" title="Aufnahme starten">
-				<i-ri-camera-fill />
-			</svws-ui-button>
-			<svws-ui-button type="icon" @click="toggleSnapshot"
-				v-if="capture && isCapturing && currentSnapshot" tabindex="0" title="Aufnahme löschen">
-				<i-ri-delete-bin-line />
-			</svws-ui-button>
-		</div>
-		<div class="avatar--capture-control" v-if="isCapturing">
-			<svws-ui-button v-if="currentSnapshot" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
-				<i-ri-refresh-line />
-			</svws-ui-button>
-			<svws-ui-button v-if="!currentSnapshot" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme abbrechen">
-				<i-ri-camera-off-line />
-			</svws-ui-button>
-			<svws-ui-button v-if="!currentSnapshot" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
-				<i-ri-fullscreen-line />
-				<span>Bild aufnehmen</span>
-			</svws-ui-button>
-			<svws-ui-button v-if="currentSnapshot" type="primary" @click="toggleCapturing" tabindex="0" title="Bild speichern">
-				<span>Bild speichern</span>
-				<i-ri-check-line />
-			</svws-ui-button>
-		</div>
-		<div class="avatar">
-			<template v-if="isCapturing">
-				<span v-if="capturingError">{{ capturingError }}</span>
-				<template v-else>
-					<video playsinline ref="videoEl" autoplay id="video" />
-					<canvas ref="canvasEl" id="canvas" class="hidden" />
-					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
-				</template>
-			</template>
-			<template v-else-if="uploadedImage">
-				<img :src="uploadedImage" :alt="alt">
-			</template>
-			<template v-else>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-					<path
-						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-				</svg>
-				<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
-				<img :src="src" :alt="alt" @error="onError">
-			</template>
-		</div>
-	</div>
-</template>
 
 <style lang="postcss">
 .svws-ui-avatar {

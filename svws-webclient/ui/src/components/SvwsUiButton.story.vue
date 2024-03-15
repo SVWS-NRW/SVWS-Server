@@ -26,7 +26,7 @@
 				<template v-if="props.type !== 'icon'">
 					Button
 				</template>
-				<i-ri-settings3-line v-else />
+				<span class="icon i-ri-settings-3-line" v-else />
 			</svws-ui-button>
 		</Variant>
 	</Story>

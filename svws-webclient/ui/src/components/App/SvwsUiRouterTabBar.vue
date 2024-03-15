@@ -4,7 +4,7 @@
 			<div class="svws-ui-tabs--wrapper">
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
-						<i-ri-arrow-left-s-line />
+						<span class="icon i-ri-arrow-left-s-line" />
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
@@ -14,7 +14,7 @@
 				</div>
 				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
 					<svws-ui-button type="icon">
-						<i-ri-arrow-right-s-line />
+						<span class="icon i-ri-arrow-right-s-line" />
 					</svws-ui-button>
 				</div>
 			</div>

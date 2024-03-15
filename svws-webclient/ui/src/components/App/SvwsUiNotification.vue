@@ -11,12 +11,12 @@
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
 				<div class="notification--header">
 					<span v-if="icon || type" class="icon notification--icon">
-						<i-ri-lock-2-line v-if="icon === 'login'" />
-						<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
-						<i-ri-bug-fill v-else-if="icon === 'bug' || type === 'bug'" />
-						<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
-						<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
-						<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
+						<span class="icon i-ri-lock-2-line" v-if="icon === 'login'" />
+						<span class="icon i-ri-alert-fill" v-else-if="icon === 'error' || type === 'error'" />
+						<span class="icon i-ri-bug-fill" v-else-if="icon === 'bug' || type === 'bug'" />
+						<span class="icon i-ri-check-line" v-else-if="icon === 'success' || type === 'success'" />
+						<span class="icon i-ri-information-line" v-else-if="icon === 'info' || type === 'info'" />
+						<span class="icon i-ri-error-warning-line" v-else-if="icon === 'warning' || type === 'warning'" />
 					</span>
 					<slot name="header" />
 				</div>
@@ -26,18 +26,18 @@
 				<div class="mt-3 -mb-1 flex flex-wrap gap-1" v-if="$slots.stack || type === 'bug'">
 					<svws-ui-button v-if="type === 'bug'" type="secondary">
 						Fehler melden
-						<i-ri-send-plane-fill />
+						<span class="icon i-ri-send-plane-fill" />
 					</svws-ui-button>
 					<svws-ui-button type="transparent" @click="toggleStackOpen" v-if="$slots.stack">
 						<span>Details</span>
-						<i-ri-arrow-up-s-line v-if="stackOpen" class="-ml-1" />
-						<i-ri-arrow-down-s-line v-else class="-ml-1" />
+						<span class="icon i-ri-arrow-up-s-line -ml-1" v-if="stackOpen" />
+						<span class="icon i-ri-arrow-down-s-line -ml-1" v-else />
 					</svws-ui-button>
 					<svws-ui-button type="transparent" @click="copyToClipboard" v-if="toCopy !== undefined">
 						<span>Meldung Kopieren</span>
-						<i-ri-file-copy-line v-if="copied === null" />
-						<i-ri-error-warning-fill v-else-if="copied === false" />
-						<i-ri-check-line v-else class="text-success" />
+						<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+						<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
+						<span class="icon i-ri-check-line text-success" v-else />
 					</svws-ui-button>
 				</div>
 				<div v-if="copied === false" class="p-2 bg-white border rounded-md text-error mt-2">{{ "Es gab einen Fehler beim Kopieren in die Zwischenablage. Ist die Zwischenablage gesperrt?" }}</div>
@@ -47,7 +47,7 @@
 			</div>
 			<div class="absolute top-0 right-0 p-1">
 				<svws-ui-button type="icon" @click="close" tabindex="-1" class="notification--close-button">
-					<i-ri-close-line />
+					<span class="icon i-ri-close-line" />
 				</svws-ui-button>
 			</div>
 		</div>

@@ -33,7 +33,7 @@
 				</template>
 				<template #version>
 					<div class="flex gap-1">
-						<div class="mt-1">{{ version }} <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
+						<div class="mt-1">{{ version }} <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
 						<svws-ui-button type="transparent" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />

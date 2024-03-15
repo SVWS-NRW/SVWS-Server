@@ -7,11 +7,11 @@
 			<span v-else-if="defaultItem" @click="action(defaultItem)" class="flex gap-1">
 				<slot name="icon" />{{ defaultItem.text }}
 			</span>
-			<i-ri-menu-line v-else />
+			<span class="icon i-ri-menu-line" v-else />
 		</svws-ui-button>
 		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
-			<i-ri-arrow-down-s-line v-if="!dropdownOpen" />
-			<i-ri-arrow-up-s-line v-else />
+			<span class="icon i-ri-arrow-down-s-line" v-if="!dropdownOpen" />
+			<span class="icon i-ri-arrow-up-s-line" v-else />
 		</button>
 		<Teleport to="body">
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :filtered-list="dropdownActions">

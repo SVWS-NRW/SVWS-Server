@@ -13,7 +13,7 @@
 			<div class="app--appearance-settings">
 				<svws-ui-menu-item subline="" @click="showModalEinstellungen().value = true">
 					<template #label>Ansicht</template>
-					<template #icon><i-ri-palette-line /></template>
+					<template #icon><span class="icon-lg i-ri-palette-line inline-block" /></template>
 				</svws-ui-menu-item>
 			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center opacity-25 dark:opacity-50">
@@ -36,13 +36,13 @@
 					<svws-ui-radio-group :row="true">
 						<svws-ui-radio-option value="small" v-model="fontSize" name="fontSize" label="Kleiner"
 							@click="updateFontSize('small')">
-							<i-ri-zoom-out-line />
+							<span class="icon i-ri-zoom-out-line" />
 						</svws-ui-radio-option>
 						<svws-ui-radio-option value="default" v-model="fontSize" name="fontSize" label="Normal"
 							@click="updateFontSize('default')" />
 						<svws-ui-radio-option value="large" v-model="fontSize" name="fontSize" label="Größer"
 							@click="updateFontSize('large')">
-							<i-ri-zoom-in-line />
+							<span class="icon i-ri-zoom-in-line" />
 						</svws-ui-radio-option>
 					</svws-ui-radio-group>
 				</div>
@@ -52,11 +52,11 @@
 						<!--<svws-ui-radio-option value="auto" v-model="themeRef" name="theme" label="System" @click="updateTheme('auto')" />-->
 						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light"
 							@click="updateTheme('light')">
-							<i-ri-sun-line />
+							<span class="icon i-ri-sun-line" />
 						</svws-ui-radio-option>
 						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)"
 							@click="updateTheme('dark')">
-							<i-ri-moon-line />
+							<span class="icon i-ri-moon-line" />
 						</svws-ui-radio-option>
 					</svws-ui-radio-group>
 					<div v-if="themeRef === 'dark'" class="mt-2 text-white/50">

@@ -19,7 +19,7 @@
 						</template>
 						<template #header(customIcon)>
 							<svws-ui-tooltip>
-								<i-ri-lightbulb-line class="text-base" />
+								<span class="icon i-ri-lightbulb-line text-base" />
 								<template #content>
 									Icon statt Text
 								</template>

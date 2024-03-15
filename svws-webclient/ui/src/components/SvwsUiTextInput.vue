@@ -14,7 +14,7 @@
 			'col-span-2': span === '2',
 		}">
 		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
-		<i-ri-search-line v-if="type === 'search'" class="text-input--search-icon" />
+		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
 		<input ref="input"
 			v-focus
 			:class="{
@@ -42,13 +42,13 @@
 				'text-input--placeholder--prefix': url
 			}">
 			<span>{{ placeholder }}</span>
-			<i-ri-alert-line v-if="(isValid === false)" class="ml-0.5" />
+			<span class="icon-xs i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
 			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="data === '' || data === null || data === undefined" />
+						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
+						<span class="icon i-ri-alert-fill" v-if="data === '' || data === null || data === undefined" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -57,20 +57,20 @@
 			</span>
 		</span>
 		<span v-if="type === 'date'" class="svws-icon">
-			<i-ri-calendar-line />
+			<span class="icon i-ri-calendar-line" />
 		</span>
 		<span v-if="type === 'email'" class="svws-icon">
-			<i-ri-at-line />
+			<span class="icon i-ri-at-line" />
 		</span>
 		<span v-if="type === 'tel'" class="svws-icon">
-			<i-ri-phone-line />
+			<span class="icon i-ri-phone-line" />
 		</span>
 		<span v-if="removable && data" @click.stop="updateData('')" class="svws-icon--remove">
-			<i-ri-close-line />
+			<span class="icon i-ri-close-line" />
 		</span>
 		<span v-if="type === 'number' && input" class="svws-input-stepper">
-			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><i-ri-subtract-line /></button>
-			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><i-ri-add-line /></button>
+			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><span class="icon i-ri-subtract-line" /></button>
+			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><span class="icon i-ri-add-line" /></button>
 		</span>
 	</label>
 </template>
@@ -235,7 +235,7 @@
 		@apply overflow-hidden whitespace-nowrap text-base;
 
 		input::placeholder {
-			@apply text-black/25 dark:text-white/25;
+			@apply text-black dark:text-white opacity-25;
 
 			.placeholder--visible & {
 				@apply text-black dark:text-white;
@@ -267,7 +267,7 @@
 			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 bg-white hover:text-error dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
 		}
 
-    svg {
+    span.icon {
       @apply opacity-25 -mr-0.5;
     }
 	}
@@ -275,7 +275,7 @@
   .text-input-component {
     &:hover,
     &:focus-within {
-      .svws-icon svg {
+      .svws-icon span.icon {
         @apply opacity-50;
       }
     }
@@ -303,14 +303,14 @@
       .svws-icon {
         @apply w-6 h-6 -top-1 right-0;
 
-        svg {
+        span.icon {
           @apply relative top-px;
         }
       }
     }
 
     &:focus-within {
-      .svws-icon svg {
+      .svws-icon span.icon {
         @apply opacity-75;
       }
     }
@@ -319,7 +319,7 @@
   .text-input--statistics .svws-icon {
     @apply text-violet-500;
 
-    svg {
+    span.icon {
       @apply opacity-50;
     }
   }
@@ -348,7 +348,7 @@
         &.svws-disabled {
           @apply pointer-events-none opacity-25;
 
-          svg {
+          span.icon {
             @apply opacity-50;
           }
         }
@@ -437,7 +437,7 @@
 	}
 
 	.text-input--statistics {
-		.tooltip-trigger--triggered svg {
+		.tooltip-trigger--triggered span.icon {
 			@apply text-violet-800;
 		}
 	}
@@ -545,7 +545,7 @@
 		@apply cursor-not-allowed;
 
 		.text-input--placeholder {
-			@apply text-black/25 dark:text-white/25;
+			@apply text-black dark:text-white opacity-25;
 		}
 	}
 

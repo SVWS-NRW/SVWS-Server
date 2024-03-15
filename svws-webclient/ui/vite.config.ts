@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, searchForWorkspaceRoot } from "vite";
 import { resolve } from "path";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
@@ -7,6 +7,11 @@ import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
 
 export default defineConfig({
+	server: {
+		fs: {
+			allow: [searchForWorkspaceRoot(process.cwd()),],
+		}
+	},
 	histoire: {
 		setupFile: './src/histoire.setup.ts',
 		plugins: [

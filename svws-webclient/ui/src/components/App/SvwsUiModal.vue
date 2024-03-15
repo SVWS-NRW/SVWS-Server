@@ -21,11 +21,11 @@
 					}">
 					<div class="modal--titlebar">
 						<DialogTitle class="modal--title inline-flex items-center gap-1">
-							<i-ri-alert-fill v-if="type === 'danger'" class="text-error" />
+							<span class="icon i-ri-alert-fill text-error" v-if="type === 'danger'" />
 							<slot name="modalTitle" />
 						</DialogTitle>
 						<svws-ui-button v-if="closeInTitle" type="icon" @click="closeModal">
-							<span class="icon modal--closeIcon"> <i-ri-close-line /> </span>
+							<span class="icon modal--closeIcon"> <span class="icon i-ri-close-line" /> </span>
 						</svws-ui-button>
 					</div>
 					<div class="modal--content-wrapper" :class="{ 'modal--content-noscroll': noScroll }">

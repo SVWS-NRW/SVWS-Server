@@ -31,7 +31,7 @@
 						<svws-ui-menu-item active>
 							<template #label>Menu Item Label</template>
 							<template #icon>
-								<i-ri-team-line />
+								<span class="icon i-ri-team-line" />
 							</template>
 						</svws-ui-menu-item>
 						<svws-ui-menu-item>
@@ -56,7 +56,7 @@
 								Abmelden
 							</template>
 							<template #icon>
-								<i-ri-logout-circle-line />
+								<span class="icon i-ri-logout-circle-line" />
 							</template>
 						</svws-ui-menu-item>
 					</template>
@@ -96,9 +96,6 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template #main>
-				<!--<div class="app--content--placeholder">
-					<i-ri-archive-line/>
-				</div>-->
 				<svws-ui-header>
 					<span>Title</span><br>
 					<span class="opacity-50">Subline</span>

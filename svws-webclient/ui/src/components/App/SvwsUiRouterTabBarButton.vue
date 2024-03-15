@@ -1,7 +1,7 @@
 <template>
 	<button v-if="text" @click="select()" class="svws-ui-tab-button" :class="{'svws-active': isSelected}">
 		<span>{{ text }}</span>
-		<!--<i-ri-loader-4-line v-if="isSelected" class="svws-ui-spinner" />-->
+		<!--<span class="icon i-ri-loader-4-line svws-ui-spinner"v-if="isSelected" />-->
 	</button>
 </template>
 

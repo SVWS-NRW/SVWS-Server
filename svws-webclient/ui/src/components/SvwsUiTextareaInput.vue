@@ -20,13 +20,13 @@
 				'textarea-input--placeholder--required': required
 			}">
 			<span>{{ placeholder }}</span>
-			<i-ri-alert-line v-if="(isValid === false)" class="ml-0.5" />
+			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
 			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="data === '' || data === null" />
+						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
+						<span class="icon i-ri-alert-fill" v-if="data === '' || data === null" />
 					</span>
 					<template #content>
 						Relevant für die Statistik

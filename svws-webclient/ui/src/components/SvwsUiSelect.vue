@@ -28,11 +28,11 @@
 			@keydown.space.prevent="onSpace"
 			@keydown.tab="onTab" />
 		<button v-if="removable && hasSelected" role="button" @click.stop="removeItem" class="svws-remove">
-			<i-ri-close-line />
+			<span class="icon i-ri-close-line my-1.5" />
 		</button>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
-			<i-ri-expand-up-down-line v-if="headless" />
-			<i-ri-expand-up-down-fill v-else />
+			<span class="icon i-ri-expand-up-down-line my-0.5" v-if="headless" />
+			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
 		</button>
 	</div>
 	<Teleport to="body">

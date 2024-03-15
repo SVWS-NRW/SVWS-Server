@@ -45,7 +45,7 @@
 										<div class="text-left">
 											<div class="-mb-2">Powered by SVWS-NRW</div>
 											<div class="flex gap-1">
-												<div class="mt-2"><span class="font-bold">Version {{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
+												<div class="mt-2"><span class="font-bold">Version {{ version }}</span>  <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
 												<svws-ui-button type="transparent" @click="copyToClipboard">
 													<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 													<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />

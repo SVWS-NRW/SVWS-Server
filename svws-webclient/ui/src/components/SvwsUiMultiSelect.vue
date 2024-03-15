@@ -4,7 +4,7 @@
 			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
 				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
-					<i-ri-close-line />
+					<span class="icon i-ri-close-line" />
 				</button>
 			</span>
 		</div>
@@ -39,8 +39,8 @@
 				@keydown.tab="onTab" />
 		</div>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
-			<i-ri-expand-up-down-line v-if="headless" />
-			<i-ri-expand-up-down-fill v-else />
+			<span class="icon i-ri-expand-up-down-line my-1" v-if="headless" />
+			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
 		</button>
 	</div>
 	<Teleport to="body">

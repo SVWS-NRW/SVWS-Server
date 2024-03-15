@@ -30,7 +30,7 @@
 						@click="selectItem(item)">
 						<span v-if="itemText(item).length === 0" class="opacity-25">—</span>
 						<span v-else :class="{'font-bold': highlightItem === item}">{{ itemText(item) }}</span>
-						<i-ri-check-line v-if="selectedItemList.has(item)" class="w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" />
+						<span class="icon i-ri-check-line w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" v-if="selectedItemList.has(item)" />
 					</li>
 				</slot>
 			</template>

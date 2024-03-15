@@ -36,12 +36,12 @@
 				'input-number--placeholder--required': required,
 			}">
 			<span>{{ placeholder }}</span>
-			<i-ri-alert-line v-if="(isValid === false)" class="ml-0.5" />
+			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
-						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="data === null || data === undefined" />
+						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
+						<span class="icon i-ri-alert-fill" v-if="data === null || data === undefined" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -50,8 +50,8 @@
 			</span>
 		</span>
 		<span v-if="input && !hideStepper" class="svws-input-stepper">
-			<button role="button" :disabled="disabled" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><i-ri-subtract-line /></button>
-			<button role="button" :disabled="disabled" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><i-ri-add-line /></button>
+			<button role="button" :disabled="disabled" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><span class="icon i-ri-subtract-line inline-block" /></button>
+			<button role="button" :disabled="disabled" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
 	</label>
 </template>
@@ -200,9 +200,9 @@
 	}
 
 	.input-number-component .svws-icon {
-		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
+		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 leading-none;
 
-		svg {
+		span.icon {
 			@apply opacity-25 -mr-0.5;
 		}
 	}
@@ -210,7 +210,7 @@
 	.input-number-component {
 		&:hover,
 		&:focus-within {
-			.svws-icon svg {
+			.svws-icon span.icon {
 				@apply opacity-50;
 			}
 		}
@@ -219,8 +219,9 @@
 	.input-number--statistics .svws-icon {
 		@apply text-violet-500;
 
-		svg {
-			@apply opacity-50;
+		span.icon {
+			-webkit-filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
+			filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
 		}
 	}
 
@@ -234,7 +235,7 @@
 			@apply absolute top-1 right-1 bottom-1 flex justify-center items-center gap-0.5;
 
 			button {
-				@apply bg-light dark:bg-white/5 border border-black/10 dark:border-white/10 rounded text-base focus:outline-none;
+				@apply bg-light dark:bg-white/5 border border-black/10 dark:border-white/10 rounded focus:outline-none leading-none;
 
 				&:hover,
 				&:focus-visible {
@@ -248,7 +249,7 @@
 				&.svws-disabled {
 					@apply pointer-events-none opacity-25;
 
-					svg {
+					span.icon {
 						@apply opacity-50;
 					}
 				}

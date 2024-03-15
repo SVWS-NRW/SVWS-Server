@@ -95,6 +95,10 @@ hr {
 	-webkit-filter: invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);
 	filter: invert(88%) sepia(25%) saturate(695%) hue-rotate(346deg) brightness(107%) contrast(106%);
 }
+.icon-statistics {
+	-webkit-filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
+	filter: brightness(0) saturate(100%) invert(37%) sepia(71%) saturate(868%) hue-rotate(224deg) brightness(103%) contrast(93%);
+}
 
 
 .i-ri-add-line {@apply bg-[url(remixicon/icons/System/add-line.svg)] bg-no-repeat bg-center }

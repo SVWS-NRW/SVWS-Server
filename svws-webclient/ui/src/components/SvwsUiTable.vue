@@ -10,7 +10,7 @@
 			<div v-if="toggleColumns" :class="{'ml-auto': !$slots.filter}">
 				<svws-ui-tooltip :indicator="false" :hover="false" :show-arrow="false" position="top" class="h-full">
 					<svws-ui-button type="transparent" class="h-full">
-						<i-ri-table-line />
+						<span class="icon i-ri-table-line" />
 						<template #badge v-if="hiddenColumns.size">
 							<span />
 						</template>
@@ -35,13 +35,13 @@
 						<span />
 					</template>
 					<template v-if="!filterReset || !filtered">
-						<i-ri-filter-line v-if="!isFilterOpen" />
-						<i-ri-arrow-up-s-line v-else />
+						<span class="icon i-ri-filter-line" v-if="!isFilterOpen" />
+						<span class="icon i-ri-arrow-up-s-line" v-else />
 					</template>
 					<span>Filter</span>
 				</svws-ui-button>
 				<svws-ui-button v-if="filterReset && filtered" type="icon" @click="filterReset" class="h-full" title="Filter zurücksetzen">
-					<i-ri-filter-off-line />
+					<span class="icon i-ri-filter-off-line" />
 				</svws-ui-button>
 			</div>
 		</div>
@@ -89,8 +89,8 @@
 							</template>
 						</slot>
 						<span v-if="column.sortable" class="svws-sorting-icon" :class="{'-order-1': column.align === 'right'}">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
+							<span class="icon i-ri-arrow-up-down-line svws-sorting-asc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
+							<span class="icon i-ri-arrow-up-down-line svws-sorting-desc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
 						</span>
 					</div>
 				</div>

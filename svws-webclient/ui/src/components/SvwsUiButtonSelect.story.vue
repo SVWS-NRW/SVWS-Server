@@ -6,7 +6,7 @@
 				<div class="w-full" />
 				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions" />
 				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
-					<template #icon><i-ri-printer-line /></template>
+					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
 			</div>
 			<template #source>

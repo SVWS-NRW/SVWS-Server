@@ -22,258 +22,258 @@
 		<Variant title="Häufig verwendet" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-add-line /></th>
+					<th><span class="icon i-ri-add-line" /></th>
 					<td>Hinzufügen, neuer Datensatz</td>
-					<td><code>{{ '<' }}i-ri-add-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-add-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-edit-2-line /></th>
+					<th><span class="icon i-ri-edit-2-line" /></th>
 					<td>Bearbeiten</td>
-					<td><code>{{ '<' }}i-ri-edit-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-edit-2-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-delete-bin-line /></th>
+					<th><span class="icon i-ri-delete-bin-line" /></th>
 					<td>Löschen</td>
-					<td><code>{{ '<' }}i-ri-delete-bin-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-delete-bin-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-link /></th>
+					<th><span class="icon i-ri-link" /></th>
 					<td>Link zu einem anderen Bereich im Client</td>
-					<td><code>{{ '<' }}i-ri-link{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-link"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-question-line /></th>
+					<th><span class="icon i-ri-question-line" /></th>
 					<td>Hilfe/Information, Tooltip Trigger</td>
-					<td><code>{{ '<' }}i-ri-question-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-question-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-information-line /></th>
+					<th><span class="icon i-ri-information-line" /></th>
 					<td>Information, Tooltip Trigger</td>
-					<td><code>{{ '<' }}i-ri-information-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-information-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-alert-line /></th>
+					<th><span class="icon i-ri-alert-line" /></th>
 					<td>Warnung</td>
-					<td><code>{{ '<' }}i-ri-alert-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-alert-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-error-warning-line /></th>
+					<th><span class="icon i-ri-error-warning-line" /></th>
 					<td>Alternative Warnung/Fehler</td>
-					<td><code>{{ '<' }}i-ri-error-warning-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-error-warning-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-alert-fill /></th>
+					<th><span class="icon i-ri-alert-fill" /></th>
 					<td>Fehler, Steigerung von "Warnung"</td>
-					<td><code>{{ '<' }}i-ri-alert-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-alert-fill"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-checkbox-circle-fill /></th>
+					<th><span class="icon i-ri-checkbox-circle-fill" /></th>
 					<td>Keine Fehler, gültig</td>
-					<td><code>{{ '<' }}i-ri-checkbox-circle-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-checkbox-circle-fill"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 		</Variant>
 		<Variant title="App Icons" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-school-line /></th>
+					<th><span class="icon i-ri-school-line" /></th>
 					<td>Schule</td>
-					<td><code>{{ '<' }}i-ri-school-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-school-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-archive-line /></th>
+					<th><span class="icon i-ri-archive-line" /></th>
 					<td>Kataloge</td>
-					<td><code>{{ '<' }}i-ri-archive-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-archive-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-group-line /></th>
+					<th><span class="icon i-ri-group-line" /></th>
 					<td>Schüler</td>
-					<td><code>{{ '<' }}i-ri-group-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-group-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-briefcase-line /></th>
+					<th><span class="icon i-ri-briefcase-line" /></th>
 					<td>Lehrer</td>
-					<td><code>{{ '<' }}i-ri-briefcase-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-briefcase-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-team-line /></th>
+					<th><span class="icon i-ri-team-line" /></th>
 					<td>Klassen</td>
-					<td><code>{{ '<' }}i-ri-team-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-team-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-book-2-line /></th>
+					<th><span class="icon i-ri-book-2-line" /></th>
 					<td>Kurse</td>
-					<td><code>{{ '<' }}i-ri-book-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-book-2-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-graduation-cap-line /></th>
+					<th><span class="icon i-ri-graduation-cap-line" /></th>
 					<td>Oberstufe</td>
-					<td><code>{{ '<' }}i-ri-graduation-cap-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-graduation-cap-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-bar-chart-2-line /></th>
+					<th><span class="icon i-ri-bar-chart-2-line" /></th>
 					<td>Statistik</td>
-					<td><code>{{ '<' }}i-ri-bar-chart-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-bar-chart-2-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-calendar-event-line /></th>
+					<th><span class="icon i-ri-calendar-event-line" /></th>
 					<td>Stundenplan</td>
-					<td><code>{{ '<' }}i-ri-calendar-event-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-calendar-event-line"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-logout-circle-line /></th>
+					<th><span class="icon i-ri-logout-circle-line" /></th>
 					<td>Logout</td>
-					<td><code>{{ '<' }}i-ri-logout-circle-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-logout-circle-line"{{ ' />' }}</code></td>
 				</tr>
 				<!--<tr>
-					<th><i-ri-palette-line /></th>
+					<th><span class="icon i-ri-palette-line" /></th>
 					<td>Ansicht (Einstellungen)</td>
-					<td><code>{{ '<' }}i-ri-palette-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-palette-line"{{ ' />' }}</code></td>
 				</tr>-->
 			</table>
 		</Variant>
 		<Variant title="Weitere Icons" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-eye-line /></th>
+					<th><span class="icon i-ri-eye-line" /></th>
 					<td>Element einblenden</td>
-					<td><code>{{ '<' }}i-ri-eye-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-eye-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-eye-off-line /></th>
+					<th><span class="icon i-ri-eye-off-line" /></th>
 					<td>Element ausblenden</td>
-					<td><code>{{ '<' }}i-ri-eye-off-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-eye-off-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-printer-line /></th>
+					<th><span class="icon i-ri-printer-line" /></th>
 					<td>Drucken</td>
-					<td><code>{{ '<' }}i-ri-printer-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-printer-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-sparkling-line /></th>
+					<th><span class="icon i-ri-sparkling-line" /></th>
 					<td>Automatisierung, z. B. Verteilen von Kursen</td>
-					<td><code>{{ '<' }}i-ri-sparkling-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-sparkling-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-upload-2-line /></th>
+					<th><span class="icon i-ri-upload-2-line" /></th>
 					<td>Importieren, Hochladen</td>
-					<td><code>{{ '<' }}i-ri-upload-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-upload-2-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-download-2-line /></th>
+					<th><span class="icon i-ri-download-2-line" /></th>
 					<td>Exportieren, Herunterladen</td>
-					<td><code>{{ '<' }}i-ri-download-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-download-2-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-shield-star-line /></th>
+					<th><span class="icon i-ri-shield-star-line" /></th>
 					<td>Admin-Rechte, Administrative Benutzergruppe</td>
-					<td><code>{{ '<' }}i-ri-shield-star-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-shield-star-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-bug-fill /></th>
+					<th><span class="icon i-ri-bug-fill" /></th>
 					<td>Fehlermeldung Bug</td>
-					<td><code>{{ '<' }}i-ri-bug-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-bug-fill"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 		</Variant>
 		<Variant title="Oberstufe" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-spam-3-line /></th>
+					<th><span class="icon i-ri-spam-3-line" /></th>
 					<td>Nichtverteilt</td>
-					<td><code>{{ '<' }}i-ri-spam-3-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-spam-3-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-alert-line /></th>
+					<th><span class="icon i-ri-alert-line" /></th>
 					<td>Kollision</td>
-					<td><code>{{ '<' }}i-ri-alert-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-alert-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-error-warning-fill /></th>
+					<th><span class="icon i-ri-error-warning-fill" /></th>
 					<td>Kollision und Nichtverteilt</td>
-					<td><code>{{ '<' }}i-ri-error-warning-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-error-warning-fill"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-draft-line /></th>
+					<th><span class="icon i-ri-draft-line" /></th>
 					<td>Fachwahl: Schriftlich</td>
-					<td><code>{{ '<' }}i-ri-draft-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-draft-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-chat1-line /></th>
+					<th><span class="icon i-ri-chat1-line" /></th>
 					<td>Fachwahl: Mündlich</td>
-					<td><code>{{ '<' }}i-ri-chat1-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-chat1-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-settings-3-line /></th>
+					<th><span class="icon i-ri-settings-3-line" /></th>
 					<td>Regeln zur Blockung</td>
-					<td><code>{{ '<' }}i-ri-settings-3-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-settings-3-line"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-loop-right-line /></th>
+					<th><span class="icon i-ri-loop-right-line" /></th>
 					<td>Laufbahnplanung: Modus wechseln (Normal, Manuell, Hochschreiben)</td>
-					<td><code>{{ '<' }}i-ri-loop-right-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-loop-right-line"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 		</Variant>
 		<Variant title="Input Fields und Interaktion" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-draggable /></th>
+					<th><span class="icon i-ri-draggable" /></th>
 					<td>Drag & Drop Handle</td>
-					<td><code>{{ '<' }}i-ri-draggable{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-draggable"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-expand-up-down-fill /></th>
+					<th><span class="icon i-ri-expand-up-down-fill" /></th>
 					<td>Multiselect Input</td>
-					<td><code>{{ '<' }}i-ri-expand-up-down-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-expand-up-down-fill"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-filter-line /></th>
+					<th><span class="icon i-ri-filter-line" /></th>
 					<td>Filter</td>
-					<td><code>{{ '<' }}i-ri-filter-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-filter-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-filter-off-line /></th>
+					<th><span class="icon i-ri-filter-off-line" /></th>
 					<td>Filter zurücksetzen</td>
-					<td><code>{{ '<' }}i-ri-filter-off-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-filter-off-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-search-line /></th>
+					<th><span class="icon i-ri-search-line" /></th>
 					<td>Suche</td>
-					<td><code>{{ '<' }}i-ri-search-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-search-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-checkbox-circle-line /></th>
+					<th><span class="icon i-ri-checkbox-circle-line" /></th>
 					<td>Radio Option: true</td>
-					<td><code>{{ '<' }}i-ri-checkbox-circle-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-checkbox-circle-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-checkbox-blank-circle-line /></th>
+					<th><span class="icon i-ri-checkbox-blank-circle-line" /></th>
 					<td>Radio Option: false</td>
-					<td><code>{{ '<' }}i-ri-checkbox-circle-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-checkbox-circle-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-check-line /></th>
+					<th><span class="icon i-ri-check-line" /></th>
 					<td>Checkbox: headless + true</td>
-					<td><code>{{ '<' }}i-ri-check-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-check-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-close-line /></th>
+					<th><span class="icon i-ri-close-line" /></th>
 					<td>Checkbox: headless + disabled + false</td>
-					<td><code>{{ '<' }}i-ri-close-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-close-line"{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-bar-chart2-line /></th>
+					<th><span class="icon i-ri-bar-chart-2-line" /></th>
 					<td>Tooltip Label für statistikrelevante Inputs</td>
-					<td><code>{{ '<' }}i-ri-bar-chart-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}span class="icon i-ri-bar-chart-2-line"{{ ' />' }}</code></td>
 				</tr>
 			</table>
 		</Variant>

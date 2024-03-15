@@ -55,8 +55,8 @@
 			<div class="s-toggle" v-if="!skeleton" :class="sidebarExpanded ? '' : 'mt-8'">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
-						<i-ri-menu-fold-line v-if="sidebarExpanded" />
-						<i-ri-menu-unfold-line v-else />
+						<span class="icon i-ri-menu-fold-line" v-if="sidebarExpanded" />
+						<span class="icon i-ri-menu-unfold-line" v-else />
 					</button>
 					<template #content>
 						Sidebar {{ !sidebarExpanded ? 'einblenden' : 'ausblenden' }}

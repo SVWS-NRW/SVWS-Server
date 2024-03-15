@@ -11,9 +11,9 @@
 		<slot />
 		<template v-if="(indicator && indicator !== 'underline') || $slots.icon">
 			<slot name="icon">
-				<i-ri-information-fill class="icon--indicator" v-if="indicator === 'info'" />
-				<i-ri-alert-fill class="icon--indicator" v-else-if="indicator === 'danger'" />
-				<i-ri-question-line class="icon--indicator -my-1 text-headline-md" v-else />
+				<span class="icon i-ri-information-fill icon--indicator" v-if="indicator === 'info'" />
+				<span class="icon i-ri-alert-fill icon--indicator" v-else-if="indicator === 'danger'" />
+				<span class="icon i-ri-question-line icon--indicator -my-1 text-headline-md" v-else />
 			</slot>
 		</template>
 	</span>
@@ -163,8 +163,9 @@
 	}
 
 	&--triggered {
-		.icon--indicator svg {
-			@apply text-svws;
+		.icon--indicator span.icon {
+			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 
 			.page--statistik & {
 				@apply text-violet-500;
@@ -177,8 +178,9 @@
 	}
 
 	&--danger {
-		svg {
-			@apply text-error;
+		span.icon {
+			-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+			filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 		}
 	}
 
