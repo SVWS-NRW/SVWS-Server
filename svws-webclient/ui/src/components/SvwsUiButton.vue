@@ -11,8 +11,8 @@
 	}" :disabled="disabled" @click="onClick">
 		<slot v-if="type !== 'trash'" />
 		<span v-if="type === 'trash'" class="button--trash-icon">
-			<span class="icon i-ri-delete-bin-line icon--line" />
-			<span class="icon i-ri-delete-bin-fill icon--fill" />
+			<span class="inline-block icon i-ri-delete-bin-line icon--line" />
+			<span class="inline-block icon i-ri-delete-bin-fill icon--fill" />
 		</span>
 		<span v-if="$slots.badge" class="button--badge">
 			<slot name="badge" />
