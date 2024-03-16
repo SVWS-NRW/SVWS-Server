@@ -10,15 +10,16 @@
 		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
 		<span v-if="icon" class="radio--indicator-icon">
 			<template v-if="iconType === 'view'">
-				<span class="icon i-ri-eye-line radio--indicator-icon--checked" />
+				<span class="icon i-ri-eye-line radio--indicator-icon--checked inline-block -my-0.5" />
 			</template>
 			<template v-else>
-				<slot />
-				<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" v-if="!$slots.default" />
-				<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" v-if="!$slots.default" />
+				<slot>
+					<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank inline-block -my-0.5" />
+					<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked inline-block -my-0.5" />
+				</slot>
 			</template>
 		</span>
-		<span class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-statistics ml-2" v-if="statistics" /> </span>
+		<span class="radio--label--text"> {{ label }} <span class="icon i-ri-bar-chart-2-line icon-statistics ml-2 inline-block -my-0.5" v-if="statistics" /> </span>
 	</label>
 </template>
 
@@ -137,6 +138,10 @@
 .radio--indicator:checked ~ .radio--indicator-icon,
 .radio--label--checked .radio--indicator-icon {
 	@apply opacity-100 text-svws;
+	span.icon {
+	-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+	filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+	}
 
 	.radio--statistics &,
 	.page--statistik & {
@@ -169,6 +174,14 @@
   .radio--indicator:checked ~ .radio--indicator-icon,
   &.radio--label--checked .radio--indicator-icon {
     @apply opacity-25 text-black dark:text-white;
+		span.icon {
+			-webkit-filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
+			filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
+		}
+		dark:span.icon {
+			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		}
 
     .radio--statistics &,
     .page--statistik & {

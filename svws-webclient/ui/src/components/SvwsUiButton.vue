@@ -10,9 +10,9 @@
 		'button--big': size === 'big',
 	}" :disabled="disabled" @click="onClick">
 		<slot v-if="type !== 'trash'" />
-		<span v-if="type === 'trash'" class="icon button--trash-icon">
-			<i-ri-delete-bin-line class="icon--line" />
-			<i-ri-delete-bin-fill class="icon--fill" />
+		<span v-if="type === 'trash'" class="button--trash-icon">
+			<span class="icon i-ri-delete-bin-line icon--line" />
+			<span class="icon i-ri-delete-bin-fill icon--fill" />
 		</span>
 		<span v-if="$slots.badge" class="button--badge">
 			<slot name="badge" />
@@ -186,7 +186,10 @@
 .button--trash {
 	@apply bg-transparent rounded relative;
 	@apply py-0 px-2;
-	@apply text-error;
+	span.icon {
+		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+	}
 	border: 0 !important;
 	padding: 0.2em !important;
 	width: 1.6em;
@@ -197,7 +200,11 @@
 	}
 
 	&:hover {
-		@apply bg-error text-white;
+		@apply bg-error;
+		span.icon {
+			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		}
 
 		.icon--line {
 			@apply hidden;
@@ -210,7 +217,11 @@
 
 	&:focus {
 		@apply bg-error;
-		@apply text-white;
+		/* @apply icon-white; */
+		span.icon {
+	-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+	filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		}
 	}
 
 	&:focus-visible {
@@ -268,6 +279,10 @@
 		@apply bg-black/25 border-black/50 text-black dark:bg-white/25 dark:border-white/50 dark:text-white;
 		@apply opacity-25;
 		@apply cursor-not-allowed pointer-events-none;
+		span.icon {
+			-webkit-filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
+			filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
+		}
 	}
 }
 

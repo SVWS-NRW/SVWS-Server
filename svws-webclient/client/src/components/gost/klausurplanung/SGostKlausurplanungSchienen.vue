@@ -111,15 +111,15 @@
 			<template #title>
 				<span class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="klausurKonflikte().size() > 0">
-						<span class="icon i-ri-alert-fill text-error -my-0.5" />
+						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
 						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
 					</template>
 					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
-						<span class="icon i-ri-alert-fill text-error -my-0.5" />
+						<span class="icon i-ri-alert-fill icon-error -my-0.5" />
 						<span> Konflikte</span>
 					</template>
 					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
-						<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
+						<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else>

@@ -48,7 +48,7 @@
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
-				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -mt-1" /> eine neue erstellen.</span>
+				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <span class="icon i-ri-add-line inline-block text-button -my-0.5" /> eine neue erstellen.</span>
 			</template>
 			<template v-else>
 				<div class="flex flex-col gap-4">
@@ -68,11 +68,7 @@
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-chat1-line" v-if="value.name === 'Ja'" />
-									<template v-else>
-										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
-										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
-									</template>
+									<span class="icon i-ri-chat-1-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>
@@ -80,11 +76,7 @@
 							<label class="sr-only" for="rbgAudioNotwendig">Audio notwendig: </label>
 							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-headphone-line" v-if="value.name === 'Ja'" />
-									<template v-else>
-										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
-										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
-									</template>
+									<span class="icon i-ri-headphone-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>
@@ -92,11 +84,7 @@
 							<label class="sr-only" for="rbgVideoNotwendig">Video notwendig: </label>
 							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<span class="icon i-ri-vidicon-line" v-if="value.name === 'Ja'" />
-									<template v-else>
-										<span class="icon i-ri-checkbox-blank-circle-line radio--indicator-icon--blank" />
-										<span class="icon i-ri-checkbox-circle-line radio--indicator-icon--checked" />
-									</template>
+									<span class="icon i-ri-vidicon-line inline-block -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
 						</div>
