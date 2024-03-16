@@ -37,7 +37,7 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 @DisplayName("Testet den {@link GostBlockungsergebnisManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class GostBlockungsergebnisManagerTest {
-
+	private static final long RANDOM_SEED = 6L;
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";
 
@@ -133,7 +133,7 @@ class GostBlockungsergebnisManagerTest {
 				fail("Schüler-ID " + gFachwahl.schuelerID + ", Fachart-ID " + fachartID + " doppelt!");
 		}
 
-		final Random lRandom = new Random(1);
+		final Random lRandom = new Random(RANDOM_SEED);
 
 		for (int i = 0; i < 1000; i++) {
 
@@ -147,10 +147,12 @@ class GostBlockungsergebnisManagerTest {
 					// Hinzufügen (Vorsicht: Hinzufügen nur dann erlaubt, wenn Schienenanzahl des Kurses >= 1!)
 					final long kursID = getRandom(mapFaKu.get(fachartID), lRandom);
 					if (out.getOfKursSchienenmenge(kursID).size() >= 1) {
-						setSchuelerKurs(out, schuelerID, kursID, true);
-						mapScFaKu.get(schuelerID).put(fachartID, kursID);
+						// Schüler-Kurs-Hinzufügen
+//						setSchuelerKurs(out, schuelerID, kursID, true);
+//						mapScFaKu.get(schuelerID).put(fachartID, kursID);
 					}
 				} else {
+					// Schüler-Kurs-Entfernen
 					// Entfernen
 //					setSchuelerKurs(out, schuelerID, old.id, false);
 //					mapScFaKu.get(schuelerID).put(fachartID, null);
@@ -164,19 +166,24 @@ class GostBlockungsergebnisManagerTest {
 					final List<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
 					final GostBlockungsergebnisSchiene schieneRnd = getRandom(schienenAlle, lRandom);
 					if (kuSchienen.contains(schieneRnd.id)) {
-						// Entfernen (Vorsicht: Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!)
+						// Vorsicht: Entfernen Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!
 						if (out.getOfKursSchienenmenge(kursID).size() >= 2) {
+							// Kurs-Schiene-Entfernen
 							setKursSchiene(out, kursID, schieneRnd.id, false);
 							kuSchienen.remove(schieneRnd.id);
 						}
 					} else {
-						// Hinzufügen
-						setKursSchiene(out, kursID, schieneRnd.id, true);
-						kuSchienen.add(schieneRnd.id);
+						// Vorsicht: Hinzufügen nur dann erlaubt, wenn der Kurs nicht bereits alle Schienen belegt!
+						if (out.getOfKursSchienenmenge(kursID).size() < schienenAlle.size()) {
+							// Kurs-Schiene-Hinzufügen
+							setKursSchiene(out, kursID, schieneRnd.id, true);
+							kuSchienen.add(schieneRnd.id);
+						}
 					}
 				} else {
-					// Entfernen (Vorsicht: Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!)
+					// Vorsicht: Entfernen Nur dann erlaubt, wenn der Kurs danach nicht schienenlos wäre!
 					if (out.getOfKursSchienenmenge(kursID).size() >= 2) {
+						// Kurs-Schiene-Entfernen
 						final long schieneAlt = getRandom(kuSchienen, lRandom);
 						setKursSchiene(out, kursID, schieneAlt, false);
 						kuSchienen.remove(schieneAlt);

@@ -281,7 +281,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
 		if (kurs === null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
-		return this.toStringFachSimple(kurs.fach_id)! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
+		return "(" + kurs.id + ") " + this.toStringFachSimple(kurs.fach_id)! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
 	}
 
 	/**
@@ -309,6 +309,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
 	 */
 	public toStringFachartSimple(idFach : number, kursart : number) : string {
+		return this.toStringFachSimple(idFach)! + "-" + this.toStringKursartSimple(kursart)!;
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 *
+	 * @param idFachart  Die Fachart (zusammengesetzt aus Fach und Kursart)
+	 *
+	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 */
+	public toStringFachartSimpleByFachartID(idFachart : number) : string {
+		const idFach : number = GostKursart.getFachID(idFachart);
+		const kursart : number = GostKursart.getKursartID(idFachart);
 		return this.toStringFachSimple(idFach)! + "-" + this.toStringKursartSimple(kursart)!;
 	}
 

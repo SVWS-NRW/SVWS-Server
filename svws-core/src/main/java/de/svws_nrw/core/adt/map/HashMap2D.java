@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 
  * @param <K1> Der Typ des 1. Schlüsselwertes des Paares(key1, key2).
  * @param <K2> Der Typ des 2. Schlüsselwertes des Paares(key1, key2).
- * @param <V> Der Typ des zugeordneten Wertes.
+ * @param <V>  Der Typ des zugeordneten Wertes.
  */
 public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 

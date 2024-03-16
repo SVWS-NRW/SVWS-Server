@@ -222,7 +222,7 @@ public class GostBlockungsdatenManager {
 		if (kurs == null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
 
-		return toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
+		return "(" + kurs.id + ") " + toStringFachSimple(kurs.fach_id) + "-" + toStringKursartSimple(kurs.kursart) + kurs.nummer + (kurs.suffix.isEmpty() ? "" : "-") + kurs.suffix;
 	}
 
 	/**
@@ -250,6 +250,19 @@ public class GostBlockungsdatenManager {
 	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
 	 */
 	public @NotNull String toStringFachartSimple(final long idFach, final int kursart) {
+		return toStringFachSimple(idFach) + "-" + toStringKursartSimple(kursart);
+	}
+
+	/**
+	 * Liefert eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 *
+	 * @param idFachart  Die Fachart (zusammengesetzt aus Fach und Kursart)
+	 *
+	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
+	 */
+	public @NotNull String toStringFachartSimpleByFachartID(final long idFachart) {
+		final long idFach = GostKursart.getFachID(idFachart);
+		final int kursart = GostKursart.getKursartID(idFachart);
 		return toStringFachSimple(idFach) + "-" + toStringKursartSimple(kursart);
 	}
 

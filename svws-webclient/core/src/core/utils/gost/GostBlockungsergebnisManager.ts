@@ -190,9 +190,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _schuelerID_to_kollisionen : JavaMap<number, number> = new HashMap();
 
 	/**
-	 * (Schüler-ID, Fach-ID) --> GostBlockungsergebnisKurs = Die aktuelle Wahl des Schülers in dem Fach.
+	 * Map von Schüler-ID nach Map von Fach-ID nach {@link GostBlockungsergebnisKurs} (Die zugeordnete Wahl des Schülers in dem Fach, auch NULL möglich).
 	 */
-	private readonly _map2D_schuelerID_fachID_kurs : HashMap2D<number, number, GostBlockungsergebnisKurs | null> = new HashMap2D();
+	private readonly _schuelerID_fachID_to_kurs_or_null : HashMap2D<number, number, GostBlockungsergebnisKurs | null> = new HashMap2D();
 
 	/**
 	 * Regeltyp --> Liste aller Regelverletzungen.
@@ -292,17 +292,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateClear(pOld : GostBlockungsergebnis, pGostBlockungsergebnisID : number) : void {
-		this._map2D_schuelerID_fachID_kurs.clear();
-		this._regelverletzungen_der_faecherparallelitaet = "";
-		this._regelverletzungen_der_wahlkonflikte = "";
+		const t1 : number = System.currentTimeMillis();
 		this._ergebnis = new GostBlockungsergebnis();
 		this._ergebnis.id = pGostBlockungsergebnisID;
 		this._ergebnis.blockungID = this._parent.getID();
 		this._ergebnis.name = pOld.name;
 		this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
 		this._ergebnis.istAktiv = pOld.istAktiv;
-		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = this._parent.daten().fachwahlen.size();
-		const t1 : number = System.currentTimeMillis();
 		this._fehlermeldungen.clear();
 		this.update_0_schienenIDset_schienenNRset();
 		this.update_0_kursIDset();
@@ -325,17 +321,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.update_2_schuelerID_schienenID_to_kurseSet();
 		this.update_2_schienenID_fachartID_to_kurseList();
 		this.update_3_schuelerID_to_kollisionen();
+		this.update_3_schuelerID_fachID_to_kurs_or_null();
 		if (!this._fehlermeldungen.isEmpty()) {
 			console.log(JSON.stringify("Es sind Fehler aufgetreten: "));
 			for (const meldung of this._fehlermeldungen)
 				console.log(JSON.stringify("    " + meldung!));
 		}
-		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
 		for (const idKurs of this._kursID_to_schienenSet.keySet()) {
 			const sizeSoll : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs).anzahlSchienen;
 			const sizeIst : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs).size();
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
+		}
+		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = 0;
+		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
+			for (const idFach of this._schuelerID_fachID_to_kurs_or_null.getKeySetOf(idSchueler))
+				if (this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler, idFach) === null)
+					this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
+		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			const idSchueler : number = regel.parameter.get(0).valueOf();
+			for (const gFachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler))
+				if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) === null)
+					this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
+		}
+		this._ergebnis.bewertung.anzahlSchuelerKollisionen = 0;
+		for (const idSchueler of this._schuelerID_to_kollisionen.keySet()) {
+			const kollisionen : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kollisionen, idSchueler).valueOf();
+			this._ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
@@ -344,11 +356,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
 			this._ergebnis.bewertung.kursdifferenzMax = Math.max(this._ergebnis.bewertung.kursdifferenzMax, newKD);
 		}
-		this._ergebnis.bewertung.anzahlSchuelerKollisionen = 0;
-		for (const idSchueler of this._schuelerID_to_kollisionen.keySet()) {
-			const kollisionen : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kollisionen, idSchueler).valueOf();
-			this._ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
-		}
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
 		for (const idSchiene of this._schienenIDset)
 			for (const idFachart of this._fachartID_to_kurseList.keySet()) {
@@ -356,27 +363,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (gleicheKurseInSchiene >= 2)
 					this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
+		for (const idKurs of this._kursID_to_schuelerIDSet.keySet()) {
+			const eKurs : GostBlockungsergebnisKurs = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs);
+			for (const idSchueler of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs))
+				eKurs.schueler.add(idSchueler);
+			for (const eSchiene of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs)) {
+				eKurs.schienen.add(eSchiene.id);
+				eSchiene.kurse.add(eKurs);
+			}
+		}
+		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
+		this.stateRegelvalidierung();
 		const t2 : number = System.currentTimeMillis();
 		if (t2 - t1 > 10) {
 			console.log(JSON.stringify("Update Time = " + (t2 - t1)));
 		}
-		for (const gFachwahl of this._parent.daten().fachwahlen)
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._map2D_schuelerID_fachID_kurs, gFachwahl.schuelerID, gFachwahl.fachID, null);
-		const kursBearbeitet : HashSet<number> | null = new HashSet();
-		for (const schieneOld of pOld.schienen)
-			for (const kursOld of schieneOld.kurse) {
-				this.stateKursSchieneHinzufuegenOhneRegelvalidierung(kursOld.id, schieneOld.id);
-				if (kursBearbeitet.add(kursOld.id))
-					for (const schuelerID of kursOld.schueler)
-						this.stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID!, kursOld.id);
-			}
-		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
-			const idSchueler : number = regel.parameter.get(0).valueOf();
-			for (const gFachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler))
-				if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) === null)
-					this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
-		}
-		this.stateRegelvalidierung();
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
@@ -662,6 +663,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
+	private update_3_schuelerID_fachID_to_kurs_or_null() : void {
+		this._schuelerID_fachID_to_kurs_or_null.clear();
+		for (const idSchueler of this._schuelerID_to_kurseSet.keySet())
+			for (const eKurs of DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kurseSet, idSchueler))
+				this._schuelerID_fachID_to_kurs_or_null.put(idSchueler, eKurs.fachID, eKurs);
+		for (const gFachwahl of this._parent.daten().fachwahlen)
+			if (!this._schuelerID_fachID_to_kurs_or_null.contains(gFachwahl.schuelerID, gFachwahl.fachID))
+				this._schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
+	}
+
 	private stateRegelvalidierung() : void {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
@@ -716,8 +727,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const sb : StringBuilder = new StringBuilder();
 		let wahlkonflikte : number = 0;
 		let wahlkonflikte_ignored : number = 0;
-		for (const idSchueler of this._map2D_schuelerID_fachID_kurs.getKeySet())
-			for (const e of this._map2D_schuelerID_fachID_kurs.getSubMapOrException(idSchueler).entrySet())
+		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
+			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet())
 				if (e.getValue() === null) {
 					if (wahlkonflikte < 10) {
 						const idFach : number = e.getKey().valueOf();
@@ -977,6 +988,62 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt den Schüler dem Kurs hinzu und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
+	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
+		const eKurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		eKurs.schueler.add(idSchueler);
+	}
+
+	/**
+	 * Entfernt den Schüler aus dem Kurs und revalidiert nicht den Zustand. <br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
+	 *          Zuordnung aller ungültigen Wahlen gelöscht.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 */
+	private stateSchuelerKursEntfernenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
+		const eKurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		eKurs.schueler.remove(idSchueler);
+	}
+
+	/**
+	 * Fügt den Kurs der Schiene hinzu und revalidiert nicht den Zustand.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 */
+	private stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
+		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
+		kurs.schienen.add(idSchiene);
+		schiene.kurse.add(kurs);
+	}
+
+	/**
+	 * Entfernt den Kurs aus der Schiene.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene Die Datenbank-ID der Schiene.
+	 */
+	private stateKursSchieneEntfernenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
+		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
+		schiene.kurse.remove(kurs);
+		for (let i : number = kurs.schienen.size() - 1; i >= 0; i--)
+			if (kurs.schienen.get(i) === schiene.id) {
+				kurs.schienen.remove(i);
+				return;
+			}
+	}
+
+	/**
 	 * Fügt den Schüler dem Kurs hinzu.<br>
 	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
 	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
@@ -987,26 +1054,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateSchuelerKursHinzufuegen(idSchueler : number, idKurs : number) : void {
 		this.stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
 		this.stateRegelvalidierung();
-	}
-
-	/**
-	 * Fügt den Schüler dem Kurs hinzu und revalidiert nicht den Zustand. <br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
-	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const fachID : number = kurs.fachID;
-		if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) !== null)
-			return;
-		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
-		kurs.schueler.add(idSchueler);
-		schuelerIDsOfKurs.add(idSchueler);
-		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
-		this._map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, kurs);
 	}
 
 	/**
@@ -1023,26 +1070,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt den Schüler aus dem Kurs und revalidiert nicht den Zustand. <br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
-	 *          Zuordnung aller ungültigen Wahlen gelöscht.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private stateSchuelerKursEntfernenOhneRevalidierung(idSchueler : number, idKurs : number) : void {
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const fachID : number = kurs.fachID;
-		if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) as unknown !== kurs as unknown)
-			return;
-		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
-		kurs.schueler.remove(idSchueler);
-		schuelerIDsOfKurs.remove(idSchueler);
-		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
-		this._map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, null);
-	}
-
-	/**
 	 * Fügt den Kurs der Schiene hinzu.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
@@ -1051,43 +1078,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : void {
 		this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
 		this.stateRegelvalidierung();
-	}
-
-	/**
-	 * Fügt den Kurs der Schiene hinzu und revalidiert nicht den Zustand.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene  Die Datenbank-ID der Schiene.
-	 */
-	private stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		DeveloperNotificationException.ifListAddsDuplicate("kurs.schienen", kurs.schienen, schiene.id);
-		DeveloperNotificationException.ifListAddsDuplicate("schiene.kurse", schiene.kurse, kurs);
-	}
-
-	/**
-	 * Entfernt den Kurs aus der Schiene.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene Die Datenbank-ID der Schiene.
-	 */
-	private stateKursSchieneEntfernen(idKurs : number, idSchiene : number) : void {
-		this.stateKursSchieneEntfernenOhneRegelvalidierung(idKurs, idSchiene);
-		this.stateRegelvalidierung();
-	}
-
-	/**
-	 * Entfernt den Kurs aus der Schiene.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene Die Datenbank-ID der Schiene.
-	 */
-	private stateKursSchieneEntfernenOhneRegelvalidierung(idKurs : number, idSchiene : number) : void {
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		DeveloperNotificationException.ifListRemoveFailes("kurs.schienen", kurs.schienen, schiene.id);
-		DeveloperNotificationException.ifListRemoveFailes("schiene.kurse", schiene.kurse, kurs);
 	}
 
 	/**
@@ -1853,7 +1843,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerHatNichtwahl(idSchueler : number) : boolean {
 		const nIst : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kurseSet, idSchueler).size();
-		const nSoll : number = this._map2D_schuelerID_fachID_kurs.getSubMapSizeOrZero(idSchueler);
+		const nSoll : number = this._schuelerID_fachID_to_kurs_or_null.getSubMapSizeOrZero(idSchueler);
 		return nIst < nSoll;
 	}
 
@@ -2026,7 +2016,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return den zu (idSchueler, idFach) passenden Kurs oder NULL.
 	 */
 	public getOfSchuelerOfFachZugeordneterKurs(idSchueler : number, idFach : number) : GostBlockungsergebnisKurs | null {
-		return this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach);
+		return this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler, idFach);
 	}
 
 	/**
@@ -2390,8 +2380,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls beide Schüler im bezogen auf das Fach gemeinsam im selben Kurs sind.
 	 */
 	public getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1 : number, idSchueler2 : number, idFach : number) : boolean {
-		const kurs1 : GostBlockungsergebnisKurs | null = this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler1, idFach);
-		const kurs2 : GostBlockungsergebnisKurs | null = this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler2, idFach);
+		const kurs1 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler1, idFach);
+		const kurs2 : GostBlockungsergebnisKurs | null = this._schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler2, idFach);
 		return (kurs1 === null) || (kurs2 === null) ? false : kurs1.id === kurs2.id;
 	}
 
@@ -4914,62 +4904,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Verknüpft einen Kurs mit einer Schiene oder hebt die Verknüpfung auf.
-	 *
-	 * @deprecated  Diese Methode muss in Zukunft über Kurs-Schienen-Updates erfolgen.
-	 *
-	 * @param  idKurs                    Die Datenbank-ID des Kurses.
-	 * @param  idSchiene                 Die Datenbank-ID der Schiene.
-	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
-	 *
-	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
-	 */
-	public setKursSchiene(idKurs : number, idSchiene : number, hinzufuegenOderEntfernen : boolean) : void {
-		if (hinzufuegenOderEntfernen)
-			this.stateKursSchieneHinzufuegen(idKurs, idSchiene);
-		else
-			this.stateKursSchieneEntfernen(idKurs, idSchiene);
-	}
-
-	/**
-	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
-	 *
-	 * @deprecated  Die Kurszuordnungen sollen über Update-Objekte erfolgen.
-	 *
-	 * @param  idSchueler                Die Datenbank-ID des Schülers.
-	 * @param  idKurs                    Die Datenbank-ID des Kurses.
-	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
-	 *
-	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
-	 */
-	public setSchuelerKurs(idSchueler : number, idKurs : number, hinzufuegenOderEntfernen : boolean) : void {
-		if (hinzufuegenOderEntfernen)
-			this.stateSchuelerKursHinzufuegen(idSchueler, idKurs);
-		else
-			this.stateSchuelerKursEntfernen(idSchueler, idKurs);
-	}
-
-	/**
-	 * Geht die übergebene Fach-Zuordnungen (Fach --> Kurs) eines Schülers durch und
-	 * setzt aktualisiert Veränderung die Kurs-Schüler-Zuordnung.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param zuordnung   Die gewünschte Zuordnung.
-	 */
-	public setSchuelerNeuzuordnung(idSchueler : number, zuordnung : SchuelerblockungOutput) : void {
-		for (const z of zuordnung.fachwahlenZuKurs) {
-			const kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
-			const kursN : GostBlockungsergebnisKurs | null = z.kursID < 0 ? null : this.getKursE(z.kursID);
-			if (kursV as unknown !== kursN as unknown) {
-				if (kursV !== null)
-					this.setSchuelerKurs(idSchueler, kursV.id, false);
-				if (kursN !== null)
-					this.setSchuelerKurs(idSchueler, kursN.id, true);
-			}
-		}
-	}
-
-	/**
 	 * Fügt die übergebene Schiene hinzu.
 	 *
 	 * @param  idSchiene  Die Datenbank-ID der Schiene.
@@ -5201,25 +5135,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.stateRevalidateEverything();
 	}
 
-	/**
-	 * Eine Logger-Ausgabe für Debug-Zwecke.
-	 *
-	 * @param logger Ein Logger für Debug-Zwecke.
-	 */
-	public debug(logger : Logger) : void {
-		logger.modifyIndent(+4);
-		logger.logLn("----- Kurse sortiert nach Fachart -----");
-		for (const fachartID of this._fachartID_to_kurseList.keySet()) {
-			logger.logLn("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
-			for (const kurs of this.getOfFachartKursmenge(fachartID!)) {
-				logger.logLn("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS");
-			}
-		}
-		logger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
-		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
-		logger.modifyIndent(-4);
-	}
-
 	private createComparatorFachartKursartFach() : Comparator<number> {
 		const comp : Comparator<number> = { compare : (a: number, b: number) => {
 			const aKursartID : number = GostKursart.getKursartID(a!);
@@ -5291,6 +5206,47 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return JavaInteger.compare(aKurs.nummer, bKurs.nummer);
 		} };
 		return comp;
+	}
+
+	/**
+	 * Eine Logger-Ausgabe für Debug-Zwecke.
+	 *
+	 * @param logger Ein Logger für Debug-Zwecke.
+	 */
+	public debug(logger : Logger) : void {
+		logger.modifyIndent(+4);
+		logger.logLn("----- Kurse sortiert nach Fachart -----");
+		for (const fachartID of this._fachartID_to_kurseList.keySet()) {
+			logger.logLn("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
+			for (const kurs of this.getOfFachartKursmenge(fachartID!)) {
+				logger.logLn("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS");
+			}
+		}
+		logger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
+		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
+		logger.modifyIndent(-4);
+	}
+
+	/**
+	 * Liefert einen String, der alle Schienen-Fachart-Kurs-Zuordnungen zeigt.
+	 *
+	 * @return einen String, der alle Schienen-Fachart-Kurs-Zuordnungen zeigt.
+	 */
+	public debugKursSchienenZuordnungen() : string {
+		const sb : StringBuilder = new StringBuilder();
+		sb.append("\n\nSchienen-Fachart-Kurs-Zuordnungen");
+		for (const idSchiene of this._schienenIDset) {
+			sb.append("Schiene " + this._parent.toStringSchieneSimple(idSchiene)! + "\n");
+			for (const idFachart of this._schienenID_fachartID_to_kurseList.getKeySetOf(idSchiene)) {
+				if (!Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart).isEmpty()) {
+					sb.append("    Fachart " + this._parent.toStringFachartSimpleByFachartID(idFachart)! + "\n");
+					for (const eKurs of Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart)) {
+						sb.append("        Kurs " + this._parent.toStringKursSimple(eKurs.id)! + "\n");
+					}
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	transpilerCanonicalName(): string {
