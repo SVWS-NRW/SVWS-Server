@@ -21,7 +21,7 @@
 		"checkJs": true,
 		"newLine": "lf",
 		"rootDir": ".",
-		"types": ["unplugin-icons/types/vue", "vite/client"]
+		"types": ["vite/client"]
 	},
 	"exclude": [
 		".eslintrc.cjs",

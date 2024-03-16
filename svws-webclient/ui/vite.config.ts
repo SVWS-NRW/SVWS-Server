@@ -1,7 +1,5 @@
 import { defineConfig, searchForWorkspaceRoot } from "vite";
 import { resolve } from "path";
-import Icons from "unplugin-icons/vite";
-import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
@@ -90,9 +88,7 @@ export default defineConfig({
 		Vue(),
 		Components({
 			globs: ["src/components/**/!(*story.vue)*.vue"],
-			resolvers: [IconsResolver()]
 		}),
-		Icons(),
 	],
 	// resolve: {
 	// 	// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,

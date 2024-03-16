@@ -1,7 +1,5 @@
 import { defineConfig } from "vitest/config";
 import Vue from "@vitejs/plugin-vue";
-import Icons from "unplugin-icons/vite";
-import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
@@ -16,7 +14,6 @@ export default defineConfig({
 		}),
 		Markdown({}),
 		Components({
-			resolvers: [IconsResolver()],
 			dirs: [
 				'src/components',
 				resolve(__dirname, '../ui/src/components'),
@@ -25,7 +22,6 @@ export default defineConfig({
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		}),
-		Icons(),
 	],
 	resolve: {
 		alias: {
