@@ -415,15 +415,35 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return cmp1;
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(a.typ);
 			let cmp2 : number;
-			const _seexpr_679278452 = (typ);
-			if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH) {
-				cmp2 = this.compareRegel_11_or_12(a, b);
-			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH) {
-				cmp2 = this.compareRegel_11_or_12(a, b);
-			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER) {
-				cmp2 = this.compareRegel_13_or_14(a, b);
-			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER) {
-				cmp2 = this.compareRegel_13_or_14(a, b);
+			const _seexpr_2075240461 = (typ);
+			if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE) {
+				cmp2 = this.compareRegel_Kurs_Nummer(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE) {
+				cmp2 = this.compareRegel_Kurs_Nummer(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS) {
+				cmp2 = this.compareRegel_Schueler_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS) {
+				cmp2 = this.compareRegel_Schueler_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS) {
+				cmp2 = this.compareRegel_Kurs_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS) {
+				cmp2 = this.compareRegel_Kurs_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN) {
+				cmp2 = this.compareRegel_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL) {
+				cmp2 = this.compareRegel_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN) {
+				cmp2 = this.compareRegel_Kurs(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH) {
+				cmp2 = this.compareRegel_Schueler_Schueler_Fach(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH) {
+				cmp2 = this.compareRegel_Schueler_Schueler_Fach(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER) {
+				cmp2 = this.compareRegel_Schueler_Schueler(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER) {
+				cmp2 = this.compareRegel_Schueler_Schueler(a, b);
+			} else if (_seexpr_2075240461 === GostKursblockungRegelTyp.SCHUELER_IGNORIEREN) {
+				cmp2 = this.compareRegel_Schueler(a, b);
 			} else {
 				cmp2 = 0;
 			}
@@ -486,7 +506,51 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private compareRegel_11_or_12(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+	private compareRegel_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpKurs1 !== 0)
+			return cmpKurs1;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareRegel_Kurs_Nummer(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpKurs1 !== 0)
+			return cmpKurs1;
+		const cmpSchienenNr : number = JavaLong.compare(a.parameter.get(1)!, b.parameter.get(1)!);
+		if (cmpSchienenNr !== 0)
+			return cmpSchienenNr;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareRegel_Schueler(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpSchueler1 !== 0)
+			return cmpSchueler1;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareRegel_Schueler_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpSchueler1 !== 0)
+			return cmpSchueler1;
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1)!, b.parameter.get(1)!);
+		if (cmpKurs1 !== 0)
+			return cmpKurs1;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareRegel_Kurs_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpKurs1 !== 0)
+			return cmpKurs1;
+		const cmpKurs2 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1)!, b.parameter.get(1)!);
+		if (cmpKurs2 !== 0)
+			return cmpKurs2;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareRegel_Schueler_Schueler_Fach(a : GostBlockungRegel, b : GostBlockungRegel) : number {
 		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
@@ -496,17 +560,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const cmpFach : number = this.compareFach(a.parameter.get(2)!, b.parameter.get(2)!);
 		if (cmpFach !== 0)
 			return cmpFach;
-		return 0;
+		return JavaLong.compare(a.id, b.id);
 	}
 
-	private compareRegel_13_or_14(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+	private compareRegel_Schueler_Schueler(a : GostBlockungRegel, b : GostBlockungRegel) : number {
 		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
 		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1)!, b.parameter.get(1)!);
 		if (cmpSchueler2 !== 0)
 			return cmpSchueler2;
-		return 0;
+		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareSchueler(idSchueler1 : number, idSchueler2 : number) : number {
@@ -531,6 +595,25 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (aFach === null)
 			return (bFach === null) ? 0 : -1;
 		return (bFach === null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
+	}
+
+	private compareKurs_Kursart_Fach_Nummer(idKurs1 : number, idKurs2 : number) : number {
+		const aKurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs1);
+		const bKurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs2);
+		if (aKurs === null)
+			return (bKurs === null) ? 0 : -1;
+		if (bKurs === null)
+			return +1;
+		const cmpKursart : number = JavaLong.compare(aKurs.kursart, bKurs.kursart);
+		if (cmpKursart !== 0)
+			return cmpKursart;
+		const cmpFach : number = this.compareFach(aKurs.fach_id, bKurs.fach_id);
+		if (cmpFach !== 0)
+			return cmpFach;
+		const cmpNummer : number = JavaLong.compare(aKurs.fach_id, bKurs.fach_id);
+		if (cmpNummer !== 0)
+			return cmpNummer;
+		return JavaLong.compare(aKurs.id, bKurs.id);
 	}
 
 	/**

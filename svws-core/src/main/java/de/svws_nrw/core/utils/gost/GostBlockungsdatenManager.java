@@ -363,10 +363,21 @@ public class GostBlockungsdatenManager {
 
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(a.typ);
 			final int cmp2 = switch (typ) {
-				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH -> compareRegel_11_or_12(a, b);
-				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH -> compareRegel_11_or_12(a, b);
-				case SCHUELER_ZUSAMMEN_MIT_SCHUELER -> compareRegel_13_or_14(a, b);
-				case SCHUELER_VERBIETEN_MIT_SCHUELER -> compareRegel_13_or_14(a, b);
+				case KURS_FIXIERE_IN_SCHIENE -> compareRegel_Kurs_Nummer(a, b);
+				case KURS_SPERRE_IN_SCHIENE -> compareRegel_Kurs_Nummer(a, b);
+				case SCHUELER_FIXIEREN_IN_KURS -> compareRegel_Schueler_Kurs(a, b);
+				case SCHUELER_VERBIETEN_IN_KURS -> compareRegel_Schueler_Kurs(a, b);
+				case KURS_VERBIETEN_MIT_KURS -> compareRegel_Kurs_Kurs(a, b);
+				case KURS_ZUSAMMEN_MIT_KURS -> compareRegel_Kurs_Kurs(a, b);
+				case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> compareRegel_Kurs(a, b);
+				case KURS_MAXIMALE_SCHUELERANZAHL -> compareRegel_Kurs(a, b);
+				case KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN -> compareRegel_Kurs(a, b);
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH -> compareRegel_Schueler_Schueler_Fach(a, b);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH -> compareRegel_Schueler_Schueler_Fach(a, b);
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER -> compareRegel_Schueler_Schueler(a, b);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER -> compareRegel_Schueler_Schueler(a, b);
+				case SCHUELER_IGNORIEREN -> compareRegel_Schueler(a, b);
+
 				default -> 0;
 			};
 			if (cmp2 != 0)
@@ -374,46 +385,46 @@ public class GostBlockungsdatenManager {
 
 			return Long.compare(a.id, b.id);
 		};
+
 		return comp;
 	}
 
 	private @NotNull Comparator<@NotNull Schueler> createComparatorSchueler() {
 		final @NotNull Comparator<@NotNull Schueler> comp = (final @NotNull Schueler a, final @NotNull Schueler b) -> {
 			final int cmpSchueler = compareSchueler(a.id, b.id);
-			if (cmpSchueler != 0)
-				return cmpSchueler;
+			if (cmpSchueler != 0) return cmpSchueler;
 
 			return Long.compare(a.id, b.id);
 		};
+
 		return comp;
 	}
 
 	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
 		final @NotNull Comparator<@NotNull GostFachwahl> comp = (final @NotNull GostFachwahl a, final @NotNull GostFachwahl b) -> {
 			final int cmpSchueler = compareSchueler(a.schuelerID, b.schuelerID);
-			if (cmpSchueler != 0)
-				return cmpSchueler;
+			if (cmpSchueler != 0) return cmpSchueler;
 
 			final int cmpFach = compareFach(a.fachID, b.fachID);
-			if (cmpFach != 0)
-				return cmpFach;
+			if (cmpFach != 0) return cmpFach;
 
 			return Integer.compare(a.kursartID, b.kursartID);
 		};
+
 		return comp;
 	}
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursFachKursartNummer() {
 		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
 			final int cmpFach = compareFach(a.fach_id, b.fach_id);
-			if (cmpFach != 0)
-				return cmpFach;
+			if (cmpFach != 0) return cmpFach;
 
 			if (a.kursart < b.kursart) return -1;
 			if (a.kursart > b.kursart) return +1;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
+
 		return comp;
 	}
 
@@ -423,39 +434,79 @@ public class GostBlockungsdatenManager {
 			if (a.kursart > b.kursart) return +1;
 
 			final int cmpFach = compareFach(a.fach_id, b.fach_id);
-			if (cmpFach != 0)
-				return cmpFach;
+			if (cmpFach != 0) return cmpFach;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
+
 		return comp;
 	}
 
-	private int compareRegel_11_or_12(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
-		// SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH
-		// SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
-		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0)
-			return cmpSchueler1;
-		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 != 0)
-			return cmpSchueler2;
-		final int cmpFach = compareFach(a.parameter.get(2), b.parameter.get(2));
-		if (cmpFach != 0)
-			return cmpFach;
-		return 0;
+	private int compareRegel_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
+		if (cmpKurs1 != 0) return cmpKurs1;
+
+		return Long.compare(a.id, b.id);
 	}
 
-	private int compareRegel_13_or_14(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
-		// SCHUELER_ZUSAMMEN_MIT_SCHUELER
-		// SCHUELER_VERBIETEN_MIT_SCHUELER
+	private int compareRegel_Kurs_Nummer(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
+		if (cmpKurs1 != 0) return cmpKurs1;
+
+		final int cmpSchienenNr = Long.compare(a.parameter.get(1), b.parameter.get(1));
+		if (cmpSchienenNr != 0) return cmpSchienenNr;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareRegel_Schueler(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
 		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 != 0)
-			return cmpSchueler1;
+		if (cmpSchueler1 != 0) return cmpSchueler1;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareRegel_Schueler_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
+		if (cmpSchueler1 != 0) return cmpSchueler1;
+
+		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
+		if (cmpKurs1 != 0) return cmpKurs1;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareRegel_Kurs_Kurs(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpKurs1 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
+		if (cmpKurs1 != 0) return cmpKurs1;
+
+		final int cmpKurs2 = compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
+		if (cmpKurs2 != 0) return cmpKurs2;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareRegel_Schueler_Schueler_Fach(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
+		if (cmpSchueler1 != 0) return cmpSchueler1;
+
 		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 != 0)
-			return cmpSchueler2;
-		return 0;
+		if (cmpSchueler2 != 0) return cmpSchueler2;
+
+		final int cmpFach = compareFach(a.parameter.get(2), b.parameter.get(2));
+		if (cmpFach != 0) return cmpFach;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareRegel_Schueler_Schueler(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
+		if (cmpSchueler1 != 0) return cmpSchueler1;
+
+		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
+		if (cmpSchueler2 != 0) return cmpSchueler2;
+
+		return Long.compare(a.id, b.id);
 	}
 
 	private int compareSchueler(final long idSchueler1, final long idSchueler2) {
@@ -484,7 +535,32 @@ public class GostBlockungsdatenManager {
 		if (aFach == null)
 			return (bFach == null) ? 0 : -1;
 
-		return  (bFach == null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
+		return (bFach == null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
+	}
+
+	private int compareKurs_Kursart_Fach_Nummer(final long idKurs1, final long idKurs2) {
+		final GostBlockungKurs aKurs = _map_idKurs_kurs.get(idKurs1);
+		final GostBlockungKurs bKurs = _map_idKurs_kurs.get(idKurs2);
+
+		if (aKurs == null)
+			return (bKurs == null) ? 0 : -1;
+
+		if (bKurs == null)
+			return +1;
+
+		final int cmpKursart = Long.compare(aKurs.kursart, bKurs.kursart);
+		if (cmpKursart != 0)
+			return cmpKursart;
+
+		final int cmpFach = compareFach(aKurs.fach_id, bKurs.fach_id);
+		if (cmpFach != 0)
+			return cmpFach;
+
+		final int cmpNummer = Long.compare(aKurs.fach_id, bKurs.fach_id);
+		if (cmpNummer != 0)
+			return cmpNummer;
+
+		return Long.compare(aKurs.id, bKurs.id);
 	}
 
 	/**
