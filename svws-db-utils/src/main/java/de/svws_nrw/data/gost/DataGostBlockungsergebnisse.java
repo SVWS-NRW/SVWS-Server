@@ -269,7 +269,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Entfernt die Zwischenergebniss mit den angegebenen IDs aus der Datenbank.
+	 * Entfernt die Zwischenergebnis mit den angegebenen IDs aus der Datenbank.
 	 *
 	 * @param ids   die IDs der zu löschenden Blockungsergebnisse
 	 *
@@ -286,7 +286,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			if (idBlockung != ergebnis.Blockung_ID)
 				throw OperationError.BAD_REQUEST.exception("Die Ergebnisse gehören zu mehreren Blockungen");
 		// Entferne die Ergebnisse
-		conn.transactionPersistAll(ergebnisse);
+		conn.transactionRemoveAll(ergebnisse);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ids).build();
 	}
 
