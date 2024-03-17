@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
- * <br> {@link GostBlockungsergebnisManager#stateRegelvalidierung}: aktualisieren.                        --> DONE
+ * <br> {@link GostBlockungsergebnisManager#stateClearErgebnisBewertung1a}: aktualisieren.                --> DONE
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
  * <br> {@link GostBlockungsergebnisManager}: ggf. Methodenanpassungen                                    -->
  * <br>

@@ -51,14 +51,6 @@ public class GostBlockungsdatenManager {
 	/** Ein Comparator für Schienen der Blockung */
 	private static final @NotNull Comparator<@NotNull GostBlockungSchiene> _compSchiene = (final @NotNull GostBlockungSchiene a, final @NotNull GostBlockungSchiene b) -> Integer.compare(a.nummer, b.nummer);
 
-	/** Ein Comparator für Regeln der Blockung */
-	private static final @NotNull Comparator<@NotNull GostBlockungRegel> _compRegel = (final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) -> {
-		final int result = Integer.compare(a.typ, b.typ);
-		if (result != 0)
-			return result;
-		return Long.compare(a.id, b.id);
-	};
-
 	/** Ein Comparator für die Lehrkräfte eines Kurses */
 	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> _compLehrkraefte = (final @NotNull GostBlockungKursLehrer a, final @NotNull GostBlockungKursLehrer b) -> {
 		final int result = Integer.compare(a.reihenfolge, b.reihenfolge);
@@ -68,15 +60,7 @@ public class GostBlockungsdatenManager {
 	};
 
 	/** Ein Comparator für die Schüler. */
-	private static final @NotNull Comparator<@NotNull Schueler> _compSchueler = (final @NotNull Schueler a, final @NotNull Schueler b) -> {
-		final int cNachname = a.nachname.compareTo(b.nachname);
-		if (cNachname != 0) return cNachname;
-
-		final int cVorname = a.vorname.compareTo(b.vorname);
-		if (cVorname != 0) return cVorname;
-
-		return Long.compare(a.id, b.id);
-	};
+	private final @NotNull Comparator<@NotNull Schueler> _compSchueler;
 
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
@@ -89,6 +73,9 @@ public class GostBlockungsdatenManager {
 
 	/** Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER). */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_fach_kursart_kursnummer;
+
+	/** Ein Comparator für Regeln der Blockung */
+	private final @NotNull Comparator<@NotNull GostBlockungRegel> _compRegel;
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungKurs> _map_idKurs_kurs = new HashMap<>();
@@ -148,6 +135,8 @@ public class GostBlockungsdatenManager {
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 		_compFachwahlen = createComparatorFachwahlen();
+		_compRegel = createComparatorRegeln();
+		_compSchueler = createComparatorSchueler();
 	}
 
 	/** Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
@@ -160,6 +149,8 @@ public class GostBlockungsdatenManager {
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 		_compFachwahlen = createComparatorFachwahlen();
+		_compRegel = createComparatorRegeln();
+		_compSchueler = createComparatorSchueler();
 
 		// Tiefe Kopie (deep copy) der GostBlockungsdaten.
 		_daten = new GostBlockungsdaten();
@@ -170,12 +161,12 @@ public class GostBlockungsdatenManager {
 		_daten.istAktiv = daten.istAktiv;
 
 		// Kopieren und Mappings aufbauen.
-		schieneAddListe(daten.schienen); // Muss vor den Kursen erzeugt werden.
-		regelAddListe(daten.regeln);
+		schieneAddListe(daten.schienen); 		// Muss vor den Kursen erzeugt werden.
+		fachwahlAddListe(daten.fachwahlen); 	// Muss vor den Schülern erzeugt werden.
+		schuelerAddListe(daten.schueler); 		// Muss vor den Regeln erzeugt werden.
 		kursAddListe(daten.kurse);
-		schuelerAddListe(daten.schueler);
-		fachwahlAddListe(daten.fachwahlen);
 		ergebnisAddListe(daten.ergebnisse);
+		regelAddListe(daten.regeln);
 	}
 
 	/**
@@ -363,12 +354,60 @@ public class GostBlockungsdatenManager {
 		return "[Regel (" + regel.id + ", Nr. " + regel.typ + "): " + regel.parameter + "]";
 	}
 
+	private @NotNull Comparator<@NotNull GostBlockungRegel> createComparatorRegeln() {
+		final @NotNull Comparator<@NotNull GostBlockungRegel> comp = (final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) -> {
+			// 1. Kriterium Typ
+			final int cmp1 = Integer.compare(a.typ, b.typ);
+			if (cmp1 != 0)
+				return cmp1;
+
+			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(a.typ);
+			final int cmp2 = switch (typ) {
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH -> compareRegel_11_or_12(a, b);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH -> compareRegel_11_or_12(a, b);
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER -> compareRegel_13_or_14(a, b);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER -> compareRegel_13_or_14(a, b);
+				default -> 0;
+			};
+			if (cmp2 != 0)
+				return cmp2;
+
+			return Long.compare(a.id, b.id);
+		};
+		return comp;
+	}
+
+	private @NotNull Comparator<@NotNull Schueler> createComparatorSchueler() {
+		final @NotNull Comparator<@NotNull Schueler> comp = (final @NotNull Schueler a, final @NotNull Schueler b) -> {
+			final int cmpSchueler = compareSchueler(a.id, b.id);
+			if (cmpSchueler != 0)
+				return cmpSchueler;
+
+			return Long.compare(a.id, b.id);
+		};
+		return comp;
+	}
+
+	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
+		final @NotNull Comparator<@NotNull GostFachwahl> comp = (final @NotNull GostFachwahl a, final @NotNull GostFachwahl b) -> {
+			final int cmpSchueler = compareSchueler(a.schuelerID, b.schuelerID);
+			if (cmpSchueler != 0)
+				return cmpSchueler;
+
+			final int cmpFach = compareFach(a.fachID, b.fachID);
+			if (cmpFach != 0)
+				return cmpFach;
+
+			return Integer.compare(a.kursartID, b.kursartID);
+		};
+		return comp;
+	}
+
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursFachKursartNummer() {
 		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
-			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
-			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
-			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
-			if (cmpFach != 0) return cmpFach;
+			final int cmpFach = compareFach(a.fach_id, b.fach_id);
+			if (cmpFach != 0)
+				return cmpFach;
 
 			if (a.kursart < b.kursart) return -1;
 			if (a.kursart > b.kursart) return +1;
@@ -383,29 +422,69 @@ public class GostBlockungsdatenManager {
 			if (a.kursart < b.kursart) return -1;
 			if (a.kursart > b.kursart) return +1;
 
-			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
-			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
-			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
-			if (cmpFach != 0) return cmpFach;
+			final int cmpFach = compareFach(a.fach_id, b.fach_id);
+			if (cmpFach != 0)
+				return cmpFach;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
 		return comp;
 	}
 
-	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
-		final @NotNull Comparator<@NotNull GostFachwahl> comp = (final @NotNull GostFachwahl a, final @NotNull GostFachwahl b) -> {
-			if (a.schuelerID < b.schuelerID) return -1;
-			if (a.schuelerID > b.schuelerID) return +1;
+	private int compareRegel_11_or_12(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		// SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH
+		// SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
+		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
+		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
+		if (cmpSchueler2 != 0)
+			return cmpSchueler2;
+		final int cmpFach = compareFach(a.parameter.get(2), b.parameter.get(2));
+		if (cmpFach != 0)
+			return cmpFach;
+		return 0;
+	}
 
-			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fachID);
-			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fachID);
-			final int tmp = GostFaecherManager.comp.compare(aFach, bFach);
-			if (tmp != 0)
-				return tmp;
-			return Integer.compare(a.kursartID, b.kursartID);
-		};
-		return comp;
+	private int compareRegel_13_or_14(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) {
+		// SCHUELER_ZUSAMMEN_MIT_SCHUELER
+		// SCHUELER_VERBIETEN_MIT_SCHUELER
+		final int cmpSchueler1 = compareSchueler(a.parameter.get(0), b.parameter.get(0));
+		if (cmpSchueler1 != 0)
+			return cmpSchueler1;
+		final int cmpSchueler2 = compareSchueler(a.parameter.get(1), b.parameter.get(1));
+		if (cmpSchueler2 != 0)
+			return cmpSchueler2;
+		return 0;
+	}
+
+	private int compareSchueler(final long idSchueler1, final long idSchueler2) {
+		final Schueler a = _map_idSchueler_schueler.get(idSchueler1);
+		final Schueler b = _map_idSchueler_schueler.get(idSchueler2);
+
+		if (a == null)
+			return (b == null) ? 0 : -1;
+
+		if (b == null)
+			return +1;
+
+		final int cNachname = a.nachname.compareTo(b.nachname);
+		if (cNachname != 0) return cNachname;
+
+		final int cVorname = a.vorname.compareTo(b.vorname);
+		if (cVorname != 0) return cVorname;
+
+		return Long.compare(a.id, b.id);
+	}
+
+	private int compareFach(final long idFach1, final long idFach2) {
+		final GostFach aFach = _faecherManager.get(idFach1);
+		final GostFach bFach = _faecherManager.get(idFach2);
+
+		if (aFach == null)
+			return (bFach == null) ? 0 : -1;
+
+		return  (bFach == null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
 	}
 
 	/**
@@ -1947,9 +2026,8 @@ public class GostBlockungsdatenManager {
 			DeveloperNotificationException.ifInvalidID(schueler.id + "", schueler.id);
 
 		// hinzufügen
-		for (final @NotNull Schueler schueler : schuelermenge) {
+		for (final @NotNull Schueler schueler : schuelermenge)
 			schuelerAddOhneSortierung(schueler);
-		}
 
 		// sortieren
 		_daten.schueler.sort(_compSchueler);

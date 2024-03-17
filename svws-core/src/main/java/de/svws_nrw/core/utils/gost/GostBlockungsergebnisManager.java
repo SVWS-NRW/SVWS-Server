@@ -157,10 +157,10 @@ public class GostBlockungsergebnisManager {
 	// ############################################################################
 
 	/** Regeltyp --> Liste aller Regelverletzungen. */
-	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _map_regelID_verletzungen = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _regelTyp_to_verletzungenList = new HashMap<>();
 
 	/** Liste aller Regeltypen, die mindestens eine Regelverletzung haben. */
-	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _list_verletzte_regeltypen_sortiert = new ArrayList<>();
+	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _regeltypList_aller_verletzungen_sortiert = new ArrayList<>();
 
 	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität. */
 	private @NotNull String _regelverletzungen_der_faecherparallelitaet = "";
@@ -291,8 +291,6 @@ public class GostBlockungsergebnisManager {
 
 		// 4) "_ergebnis.bewertung" aktualisieren.
 		stateClearErgebnisBewertung();
-
-
 	}
 
 	private void stateClearErgebnisBewertung() {
@@ -714,64 +712,64 @@ public class GostBlockungsergebnisManager {
 		// Clear
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
-		_map_regelID_verletzungen.clear();
-		_list_verletzte_regeltypen_sortiert.clear();
+		_regelTyp_to_verletzungenList.clear();
+		_regeltypList_aller_verletzungen_sortiert.clear();
 		_regelverletzungen_der_wahlkonflikte = stateRegelvalidierungTooltip2();
 		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4();
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		// stateRegelvalidierung9 ist nicht nötig
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
-			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, _map_regelID_verletzungen);
+			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen, _regelTyp_to_verletzungenList);
 
 		// stateRegelvalidierung16 ist nicht nötig
 		// stateRegelvalidierung17 ist nicht nötig
 
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		// TODO BAR besser sortieren?
+		// TODO BAR besser sortieren? ... nein ist auch so linear.
 		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
 		for (final int regeltyp : regeltypSortierung)
-			if (_map_regelID_verletzungen.containsKey(regeltyp))
-				_list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
+			if (_regelTyp_to_verletzungenList.containsKey(regeltyp))
+				_regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 
 		// Die Bewertung im DatenManager aktualisieren.
 		_parent.ergebnisUpdateBewertung(_ergebnis);
@@ -3218,7 +3216,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
 	 */
 	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
-		return _list_verletzte_regeltypen_sortiert;
+		return _regeltypList_aller_verletzungen_sortiert;
 	}
 
 	/**
@@ -3229,7 +3227,7 @@ public class GostBlockungsergebnisManager {
 	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
 	 */
 	public @NotNull List<@NotNull String> regelGetMengeAnVerletzungen(final @NotNull GostKursblockungRegelTyp regeltyp) {
-		return MapUtils.getOrCreateArrayList(_map_regelID_verletzungen, regeltyp.typ);
+		return MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungenList, regeltyp.typ);
 	}
 
 	/**

@@ -60,16 +60,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private static readonly _compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => JavaInteger.compare(a.nummer, b.nummer) };
 
 	/**
-	 * Ein Comparator für Regeln der Blockung
-	 */
-	private static readonly _compRegel : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
-		const result : number = JavaInteger.compare(a.typ, b.typ);
-		if (result !== 0)
-			return result;
-		return JavaLong.compare(a.id, b.id);
-	} };
-
-	/**
 	 * Ein Comparator für die Lehrkräfte eines Kurses
 	 */
 	private static readonly _compLehrkraefte : Comparator<GostBlockungKursLehrer> = { compare : (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
@@ -82,15 +72,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Ein Comparator für die Schüler.
 	 */
-	private static readonly _compSchueler : Comparator<Schueler> = { compare : (a: Schueler, b: Schueler) => {
-		const cNachname : number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cNachname !== 0)
-			return cNachname;
-		const cVorname : number = JavaString.compareTo(a.vorname, b.vorname);
-		if (cVorname !== 0)
-			return cVorname;
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private readonly _compSchueler : Comparator<Schueler>;
 
 	/**
 	 * Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART)
@@ -111,6 +93,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER).
 	 */
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
+
+	/**
+	 * Ein Comparator für Regeln der Blockung
+	 */
+	private readonly _compRegel : Comparator<GostBlockungRegel>;
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID.
@@ -218,6 +205,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
+			this._compRegel = this.createComparatorRegeln();
+			this._compSchueler = this.createComparatorSchueler();
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))))) {
 			const daten : GostBlockungsdaten = cast_de_svws_nrw_core_data_gost_GostBlockungsdaten(__param0);
 			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
@@ -225,6 +214,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
+			this._compRegel = this.createComparatorRegeln();
+			this._compSchueler = this.createComparatorSchueler();
 			this._daten = new GostBlockungsdaten();
 			this._daten.id = daten.id;
 			this._daten.name = daten.name;
@@ -232,11 +223,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._daten.gostHalbjahr = daten.gostHalbjahr;
 			this._daten.istAktiv = daten.istAktiv;
 			this.schieneAddListe(daten.schienen);
-			this.regelAddListe(daten.regeln);
-			this.kursAddListe(daten.kurse);
-			this.schuelerAddListe(daten.schueler);
 			this.fachwahlAddListe(daten.fachwahlen);
+			this.schuelerAddListe(daten.schueler);
+			this.kursAddListe(daten.kurse);
 			this.ergebnisAddListe(daten.ergebnisse);
+			this.regelAddListe(daten.regeln);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -417,11 +408,59 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return "[Regel (" + regel.id + ", Nr. " + regel.typ + "): " + regel.parameter + "]";
 	}
 
+	private createComparatorRegeln() : Comparator<GostBlockungRegel> {
+		const comp : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
+			const cmp1 : number = JavaInteger.compare(a.typ, b.typ);
+			if (cmp1 !== 0)
+				return cmp1;
+			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(a.typ);
+			let cmp2 : number;
+			const _seexpr_679278452 = (typ);
+			if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH) {
+				cmp2 = this.compareRegel_11_or_12(a, b);
+			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH) {
+				cmp2 = this.compareRegel_11_or_12(a, b);
+			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER) {
+				cmp2 = this.compareRegel_13_or_14(a, b);
+			} else if (_seexpr_679278452 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER) {
+				cmp2 = this.compareRegel_13_or_14(a, b);
+			} else {
+				cmp2 = 0;
+			}
+			;
+			if (cmp2 !== 0)
+				return cmp2;
+			return JavaLong.compare(a.id, b.id);
+		} };
+		return comp;
+	}
+
+	private createComparatorSchueler() : Comparator<Schueler> {
+		const comp : Comparator<Schueler> = { compare : (a: Schueler, b: Schueler) => {
+			const cmpSchueler : number = this.compareSchueler(a.id, b.id);
+			if (cmpSchueler !== 0)
+				return cmpSchueler;
+			return JavaLong.compare(a.id, b.id);
+		} };
+		return comp;
+	}
+
+	private createComparatorFachwahlen() : Comparator<GostFachwahl> {
+		const comp : Comparator<GostFachwahl> = { compare : (a: GostFachwahl, b: GostFachwahl) => {
+			const cmpSchueler : number = this.compareSchueler(a.schuelerID, b.schuelerID);
+			if (cmpSchueler !== 0)
+				return cmpSchueler;
+			const cmpFach : number = this.compareFach(a.fachID, b.fachID);
+			if (cmpFach !== 0)
+				return cmpFach;
+			return JavaInteger.compare(a.kursartID, b.kursartID);
+		} };
+		return comp;
+	}
+
 	private createComparatorKursFachKursartNummer() : Comparator<GostBlockungKurs> {
 		const comp : Comparator<GostBlockungKurs> = { compare : (a: GostBlockungKurs, b: GostBlockungKurs) => {
-			const aFach : GostFach = this._faecherManager.getOrException(a.fach_id);
-			const bFach : GostFach = this._faecherManager.getOrException(b.fach_id);
-			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
+			const cmpFach : number = this.compareFach(a.fach_id, b.fach_id);
 			if (cmpFach !== 0)
 				return cmpFach;
 			if (a.kursart < b.kursart)
@@ -439,9 +478,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return -1;
 			if (a.kursart > b.kursart)
 				return +1;
-			const aFach : GostFach = this._faecherManager.getOrException(a.fach_id);
-			const bFach : GostFach = this._faecherManager.getOrException(b.fach_id);
-			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
+			const cmpFach : number = this.compareFach(a.fach_id, b.fach_id);
 			if (cmpFach !== 0)
 				return cmpFach;
 			return JavaInteger.compare(a.nummer, b.nummer);
@@ -449,20 +486,51 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private createComparatorFachwahlen() : Comparator<GostFachwahl> {
-		const comp : Comparator<GostFachwahl> = { compare : (a: GostFachwahl, b: GostFachwahl) => {
-			if (a.schuelerID < b.schuelerID)
-				return -1;
-			if (a.schuelerID > b.schuelerID)
-				return +1;
-			const aFach : GostFach = this._faecherManager.getOrException(a.fachID);
-			const bFach : GostFach = this._faecherManager.getOrException(b.fachID);
-			const tmp : number = GostFaecherManager.comp.compare(aFach, bFach);
-			if (tmp !== 0)
-				return tmp;
-			return JavaInteger.compare(a.kursartID, b.kursartID);
-		} };
-		return comp;
+	private compareRegel_11_or_12(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpSchueler1 !== 0)
+			return cmpSchueler1;
+		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1)!, b.parameter.get(1)!);
+		if (cmpSchueler2 !== 0)
+			return cmpSchueler2;
+		const cmpFach : number = this.compareFach(a.parameter.get(2)!, b.parameter.get(2)!);
+		if (cmpFach !== 0)
+			return cmpFach;
+		return 0;
+	}
+
+	private compareRegel_13_or_14(a : GostBlockungRegel, b : GostBlockungRegel) : number {
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		if (cmpSchueler1 !== 0)
+			return cmpSchueler1;
+		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1)!, b.parameter.get(1)!);
+		if (cmpSchueler2 !== 0)
+			return cmpSchueler2;
+		return 0;
+	}
+
+	private compareSchueler(idSchueler1 : number, idSchueler2 : number) : number {
+		const a : Schueler | null = this._map_idSchueler_schueler.get(idSchueler1);
+		const b : Schueler | null = this._map_idSchueler_schueler.get(idSchueler2);
+		if (a === null)
+			return (b === null) ? 0 : -1;
+		if (b === null)
+			return +1;
+		const cNachname : number = JavaString.compareTo(a.nachname, b.nachname);
+		if (cNachname !== 0)
+			return cNachname;
+		const cVorname : number = JavaString.compareTo(a.vorname, b.vorname);
+		if (cVorname !== 0)
+			return cVorname;
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	private compareFach(idFach1 : number, idFach2 : number) : number {
+		const aFach : GostFach | null = this._faecherManager.get(idFach1);
+		const bFach : GostFach | null = this._faecherManager.get(idFach2);
+		if (aFach === null)
+			return (bFach === null) ? 0 : -1;
+		return (bFach === null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
 	}
 
 	/**
@@ -1476,9 +1544,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this.regelCheck(regel);
 		for (const regel of regelmenge)
 			this.regelAddOhneSortierung(regel);
-		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
+		this._daten.regeln.sort(this._compRegel);
 		for (const listOfTyp of this._map_regeltyp_regeln.values())
-			listOfTyp.sort(GostBlockungsdatenManager._compRegel);
+			listOfTyp.sort(this._compRegel);
 	}
 
 	/**
@@ -1858,10 +1926,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public schuelerAddListe(schuelermenge : List<Schueler>) : void {
 		for (const schueler of schuelermenge)
 			DeveloperNotificationException.ifInvalidID(schueler.id + "", schueler.id);
-		for (const schueler of schuelermenge) {
+		for (const schueler of schuelermenge)
 			this.schuelerAddOhneSortierung(schueler);
-		}
-		this._daten.schueler.sort(GostBlockungsdatenManager._compSchueler);
+		this._daten.schueler.sort(this._compSchueler);
 	}
 
 	/**
