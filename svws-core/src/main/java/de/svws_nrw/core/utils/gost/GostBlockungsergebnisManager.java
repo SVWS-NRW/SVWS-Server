@@ -222,8 +222,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void stateClear(final @NotNull GostBlockungsergebnis pOld, final long pGostBlockungsergebnisID) {
-		final long t1 = System.currentTimeMillis();
-
 		// 1) GostBlockungsergebnis kopieren (ohne Bewertung und ohne Zuordnungen).
 		_ergebnis = new GostBlockungsergebnis();
 		_ergebnis.id = pGostBlockungsergebnisID;
@@ -329,17 +327,21 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		// Schienen dem Ergebnis hinzufügen.
+		// Kursmenge pro Schiene sortieren.
+		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge =  schiene.kurse;
+			if (_fachartmenge_sortierung == 1) {
+				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
+			}
+		}
+
+		// Schienen dem Ergebnis hinzufügen. TODO BAR Schienenmenge sortieren?
 		_ergebnis.schienen.addAll(_schienenID_to_schiene.values());
 
 		// 5) Regelverletzungen überprüfen.
 		stateRegelvalidierung();
-
-		// Zeitmessung beenden
-		final long t2 = System.currentTimeMillis();
-		if (t2 - t1 > 10) {
-			System.out.println("Update Time = " + (t2 - t1));
-		}
 	}
 
 	private void update_0_schienenIDset_schienenNRset() {
@@ -712,8 +714,8 @@ public class GostBlockungsergebnisManager {
 		regelVerletzungen.clear();
 		_map_regelID_verletzungen.clear();
 		_list_verletzte_regeltypen_sortiert.clear();
-		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4();
 		_regelverletzungen_der_wahlkonflikte = stateRegelvalidierungTooltip2();
+		_regelverletzungen_der_faecherparallelitaet = stateRegelvalidierungTooltip4();
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, _map_regelID_verletzungen);
@@ -763,6 +765,7 @@ public class GostBlockungsergebnisManager {
 		// stateRegelvalidierung17 ist nicht nötig
 
 		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
+		// TODO BAR besser sortieren?
 		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
 		for (final int regeltyp : regeltypSortierung)
 			if (_map_regelID_verletzungen.containsKey(regeltyp))
@@ -771,15 +774,6 @@ public class GostBlockungsergebnisManager {
 		// Die Bewertung im DatenManager aktualisieren.
 		_parent.ergebnisUpdateBewertung(_ergebnis);
 
-		// Kursmenge pro Schiene sortieren.
-		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge =  schiene.kurse;
-			if (_fachartmenge_sortierung == 1) {
-				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
-			} else {
-				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
-			}
-		}
 	}
 
 	private @NotNull String stateRegelvalidierungTooltip2() {
@@ -1144,7 +1138,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private void stateSchuelerKursHinzufuegen(final long idSchueler, final long idKurs) {
 		stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
-		stateRegelvalidierung();
+		stateRevalidateEverything();
 	}
 
 	/**
@@ -1157,7 +1151,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private void stateSchuelerKursEntfernen(final long idSchueler, final long idKurs) {
 		stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
-		stateRegelvalidierung();
+		stateRevalidateEverything();
 	}
 
 	/**
@@ -1168,7 +1162,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private void stateKursSchieneHinzufuegen(final long idKurs, final long idSchiene) {
 		stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
-		stateRegelvalidierung();
+		stateRevalidateEverything();
 	}
 
 	// #########################################################################

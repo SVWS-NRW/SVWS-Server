@@ -292,7 +292,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateClear(pOld : GostBlockungsergebnis, pGostBlockungsergebnisID : number) : void {
-		const t1 : number = System.currentTimeMillis();
 		this._ergebnis = new GostBlockungsergebnis();
 		this._ergebnis.id = pGostBlockungsergebnisID;
 		this._ergebnis.blockungID = this._parent.getID();
@@ -372,12 +371,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				eSchiene.kurse.add(eKurs);
 			}
 		}
+		for (const schiene of this._ergebnis.schienen) {
+			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
+			if (this._fachartmenge_sortierung === 1) {
+				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
+			}
+		}
 		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
 		this.stateRegelvalidierung();
-		const t2 : number = System.currentTimeMillis();
-		if (t2 - t1 > 10) {
-			console.log(JSON.stringify("Update Time = " + (t2 - t1)));
-		}
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
@@ -678,8 +681,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		regelVerletzungen.clear();
 		this._map_regelID_verletzungen.clear();
 		this._list_verletzte_regeltypen_sortiert.clear();
-		this._regelverletzungen_der_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
 		this._regelverletzungen_der_wahlkonflikte = this.stateRegelvalidierungTooltip2();
+		this._regelverletzungen_der_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen, this._map_regelID_verletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
@@ -713,14 +716,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this._map_regelID_verletzungen.containsKey(regeltyp))
 				this._list_verletzte_regeltypen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 		this._parent.ergebnisUpdateBewertung(this._ergebnis);
-		for (const schiene of this._ergebnis.schienen) {
-			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
-			if (this._fachartmenge_sortierung === 1) {
-				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
-			} else {
-				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
-			}
-		}
 	}
 
 	private stateRegelvalidierungTooltip2() : string {
@@ -1053,7 +1048,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private stateSchuelerKursHinzufuegen(idSchueler : number, idKurs : number) : void {
 		this.stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
-		this.stateRegelvalidierung();
+		this.stateRevalidateEverything();
 	}
 
 	/**
@@ -1066,7 +1061,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private stateSchuelerKursEntfernen(idSchueler : number, idKurs : number) : void {
 		this.stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
-		this.stateRegelvalidierung();
+		this.stateRevalidateEverything();
 	}
 
 	/**
@@ -1077,7 +1072,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : void {
 		this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
-		this.stateRegelvalidierung();
+		this.stateRevalidateEverything();
 	}
 
 	/**
