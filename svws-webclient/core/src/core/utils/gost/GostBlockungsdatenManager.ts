@@ -1477,6 +1477,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (const regel of regelmenge)
 			this.regelAddOhneSortierung(regel);
 		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
+		for (const listOfTyp of this._map_regeltyp_regeln.values())
+			listOfTyp.sort(GostBlockungsdatenManager._compRegel);
 	}
 
 	/**

@@ -265,58 +265,7 @@ public class GostBlockungsergebnisManager {
 				System.out.println("    " + meldung);
 		}
 
-		// 3) "_ergebnis.bewertung" aktualisieren.
-
-		// Ergebnis aktualisieren - Bewertungskriterium 1a (...) und 1b (anzahlKurseNichtZugeordnet)
-		_ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
-		for (final long idKurs : _kursID_to_schienenSet.keySet()) {
-			final int sizeSoll = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs).anzahlSchienen;
-			final int sizeIst =  DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schienenSet, idKurs).size();
-			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
-		}
-
-		// Ergebnis aktualisieren - Bewertungskriterium 2a (anzahlSchuelerNichtZugeordnet)
-		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = 0;
-		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (final long idFach : _schuelerID_fachID_to_kurs_or_null.getKeySetOf(idSchueler))
-				if (_schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler, idFach) == null)
-					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
-		// ... wenn ein Schüler ignoriert werden soll, dann bewerte nicht zugeordnete Kurse als zugeordnet.
-		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
-			final long idSchueler = regel.parameter.get(0);
-			for (@NotNull final GostFachwahl gFachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler))
-				if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) == null)
-					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
-		}
-
-		// Ergebnis aktualisieren - 2b (anzahlSchuelerKollisionen)
-		_ergebnis.bewertung.anzahlSchuelerKollisionen = 0;
-		for (final long idSchueler : _schuelerID_to_kollisionen.keySet()) {
-			final int kollisionen = DeveloperNotificationException.ifMapGetIsNull(_schuelerID_to_kollisionen, idSchueler);
-			_ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
-		}
-
-		// Ergebnis aktualisieren - Bewertungskriterium 3a und 3b (Kursdifferenzen)
-		_ergebnis.bewertung.kursdifferenzMax = 0;
-		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
-		for (final long idFachart : _fachartID_to_kursdifferenz.keySet()) {
-			final int newKD = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
-			_ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
-			_ergebnis.bewertung.kursdifferenzMax = Math.max(_ergebnis.bewertung.kursdifferenzMax, newKD);
-		}
-
-		// Ergebnis aktualisieren - Bewertungskriterium 4
-		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
-		for (final long idSchiene : _schienenIDset)
-			for (final long idFachart : _fachartID_to_kurseList.keySet()) {
-				final int gleicheKurseInSchiene = Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart).size();
-				if (gleicheKurseInSchiene >= 2)
-					_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
-			}
-
-		// 4) Zuordnungen (Schiene --> Kurse --> Schüler) aktualisieren.
-
-		// Schüler zu Kursen, Schienen zu Kursen, Kurse zu Schienen
+		// 3) Zuordnungen (Schüler zu Kursen, Schienen zu Kursen, Kurse zu Schienen) aktualisieren.
 		for (final long idKurs : _kursID_to_schuelerIDSet.keySet()) {
 			final @NotNull GostBlockungsergebnisKurs eKurs = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs);
 			for (final long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs))
@@ -340,8 +289,62 @@ public class GostBlockungsergebnisManager {
 		// Schienen dem Ergebnis hinzufügen. TODO BAR Schienenmenge sortieren?
 		_ergebnis.schienen.addAll(_schienenID_to_schiene.values());
 
-		// 5) Regelverletzungen überprüfen.
-		stateRegelvalidierung();
+		// 4) "_ergebnis.bewertung" aktualisieren.
+		stateClearErgebnisBewertung();
+
+
+	}
+
+	private void stateClearErgebnisBewertung() {
+		// Bewertungskriterium 1a (regelVerletzungen) am Ende.
+		stateClearErgebnisBewertung1a();
+
+		// Bewertungskriterium 1b (anzahlKurseNichtZugeordnet)
+		_ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
+		for (final long idKurs : _kursID_to_schienenSet.keySet()) {
+			final int sizeSoll = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_kurs, idKurs).anzahlSchienen;
+			final int sizeIst =  DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schienenSet, idKurs).size();
+			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
+		}
+
+		// Bewertungskriterium 2a (anzahlSchuelerNichtZugeordnet)
+		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = 0;
+		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
+			for (final long idFach : _schuelerID_fachID_to_kurs_or_null.getKeySetOf(idSchueler))
+				if (_schuelerID_fachID_to_kurs_or_null.getOrNull(idSchueler, idFach) == null)
+					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
+		// ... wenn ein Schüler ignoriert werden soll, dann bewerte nicht zugeordnete Kurse als zugeordnet.
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			final long idSchueler = regel.parameter.get(0);
+			for (@NotNull final GostFachwahl gFachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler))
+				if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, gFachwahl.fachID) == null)
+					_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
+		}
+
+		// Bewertungskriterium 2b (anzahlSchuelerKollisionen)
+		_ergebnis.bewertung.anzahlSchuelerKollisionen = 0;
+		for (final long idSchueler : _schuelerID_to_kollisionen.keySet()) {
+			final int kollisionen = DeveloperNotificationException.ifMapGetIsNull(_schuelerID_to_kollisionen, idSchueler);
+			_ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
+		}
+
+		// Bewertungskriterium 3a (kursdifferenzMax) und 3b (kursdifferenzHistogramm)
+		_ergebnis.bewertung.kursdifferenzMax = 0;
+		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
+		for (final long idFachart : _fachartID_to_kursdifferenz.keySet()) {
+			final int newKD = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
+			_ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
+			_ergebnis.bewertung.kursdifferenzMax = Math.max(_ergebnis.bewertung.kursdifferenzMax, newKD);
+		}
+
+		// Bewertungskriterium 4
+		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
+		for (final long idSchiene : _schienenIDset)
+			for (final long idFachart : _fachartID_to_kurseList.keySet()) {
+				final int gleicheKurseInSchiene = Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart).size();
+				if (gleicheKurseInSchiene >= 2)
+					_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
+			}
 	}
 
 	private void update_0_schienenIDset_schienenNRset() {
@@ -490,8 +493,7 @@ public class GostBlockungsergebnisManager {
 		}
 		// Kurse ohne Dummy-SuS ergänzen.
 		for (final long idKurs : _kursIDset)
-			if (!_kursID_to_dummySuS.containsKey(idKurs))
-				_kursID_to_dummySuS.put(idKurs, 0);
+			MapUtils.putNonNullIfNotExists(_kursID_to_dummySuS, idKurs, 0);
 	}
 
 	private void update_1_fachID_to_kurseList() {
@@ -708,7 +710,7 @@ public class GostBlockungsergebnisManager {
 				_schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
 	}
 
-	private void stateRegelvalidierung() {
+	private void stateClearErgebnisBewertung1a() {
 		// Clear
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
@@ -783,17 +785,19 @@ public class GostBlockungsergebnisManager {
 		int wahlkonflikte = 0;
 		int wahlkonflikte_ignored = 0;
 		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet())
-				if (e.getValue() == null) {
-					if (wahlkonflikte < 10) {
-						final long idFach = e.getKey();
-						final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
-					} else {
-						wahlkonflikte_ignored++;
-					}
-					wahlkonflikte++;
+			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+				if (e.getValue() != null)
+					continue;
+
+				if (wahlkonflikte < 10) {
+					final long idFach = e.getKey();
+					final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
+				} else {
+					wahlkonflikte_ignored++;
 				}
+				wahlkonflikte++;
+			}
 
 		// Kollisionen des Schülers.
 		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet())
@@ -4885,11 +4889,10 @@ public class GostBlockungsergebnisManager {
 
 		final @NotNull Set<@NotNull Long> setSchulerOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		for (final long idSchueler : schuelerIDs)
-			if (setSchulerOfKurs.contains(idSchueler))
-				if (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
-					// (1) (2)
-					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
-				}
+			if ((setSchulerOfKurs.contains(idSchueler)) && (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs))) {
+				// (1) (2)
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+			}
 
 		return u;
 	}

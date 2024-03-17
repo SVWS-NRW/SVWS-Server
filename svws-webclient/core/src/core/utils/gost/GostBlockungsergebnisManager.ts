@@ -326,6 +326,29 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const meldung of this._fehlermeldungen)
 				console.log(JSON.stringify("    " + meldung!));
 		}
+		for (const idKurs of this._kursID_to_schuelerIDSet.keySet()) {
+			const eKurs : GostBlockungsergebnisKurs = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs);
+			for (const idSchueler of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs))
+				eKurs.schueler.add(idSchueler);
+			for (const eSchiene of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs)) {
+				eKurs.schienen.add(eSchiene.id);
+				eSchiene.kurse.add(eKurs);
+			}
+		}
+		for (const schiene of this._ergebnis.schienen) {
+			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
+			if (this._fachartmenge_sortierung === 1) {
+				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
+			}
+		}
+		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
+		this.stateClearErgebnisBewertung();
+	}
+
+	private stateClearErgebnisBewertung() : void {
+		this.stateClearErgebnisBewertung1a();
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
 		for (const idKurs of this._kursID_to_schienenSet.keySet()) {
 			const sizeSoll : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs).anzahlSchienen;
@@ -362,25 +385,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (gleicheKurseInSchiene >= 2)
 					this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
-		for (const idKurs of this._kursID_to_schuelerIDSet.keySet()) {
-			const eKurs : GostBlockungsergebnisKurs = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs);
-			for (const idSchueler of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs))
-				eKurs.schueler.add(idSchueler);
-			for (const eSchiene of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs)) {
-				eKurs.schienen.add(eSchiene.id);
-				eSchiene.kurse.add(eKurs);
-			}
-		}
-		for (const schiene of this._ergebnis.schienen) {
-			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
-			if (this._fachartmenge_sortierung === 1) {
-				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
-			} else {
-				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
-			}
-		}
-		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
-		this.stateRegelvalidierung();
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
@@ -512,8 +516,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._kursID_to_dummySuS.put(idKurs, anzahl);
 		}
 		for (const idKurs of this._kursIDset)
-			if (!this._kursID_to_dummySuS.containsKey(idKurs))
-				this._kursID_to_dummySuS.put(idKurs, 0);
+			MapUtils.putNonNullIfNotExists(this._kursID_to_dummySuS, idKurs, 0);
 	}
 
 	private update_1_fachID_to_kurseList() : void {
@@ -676,7 +679,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				this._schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
 	}
 
-	private stateRegelvalidierung() : void {
+	private stateClearErgebnisBewertung1a() : void {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		this._map_regelID_verletzungen.clear();
@@ -723,17 +726,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let wahlkonflikte : number = 0;
 		let wahlkonflikte_ignored : number = 0;
 		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet())
-				if (e.getValue() === null) {
-					if (wahlkonflikte < 10) {
-						const idFach : number = e.getKey().valueOf();
-						const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-						sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
-					} else {
-						wahlkonflikte_ignored++;
-					}
-					wahlkonflikte++;
+			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+				if (e.getValue() !== null)
+					continue;
+				if (wahlkonflikte < 10) {
+					const idFach : number = e.getKey().valueOf();
+					const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
+				} else {
+					wahlkonflikte_ignored++;
 				}
+				wahlkonflikte++;
+			}
 		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
 			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
 				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();
@@ -4444,10 +4448,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		const setSchulerOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
 		for (const idSchueler of schuelerIDs)
-			if (setSchulerOfKurs.contains(idSchueler))
-				if (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
-					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
-				}
+			if ((setSchulerOfKurs.contains(idSchueler)) && (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs))) {
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+			}
 		return u;
 	}
 

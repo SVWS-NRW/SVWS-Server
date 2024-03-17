@@ -138,4 +138,20 @@ public final class MapUtils {
 		return value;
 	}
 
+    /**
+     * Falls der Schlüssel K keinen zugeordneten Wert hat, wird der übergebene Wert hinzugefügt.
+     *
+     * @param <K>    Der Typ der Schlüssel.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     *
+     * @param map    Die Map, welche K auf V abbildet.
+     * @param key    Der Schlüssel.
+     * @param value  Der Wert, welcher hinzugefügt werden soll, falls es noch keine Zuordnung gibt.
+     */
+	public static <@NotNull K, @NotNull V>  void putNonNullIfNotExists(final @NotNull Map<@NotNull K, @NotNull  V> map, final @NotNull K key, final @NotNull V value) {
+		if (map.containsKey(key))
+			return;
+		map.put(key, value);
+	}
+
 }

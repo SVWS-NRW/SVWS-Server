@@ -128,6 +128,22 @@ export class MapUtils extends JavaObject {
 		return value;
 	}
 
+	/**
+	 * Falls der Schlüssel K keinen zugeordneten Wert hat, wird der übergebene Wert hinzugefügt.
+	 *
+	 * @param <K>    Der Typ der Schlüssel.
+	 * @param <V>    Der Typ der Objekte in der ArrayList.
+	 *
+	 * @param map    Die Map, welche K auf V abbildet.
+	 * @param key    Der Schlüssel.
+	 * @param value  Der Wert, welcher hinzugefügt werden soll, falls es noch keine Zuordnung gibt.
+	 */
+	public static putNonNullIfNotExists<K, V>(map : JavaMap<K, V>, key : K, value : V) : void {
+		if (map.containsKey(key))
+			return;
+		map.put(key, value);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.MapUtils';
 	}

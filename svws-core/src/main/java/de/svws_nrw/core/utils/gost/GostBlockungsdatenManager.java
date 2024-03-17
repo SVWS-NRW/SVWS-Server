@@ -1509,6 +1509,10 @@ public class GostBlockungsdatenManager {
 
 		// Sortieren der Regelmenge.
 		_daten.regeln.sort(_compRegel);
+
+		// Sortieren der pro Regeltyp zugeordneten Regelmenge.
+		for (final @NotNull List<@NotNull GostBlockungRegel> listOfTyp : _map_regeltyp_regeln.values())
+			listOfTyp.sort(_compRegel);
 	}
 
 	/**
