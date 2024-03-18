@@ -29,15 +29,10 @@
 						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung1Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 							<template #content>
-								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
-								<template v-for="typ in getErgebnismanager(row).regelGetMengeVerletzterTypen()" :key="typ.id">
-									<template v-for="text in getErgebnismanager(row).regelGetMengeAnVerletzungen(typ)" :key="text">
-										<br>{{ text }}
-									</template>
-								</template>
+								<pre>{{ getErgebnismanager(row).stateRegelvalidierungTooltip1() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color1(row)}">0</span>
 						<!-- Wert 2-->
 						<svws-ui-tooltip v-if="getDatenmanager().ergebnisGetBewertung2Wert(row.id) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
@@ -64,7 +59,7 @@
 								<pre>{{ getErgebnismanager(row).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
 						</svws-ui-tooltip>
-						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :title="`${getDatenmanager().ergebnisGetBewertung4Wert(row.id)} Fächer parallel`" :style="{'background-color': color4(row)}">0</span>
 						<!-- Ende Wertanzeige-->
 					</span>
 					<div class="ml-auto inline-flex">

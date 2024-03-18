@@ -29,12 +29,7 @@
 						<svws-ui-tooltip v-if="getBewertungWert(row, 1) > 0" autosize>
 							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 1)}">{{ getBewertungWert(row, 1) }}</span>
 							<template #content>
-								{{ getBewertungWert(row, 1) }} Regelverletzungen
-								<template v-for="typ in listErgebnismanager.get(rowIndex).regelGetMengeVerletzterTypen()" :key="typ.id">
-									<template v-for="text in listErgebnismanager.get(rowIndex).regelGetMengeAnVerletzungen(typ)" :key="text+i">
-										<br>{{ text }}
-									</template>
-								</template>
+								<pre>{{ listErgebnismanager.get(rowIndex).stateRegelvalidierungTooltip1() }}</pre>
 							</template>
 						</svws-ui-tooltip>
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>

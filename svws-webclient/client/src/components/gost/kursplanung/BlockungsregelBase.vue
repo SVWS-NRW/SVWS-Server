@@ -7,16 +7,12 @@
 				</svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
-				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-error': verletzungen.contains(r)}" role="row" @click="select_regel(r)">
-					<svws-ui-tooltip v-if="verletzungen.contains(r)" autosize>
+				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-error text-white hover:text-error': verletzungen.get(r.id)}" role="row" @click="select_regel(r)">
+					<svws-ui-tooltip v-if="verletzungen.get(r.id)" autosize>
 						<div class="svws-ui-td" role="cell">
 							<span class="icon i-ri-information-line" />
 						</div>
-						<template #content>
-							<template v-for="text in getErgebnismanager().regelGetMengeAnVerletzungen(GostKursblockungRegelTyp.fromTyp(r.typ))" :key="text">
-								<br>{{ text }}
-							</template>
-						</template>
+						<template #content> {{ getErgebnismanager().regelGetMap_regelID_to_verletzungString().get(r.id) }} </template>
 					</svws-ui-tooltip>
 					<div v-else class="svws-ui-td" role="cell" />
 					<slot name="regelRead" :regel="r" />
@@ -26,7 +22,6 @@
 						</svws-ui-button>
 					</div>
 				</div>
-				<span />
 			</template>
 			<template #footer v-if="modelValue?.typ === regelTyp.typ && !disabled">
 				<div class="mt-7 p-3" :class="{'opacity-50': apiStatus.pending}">
@@ -49,8 +44,8 @@
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungsdatenManager, List } from "@core";
-	import { ArrayList, GostKursblockungRegelTyp } from "@core";
+	import type { GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungsdatenManager, List , GostKursblockungRegelTyp } from "@core";
+	import { ArrayList } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -70,13 +65,13 @@
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
 
-	const verletzungen = computed(() => props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen);
+	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
 
 	const regeln = computed(()=> {
 		if (props.nurRegelverletzungen) {
 			const list: List<GostBlockungRegel> = new ArrayList();
 			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))
-				if (verletzungen.value.contains(r.id))
+				if (verletzungen.value.get(r.id))
 					list.add(r);
 			return list;
 		}
