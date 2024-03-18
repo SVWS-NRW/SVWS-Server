@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Schild-2 Schema migrieren">
+	<svws-ui-content-card class="mt-4 mb-20">
 		<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 		<div class="flex flex-col items-start gap-3">
 			<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
@@ -31,7 +31,7 @@
 		</div>
 		<div class="flex gap-1 items-start" :class="{'mt-12': status === undefined, 'mt-5 mb-12': status !== undefined}">
 			<template v-if="status === undefined">
-				<svws-ui-button @click="migrate" :disabled="loading"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
+				<svws-ui-button @click="migrate" :disabled="loading || (migrationQuellinformationen().dbms === 'mdb' && !file)"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
 				<svws-ui-button type="secondary" @click="setCurrentAction('')" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
 			<template v-else>

@@ -2,7 +2,7 @@
 	<div v-if="auswahl !== undefined" class="page--flex">
 		<header class="svws-ui-header max-w-[140rem]">
 			<div class="svws-ui-header--title gap-x-8 lg:gap-x-16 w-full">
-				<div class="svws-headline-wrapper flex-1">
+				<div class="svws-headline-wrapper flex-[2]">
 					<h2 class="svws-headline">
 						<span>{{ auswahl.name }}</span>
 					</h2>
@@ -11,8 +11,10 @@
 						<span v-else> Revision: {{ auswahl.revision }} </span>
 					</span>
 				</div>
-				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3 text-balance">
-					<span><span class="icon i-ri-school-line inline-block relative top-0.5 opacity-75" /> <span class="font-bold">{{ info.schulNr }} {{ info.schulform }}</span><br>{{ info.bezeichnung }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
+				<div v-if="info !== undefined" class="flex-1 flex flex-col bg-light py-2 px-4 rounded-lg text-base -mr-3">
+					<span class="text-headline-md">{{ info.bezeichnung.split('\n')[0] }}</span>
+					<span class="opacity-50 line-clamp-1" :title="`${info.bezeichnung} (${ info.strassenname } ${ info.hausnummer } ${ info.hausnummerZusatz ?? '' } ${ info.ort })`">{{ info.bezeichnung.split('\n').slice(1).join('\n') }} ({{ info.strassenname }} {{ info.hausnummer }} {{ info.hausnummerZusatz ?? '' }} {{ info.ort }})</span>
+					<span class="opacity-50">{{ info.schulNr }} {{ info.schulform }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />

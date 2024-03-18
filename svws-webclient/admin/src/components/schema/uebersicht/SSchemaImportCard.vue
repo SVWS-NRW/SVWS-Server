@@ -1,16 +1,16 @@
 <template>
-	<svws-ui-content-card title="Backup wiederherstellen">
+	<svws-ui-content-card class="mt-4 mb-20">
 		<div class="flex flex-col gap-2 mb-5">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
 			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
 		</div>
 		<div :class="{'mt-12': status === undefined, 'mt-5 mb-12': status !== undefined}">
 			<template v-if="status === undefined">
+				<div v-if="file" class="text-base leading-none -mt-3 mb-3 text-error"> <span class="icon i-ri-alert-line inline-block relative icon-error top-0.5 mr-0.5" />Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
 				<div class="flex gap-1 items-start">
 					<svws-ui-button @click="add" :disabled="!file || loading"> <svws-ui-spinner :spinning="loading" /> Wiederherstellen </svws-ui-button>
 					<svws-ui-button type="secondary" @click="setCurrentAction('')" :disabled="loading"> Abbrechen </svws-ui-button>
 				</div>
-				<div class="text-base leading-none mt-4 text-error"> <span class="icon i-ri-alert-line inline-block relative icon-error top-0.5 mr-0.5" />Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.</div>
 			</template>
 			<template v-else>
 				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>

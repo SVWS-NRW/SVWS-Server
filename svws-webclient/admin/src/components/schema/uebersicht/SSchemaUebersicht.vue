@@ -1,30 +1,52 @@
 <template>
-	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20" :class="{'opacity-25 pointer-events-none': currentAction}">
-			<svws-ui-content-card v-if="eintrag !== undefined" :title="schuleInfo() === undefined ? 'Schema initialisieren' : 'Schema verwalten'">
+	<div class="page--content !flex">
+		<svws-ui-content-card v-if="eintrag !== undefined" :title="schuleInfo() === undefined ? 'Schema initialisieren' : 'Schema verwalten'" class="flex-[2]">
+			<div class="flex flex-col gap-2 mb-4">
 				<template v-if="schuleInfo() === undefined">
-					<div class="flex gap-1 mb-4">
+					<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': currentAction && currentAction !== 'init', 'svws-active': currentAction === 'init'}" @click="currentAction = 'init'">
+						<div class="svws-icon"><span class="icon i-ri-archive-line" /></div>
+						<div class="flex flex-col">
+							<div class="svws-title">Schulkatalog</div>
+							<div class="svws-description">Daten werden über die Auswahl der Schulnummer initialisiert</div>
+						</div>
+					</button>
+					<svws-ui-input-wrapper v-if="currentAction === 'init'" class="mt-4 mb-20">
 						<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
-						<svws-ui-button :disabled="schule == undefined" @click="init"><svws-ui-spinner :spinning="loading" /> Initialisieren</svws-ui-button>
-					</div>
+						<div class="flex gap-1 flex-wrap justify-self-start">
+							<svws-ui-button :disabled="schule == undefined" @click="init"><svws-ui-spinner :spinning="loading" /> Initialisieren</svws-ui-button>
+							<svws-ui-button type="secondary" @click="currentAction = ''"> Abbrechen</svws-ui-button>
+						</div>
+					</svws-ui-input-wrapper>
 				</template>
-				<div class="flex flex-wrap gap-1 mb-4">
-					<svws-ui-button type="secondary" @click="currentAction = 'migrate'" title="Schild2-Schema migrieren"> <span class="icon i-ri-database-2-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Schild2-Schema migrieren </svws-ui-button>
-					<svws-ui-button type="secondary" @click="currentAction = 'import'" title="Schema aus Backup wiederherstellen"> <span class="icon i-ri-device-recover-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup wiederherstellen </svws-ui-button>
-					<svws-ui-button v-if="eintrag.isSVWS" @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending"> <span class="icon i-ri-save-3-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
-				<!-- <svws-ui-button type="secondary" :disabled="eintrag.isInConfig" @click="inConfig">In Config setzen</svws-ui-button> -->
-				</div>
-				<svws-ui-input-wrapper v-if="revisionUpToDate">
+				<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': currentAction && currentAction !== 'migrate', 'svws-active': currentAction === 'migrate'}" @click="currentAction = 'migrate'">
+					<div class="svws-icon"><span class="icon i-ri-database-2-line" /></div>
+					<div class="flex flex-col">
+						<div class="svws-title">Schild2-Schema migrieren</div>
+						<div class="svws-description">Daten werden über die Auswahl einer existierenden Schild 2-Datenbank importiert.</div>
+					</div>
+				</button>
+				<s-schema-migrate-card v-if="eintrag !== undefined && currentAction === 'migrate'" :set-current-action="setCurrentAction" :migrate-schema="migrateSchema" :target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen" />
+				<button role="button" class="svws-ui-content-button" :class="{'svws-not-active': currentAction && currentAction !== 'import', 'svws-active': currentAction === 'import'}" @click="currentAction = 'import'" title="Schema aus Backup wiederherstellen">
+					<div class="svws-icon"><span class="icon i-ri-device-recover-line" /></div>
+					<div class="flex flex-col">
+						<div class="svws-title">Backup wiederherstellen</div>
+						<div class="svws-description">Daten werden aus einem Backup wiederhergestellt</div>
+					</div>
+				</button>
+				<s-schema-import-card v-if="eintrag !== undefined && currentAction === 'import'" :set-current-action="setCurrentAction" :restore-schema="restoreSchema" />
+			</div>
+
+			<div class="flex flex-wrap gap-2 mt-10">
+				<svws-ui-button @click="getBackupSchema" title="SQLite-Schema als Backup erstellen" class="mr-3" :disabled="apiStatus.pending || !eintrag.isSVWS"> <span class="icon i-ri-save-3-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Backup erstellen </svws-ui-button>
+				<template v-if="revisionUpToDate">
 					<svws-ui-button type="secondary" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <span class="icon i-ri-speed-line h-[1.5em] w-[1.5em] !-m-[0.3em] !-mr-[0.1em]" /> Revision auf {{ revision }} setzen </svws-ui-button>
 					<div v-if="eintrag.isTainted" class="opacity-50"><span class="icon i-ri-error-warning-line inline relative -top-0.5 -mr-0.5" /> Achtung, auch nach dem Hochsetzen auf die aktuelle Revision bleibt das Schema „Tainted“.</div>
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
-			<svws-ui-content-card title="Admin-Benutzer">
-				<svws-ui-table :columns="cols" :items="admins()" />
-			</svws-ui-content-card>
-		</div>
-		<s-schema-migrate-card v-if="eintrag !== undefined && currentAction === 'migrate'" :set-current-action="setCurrentAction" :migrate-schema="migrateSchema" :target-schema="eintrag.name" :migration-quellinformationen="migrationQuellinformationen" />
-		<s-schema-import-card v-if="eintrag !== undefined && currentAction === 'import'" :set-current-action="setCurrentAction" :restore-schema="restoreSchema" />
+				</template>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Admin-Benutzer" class="flex-1">
+			<svws-ui-table :columns="cols" :items="admins()" />
+		</svws-ui-content-card>
 	</div>
 </template>
 
@@ -53,7 +75,7 @@
 	})
 
 	const cols: DataTableColumn[] = [
-		{ key: "anzeigename", label: "Name", span: 3 },
+		{ key: "anzeigename", label: "Name", span: 2 },
 		{ key: "name", label: "Benutzername", span: 1, sortable: true },
 	];
 
@@ -116,3 +138,54 @@
 		}
 	};
 </script>
+
+<style lang="postcss" scoped>
+.svws-ui-content-button {
+	@apply rounded-lg border-light border p-4 text-balance flex gap-1 text-left;
+
+	.icon {
+		@apply block h-[1.2em] w-[1.2em];
+	}
+
+	&.svws-not-active {
+		@apply opacity-50 border-transparent order-1;
+
+		.svws-icon {
+			@apply opacity-25;
+		}
+	}
+
+	&.svws-active {
+		@apply border-transparent text-primary bg-primary/10 pointer-events-none;
+	}
+
+	&:not(.svws-active):hover,
+	&:not(.svws-active):focus-visible {
+		@apply outline-none bg-black/10 border-black/10 opacity-100;
+
+		.svws-icon {
+			@apply opacity-100;
+		}
+	}
+
+	&:focus {
+		@apply outline-none;
+	}
+
+	&:not(.svws-active):focus-visible {
+		@apply ring ring-primary/50 ring-offset-1;
+	}
+
+	.svws-title {
+		@apply font-bold text-headline-md;
+	}
+
+	.svws-description {
+		@apply opacity-50 leading-tight;
+	}
+
+	.svws-icon {
+		@apply text-headline-xl w-16 text-center;
+	}
+}
+</style>
