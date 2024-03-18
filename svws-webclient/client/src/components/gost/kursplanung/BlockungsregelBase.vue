@@ -12,7 +12,7 @@
 						<div class="svws-ui-td" role="cell">
 							<span class="icon i-ri-information-line" />
 						</div>
-						<template #content> {{ getErgebnismanager().regelGetMap_regelID_to_verletzungString().get(r.id) }} </template>
+						<template #content> {{ verletzungen.get(r.id) }} </template>
 					</svws-ui-tooltip>
 					<div v-else class="svws-ui-td" role="cell" />
 					<slot name="regelRead" :regel="r" />

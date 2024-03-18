@@ -363,12 +363,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.auswahlErgebnis;
 	}
 
-	public setAuswahlErgebnis = async (value: GostBlockungsergebnis | undefined) => {
+	public setAuswahlErgebnis = async (auswahlErgebnis: GostBlockungsergebnis | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if ((this._state.value.auswahlErgebnis?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
+		if ((this._state.value.auswahlErgebnis?.id === auswahlErgebnis?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
-		if (value === undefined) {
+		if (auswahlErgebnis === undefined) {
 			this.setPatchedState({
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
@@ -378,16 +378,12 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		}
 		if (this._state.value.datenmanager === undefined)
-			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
-		const ergebnismanager = this.datenmanager.ergebnisManagerGet(value.id);
+		const ergebnismanager = this.datenmanager.ergebnisManagerGet(auswahlErgebnis.id);
 		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, () => this.ergebnismanager, this.faecherManager.faecher(), this.mapSchueler)
 		api.status.stop();
-		this.setPatchedState({
-			auswahlErgebnis: value,
-			ergebnismanager: ergebnismanager,
-			schuelerFilter: schuelerFilter,
-		});
+		this.setPatchedState({ auswahlErgebnis, ergebnismanager, schuelerFilter });
 	}
 
 	public get schuelerFilter(): GostKursplanungSchuelerFilter {
@@ -404,13 +400,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.auswahlSchueler;
 	}
 
-	public async setAuswahlSchueler(value: SchuelerListeEintrag | undefined) {
+	public async setAuswahlSchueler(auswahlSchueler: SchuelerListeEintrag | undefined) {
 		if (this._state.value.abiturjahr === undefined)
-			throw new DeveloperNotificationException("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (value?.id === this._state.value.auswahlSchueler?.id)
+			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+		if (auswahlSchueler?.id === this._state.value.auswahlSchueler?.id)
 			return;
 		// Setze die neue Schülerauswahl im geklonten State
-		this.setPatchedState({ auswahlSchueler: value });
+		this.setPatchedState({ auswahlSchueler });
 	}
 
 	addBlockung = api.call(async () => {
