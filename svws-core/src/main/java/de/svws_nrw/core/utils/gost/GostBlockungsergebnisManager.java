@@ -157,13 +157,10 @@ public class GostBlockungsergebnisManager {
 	// ############################################################################
 
 	/** Von Regel-ID Regel-TYP nach List (alle Regelverletzungen des Typs als String-Menge). */
-	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _regelTyp_to_verletzungenList = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _regelTyp_to_verletzungList = new HashMap<>();
 
 	/** Von Regel-ID nach String (Beschreibung der Regelverletzung). */
 	private final @NotNull Map<@NotNull Long, @NotNull String> _regelID_to_verletzungString = new HashMap<>();
-
-	/** Liste aller Regeltypen, die mindestens eine Regelverletzung haben. */
-	private final @NotNull List<@NotNull GostKursblockungRegelTyp> _regeltypList_aller_verletzungen_sortiert = new ArrayList<>();
 
 	/** Textuelle Darstellung aller Regelverletzungen der definierten Regeln. */
 	private @NotNull String _regelverletzungen_tooltip1_regeln = "";
@@ -309,8 +306,7 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 1a (regelVerletzungen)
 		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
-		_regelTyp_to_verletzungenList.clear();
-		_regeltypList_aller_verletzungen_sortiert.clear();
+		_regelTyp_to_verletzungList.clear();
 		_regelID_to_verletzungString.clear();
 
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
@@ -357,14 +353,8 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
 			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
 
-				// stateRegelvalidierung16 ist nicht nötig
+		// stateRegelvalidierung16 ist nicht nötig
 		// stateRegelvalidierung17 ist nicht nötig
-
-		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
-		for (final int regeltyp : regeltypSortierung)
-			if (_regelTyp_to_verletzungenList.containsKey(regeltyp))
-				_regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 
 		// Bewertungskriterium 1b (anzahlKurseNichtZugeordnet)
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
@@ -790,13 +780,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private @NotNull String stateRegelvalidierungTooltip1() {
-		final int[] regeltyp_reihenfolge = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
 		final @NotNull StringBuilder sb = new StringBuilder();
 
 		int konflikte = 0;
 		int konflikte_ignored = 0;
-		for (final int idRegeltyp : regeltyp_reihenfolge)
-			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungenList, idRegeltyp)) {
+		for (final int idRegeltyp : GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
+			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungList, idRegeltyp)) {
 				if (konflikte < 10) {
 					sb.append(fehlermeldung + "\n");
 				} else {
@@ -905,7 +894,7 @@ public class GostBlockungsergebnisManager {
 				if (eKurs.kursart == r.parameter.get(0).intValue()) {
 					regelVerletzungen.add(r.id);
 					final @NotNull String beschreibung = "Kursart " + getOfKursName(eKurs.id) + " sollte nicht auf Schiene " + schienenNr + " liegen.";
-					MapUtils.addToList(_regelTyp_to_verletzungenList, 1, beschreibung);
+					MapUtils.addToList(_regelTyp_to_verletzungList, 1, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 	}
@@ -916,7 +905,7 @@ public class GostBlockungsergebnisManager {
 		if (!getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " sollte fixiert sein in Schiene " + schienenNr + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 2, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 2, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}
@@ -927,7 +916,7 @@ public class GostBlockungsergebnisManager {
 		if (getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " sollte gesperrt sein in Schiene " + schienenNr + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 3, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 3, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}
@@ -938,7 +927,7 @@ public class GostBlockungsergebnisManager {
 		if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler) + " sollte fixiert sein in Kurs " + getOfKursName(idKurs) + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 4, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 4, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}
@@ -949,7 +938,7 @@ public class GostBlockungsergebnisManager {
 		if (getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler) + " sollte verboten sein in Kurs " + getOfKursName(idKurs) + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 5, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 5, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}
@@ -967,7 +956,7 @@ public class GostBlockungsergebnisManager {
 				if (b1 != b2) {
 					regelVerletzungen.add(r.id);
 					final @NotNull String beschreibung = "Kursart von " + getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " +  schienenNrVon + " bis " + schienenNrBis + " sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungenList, 6, beschreibung);
+					MapUtils.addToList(_regelTyp_to_verletzungList, 6, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 			}
@@ -982,7 +971,7 @@ public class GostBlockungsergebnisManager {
 					regelVerletzungen.add(r.id);
 					final int nr  = getSchieneG(schiene1.id).nummer;
 					final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungenList, 7, beschreibung);
+					MapUtils.addToList(_regelTyp_to_verletzungList, 7, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 	}
@@ -998,7 +987,7 @@ public class GostBlockungsergebnisManager {
 				if (!set2.contains(schiene1)) {
 					regelVerletzungen.add(r.id);
 					final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungenList, 8, beschreibung);
+					MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 		} else {
@@ -1007,7 +996,7 @@ public class GostBlockungsergebnisManager {
 				if (!set1.contains(schiene2)) {
 					regelVerletzungen.add(r.id);
 					final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs1) + " und Kurs " +  getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungenList, 8, beschreibung);
+					MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 		}
@@ -1024,7 +1013,7 @@ public class GostBlockungsergebnisManager {
 									regelVerletzungen.add(r.id);
 									final int nr  = getSchieneG(eSchiene.id).nummer;
 									final @NotNull String beschreibung = "Kurs " + getOfKursName(eKurs1.id) + " und Kurs " + getOfKursName(eKurs2.id) + " haben die Lehrkraft " + gLehr1.kuerzel + " in der selben Schiene (" + nr + ").";
-									MapUtils.addToList(_regelTyp_to_verletzungenList, 10, beschreibung);
+									MapUtils.addToList(_regelTyp_to_verletzungList, 10, beschreibung);
 									_regelID_to_verletzungString.put(r.id, beschreibung);
 								}
 	}
@@ -1038,7 +1027,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 11, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1046,7 +1035,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 11, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1054,7 +1043,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 11, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1062,7 +1051,7 @@ public class GostBlockungsergebnisManager {
 		if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 11, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 
@@ -1077,7 +1066,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 12, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1085,7 +1074,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 12, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1093,7 +1082,7 @@ public class GostBlockungsergebnisManager {
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 12, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
@@ -1101,7 +1090,7 @@ public class GostBlockungsergebnisManager {
 		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 12, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 
@@ -1115,7 +1104,7 @@ public class GostBlockungsergebnisManager {
 			if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
 				final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.";
-				MapUtils.addToList(_regelTyp_to_verletzungenList, 13, beschreibung);
+				MapUtils.addToList(_regelTyp_to_verletzungList, 13, beschreibung);
 				_regelID_to_verletzungString.put(r.id, beschreibung);
 			}
 	}
@@ -1128,7 +1117,7 @@ public class GostBlockungsergebnisManager {
 			if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, fach.id)) {
 				regelVerletzungen.add(r.id);
 				final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.";
-				MapUtils.addToList(_regelTyp_to_verletzungenList, 14, beschreibung);
+				MapUtils.addToList(_regelTyp_to_verletzungList, 14, beschreibung);
 				_regelID_to_verletzungString.put(r.id, beschreibung);
 			}
 	}
@@ -1142,7 +1131,7 @@ public class GostBlockungsergebnisManager {
 		if (sus > maxSuS) {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.";
-			MapUtils.addToList(_regelTyp_to_verletzungenList, 15, beschreibung);
+			MapUtils.addToList(_regelTyp_to_verletzungList, 15, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}
@@ -3283,32 +3272,6 @@ public class GostBlockungsergebnisManager {
 				list.add(regel);
 
 		return list;
-	}
-
-	/**
-	 * Liefert die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
-	 *
-	 * @deprecated  Die Methode wird gelöscht.
-	 *
-	 * @return die Menge aller {@link GostKursblockungRegelTyp}, welche mindestens eine Regelverletzung haben.
-	 */
-	@Deprecated(forRemoval = true)
-	final @NotNull List<@NotNull GostKursblockungRegelTyp> regelGetMengeVerletzterTypen() {
-		return _regeltypList_aller_verletzungen_sortiert;
-	}
-
-	/**
-	 * Liefert zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
-	 *
-	 * @deprecated      Die Methode wird gelöscht --> Tooltip 1 ODER
-	 *
-	 * @param regeltyp  Das {@link GostKursblockungRegelTyp}-Objekt.
-	 *
-	 * @return zu einem {@link GostKursblockungRegelTyp} die Menge aller Verletzungen als textuelle Beschreibung.
-	 */
-	@Deprecated(forRemoval = true)
-	public @NotNull List<@NotNull String> regelGetMengeAnVerletzungen(final @NotNull GostKursblockungRegelTyp regeltyp) {
-		return MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungenList, regeltyp.typ);
 	}
 
 	/**

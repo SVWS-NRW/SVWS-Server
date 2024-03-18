@@ -17,16 +17,16 @@ import jakarta.validation.constraints.NotNull;
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
  * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
- * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
- * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
- * <br> {@link GostBlockungsergebnisManager#stateClearErgebnisBewertung1a}: aktualisieren.                --> DONE
- * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 -->
+ * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              -->
+ * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    -->
+ * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1 aktualisieren.                 -->
+ * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            -->
  * <br> {@link GostBlockungsergebnisManager}: ggf. Methodenanpassungen                                    -->
  * <br>
  * <br> Aktive Anpassung
- * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  --> DONE
- * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       --> DONE
+ * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
+ * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       -->
  *
  * <br> GUI Anpassung
  * <br> SCardGostRegelansicht.vue
@@ -222,6 +222,8 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.KURS_ID
 	));
 
+	/** Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen. */
+	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
 
 	/** Die ID des Regel-Typs */
 	public final int typ;
