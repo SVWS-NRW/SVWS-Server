@@ -21,11 +21,11 @@
 					}">
 					<div class="modal--titlebar">
 						<DialogTitle class="modal--title inline-flex items-center gap-1">
-							<span class="icon i-ri-alert-fill text-error" v-if="type === 'danger'" />
+							<span class="icon i-ri-alert-fill icon-error inline-block" v-if="type === 'danger'" />
 							<slot name="modalTitle" />
 						</DialogTitle>
 						<svws-ui-button v-if="closeInTitle" type="icon" @click="closeModal">
-							<span class="icon modal--closeIcon"> <span class="icon i-ri-close-line" /> </span>
+							<span class="icon i-ri-close-line" />
 						</svws-ui-button>
 					</div>
 					<div class="modal--content-wrapper" :class="{ 'modal--content-noscroll': noScroll }">
@@ -53,8 +53,8 @@
 
 <script setup lang='ts'>
 
-	import { type Ref } from "vue";
 	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
+	import type { Ref } from "vue";
 	import type { Size } from "../../types";
 
 	const props = withDefaults(defineProps<{
