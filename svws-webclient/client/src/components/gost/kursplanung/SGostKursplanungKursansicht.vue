@@ -109,9 +109,9 @@
 						<template v-for="(schiene, index) in schienen" :key="schiene.id">
 							<div @dragover="if (istDropZoneSchiene(schiene)) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
 								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene), 'svws-divider': index + 1 < schienen.size() }">
-								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none cursor-pointer text-center" :class="{'cursor-grabbing': dragSperreSchiene !== undefined}" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
-									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem] cursor-grab">
-										<span class="icon-sm inline-block i-ri-draggable -ml-0.5 opacity-25 group-hover:opacity-100" />
+								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none text-center" :class="dragSperreSchiene !== undefined ? ['cursor-grabbing'] : ['cursor-grab']" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
+									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem]">
+										<span class="icon-sm inline-block i-ri-draggable -ml-0.5 -my-2 opacity-25 group-hover:opacity-100" />
 									</span>
 									<span class="icon inline-block i-ri-lock-unlock-line opacity-25 group-hover:opacity-100" />
 								</div>
@@ -224,20 +224,22 @@
 											@drop="setDrop(kurs, schiene)">
 											<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 											<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
-												class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black p-px"
+												@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)"
+												class="select-none w-full h-full rounded-sm flex items-center group text-black p-px"
 												:class="{
 													'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 													'bg-white/50': !istKursAusgewaehlt(kurs).value,
 													'cursor-grab': !isDragging,
-												}"
-												@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)">
-												{{ getSchuelerAnzahl(kurs.id).value }}
-												<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
-													<span class="icon-sm inline-block i-ri-draggable -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
-												</span>
-												<div class="icon group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
-													<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-fill inline-block group-hover:opacity-75" />
-													<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100" />
+												}">
+												<span class="icon-sm" :class="istKursFixiertInSchiene(kurs, schiene).value ? ['invisible'] : ['group-hover:bg-white rounded-sm i-ri-draggable -my-0.5 opacity-40 group-hover:opacity-100 inline-block']" />
+												<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)">
+													{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }}
+													<template #content>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }} zusätzliche Kursteilnehmer</template>
+												</svws-ui-tooltip>
+												<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
+												<div class="group" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
+													<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill inline-block opacity-75 group-hover:opacity-100 -my-0.5" />
+													<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
 												</div>
 											</div>
 											<!-- ... ansonsten ist er nicht draggable -->
@@ -917,13 +919,6 @@
 			: props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
 		await props.regelnUpdate(update);
 	}
-
-	const getSchuelerAnzahl = (idKurs: number) => computed(() => {
-		const aktive = props.getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(idKurs);
-		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
-		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
-	})
-
 
 </script>
 
