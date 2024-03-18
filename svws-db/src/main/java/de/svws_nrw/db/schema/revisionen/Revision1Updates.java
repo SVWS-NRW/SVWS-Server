@@ -2771,6 +2771,21 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_BenutzergruppenKompetenzen, Schema.tab_Kompetenzen
 		);
+		add("Benutzer: Prüfe, ob der Admin-Benutzer auch administrative Rechte hat, falls es keinen anderen administrativen Benutzer gibt",
+			"""
+			UPDATE Benutzer b
+			JOIN BenutzerAllgemein ba ON b.Allgemein_ID = ba.ID
+			JOIN Credentials c ON ba.CredentialID = c.ID AND Benutzername = 'Admin'
+			SET b.IstAdmin = 1
+			WHERE (
+			    SELECT count(*) FROM Benutzer b
+			    LEFT JOIN BenutzergruppenMitglieder m ON b.ID = m.Benutzer_ID
+			    LEFT JOIN Benutzergruppen g ON m.Gruppe_ID = g.ID
+			    WHERE b.IstAdmin <> 0 OR g.IstAdmin <> 0
+			) = 0
+			""",
+			Schema.tab_Benutzer, Schema.tab_BenutzerAllgemein, Schema.tab_Credentials
+		);
 	}
 
 
