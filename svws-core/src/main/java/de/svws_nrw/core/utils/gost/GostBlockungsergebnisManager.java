@@ -296,12 +296,75 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.schienen.addAll(_schienenID_to_schiene.values());
 
 		// 4) "_ergebnis.bewertung" aktualisieren.
-		stateClearErgebnisBewertung();
+		stateClearErgebnisBewertung1();
+		stateClearErgebnisBewertung2();
+		stateClearErgebnisBewertung3();
+		stateClearErgebnisBewertung4();
+
+		// Die Bewertung im DatenManager aktualisieren.
+		_parent.ergebnisUpdateBewertung(_ergebnis);
 	}
 
-	private void stateClearErgebnisBewertung() {
-		// Bewertungskriterium 1a (regelVerletzungen) am Ende.
-		stateClearErgebnisBewertung1a();
+	private void stateClearErgebnisBewertung1() {
+		// Bewertungskriterium 1a (regelVerletzungen)
+		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
+		regelVerletzungen.clear();
+		_regelTyp_to_verletzungenList.clear();
+		_regeltypList_aller_verletzungen_sortiert.clear();
+		_regelID_to_verletzungString.clear();
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
+			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
+			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
+			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
+
+		// stateRegelvalidierung9 ist nicht nötig
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
+			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen);
+
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
+
+				// stateRegelvalidierung16 ist nicht nötig
+		// stateRegelvalidierung17 ist nicht nötig
+
+		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
+		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
+		for (final int regeltyp : regeltypSortierung)
+			if (_regelTyp_to_verletzungenList.containsKey(regeltyp))
+				_regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 
 		// Bewertungskriterium 1b (anzahlKurseNichtZugeordnet)
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
@@ -311,6 +374,10 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
 		}
 
+		_regelverletzungen_tooltip1_regeln = stateRegelvalidierungTooltip1(); // benötigt _regelTyp_to_verletzungenList
+	}
+
+	private void stateClearErgebnisBewertung2() {
 		// Bewertungskriterium 2a (anzahlSchuelerNichtZugeordnet)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = 0;
 		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
@@ -332,6 +399,10 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
 
+		_regelverletzungen_tooltip2_wahlkonflikte = stateRegelvalidierungTooltip2();
+	}
+
+	private void stateClearErgebnisBewertung3() {
 		// Bewertungskriterium 3a (kursdifferenzMax) und 3b (kursdifferenzHistogramm)
 		_ergebnis.bewertung.kursdifferenzMax = 0;
 		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
@@ -340,7 +411,9 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
 			_ergebnis.bewertung.kursdifferenzMax = Math.max(_ergebnis.bewertung.kursdifferenzMax, newKD);
 		}
+	}
 
+	private void stateClearErgebnisBewertung4() {
 		// Bewertungskriterium 4
 		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
 		for (final long idSchiene : _schienenIDset)
@@ -349,6 +422,8 @@ public class GostBlockungsergebnisManager {
 				if (gleicheKurseInSchiene >= 2)
 					_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
+
+		_regelverletzungen_tooltip4_faecherparallelitaet = stateRegelvalidierungTooltip4();
 	}
 
 	private void update_0_schienenIDset_schienenNRset() {
@@ -712,76 +787,6 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			if (!_schuelerID_fachID_to_kurs_or_null.contains(gFachwahl.schuelerID, gFachwahl.fachID))
 				_schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
-	}
-
-	private void stateClearErgebnisBewertung1a() {
-		// Clear
-		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
-		regelVerletzungen.clear();
-		_regelTyp_to_verletzungenList.clear();
-		_regelID_to_verletzungString.clear();
-		_regeltypList_aller_verletzungen_sortiert.clear();
-		_regelverletzungen_tooltip2_wahlkonflikte = stateRegelvalidierungTooltip2();
-		_regelverletzungen_tooltip4_faecherparallelitaet = stateRegelvalidierungTooltip4();
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-			stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-			stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-			stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-			stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
-
-		// stateRegelvalidierung9 ist nicht nötig
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
-			stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen);
-
-		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-			stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
-
-		// stateRegelvalidierung16 ist nicht nötig
-		// stateRegelvalidierung17 ist nicht nötig
-
-		// Fülle die Liste der verletzten Regeltypen in einer bestimmten Sortierung (kann später geändert werden).
-		final @NotNull int[] regeltypSortierung = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17};
-		for (final int regeltyp : regeltypSortierung)
-			if (_regelTyp_to_verletzungenList.containsKey(regeltyp))
-				_regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
-
-		_regelverletzungen_tooltip1_regeln = stateRegelvalidierungTooltip1(); // benötigt _regelTyp_to_verletzungenList
-
-		// Die Bewertung im DatenManager aktualisieren.
-		_parent.ergebnisUpdateBewertung(_ergebnis);
-
 	}
 
 	private @NotNull String stateRegelvalidierungTooltip1() {
@@ -5048,8 +5053,6 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt.
 	 */
 	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
-		// System.out.println("kursSchuelerUpdateExecute ksz-" + update.listEntfernen.size() + ", ksz+" + update.listHinzuzufuegen.size())
-
 		// Regeln entfernen.
 		if (_parent.getIstBlockungsVorlage())
 			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);

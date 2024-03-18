@@ -165,8 +165,8 @@ public class GostBlockungsdatenManager {
 		fachwahlAddListe(daten.fachwahlen); 	// Muss vor den Schülern erzeugt werden.
 		schuelerAddListe(daten.schueler); 		// Muss vor den Regeln erzeugt werden.
 		kursAddListe(daten.kurse);
+		regelAddListe(daten.regeln);  			// Muss vor den Ergebnissen erzeugt werden.
 		ergebnisAddListe(daten.ergebnisse);
-		regelAddListe(daten.regeln);
 	}
 
 	/**

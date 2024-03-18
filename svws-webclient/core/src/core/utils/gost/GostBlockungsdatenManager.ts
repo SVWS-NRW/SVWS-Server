@@ -226,8 +226,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this.fachwahlAddListe(daten.fachwahlen);
 			this.schuelerAddListe(daten.schueler);
 			this.kursAddListe(daten.kurse);
-			this.ergebnisAddListe(daten.ergebnisse);
 			this.regelAddListe(daten.regeln);
+			this.ergebnisAddListe(daten.ergebnisse);
 		} else throw new Error('invalid method overload');
 	}
 

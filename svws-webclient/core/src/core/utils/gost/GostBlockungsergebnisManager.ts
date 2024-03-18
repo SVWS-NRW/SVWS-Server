@@ -354,17 +354,61 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 		}
 		this._ergebnis.schienen.addAll(this._schienenID_to_schiene.values());
-		this.stateClearErgebnisBewertung();
+		this.stateClearErgebnisBewertung1();
+		this.stateClearErgebnisBewertung2();
+		this.stateClearErgebnisBewertung3();
+		this.stateClearErgebnisBewertung4();
+		this._parent.ergebnisUpdateBewertung(this._ergebnis);
 	}
 
-	private stateClearErgebnisBewertung() : void {
-		this.stateClearErgebnisBewertung1a();
+	private stateClearErgebnisBewertung1() : void {
+		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
+		regelVerletzungen.clear();
+		this._regelTyp_to_verletzungenList.clear();
+		this._regeltypList_aller_verletzungen_sortiert.clear();
+		this._regelID_to_verletzungString.clear();
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+			this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
+			this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+			this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
+			this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
+			this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
+			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
+			this.stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
+			this.stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
+			this.stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
+			this.stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+			this.stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
+		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17];
+		for (const regeltyp of regeltypSortierung)
+			if (this._regelTyp_to_verletzungenList.containsKey(regeltyp))
+				this._regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
 		for (const idKurs of this._kursID_to_schienenSet.keySet()) {
 			const sizeSoll : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs).anzahlSchienen;
 			const sizeIst : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs).size();
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
 		}
+		this._regelverletzungen_tooltip1_regeln = this.stateRegelvalidierungTooltip1();
+	}
+
+	private stateClearErgebnisBewertung2() : void {
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = 0;
 		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
 			for (const idFach of this._schuelerID_fachID_to_kurs_or_null.getKeySetOf(idSchueler))
@@ -381,6 +425,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const kollisionen : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kollisionen, idSchueler).valueOf();
 			this._ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
+		this._regelverletzungen_tooltip2_wahlkonflikte = this.stateRegelvalidierungTooltip2();
+	}
+
+	private stateClearErgebnisBewertung3() : void {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
 		for (const idFachart of this._fachartID_to_kursdifferenz.keySet()) {
@@ -388,6 +436,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
 			this._ergebnis.bewertung.kursdifferenzMax = Math.max(this._ergebnis.bewertung.kursdifferenzMax, newKD);
 		}
+	}
+
+	private stateClearErgebnisBewertung4() : void {
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene = 0;
 		for (const idSchiene of this._schienenIDset)
 			for (const idFachart of this._fachartID_to_kurseList.keySet()) {
@@ -395,6 +446,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (gleicheKurseInSchiene >= 2)
 					this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
+		this._regelverletzungen_tooltip4_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
@@ -687,50 +739,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gFachwahl of this._parent.daten().fachwahlen)
 			if (!this._schuelerID_fachID_to_kurs_or_null.contains(gFachwahl.schuelerID, gFachwahl.fachID))
 				this._schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
-	}
-
-	private stateClearErgebnisBewertung1a() : void {
-		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
-		regelVerletzungen.clear();
-		this._regelTyp_to_verletzungenList.clear();
-		this._regelID_to_verletzungString.clear();
-		this._regeltypList_aller_verletzungen_sortiert.clear();
-		this._regelverletzungen_tooltip2_wahlkonflikte = this.stateRegelvalidierungTooltip2();
-		this._regelverletzungen_tooltip4_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-			this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-			this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-			this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-			this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
-			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			this.stateRegelvalidierung11_schueler_zusammen_mit_schueler_in_fach(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			this.stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			this.stateRegelvalidierung13_schueler_zusammen_mit_schueler(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			this.stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen);
-		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-			this.stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
-		const regeltypSortierung : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17];
-		for (const regeltyp of regeltypSortierung)
-			if (this._regelTyp_to_verletzungenList.containsKey(regeltyp))
-				this._regeltypList_aller_verletzungen_sortiert.add(GostKursblockungRegelTyp.fromTyp(regeltyp));
-		this._regelverletzungen_tooltip1_regeln = this.stateRegelvalidierungTooltip1();
-		this._parent.ergebnisUpdateBewertung(this._ergebnis);
 	}
 
 	private stateRegelvalidierungTooltip1() : string {
