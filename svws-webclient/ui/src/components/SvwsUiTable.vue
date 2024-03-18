@@ -7,7 +7,7 @@
 			<div v-if="$slots.filter" class="flex flex-shrink-0 items-center gap-1" :class="{'mr-5': $slots.filterAdvanced || toggleColumns, 'ml-2': $slots.search, 'ml-auto': !$slots.search}">
 				<slot name="filter" />
 			</div>
-			<div v-if="toggleColumns" :class="{'ml-auto': !$slots.filter}">
+			<div v-if="toggleColumns">
 				<svws-ui-tooltip :indicator="false" :hover="false" :show-arrow="false" position="top" class="h-full">
 					<svws-ui-button type="transparent" class="h-full">
 						<span class="icon i-ri-table-line" />
@@ -18,7 +18,7 @@
 					</svws-ui-button>
 					<template #content>
 						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-							<li v-for="(column, index) in columns" :key="index">
+							<li v-for="(column, index) in columns.filter(col => (typeof col !== 'string') && !col.toggleInvisible)" :key="index">
 								<template v-if="typeof column !== 'string'">
 									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="ok => updateHiddenColumns(column.key, ok)">
 										{{ column.label }}
@@ -193,6 +193,7 @@
 		type: InputType
 		divider: boolean
 		toggle: boolean
+		toggleInvisible: boolean
 	}
 
 	type DataTableCell = {
@@ -308,8 +309,8 @@
 			disabled: input.disabled || false,
 			type: input.type || 'text',
 			divider: input.divider || false,
-			toggle: input.toggle || false
-			// TODO ivisible toggle, statt disabled
+			toggle: input.toggle || false,
+			toggleInvisible: input.toggleInvisible || false,
 		}
 	}
 

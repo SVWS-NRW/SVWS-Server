@@ -122,7 +122,7 @@
 	});
 
 	const cols = ref<DataTableColumn[]>([
-		{key: "name", label: "Name", sortable: true, span: 1,},
+		{key: "name", label: "Name", sortable: true, span: 1, toggleInvisible: true},
 		{key: "fach", label: "Fach", span: 0.5},
 		{key: "email", label: "E-Mail", toggle: true},
 		{key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25},
