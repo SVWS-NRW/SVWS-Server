@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="regelnFilter" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
+		<svws-ui-table :items="regeln" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
 			<template #header(entfernen)>
 				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1">
 					<span class="icon i-ri-add-line" />
 				</svws-ui-button>
 			</template>
 			<template #rowCustom="{row: r}">
-				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-red-400': regelverletzung(r)}" role="row" @click="select_regel(r)">
-					<svws-ui-tooltip v-if="regelverletzung(r)" autosize>
+				<div :key="r.id" class="svws-ui-tr" :class="{'svws-clicked': modelValue?.id === r.id, 'bg-error': verletzungen.contains(r)}" role="row" @click="select_regel(r)">
+					<svws-ui-tooltip v-if="verletzungen.contains(r)" autosize>
 						<div class="svws-ui-td" role="cell">
 							<span class="icon i-ri-information-line" />
 						</div>
@@ -46,49 +46,52 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager, GostBlockungRegel } from "@core";
-	import { GostKursblockungRegelTyp } from "@core";
-
-	type DataTableColumnSource = DataTableColumn | string
+	import type { GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungsdatenManager, List } from "@core";
+	import { ArrayList, GostKursblockungRegelTyp } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
+		getDatenmanager: () => GostBlockungsdatenManager;
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
-		regeln: Map<GostKursblockungRegelTyp, ComputedRef<GostBlockungRegel[]>>;
-		columns: DataTableColumnSource[];
+		columns: DataTableColumn[];
 		disabled: boolean;
 		regelEntfernen: (regel: GostBlockungRegel) => Promise<void>;
 		regelSpeichern: () => Promise<void>;
 		regelHinzufuegen: () => void;
 		apiStatus: ApiStatus;
+		nurRegelverletzungen: boolean;
 	}>()
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
 
+	const verletzungen = computed(() => props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen);
+
+	const regeln = computed(()=> {
+		if (props.nurRegelverletzungen) {
+			const list: List<GostBlockungRegel> = new ArrayList();
+			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))
+				if (verletzungen.value.contains(r.id))
+					list.add(r);
+			return list;
+		}
+		return props.getDatenmanager().regelGetListeOfTyp(props.regelTyp);
+	});
+
 	function abbrechen() {
 		if (props.apiStatus.pending)
 			return;
 		emit('update:modelValue', undefined);
 	}
+
 	function select_regel(r: GostBlockungRegel) {
 		emit('update:modelValue', r);
 	}
-
-	function regelverletzung(r: GostBlockungRegel) {
-		for (const v of props.getErgebnismanager().getErgebnis().bewertung.regelVerletzungen)
-			if (v === r.id)
-				return true;
-		return false;
-	}
-
-	const regelnFilter = computed(() => props.regeln.get(props.regelTyp)?.value);
 
 </script>
 
