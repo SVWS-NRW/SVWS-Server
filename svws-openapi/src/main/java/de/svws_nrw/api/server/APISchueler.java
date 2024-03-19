@@ -128,6 +128,33 @@ public class APISchueler {
 
 
     /**
+     * Die OpenAPI-Methode für die Abfrage der Informationen zur Verwaltung einer Schüler-Auswahlliste
+     * mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt (GZip-komprimiert).
+     *
+     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abschnitt   die ID des Schuljahresabschnitts
+     * @param request     die Informationen zur HTTP-Anfrage
+     *
+     * @return die GZip-komprimierten Daten zur Schüler-Auswahlliste
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/abschnitt/{abschnitt : \\d+}/auswahlliste")
+    @Operation(summary = "Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück.",
+               description = "Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück."
+               		       + "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Daten zur Schüler-Auswahlliste",
+		content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+		schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Daten zur Schüler-Auswahlliste")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge")
+    public Response getSchuelerAuswahllisteFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> JSONMapper.gzipFileResponseFromObject(DataSchuelerliste.getSchuelerListe(conn, abschnitt), "auswahlliste_%d.json.gz".formatted(abschnitt)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Schülers.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

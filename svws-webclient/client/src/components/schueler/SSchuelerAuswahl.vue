@@ -26,11 +26,11 @@
 					</svws-ui-button>-->
 				</template>
 				<template #cell(idKlasse)="{ rowData, value }">
-					{{ value === null ? "–" : (schuelerListeManager().klassen.get(value)?.kuerzel) ?? "–" }}
+					{{ value === null ? "–" : (schuelerListeManager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
 					<svws-ui-tooltip v-if="!schuelerListeManager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
 						<span class="icon icon-error i-ri-alert-line" />
 						<template #content>
-							Der Schüler befindet sich nicht in dem Schuljahrsabschnitt der Auswahl
+							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ schuelerListeManager().schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>
 					</svws-ui-tooltip>
 				</template>

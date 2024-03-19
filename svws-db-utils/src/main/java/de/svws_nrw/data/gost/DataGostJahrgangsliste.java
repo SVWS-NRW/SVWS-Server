@@ -58,19 +58,26 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		super(conn);
 	}
 
-	@Override
-	public Response getAll() {
+
+	/**
+	 * Bestimmt die Liste der Abiturjahrgänge
+	 *
+	 * @param conn   die Datenbankverbindung
+	 *
+	 * @return die Liste der Abiturjahrgänge
+	 */
+	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn) {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception("Aktueller Schuljahresabschnitt konnte nicht bestimmt werden.");
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception("Es konnten keine Jahrgänge gefunden werden.");
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final ArrayList<GostJahrgang> daten = new ArrayList<>();
@@ -107,6 +114,12 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		eintrag.bezeichnung = "Allgemein / Vorlage";
 		eintrag.istAbgeschlossen = false;
 		daten.add(0, eintrag);
+		return daten;
+	}
+
+	@Override
+	public Response getAll() {
+		final List<GostJahrgang> daten = getGostJahrgangsliste(conn);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

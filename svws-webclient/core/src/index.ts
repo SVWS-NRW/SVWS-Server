@@ -282,6 +282,7 @@ export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/Schueler
 export { SchuelerLernabschnittNachpruefung } from './core/data/schueler/SchuelerLernabschnittNachpruefung';
 export { SchuelerLernabschnittNachpruefungsdaten } from './core/data/schueler/SchuelerLernabschnittNachpruefungsdaten';
 export { SchuelerLernabschnittsdaten } from './core/data/schueler/SchuelerLernabschnittsdaten';
+export { SchuelerListe } from './core/data/schueler/SchuelerListe';
 export { SchuelerListeEintrag } from './core/data/schueler/SchuelerListeEintrag';
 export { SchuelerSchulbesuchMerkmal } from './core/data/schueler/SchuelerSchulbesuchMerkmal';
 export { SchuelerSchulbesuchSchule } from './core/data/schueler/SchuelerSchulbesuchSchule';

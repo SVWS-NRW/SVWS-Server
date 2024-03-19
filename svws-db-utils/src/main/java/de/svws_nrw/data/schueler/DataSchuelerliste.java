@@ -8,16 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.gost.DataGostJahrgangsliste;
+import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
+import de.svws_nrw.data.klassen.DataKlassenlisten;
+import de.svws_nrw.data.kurse.DataKursliste;
+import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -27,6 +34,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -60,7 +68,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				return OperationError.NOT_FOUND.getResponse();
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(tmpAbschnitt, false);
+		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, false);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -73,7 +81,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				return OperationError.NOT_FOUND.getResponse();
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(tmpAbschnitt, true);
+		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, true);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -184,13 +192,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 
 
 	/**
-	 *  Ermittelt die Kurse, welche von den Schülern in der Liste belegt wurden und ordnet diese zu.
-	 *  Die Ermittlung der Kurse sollte mit einer gültigen Schuljahresabschnitts-ID eingeschränkt werden.
+	 * Ermittelt die Kurse, welche von den Schülern in der Liste belegt wurden und ordnet diese zu.
+	 * Die Ermittlung der Kurse sollte mit einer gültigen Schuljahresabschnitts-ID eingeschränkt werden.
 	 *
-	 *  @param schuelerListe             die Schülerliste
-	 *  @param schuljahresabschnittsID   die ID des Schuljahrsabschnitts
+	 * @param conn        die Datenbankverbindung
+	 * @param schuelerListe             die Schülerliste
+	 * @param schuljahresabschnittsID   die ID des Schuljahrsabschnitts
 	 */
-	private void getSchuelerKurse(final List<SchuelerListeEintrag> schuelerListe, final Long schuljahresabschnittsID) {
+	private static void getSchuelerKurse(final DBEntityManager conn, final List<SchuelerListeEintrag> schuelerListe, final Long schuljahresabschnittsID) {
 		if (!schuelerListe.isEmpty()) {
 			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
 			Map<Long, List<DTOKursSchueler>> kursSchueler;
@@ -224,12 +233,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	/**
 	 * Erstellt eine Liste der nicht gelöschten Schüler für den angegebenen Abschnitt.
 	 *
+	 * @param conn        die Datenbankverbindung
 	 * @param abschnitt   die ID des Schuljahresabschnitts, der eingelesen werden soll
 	 * @param nurAktive   gibt an, dass nur aktive Schüler zurückgegeben werden sollen
 	 *
 	 * @return die Schülerliste
 	 */
-	private List<SchuelerListeEintrag> getListeSchueler(final long abschnitt, final boolean nurAktive) {
+	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive) {
 		// Lese die Schüler aus der Datenbank
 		List<DTOSchueler> schueler = null;
 		if (nurAktive) {
@@ -276,7 +286,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
     		.sorted(dataComparator)
 	    	.toList();
     	// Ermittle die Kurse, welche von den Schülern belegt wurden.
-    	getSchuelerKurse(schuelerListe, abschnitt);
+    	getSchuelerKurse(conn, schuelerListe, abschnitt);
     	// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
     	if (schule.Schulform.daten.hatGymOb) {
     		for (final SchuelerListeEintrag s : schuelerListe) {
@@ -288,6 +298,43 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	}
     	// Und gib die Schülerliste mit den belegten Kursen zurück...
     	return schuelerListe;
+	}
+
+
+	/**
+	 * Aggregiert alle Daten, welche für eine Auswahlliste mit dem SchuelerListeManager
+	 * benötigt werden.
+	 *
+	 * @param conn                      die Datenbankverbindung
+	 * @param idSchuljahresabschnitt    die ID des Schuljahresabschnitt für welchen die Daten aggregiert werden sollen
+	 *
+	 * @return die Daten für die Schüler-Auswahlliste
+	 */
+	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) {
+		// Bestimme die Schulform
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if ((schule == null) || (schule.Schulform == null))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Schulform der Schule konnte nicht ermittelt werden.");
+		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
+		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
+		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
+			throw OperationError.NOT_FOUND.exception("Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden".formatted(idSchuljahresabschnitt));
+		// Erstelle das Ergebnis-DTO ...
+		final SchuelerListe result = new SchuelerListe();
+		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
+		// ... lese die Daten ein
+		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
+		result.klassen.addAll(DataKlassenlisten.getKlassenListe(conn, idSchuljahresabschnitt));
+		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
+		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
+		if (schule.Schulform.daten.hatGymOb)
+			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn));
+		// ... und ermittle ggf. weitere Klassen
+		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
+		final List<Long> idsFehlendeKlassen = result.schueler.stream().map(s -> s.idKlasse).filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id))).distinct().toList();
+		if (!idsFehlendeKlassen.isEmpty())
+			result.klassen.addAll(DataKlassenlisten.getKlassenListeByIDs(conn, idSchuljahresabschnitt, idsFehlendeKlassen));
+		return result;
 	}
 
 }

@@ -51,7 +51,22 @@ public final class DataKlassenlisten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	private static @NotNull List<@NotNull KlassenDaten> getKlassenListe(final DBEntityManager conn, final long idSchuljahresabschnitt) {
+	/**
+	 * Bestimmt eine Liste mit allen Klassendaten für den angegebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param klassen                  die DTOs der Klassen
+	 *
+	 * @return die Liste mit den Daten der Klassen
+	 */
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByDTOs(final DBEntityManager conn, final long idSchuljahresabschnitt, final List<DTOKlassen> klassen) {
+		// Bestimme alle Klassen des aktuellen Schuljahresabschnitts und deren Klassenleitungen
+    	if ((klassen == null) || (klassen.isEmpty()))
+    		return new ArrayList<>();
+    	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
+    	final Map<Long, List<DTOKlassenLeitung>> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class)
+    			.stream().collect(Collectors.groupingBy(kll -> kll.Klassen_ID));
 		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
@@ -60,13 +75,6 @@ public final class DataKlassenlisten extends DataManager<Long> {
 		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null)
 			throw OperationError.NOT_FOUND.exception("Konnte den Schuljahresabschnitt für die ID %d nicht finden.".formatted(idSchuljahresabschnitt));
-		// Bestimme alle Klassen des aktuellen Schuljahresabschnitts und deren Klassenleitungen
-    	final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schuljahresabschnitt.ID, DTOKlassen.class);
-    	if ((klassen == null) || (klassen.isEmpty()))
-    		return new ArrayList<>();
-    	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
-    	final Map<Long, List<DTOKlassenLeitung>> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class)
-    			.stream().collect(Collectors.groupingBy(kll -> kll.Klassen_ID));
     	// Bestimme alle Klassen-DTOs der klassen aus dem vorigen und nachfolgenden Schuljahresabschnitt
     	final Map<String, DTOKlassen> klassenVorher = (schuljahresabschnitt.VorigerAbschnitt_ID == null)
     			? new HashMap<>()
@@ -93,6 +101,37 @@ public final class DataKlassenlisten extends DataManager<Long> {
     		DataKlassendaten.dtoMapper(schule.Schulform, mapSchuljahresabschnitte, k, klassenLeitungen.computeIfAbsent(k.ID, l -> new ArrayList<>()),
     				mapKlassenSchueler.computeIfAbsent(k.ID, l -> new ArrayList<>()), klassenVorher, klassenNachher)
     	).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+	}
+
+
+	/**
+	 * Bestimmt eine Liste mit allen Klassendaten für den angegebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param idsKlassen               die IDs der Klassen
+	 *
+	 * @return die Liste mit den Daten der Klassen
+	 */
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListeByIDs(final DBEntityManager conn, final long idSchuljahresabschnitt, final List<Long> idsKlassen) {
+		if (idsKlassen.isEmpty())
+			return new ArrayList<>();
+		return getKlassenListeByDTOs(conn, idSchuljahresabschnitt, conn.queryByKeyList(DTOKlassen.class, idsKlassen));
+	}
+
+
+	/**
+	 * Bestimmt eine Liste mit allen Klassendaten für den angegebenen Schuljahresabschnitt
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die Liste mit den Daten der Klassen
+	 */
+	public static @NotNull List<@NotNull KlassenDaten> getKlassenListe(final DBEntityManager conn, final long idSchuljahresabschnitt) {
+		// Bestimme alle Klassen des aktuellen Schuljahresabschnitts und deren Klassenleitungen
+    	final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOKlassen.class);
+    	return getKlassenListeByDTOs(conn, idSchuljahresabschnitt, klassen);
 	}
 
 	@Override

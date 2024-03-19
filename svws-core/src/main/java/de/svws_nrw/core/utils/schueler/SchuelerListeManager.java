@@ -1,8 +1,11 @@
 package de.svws_nrw.core.utils.schueler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import de.svws_nrw.core.adt.Pair;
@@ -11,6 +14,7 @@ import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
+import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
@@ -53,6 +57,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	/** Das Filter-Attribut für die Klassen */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KlassenDaten> klassen;
 	private static final @NotNull Function<@NotNull KlassenDaten, @NotNull Long> _klasseToId = (final @NotNull KlassenDaten k) -> k.id;
+	private final @NotNull Map<@NotNull Long, @NotNull KlassenDaten> _mapKlassenAlle = new HashMap<>();
 
 	/** Das Filter-Attribut für die Kurse */
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KursDaten> kurse;
@@ -80,29 +85,26 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Schülerauswahl bezieht
 	 * @param schulform               die Schulform der Schule
-	 * @param schueler                die Liste der Schüler
-	 * @param jahrgaenge              die Liste des Jahrgangskatalogs
-	 * @param klassen                 die Liste des Klassenkatalogs
-	 * @param kurse                   die Liste des Kurskatalogs
+	 * @param daten                   die Informationen zur Schüler-Auswahlliste
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
-	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public SchuelerListeManager(final long schuljahresabschnitt, final Schulform schulform,
-			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
-			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
-			final @NotNull List<@NotNull KlassenDaten> klassen,
-			final @NotNull List<@NotNull KursDaten> kurse,
-			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
-			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
+	public SchuelerListeManager(final Schulform schulform, final @NotNull SchuelerListe daten, final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte) {
+		super(daten.idSchuljahresabschnitt, schulform, daten.schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
 				Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
-		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
-		this.klassen = new AttributMitAuswahl<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
-		this.kurse = new AttributMitAuswahl<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
+		// Erstelle eine Map für den Zugriff auf Klassen über die ID und
+		// erstelle für den Filter eine Liste der Klassen reduziert auf alle Klassen des Schuljahresabschnittes der Auswahl
+		final @NotNull List<@NotNull KlassenDaten> aktuelleKlassen = new ArrayList<>();
+		for (final @NotNull KlassenDaten klasse : daten.klassen) {
+			_mapKlassenAlle.put(klasse.id, klasse);
+			if (klasse.idSchuljahresabschnitt == daten.idSchuljahresabschnitt)
+				aktuelleKlassen.add(klasse);
+		}
+		this.klassen = new AttributMitAuswahl<>(aktuelleKlassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributMitAuswahl<>(daten.jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
+		this.kurse = new AttributMitAuswahl<>(daten.kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
 		this.schuljahresabschnitte = new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
-		this.abiturjahrgaenge = new AttributMitAuswahl<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributMitAuswahl<>(daten.jahrgaengeGost, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
 		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
@@ -191,8 +193,8 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 			final boolean asc = (criteria.b == null) || criteria.b;
 			int cmp = 0;
 			if ("klassen".equals(field)) {
-				final KlassenDaten aKlasse = this.klassen.get(a.idKlasse);
-				final KlassenDaten bKlasse = this.klassen.get(b.idKlasse);
+				final KlassenDaten aKlasse = this.klasseGetOrNull(a.idKlasse);
+				final KlassenDaten bKlasse = this.klasseGetOrNull(b.idKlasse);
 				if ((aKlasse == null) && (bKlasse == null)) {
 					cmp = 0;
 				} else if (aKlasse == null) {
@@ -240,6 +242,19 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 
 
 	/**
+	 * Gibt für die angegebene Klassen-ID die Daten zur Klasse zurück.
+	 * Sollte die ID ungültig sein, so wird null zurückgegeben.
+	 *
+	 * @param idKlasse    die ID der Klasse
+	 *
+	 * @return die Daten der Klasse
+	 */
+	public KlassenDaten klasseGetOrNull(final long idKlasse) {
+		return this._mapKlassenAlle.get(idKlasse);
+	}
+
+
+	/**
 	 * Gibt zurück, ob der Schüler mit der angebenen ID einen Lernabschnitt in
 	 * dem Schuljahresabschnitt dieser Auswahl hat.
 	 *
@@ -249,9 +264,26 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	 */
 	public boolean schuelerIstImSchuljahresabschnitt(final long idSchueler) {
 		final SchuelerListeEintrag schueler = this.liste.get(idSchueler);
-		if (schueler == null)
-			return false;
-		return (schueler.idSchuljahresabschnitt == this._schuljahresabschnitt);
+		return (schueler != null) && (schueler.idSchuljahresabschnitt == this._schuljahresabschnitt);
 	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt des Schülers als String zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return der Schuljahresabschnitt als String
+	 */
+	public @NotNull String schuelerSchuljahresabschnittAsString(final long idSchueler) {
+		final SchuelerListeEintrag schueler = this.liste.get(idSchueler);
+		if (schueler == null)
+			return "----.-";
+		final Schuljahresabschnitt schuljahresabschnitt = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null)
+			return "----.-";
+		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
+	}
+
 
 }

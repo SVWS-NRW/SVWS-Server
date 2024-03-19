@@ -31,7 +31,7 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.
 	 */
-	private final Function<DTOJahrgang, JahrgangsDaten> dtoMapperJahrgang = (final DTOJahrgang j) -> {
+	private static final Function<DTOJahrgang, JahrgangsDaten> dtoMapperJahrgang = (final DTOJahrgang j) -> {
 		final JahrgangsDaten eintrag = new JahrgangsDaten();
 		eintrag.id = j.ID;
 		eintrag.kuerzel = j.InternKrz;
@@ -47,12 +47,25 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		return eintrag;
 	};
 
-	@Override
-	public Response getAll() {
+
+	/**
+	 * Bestimmt eine Liste mit allen Jahrgangsdaten
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 *
+	 * @return die Liste mit den Daten der Jahrgänge
+	 */
+	public static List<JahrgangsDaten> getJahrgangsliste(final DBEntityManager conn) {
     	final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
     	if (jahrgaenge == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final List<JahrgangsDaten> daten = jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+    		throw OperationError.NOT_FOUND.exception("Keine Jahrgänge gefunden");
+    	return jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+	}
+
+
+	@Override
+	public Response getAll() {
+    	final List<JahrgangsDaten> daten = getJahrgangsliste(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

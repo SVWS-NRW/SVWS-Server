@@ -1,6 +1,6 @@
 import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenDaten, JahrgangsDaten, KursDaten, GostJahrgang, Schuljahresabschnitt } from "@core";
 
-import { SchuelerListeManager, ArrayList, DeveloperNotificationException } from "@core";
+import { SchuelerListeManager, ArrayList, DeveloperNotificationException, SchuelerListe } from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
@@ -18,7 +18,7 @@ interface RouteStateSchueler extends RouteStateInterface {
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: new SchuelerListeManager(-1, null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsDaten>, new ArrayList<KlassenDaten>, new ArrayList<KursDaten>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+	schuelerListeManager: new SchuelerListeManager(null, new SchuelerListe(), new ArrayList<Schuljahresabschnitt>()),
 	view: routeSchuelerIndividualdaten,
 };
 
@@ -41,12 +41,10 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
 		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den Schülerlisten-Manager zunächst ohne Auswahl
-		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listAbiturjahrgaenge = api.schulform.daten.hatGymOb ? await api.server.getGostAbiturjahrgaenge(api.schema) : new ArrayList<GostJahrgang>();
-		const schuelerListeManager = new SchuelerListeManager(idSchuljahresabschnitt, api.schulform, listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
+		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		const auswahllisteDaten = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
+		const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen

@@ -108,7 +108,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		final @NotNull DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(klasse.Schuljahresabschnitts_ID);
 		if ((!mapKlassenVorher.isEmpty()) && (daten.kuerzelVorgaengerklasse != null)) {
 			DTOKlassen klasseVorher = null;
-			if ((schulform != Schulform.WB) && (mapSchuljahresabschnitte.get(schuljahresabschnitt.VorigerAbschnitt_ID).Jahr == schuljahresabschnitt.Jahr))
+			if ((schulform != Schulform.WB) && (schuljahresabschnitt.Abschnitt == 2))
 				klasseVorher = mapKlassenVorher.get(daten.kuerzel);
 			else
 				klasseVorher = mapKlassenVorher.get(daten.kuerzelVorgaengerklasse);
@@ -117,7 +117,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 			daten.idVorgaengerklasse = null;
 		if ((!mapKlassenNachher.isEmpty()) && (daten.kuerzelFolgeklasse != null)) {
 			DTOKlassen klasseNachher = null;
-			if ((schulform != Schulform.WB) && (mapSchuljahresabschnitte.get(schuljahresabschnitt.FolgeAbschnitt_ID).Jahr == schuljahresabschnitt.Jahr))
+			if ((schulform != Schulform.WB) && (schuljahresabschnitt.Abschnitt == 1))
 				klasseNachher = mapKlassenNachher.get(daten.kuerzel);
 			else
 				klasseNachher = mapKlassenNachher.get(daten.kuerzelFolgeklasse);

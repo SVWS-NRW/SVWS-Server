@@ -9043,6 +9043,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerAuswahllisteFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/abschnitt/{abschnitt : \d+}/auswahlliste
+	 *
+	 * Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierten Daten zur Schüler-Auswahlliste
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
+	 *   Code 404: Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 *
+	 * @returns Die GZip-komprimierten Daten zur Schüler-Auswahlliste
+	 */
+	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}/auswahlliste"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerAktuell für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/aktuell
 	 *
 	 * Erstellt eine Liste aller im aktuellen Schuljahresabschnitt vorhanden Schüler unter Angabe der ID, des Vor- und Nachnamens, der Klasse, des Jahrgangs, sein Status (z.B. aktiv), einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Die schüler sind anhand der Klasse, des Nachnamens und des Vornamens sortiert.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.

@@ -2,9 +2,11 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -13,6 +15,7 @@ import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
+import { SchuelerListe } from '../../../core/data/schueler/SchuelerListe';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Pair } from '../../../core/adt/Pair';
@@ -25,6 +28,7 @@ import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 
 export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEintrag, SchuelerStammdaten> {
@@ -66,6 +70,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	public readonly klassen : AttributMitAuswahl<number, KlassenDaten>;
 
 	private static readonly _klasseToId : JavaFunction<KlassenDaten, number> = { apply : (k: KlassenDaten) => k.id };
+
+	private readonly _mapKlassenAlle : JavaMap<number, KlassenDaten> = new HashMap();
 
 	/**
 	 * Das Filter-Attribut für die Kurse
@@ -110,22 +116,23 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Schülerauswahl bezieht
 	 * @param schulform               die Schulform der Schule
-	 * @param schueler                die Liste der Schüler
-	 * @param jahrgaenge              die Liste des Jahrgangskatalogs
-	 * @param klassen                 die Liste des Klassenkatalogs
-	 * @param kurse                   die Liste des Kurskatalogs
+	 * @param daten                   die Informationen zur Schüler-Auswahlliste
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
-	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, klassen : List<KlassenDaten>, kurse : List<KursDaten>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
-		super(schuljahresabschnitt, schulform, schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
-		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
-		this.klassen = new AttributMitAuswahl(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
-		this.kurse = new AttributMitAuswahl(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
+	public constructor(schulform : Schulform | null, daten : SchuelerListe, schuljahresabschnitte : List<Schuljahresabschnitt>) {
+		super(daten.idSchuljahresabschnitt, schulform, daten.schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
+		const aktuelleKlassen : List<KlassenDaten> = new ArrayList();
+		for (const klasse of daten.klassen) {
+			this._mapKlassenAlle.put(klasse.id, klasse);
+			if (klasse.idSchuljahresabschnitt === daten.idSchuljahresabschnitt)
+				aktuelleKlassen.add(klasse);
+		}
+		this.klassen = new AttributMitAuswahl(aktuelleKlassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributMitAuswahl(daten.jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
+		this.kurse = new AttributMitAuswahl(daten.kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
 		this.schuljahresabschnitte = new AttributMitAuswahl(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
-		this.abiturjahrgaenge = new AttributMitAuswahl(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributMitAuswahl(daten.jahrgaengeGost, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
@@ -204,8 +211,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 			const asc : boolean = (criteria.b === null) || criteria.b;
 			let cmp : number = 0;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
-				const aKlasse : KlassenDaten | null = this.klassen.get(a.idKlasse);
-				const bKlasse : KlassenDaten | null = this.klassen.get(b.idKlasse);
+				const aKlasse : KlassenDaten | null = this.klasseGetOrNull(a.idKlasse);
+				const bKlasse : KlassenDaten | null = this.klasseGetOrNull(b.idKlasse);
 				if ((aKlasse === null) && (bKlasse === null)) {
 					cmp = 0;
 				} else
@@ -253,6 +260,18 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	}
 
 	/**
+	 * Gibt für die angegebene Klassen-ID die Daten zur Klasse zurück.
+	 * Sollte die ID ungültig sein, so wird null zurückgegeben.
+	 *
+	 * @param idKlasse    die ID der Klasse
+	 *
+	 * @return die Daten der Klasse
+	 */
+	public klasseGetOrNull(idKlasse : number) : KlassenDaten | null {
+		return this._mapKlassenAlle.get(idKlasse);
+	}
+
+	/**
 	 * Gibt zurück, ob der Schüler mit der angebenen ID einen Lernabschnitt in
 	 * dem Schuljahresabschnitt dieser Auswahl hat.
 	 *
@@ -262,9 +281,24 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public schuelerIstImSchuljahresabschnitt(idSchueler : number) : boolean {
 		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
+		return (schueler !== null) && (schueler.idSchuljahresabschnitt === this._schuljahresabschnitt);
+	}
+
+	/**
+	 * Gibt den Schuljahresabschnitt des Schülers als String zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return der Schuljahresabschnitt als String
+	 */
+	public schuelerSchuljahresabschnittAsString(idSchueler : number) : string {
+		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
 		if (schueler === null)
-			return false;
-		return (schueler.idSchuljahresabschnitt === this._schuljahresabschnitt);
+			return "----.-";
+		const schuljahresabschnitt : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null)
+			return "----.-";
+		return schuljahresabschnitt.schuljahr + "." + schuljahresabschnitt.abschnitt;
 	}
 
 	transpilerCanonicalName(): string {
