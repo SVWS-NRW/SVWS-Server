@@ -264,7 +264,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
 		if (schueler === null)
 			return false;
-		return schueler.idSchuljahresabschnitt === this._schuljahresabschnitt;
+		return (schueler.idSchuljahresabschnitt === this._schuljahresabschnitt);
 	}
 
 	transpilerCanonicalName(): string {

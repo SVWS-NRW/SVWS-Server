@@ -106,11 +106,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		eintrag.geschlecht = schueler.Geschlecht == null ? "" : schueler.Geschlecht.kuerzel;
 		if (aktAbschnitt == null) {
+			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = -1L;
 			eintrag.idJahrgang = -1L;
 			eintrag.jahrgang = "";
 			eintrag.schulgliederung = "";
 		} else {
+			eintrag.idSchuljahresabschnitt = aktAbschnitt.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = (aktAbschnitt.Klassen_ID == null) ? -1 : aktAbschnitt.Klassen_ID;
 			final DTOJahrgang jg = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
 			if (jg == null) {
@@ -129,7 +131,6 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.status = schueler.Status.id;
 		eintrag.istDuplikat = schueler.Duplikat;
 		eintrag.externeSchulNr = schueler.ExterneSchulNr;
-		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 		return eintrag;
 	}
 
