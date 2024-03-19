@@ -49,13 +49,19 @@
 						</template>
 						<div v-else class="mr-2 ml-auto inline-flex">
 							<svws-ui-tooltip v-if="row.anzahlErgebnisse > 1">
-								<span class="icon-sm i-ri-lock-fill -mx-0.5" />
+								<span class="icon-sm i-ri-lock-fill -mx-1" />
 								<template #content>
-									<span>{{ row.anzahlErgebnisse }} Ergebnisse vorhanden, es können keine weiteren Regeln angelegt werden.</span>
+									<span>
+										{{ row.anzahlErgebnisse }} Ergebnisse vorhanden.
+										<br>Es können nur bei den Blockungsergebnissen, d.h.
+										den Kurs-Schienen- und der Kurs-Schülerzuordnungen, Änderungen vorgenommen werden.
+										<br>Für weitere Anpassungen an der Blockung müssen entweder alle Ergebnisse bis auf eines gelöscht werden
+										oder die Blockung muss zu einer neuen Blockung abgeleitet werden.
+									</span>
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else autosize>
-								<span class="icon-sm i-ri-lock-unlock-line -mx-0.5" />
+								<span class="icon-sm i-ri-lock-unlock-line -mx-1" />
 								<template #content>
 									<span>In dieser Blockung können Regeln erstellt werden.</span>
 								</template>
