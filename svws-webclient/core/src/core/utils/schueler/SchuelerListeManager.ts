@@ -112,6 +112,11 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
+	/**
+	 * Das Filter-Attribut auf Schüler mit einem Lernabschnitt in dem Schuljahresabschnitt
+	 */
+	private _filterNurMitLernabschitt : boolean = true;
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -181,6 +186,27 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	}
 
 	/**
+	 * Gibt die aktuelle Filtereinstellung auf Schüler mit Lernabschnitt
+	 * im ausgewählten Schuljahresabschnitt zurück.
+	 *
+	 * @return true, wenn nur Schüler mit Lernabschnitt angezeigt werden und ansonsten false
+	 */
+	public filterNurMitLernabschitt() : boolean {
+		return this._filterNurMitLernabschitt;
+	}
+
+	/**
+	 * Setzt die Filtereinstellung auf Schüler mit Lernabschnitt im ausgewählten
+	 * Schuljahresabschnitt.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public setFilterNurMitLernabschitt(value : boolean) : void {
+		this._filterNurMitLernabschitt = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+	/**
 	 * Aktualisiert die Klassen-ID bei dem Schüler
 	 *
 	 * @param idKlasse   die ID der Klasse
@@ -240,6 +266,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	}
 
 	protected checkFilter(eintrag : SchuelerListeEintrag) : boolean {
+		if (this._filterNurMitLernabschitt && (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt))
+			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt !== this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))

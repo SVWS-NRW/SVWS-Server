@@ -20,6 +20,9 @@
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<div class="col-span-full flex flex-wrap gap-x-5">
+						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
+					</div>
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<span class="icon i-ri-filter-line" />
 						Erweiterte Filter
@@ -126,6 +129,14 @@
 				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase)))
 				arr.push(e);
 		return arr;
+	});
+
+	const filterNurMitLernabschitt = computed<boolean>({
+		get: () => props.schuelerListeManager().filterNurMitLernabschitt(),
+		set: (value) => {
+			props.schuelerListeManager().setFilterNurMitLernabschitt(value);
+			void props.setFilter();
+		}
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({

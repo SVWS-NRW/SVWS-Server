@@ -81,6 +81,9 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
 	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
+	/** Das Filter-Attribut auf Schüler mit einem Lernabschnitt in dem Schuljahresabschnitt */
+	private boolean _filterNurMitLernabschitt = true;
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -158,6 +161,29 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 
 
 	/**
+	 * Gibt die aktuelle Filtereinstellung auf Schüler mit Lernabschnitt
+	 * im ausgewählten Schuljahresabschnitt zurück.
+	 *
+	 * @return true, wenn nur Schüler mit Lernabschnitt angezeigt werden und ansonsten false
+	 */
+	public boolean filterNurMitLernabschitt() {
+		return this._filterNurMitLernabschitt;
+	}
+
+
+	/**
+	 * Setzt die Filtereinstellung auf Schüler mit Lernabschnitt im ausgewählten
+	 * Schuljahresabschnitt.
+	 *
+	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 */
+	public void setFilterNurMitLernabschitt(final boolean value) {
+		this._filterNurMitLernabschitt = value;
+		this._eventHandlerFilterChanged.run();
+	}
+
+
+	/**
 	 * Aktualisiert die Klassen-ID bei dem Schüler
 	 *
 	 * @param idKlasse   die ID der Klasse
@@ -220,7 +246,9 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 
 	@Override
 	protected boolean checkFilter(final @NotNull SchuelerListeEintrag eintrag) {
-		// Filtere nun anhand dee Filterkriterien
+		// Filtere nun anhand der Filterkriterien
+		if (this._filterNurMitLernabschitt && (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt))
+			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
 		if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
