@@ -49,7 +49,7 @@
 			<slot name="filterAdvanced" />
 		</div>
 	</div>
-	<div class="svws-ui-table" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable;"
+	<div class="svws-ui-table" role="table" aria-label="Tabelle" v-bind="$attrs" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;"
 		:class="{
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
@@ -61,6 +61,7 @@
 			'svws-has-background': hasBackground,
 			'overflow-visible': !scroll,
 			'overflow-auto': scroll,
+			'pr-4': scroll && win11FForMacOS,
 		}">
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
@@ -494,6 +495,15 @@
 	function updateHiddenColumns(columnKey: string, ok: any) {
 		ok ? hiddenColumns.value.delete(columnKey) : hiddenColumns.value.add(columnKey);
 	}
+
+	const win11FForMacOS = computed<boolean>(() => {
+		const userAgent = window.navigator.userAgent;
+		if (userAgent.includes("Mac"))
+			return true;
+		if (userAgent.includes("Win") && userAgent.includes("Firefox"))
+			return true;
+		return false;
+	});
 
 </script>
 
