@@ -89,6 +89,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): LehrerAuswahlProps {
 		return {
+			serverMode: api.mode,
 			lehrerListeManager: () => this.data.lehrerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,

@@ -1,8 +1,9 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline>Stundenplan</template>
+		<template #headline><span class="select-none">Stundenplan</span></template>
 		<template #abschnitt>
-			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
+			<abschnitt-auswahl v-if="serverMode !== ServerMode.STABLE" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
+			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
@@ -19,9 +20,9 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
-	import type { StundenplanListeEintrag } from "@core";
-	import type { DataTableColumn } from "@ui";
+	import { type StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
+	import { ServerMode, type StundenplanListeEintrag } from "@core";
+	import { type DataTableColumn } from "@ui";
 	import { ref } from "vue";
 
 	const props = defineProps<StundenplanAuswahlProps>();

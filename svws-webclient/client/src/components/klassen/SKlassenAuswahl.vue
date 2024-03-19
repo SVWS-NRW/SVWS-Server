@@ -2,7 +2,8 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Klassen</template>
 		<template #abschnitt>
-			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
+			<abschnitt-auswahl v-if="serverMode !== ServerMode.STABLE" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
+			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
 		</template>
 		<template #content>
 			<svws-ui-table clickable :clicked="klassenListeManager().hasDaten() ? klassenListeManager().auswahl() : null" @update:clicked="gotoEintrag"
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import { ServerMode } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import { computed, ref, shallowRef } from "vue";
 

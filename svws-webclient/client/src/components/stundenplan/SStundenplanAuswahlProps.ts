@@ -1,6 +1,7 @@
-import type { Schuljahresabschnitt, StundenplanListeEintrag } from "@core";
+import type { Schuljahresabschnitt, ServerMode, StundenplanListeEintrag } from "@core";
 
 export interface StundenplanAuswahlProps {
+	serverMode: ServerMode;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: () => Map<number, StundenplanListeEintrag>;
 	gotoEintrag: (religion: StundenplanListeEintrag) => Promise<void>;

@@ -97,6 +97,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
 		return {
+			serverMode: api.mode,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,

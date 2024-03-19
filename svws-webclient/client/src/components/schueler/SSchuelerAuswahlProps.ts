@@ -1,6 +1,7 @@
-import type { SchuelerListeEintrag, Schuljahresabschnitt, SchuelerListeManager } from "@core";
+import type { SchuelerListeEintrag, Schuljahresabschnitt, SchuelerListeManager, ServerMode } from "@core";
 
 export interface SchuelerAuswahlProps {
+	serverMode: ServerMode;
 	schuelerListeManager: () => SchuelerListeManager;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;

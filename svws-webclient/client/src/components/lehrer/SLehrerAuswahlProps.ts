@@ -1,6 +1,7 @@
-import type { LehrerListeEintrag, LehrerListeManager, Schuljahresabschnitt } from "@core";
+import type { LehrerListeEintrag, LehrerListeManager, Schuljahresabschnitt, ServerMode } from "@core";
 
 export interface LehrerAuswahlProps {
+	serverMode: ServerMode;
 	lehrerListeManager: () => LehrerListeManager;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;

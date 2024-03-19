@@ -78,6 +78,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public getAuswahlProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
 		return {
+			serverMode: api.mode,
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: () =>this.data.mapKatalogeintraege,
 			gotoEintrag: this.data.gotoEintrag,

@@ -1,8 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>Statistik</div>
-			<div class="opacity-50">2023.1</div>
+			<div class="select-none">Statistik</div>
+		</template>
+		<template #abschnitt>
+			<span class="text-base font-bold opacity-50 select-none">2023.1</span>
 		</template>
 	</svws-ui-secondary-menu>
 	<!--<svws-ui-secondary-menu>
