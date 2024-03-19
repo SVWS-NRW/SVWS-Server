@@ -37,6 +37,6 @@
 	const aktBezeichnung = `${abschnitt?.schuljahr}.${abschnitt?.abschnitt}`;
 
 	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
-	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}.${item.abschnitt}` : "Abschnitt";
+	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}/${(item.schuljahr + 1) % 100}.${item.abschnitt}` : "Abschnitt";
 
 </script>
