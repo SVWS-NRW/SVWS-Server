@@ -25,9 +25,7 @@
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
 											<div class="flex flex-row flex-grow">
 												<template v-if="fachwahlKurszuordnungen.get(fach.fachID) === undefined">
-													<span class="rounded-sm group-hover:bg-white/50 w-3 -my-0.5 flex">
-														<span class="icon-sm i-ri-draggable text-black -ml-0.5 -mr-1 opacity-50 group-hover:opacity-100" />
-													</span>
+													<span class="icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-sm group-hover:bg-white/50" />
 												</template>
 												<template v-else>
 													<span class="w-3 text-sm">&nbsp;</span>
@@ -92,9 +90,7 @@
 									:style="{ 'background-color': hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id) ? 'rgb(var(--color-error))' : bgColor(kurs.id) }"
 									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id).value && getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}"
 									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs)">
-									<span class="rounded-sm w-3 absolute top-1 left-1 flex" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
-										<span class="icon-sm i-ri-draggable -ml-0.5 opacity-50 group-hover:opacity-100" />
-									</span>
+									<span class="icon-sm i-ri-draggable mt-1 ml-1 opacity-50 group-hover:opacity-100 rounded-sm absolute top-0 left-0" v-if="is_draggable(kurs.id).value" :class="[hatSchieneKollisionen(schiene.id).value && is_draggable(kurs.id).value ? 'group-hover:bg-white/25 icon-white' : 'group-hover:bg-white/75 icon-black']" />
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
 									</span>
