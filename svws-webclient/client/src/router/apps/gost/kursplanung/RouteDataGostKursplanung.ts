@@ -532,7 +532,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	});
 
 	addSchieneKurs = api.call(async (kurs: GostBlockungKurs) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis))
+		if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen >= this.datenmanager.schieneGetAnzahl()))
 			return;
 		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen + 1);
 		const k = this.ergebnismanager.getKursE(kurs.id);

@@ -102,7 +102,7 @@ hr {
 
 
 .i-ri-add-line {@apply bg-[url(remixicon/icons/System/add-line.svg)] bg-no-repeat bg-center }
-.i-ri-alert-line { @apply bg-[url(remixicon/icons/System/alert-line.svg)] bg-no-repeat bg-center }
+.i-ri-alert-line {@apply bg-[url(remixicon/icons/System/alert-line.svg)] bg-no-repeat bg-center }
 .i-ri-alert-fill {@apply bg-[url(remixicon/icons/System/alert-fill.svg)] bg-no-repeat bg-center }
 .i-ri-archive-line {@apply bg-[url(remixicon/icons/Business/archive-line.svg)] bg-no-repeat bg-center }
 .i-ri-archive-stack-line {@apply bg-[url(remixicon/icons/Business/archive-stack-line.svg)] bg-no-repeat bg-center }

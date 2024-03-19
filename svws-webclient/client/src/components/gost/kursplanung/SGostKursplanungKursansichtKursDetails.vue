@@ -27,7 +27,7 @@
 							<span class="icon-sm i-ri-subtract-line" />
 						</svws-ui-button>
 						<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending">
+						<svws-ui-button type="icon" @click="addSchieneKurs(kurs)" size="small" :disabled="apiStatus.pending || (kurs.anzahlSchienen >= getDatenmanager().schieneGetAnzahl())">
 							<span class="icon-sm i-ri-add-line" />
 						</svws-ui-button>
 					</div>
