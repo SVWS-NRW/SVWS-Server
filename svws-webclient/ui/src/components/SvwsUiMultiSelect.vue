@@ -4,7 +4,7 @@
 			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
 				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
-					<span class="icon i-ri-close-line" />
+					<span class="icon i-ri-close-line -my-0.5" />
 				</button>
 			</span>
 		</div>
@@ -39,8 +39,8 @@
 				@keydown.tab="onTab" />
 		</div>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
-			<span class="icon i-ri-expand-up-down-line my-1" v-if="headless" />
-			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
+			<span class="icon i-ri-expand-up-down-line my-0.5" v-if="headless" />
+			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
 		</button>
 	</div>
 	<Teleport to="body">
@@ -343,7 +343,11 @@
     @apply relative z-10 flex flex-wrap gap-0.5 pl-1 pt-2 pb-1 pr-7 pointer-events-none;
 
     .svws-remove {
-      @apply relative top-0 left-0 w-auto h-auto -mx-0.5 text-black/50 dark:text-white/50 hover:text-error text-sm pointer-events-auto;
+      @apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
+			hover:span.icon {
+				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+			}
     }
   }
 
