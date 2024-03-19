@@ -252,6 +252,21 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return true;
 	}
 
+	/**
+	 * Gibt zurück, ob der Schüler mit der angebenen ID einen Lernabschnitt in
+	 * dem Schuljahresabschnitt dieser Auswahl hat.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return true, fall ein Lernabschnitt vorhanden ist und ansonsten false
+	 */
+	public schuelerIstImSchuljahresabschnitt(idSchueler : number) : boolean {
+		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
+		if (schueler === null)
+			return false;
+		return schueler.idSchuljahresabschnitt === this._schuljahresabschnitt;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.schueler.SchuelerListeManager';
 	}

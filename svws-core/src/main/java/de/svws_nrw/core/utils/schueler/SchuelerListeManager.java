@@ -238,4 +238,20 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 		return true;
 	}
 
+
+	/**
+	 * Gibt zurück, ob der Schüler mit der angebenen ID einen Lernabschnitt in
+	 * dem Schuljahresabschnitt dieser Auswahl hat.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return true, fall ein Lernabschnitt vorhanden ist und ansonsten false
+	 */
+	public boolean schuelerIstImSchuljahresabschnitt(final long idSchueler) {
+		final SchuelerListeEintrag schueler = this.liste.get(idSchueler);
+		if (schueler == null)
+			return false;
+		return (schueler.idSchuljahresabschnitt == this._schuljahresabschnitt);
+	}
+
 }

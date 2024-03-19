@@ -25,8 +25,14 @@
 						Erweiterte Filter
 					</svws-ui-button>-->
 				</template>
-				<template #cell(idKlasse)="{ value }">
-					{{ value === null ? "–" : schuelerListeManager().klassen.get(value)?.kuerzel }}
+				<template #cell(idKlasse)="{ rowData, value }">
+					{{ value === null ? "–" : (schuelerListeManager().klassen.get(value)?.kuerzel) ?? "–" }}
+					<svws-ui-tooltip v-if="!schuelerListeManager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
+						<span class="icon icon-error i-ri-alert-line" />
+						<template #content>
+							Der Schüler befindet sich nicht in dem Schuljahrsabschnitt der Auswahl
+						</template>
+					</svws-ui-tooltip>
 				</template>
 				<!-- <template #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="transparent" @click="showModalGruppenaktionen().value = true">
