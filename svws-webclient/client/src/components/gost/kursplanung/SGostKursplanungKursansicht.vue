@@ -293,13 +293,25 @@
 			<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modalRegelKursartSchienen" />
 			<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 		</div>
+		<svws-ui-modal :show="() => toRef((fehlermeldungen.size() > 0) && !fehlerIgnore)" type="danger" size="medium">
+			<template #modalTitle>Achtung</template>
+			<template #modalContent>
+				Es sind Fehler in dieser Blockung aufgetaucht:
+				<ul>
+					<li v-for="fehler in fehlermeldungen" :key="fehler">{{ fehler }}</li>
+				</ul>
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="secondary" @click="fehlerIgnore = true"> Schließen </svws-ui-button>
+			</template>
+		</svws-ui-modal>
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { WritableComputedRef } from "vue";
-	import { computed, onMounted, ref, toRaw } from "vue";
+	import { computed, onMounted, ref, toRaw, toRef } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
@@ -346,6 +358,8 @@
 	}>();
 
 	const edit_schienenname = ref<number|undefined>(undefined);
+	const fehlermeldungen = computed(() => props.getErgebnismanager().getFehlermeldungen());
+	const fehlerIgnore = ref<boolean>(false);
 
 	const kurse = computed(() => (props.kurssortierung.value === 'fach')
 		? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()

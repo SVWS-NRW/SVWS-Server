@@ -137,23 +137,11 @@
 				</div>
 			</div>
 		</div>
-		<svws-ui-modal :show="() => toRef((fehlermeldungen.size() > 0) && !fehlerIgnore)" type="danger" size="medium">
-			<template #modalTitle>Achtung</template>
-			<template #modalContent>
-				Es sind Fehler in dieser Blockung aufgetaucht:
-				<ul>
-					<li v-for="fehler in fehlermeldungen" :key="fehler">{{ fehler }}</li>
-				</ul>
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="fehlerIgnore = true"> Schließen </svws-ui-button>
-			</template>
-		</svws-ui-modal>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, onMounted, toRef } from "vue";
+	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import { HashSet, SetUtils } from "@core";
@@ -168,8 +156,6 @@
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
 	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
-	const fehlermeldungen = computed(() => props.getErgebnismanager().getFehlermeldungen());
-	const fehlerIgnore = ref<boolean>(false);
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
