@@ -91,7 +91,7 @@
 .button--primary {
 	@apply bg-svws text-white border-svws;
 
-	span.icon {
+	.icon, .icon-sm, .icon-lg {
 		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 	}
@@ -119,6 +119,10 @@
 
 	&:hover {
 		@apply border-svws text-svws;
+		.icon, .icon-sm, .icon-lg {
+			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+		}
 
 		.page--statistik & {
 			@apply border-violet-500 text-violet-500;
@@ -168,7 +172,7 @@
 .button--danger {
 	@apply bg-transparent dark:bg-transparent text-error border-error;
 
-	span.icon {
+	.icon, .icon-sm, .icon-lg {
 		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	}
@@ -186,7 +190,7 @@
 .button--trash {
 	@apply bg-transparent rounded relative;
 	@apply py-0 px-2;
-	span.icon {
+	.icon, .icon-sm, .icon-lg {
 		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	}
@@ -201,7 +205,7 @@
 
 	&:hover {
 		@apply bg-error;
-		span.icon {
+		.icon, .icon-sm, .icon-lg {
 			-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 			filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 		}
@@ -218,7 +222,7 @@
 	&:focus {
 		@apply bg-error;
 		/* @apply icon-white; */
-		span.icon {
+		.icon, .icon-sm, .icon-lg {
 	-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 	filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
 		}
