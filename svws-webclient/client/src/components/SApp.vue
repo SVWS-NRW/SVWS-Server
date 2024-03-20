@@ -10,7 +10,6 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
-							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							<template #icon>
 								<span class="inline-block icon-lg i-ri-team-line" v-if="item.name === 'klassen'" />
 								<span class="inline-block icon-lg i-ri-group-line" v-else-if="item.name === 'schueler'" />
@@ -22,6 +21,7 @@
 								<span class="inline-block icon-lg i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
 								<span class="inline-block icon-lg i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
 							</template>
+							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 						</svws-ui-menu-item>
 					</template>
 				</template>

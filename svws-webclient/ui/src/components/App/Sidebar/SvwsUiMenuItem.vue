@@ -7,9 +7,7 @@
 	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : hatlabel">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
-			<span class="icon">
-				<slot name="icon" />
-			</span>
+			<slot name="icon" />
 		</span>
 		<span class="sidebar--menu-item--label">
 			<slot name="label" />
@@ -56,7 +54,7 @@
 
 <style lang="postcss">
 .sidebar--menu-item {
-	@apply flex items-center flex-col cursor-pointer p-2 rounded my-1;
+	@apply flex items-center flex-col cursor-pointer p-1 rounded my-1;
 	padding: 0.25rem 0.1rem;
 
 	@media (orientation: portrait) {
@@ -73,7 +71,7 @@
 
 	&--active {
 		@apply bg-svws/10 text-svws dark:bg-svws/20;
-		span.icon-lg {
+		.icon-lg {
 			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 		}
@@ -124,7 +122,6 @@
 }
 
 .sidebar--menu-item--icon {
-	@apply mr-0 mt-1;
 	font-size: 1.2rem;
 
 	@media (min-width: 1280px) {
