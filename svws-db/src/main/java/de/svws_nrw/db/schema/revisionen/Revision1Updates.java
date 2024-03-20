@@ -2786,6 +2786,12 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_Benutzer, Schema.tab_BenutzerAllgemein, Schema.tab_Credentials
 		);
+		add("SchuelerWiedervorlage: Entferne Einträge, die keinem gültigen Benutzer zugeordnet sind.",
+			"""
+			DELETE FROM SchuelerWiedervorlage WHERE User_ID NOT IN (SELECT ID FROM Benutzer)
+			""",
+			Schema.tab_Benutzer, Schema.tab_SchuelerWiedervorlage
+		);
 	}
 
 
