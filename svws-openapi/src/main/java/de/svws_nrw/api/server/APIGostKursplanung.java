@@ -1160,7 +1160,7 @@ public class APIGostKursplanung {
             final List<Long> idsSchueler,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsSchueler, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsSchueler, false, 0))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1211,7 +1211,7 @@ public class APIGostKursplanung {
             final List<Long> idsSchueler,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsSchueler, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsSchueler, false, 0))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1263,7 +1263,7 @@ public class APIGostKursplanung {
             final List<Long> idsKurse,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsKurse, false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css", new ArrayList<>(List.of(idBlockungsergebnis)), false, idsKurse, false, 0))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

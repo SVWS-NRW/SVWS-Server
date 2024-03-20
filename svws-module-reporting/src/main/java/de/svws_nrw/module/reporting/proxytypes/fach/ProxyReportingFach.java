@@ -39,9 +39,9 @@ public class ProxyReportingFach extends ReportingFach {
 	 * Erstellt ein neues Reporting-Objekt auf Basis der Daten eines Fach- und GostFach-Objektes.
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param fachDaten Fach-Daten-Objekt
-	 * @param FachGostDaten GostFach-Daten-Objekt
+	 * @param fachGostDaten GostFach-Daten-Objekt
 	 */
-	public ProxyReportingFach(final ReportingRepository reportingRepository, final FachDaten fachDaten, final GostFach FachGostDaten) {
+	public ProxyReportingFach(final ReportingRepository reportingRepository, final FachDaten fachDaten, final GostFach fachGostDaten) {
 		super(fachDaten.aufgabenfeld,
 			fachDaten.aufZeugnis,
 			fachDaten.bezeichnung,
@@ -71,9 +71,9 @@ public class ProxyReportingFach extends ReportingFach {
 			super.setFachgruppe(super.statistikfach().getFachgruppe());
 		}
 
-		if (FachGostDaten != null) {
-			this.setIstFremdsprache(FachGostDaten.istFremdsprache);
-			this.setIstFremdSpracheNeuEinsetzend(FachGostDaten.istFremdSpracheNeuEinsetzend);
+		if (fachGostDaten != null) {
+			this.setIstFremdsprache(fachGostDaten.istFremdsprache);
+			this.setIstFremdSpracheNeuEinsetzend(fachGostDaten.istFremdSpracheNeuEinsetzend);
 		}
 	}
 

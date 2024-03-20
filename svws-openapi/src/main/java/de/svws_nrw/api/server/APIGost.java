@@ -921,7 +921,7 @@ public class APIGost {
 		final List<Long> idsSchueler,
 		@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, 0))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, 0))
 					.create(),
 			request, ServerMode.DEV,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
@@ -972,7 +972,7 @@ public class APIGost {
             final List<Long> idsSchueler,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, detaillevel))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, detaillevel))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1021,7 +1021,7 @@ public class APIGost {
             @PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", idsSchueler, false, new ArrayList<>(), false, detaillevel))
+				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css", idsSchueler, false, new ArrayList<>(), false, detaillevel))
 					.create(),
 			request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
