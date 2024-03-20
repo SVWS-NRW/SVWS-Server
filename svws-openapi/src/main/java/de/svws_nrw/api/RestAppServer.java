@@ -24,6 +24,7 @@ import de.svws_nrw.api.server.APIKataloge;
 import de.svws_nrw.api.server.APIKlassen;
 import de.svws_nrw.api.server.APIKurse;
 import de.svws_nrw.api.server.APILehrer;
+import de.svws_nrw.api.server.APIOAuth;
 import de.svws_nrw.api.server.APISchema;
 import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
@@ -73,7 +74,7 @@ public final class RestAppServer extends Application {
 		APIENM.class,
 		APIEmail.class,
 		APIGostKlausuren.class,
-
+		APIOAuth.class,
 		OpenAPICorsFilter.class,
 		OpenApiServer.class
 	);

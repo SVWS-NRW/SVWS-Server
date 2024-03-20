@@ -255,6 +255,7 @@ export { LehrerPersonalabschnittsdatenAnrechnungsstunden } from './core/data/leh
 export { LehrerPersonalabschnittsdatenLehrerfunktion } from './core/data/lehrer/LehrerPersonalabschnittsdatenLehrerfunktion';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
+export { OAuth2ClientSecret } from './core/data/oauth2/OAuth2ClientSecret';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
@@ -474,6 +475,7 @@ export { LehrerMehrleistungArt } from './core/types/lehrer/LehrerMehrleistungArt
 export { LehrerMinderleistungArt } from './core/types/lehrer/LehrerMinderleistungArt';
 export { LehrerRechtsverhaeltnis } from './core/types/lehrer/LehrerRechtsverhaeltnis';
 export { LehrerZugangsgrund } from './core/types/lehrer/LehrerZugangsgrund';
+export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { Einschulungsart } from './core/types/schueler/Einschulungsart';
 export { Foerderschwerpunkt } from './core/types/schueler/Foerderschwerpunkt';

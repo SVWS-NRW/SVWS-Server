@@ -1,0 +1,285 @@
+package de.svws_nrw.data.oauth2;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+
+import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
+import de.svws_nrw.db.utils.OperationError;
+
+
+/**
+ * Diese Klasse dient dem Verbinden mit einem OAuth2 Server mit ggf. vorhandenen Token. Das Token wird,
+ * sofern nicht im Cache vorhanden oder ungültig über das Client-Secret und Client Id erzeugt.
+ *
+ * Der Client stellt darüber hinaus HTTP-Methoden zum Verbinden mit OAuth2-Servern bereit.
+ */
+public final class OAuth2Client {
+
+	/** Konstante, um Token früher als nötig zu invalidieren (zum Vermeiden von Varianz zwischen OAuth2-Server generiertem
+	 * expires_in im Vergleich zum lokal erzeugtem {@link #authenticateTimestamp}) */
+	private static final int TOKEN_EXPIRING_MODIFIER = 60000;
+
+	/** Konstante für den POST_CONTENT beim Erzeugen eines Tokens */
+	private static final String POST_CONTENT = "grant_type=client_credentials";
+
+	/** Konstante Map als Cache der bereits erzeugten OAuthclients anhand ihrer URL */
+	private static final Map<String, OAuth2Client> OAUTH2_CLIENT_CACHE_BY_URL = new ConcurrentHashMap<>();
+
+	/** allg. Pfad auf OAuth2-Servern zum Tokenaustausch */
+	private static String OAUTH2_PATH = "/oauth/token";
+
+	/** Die URL auf die dieser Client verweisen soll */
+	private final String url;
+
+	/** das Oauth Token Objekt aus der Response beim Tokenaustausch */
+	private OAuth2Token token;
+
+	/** der lokale Timestamp (vgl. {@link System#currentTimeMillis()}) zum Zeitpunkt des Tokenaustausch */
+	private long authenticateTimestamp;
+
+	/** der zu nutzende Pfad für den Tokenaustausch */
+	private final String oauth2Path;
+
+
+	/**
+	 * Privater Konstruktor, vgl. {@link OAuth2Client#getClient(String, Supplier)} zum Instantiieren
+	 * des Clients
+	 *
+	 * @param url          die URL mit der dieser Client sich verbinden soll
+	 * @param oauth2Path   der Pfad zum Tokenaustausch
+	 */
+	private OAuth2Client(final String url, final String oauth2Path) {
+		this.url = url;
+		this.oauth2Path = oauth2Path;
+	}
+
+
+	/**
+	 * Hilfsmethode prüft, ob für die gegebene URL bereits ein Client im mit validem Token vorhanden ist und gibt diesen
+	 * zurück. Falls kein Client vorhanden ist, wird ein neuer erzeugt. Falls das Token ausgelaufen ist, wird ein neuer
+	 * Tokenaustausch ausgeführt.
+	 *
+	 * @param url          die URL des OAuth2-Servers
+	 * @param oauth2Path   der Pfad zum Tokenaustausch
+	 * @param basicAuth    der BasicAuth String zur Authentifizierung
+	 *
+	 * @return der erstellte OAuth2Client mit validem Token
+	 */
+	private static OAuth2Client getClient(final String url, final String oauth2Path, final String basicAuth) {
+		final OAuth2Client client = OAUTH2_CLIENT_CACHE_BY_URL.computeIfAbsent(url, s -> new OAuth2Client(url, oauth2Path));
+		if (!client.isTokenValid()) {
+			client.requestToken(basicAuth);
+		}
+		return client;
+	}
+
+
+	/**
+	 * Öffentliche Methode, um einen {@link OAuth2Client} für die gegebene URL zu erhalten. vgl.
+	 * {@link #getClient(String, String, String)} mit {@link #OAUTH2_PATH}
+	 *
+	 * @param url         die URL zu der der OAuth2Client verbunden werden soll
+	 * @param basicAuth   für die Basisauthentifizierung
+	 *
+	 * @return den OAuth2Client
+	 */
+	public static OAuth2Client getClient(final String url, final String basicAuth) {
+		return getClient(url, OAUTH2_PATH, basicAuth);
+	}
+
+
+	/**
+	 * Öffentliche Methode um einen OAuth2-Client anhand des {@link DTOSchuleOAuthSecrets} zu erhalten
+	 *
+	 * @param dto   das DTO mit den OAuth2-Secrets der Schule
+	 *
+	 * @return den OAuth2-Client
+	 */
+	public static OAuth2Client getClient(final DTOSchuleOAuthSecrets dto) {
+		if (dto == null || dto.AuthServer == null || dto.AuthServer.isBlank() || dto.ClientID == null
+				|| dto.ClientID.isBlank() || dto.ClientSecret == null || dto.ClientSecret.isBlank()) {
+			throw OperationError.NOT_FOUND.exception();
+		}
+		final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
+		return getClient(dto.AuthServer, basicAuth);
+	}
+
+
+	/**
+	 * Gibt wieder, ob ein Token vorhanden ist, welches nicht abgelaufen ist
+	 *
+	 * @return true, wenn ein nicht abgelaufenes Token vorhanden ist, und ansonsten false
+	 */
+	private boolean isTokenValid() {
+		if (this.token == null)
+			return false;
+		return this.token.expiresIn * 1000
+				+ authenticateTimestamp > (System.currentTimeMillis() - TOKEN_EXPIRING_MODIFIER);
+	}
+
+
+	/**
+	 * Erzeugt auf Basis eines Basic-Auth Strings ein Token und hinterlegt es an diesem Client
+	 *
+	 * @param basicAuthString   String für die BasicAuth, Base64 encoded clientId:password
+	 */
+	private void requestToken(final String basicAuthString) {
+		// Bereite des HTTP-Request vor...
+		final String client_secret_b64 = basicAuthString;
+		final URI uri = URI.create(url + oauth2Path);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
+				.POST(BodyPublishers.ofString(POST_CONTENT)).header("Content-Type", "application/x-www-form-urlencoded")
+				.setHeader("Authorization", "Basic " + client_secret_b64).build();
+		// ... sende den Request und warte auf die Antwort ...
+		final HttpResponse<String> response = send(request, BodyHandlers.ofString());
+		// ... prüfe, den Response-Code ...
+		final int statusCode = response.statusCode();
+		if (statusCode == 401)
+			throw OperationError.BAD_GATEWAY.exception("Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten überprüft werden.");
+		if ((statusCode != 200) && (statusCode != 201))
+			throw OperationError.BAD_GATEWAY.exception("Verbindung zu dem OAuth2-Server fehlgeschlagen: " + statusCode);
+		// ... und validiere im Erfolgsfall die HTTP-Response
+		final String stringResponse = response.body();
+		this.authenticateTimestamp = System.currentTimeMillis();
+		try {
+			this.token = getTokenfromJson(stringResponse);
+		} catch (@SuppressWarnings("unused") final JsonProcessingException e) {
+			throw OperationError.BAD_GATEWAY.exception("Antwort des OAuthServers inkorrekt:\n" + stringResponse);
+		}
+	}
+
+
+	/**
+	 * Methode zum Versenden eines HTTP-Requests mithilfe der Methode
+	 * {@link #send(HttpRequest, BodyHandler)}.
+	 *
+	 * @param <T> generischer Typ der Response
+	 * @param request   der zu sendende Request
+	 * @param handler   der BodyHandler
+	 *
+	 * @return die HTTP-Response
+	 */
+	private static <T> HttpResponse<T> send(final HttpRequest request, final BodyHandler<T> handler) {
+		try (HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1)
+				.connectTimeout(Duration.ofSeconds(20)).build()) {
+			return client.send(request, handler);
+		} catch (IOException | InterruptedException e) {
+			throw OperationError.BAD_GATEWAY.exception(e);
+		}
+	}
+
+
+	/**
+	 * Getter für das {@link OAuth2Token}
+	 *
+	 * @return das {@link OAuth2Token}
+	 */
+	public OAuth2Token getToken() {
+		return this.token;
+	}
+
+
+	/**
+	 * Sendet Daten an eine URL mit dem Content-Type multipart/form-data.
+	 *
+	 * @param <T>        der generische Typ der {@link HttpResponse} und des entsprechenden {@link BodyHandler}
+	 * @param path       der Pfad als Teil der URL an den der Request gesendet wird
+	 * @param filename   der Dateiname, der verwendet wird
+	 * @param bytes      die Bytes, die innerhalb des Files gesendet werden
+	 * @param handler    der BodyHandler für die Response
+	 *
+	 * @return die Response
+	 */
+	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler) {
+		final URI uri = URI.create(url + path);
+		final String actualBoundary = UUID.randomUUID().toString() + "--";
+		final String boundary = "--" + actualBoundary;
+		final byte[] boundaryBytes = ("\r\n" + boundary).getBytes();
+		final byte[] contentDisposition = (boundary + "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" + filename + "\"\r\n\r\n").getBytes();
+		final byte[] c = new byte[contentDisposition.length + bytes.length + boundaryBytes.length];
+		System.arraycopy(contentDisposition, 0, c, 0, contentDisposition.length);
+		System.arraycopy(bytes, 0, c, contentDisposition.length, bytes.length);
+		System.arraycopy(boundaryBytes, 0, c, contentDisposition.length + bytes.length, boundaryBytes.length);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
+				.POST(BodyPublishers.ofByteArray(c))
+				.header("Content-Type", "multipart/form-data;boundary=" + actualBoundary)
+				.header("Authorization", "Bearer " + token.accessToken).header("file", "file").build();
+		return send(request, handler);
+	}
+
+
+	/**
+	 * Sendet Daten mit Content-Type application/x-www-form-urlencoded. Dabei werden die übergebenen Strings als
+	 * Schlüssel-Wert-Paare betrachtet
+	 *
+	 * @param <T>             generischer Typ des {@link HttpResponse} und {@link BodyHandler}
+	 * @param path            der Pfad als Teil der URL für diesen OauthClient, an den die Daten geschickt werden
+	 * @param handler         der BodyHandler für den Response-Body
+	 * @param keyValuePairs   Schlüssel-Wert-Paare für die Form-Parameter, gerader Index = Schlüssel, ungerader Index = Wert
+	 *
+	 * @return die Response
+	 */
+	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) {
+		final URI uri = URI.create(url + path);
+		if (keyValuePairs.length % 2 != 0)
+			throw new IllegalArgumentException("Invalid nameValuePairs");
+		String input = "";
+		for (int i = 0; i < keyValuePairs.length; i += 2)
+			input = keyValuePairs[i] + "=" + keyValuePairs[i + 1] + "\n";
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
+				.POST(BodyPublishers.ofString(input)).header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Authorization", "Bearer " + token.accessToken).build();
+		return send(request, handler);
+	}
+
+
+	/**
+	 * Führt ein GET-Request gegen den gegebenen Pfad aus
+	 *
+	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
+	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das GET geschickt wird
+	 * @param handler   der BodyHandler für den Response-Body
+	 *
+	 * @return die Response
+	 */
+	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler) {
+		final URI uri = URI.create(url + path);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
+				.header("Authorization", "Bearer " + token.accessToken).build();
+		return send(request, handler);
+	}
+
+
+	/**
+	 * Wandelt einen JSON-String in ein {@link OAuth2Token} um.
+	 *
+	 * @param json   der JSON-String
+	 *
+	 * @return das OAuth2-Token
+	 *
+	 * @throws JsonProcessingException   wenn die Umwandlung fehlschlägt
+	 */
+	public static OAuth2Token getTokenfromJson(final String json) throws JsonProcessingException {
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+		return mapper.readValue(json, OAuth2Token.class);
+	}
+
+}

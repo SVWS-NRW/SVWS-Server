@@ -114,6 +114,7 @@ import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
 import { List } from '../java/util/List';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
+import { OAuth2ClientSecret } from '../core/data/oauth2/OAuth2ClientSecret';
 import { OrganisationsformKatalogEintrag } from '../core/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
@@ -8005,6 +8006,143 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getOAuthClientSecrets für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets
+	 *
+	 * Gibt die OAuth2-Client-Secrets der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Client-Secrets besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der OAuth2-Client-Secrets der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<OAuth2ClientSecret>
+	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Client-Secrets.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der OAuth2-Client-Secrets der Schule.
+	 */
+	public async getOAuthClientSecrets(schema : string) : Promise<List<OAuth2ClientSecret>> {
+		const path = "/db/{schema}/oauth/secrets"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<OAuth2ClientSecret>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OAuth2ClientSecret.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchOAuthSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
+	 *
+	 * Passt die OAuth2-Client-Secrets zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von OAuth2-Client-Secrets besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die OAuth2-Client-Secrets der Schule integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets zu ändern.
+	 *   Code 404: Kein OAuth2-Client-Secrets mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OAuth2ClientSecret>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchOAuthSecret(data : Partial<OAuth2ClientSecret>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = OAuth2ClientSecret.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteOAuthSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
+	 *
+	 * Entfernt ein OAuth2-Client-Secrets. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von OAuth Client Secrets hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das OAuth2-Client-Secrets wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OAuth2ClientSecret
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um OAuth2-Client-Secrets zu entfernen.
+	 *   Code 404: OAuth2-Client-Secrets nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das OAuth2-Client-Secrets wurde erfolgreich entfernt.
+	 */
+	public async deleteOAuthSecret(schema : string, id : number) : Promise<OAuth2ClientSecret> {
+		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return OAuth2ClientSecret.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getOAuthClientSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
+	 *
+	 * Gibt das OAuth2-Client-Secrets der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Client-Secrets besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das OAuth2-Client-Secrets der Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OAuth2ClientSecret
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets anzusehen.
+	 *   Code 404: Kein OAuth2-Client-Secrets mit der ID bei der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das OAuth2-Client-Secrets der Schule
+	 */
+	public async getOAuthClientSecret(schema : string, id : number) : Promise<OAuth2ClientSecret> {
+		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return OAuth2ClientSecret.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addOAuthClientSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/create
+	 *
+	 * Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Client-Secrets und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von OAuth2-Client-Secrets besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Eintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OAuth2ClientSecret
+	 *   Code 400: Der Eintrag enthält Fehler, bspw. eine invalide URL.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein OAuth2-Client-Secret für die Schule anzulegen.
+	 *   Code 409: Es existiert bereits ein Eintrag für den gegebenen OAuth2-Server.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OAuth2ClientSecret>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addOAuthClientSecret(data : Partial<OAuth2ClientSecret>, schema : string) : Promise<OAuth2ClientSecret> {
+		const path = "/db/{schema}/oauth/secrets/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = OAuth2ClientSecret.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return OAuth2ClientSecret.transpilerFromJSON(text);
 	}
 
 

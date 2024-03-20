@@ -28,6 +28,9 @@ public enum OperationError {
 	/** Der Fehlercode 500 signalisiert, dass ein nicht näher spezifizierter Fehler bei der Operation aufgetreten ist. */
 	INTERNAL_SERVER_ERROR(500),
 
+	/** Der Fehlercode 502 signalisiert, dass bei Verbindungen zu weiteren Servern Fehler aufgetreten sind. */
+	BAD_GATEWAY(502),
+
 	/** Der Fehlercode 503 signalisiert, dass ein Zugriff auf die Datenbank nicht möglich ist, da das Schema zur Zeit vom SVWS-Server gesperrt ist. */
 	SERVICE_UNAVAILABLE(503);
 
