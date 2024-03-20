@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -68,12 +68,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		try {
 			// Prüfe die Parameter zunächst allgemein
 			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
-				throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+				throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 			const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 			const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
-				throw new Error("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
+				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 			// Aktualisiere das Halbjahr
 			if (halbjahr === undefined) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -87,7 +87,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			if ((changedHalbjahr) || (to.name === this.name))
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 		} catch(e: unknown) {
-			return routeError.getRoute(e instanceof Error ? e : new Error("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 
@@ -129,7 +129,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		this.data.setView(node, this.children);
 	}

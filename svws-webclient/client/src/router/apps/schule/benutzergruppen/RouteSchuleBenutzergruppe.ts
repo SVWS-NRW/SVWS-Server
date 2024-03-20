@@ -2,7 +2,7 @@ import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -35,7 +35,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		if (id !== undefined)
 			return routeSchuleBenutzergruppeDaten.getRoute(id);
@@ -48,7 +48,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		await this.data.ladeListe();
 		if (to.name === this.name) {
@@ -114,7 +114,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 	private setTab = async (value: AuswahlChildData) => {
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined) throw new Error("Unbekannte Route");
+		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({
 			name: value.name,
 			params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id },

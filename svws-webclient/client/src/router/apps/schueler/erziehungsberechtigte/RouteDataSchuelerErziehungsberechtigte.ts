@@ -1,4 +1,4 @@
-import type { Erzieherart, ErzieherStammdaten, List} from "@core";
+import { DeveloperNotificationException, type Erzieherart, type ErzieherStammdaten, type List} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -24,7 +24,7 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 
 	get daten(): List<ErzieherStammdaten> {
 		if (this._state.value.daten === undefined)
-			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
 		return this._state.value.daten;
 	}
 
@@ -37,7 +37,7 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 
 	public get mapErzieherarten() : Map<number, Erzieherart> {
 		if (this._state.value.mapErzieherarten.size === 0)
-			throw new Error("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
+			throw new DeveloperNotificationException("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
 		return this._state.value.mapErzieherarten;
 	}
 

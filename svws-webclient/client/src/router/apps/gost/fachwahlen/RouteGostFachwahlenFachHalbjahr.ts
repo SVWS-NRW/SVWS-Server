@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
@@ -31,7 +31,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<unknown, RouteGos
 
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
 			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
@@ -40,12 +40,12 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<unknown, RouteGos
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if ((to_params.idhalbjahr instanceof Array) || (to_params.idfach instanceof Array))
-			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		this._idFach.value = parseInt(to_params.idfach);
 		const idHalbjahr = parseInt(to_params.idhalbjahr);
 		const halbjahr = GostHalbjahr.fromID(idHalbjahr);
 		if (halbjahr === null)
-			return new Error("Fehler: Das Halbjahr " + to_params.idhalbjahr + " ist ungültig");
+			return new DeveloperNotificationException("Fehler: Das Halbjahr " + to_params.idhalbjahr + " ist ungültig");
 		this._halbjahr.value = halbjahr;
 		routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: halbjahr.kuerzel };
 	}

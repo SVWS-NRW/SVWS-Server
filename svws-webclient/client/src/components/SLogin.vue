@@ -87,7 +87,7 @@
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
 	import { computed, ref, shallowRef } from "vue";
-	import { ArrayList } from "@core";
+	import { ArrayList, DeveloperNotificationException } from "@core";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 
@@ -137,7 +137,7 @@
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 			if (inputDBSchemata.value.size() <= 0)
-				throw new Error();
+				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
 		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;

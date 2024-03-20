@@ -8,7 +8,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
-import { ServerMode } from "@core";
+import { DeveloperNotificationException, ServerMode } from "@core";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -84,7 +84,7 @@ export class RouteManager {
 	public static async doRoute(to: RouteLocationRaw) {
 		const manager = RouteManager._instance;
 		if (manager === undefined)
-			throw new Error("Unzulässiger Zugriff auf den RouteManager bevor eine Instanz erzeugt wurde.");
+			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
 		// Ignoriere Aufruf, wenn der manager bereits in einem Routing-Vorgang ist. Dies kann sonst das aktuelle Routing canceln
 		// und zu ungültigen Zuständen führen
 		if (manager.active)
@@ -102,7 +102,7 @@ export class RouteManager {
 	 */
 	public static create(router: Router): RouteManager {
 		if (RouteManager._instance !== undefined)
-			throw new Error("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
+			throw new DeveloperNotificationException("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
 		RouteManager._instance = new RouteManager(router);
 		return RouteManager._instance;
 	}
@@ -174,7 +174,7 @@ export class RouteManager {
 		if (api.mode !== ServerMode.STABLE)
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
 		if (!to_node.mode.checkServerMode(api.mode))
-			return routeError.getRoute(new Error("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
+			return routeError.getRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.doBeforeEach(to_node, to.params, from_node, from.params);
 		if (result !== true)

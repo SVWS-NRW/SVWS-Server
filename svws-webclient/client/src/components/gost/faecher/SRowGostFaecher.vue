@@ -58,7 +58,7 @@
 	import type { List, GostFach, GostFaecherManager} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
+	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
@@ -74,7 +74,7 @@
 	const fach = computed(()=> {
 		const fach = props.faecherManager().get(props.fachId);
 		if (fach === null)
-			throw new Error("Fehler, es gibt kein gültiges Fach.");
+			throw new DeveloperNotificationException("Fehler, es gibt kein gültiges Fach.");
 		return fach;
 	})
 

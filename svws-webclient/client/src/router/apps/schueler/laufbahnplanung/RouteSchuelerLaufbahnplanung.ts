@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -22,7 +22,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.text = "Laufbahnplanung";
 		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
 			if (!routeSchueler.data.schuelerListeManager.hasDaten())
 				return false;
 			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
@@ -47,9 +47,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (this.parent === undefined)
-			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.id === undefined) {
 			await this.data.ladeDaten(null);
 		} else {

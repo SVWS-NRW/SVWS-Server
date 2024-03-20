@@ -49,7 +49,7 @@ export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetrieb
 
 	get daten(): BetriebStammdaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -108,7 +108,7 @@ export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetrieb
 
 	patch = async (data : Partial<BetriebStammdaten>) => {
 		if(this.daten === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.")
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.")
 		await api.server.patchBetriebStammdaten(data, api.schema, this.daten.id)
 		const daten = await api.server.getBetriebStammdaten(api.schema, this.daten.id)
 		const auswahl = new BetriebListeEintrag();

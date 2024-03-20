@@ -29,7 +29,7 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
@@ -55,7 +55,7 @@ export class RouteDataSchuelerLaufbahninfo extends RouteData<RouteStateSchuelerL
 			sprachbelegungen.sort(<Comparator<Sprachbelegung>>{ compare(n1: Sprachbelegung, n2: Sprachbelegung) { return JavaInteger.compare(n1.reihenfolge ?? 0, n2.reihenfolge ?? 0); }})
 			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen })
 		} catch(error) {
-			throw new Error("Die Laufbahninformationen konnten nicht eingeholt werden.")
+			throw new DeveloperNotificationException("Die Laufbahninformationen konnten nicht eingeholt werden.")
 		}
 		api.status.stop();
 	}

@@ -1,4 +1,4 @@
-import type { JahrgangsDaten } from "@core";
+import { DeveloperNotificationException, type JahrgangsDaten } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -37,7 +37,7 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 
 	get daten(): JahrgangsDaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -61,7 +61,7 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 
 	patch = async (data : Partial<JahrgangsDaten>) => {
 		if ((this.auswahl === undefined) || (this.daten === undefined))
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchJahrgang(data, api.schema, this.daten.id);
 		Object.assign(this.daten, data);
 		if (data.kuerzel !== undefined)

@@ -3,7 +3,7 @@ import { computed } from "vue";
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "~/components/Config";
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse } from "@core";
+import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse, DeveloperNotificationException } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData} from "~/components/ApiStatus";
@@ -191,7 +191,7 @@ class Api {
 	public get benutzertyp(): BenutzerTyp {
 		const typ = BenutzerTyp.getByID(this.benutzerdaten.typ);
 		if (typ === null)
-			throw new Error("Der Typ des Benutzers ist ungültig.");
+			throw new DeveloperNotificationException("Der Typ des Benutzers ist ungültig.");
 		return typ;
 	}
 
@@ -202,7 +202,7 @@ class Api {
 	 */
 	public get benutzerIDLehrer(): number {
 		if (this.benutzertyp !== BenutzerTyp.LEHRER)
-			throw new Error("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
+			throw new DeveloperNotificationException("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
 		return this.benutzerdaten.typID;
 	}
 
@@ -234,7 +234,7 @@ class Api {
 	public get schulform(): Schulform {
 		const schulform = Schulform.getByKuerzel(this.conn.schuleStammdaten.schulform);
 		if (schulform === null)
-			throw new Error("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
+			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
 		return schulform;
 	}
 
@@ -268,7 +268,7 @@ class Api {
 	public get abschnitt(): Schuljahresabschnitt {
 		const abschnitt = this.mapAbschnitte.value.get(this.schuleStammdaten.idSchuljahresabschnitt);
 		if (abschnitt === undefined)
-			throw new Error("Der aktuelle Schuljahresabschnitt der schule existiert nicht in der Liste der Schuljahresabschnitte.");
+			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule existiert nicht in der Liste der Schuljahresabschnitte.");
 		return abschnitt;
 	}
 

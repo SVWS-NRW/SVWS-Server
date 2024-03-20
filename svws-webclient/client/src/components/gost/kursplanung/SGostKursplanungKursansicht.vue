@@ -637,7 +637,7 @@
 		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
 			dragSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
 		else
-			throw new Error("Es können keine zwei Schienen übergeben werden");
+			throw new DeveloperNotificationException("Es können keine zwei Schienen übergeben werden");
 	}
 
 	function setDragOver(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
@@ -655,7 +655,7 @@
 		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
 			dropSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
 		else
-			throw new Error("Es können keine zwei Schienen übergeben werden");
+			throw new DeveloperNotificationException("Es können keine zwei Schienen übergeben werden");
 		if (highlightKursVerschieben(p1).value)
 			await setKursVerschieben();
 		else if (highlightRechteck(p1, p2).value && allowRegeln.value)

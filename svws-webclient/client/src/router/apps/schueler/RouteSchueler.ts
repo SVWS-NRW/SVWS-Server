@@ -136,7 +136,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
 		this.data.setView(node, this.children);
 	}

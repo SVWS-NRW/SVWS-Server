@@ -3,7 +3,7 @@ import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
 import type { GostBlockungListeneintrag, GostBlockungsergebnis} from "@core";
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -45,7 +45,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
 			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
@@ -54,7 +54,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
@@ -75,14 +75,14 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
 		// Prüfe den Abiturjahrgang und setze diesen ggf.
 		if (abiturjahr === undefined)
-			throw new Error("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
+			throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
 		await this.data.setAbiturjahr(abiturjahr);
 		// Prüfe das Halbjahr und setzte dieses ggf.
 		if (halbjahr === undefined) {
@@ -124,7 +124,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// ... wurde die ID der Blockung verändert, so setze den neu ausgewählten Blockungs-Eintrag und aktualisiere ggf. die Route
 			if (idErgebnis === undefined) {
 				if (this.data.ergebnisse.size() <= 0)
-					throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
+					throw new DeveloperNotificationException("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 				// ...wenn kein Ergebnis in der Route gesetzt wurde, aber ein Ergebnis existiert, dann setze die Route neu auf das Vorlagen-Ergebnis und ggf. auf den aktuellen Schüler
 				if (this.data.hatSchueler)
 					return this.getRouteSchueler(abiturjahr, halbjahr.id, blockungsEintrag.id, this.data.auswahlErgebnis.id, this.data.auswahlSchueler.id);
@@ -156,7 +156,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		} catch (e) {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
 			if (this.data.ergebnisse.size() <= 0)
-				throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
+				throw new DeveloperNotificationException("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 			const ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 			return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 		}

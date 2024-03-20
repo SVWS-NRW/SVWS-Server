@@ -128,7 +128,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.kursListeManager.auswahlID() } });
 		this.data.setView(node, this.children);
 	}

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -24,7 +24,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.idStundenplan instanceof Array
 				|| to_params.wochentyp instanceof Array || to_params.kw instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idLehrer = to_params.id === undefined ? undefined : parseInt(to_params.id);
 		let wochentyp = (to_params.wochentyp === undefined) || (to_params.wochentyp === "") ? undefined : parseInt(to_params.wochentyp);
 		let kwjahr = undefined;
@@ -34,7 +34,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 		} else if ((to_params.kw !== undefined) && (to_params.kw !== "")) {
 			const tmpKW = to_params.kw.split(".");
 			if (tmpKW.length !== 2)
-				throw new Error("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
+				throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
 			kwjahr = parseInt(tmpKW[0]);
 			kw = parseInt(tmpKW[1]);
 		}
@@ -44,7 +44,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 			// Prüfe, ob die Stundenplan-ID definiert ist, wenn nicht, dann versuche einen zu laden
 		if (to_params.idStundenplan === undefined) {
 			if (routeLehrerStundenplan.data.mapStundenplaene.size === 0)
-				throw new Error("Fehler: Kein Stundenplan für die angegebene ID gefunden.");
+				throw new DeveloperNotificationException("Fehler: Kein Stundenplan für die angegebene ID gefunden.");
 			return this.getRoute(idLehrer, routeLehrerStundenplan.data.auswahl.id,
 				routeLehrerStundenplan.data.wochentyp, routeLehrerStundenplan.data.kalenderwoche?.jahr,
 				routeLehrerStundenplan.data.kalenderwoche?.kw);

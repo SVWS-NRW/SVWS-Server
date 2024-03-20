@@ -1,4 +1,4 @@
-import type { SchuelerSchulbesuchsdaten} from "@core";
+import { DeveloperNotificationException, type SchuelerSchulbesuchsdaten} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -21,7 +21,7 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 
 	get daten(): SchuelerSchulbesuchsdaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
 		return this._state.value.daten;
 	}
 

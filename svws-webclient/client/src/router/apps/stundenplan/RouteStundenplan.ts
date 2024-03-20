@@ -4,7 +4,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -46,7 +46,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined) {
 			await this.data.ladeListe();
 		} else {
@@ -118,7 +118,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, routeStundenplan.children);
 	}

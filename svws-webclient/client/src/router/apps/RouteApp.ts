@@ -1,7 +1,7 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { AppProps } from "~/components/SAppProps";
-import { Schulform, BenutzerKompetenz, ServerMode } from "@core";
+import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -153,7 +153,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, this.children);
 	}

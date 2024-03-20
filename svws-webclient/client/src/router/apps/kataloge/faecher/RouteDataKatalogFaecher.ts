@@ -1,4 +1,4 @@
-import type { FachDaten, FachDaten } from "@core";
+import { DeveloperNotificationException, type FachDaten  } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -36,7 +36,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 
 	get daten(): FachDaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Fächerdaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächerdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -70,7 +70,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 
 	patch = async (data : Partial<FachDaten>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchFach(data, api.schema, this.daten.id);
 		Object.assign(this.daten, data);
 		const eintrag = this.mapKatalogeintraege.get(this.daten.id);

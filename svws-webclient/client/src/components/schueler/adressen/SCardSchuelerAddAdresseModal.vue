@@ -28,7 +28,7 @@
 <script setup lang="ts">
 
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
-	import { SchuelerBetriebsdaten } from "@core";
+	import { DeveloperNotificationException, SchuelerBetriebsdaten } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{
@@ -52,7 +52,7 @@
 		},
 		set: (value) => {
 			if (value === undefined)
-				throw new Error("Ungültiger Betrieb ausgewählt");
+				throw new DeveloperNotificationException("Ungültiger Betrieb ausgewählt");
 			schuelerBetriebsdaten.value.betrieb_id = value.id;
 			schuelerBetriebsdaten.value.ansprechpartner_id = null;
 			for (const ap of props.mapAnsprechpartner.values()) {

@@ -1,4 +1,4 @@
-import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@core";
+import { DeveloperNotificationException, type GostJahrgangFachkombination, type GostLaufbahnplanungFachkombinationTyp} from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
@@ -21,13 +21,13 @@ export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
 
 	get abiturjahr(): number {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Unerwarteter Fehler: Jahrgang nicht festgelegt, es können keine Informationen zu den Fächern abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Jahrgang nicht festgelegt, es können keine Informationen zu den Fächern abgerufen oder eingegeben werden.");
 		return this._state.value.abiturjahr;
 	}
 
 	public get mapFachkombinationen() : Map<number, GostJahrgangFachkombination> {
 		if (this._state.value.mapFachkombinationen === undefined)
-			throw new Error("Zugriff auf die Fachkombinationen, bevor diese geladen wurden.");
+			throw new DeveloperNotificationException("Zugriff auf die Fachkombinationen, bevor diese geladen wurden.");
 		return this._state.value.mapFachkombinationen;
 	}
 
@@ -48,7 +48,7 @@ export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
 		const mapFachkombinationen = this.mapFachkombinationen;
 		const kombi = mapFachkombinationen.get(id);
 		if (kombi === undefined)
-			throw new Error("Änderungen an der Fachkombination mit der ID " + id + " nicht möglich, da eine solche Fachkombination nicht bekannt ist.");
+			throw new DeveloperNotificationException("Änderungen an der Fachkombination mit der ID " + id + " nicht möglich, da eine solche Fachkombination nicht bekannt ist.");
 		await api.server.patchGostFachkombination(data, api.schema, id);
 		Object.assign(kombi, data);
 		mapFachkombinationen.set(kombi.id, kombi);

@@ -3,7 +3,7 @@ import { ref} from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { List, SchulenKatalogEintrag} from "@core";
-import { DatenbankVerbindungsdaten, ServerMode} from "@core";
+import { DatenbankVerbindungsdaten, DeveloperNotificationException, ServerMode} from "@core";
 import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -108,7 +108,7 @@ export class RouteInit extends RouteNode<unknown, any> {
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.source instanceof Array || to_params.db instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if ((to_params.source === 'schild2') && (to_params.db === undefined))
 			return { name: this.name, params: { source: to_params.source, db: 'mdb' }};
 		if ((to_params.source !== 'schild2') && (to_params.db !== undefined))

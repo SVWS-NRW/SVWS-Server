@@ -1,5 +1,5 @@
 import type { BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@core";
-import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList } from "@core";
+import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -126,7 +126,7 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 
 	get daten(): BenutzerDaten {
 		if(this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -136,7 +136,7 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 
 	get benutzerManager(): BenutzerManager {
 		if(this._state.value.benutzerManager === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.benutzerManager
 	}
 
@@ -146,7 +146,7 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 
 	get listBenutzergruppen(): List<BenutzergruppeListeEintrag> {
 		if(this._state.value.listBenutzergruppen === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.listBenutzergruppen
 	}
 
@@ -156,7 +156,7 @@ export class RouteDataSchuleBenutzer extends RouteData<RouteStateSchuleBenutzer>
 
 	get mapBenutzer(): Map<number, BenutzerListeEintrag> {
 		if(this._state.value.mapBenutzer === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.mapBenutzer
 	}
 

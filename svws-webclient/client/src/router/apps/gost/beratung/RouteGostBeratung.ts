@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
@@ -23,16 +23,16 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (this.parent === undefined)
-			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.abiturjahr === undefined)
-			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein"));
 		const abiturjahr = parseInt(to_params.abiturjahr);
 		try {
 			await this.data.ladeDaten(abiturjahr);
 		} catch(error) {
-			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Fehler beim Laden der Daten"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Fehler beim Laden der Daten"));
 		}
 	}
 

@@ -55,13 +55,13 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 
 	get daten(): Stundenplan {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
 	get stundenplanManager(): StundenplanManager {
 		if (this._state.value.stundenplanManager === undefined)
-			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.stundenplanManager;
 	}
 

@@ -1,5 +1,5 @@
 import type { SchulEintrag } from "@core";
-import { ArrayList } from "@core";
+import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -81,7 +81,7 @@ export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen>
 
 	patch = async (data : Partial<SchulEintrag>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		api.status.start();
 		await api.server.patchSchuleAusKatalog(data, api.schema, this.auswahl.id);
 		Object.assign(this.auswahl, data);

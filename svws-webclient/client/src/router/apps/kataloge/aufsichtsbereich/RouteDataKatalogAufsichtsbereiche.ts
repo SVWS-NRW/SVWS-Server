@@ -40,13 +40,13 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 
 	get stundenplanManager(): StundenplanManager {
 		if (this._state.value.stundenplanManager === undefined)
-			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.stundenplanManager;
 	}
 
 	get daten(): StundenplanAufsichtsbereich {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Raumdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 

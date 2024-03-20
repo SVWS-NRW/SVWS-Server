@@ -1,5 +1,5 @@
 import type { List, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
-import { ArrayList, Stundenplan, StundenplanManager } from "@core";
+import { ArrayList, DeveloperNotificationException, Stundenplan, StundenplanManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -27,7 +27,7 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 
 	get stundenplanManager(): StundenplanManager {
 		if (this._state.value.stundenplanManager === undefined)
-			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.stundenplanManager;
 	}
 

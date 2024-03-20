@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -42,9 +42,9 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (to_params.id === undefined)
-			return routeError.getRoute(new Error("Fehler: Keine Schüler-ID in der URL angegeben."));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben."));
 		const id = parseInt(to_params.id);
 		if (this.data.idSchueler !== id)
 			await this.data.setSchueler(id);
@@ -97,7 +97,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: {
 			id: routeSchueler.data.schuelerListeManager.daten().id,
 			abschnitt: this.data.auswahl.schuljahresabschnitt,

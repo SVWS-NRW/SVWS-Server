@@ -51,7 +51,7 @@
 	}
 
 	async function createCapturedError(reason: Error) {
-		let name = "Fehler";
+		let name = "Unbekannter Fehler";
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException)

@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostLaufbahnfehlerProps } from "~/components/gost/laufbahnfehler/SGostLaufbahnfehlerProps";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -32,7 +32,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
 			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
@@ -41,10 +41,10 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to.name === this.name) {
 			if (this.parent === undefined)
-				throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			const abiturjahr = parseInt(to_params.abiturjahr);
 			if (abiturjahr === undefined || abiturjahr === -1)
 				return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
@@ -54,13 +54,13 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		// Prüfe das Abiturjahr
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		if (abiturjahr === undefined)
-			throw new Error("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
+			throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 		await this.data.setAbiturjahr(abiturjahr);
 	}
 

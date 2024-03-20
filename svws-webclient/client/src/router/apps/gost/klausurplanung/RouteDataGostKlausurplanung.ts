@@ -66,7 +66,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public get abiturjahr() : number {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es wurde noch kein Abiturjahrgang geladen.");
+			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen.");
 		return this._state.value.abiturjahr;
 	}
 
@@ -106,7 +106,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
 		if (this._state.value.jahrgangsdaten === undefined)
-			throw new Error("Es wurde noch kein Abiturjahrgang geladen, so dass keine Jahrgangsdaten zur Verfügung stehen.");
+			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen, so dass keine Jahrgangsdaten zur Verfügung stehen.");
 		return this._state.value.jahrgangsdaten;
 	}
 
@@ -133,7 +133,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public async setHalbjahr(halbjahr: GostHalbjahr, hjChanged: boolean): Promise<boolean> {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (!hjChanged && halbjahr === this._state.value.halbjahr)
 			return false;
 		try {
@@ -182,7 +182,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
 			if (stundenplan === null)
-				throw new Error("Es konnte kein aktiver Stundenplan gefunden werden.");
+				throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
 			const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
 			const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
 			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
@@ -203,7 +203,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public get stundenplanmanager(): StundenplanManager {
 		if (this._state.value.stundenplanmanager === undefined)
-			throw new Error("Es wurde noch keine Daten geladen, so dass kein Stundenplan-Manager zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Stundenplan-Manager zur Verfügung steht.");
 		return this._state.value.stundenplanmanager;
 	}
 
@@ -214,7 +214,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public get kursklausurmanager(): GostKursklausurManager {
 		if (this._state.value.kursklausurmanager === undefined)
-			throw new Error("Es wurde noch keine Daten geladen, so dass kein Kurs-Klausur-Manager zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Kurs-Klausur-Manager zur Verfügung steht.");
 		return this._state.value.kursklausurmanager;
 	}
 
@@ -224,7 +224,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public get klausurvorgabenmanager(): GostKlausurvorgabenManager {
 		if (this._state.value.klausurvorgabenmanager === undefined)
-			throw new Error("Es wurde noch keine Daten geladen, so dass kein Klausur-Vorgaben-Manager zur Verfügung steht.");
+			throw new DeveloperNotificationException("Es wurde noch keine Daten geladen, so dass kein Klausur-Vorgaben-Manager zur Verfügung steht.");
 		return this._state.value.klausurvorgabenmanager;
 	}
 

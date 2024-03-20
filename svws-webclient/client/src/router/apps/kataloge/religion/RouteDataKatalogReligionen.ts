@@ -1,5 +1,5 @@
 import type { ReligionEintrag } from "@core";
-import { ArrayList } from "@core";
+import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -63,7 +63,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 
 	patch = async (data : Partial<ReligionEintrag>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchReligion(data, api.schema, this.auswahl.id)
 	}
 

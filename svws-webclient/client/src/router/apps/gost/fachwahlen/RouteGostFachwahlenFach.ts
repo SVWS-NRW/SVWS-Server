@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFachwahlenFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenFachProps";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
@@ -30,7 +30,7 @@ export class RouteGostFachwahlenFach extends RouteNode<unknown, RouteGost> {
 
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
 		if ((abiturjahr === null) || (abiturjahr === -1))
 			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
@@ -39,7 +39,7 @@ export class RouteGostFachwahlenFach extends RouteNode<unknown, RouteGost> {
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if ((to_params.abiturjahr instanceof Array) || (to_params.idfach instanceof Array))
-			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		// const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		this._idFach.value = parseInt(to_params.idfach);
 		routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: 'Fach' };

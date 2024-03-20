@@ -19,7 +19,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, List } from "@core";
-	import { ArrayList, LehrerListeEintrag } from "@core";
+	import { ArrayList, DeveloperNotificationException, LehrerListeEintrag } from "@core";
 	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<{
@@ -67,7 +67,7 @@
 		if (lehrer instanceof LehrerListeEintrag) {
 			const kurslehrer = await props.addKursLehrer(props.kurs.id, lehrer.id);
 			if (!kurslehrer)
-				throw new Error("Fehler beim Anlegen des Kurslehrers");
+				throw new DeveloperNotificationException("Fehler beim Anlegen des Kurslehrers");
 			await props.addLehrerRegel();
 			new_kurs_lehrer.value = false;
 		}

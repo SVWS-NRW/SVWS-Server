@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, JahrgangsUtils, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, JahrgangsUtils, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -24,7 +24,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<unknown, 
 		];
 		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
 			const manager = routeSchueler.data.schuelerListeManager;
 			if (!manager.hasDaten())
 				return false;

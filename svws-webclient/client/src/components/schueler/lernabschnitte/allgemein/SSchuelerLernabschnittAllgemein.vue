@@ -58,7 +58,7 @@
 
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
-	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
+	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
 
@@ -149,7 +149,7 @@
 	const klassenarten = computed<List<Klassenart>>(() => {
 		const schulform = Schulform.getByKuerzel(props.schule.schulform);
 		if (schulform === null)
-			throw new Error("Keine gültige Schulform festgelegt");
+			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 		return Klassenart.get(schulform);
 	});
 
@@ -164,7 +164,7 @@
 	const gliederungen = computed<List<Schulgliederung>>(() => {
 		const schulform = Schulform.getByKuerzel(props.schule.schulform);
 		if (schulform === null)
-			throw new Error("Keine gültige Schulform festgelegt");
+			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 		return Schulgliederung.get(schulform);
 	});
 
@@ -181,7 +181,7 @@
 	const organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {
 		const schulform = Schulform.getByKuerzel(props.schule.schulform);
 		if (schulform === null)
-			throw new Error("Keine gültige Schulform festgelegt");
+			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 		const result = new ArrayList<OrganisationsformKatalogEintrag>();
 		if (schulform === Schulform.WB) {
 			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
@@ -202,7 +202,7 @@
 				return undefined;
 			const schulform = Schulform.getByKuerzel(props.schule.schulform);
 			if (schulform === null)
-				throw new Error("Keine gültige Schulform festgelegt");
+				throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 			if (schulform === Schulform.WB) {
 				const orgform = WeiterbildungskollegOrganisationsformen.getByKuerzel(props.manager().lernabschnittGet().organisationsform);
 				return orgform === null ? undefined : orgform.daten;

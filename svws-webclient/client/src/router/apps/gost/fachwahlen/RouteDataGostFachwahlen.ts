@@ -1,7 +1,7 @@
 import type { RouteLocationRaw } from "vue-router";
 
 import type { GostHalbjahr, GostStatistikFachwahl, List, SchuelerListeEintrag } from "@core";
-import { ArrayList, SchuelerStatus, GostJahrgangsFachwahlenManager, GostJahrgangFachwahlen } from "@core";
+import { ArrayList, SchuelerStatus, GostJahrgangsFachwahlenManager, GostJahrgangFachwahlen, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -39,7 +39,7 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 
 	get abiturjahr(): number {
 		if (this._state.value.abiturjahr < 0)
-			throw new Error("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
 		return this._state.value.abiturjahr;
 	}
 

@@ -1,4 +1,4 @@
-import { type StundenplanListeEintrag, type StundenplanKalenderwochenzuordnung, StundenplanManager} from "@core";
+import { type StundenplanListeEintrag, type StundenplanKalenderwochenzuordnung, StundenplanManager, DeveloperNotificationException} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -44,13 +44,13 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 
 	get auswahl(): StundenplanListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
 	get manager(): StundenplanManager {
 		if (this._state.value.manager === undefined)
-			throw new Error("Unerwarteter Fehler: Stunden-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Stunden-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
 		return this._state.value.manager;
 	}
 
@@ -85,7 +85,7 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 			result.wochentyp = wochentyp;
 		}
 		if ((result.wochentyp < 0) || (result.wochentyp > manager.getWochenTypModell()))
-			throw new Error("Der Wochentyp " + result.wochentyp + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell() + " des Stundenplans");
+			throw new DeveloperNotificationException("Der Wochentyp " + result.wochentyp + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell() + " des Stundenplans");
 		return result;
 	}
 

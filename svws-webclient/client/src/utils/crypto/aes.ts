@@ -1,4 +1,4 @@
-import { ArrayIndexOutOfBoundsException } from "@core";
+import { ArrayIndexOutOfBoundsException, DeveloperNotificationException } from "@core";
 import type { AESAlgo } from "./aesAlgo";
 import { AESException } from "./aesException";
 
@@ -132,7 +132,7 @@ export class AES {
 		if (typeof base64url === 'string')
 			return base64url.split(",", 2)[1];
 		else
-			throw new Error("Keine gültigen Daten zum Umwandeln in Base64");
+			throw new DeveloperNotificationException("Keine gültigen Daten zum Umwandeln in Base64");
 	}
 
 	/**

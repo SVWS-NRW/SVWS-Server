@@ -55,7 +55,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	get manager(): SchuelerLernabschnittManager {
 		if (this._state.value.manager === undefined)
-			throw new Error("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
 		return this._state.value.manager;
 	}
 
@@ -65,7 +65,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	get klausurManager(): GostKursklausurManager {
 		if (this._state.value.klausurManager === undefined)
-			throw new Error("Unerwarteter Fehler: Schüler-Klausurmanager nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Klausurmanager nicht initialisiert");
 		return this._state.value.klausurManager;
 	}
 
@@ -153,13 +153,13 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	get auswahl(): SchuelerLernabschnittListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Lernabschnittseintrag nicht festgelegt, es können keine Informationen zu den Leistungsdaten abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Lernabschnittseintrag nicht festgelegt, es können keine Informationen zu den Leistungsdaten abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
 	get daten(): SchuelerLernabschnittsdaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Lernabschnittdaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Lernabschnittdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 

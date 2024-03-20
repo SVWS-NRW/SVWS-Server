@@ -1,3 +1,4 @@
+import { DeveloperNotificationException } from "@core";
 import { shallowRef } from "vue";
 
 import { type RouteNode } from "~/router/RouteNode";
@@ -31,7 +32,7 @@ export class RouteDataKataloge {
 		if (routeKataloge.menu.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Kataloge gewählte Ansicht wird nicht unterstützt.");
+			throw new DeveloperNotificationException("Diese für die Kataloge gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {

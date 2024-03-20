@@ -63,14 +63,14 @@ export class ApiConnection {
 	// Gibt die Server-API zurück.
 	get api(): ApiServer {
 		if (this._api === undefined)
-			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
+			throw new DeveloperNotificationException("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
 		return this._api;
 	}
 
 	// Gibt das Datenbank-Schema zurück.
 	get schema(): string {
 		if (this._schema === undefined)
-			throw new Error("Es liegt kein DB-Schema für die Api vor")
+			throw new DeveloperNotificationException("Es liegt kein DB-Schema für die Api vor")
 		return this._schema;
 	}
 
@@ -92,28 +92,28 @@ export class ApiConnection {
 	// Gibt die Benutzerdaten des angemeldeten Benutzers zurück, sofern ein Login stattgefunden hat
 	get benutzerdaten(): BenutzerDaten {
 		if (this._benutzerdaten.value === undefined)
-			throw new Error("Ein Benutzer muss angemeldet sein, damit dessen Daten geladen sein können.");
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen Daten geladen sein können.");
 		return this._benutzerdaten.value;
 	}
 
 	// Gibt an, sofern ein Login stattgefunden hat, ob es sich bei dem angemeldeten Benutzer um einen Administrator handelt oder nicht
 	get istAdmin(): boolean {
 		if (this._istAdmin.value === undefined)
-			throw new Error("Ein Benutzer muss angemeldet sein, damit ermittelt werden kann, ob es sich um einen Administrator handelt oder nicht.");
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit ermittelt werden kann, ob es sich um einen Administrator handelt oder nicht.");
 		return this._istAdmin.value;
 	}
 
 	// Die Kompetenzen des angemeldeten Benutzers, sofern ein Login stattgefunden hat
 	get kompetenzen(): Set<BenutzerKompetenz> {
 		if (this._kompetenzen.value === undefined)
-			throw new Error("Ein Benutzer muss angemeldet sein, damit dessen Kompetenzen ermittelt werden können.");
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen Kompetenzen ermittelt werden können.");
 		return this._kompetenzen.value;
 	}
 
 	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
 	get config(): Config {
 		if (this._config.value === undefined)
-			throw new Error("Eine Konfiguration ist nicht vorhanden.");
+			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
 		return this._config.value;
 	}
 
@@ -153,7 +153,7 @@ export class ApiConnection {
 	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
 	get schuleStammdaten(): SchuleStammdaten {
 		if (this._stammdaten.value.stammdaten === undefined)
-			throw new Error("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
+			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
 		return this._stammdaten.value.stammdaten;
 	}
 
@@ -294,7 +294,7 @@ export class ApiConnection {
 	login = async (schema: string, username: string, password: string): Promise<void> => {
 		try {
 			if (this._url === undefined)
-				throw new Error("Keine gültige URL für einen Login verfügbar.");
+				throw new DeveloperNotificationException("Keine gültige URL für einen Login verfügbar.");
 			this._schema_api = new ApiSchema(this._url, username, password);
 			const result = await this._schema_api.revision(schema);
 			// TODO verwende revision für Client Check

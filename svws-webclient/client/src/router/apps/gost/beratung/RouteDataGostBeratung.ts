@@ -42,7 +42,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 
 	get auswahl(): number {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
 		return this._state.value.auswahl;
 	}
 
@@ -64,7 +64,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 
 	get faechermanager(): GostFaecherManager {
 		if (this._state.value.faecherManager === undefined)
-			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return this._state.value.faecherManager;
 	}
 	set faecherManager(faecherManager: GostFaecherManager | undefined) {
@@ -73,7 +73,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 
 	get abiturdatenManager(): AbiturdatenManager {
 		if (this._state.value.abiturdatenManager === undefined)
-			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
 		return this._state.value.abiturdatenManager;
 	}
 	set abiturdatenManager(abiturdatenManager: AbiturdatenManager | undefined) {
@@ -151,7 +151,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, faecherManager, mapLehrer })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
-				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Abiturjahrgang Laufbahndaten möglich?");
+				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Abiturjahrgang Laufbahndaten möglich?");
 			}
 		}
 	}

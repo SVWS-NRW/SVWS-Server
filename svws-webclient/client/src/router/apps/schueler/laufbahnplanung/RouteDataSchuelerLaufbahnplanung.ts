@@ -50,7 +50,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
@@ -72,7 +72,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 
 	get faechermanager(): GostFaecherManager {
 		if (this._state.value.faecherManager === undefined)
-			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return this._state.value.faecherManager;
 	}
 	set faecherManager(faecherManager: GostFaecherManager | undefined) {
@@ -243,7 +243,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer, zwischenspeicher: undefined })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
-				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
+				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
 			}
 		}
 	}

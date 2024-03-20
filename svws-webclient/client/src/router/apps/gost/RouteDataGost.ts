@@ -125,7 +125,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	get jahrgangsdaten(): GostJahrgangsdaten {
 		if (this._state.value.jahrgangsdaten === undefined)
-			throw new Error("Unerwarteter Fehler: Jahrgangsdaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Jahrgangsdaten nicht initialisiert");
 		return this._state.value.jahrgangsdaten;
 	}
 

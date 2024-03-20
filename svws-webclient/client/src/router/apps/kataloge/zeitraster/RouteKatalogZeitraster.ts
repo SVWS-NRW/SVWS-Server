@@ -9,7 +9,7 @@ import { routeApp } from "../../RouteApp";
 import { routeKataloge } from "../RouteKataloge";
 import { RouteDataKatalogZeitraster } from "./RouteDataKatalogZeitraster";
 import { routeKatalogZeitrasterDaten } from "./RouteKatalogZeitrasterDaten";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 const SZeitrasterAuswahl = () => import("~/components/kataloge/zeitraster/SZeitrasterAuswahl.vue")
@@ -78,7 +78,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
-			throw new Error("Unbekannte Route");
+			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, this.children);
 	}

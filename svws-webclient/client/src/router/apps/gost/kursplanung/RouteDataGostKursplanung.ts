@@ -200,7 +200,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		const result : boolean = (halbjahr !== this._state.value.halbjahr);
 		if ((!result) && (this._state.value.halbjahrInitialisiert === true))
 			return result;

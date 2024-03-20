@@ -1,7 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import type { SchuelerListeEintrag} from "@core";
-import { SchuelerKAoADaten } from "@core";
+import { DeveloperNotificationException, SchuelerKAoADaten } from "@core";
 
 
 interface RouteStateSchuelerKAoA extends RouteStateInterface {
@@ -21,19 +21,19 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.auswahl;
 	}
 
 	get data(): SchuelerKAoADaten {
 		// if (this._state.value.data === undefined)
-		// 	throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
+		// 	throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zu KAoA-Daten abgerufen oder eingegeben werden.");
 		return this._state.value.data
 	}
 
 	patch = async (data : Partial<SchuelerKAoADaten>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patch KAoA", data);
 	}
 
@@ -47,7 +47,7 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			try {
 				// TODO Lade KAoA-Daten
 			} catch(error) {
-				throw new Error("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?")
+				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?")
 			}
 		}
 	}

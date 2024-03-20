@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
 import { ConfigElement } from "~/components/Config";
 
 import { api } from "~/router/Api";
@@ -43,7 +43,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
-			throw new Error("Fehler: Die Parameter dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
@@ -59,14 +59,14 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array || to_params.idschueler instanceof Array)
-			throw new Error("Fehler: Die Parameter dürfen keine Arrays sein");
+			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung und des Ergebnisses
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		if ((abiturjahr !== routeGostKursplanung.data.abiturjahr) || (halbjahr !== routeGostKursplanung.data.halbjahr) || (idBlockung === undefined))
 			return routeGostKursplanung.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		if (idBlockung !== routeGostKursplanung.data.auswahlBlockung.id)
@@ -98,7 +98,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined, idschueler: number | undefined) : RouteLocationRaw {
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined) || (idergebnis === undefined))
-			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
+			throw new DeveloperNotificationException("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
 		if (idschueler === undefined)
 			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis }};
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis, idschueler }};

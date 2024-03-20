@@ -1,5 +1,5 @@
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@core";
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@core";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -104,7 +104,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 
 	get benutzergruppenManager(): BenutzergruppenManager {
 		if(this._state.value.benutzergruppenManager === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.benutzergruppenManager
 	}
 
@@ -151,7 +151,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 
 	get daten(): BenutzergruppeDaten {
 		if(this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -161,7 +161,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 
 	get mapBenutzergruppe(): Map<number, BenutzergruppeListeEintrag> {
 		if(this._state.value.mapBenutzergruppe === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.mapBenutzergruppe
 	}
 

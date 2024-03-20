@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager, DeveloperNotificationException } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -22,11 +22,11 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
-			return routeError.getRoute(new Error("Fehler: Die Parameter dürfen keine Arrays sein"));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein"));
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			return routeError.getRoute(new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein."));
+			return routeError.getRoute(new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein."));
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {

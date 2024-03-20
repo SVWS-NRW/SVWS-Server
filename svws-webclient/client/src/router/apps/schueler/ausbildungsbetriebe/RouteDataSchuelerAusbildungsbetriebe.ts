@@ -1,5 +1,5 @@
 import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
-import { ArrayList } from "@core";
+import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -147,7 +147,7 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 
 	createAnsprechpartner = async (data: BetriebAnsprechpartner) => {
 		if (this.daten === undefined)
-			throw new Error("Es ist kein gültiger Betrieb für das Anlegen eines Ansprechpartners ausgewählt.")
+			throw new DeveloperNotificationException("Es ist kein gültiger Betrieb für das Anlegen eines Ansprechpartners ausgewählt.")
 		const ansprechpartner = await api.server.createBetriebansprechpartner(data, api.schema, this.daten.id);
 		const listAnsprechpartner = new ArrayList<BetriebAnsprechpartner>();
 		for(const value of this.listAnsprechpartner){

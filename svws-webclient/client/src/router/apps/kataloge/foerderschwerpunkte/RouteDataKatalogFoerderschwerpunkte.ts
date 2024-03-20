@@ -1,4 +1,4 @@
-import type { FoerderschwerpunktEintrag } from "@core";
+import { DeveloperNotificationException, type FoerderschwerpunktEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -36,7 +36,7 @@ export class RouteDataKatalogFoerderschwerpunkte extends RouteData<RouteStateKat
 
 	get daten(): FoerderschwerpunktEintrag {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -60,7 +60,7 @@ export class RouteDataKatalogFoerderschwerpunkte extends RouteData<RouteStateKat
 
 	patch = async (data : Partial<FoerderschwerpunktEintrag>) => {
 		if (this.auswahl === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patch...Daten", data);
 		//await api.server.patch...Daten(data, api.schema, this.item.id);
 	}
