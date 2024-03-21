@@ -68,14 +68,15 @@
 	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
 
 	const regeln = computed(()=> {
+		const list: List<GostBlockungRegel> = new ArrayList();
 		if (props.nurRegelverletzungen) {
-			const list: List<GostBlockungRegel> = new ArrayList();
 			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))
 				if (verletzungen.value.get(r.id))
 					list.add(r);
 			return list;
 		}
-		return props.getDatenmanager().regelGetListeOfTyp(props.regelTyp);
+		list.addAll(props.getDatenmanager().regelGetListeOfTyp(props.regelTyp));
+		return list;
 	});
 
 	function abbrechen() {

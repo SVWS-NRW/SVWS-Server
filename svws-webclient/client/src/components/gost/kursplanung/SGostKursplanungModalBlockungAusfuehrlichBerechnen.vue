@@ -23,11 +23,11 @@
 				</div>
 				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
 			</div>
-			<svws-ui-table clickable v-model="selected" :selectable="liste.size() > 0 && !running" class="z-20 relative" :columns="cols" :items="liste" :count="!liste.isEmpty()">
-				<template #cell(wert1)="{ rowData: row, rowIndex }">
+			<svws-ui-table clickable v-model="selected" :selectable="items.size() > 0 && !running" class="z-20 relative" :columns :items :count="!items.isEmpty()">
+				<template #cell(wert1)="{ rowIndex }">
 					<div class="table-cell">
-						<svws-ui-tooltip v-if="getBewertungWert(row, 1) > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 1)}">{{ getBewertungWert(row, 1) }}</span>
+						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung1Wert() > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung1Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung1Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerRegelverletzungen() }}</pre>
 							</template>
@@ -35,10 +35,10 @@
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
-				<template #cell(wert2)="{ rowData: row, rowIndex }">
+				<template #cell(wert2)="{ rowIndex }">
 					<div class="table-cell">
-						<svws-ui-tooltip v-if="getBewertungWert(row, 2) > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 2)}">{{ getBewertungWert(row, 2) }}</span>
+						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung2Wert() > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung2Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung2Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerWahlkonflikte() }}</pre>
 							</template>
@@ -46,24 +46,24 @@
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" style="background-color: rgb(128, 255, 128)">0</span>
 					</div>
 				</template>
-				<template #cell(wert3)="{ rowData: row }">
+				<template #cell(wert3)="{ rowIndex }">
 					<div class="table-cell">
-						<svws-ui-tooltip>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 3)}">{{ getBewertungWert(row, 3) }}</span>
+						<svws-ui-tooltip autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-between flex gap-2" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
+								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
+								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
+								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
+							</span>
 							<template #content>
-								Maximale Kursdifferenz: {{ getBewertungWert(row, 3) }}
-								<template v-for="d, i in row.bewertung.kursdifferenzHistogramm" :key="`${d}${i}`">
-									<template v-if="(i === 1 && row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] > 0)"><br>Optimal 0/1: {{ row.bewertung.kursdifferenzHistogramm[0] + row.bewertung.kursdifferenzHistogramm[1] }}x</template>
-									<template v-if="(d > 0) && (i >= 2)"><br>Differenz {{ i }}: {{ d }}x</template>
-								</template>
+								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>
 						</svws-ui-tooltip>
 					</div>
 				</template>
-				<template #cell(wert4)="{ rowData: row, rowIndex }">
+				<template #cell(wert4)="{ rowIndex }">
 					<div class="table-cell">
-						<svws-ui-tooltip v-if="getBewertungWert(row, 4) > 0" autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(row, 4)}">{{ getBewertungWert(row, 4) }}</span>
+						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung4Wert() > 0" autosize>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung4Farbcode())}">{{ listErgebnismanager.get(rowIndex).getOfBewertung4Wert() }}</span>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerFaecherparallelitaet() }}</pre>
 							</template>
@@ -80,12 +80,12 @@
 						<span class="icon i-ri-download-2-line" />
 						<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
 					</svws-ui-button>
-					<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+					<svws-ui-button v-if="!nachfragen" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
 					<svws-ui-button v-else type="danger" @click="closeModal">Alle berechneten Ergebnisse verwerfen und schließen</svws-ui-button>
 				</template>
 				<template v-else>
 					<div class="flex gap-2 w-full">
-						<svws-ui-button v-if="!nachfragen" type="danger" @click="liste.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
+						<svws-ui-button v-if="!nachfragen" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
 						<div>Der Worker zum Berechnen der Blockungen konnte nicht erstellt werden, bitte Fehlermeldungen überprüfen.</div>
 					</div>
 				</template>
@@ -97,7 +97,8 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from 'vue';
-	import { ArrayList, type GostBlockungsergebnis, type GostBlockungsdatenManager, GostBlockungsergebnisManager, type List } from "@core";
+	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungsergebnis, List } from "@core";
+	import { ArrayList } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
 
 	const props = defineProps<{
@@ -105,7 +106,7 @@
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 	}>();
 
-	const cols = [
+	const columns = [
 		{ key: 'wert1', label: 'Regelverletzungen' },
 		{ key: 'wert2', label: 'Wahlkonflikte' },
 		{ key: 'wert3', label: 'Maximale Kursdifferenz' },
@@ -131,7 +132,7 @@
 
 	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
 
-	const liste = computed<List<GostBlockungsergebnis>>(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
+	const items = computed<List<GostBlockungsergebnis>>(() => workerManager.value?.getErgebnisse() ?? new ArrayList<GostBlockungsergebnis>());
 	const listErgebnismanager = computed<List<GostBlockungsergebnisManager>>(() => workerManager.value?.getErgebnisManager() ?? new ArrayList<GostBlockungsergebnisManager>());
 
 	const nachfragen = ref(false);
@@ -172,7 +173,7 @@
 	async function pause() {
 		workerManager.value?.pause();
 		await getWaiting();
-		selected.value = [...liste.value];
+		selected.value = [...items.value];
 	}
 
 	async function ergebnisseUebernehmen() {
@@ -185,29 +186,9 @@
 		closeModal();
 	}
 
-	function getBewertungWert(ergebnis: GostBlockungsergebnis, value: number) : number {
-		switch(value) {
-			case 1: return GostBlockungsergebnisManager.getOfBewertung1WertStatic(ergebnis.bewertung);
-			case 2: return GostBlockungsergebnisManager.getOfBewertung2WertStatic(ergebnis.bewertung);
-			case 3: return GostBlockungsergebnisManager.getOfBewertung3WertStatic(ergebnis.bewertung);
-			case 4: return GostBlockungsergebnisManager.getOfBewertung4WertStatic(ergebnis.bewertung);
-			default: return Number.MAX_SAFE_INTEGER;
-		}
-	}
-
-	function getBewertungColor(ergebnis: GostBlockungsergebnis, value: number) : string {
-		const h = Math.round((1 - (getBewertungCode(ergebnis, value)||0)) * 120);
+	function getBewertungColor(farbcode: number) : string {
+		const h = Math.round((1 - (farbcode || 0)) * 120);
 		return `hsl(${h},100%,75%)`;
-	}
-
-	function getBewertungCode(ergebnis: GostBlockungsergebnis, value: number) : number {
-		switch(value) {
-			case 1: return GostBlockungsergebnisManager.getOfBewertung1FarbcodeStatic(ergebnis.bewertung);
-			case 2: return GostBlockungsergebnisManager.getOfBewertung2FarbcodeStatic(ergebnis.bewertung);
-			case 3: return GostBlockungsergebnisManager.getOfBewertung3FarbcodeStatic(ergebnis.bewertung);
-			case 4: return GostBlockungsergebnisManager.getOfBewertung4FarbcodeStatic(ergebnis.bewertung);
-			default: return 1;
-		}
 	}
 
 	const openModal = () => showModal().value = true;
