@@ -226,7 +226,7 @@
 												<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 												<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
 													@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)"
-													class="select-none w-full h-full rounded-sm flex items-center group text-black p-px"
+													class="select-none w-full h-full rounded-sm flex justify-between items-center group text-black p-px"
 													:class="{
 														'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 														'bg-white/50': !istKursAusgewaehlt(kurs).value,
