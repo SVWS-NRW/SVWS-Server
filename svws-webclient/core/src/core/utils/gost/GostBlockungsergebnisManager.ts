@@ -244,6 +244,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private readonly _kursComparator_fach_kursart_kursnummer : Comparator<GostBlockungsergebnisKurs>;
 
+	private _bewertung3_KD_nur_LK : number = 0;
+
+	private _bewertung3_KD_nur_GK : number = 0;
+
+	private _bewertung3_KD_nur_REST : number = 0;
+
 
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
@@ -423,10 +429,23 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateClearErgebnisBewertung3() : void {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
+		this._bewertung3_KD_nur_LK = 0;
+		this._bewertung3_KD_nur_GK = 0;
+		this._bewertung3_KD_nur_REST = 0;
 		for (const idFachart of this._fachartID_to_kursdifferenz.keySet()) {
 			const newKD : number = DeveloperNotificationException.ifMapGetIsNull(this._fachartID_to_kursdifferenz, idFachart).valueOf();
 			this._ergebnis.bewertung.kursdifferenzHistogramm[newKD]++;
 			this._ergebnis.bewertung.kursdifferenzMax = Math.max(this._ergebnis.bewertung.kursdifferenzMax, newKD);
+			const kursart : number = GostKursart.getKursartID(idFachart);
+			if (kursart === GostKursart.LK.id) {
+				this._bewertung3_KD_nur_LK = Math.max(this._bewertung3_KD_nur_LK, newKD);
+			} else {
+				if (kursart === GostKursart.GK.id) {
+					this._bewertung3_KD_nur_GK = Math.max(this._bewertung3_KD_nur_GK, newKD);
+				} else {
+					this._bewertung3_KD_nur_REST = Math.max(this._bewertung3_KD_nur_REST, newKD);
+				}
+			}
 		}
 	}
 
@@ -1068,9 +1087,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (size <= maxProSchiene)
 				continue;
 			regelVerletzungen.add(r.id);
-			const beschreibung : string = "In Schiene " + this._parent.toStringSchieneSimple(idSchiene)! + " ist die Fachart " + this._parent.toStringFachartSimpleByFachartID(idFachart)! + " " + size + " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
+			const beschreibung : string = "In " + this._parent.toStringSchieneSimple(idSchiene)! + " ist die Fachart " + this._parent.toStringFachartSimpleByFachartID(idFachart)! + " insgesamt " + size + " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 18, beschreibung);
-			this._regelID_to_verletzungString.put(r.id, beschreibung);
+			const old : string = MapUtils.getOrDefault(this._regelID_to_verletzungString, r.id, "");
+			this._regelID_to_verletzungString.put(r.id, (JavaString.isEmpty(old) ? "" : "\n") + beschreibung!);
 		}
 	}
 
@@ -1316,7 +1336,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Güte des Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
-	public static getOfBewertungFarbcodeStatic(value : number) : number {
+	private static getOfBewertungFarbcodeStatic(value : number) : number {
 		return 1 - 1 / (0.25 * value + 1);
 	}
 
@@ -1423,6 +1443,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param bewertung   die Bewertung vom Ergebnis
+	 *
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public static getOfBewertung3FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
+		let wert : number = GostBlockungsergebnisManager.getOfBewertung3WertStatic(bewertung);
+		if (wert > 0)
+			wert--;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert);
+	}
+
+	/**
 	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
@@ -1436,14 +1472,79 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 * Liefert den Wert des 3. Bewertungskriteriums (Kursdifferenz).
 	 *
-	 * @return Den Wert des 3. Bewertungskriteriums.
+	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz).
 	 */
 	public getOfBewertung3Wert() : number {
-		return GostBlockungsergebnisManager.getOfBewertung3WertStatic(this._ergebnis.bewertung);
+		return this._ergebnis.bewertung.kursdifferenzMax;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums (Kursdifferenz) im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz) im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung3Farbcode() : number {
+		const wert : number = this._ergebnis.bewertung.kursdifferenzMax;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart LK.
+	 *
+	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart LK.
+	 */
+	public getOfBewertung3Wert_nur_LK() : number {
+		return this._bewertung3_KD_nur_LK;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur LK) im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur LK) im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung3Farbcode_nur_LK() : number {
+		const wert : number = this._bewertung3_KD_nur_LK;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart GK.
+	 *
+	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart GK.
+	 */
+	public getOfBewertung3Wert_nur_GK() : number {
+		return this._bewertung3_KD_nur_GK;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur GK) im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur GK) im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung3Farbcode_nur_GK() : number {
+		const wert : number = this._bewertung3_KD_nur_GK;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf Kursarten die nicht LK oder GK sind.
+	 *
+	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf Kursarten die nicht LK oder GK sind.
+	 */
+	public getOfBewertung3Wert_nur_REST() : number {
+		return this._bewertung3_KD_nur_REST;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums (Kursdifferenz, alles außer LK und GK) im Bereich [0;1], mit 0=optimal.
+	 *
+	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, alles außer LK und GK) im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung3Farbcode_nur_REST() : number {
+		const wert : number = this._bewertung3_KD_nur_REST;
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert === 0 ? 0 : wert - 1);
 	}
 
 	/**
@@ -1472,33 +1573,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertung3Histogramm() : Array<number> {
 		return GostBlockungsergebnisManager.getOfBewertung3HistogrammStatic(this._ergebnis.bewertung);
-	}
-
-	/**
-	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @param bewertung   die Bewertung vom Ergebnis
-	 *
-	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 */
-	public static getOfBewertung3FarbcodeStatic(bewertung : GostBlockungsergebnisBewertung) : number {
-		let wert : number = GostBlockungsergebnisManager.getOfBewertung3WertStatic(bewertung);
-		if (wert > 0)
-			wert--;
-		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(wert);
-	}
-
-	/**
-	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 */
-	public getOfBewertung3Farbcode() : number {
-		return GostBlockungsergebnisManager.getOfBewertung3FarbcodeStatic(this._ergebnis.bewertung);
 	}
 
 	/**
