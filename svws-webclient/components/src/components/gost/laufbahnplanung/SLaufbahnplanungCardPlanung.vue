@@ -75,28 +75,28 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
-							Pro Halbjahr sollten <strong>10–11</strong> Kurse gewählt werden. Insgesamt sind <strong>33–36</strong> Kurse als Summe aus der Qualifikationsphase optimal.
+							Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(jahrgang, i) in kurszahlen" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
+				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(kurse, i) in kurszahlen" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
 					<span class="svws-ergebnis-badge"
 						:class="{
-							'svws-ergebnis--not-enough': jahrgang < 9,
-							'svws-ergebnis--low': jahrgang < 10 && jahrgang > 8,
-							'svws-ergebnis--good': jahrgang > 9 && jahrgang < 12,
-							'svws-ergebnis--more': jahrgang > 11
+							'svws-ergebnis--not-enough': (kurse < 10) && (i < 2) || (kurse < 9) && (i > 1),
+							'svws-ergebnis--low': ((kurse > 9) && (kurse < 11) && (i < 2)) || ((kurse > 8) && (kurse < 10) && (i > 1)),
+							'svws-ergebnis--good': ((kurse > 10) && (kurse < 13) && (i < 2)) || ((kurse > 9) && (kurse < 12) && (i > 1)),
+							'svws-ergebnis--more': ((kurse > 12) && (i < 2)) || ((kurse > 11) && (i > 1))
 						}">
-						{{ jahrgang }}
+						{{ kurse }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
 					<span class="svws-ergebnis-badge"
 						:class="{
-							'svws-ergebnis--not-enough': kurse_summe < 30,
-							'svws-ergebnis--low': kurse_summe >= 31 && kurse_summe <= 32,
-							'svws-ergebnis--good': kurse_summe > 32 && kurse_summe < 37,
-							'svws-ergebnis--more': kurse_summe > 36
+							'svws-ergebnis--not-enough': kurse_summe < 38,
+							'svws-ergebnis--low': kurse_summe > 37 && kurse_summe < 40,
+							'svws-ergebnis--good': kurse_summe > 39 && kurse_summe < 43,
+							'svws-ergebnis--more': kurse_summe > 42
 						}">
 						{{ kurse_summe }}
 					</span>
@@ -108,28 +108,28 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
-							Pro Halbjahr sollten <strong>33–36</strong> Wochenstunden erreicht werden. Insgesamt sind <strong>102–108</strong> Wochenstunden als Summe aus der Qualifikationsphase optimal.
+							Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33–36</strong> Wochenstunden gewählt werden.
 						</template>
 					</svws-ui-tooltip>
 				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(jahrgang, i) in wochenstunden" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
+				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(wst, i) in wochenstunden" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
 					<span class="svws-ergebnis-badge"
 						:class="{
-							'svws-ergebnis--not-enough': jahrgang < 30,
-							'svws-ergebnis--low': jahrgang >= 31 && jahrgang <= 32,
-							'svws-ergebnis--good': jahrgang > 32 && jahrgang < 37,
-							'svws-ergebnis--more': jahrgang > 36
+							'svws-ergebnis--not-enough': wst < 30,
+							'svws-ergebnis--low': wst >= 30 && wst < 33,
+							'svws-ergebnis--good': wst >= 33 && wst < 37,
+							'svws-ergebnis--more': wst >= 37
 						}">
-						{{ jahrgang }}
+						{{ wst }}
 					</span>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
 					<span class="svws-ergebnis-badge"
 						:class="{
 							'svws-ergebnis--not-enough': wst_summe < 100,
-							'svws-ergebnis--low': wst_summe >= 100 && wst_summe < 102,
-							'svws-ergebnis--good': wst_summe >= 102 && wst_summe <= 108,
-							'svws-ergebnis--more': wst_summe > 108
+							'svws-ergebnis--low': wst_summe >= 100 && wst_summe < 101,
+							'svws-ergebnis--good': wst_summe >= 101 && wst_summe <= 106,
+							'svws-ergebnis--more': wst_summe > 106
 						}">
 						{{ wst_summe }}
 					</span>
