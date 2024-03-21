@@ -51,8 +51,26 @@
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<div class="svws-ui-stundenplan--stunde" :style="posZeitraster(wochentag, stunde)"
+					<div class="svws-ui-stundenplan--stunde relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
+						<!-- TODO Unterstütze mehrere Drop-Bereich, um direkt den einzelnen Wochentypen zuweisen zu können ...
+						<div v-if="(dragData !== undefined) && (dragData() !== undefined)"
+							class="absolute w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex flex-col gap-1 z-10 bg-white bg-opacity-75 text-center select-none"
+							:class="{ 'opacity-100': isDragOverPosition(wochentag, stunde), 'opacity-5': !isDragOverPosition(wochentag, stunde) }">
+							<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:font-bold"
+								@dragover="updateDragOverPosition($event, wochentag, stunde, undefined)">
+								Jede Woche
+							</div>
+							<div class="h-[calc(50%-0.25rem)] flex flex-row gap-1">
+								<template v-for="wt in [ ...Array(manager().getWochenTypModell()).keys() ].map( i => i+1)" :key="wt">
+									<div class="flex-grow flex justify-center items-center p-2 border-2 border-solid rounded-lg border-black/50 hover:border-black hover:font-bold"
+										@dragover="updateDragOverPosition($event, wochentag, stunde, wt)">
+										<span class="w-20">{{ manager().stundenplanGetWochenTypAsString(wt) }}</span>
+									</div>
+								</template>
+							</div>
+						</div>
+						-->
 						<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
 						<!-- Allgemeiner Wochentyp ausgewählt -->
 						<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
@@ -178,7 +196,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 	import type { Wochentag, StundenplanPausenzeit, List } from "@core";
 	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht, StundenplanSchiene } from "@core";
@@ -196,6 +214,28 @@
 		onDrag: (data: StundenplanAnsichtDragData, event?: DragEvent) => {},
 		onDrop: (zone: StundenplanAnsichtDropZone) => {},
 	});
+
+	const dragOverPos = ref<{
+		wochentag: Wochentag | undefined,
+		stunde : number | undefined,
+		wochentyp : number | undefined,
+	}>({
+		wochentag: undefined,
+		stunde: undefined,
+		wochentyp: undefined,
+	});
+
+	function updateDragOverPosition(event: DragEvent, wochentag : Wochentag, stunde : number, wochentyp : number | undefined) {
+console.log(wochentag, stunde, wochentyp);
+		if (dragOverPos.value.wochentag !== wochentag)
+			dragOverPos.value.wochentag = wochentag;
+		if (dragOverPos.value.stunde !== stunde)
+			dragOverPos.value.stunde = stunde;
+	}
+
+	function isDragOverPosition(wochentag : Wochentag, stunde : number) {
+		return (dragOverPos.value.wochentag?.id === wochentag.id) && (dragOverPos.value.stunde === stunde);
+	}
 
 	const getWochentyp = computed(()=> props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
 
