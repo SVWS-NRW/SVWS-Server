@@ -356,6 +356,9 @@ public class GostBlockungsergebnisManager {
 		// stateRegelvalidierung16 ist nicht nötig
 		// stateRegelvalidierung17 ist nicht nötig
 
+		for (final @NotNull GostBlockungRegel r : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE))
+			stateRegelvalidierung18_fach_kursart_maxProSchiene(r, regelVerletzungen);
+
 		// Bewertungskriterium 1b (anzahlKurseNichtZugeordnet)
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
 		for (final long idKurs : _kursID_to_schienenSet.keySet()) {
@@ -1132,6 +1135,23 @@ public class GostBlockungsergebnisManager {
 			regelVerletzungen.add(r.id);
 			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.";
 			MapUtils.addToList(_regelTyp_to_verletzungList, 15, beschreibung);
+			_regelID_to_verletzungString.put(r.id, beschreibung);
+		}
+	}
+
+	private void stateRegelvalidierung18_fach_kursart_maxProSchiene(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		final long idFach = r.parameter.get(0);
+		final int kursart = r.parameter.get(1).intValue();
+		final int maxProSchiene = r.parameter.get(2).intValue();
+		final long idFachart = GostKursart.getFachartID(idFach, kursart);
+
+		for (final long idSchiene : _schienenIDset) {
+			final int size = Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart).size();
+			if (size <= maxProSchiene)
+				continue;
+			regelVerletzungen.add(r.id);
+			final @NotNull String beschreibung = "In Schiene " + _parent.toStringSchieneSimple(idSchiene) +  " ist die Fachart " + _parent.toStringFachartSimpleByFachartID(idFachart) + " " + size + " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
+			MapUtils.addToList(_regelTyp_to_verletzungList, 18, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}

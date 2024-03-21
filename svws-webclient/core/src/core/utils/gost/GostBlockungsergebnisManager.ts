@@ -389,6 +389,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.stateRegelvalidierung14_schueler_verbieten_mit_schueler(r, regelVerletzungen);
 		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
 			this.stateRegelvalidierung15_kurs_maximale_schueleranzahl(r, regelVerletzungen);
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE))
+			this.stateRegelvalidierung18_fach_kursart_maxProSchiene(r, regelVerletzungen);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet = 0;
 		for (const idKurs of this._kursID_to_schienenSet.keySet()) {
 			const sizeSoll : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_kurs, idKurs).anzahlSchienen;
@@ -1052,6 +1054,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			regelVerletzungen.add(r.id);
 			const beschreibung : string = "Kurs " + this.getOfKursName(idKurs)! + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.";
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 15, beschreibung);
+			this._regelID_to_verletzungString.put(r.id, beschreibung);
+		}
+	}
+
+	private stateRegelvalidierung18_fach_kursart_maxProSchiene(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		const idFach : number = r.parameter.get(0).valueOf();
+		const kursart : number = r.parameter.get(1)!;
+		const maxProSchiene : number = r.parameter.get(2)!;
+		const idFachart : number = GostKursart.getFachartID(idFach, kursart);
+		for (const idSchiene of this._schienenIDset) {
+			const size : number = Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart).size();
+			if (size <= maxProSchiene)
+				continue;
+			regelVerletzungen.add(r.id);
+			const beschreibung : string = "In Schiene " + this._parent.toStringSchieneSimple(idSchiene)! + " ist die Fachart " + this._parent.toStringFachartSimpleByFachartID(idFachart)! + " " + size + " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
+			MapUtils.addToList(this._regelTyp_to_verletzungList, 18, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 	}

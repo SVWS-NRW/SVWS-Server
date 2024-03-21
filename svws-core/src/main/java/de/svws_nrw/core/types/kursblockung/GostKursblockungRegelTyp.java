@@ -24,8 +24,7 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
  * <br>
  * <br> Nach GUI Regel-Einbindung
- * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1 aktualisieren.                 -->
- * <br> {@link GostBlockungsergebnisManager}: ggf. Methodenanpassungen                                    -->
+ * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               -->
  * <br>
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
@@ -228,8 +227,8 @@ public enum GostKursblockungRegelTyp {
 	/**
 	 * Der Regel-Typ zum forcieren, dass eine Fachart (Fach + Kursart) eine Obergrenze pro Schiene hat.
 	 * <br>- Parameter A: Datenbank-ID des Faches (long)
-	 * <br>- Parameter B: Datenbank-ID der Kursart (long)
-	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9.
+	 * <br>- Parameter B: Datenbank-ID der Kursart (int)
+	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9. (int)
 	 */
 	FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(
 		GostKursblockungRegelParameterTyp.FACH_ID,

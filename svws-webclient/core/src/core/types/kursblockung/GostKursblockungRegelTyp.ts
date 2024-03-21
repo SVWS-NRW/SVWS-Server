@@ -158,8 +158,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	/**
 	 *  Der Regel-Typ zum forcieren, dass eine Fachart (Fach + Kursart) eine Obergrenze pro Schiene hat.
 	 *  <br>- Parameter A: Datenbank-ID des Faches (long)
-	 *  <br>- Parameter B: Datenbank-ID der Kursart (long)
-	 *  <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9.
+	 *  <br>- Parameter B: Datenbank-ID der Kursart (int)
+	 *  <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9. (int)
 	 */
 	public static readonly FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE", 18, 18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.FACH_ID, GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.GANZZAHL));
 
