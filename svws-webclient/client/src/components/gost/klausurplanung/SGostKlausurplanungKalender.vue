@@ -63,27 +63,30 @@
 						:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager().kalenderwochenzuordnungGetWocheAsString(kw)" />
 				</template>
 			</svws-ui-content-card>
-			<div class="-ml-4 space-y-6">
-				<svws-ui-content-card class="border p-2">
-					<template #title>
-						<span class="text-headline-md leading-none inline-flex gap-1">
-							<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
-								<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
-								<span>Keine Konflikte</span>
-							</template>
-							<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
-								<span class="icon i-ri-alert-fill icon-error -my-0.5" />
-								<span> Konflikte</span>
-							</template>
-						</span>
-					</template>
-					<div v-if="anzahlProKwKonflikte2(4, false).length > 0" class="mt-5">
-						<div class="text-headline-md leading-tight mb-3">
-							<div class="inline-flex gap-1">{{ anzahlProKwKonflikte2(4, false).length }} Schüler:innen</div><svws-ui-checkbox class="float-right" type="toggle" v-model="showMoreKonflikte">Alle anzeigen</svws-ui-checkbox>
+			<svws-ui-content-card>
+				<template #title>
+					<span class="text-headline-md leading-none inline-flex gap-1">
+						<template v-if="anzahlProKwKonflikte2(4, false).length === 0">
+							<span class="icon i-ri-checkbox-circle-fill icon-success -my-1" />
+							<span>Keine Konflikte</span>
+						</template>
+						<template v-else-if="anzahlProKwKonflikte2(4, false).length > 0">
+							<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+							<span> Konflikte</span>
+						</template>
+					</span>
+				</template>
+				<div class="mb-12">
+					<div v-if="anzahlProKwKonflikte2(4, false).length > 0">
+						<div class="text-headline-sm leading-tight mb-6 -mt-2">
+							<div class="inline-flex gap-2 justify-between w-full">
+								<span>{{ anzahlProKwKonflikte2(4, false).length }} Schüler:innen</span>
+								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreKonflikte">Alle anzeigen</svws-ui-checkbox>
+							</div>
 							<div class="opacity-50">Mehr als drei Klausuren in dieser Woche</div>
 						</div>
-						<ul class="flex flex-col gap-5">
-							<li v-for="(konflikt, no) in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()" :class="showMoreKonflikte ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
+						<ul class="flex flex-col gap-3">
+							<li v-for="konflikt in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
@@ -92,29 +95,31 @@
 									</span>
 								</div>
 							</li>
+							<li v-if="!showMoreKonflikte" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte2(4, false, true).length - 3 }} weitere</li>
 						</ul>
 					</div>
-				</svws-ui-content-card>
-				<svws-ui-content-card class="border p-2 op">
-					<template #title>
-						<span class="text-headline-md leading-none inline-flex gap-1">
-							<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
-								<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
-								<span>Keine Warnungen</span>
-							</template>
-							<template v-else-if="anzahlProKwKonflikte2(3, true).length > 0">
-								<span class="icon i-ri-alert-fill text-highlight -my-0.5" />
-								<span> Warnungen</span>
-							</template>
-						</span>
-					</template>
+				</div>
+				<div>
+					<span class="text-headline-md leading-none inline-flex gap-1">
+						<template v-if="anzahlProKwKonflikte2(3, true).length === 0">
+							<span class="icon i-ri-checkbox-circle-fill text-success -my-1" />
+							<span>Keine Warnungen</span>
+						</template>
+						<template v-else-if="anzahlProKwKonflikte2(3, true).length > 0">
+							<span class="icon i-ri-alert-line text-highlight -my-0.5" />
+							<span> Warnungen</span>
+						</template>
+					</span>
 					<div v-if="anzahlProKwKonflikte2(3, true).length > 0" class="mt-5">
-						<div class="text-headline-md leading-tight mb-3">
-							<div class="inline-flex gap-1">{{ anzahlProKwKonflikte2(3, true).length }} Schüler:innen</div><svws-ui-checkbox class="float-right" type="toggle" v-model="showMoreWarnungen">Alle anzeigen</svws-ui-checkbox>
+						<div class="text-headline-sm leading-tight mb-6 -mt-2">
+							<div class="inline-flex gap-2 justify-between w-full">
+								<span>{{ anzahlProKwKonflikte2(3, true).length }} Schüler:innen</span>
+								<svws-ui-checkbox class="-mt-1" type="toggle" v-model="showMoreWarnungen">Alle anzeigen</svws-ui-checkbox>
+							</div>
 							<div class="opacity-50">Drei Klausuren in dieser Woche</div>
 						</div>
-						<ul class="flex flex-col gap-5">
-							<li v-for="(konflikt, no) in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()" :class="showMoreWarnungen ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
+						<ul class="flex flex-col gap-3">
+							<li v-for="konflikt in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()">
 								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
@@ -123,10 +128,11 @@
 									</span>
 								</div>
 							</li>
+							<li v-if="!showMoreWarnungen" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte(3, true, true).length - 3 }} weitere</li>
 						</ul>
 					</div>
-				</svws-ui-content-card>
-			</div>
+				</div>
+			</svws-ui-content-card>
 		</div>
 	</template>
 </template>
