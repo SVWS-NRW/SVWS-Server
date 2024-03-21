@@ -5,6 +5,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.enm.DataENMDaten;
+import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für die Arbeit mit den
@@ -111,5 +113,106 @@ public class APIENM {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
     }
+
+	/**
+	 * Die OpenAPI-Methode für die Synchronisation der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die HTTP-Response
+	 */
+	@GET
+	@Path("/synchronize")
+	@Operation(summary = "Synchronisiert die Daten des Externen Notenmoduls (ENM).", description = "Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank "
+			+ "und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
+			+ "Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	public Response synchronizeENMDaten(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
+			return DataENMDaten.synchronize(conn);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für den Upload von Daten an das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die HTTP-Response
+	 */
+	@GET
+	@Path("/upload")
+	@Operation(summary = "Lädt die ENM-Daten beim Externen Notenmodul (ENM) hoch.", description = "Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank "
+			+ "und lädt diese als ZIP beim ENM hoch."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
+			+ "Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	public Response uploadENMDaten(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
+			return DataENMDaten.upload(conn);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für den Upload von Daten an das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return true, wenn der Datenimport erfolgreich war
+	 */
+	@GET
+	@Path("/download")
+	@Operation(summary = "Lädt die Daten vom Externen Notenmodul (ENM).", description = "Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
+			+ "Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler, bspw. beim Lesen in der DB oder Erstellen des Zipfiles.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
+	public Response downloadENMDaten(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
+			return DataENMDaten.download(conn);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für den Upload von Daten an das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return eine Response mit Boolean True, wenn das Truncate erfolgreich war
+	 */
+	@GET
+	@Path("/truncate")
+	@Operation(summary = "Leert die Daten des Externen Notenmoduls (ENM).", description = "Leert die Daten des Externen Notenmoduls."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
+			+ "Auslesen der Notendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) wurden geleert.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine WeNoM-Serverdaten gefunden.")
+	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server, u.U. auch fehlende OAuth-Daten.")
+	public Response truncateENMServer(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
+			return DataENMDaten.truncate(conn);
+		}
+	}
 
 }

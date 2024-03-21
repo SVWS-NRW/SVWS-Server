@@ -79,7 +79,14 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	}
 
 
-	private DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
+	/**
+	 * Liefert das Datenbank-DTO zu den OAuth2-Secrets des angegebenen Server-Typs
+	 *
+	 * @param typ   der Server-Typ
+	 *
+	 * @return das DB-DTO zu den OAuth2-Secrets
+	 */
+	public DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
 		final List<DTOSchuleOAuthSecrets> dtoList = conn.queryNamed("DTOSchuleOAuthSecrets.id", typ.getId(), DTOSchuleOAuthSecrets.class);
 		if ((dtoList == null) || (dtoList.size() != 1))
 			return null;

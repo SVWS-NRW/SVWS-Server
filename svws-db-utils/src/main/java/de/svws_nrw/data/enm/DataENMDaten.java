@@ -1,24 +1,39 @@
 package de.svws_nrw.data.enm;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFloskel;
 import de.svws_nrw.core.data.enm.ENMFloskelgruppe;
 import de.svws_nrw.core.data.enm.ENMJahrgang;
 import de.svws_nrw.core.data.enm.ENMKlasse;
+import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.oauth2.DataOauthClientSecrets;
+import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFloskelgruppen;
@@ -28,9 +43,15 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
+import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
+import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
 import jakarta.ws.rs.core.MediaType;
@@ -42,6 +63,11 @@ import jakarta.ws.rs.core.Response.Status;
  * Core-DTO {@link ENMDaten}.
  */
 public final class DataENMDaten extends DataManager<Long> {
+
+	private static final String ENM_UPLOAD_PATH = "/api/import/gzip";
+	private static final String ENM_DOWNLOAD_PATH = "/api/export";
+	private static final String ENM_TRUNCATE_PATH = "/api/truncate";
+
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ENMDaten}.
@@ -85,6 +111,20 @@ public final class DataENMDaten extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Gibt die ENM-Daten aller Lehrer als mit GZIP komprimiertes byte[] zurück.
+	 *
+	 * @return das GZIP-komprimierte byte[].
+	 */
+	public byte[] getAllGZIPBytes() {
+		final ENMDaten daten = getDaten(null);
+		try {
+			return JSONMapper.gzipByteArrayFromObject(daten);
+		} catch (final CompressionException ce) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(ce);
+		}
 	}
 
 	/**
@@ -379,6 +419,281 @@ public final class DataENMDaten extends DataManager<Long> {
 			}
 			// TODO else ... Fehlerbehandlung: Wie ordnet man die Floskel zu? -> allgemein
 		}
+	}
+
+	/**
+	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
+	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
+	 *
+	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
+	 */
+	public void importEnmDaten(final byte[] enmBytes) {
+		ENMSchueler[] enmDaten;
+		try {
+			enmDaten = JSONMapper.mapper.readValue(enmBytes, ENMSchueler[].class);
+			// TODO kein ZIP auf diesem Endpunkt
+			// JSONMapper.toObjectGZip(httpResponse.body(), ENMSchueler[].class);
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			throw OperationError.BAD_GATEWAY.exception("Antwort des ENM-Servers nicht parsebar.");
+		}
+		conn.transactionBegin();
+		final DTOEigeneSchule schule = getSchule();
+		final List<DTOSchuelerLernabschnittsdaten> slaDatenList = conn.queryNamed(
+				"DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID,
+				DTOSchuelerLernabschnittsdaten.class);
+		if (slaDatenList == null || slaDatenList.size() == 0) {
+			throw OperationError.NOT_FOUND.exception("Lernabschnittsdaten für Schuljahresabschnitt nicht gefunden.");
+		}
+		final Map<Long, DTOSchuelerLernabschnittsdaten> slaBySchuelerId = slaDatenList.stream()
+				.collect(Collectors.toMap((sla) -> sla.Schueler_ID, Function.identity()));
+
+		final List<DTOSchuelerLeistungsdaten> slDatenList = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
+				schule.Schuljahresabschnitts_ID, DTOSchuelerLeistungsdaten.class);
+		if (slDatenList == null) {
+			throw OperationError.NOT_FOUND.exception("Leistungsdaten für Schuljahresabschnitt nicht gefunden.");
+		}
+
+		for (final ENMSchueler enmSchueler : enmDaten) {
+			final DTOSchuelerLernabschnittsdaten sla = slaBySchuelerId.get(enmSchueler.id);
+			final List<DTOEnmLernabschnittsdaten> dtoEnmLAList = conn.queryNamed("DTOEnmLernabschnittsdaten.id", sla.ID,
+					DTOEnmLernabschnittsdaten.class);
+			if (dtoEnmLAList == null || dtoEnmLAList.size() != 1) {
+				throw OperationError.NOT_FOUND.exception("Lernabschnittsdaten nicht gefunden.");
+			}
+			final DTOEnmLernabschnittsdaten enmLA = dtoEnmLAList.get(0);
+
+			final List<DTOSchuelerPSFachBemerkungen> dtoFachbemerkungenList = conn.queryNamed(
+					"DTOSchuelerPSFachBemerkungen.abschnitt_id", sla.ID, DTOSchuelerPSFachBemerkungen.class);
+			if (dtoFachbemerkungenList == null || dtoFachbemerkungenList.size() != 1) {
+				throw OperationError.NOT_FOUND.exception("Fachbemerkungen nicht gefunden.");
+			}
+			final DTOSchuelerPSFachBemerkungen fachBemerkungen = dtoFachbemerkungenList.get(0);
+			boolean laUpdaten = false;
+			boolean bemerkungenUpdaten = false;
+			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsASV, enmLA.tsASV, () -> {
+				fachBemerkungen.ASV = enmSchueler.bemerkungen.ASV;
+				enmLA.tsASV = enmSchueler.bemerkungen.tsASV;
+			});
+			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsAUE, enmLA.tsAUE, () -> {
+				fachBemerkungen.AUE = enmSchueler.bemerkungen.AUE;
+				enmLA.tsAUE = enmSchueler.bemerkungen.tsAUE;
+			});
+			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen,
+					enmLA.tsBemerkungVersetzung, () -> {
+						fachBemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
+						enmLA.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
+					});
+
+			laUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsZB, enmLA.tsZeugnisBem, () -> {
+				sla.ZeugnisBem = enmSchueler.bemerkungen.ZB;
+				enmLA.tsZeugnisBem = enmSchueler.bemerkungen.tsZB;
+			});
+
+			laUpdaten |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamt, enmLA.tsSumFehlStd,
+					() -> {
+						sla.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
+						enmLA.tsSumFehlStd = enmSchueler.lernabschnitt.tsFehlstundenGesamt;
+					});
+
+			laUpdaten |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt,
+					enmLA.tsSumFehlStdU, () -> {
+						sla.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
+						enmLA.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
+					});
+
+			if (bemerkungenUpdaten) {
+				conn.transactionPersist(fachBemerkungen);
+			}
+			if (laUpdaten) {
+				conn.transactionPersist(sla);
+			}
+			if (bemerkungenUpdaten || laUpdaten) {
+				conn.transactionPersist(enmLA);
+			}
+
+			for (final ENMLeistung leistung : enmSchueler.leistungsdaten) {
+				final DTOSchuelerLeistungsdaten dtoSchuelerLeistungsdaten = conn
+						.queryNamed("DTOSchuelerLeistungsdaten.id", leistung.id, DTOSchuelerLeistungsdaten.class)
+						.get(0);
+				final List<DTOEnmLeistungsdaten> dtoEnmLDList = conn.queryNamed("DTOEnmLeistungsdaten.id", leistung.id,
+						DTOEnmLeistungsdaten.class);
+				if (dtoSchuelerLeistungsdaten == null || dtoEnmLDList == null || dtoEnmLDList.size() != 1) {
+					throw OperationError.NOT_FOUND.exception("Schuelerleistungsdaten nicht gefunden.");
+				}
+				final var dtoEnmLD = dtoEnmLDList.get(0);
+				boolean dtoUpdaten = false;
+
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFachbezogeneBemerkungen, dtoEnmLD.tsLernentw, () -> {
+					dtoSchuelerLeistungsdaten.Lernentw = leistung.fachbezogeneBemerkungen;
+					dtoEnmLD.tsLernentw = leistung.tsFachbezogeneBemerkungen;
+				});
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFehlstundenFach, dtoEnmLD.tsFehlStd, () -> {
+					dtoSchuelerLeistungsdaten.FehlStd = leistung.fehlstundenFach;
+					dtoEnmLD.tsFehlStd = leistung.tsFehlstundenFach;
+				});
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFehlstundenUnentschuldigtFach, dtoEnmLD.tsuFehlStd,
+						() -> {
+							dtoSchuelerLeistungsdaten.uFehlStd = leistung.fehlstundenUnentschuldigtFach;
+							dtoEnmLD.tsuFehlStd = leistung.tsFehlstundenUnentschuldigtFach;
+						});
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsIstGemahnt, dtoEnmLD.tsWarnung, () -> {
+					dtoSchuelerLeistungsdaten.Warnung = leistung.istGemahnt;
+					dtoEnmLD.tsWarnung = leistung.tsIstGemahnt;
+				});
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsNote, dtoEnmLD.tsNotenKrz, () -> {
+					dtoSchuelerLeistungsdaten.NotenKrz = Note.fromKuerzel(leistung.note);
+					dtoEnmLD.tsNotenKrz = leistung.tsNote;
+				});
+				dtoUpdaten |= isEnmLatestThenAction(leistung.tsNoteQuartal, dtoEnmLD.tsNotenKrzQuartal, () -> {
+					dtoSchuelerLeistungsdaten.NotenKrzQuartal = Note.fromKuerzel(leistung.noteQuartal);
+					dtoEnmLD.tsNotenKrzQuartal = leistung.tsNoteQuartal;
+				});
+
+				if (dtoUpdaten) {
+					conn.transactionPersist(dtoSchuelerLeistungsdaten);
+					conn.transactionPersist(dtoEnmLD);
+				}
+			}
+		}
+		conn.transactionFlush();
+		conn.transactionCommitOrThrow();
+	}
+
+	/**
+	 * Prüft, ob der gegebene Timestamp-String des ENM nach dem Timestamp String des SVWS ist und führt in diesem Fall
+	 * das gegebene Runnable aus
+	 *
+	 * @param tsEnmStr    der Timestamp aus dem ENM
+	 * @param tsSvwsStr   der Timestamp aus dem SVWS-Server
+	 * @param actionIf die auszuführende Aktion, wenn der Timestamp des ENM nach dem des SVWS ist, vgl.
+	 *                 {@link Timestamp#after(Timestamp)}
+	 * @return ob der Timestamp des ENM nach dem des SVWS ist
+	 */
+	private static boolean isEnmLatestThenAction(final String tsEnmStr, final String tsSvwsStr,
+			final Runnable actionIf) {
+		if (tsEnmStr == null || tsEnmStr.isBlank()) {
+			return false;
+		}
+		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
+				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
+		final Timestamp tsEnm = Timestamp.valueOf(LocalDateTime.parse(tsEnmStr, ofPattern));
+		if (tsSvwsStr == null || tsSvwsStr.isBlank()) {
+			return true;
+		}
+		final Timestamp tsSvws = Timestamp.valueOf(LocalDateTime.parse(tsSvwsStr, ofPattern));
+		final boolean after = tsEnm.after(tsSvws);
+		if (after) {
+			actionIf.run();
+		}
+		return after;
+	}
+
+
+	/**
+	 * Erstellt mit einer gegebenen Datenbankverbindung einen {@link OAuthClient}
+	 *
+	 * @param conn die Datenbankverbindung
+	 * @return der OAuthClient
+	 */
+	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn) {
+		final DTOSchuleOAuthSecrets dto = new DataOauthClientSecrets(conn).getDto(OAuth2ServerTyp.WENOM);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		return OAuth2Client.getClient(dto);
+	}
+
+	/**
+	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
+	 * Datenbank
+	 *
+	 * @param client  der OAuthClient
+	 * @param dataENM der ENM DataManager
+	 */
+	private static void downloadENMDaten(final OAuth2Client client, final DataENMDaten dataENM) {
+		final HttpResponse<byte[]> httpResponse = client.get(ENM_DOWNLOAD_PATH, BodyHandlers.ofByteArray());
+		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
+			throw OperationError.BAD_GATEWAY.exception(httpResponse.body());
+		}
+		dataENM.importEnmDaten(httpResponse.body());
+	}
+
+	/**
+	 * Lädt die ENM-Daten beim ENM-Server hoch
+	 *
+	 * @param client       der OAuth-Client zur Verbindung mit dem ENM
+	 * @param dataENMDaten der DataManager für ENM-Daten
+	 */
+	private static void uploadENMDaten(final OAuth2Client client, final DataENMDaten dataENMDaten) {
+		final byte[] daten = dataENMDaten.getAllGZIPBytes();
+		final HttpResponse<String> response = client.postMultipart(ENM_UPLOAD_PATH, "json.gz", daten,
+				BodyHandlers.ofString());
+		if (response.statusCode() != Status.OK.getStatusCode()) {
+			throw OperationError.BAD_GATEWAY.exception(response.body());
+		}
+	}
+
+
+	/**
+	 * Synchronisiert die Daten des Externen Notenmoduls (ENM) mit dem WeNoM-Server und lädt
+	 * dabei diese als ZIP beim ENM hoch und anschließend wieder von diesem herunter und speichert
+	 * diese in der Datenbank.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response synchronize(final DBEntityManager conn) {
+		final OAuth2Client client = getWenomOAuthClient(conn);
+		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
+		uploadENMDaten(client, dataENMDaten);
+		downloadENMDaten(client, dataENMDaten);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+	}
+
+
+	/**
+	 * Lädt die ENM-Daten aus der Datenbank zu dem WeNoM-Server hoch.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response upload(final DBEntityManager conn) {
+		final OAuth2Client client = getWenomOAuthClient(conn);
+		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
+		uploadENMDaten(client, dataENMDaten);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+	}
+
+
+	/**
+	 * Importiert die ENM-Daten von dem WeNoM-Server und schreibt diese in die Datenbank.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response download(final DBEntityManager conn) {
+		final OAuth2Client client = getWenomOAuthClient(conn);
+		final DataENMDaten dataENM = new DataENMDaten(conn);
+		downloadENMDaten(client, dataENM);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
+	}
+
+
+	/**
+	 * Entfernt die ENM-Daten von dem WeNoM-Server.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response truncate(final DBEntityManager conn) {
+		final OAuth2Client client = getWenomOAuthClient(conn);
+		final HttpResponse<String> response = client.get(ENM_TRUNCATE_PATH, BodyHandlers.ofString());
+		if (response.statusCode() != Status.OK.getStatusCode())
+			throw OperationError.BAD_GATEWAY.exception(response.body());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
 	}
 
 }
