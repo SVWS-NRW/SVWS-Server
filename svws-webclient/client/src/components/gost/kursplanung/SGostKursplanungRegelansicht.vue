@@ -53,6 +53,20 @@
 				<svws-ui-select v-model="regelParameterSchiene(schienen, regel, 1).value" :items="schienen" :item-text="i => i.nummer.toString()" />
 			</template>
 		</BlockungsregelBase>
+		<!-- Regeltyp 18  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE" :get-datenmanager :get-ergebnismanager :api-status :nur-regelverletzungen
+			:regel-hinzufuegen="regelHinzufuegen_18" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'fach', label: 'Fach'}, {key: 'kursart', label: 'mit Kursart'}, {key: 'in', label: 'max. Anzahl/Schiene'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getErgebnismanager().getFach(r.parameter.get(0)).bezeichnung ?? '??' }} </div>
+				<div class="svws-ui-td" role="cell"> {{ GostKursart.fromID(r.parameter.get(1)).beschreibung }} </div>
+				<div class="svws-ui-td" role="cell"> {{ r.parameter.get(2) }} </div>
+			</template>
+			<template #regelEdit>
+				<svws-ui-select v-model="regelParameterFach(mapFaecher, regel, 0).value" :items="mapFaecher" :item-text="i => i.bezeichnung ?? '??'" />
+				<svws-ui-select v-model="regelParameterKursart(regel, 1).value" :items="GostKursart.values()" :item-text="i => i.beschreibung" />
+				<svws-ui-input-number placeholder="max. Anzahl" v-model="regelParameterMaxAnzahlProSchiene" :min="1" :max="9" />
+			</template>
+		</BlockungsregelBase>
 		<!-- Regeltyp 7  -->
 		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS" :get-datenmanager :get-ergebnismanager :api-status :nur-regelverletzungen
 			:regel-hinzufuegen="regelHinzufuegen_07" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'kurs1', label: 'Kurs nie zusammen'}, {key: 'kurs2', label: 'mit Kurs'}, ]">
@@ -289,6 +303,16 @@
 			regel.value = r;
 		}
 	}
+
+	function regelHinzufuegen_18() {
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE.typ;
+		r.parameter.add(mapFaecher.value.values().next().value.id);
+		r.parameter.add(1);
+		r.parameter.add(1);
+		regel.value = r;
+	}
+
 	function regelHinzufuegen_07() {
 		const r = new GostBlockungRegel();
 		r.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
@@ -475,6 +499,8 @@
 					return props.getErgebnismanager().regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(p.get(0)));
 				case GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ:
 					return props.getErgebnismanager().regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(p.get(0)));
+				case GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE.typ:
+					return props.getErgebnismanager().regelupdateCreate_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(p.get(0), p.get(1), p.get(2));
 				default:
 					throw new DeveloperNotificationException('Es kann keine leere Regel erstellt werden');
 			}})();
@@ -511,6 +537,18 @@
 		set: (value) => {
 			if (regel.value !== undefined)
 				regel.value.parameter.set(1, value)
+		}
+	})
+
+	const regelParameterMaxAnzahlProSchiene = computed<number>({
+		get: () => {
+			if (regel.value === undefined)
+				return 0;
+			return regel.value.parameter.get(2);
+		},
+		set: (value) => {
+			if (regel.value !== undefined)
+				regel.value.parameter.set(2, value)
 		}
 	})
 
