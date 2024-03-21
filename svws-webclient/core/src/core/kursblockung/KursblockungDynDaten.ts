@@ -678,14 +678,27 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() : void {
+		const mapSchuelerZuFixierungen : HashMap<number, List<number>> = new HashMap();
 		for (const regel4 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			const schuelerID : number = regel4.parameter.get(0).valueOf();
 			const kursID : number = regel4.parameter.get(1).valueOf();
+			MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, schuelerID).add(kursID);
 			const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
 			const fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
 			for (const kurs of fixierterKurs.gibFachart().gibKurse())
 				if (kurs as unknown !== fixierterKurs as unknown)
 					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
+		}
+		for (const idSchueler of mapSchuelerZuFixierungen.keySet()) {
+			const listKursIDs : List<number> = MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, idSchueler);
+			for (let index2 : number = 1; index2 < listKursIDs.size(); index2++)
+				for (let index1 : number = 0; index1 < index2; index1++) {
+					const kursID1 : number = listKursIDs.get(index1).valueOf();
+					const kursID2 : number = listKursIDs.get(index2).valueOf();
+					const kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
+					const kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
+					this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+				}
 		}
 		for (const regel5 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
 			const schuelerID : number = regel5.parameter.get(0).valueOf();

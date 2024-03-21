@@ -804,9 +804,11 @@ public class KursblockungDynDaten {
 
 	private void fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
+		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> mapSchuelerZuFixierungen = new HashMap<>();
 		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			final long schuelerID = regel4.parameter.get(0);
 			final long kursID = regel4.parameter.get(1);
+			MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, schuelerID).add(kursID);
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(schuelerID);
 			final @NotNull KursblockungDynKurs fixierterKurs = gibKurs(kursID);
 			// Alle anderen Kurse der selben Fachart verbieten ...
@@ -816,6 +818,19 @@ public class KursblockungDynDaten {
 		}
 
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS (Spezialfall - Pro Schüler: Alle Kurspaar-Fixierungen Kurs-Kurs-Zusammen verbieten))
+		for (final long idSchueler : mapSchuelerZuFixierungen.keySet()) {
+			final @NotNull List<@NotNull Long> listKursIDs = MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, idSchueler);
+			// Alle (sortierten) Kurs-Paarungen durchgehen und KURS_VERBIETEN_MIT_KURS definieren.
+			for (int index2 = 1; index2 < listKursIDs.size(); index2++)
+				for (int index1 = 0; index1 < index2; index1++) {
+					final long kursID1 = listKursIDs.get(index1);
+					final long kursID2 = listKursIDs.get(index2);
+					final @NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
+					final @NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
+					_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+					// TODO BAR check if aufgerufen.
+				}
+		}
 
 
 		// Regel 5 - SCHUELER_VERBIETEN_IN_KURS
