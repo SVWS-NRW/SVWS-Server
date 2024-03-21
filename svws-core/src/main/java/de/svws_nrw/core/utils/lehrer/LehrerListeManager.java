@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -56,13 +57,16 @@ public final class LehrerListeManager extends AuswahlManager<@NotNull Long, @Not
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Lahrerauswahl bezieht
-	 * @param schulform     die Schulform der Schule
-	 * @param lehrer        die Liste der Lehrer
+	 * @param schuljahresabschnitt         der Schuljahresabschnitt, auf den sich die Lahrerauswahl bezieht
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schulform                    die Schulform der Schule
+	 * @param lehrer                       die Liste der Lehrer
 	 */
-	public LehrerListeManager(final long schuljahresabschnitt, final Schulform schulform,
+	public LehrerListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
+			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
-		super(schuljahresabschnitt, schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, lehrer, LehrerUtils.comparator, _lehrerToId, _lehrerDatenToId,
 				Arrays.asList(new Pair<>("nachname", true), new Pair<>("vorname", true), new Pair<>("kuerzel", true)));
 		this.personaltypen = new AttributMitAuswahl<>(Arrays.asList(PersonalTyp.values()), _personaltypToId, _comparatorPersonaltypen, _eventHandlerFilterChanged);
 		initLehrer();

@@ -28,7 +28,6 @@ import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
 import de.svws_nrw.core.utils.kurse.KursUtils;
-import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -63,10 +62,6 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull KursDaten> kurse;
 	private static final @NotNull Function<@NotNull KursDaten, @NotNull Long> _kursToId = (final @NotNull KursDaten k) -> k.id;
 
-	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
-	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
-
 	/** Das Filter-Attribut für die Abiturjahrgänge - die Filterfunktion wird zur Zeit noch nicht genutzt */
 	public final @NotNull AttributMitAuswahl<@NotNull Integer, @NotNull GostJahrgang> abiturjahrgaenge;
 	private static final @NotNull Function<@NotNull GostJahrgang, @NotNull Integer> _abiturjahrgangToId = (final @NotNull GostJahrgang a) -> a.abiturjahr;
@@ -88,13 +83,15 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param schulform               die Schulform der Schule
-	 * @param daten                   die Informationen zur Schüler-Auswahlliste
-	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
+	 * @param schulform                    die Schulform der Schule
+	 * @param daten                        die Informationen zur Schüler-Auswahlliste
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in dem sich die Schule aktuell befindet
 	 */
-	public SchuelerListeManager(final Schulform schulform, final @NotNull SchuelerListe daten, final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte) {
-		super(daten.idSchuljahresabschnitt, schulform, daten.schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
-				Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
+	public SchuelerListeManager(final Schulform schulform, final @NotNull SchuelerListe daten, final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
+			final long schuljahresabschnittSchule) {
+		super(daten.idSchuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, daten.schueler, SchuelerUtils.comparator,
+			_schuelerToId, _stammdatenToId, Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
 		// Erstelle eine Map für den Zugriff auf Klassen über die ID und
 		// erstelle für den Filter eine Liste der Klassen reduziert auf alle Klassen des Schuljahresabschnittes der Auswahl
 		final @NotNull List<@NotNull KlassenDaten> aktuelleKlassen = new ArrayList<>();
@@ -106,7 +103,6 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 		this.klassen = new AttributMitAuswahl<>(aktuelleKlassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl<>(daten.jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(daten.kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
-		this.schuljahresabschnitte = new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl<>(daten.jahrgaengeGost, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
 		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);

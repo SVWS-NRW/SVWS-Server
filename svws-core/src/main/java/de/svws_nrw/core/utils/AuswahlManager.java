@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.function.Function;
 
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -35,8 +37,16 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/** Die Schulform der Schule */
 	protected final Schulform _schulform;
 
-	/** Der Schuljahresabschnitt */
+	/** Der Schuljahresabschnitt, welcher für die Auswahl genutzt wird */
 	protected final long _schuljahresabschnitt;
+
+	/** Der Schuljahresabschnitt, in dem sich die Schule befindet */
+	protected final long _schuljahresabschnittSchule;
+
+	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
+	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
+	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
+
 
 	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
 	protected List<@NotNull TAuswahl> _filtered = null;
@@ -64,19 +74,24 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
 	 *
-	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
-	 * @param schulform              die Schulform, für welche die Auswahl bereitgestellt wird.
-	 * @param values                 die Werte für die Auswahlliste
-	 * @param listComparator         ein comparator für das Vergleichen von Auswahl-Werten
-	 * @param listeToId              eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
-	 * @param datenToId              eine Funktion für das Mappen eines Daten-Objektes auf seine ID
-	 * @param order                  die Default-Sortierung für die Auswahl-Liste
+	 * @param schuljahresabschnitt         der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schulform                    die Schulform, für welche die Auswahl bereitgestellt wird.
+	 * @param values                       die Werte für die Auswahlliste
+	 * @param listComparator               ein comparator für das Vergleichen von Auswahl-Werten
+	 * @param listeToId                    eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
+	 * @param datenToId                    eine Funktion für das Mappen eines Daten-Objektes auf seine ID
+	 * @param order                        die Default-Sortierung für die Auswahl-Liste
 	 */
-	protected AuswahlManager(final long schuljahresabschnitt, final Schulform schulform,
+	protected AuswahlManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
+			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull Collection<@NotNull TAuswahl> values, final @NotNull Comparator<@NotNull TAuswahl> listComparator,
 			final @NotNull Function<@NotNull TAuswahl, @NotNull TID> listeToId, final @NotNull Function<@NotNull TDaten, @NotNull TID> datenToId,
 			final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
+		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
+		this.schuljahresabschnitte = new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;
@@ -342,6 +357,73 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 	 */
 	public void setFilterAuswahlPermitted(final boolean value) {
 		this._filterPermitAuswahl = value;
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt der Auswahl zurück.
+	 *
+	 * @return der Schuljahresabschnitt der Auswahl
+	 */
+	public Schuljahresabschnitt getSchuljahresabschnittAuswahl() {
+		return this.schuljahresabschnitte.get(this._schuljahresabschnitt);
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt der Schule zurück.
+	 *
+	 * @return der Schuljahresabschnitt der Schule
+	 */
+	public Schuljahresabschnitt getSchuljahresabschnittSchule() {
+		return this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+	}
+
+
+	/**
+	 * Gibt zurück, ob der Schuljahresabschnitt der Auswahl mit dem aktuellen
+	 * Schuljahresabschnitt der Schule übereinstimmt.
+	 *
+	 * @return true, wenn die Schuljahresabschnitte übereinstimmen
+	 */
+	public boolean istSchuljahresabschnittAktuell() {
+		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
+		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+			return false;
+		return (abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt == abschnittSchule.abschnitt);
+	}
+
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um ein
+	 * Abschnitt in Planung handelt, d.h. ob der Schuljahresabschnitt der Auswahl
+	 * nach dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein Planungsabschnitt ist
+	 */
+	public boolean istSchuljahresabschnittPlanung() {
+		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
+		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+			return false;
+		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
+	}
+
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um einen
+	 * Abschnitt in der Vergangengheit handelt, d.h. ob der Schuljahresabschnitt
+	 * der Auswahl vor dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein vergangener Abschnitt ist
+	 */
+	public boolean istSchuljahresabschnittVergangenheit() {
+		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
+		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+			return false;
+		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
 	}
 
 }

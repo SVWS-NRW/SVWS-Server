@@ -18,7 +18,7 @@ interface RouteStateLehrer extends RouteStateInterface {
 
 const defaultState = <RouteStateLehrer> {
 	idSchuljahresabschnitt: -1,
-	lehrerListeManager: new LehrerListeManager(-1, null, new ArrayList()),
+	lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeLehrerIndividualdaten
 };
 
@@ -47,7 +47,8 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		// Lade die Lehrerliste
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schulform, listLehrer);
+		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, listLehrer);
 		// Lade ggf. die Daten für die Ansichten nach
 		if (hatteDaten && (hatteAuswahlID !== null)) {
 			lehrerListeManager.setDaten(await api.server.getLehrerStammdaten(api.schema, hatteAuswahlID));

@@ -25,6 +25,7 @@ import { Schueler } from '../../../core/data/schueler/Schueler';
 import type { Runnable } from '../../../java/lang/Runnable';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Arrays } from '../../../java/util/Arrays';
+import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 
 export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, KlassenDaten> {
 
@@ -103,14 +104,16 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
 	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform     die Schulform der Schule
 	 * @param klassen       die Liste der Klassen
 	 * @param schueler      die Liste der Schüler
 	 * @param jahrgaenge    die Liste der Jahrgänge
 	 * @param lehrer        die Liste der Lehrer
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, klassen : List<KlassenDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>) {
-		super(schuljahresabschnitt, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, klassen : List<KlassenDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), KlassenListeManager._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KlassenListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);

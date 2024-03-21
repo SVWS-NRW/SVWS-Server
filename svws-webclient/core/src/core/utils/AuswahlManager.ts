@@ -1,14 +1,16 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import type { JavaFunction } from '../../java/util/function/JavaFunction';
 import { AttributMitAuswahl } from '../../core/utils/AttributMitAuswahl';
 import { Schulform } from '../../core/types/schule/Schulform';
-import type { Runnable } from '../../java/lang/Runnable';
 import { ArrayList } from '../../java/util/ArrayList';
+import { SchuljahresabschnittsUtils } from '../../core/utils/schule/SchuljahresabschnittsUtils';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../java/util/Comparator';
+import type { JavaFunction } from '../../java/util/function/JavaFunction';
+import type { Runnable } from '../../java/lang/Runnable';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
-import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { Schuljahresabschnitt } from '../../core/data/schule/Schuljahresabschnitt';
 import { Pair } from '../../core/adt/Pair';
-import type { Comparator } from '../../java/util/Comparator';
 
 export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 
@@ -33,9 +35,21 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	protected readonly _schulform : Schulform | null;
 
 	/**
-	 * Der Schuljahresabschnitt
+	 * Der Schuljahresabschnitt, welcher für die Auswahl genutzt wird
 	 */
 	protected readonly _schuljahresabschnitt : number;
+
+	/**
+	 * Der Schuljahresabschnitt, in dem sich die Schule befindet
+	 */
+	protected readonly _schuljahresabschnittSchule : number;
+
+	/**
+	 * Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt
+	 */
+	public readonly schuljahresabschnitte : AttributMitAuswahl<number, Schuljahresabschnitt>;
+
+	private static readonly _schuljahresabschnittToId : JavaFunction<Schuljahresabschnitt, number> = { apply : (sja: Schuljahresabschnitt) => sja.id };
 
 	/**
 	 * Die gefilterte Liste, sofern sie schon berechnet wurde
@@ -74,17 +88,21 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	/**
 	 * Initialisiert die Auswahl-Manager-Instanz
 	 *
-	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
-	 * @param schulform              die Schulform, für welche die Auswahl bereitgestellt wird.
-	 * @param values                 die Werte für die Auswahlliste
-	 * @param listComparator         ein comparator für das Vergleichen von Auswahl-Werten
-	 * @param listeToId              eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
-	 * @param datenToId              eine Funktion für das Mappen eines Daten-Objektes auf seine ID
-	 * @param order                  die Default-Sortierung für die Auswahl-Liste
+	 * @param schuljahresabschnitt         der Schuljahresabschnitt, für welchen die Auswahl bereitgestellt wird.
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schulform                    die Schulform, für welche die Auswahl bereitgestellt wird.
+	 * @param values                       die Werte für die Auswahlliste
+	 * @param listComparator               ein comparator für das Vergleichen von Auswahl-Werten
+	 * @param listeToId                    eine Funktion für das Mappen eines Auswahl-Objektes auf seine ID
+	 * @param datenToId                    eine Funktion für das Mappen eines Daten-Objektes auf seine ID
+	 * @param order                        die Default-Sortierung für die Auswahl-Liste
 	 */
-	protected constructor(schuljahresabschnitt : number, schulform : Schulform | null, values : Collection<TAuswahl>, listComparator : Comparator<TAuswahl>, listeToId : JavaFunction<TAuswahl, TID>, datenToId : JavaFunction<TDaten, TID>, order : List<Pair<string, boolean>>) {
+	protected constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, values : Collection<TAuswahl>, listComparator : Comparator<TAuswahl>, listeToId : JavaFunction<TAuswahl, TID>, datenToId : JavaFunction<TDaten, TID>, order : List<Pair<string, boolean>>) {
 		super();
 		this._schuljahresabschnitt = schuljahresabschnitt;
+		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
+		this.schuljahresabschnitte = new AttributMitAuswahl(schuljahresabschnitte, AuswahlManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;
@@ -321,6 +339,68 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	public setFilterAuswahlPermitted(value : boolean) : void {
 		this._filterPermitAuswahl = value;
+	}
+
+	/**
+	 * Gibt den Schuljahresabschnitt der Auswahl zurück.
+	 *
+	 * @return der Schuljahresabschnitt der Auswahl
+	 */
+	public getSchuljahresabschnittAuswahl() : Schuljahresabschnitt | null {
+		return this.schuljahresabschnitte.get(this._schuljahresabschnitt);
+	}
+
+	/**
+	 * Gibt den Schuljahresabschnitt der Schule zurück.
+	 *
+	 * @return der Schuljahresabschnitt der Schule
+	 */
+	public getSchuljahresabschnittSchule() : Schuljahresabschnitt | null {
+		return this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+	}
+
+	/**
+	 * Gibt zurück, ob der Schuljahresabschnitt der Auswahl mit dem aktuellen
+	 * Schuljahresabschnitt der Schule übereinstimmt.
+	 *
+	 * @return true, wenn die Schuljahresabschnitte übereinstimmen
+	 */
+	public istSchuljahresabschnittAktuell() : boolean {
+		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
+		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+			return false;
+		return (abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt === abschnittSchule.abschnitt);
+	}
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um ein
+	 * Abschnitt in Planung handelt, d.h. ob der Schuljahresabschnitt der Auswahl
+	 * nach dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein Planungsabschnitt ist
+	 */
+	public istSchuljahresabschnittPlanung() : boolean {
+		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
+		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+			return false;
+		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
+	}
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um einen
+	 * Abschnitt in der Vergangengheit handelt, d.h. ob der Schuljahresabschnitt
+	 * der Auswahl vor dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein vergangener Abschnitt ist
+	 */
+	public istSchuljahresabschnittVergangenheit() : boolean {
+		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
+		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
+		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+			return false;
+		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
 	}
 
 	transpilerCanonicalName(): string {

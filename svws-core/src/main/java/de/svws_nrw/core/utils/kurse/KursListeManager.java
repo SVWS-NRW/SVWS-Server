@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -80,6 +81,8 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
 	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Kursauswahl bezieht
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform     die Schulform der Schule
 	 * @param kurse         die Liste der Kurse
 	 * @param schueler      die Liste der Schüler
@@ -87,13 +90,14 @@ public final class KursListeManager extends AuswahlManager<@NotNull Long, @NotNu
 	 * @param lehrer        die Liste der Lehrer
 	 * @param faecher       die Liste der Fächer
 	 */
-	public KursListeManager(final long schuljahresabschnitt, final Schulform schulform,
+	public KursListeManager(final long schuljahresabschnitt, final long schuljahresabschnittSchule,
+			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte, final Schulform schulform,
 			final @NotNull List<@NotNull KursDaten> kurse,
 			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsDaten> jahrgaenge,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer,
 			final @NotNull List<@NotNull FachDaten> faecher) {
-		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, _kursToId, _kursToId,
 				Arrays.asList(new Pair<>("idJahrgaenge", true), new Pair<>("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerFilterChanged);

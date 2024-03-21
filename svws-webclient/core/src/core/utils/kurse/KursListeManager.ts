@@ -26,6 +26,7 @@ import { JavaLong } from '../../../java/lang/JavaLong';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import { FachUtils } from '../../../core/utils/fach/FachUtils';
+import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 
 export class KursListeManager extends AuswahlManager<number, KursDaten, KursDaten> {
 
@@ -113,6 +114,8 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
 	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Kursauswahl bezieht
+	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
 	 * @param schulform     die Schulform der Schule
 	 * @param kurse         die Liste der Kurse
 	 * @param schueler      die Liste der Schüler
@@ -120,8 +123,8 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @param lehrer        die Liste der Lehrer
 	 * @param faecher       die Liste der Fächer
 	 */
-	public constructor(schuljahresabschnitt : number, schulform : Schulform | null, kurse : List<KursDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>, faecher : List<FachDaten>) {
-		super(schuljahresabschnitt, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, kurse : List<KursDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>, faecher : List<FachDaten>) {
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), KursListeManager._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);

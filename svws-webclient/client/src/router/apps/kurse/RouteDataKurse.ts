@@ -17,7 +17,7 @@ interface RouteStateKurse extends RouteStateInterface {
 
 const defaultState = <RouteStateKurse> {
 	idSchuljahresabschnitt: -1,
-	kursListeManager: new KursListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
+	kursListeManager: new KursListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
 	view: routeKursDaten,
 };
 
@@ -43,7 +43,8 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const listFaecher = await api.server.getFaecher(api.schema);
-		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
+		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
 		// Wählen nun einen Kurs aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		let result : number | null = null;
 		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null) && (!hatteAuswahl.idJahrgaenge.isEmpty())) {

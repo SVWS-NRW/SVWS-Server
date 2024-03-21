@@ -18,7 +18,7 @@ interface RouteStateSchueler extends RouteStateInterface {
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: new SchuelerListeManager(null, new SchuelerListe(), new ArrayList<Schuljahresabschnitt>()),
+	schuelerListeManager: new SchuelerListeManager(null, new SchuelerListe(), new ArrayList<Schuljahresabschnitt>(), -1),
 	view: routeSchuelerIndividualdaten,
 };
 
@@ -44,7 +44,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const auswahllisteGzip = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const auswahllisteBlob = await new Response(auswahllisteGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 		const auswahllisteDaten = SchuelerListe.transpilerFromJSON(await auswahllisteBlob.text());
-		const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte);
+		const schuelerListeManager = new SchuelerListeManager(api.schulform, auswahllisteDaten, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen

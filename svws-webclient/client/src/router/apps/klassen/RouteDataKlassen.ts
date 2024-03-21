@@ -19,7 +19,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
-	klassenListeManager: new KlassenListeManager(-1, null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
+	klassenListeManager: new KlassenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
@@ -60,7 +60,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
+			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
 		// Wählen nun eine Klasse aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		let result : number | null = null;
 		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
