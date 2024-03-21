@@ -489,4 +489,13 @@ public class KursblockungDynStatistik {
 		bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
 	}
 
+	/**
+	 * Verändert die aktuelle Anzahl an Regelverletzungen.
+	 *
+	 * @param unterschied  Der Unterschied (auch negativ).
+	 */
+	void regelverletzungVeraendern(final int unterschied) {
+		bewertungRegelverletzungen += unterschied;
+	}
+
 }

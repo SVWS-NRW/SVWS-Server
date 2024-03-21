@@ -124,23 +124,24 @@ export class KursblockungDynDaten extends JavaObject {
 		this._schuelerArr = Array(0).fill(null);
 		this._schuelerMap = new HashMap();
 		this._statistik = new KursblockungDynStatistik(this._logger);
-		this.schritt01FehlerBeiReferenzen(input);
-		this.schritt02FehlerBeiRegelGruppierung(input.daten().regeln);
-		this.schritt03FehlerBeiSchuelerErstellung(input);
-		this.schritt04FehlerBeiFachartenErstellung(input, this._schuelerArr.length);
-		this.schritt05FehlerBeiSchuelerFachwahlenErstellung(input, this._schuelerArr);
-		this.schritt06FehlerBeiStatistikErstellung(this._fachartArr, this._schuelerArr, input);
-		this.schritt07FehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
-		this.schritt08FehlerBeiKursErstellung(input, this._schuelerArr.length);
-		this.schritt09FehlerBeiKursFreiErstellung();
-		this.schritt10FehlerBeiFachartKursArrayErstellung();
-		this.schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
-		this.schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
-		this.schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
-		this.schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
-		this.schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
-		this.schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
-		this.schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+		this.fehlerBeiReferenzen(input);
+		this.fehlerBeiRegelGruppierung(input.daten().regeln);
+		this.fehlerBeiSchuelerErstellung(input);
+		this.fehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
+		this.fehlerBeiFachartenErstellung(input, this._schuelerArr.length, this._schienenArr.length);
+		this.fehlerBeiSchuelerFachwahlenErstellung(input, this._schuelerArr);
+		this.fehlerBeiStatistikErstellung(this._fachartArr, this._schuelerArr, input);
+		this.fehlerBeiKursErstellung(input, this._schuelerArr.length);
+		this.fehlerBeiKursFreiErstellung();
+		this.fehlerBeiFachartKursArrayErstellung();
+		this.fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
+		this.fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
+		this.fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
+		this.fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
+		this.fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
+		this.fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
+		this.fehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+		this.fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -151,7 +152,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 *
 	 * @param input Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
-	private schritt01FehlerBeiReferenzen(input : GostBlockungsdatenManager) : void {
+	private fehlerBeiReferenzen(input : GostBlockungsdatenManager) : void {
 		DeveloperNotificationException.ifNull("pInput", input);
 		DeveloperNotificationException.ifNull("pInput.daten()", input.daten());
 		DeveloperNotificationException.ifNull("pInput.daten().fachwahlen", input.daten().fachwahlen);
@@ -464,7 +465,7 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
 	}
 
-	private schritt02FehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
+	private fehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
 		const regelDatabaseIDs : HashSet<number | null> | null = new HashSet();
 		for (const iRegel of pRegeln) {
 			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
@@ -474,7 +475,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt03FehlerBeiSchuelerErstellung(input : GostBlockungsdatenManager) : void {
+	private fehlerBeiSchuelerErstellung(input : GostBlockungsdatenManager) : void {
 		const setSchueler : HashSet<number> = new HashSet();
 		for (const gSchueler of input.daten().schueler)
 			setSchueler.add(gSchueler.id);
@@ -493,7 +494,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt04FehlerBeiFachartenErstellung(input : GostBlockungsdatenManager, nSchueler : number) : void {
+	private fehlerBeiFachartenErstellung(input : GostBlockungsdatenManager, nSchueler : number, nSchienen : number) : void {
 		let nFacharten : number = 0;
 		const nKurse : number = input.daten().kurse.size();
 		for (const gKurs of input.daten().kurse) {
@@ -501,7 +502,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const kursart : GostKursart = GostKursart.fromID(gKurs.kursart);
 			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
-				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik, nSchueler);
+				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik, nSchueler, nSchienen);
 				this._fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
@@ -512,7 +513,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const kursart : GostKursart = GostKursart.fromID(iFachwahl.kursartID);
 			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
-				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik, nSchueler);
+				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik, nSchueler, nSchienen);
 				this._fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
@@ -527,7 +528,7 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme !== nKurse);
 	}
 
-	private schritt05FehlerBeiSchuelerFachwahlenErstellung(input : GostBlockungsdatenManager, susArr : Array<KursblockungDynSchueler>) : void {
+	private fehlerBeiSchuelerFachwahlenErstellung(input : GostBlockungsdatenManager, susArr : Array<KursblockungDynSchueler>) : void {
 		const mapSchuelerFA : HashMap<number, List<KursblockungDynFachart>> = new HashMap();
 		for (const iFachwahl of input.daten().fachwahlen) {
 			const dynFachart : KursblockungDynFachart = this.gibFachart(iFachwahl.fachID, iFachwahl.kursartID);
@@ -540,7 +541,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt06FehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>, input : GostBlockungsdatenManager) : void {
+	private fehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>, input : GostBlockungsdatenManager) : void {
 		const nFacharten : number = fachartArr.length;
 		const bewertungMatrixFachart : Array<Array<number>> = [...Array(nFacharten)].map(e => Array(nFacharten).fill(0));
 		for (let i : number = 0; i < susArr.length; i++) {
@@ -573,13 +574,13 @@ export class KursblockungDynDaten extends JavaObject {
 		this._statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
 	}
 
-	private schritt07FehlerBeiSchienenErzeugung(schienen : number) : void {
-		this._schienenArr = Array(schienen).fill(null);
-		for (let nr : number = 0; nr < schienen; nr++)
+	private fehlerBeiSchienenErzeugung(nSchienen : number) : void {
+		this._schienenArr = Array(nSchienen).fill(null);
+		for (let nr : number = 0; nr < nSchienen; nr++)
 			this._schienenArr[nr] = new KursblockungDynSchiene(this._logger, nr, this._statistik);
 	}
 
-	private schritt08FehlerBeiKursErstellung(input : GostBlockungsdatenManager, nSchueler : number) : void {
+	private fehlerBeiKursErstellung(input : GostBlockungsdatenManager, nSchueler : number) : void {
 		const nKurse : number = input.kursGetAnzahl();
 		const nSchienen : number = input.schieneGetAnzahl();
 		this._kursArr = Array(nKurse).fill(null);
@@ -646,7 +647,7 @@ export class KursblockungDynDaten extends JavaObject {
 		return new KursblockungDynKurs(this._random, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, this._logger, kursNr, nSchueler);
 	}
 
-	private schritt09FehlerBeiKursFreiErstellung() : void {
+	private fehlerBeiKursFreiErstellung() : void {
 		let nKursFrei : number = 0;
 		for (const kurs of this._kursArr)
 			if (kurs.gibHatFreiheitsgrade())
@@ -660,7 +661,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 	}
 
-	private schritt10FehlerBeiFachartKursArrayErstellung() : void {
+	private fehlerBeiFachartKursArrayErstellung() : void {
 		const nFacharten : number = this._fachartArr.length;
 		const mapFachartList : HashMap<number, List<KursblockungDynKurs>> = new HashMap();
 		for (let i : number = 0; i < nFacharten; i++)
@@ -676,7 +677,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() : void {
+	private fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() : void {
 		for (const regel4 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			const schuelerID : number = regel4.parameter.get(0).valueOf();
 			const kursID : number = regel4.parameter.get(1).valueOf();
@@ -695,7 +696,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() : void {
+	private fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() : void {
 		for (const regel7 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 			const kursID1 : number = regel7.parameter.get(0).valueOf();
 			const kursID2 : number = regel7.parameter.get(1).valueOf();
@@ -712,7 +713,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() : void {
+	private fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() : void {
 		for (const regel9 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			const kursID : number = regel9.parameter.get(0).valueOf();
 			const susAnzahl : number = regel9.parameter.get(1)!;
@@ -722,7 +723,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(pInput : GostBlockungsdatenManager) : void {
+	private fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(pInput : GostBlockungsdatenManager) : void {
 		const regelnTyp10 : List<GostBlockungRegel> | null = MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10.isEmpty())
 			return;
@@ -743,7 +744,7 @@ export class KursblockungDynDaten extends JavaObject {
 							}
 	}
 
-	private schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
+	private fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
 		const setSSF : HashSet<string | null> = new HashSet();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();
@@ -776,9 +777,9 @@ export class KursblockungDynDaten extends JavaObject {
 				sch1.regel13_zusammen_mit_schueler(sch2);
 			}
 		}
-		for (const regel14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			const idS1 : number = regel14.parameter.get(0).valueOf();
-			const idS2 : number = regel14.parameter.get(1).valueOf();
+		for (const r14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
+			const idS1 : number = r14.parameter.get(0).valueOf();
+			const idS2 : number = r14.parameter.get(1).valueOf();
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
@@ -789,20 +790,30 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() : void {
-		for (const regel15 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
-			const idKurs : number = regel15.parameter.get(0).valueOf();
-			const maxSuS : number = regel15.parameter.get(1)!;
+	private fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() : void {
+		for (const r15 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+			const idKurs : number = r15.parameter.get(0).valueOf();
+			const maxSuS : number = r15.parameter.get(1)!;
 			const kurs : KursblockungDynKurs = this.gibKurs(idKurs);
 			kurs.setzeMaxSuS(maxSuS);
 		}
 	}
 
-	private schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN() : void {
-		for (const regel16 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
-			const idSchueler : number = regel16.parameter.get(0).valueOf();
+	private fehlerBeiRegel_16_SCHUELER_IGNORIEREN() : void {
+		for (const r16 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			const idSchueler : number = r16.parameter.get(0).valueOf();
 			const schueler : KursblockungDynSchueler = this.gibSchueler(idSchueler);
 			schueler.regel16_sperre();
+		}
+	}
+
+	private fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE() : void {
+		for (const r18 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE)) {
+			const idFach : number = r18.parameter.get(0).valueOf();
+			const idKursart : number = r18.parameter.get(1)!;
+			const maximalProSchiene : number = r18.parameter.get(2)!;
+			const fachart : KursblockungDynFachart = this.gibFachart(idFach, idKursart);
+			fachart.regel18_maximalProSchiene(maximalProSchiene);
 		}
 	}
 

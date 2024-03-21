@@ -495,6 +495,15 @@ export class KursblockungDynStatistik extends JavaObject {
 		this.bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
 	}
 
+	/**
+	 * Verändert die aktuelle Anzahl an Regelverletzungen.
+	 *
+	 * @param unterschied  Der Unterschied (auch negativ).
+	 */
+	regelverletzungVeraendern(unterschied : number) : void {
+		this.bewertungRegelverletzungen += unterschied;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.kursblockung.KursblockungDynStatistik';
 	}

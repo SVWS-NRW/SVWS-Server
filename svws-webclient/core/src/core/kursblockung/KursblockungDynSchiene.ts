@@ -33,9 +33,9 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 * Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
 	 *
-	 * @param pLogger    Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pNr        Die Nummer der Schiene.
-	 * @param pStatistik Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
+	 * @param pLogger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param pNr         Die Nummer der Schiene.
+	 * @param pStatistik  Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
 	public constructor(pLogger : Logger, pNr : number, pStatistik : KursblockungDynStatistik) {
 		super();
@@ -66,6 +66,7 @@ export class KursblockungDynSchiene extends JavaObject {
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler)
 		}
+		kurs1.gibFachart().aktionSchieneWurdeHinzugefuegt(this);
 		for (const kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 		this.kursMap.put(kursID, kurs1);
@@ -84,6 +85,7 @@ export class KursblockungDynSchiene extends JavaObject {
 			throw new DeveloperNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
+		kurs1.gibFachart().aktionSchieneWurdeEntfernt(this);
 		for (const kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 	}

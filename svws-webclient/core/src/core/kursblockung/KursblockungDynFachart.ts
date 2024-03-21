@@ -3,6 +3,7 @@ import { GostFach } from '../../core/data/gost/GostFach';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
+import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { ArrayUtils } from '../../core/utils/ArrayUtils';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
@@ -66,6 +67,16 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	private readonly schuelerZusammenMitSchueler : Array<Array<number>>;
 
+	/**
+	 * Wie oft die Fachart pro Schiene aktuell vertreten ist.
+	 */
+	private readonly _schienenCounter : Array<number>;
+
+	/**
+	 * Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene.
+	 */
+	private _maxKurseProSchiene : number = 0;
+
 
 	/**
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -74,8 +85,9 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param pGostKursart    Referenz zur zugehörigen GOST-Kursart.
 	 * @param pStatistik      Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
 	 * @param schuelerAnzahl  Die Gesamtanzahl aller Schüler.
+	 * @param schienenAnzahl  Die Gesamtanzahl aller Schienen.
 	 */
-	constructor(pRandom : Random, pNr : number, pGostFach : GostFach, pGostKursart : GostKursart, pStatistik : KursblockungDynStatistik, schuelerAnzahl : number) {
+	constructor(pRandom : Random, pNr : number, pGostFach : GostFach, pGostKursart : GostKursart, pStatistik : KursblockungDynStatistik, schuelerAnzahl : number, schienenAnzahl : number) {
 		super();
 		this._random = pRandom;
 		this.nr = pNr;
@@ -88,6 +100,8 @@ export class KursblockungDynFachart extends JavaObject {
 		this.schuelerAnzNow = 0;
 		this.schuelerVerbotenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
 		this.schuelerZusammenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
+		this._schienenCounter = Array(schienenAnzahl).fill(0);
+		this._maxKurseProSchiene = 0;
 	}
 
 	/**
@@ -235,6 +249,28 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 */
+	gibVonSchuelerVerbotenMit(schuelerNr : number) : Array<number> {
+		return this.schuelerVerbotenMitSchueler[schuelerNr];
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 */
+	gibVonSchuelerZusammenMit(schuelerNr : number) : Array<number> {
+		return this.schuelerZusammenMitSchueler[schuelerNr];
+	}
+
+	/**
 	 * Ordnet alle Kurse der Fachart zu. Die Kurse haben noch keine SuS und sind somit automatisch sortiert.
 	 *
 	 * @param pKursArr  Alle Kurse der Fachart.
@@ -325,6 +361,32 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
+	 * Erhöht das Vorkommen dieser Fachart in der übergebenen Schiene. Aktualisiert ggf. eine Verletzung der Regel 18.
+	 *
+	 * @param schiene  Die Schiene um die es geht.
+	 */
+	aktionSchieneWurdeHinzugefuegt(schiene : KursblockungDynSchiene) : void {
+		if (this._maxKurseProSchiene <= 0)
+			return;
+		this._schienenCounter[schiene.gibNr()]++;
+		if (this._schienenCounter[schiene.gibNr()] === this._maxKurseProSchiene)
+			this.statistik.regelverletzungVeraendern(+1);
+	}
+
+	/**
+	 * Verringert das Vorkommen dieser Fachart in der übergebenen Schiene. Aktualisiert ggf. eine Verletzung der Regel 18.
+	 *
+	 * @param schiene  Die Schiene um die es geht.
+	 */
+	aktionSchieneWurdeEntfernt(schiene : KursblockungDynSchiene) : void {
+		if (this._maxKurseProSchiene <= 0)
+			return;
+		if (this._schienenCounter[schiene.gibNr()] === this._maxKurseProSchiene)
+			this.statistik.regelverletzungVeraendern(-1);
+		this._schienenCounter[schiene.gibNr()]--;
+	}
+
+	/**
 	 * Debug Ausgabe. Nur für Testzwecke.
 	 *
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
@@ -357,25 +419,12 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 * Definiert, wie oft ein Kurs dieser Fachart maximal pro Schiene vorkommen darf.
 	 *
-	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
-	 *
-	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	gibVonSchuelerVerbotenMit(schuelerNr : number) : Array<number> {
-		return this.schuelerVerbotenMitSchueler[schuelerNr];
-	}
-
-	/**
-	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
-	 *
-	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
-	 *
-	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
-	 */
-	gibVonSchuelerZusammenMit(schuelerNr : number) : Array<number> {
-		return this.schuelerZusammenMitSchueler[schuelerNr];
+	regel18_maximalProSchiene(maximalProSchiene : number) : void {
+		this._maxKurseProSchiene = maximalProSchiene;
 	}
 
 	transpilerCanonicalName(): string {

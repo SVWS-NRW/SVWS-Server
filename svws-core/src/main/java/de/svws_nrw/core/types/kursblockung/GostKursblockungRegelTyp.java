@@ -20,18 +20,15 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
  * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    --> DONE
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
- * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    --> DONE
+ * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             --> DONE
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
+ * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               --> DONE
  * <br>
- * <br> Nach GUI Regel-Einbindung
- * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               -->
+ * <br> GUI Regel-Einbindung nun möglich.
  * <br>
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
  * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       -->
- * <br>
- * <br> GUI Anpassung
- * <br> SCardGostRegelansicht.vue
 */
 public enum GostKursblockungRegelTyp {
 

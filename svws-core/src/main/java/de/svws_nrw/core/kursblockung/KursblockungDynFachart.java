@@ -50,6 +50,13 @@ public class KursblockungDynFachart {
 	/** Ordnet jedem Schüler die zusammen-forcierten anderen Schüler zu. Dimension des 2D-Arrays: [Schülerzahl][Dynamisch je Zeile]  */
 	private final @NotNull int @NotNull [][] schuelerZusammenMitSchueler;
 
+	/** Wie oft die Fachart pro Schiene aktuell vertreten ist. */
+	private final @NotNull int[] _schienenCounter;
+
+	/** Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene. */
+	private int _maxKurseProSchiene; // Wert 0 = deaktiviert
+
+
 	/**
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr             Eine laufende Nummer (ID) für alle Facharten.
@@ -57,6 +64,7 @@ public class KursblockungDynFachart {
 	 * @param pGostKursart    Referenz zur zugehörigen GOST-Kursart.
 	 * @param pStatistik      Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
 	 * @param schuelerAnzahl  Die Gesamtanzahl aller Schüler.
+	 * @param schienenAnzahl  Die Gesamtanzahl aller Schienen.
 	 */
 	KursblockungDynFachart(
 					final @NotNull Random pRandom,
@@ -64,7 +72,8 @@ public class KursblockungDynFachart {
 					final @NotNull GostFach pGostFach,
 					final @NotNull GostKursart pGostKursart,
 					final @NotNull KursblockungDynStatistik pStatistik,
-					final int schuelerAnzahl) {
+					final int schuelerAnzahl,
+					final int schienenAnzahl) {
 		_random = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
@@ -76,6 +85,8 @@ public class KursblockungDynFachart {
 		schuelerAnzNow = 0;
 		schuelerVerbotenMitSchueler = new int[schuelerAnzahl][0];
 		schuelerZusammenMitSchueler = new int[schuelerAnzahl][0];
+		_schienenCounter = new int[schienenAnzahl];
+		_maxKurseProSchiene = 0;
 	}
 
 	/**
@@ -235,6 +246,28 @@ public class KursblockungDynFachart {
 	// ########################################
 
 	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 */
+	@NotNull int[] gibVonSchuelerVerbotenMit(final int schuelerNr) {
+		return schuelerVerbotenMitSchueler[schuelerNr];
+	}
+
+	/**
+	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 *
+	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
+	 *
+	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
+	 */
+	@NotNull int[] gibVonSchuelerZusammenMit(final int schuelerNr) {
+		return schuelerZusammenMitSchueler[schuelerNr];
+	}
+
+	/**
 	 * Ordnet alle Kurse der Fachart zu. Die Kurse haben noch keine SuS und sind somit automatisch sortiert.
 	 *
 	 * @param pKursArr  Alle Kurse der Fachart.
@@ -333,6 +366,42 @@ public class KursblockungDynFachart {
 	}
 
 	/**
+	 * Erhöht das Vorkommen dieser Fachart in der übergebenen Schiene. Aktualisiert ggf. eine Verletzung der Regel 18.
+	 *
+	 * @param schiene  Die Schiene um die es geht.
+	 */
+	void aktionSchieneWurdeHinzugefuegt(final @NotNull KursblockungDynSchiene schiene) {
+		// Ist die Regel deaktiviert?
+		if (_maxKurseProSchiene <= 0)
+			return;
+
+		// Erhöhen der Anzahl pro Schiene.
+		_schienenCounter[schiene.gibNr()]++;
+
+		// Erste Überschreitung der Maximalgrenze?
+		if (_schienenCounter[schiene.gibNr()] == _maxKurseProSchiene)
+			statistik.regelverletzungVeraendern(+1);
+	}
+
+	/**
+	 * Verringert das Vorkommen dieser Fachart in der übergebenen Schiene. Aktualisiert ggf. eine Verletzung der Regel 18.
+	 *
+	 * @param schiene  Die Schiene um die es geht.
+	 */
+	void aktionSchieneWurdeEntfernt(final @NotNull KursblockungDynSchiene schiene) {
+		// Ist die Regel deaktiviert?
+		if (_maxKurseProSchiene <= 0)
+			return;
+
+		// Erste Unterschreitung der Maximalgrenze?
+		if (_schienenCounter[schiene.gibNr()] == _maxKurseProSchiene)
+			statistik.regelverletzungVeraendern(-1);
+
+		// Reduzieren der Anzahl pro Schiene.
+		_schienenCounter[schiene.gibNr()]--;
+	}
+
+	/**
 	 * Debug Ausgabe. Nur für Testzwecke.
 	 *
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
@@ -365,25 +434,12 @@ public class KursblockungDynFachart {
 	}
 
 	/**
-	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 * Definiert, wie oft ein Kurs dieser Fachart maximal pro Schiene vorkommen darf.
 	 *
-	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
-	 *
-	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart nicht im selben Kurs landen sollen.
+	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	@NotNull int[] gibVonSchuelerVerbotenMit(final int schuelerNr) {
-		return schuelerVerbotenMitSchueler[schuelerNr];
-	}
-
-	/**
-	 * Liefert alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
-	 *
-	 * @param schuelerNr  Die Nummer des übergebenen Schülers.
-	 *
-	 * @return alle anderen Schüler, die mit dem übergebenen Schüler bei dieser Fachart im selben Kurs landen sollen.
-	 */
-	@NotNull int[] gibVonSchuelerZusammenMit(final int schuelerNr) {
-		return schuelerZusammenMitSchueler[schuelerNr];
+	void regel18_maximalProSchiene(final int maximalProSchiene) {
+		_maxKurseProSchiene = maximalProSchiene;
 	}
 
 }

@@ -109,51 +109,53 @@ public class KursblockungDynDaten {
 		_statistik = new KursblockungDynStatistik(_logger);
 
 		// Definiert: ---
-		schritt01FehlerBeiReferenzen(input);
+		fehlerBeiReferenzen(input);
 
 		// Definiert: regelMap
-		schritt02FehlerBeiRegelGruppierung(input.daten().regeln);
+		fehlerBeiRegelGruppierung(input.daten().regeln);
 
 		// Definiert: schuelerArr, susMap
-		schritt03FehlerBeiSchuelerErstellung(input);
-
-		// Definiert: fachartArr
-		schritt04FehlerBeiFachartenErstellung(input, _schuelerArr.length);
-
-		// Definiert: schueler[i].fachartArr
-		schritt05FehlerBeiSchuelerFachwahlenErstellung(input, _schuelerArr);
-
-		// Definiert: statistik
-		schritt06FehlerBeiStatistikErstellung(_fachartArr, _schuelerArr, input);
+		fehlerBeiSchuelerErstellung(input);
 
 		// Definiert: schienenArr
-		schritt07FehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
+		fehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
+
+		// Definiert: fachartArr
+		fehlerBeiFachartenErstellung(input, _schuelerArr.length, _schienenArr.length);
+
+		// Definiert: schueler[i].fachartArr
+		fehlerBeiSchuelerFachwahlenErstellung(input, _schuelerArr);
+
+		// Definiert: statistik
+		fehlerBeiStatistikErstellung(_fachartArr, _schuelerArr, input);
 
 		// Benötigt: fachartArr
 		// Definiert: kursArr
-		schritt08FehlerBeiKursErstellung(input, _schuelerArr.length);
+		fehlerBeiKursErstellung(input, _schuelerArr.length);
 
 		// Benötigt: kursArr
 		// Definiert: kursArrFrei
-		schritt09FehlerBeiKursFreiErstellung();
+		fehlerBeiKursFreiErstellung();
 
 		// Benötigt: kursArr
 		// Definiert: fachartArr[i].kursArr
-		schritt10FehlerBeiFachartKursArrayErstellung();
+		fehlerBeiFachartKursArrayErstellung();
 
-		schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
+		fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
 
-		schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
+		fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
 
-		schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
+		fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
 
-		schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
+		fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
 
-		schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
+		fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
 
-		schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
+		fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
 
-		schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+		fehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+
+		fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE();
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -167,7 +169,7 @@ public class KursblockungDynDaten {
 	 * @param input Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
 	@SuppressWarnings("static-method")
-	private void schritt01FehlerBeiReferenzen(final @NotNull GostBlockungsdatenManager input) {
+	private void fehlerBeiReferenzen(final @NotNull GostBlockungsdatenManager input) {
 
 		DeveloperNotificationException.ifNull("pInput", input);
 		DeveloperNotificationException.ifNull("pInput.daten()", input.daten());
@@ -520,7 +522,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
 	}
 
-	private void schritt02FehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {
+	private void fehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {
 		// Regeln nach ID in Listen gruppieren.
 		final HashSet<Long> regelDatabaseIDs = new HashSet<>();
 		for (final GostBlockungRegel iRegel : pRegeln) {
@@ -532,7 +534,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt03FehlerBeiSchuelerErstellung(final @NotNull GostBlockungsdatenManager input) {
+	private void fehlerBeiSchuelerErstellung(final @NotNull GostBlockungsdatenManager input) {
 		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
 
 		// Schüler sammeln.
@@ -557,7 +559,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt04FehlerBeiFachartenErstellung(final @NotNull GostBlockungsdatenManager input, final int nSchueler) {
+	private void fehlerBeiFachartenErstellung(final @NotNull GostBlockungsdatenManager input, final int nSchueler, final int nSchienen) {
 		int nFacharten = 0;
 
 		// Facharten aus Kursen extrahieren.
@@ -568,7 +570,7 @@ public class KursblockungDynDaten {
 
 			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
-				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler);
+				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler, nSchienen);
 				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
@@ -583,7 +585,7 @@ public class KursblockungDynDaten {
 
 			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
-				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler);
+				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler, nSchienen);
 				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
@@ -605,7 +607,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme != nKurse);
 	}
 
-	private void schritt05FehlerBeiSchuelerFachwahlenErstellung(final @NotNull GostBlockungsdatenManager input, final @NotNull KursblockungDynSchueler @NotNull [] susArr) {
+	private void fehlerBeiSchuelerFachwahlenErstellung(final @NotNull GostBlockungsdatenManager input, final @NotNull KursblockungDynSchueler @NotNull [] susArr) {
 		// Schüler-ID --> Liste der Facharten
 		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull KursblockungDynFachart>> mapSchuelerFA = new HashMap<>();
 
@@ -623,7 +625,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt06FehlerBeiStatistikErstellung(final @NotNull KursblockungDynFachart @NotNull [] fachartArr, final @NotNull KursblockungDynSchueler @NotNull [] susArr, final @NotNull GostBlockungsdatenManager input) {
+	private void fehlerBeiStatistikErstellung(final @NotNull KursblockungDynFachart @NotNull [] fachartArr, final @NotNull KursblockungDynSchueler @NotNull [] susArr, final @NotNull GostBlockungsdatenManager input) {
 		final int nFacharten = fachartArr.length;
 		final @NotNull int @NotNull [][] bewertungMatrixFachart = new int[nFacharten][nFacharten];
 
@@ -664,13 +666,13 @@ public class KursblockungDynDaten {
 		_statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
 	}
 
-	private void schritt07FehlerBeiSchienenErzeugung(final int schienen) {
-		_schienenArr = new KursblockungDynSchiene[schienen];
-		for (int nr = 0; nr < schienen; nr++)
+	private void fehlerBeiSchienenErzeugung(final int nSchienen) {
+		_schienenArr = new KursblockungDynSchiene[nSchienen];
+		for (int nr = 0; nr < nSchienen; nr++)
 			_schienenArr[nr] = new KursblockungDynSchiene(_logger, nr, _statistik);
 	}
 
-	private void schritt08FehlerBeiKursErstellung(final @NotNull GostBlockungsdatenManager input, final int nSchueler) {
+	private void fehlerBeiKursErstellung(final @NotNull GostBlockungsdatenManager input, final int nSchueler) {
 		final int nKurse = input.kursGetAnzahl();
 		final int nSchienen = input.schieneGetAnzahl();
 
@@ -760,7 +762,7 @@ public class KursblockungDynDaten {
 		return new KursblockungDynKurs(_random, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, _logger, kursNr, nSchueler);
 	}
 
-	private void schritt09FehlerBeiKursFreiErstellung() {
+	private void fehlerBeiKursFreiErstellung() {
 		// Zähle Kurse mit Freiheitsgraden.
 		int nKursFrei = 0;
 		for (final KursblockungDynKurs kurs : _kursArr)
@@ -777,7 +779,7 @@ public class KursblockungDynDaten {
 			}
 	}
 
-	private void schritt10FehlerBeiFachartKursArrayErstellung() {
+	private void fehlerBeiFachartKursArrayErstellung() {
 		final int nFacharten = _fachartArr.length;
 
 		// Map: Fachart-Nummer --> Liste der Kurse
@@ -800,7 +802,7 @@ public class KursblockungDynDaten {
 
 	}
 
-	private void schritt11FehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
+	private void fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
 		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			final long schuelerID = regel4.parameter.get(0);
@@ -824,7 +826,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt12FehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() {
+	private void fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() {
 		// Regel 7 - KURS_VERBIETEN_MIT_KURS
 		for (final @NotNull GostBlockungRegel regel7 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 			final long kursID1 = regel7.parameter.get(0);
@@ -844,7 +846,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt13FehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() {
+	private void fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() {
 		// Regel 9 - KURS_MIT_DUMMY_SUS_AUFFUELLEN
 		for (final @NotNull GostBlockungRegel regel9 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			final long kursID = regel9.parameter.get(0);
@@ -855,7 +857,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt14FehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(final @NotNull GostBlockungsdatenManager pInput) {
+	private void fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(final @NotNull GostBlockungsdatenManager pInput) {
 		final List<@NotNull GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10.isEmpty()) return;
 
@@ -880,7 +882,7 @@ public class KursblockungDynDaten {
 							}
 	}
 
-	private void schritt14FehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(final @NotNull GostBlockungsdatenManager input) {
+	private void fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(final @NotNull GostBlockungsdatenManager input) {
 		// Das Set dient dazu, Widersprüche/Dopplungen bei den Regeln zu finden.
 		final @NotNull HashSet<String> setSSF = new HashSet<>();
 
@@ -925,9 +927,9 @@ public class KursblockungDynDaten {
 		}
 
 		// Regel 14: SCHUELER_VERBIETEN_MIT_SCHUELER
-		for (final @NotNull GostBlockungRegel regel14 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			final long idS1 = regel14.parameter.get(0);
-			final long idS2 = regel14.parameter.get(1);
+		for (final @NotNull GostBlockungRegel r14 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
+			final long idS1 = r14.parameter.get(0);
+			final long idS2 = r14.parameter.get(1);
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
@@ -940,22 +942,33 @@ public class KursblockungDynDaten {
 
 	}
 
-	private void schritt15FehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {
-		for (final @NotNull GostBlockungRegel regel15 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
-			final long idKurs = regel15.parameter.get(0);
-			final int maxSuS = regel15.parameter.get(1).intValue();
+	private void fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {
+		for (final @NotNull GostBlockungRegel r15 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+			final long idKurs = r15.parameter.get(0);
+			final int maxSuS = r15.parameter.get(1).intValue();
 
 			final @NotNull KursblockungDynKurs kurs = gibKurs(idKurs);
 			kurs.setzeMaxSuS(maxSuS);
 		}
 	}
 
-	private void schritt16FehlerBeiRegel_16_SCHUELER_IGNORIEREN() {
-		for (final @NotNull GostBlockungRegel regel16 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
-			final long idSchueler = regel16.parameter.get(0);
+	private void fehlerBeiRegel_16_SCHUELER_IGNORIEREN() {
+		for (final @NotNull GostBlockungRegel r16 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+			final long idSchueler = r16.parameter.get(0);
 
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(idSchueler);
 			schueler.regel16_sperre();
+		}
+	}
+
+	private void fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE() {
+		for (final @NotNull GostBlockungRegel r18 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE)) {
+			final long idFach = r18.parameter.get(0);
+			final int idKursart = r18.parameter.get(1).intValue();
+			final int maximalProSchiene = r18.parameter.get(2).intValue();
+
+			final @NotNull KursblockungDynFachart fachart = gibFachart(idFach, idKursart);
+			fachart.regel18_maximalProSchiene(maximalProSchiene);
 		}
 	}
 

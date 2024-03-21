@@ -30,9 +30,9 @@ public class KursblockungDynSchiene {
 	/**
 	 * Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
 	 *
-	 * @param pLogger    Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pNr        Die Nummer der Schiene.
-	 * @param pStatistik Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
+	 * @param pLogger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param pNr         Die Nummer der Schiene.
+	 * @param pStatistik  Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
 	public KursblockungDynSchiene(final @NotNull Logger pLogger, final int pNr, final @NotNull KursblockungDynStatistik pStatistik) {
 		logger = pLogger;
@@ -65,7 +65,8 @@ public class KursblockungDynSchiene {
 			throw new DeveloperNotificationException(fehler);
 		}
 
-		// Zuerst Kurs-Paarungen hinzufügen.
+		// Fachart-Schiene und Kurs-Kurs Beziehungen aktualisieren.
+		kurs1.gibFachart().aktionSchieneWurdeHinzugefuegt(this);
 		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 
@@ -82,8 +83,7 @@ public class KursblockungDynSchiene {
 		// Fehler?
 		final long kursID = kurs1.gibDatenbankID();
 		if (!kursMap.containsKey(kursID)) {
-			final String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
-					+ " entfernt werden, ist aber nicht drin.";
+			final String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr + " entfernt werden, ist aber nicht drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler);
 		}
@@ -91,7 +91,8 @@ public class KursblockungDynSchiene {
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);
 
-		// Dann Kurs-Paarungen entfernen.
+		// Fachart-Schiene und Kurs-Kurs Beziehungen aktualisieren.
+		kurs1.gibFachart().aktionSchieneWurdeEntfernt(this);
 		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 	}
