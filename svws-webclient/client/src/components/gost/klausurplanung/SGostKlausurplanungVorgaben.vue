@@ -43,7 +43,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-0 -ml-2">
+		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-8 -ml-2">
 			<template #actions v-if="activeVorgabe.idVorgabe > 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
 			</template>
