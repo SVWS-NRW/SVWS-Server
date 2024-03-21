@@ -212,8 +212,21 @@
 
 <style lang="postcss" scoped>
 .page--content {
-  @apply grid;
-  grid-template-columns: minmax(44rem, .3fr) 1fr;
+  	@apply grid;
+  	grid-template-columns: minmax(44rem, .3fr) 1fr;
+}
+
+.svws-ui-tab-content {
+	@apply overflow-y-hidden items-start;
+
+	.page--content {
+		@apply h-full py-0 auto-rows-auto;
+
+		.content-card {
+			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
+			scrollbar-gutter: stable;
+		}
+	}
 }
 
 </style>

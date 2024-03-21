@@ -39,11 +39,11 @@
 					</li>
 				</ul>
 			</svws-ui-content-card>
-			<div v-if="selectedTermin === null">
-				<div class="h-full rounded-lg shadow-inner flex items-center justify-center p-3 text-center">
+			<svws-ui-content-card v-if="selectedTermin === null">
+				<div class="h-full rounded-lg shadow-inner flex items-center justify-center py-8 px-3 text-center">
 					<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
 				</div>
-			</div>
+			</svws-ui-content-card>
 			<template v-else>
 				<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
 					:k-man="kMan"
@@ -147,5 +147,18 @@
 .page--content {
 	@apply grid;
 	grid-template-columns: minmax(20rem, 0.25fr) 1fr;
+}
+
+.svws-ui-tab-content {
+	@apply overflow-y-hidden items-start;
+
+	.page--content {
+		@apply h-full py-0 auto-rows-auto;
+
+		.content-card {
+			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
+			scrollbar-gutter: stable;
+		}
+	}
 }
 </style>
