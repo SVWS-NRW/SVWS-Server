@@ -5097,10 +5097,10 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
 	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
-	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist. Auch die Fixierungs-Regel wird entfernt.
 	 *
-	 * @param schuelerIDs  Die Menge der Schüler-IDs.
-	 * @param idKurs       Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
+	 * @param schuelerIDs           Die Menge der Schüler-IDs.
+	 * @param idKurs                Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
 	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
@@ -5110,11 +5110,26 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		final @NotNull Set<@NotNull Long> setSchulerOfKurs = getOfKursSchuelerIDmenge(idKurs);
-		for (final long idSchueler : schuelerIDs)
-			if ((setSchulerOfKurs.contains(idSchueler)) && (entferneAuchFixierte || !_parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs))) {
-				// (1) (2)
+		for (final long idSchueler : schuelerIDs) {
+			// Ist der Schüler überhaupt dem Kurs zugeordnet?
+			if (!setSchulerOfKurs.contains(idSchueler))
+				continue;
+
+			final @NotNull LongArrayKey keyFixiert = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs});
+			final GostBlockungRegel regelFixiert = _parent.regelGetByLongArrayKeyOrNull(keyFixiert);
+
+			if (regelFixiert == null) {
+				// (1)
 				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				continue;
 			}
+
+			if (entferneAuchFixierte) {
+				// (2)
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				u.regelUpdates.listEntfernen.add(regelFixiert);
+			}
+		}
 
 		return u;
 	}

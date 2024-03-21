@@ -4654,10 +4654,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
 	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
-	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist.
+	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist. Auch die Fixierungs-Regel wird entfernt.
 	 *
-	 * @param schuelerIDs  Die Menge der Schüler-IDs.
-	 * @param idKurs       Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
+	 * @param schuelerIDs           Die Menge der Schüler-IDs.
+	 * @param idKurs                Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
 	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
@@ -4665,10 +4665,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(schuelerIDs : JavaSet<number>, idKurs : number, entferneAuchFixierte : boolean) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 		const setSchulerOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
-		for (const idSchueler of schuelerIDs)
-			if ((setSchulerOfKurs.contains(idSchueler)) && (entferneAuchFixierte || !this._parent.schuelerGetIstFixiertInKurs(idSchueler, idKurs))) {
+		for (const idSchueler of schuelerIDs) {
+			if (!setSchulerOfKurs.contains(idSchueler))
+				continue;
+			const keyFixiert : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+			const regelFixiert : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixiert);
+			if (regelFixiert === null) {
 				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				continue;
 			}
+			if (entferneAuchFixierte) {
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				u.regelUpdates.listEntfernen.add(regelFixiert);
+			}
+		}
 		return u;
 	}
 

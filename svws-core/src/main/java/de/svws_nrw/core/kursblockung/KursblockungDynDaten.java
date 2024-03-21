@@ -815,6 +815,9 @@ public class KursblockungDynDaten {
 					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 		}
 
+		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS (Spezialfall - Pro Schüler: Alle Kurspaar-Fixierungen Kurs-Kurs-Zusammen verbieten))
+
+
 		// Regel 5 - SCHUELER_VERBIETEN_IN_KURS
 		for (final @NotNull GostBlockungRegel regel5 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
 			final long schuelerID = regel5.parameter.get(0);
