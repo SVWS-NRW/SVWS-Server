@@ -168,6 +168,9 @@ public class GostBlockungsergebnisManager {
 	/** Textuelle Darstellung aller Regelverletzungen der Wahlkonflikte. */
 	private @NotNull String _regelverletzungen_tooltip2_wahlkonflikte = "";
 
+	/** Textuelle Darstellung aller Regelverletzungen der Kursdifferenzen. */
+	private @NotNull String _regelverletzungen_tooltip3_kursdifferenzen = "";
+
 	/** Textuelle Darstellung aller Regelverletzungen der Fächerparallelität. */
 	private @NotNull String _regelverletzungen_tooltip4_faecherparallelitaet = "";
 
@@ -371,7 +374,27 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
 		}
 
-		_regelverletzungen_tooltip1_regeln = stateRegelvalidierungTooltip1(); // benötigt _regelTyp_to_verletzungenList
+		_regelverletzungen_tooltip1_regeln = stateClearErgebnisTooltip1(); // benötigt _regelTyp_to_verletzungenList
+	}
+
+	private @NotNull String stateClearErgebnisTooltip1() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		int konflikte = 0;
+		int konflikte_ignored = 0;
+		for (final int idRegeltyp : GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
+			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungList, idRegeltyp)) {
+				if (konflikte < 10) {
+					sb.append(fehlermeldung + "\n");
+				} else {
+					konflikte_ignored++;
+				}
+				konflikte++;
+			}
+		if (konflikte == 0)
+			return "";
+
+		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikte_ignored == 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
 	}
 
 	private void stateClearErgebnisBewertung2() {
@@ -396,7 +419,54 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
 
-		_regelverletzungen_tooltip2_wahlkonflikte = stateRegelvalidierungTooltip2();
+		_regelverletzungen_tooltip2_wahlkonflikte = stateClearErgebnisTooltip2();
+	}
+
+	private @NotNull String stateClearErgebnisTooltip2() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		// Nichtwahlen des Schülers.
+		int wahlkonflikte = 0;
+		int wahlkonflikte_ignored = 0;
+		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
+			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+				if (e.getValue() != null)
+					continue;
+
+				if (wahlkonflikte < 10) {
+					final long idFach = e.getKey();
+					final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+				wahlkonflikte++;
+			}
+
+		// Kollisionen des Schülers.
+		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet())
+			for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> e : _schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
+				final Set<@NotNull GostBlockungsergebnisKurs> set = e.getValue();
+				if (set == null)
+					continue;
+				if (set.size() <= 1)
+					continue;
+
+				final @NotNull ArrayList<@NotNull GostBlockungsergebnisKurs> list = new ArrayList<@NotNull GostBlockungsergebnisKurs>(set);
+
+				if (wahlkonflikte < 10) {
+					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in " + _parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
+					for (int i = 0; i < list.size(); i++)
+						sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimple(list.get(i).id));
+					sb.append("\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+
+				wahlkonflikte += list.size() - 1;
+			}
+
+		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString() + (wahlkonflikte_ignored == 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
 	}
 
 	private void stateClearErgebnisBewertung3() {
@@ -425,6 +495,22 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
+		_regelverletzungen_tooltip3_kursdifferenzen = stateClearErgebnisTooltip3();
+	}
+
+	private @NotNull String stateClearErgebnisTooltip3() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+		final @NotNull int[] histo = _ergebnis.bewertung.kursdifferenzHistogramm;
+		sb.append("Maximale Kursdifferenz (LK, GK, REST): " + _bewertung3_KD_nur_LK + ", " + _bewertung3_KD_nur_GK + ", " + _bewertung3_KD_nur_REST + "\n");
+
+		if (histo.length >= 2)
+			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x\n");
+
+		for (int i = 2; i < histo.length; i++)
+			if (histo[i] > 0)
+				sb.append("Differenz " + i + ": " + histo[i] + "x\n");
+
+		return sb.toString();
 	}
 
 	private void stateClearErgebnisBewertung4() {
@@ -437,7 +523,49 @@ public class GostBlockungsergebnisManager {
 					_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
 
-		_regelverletzungen_tooltip4_faecherparallelitaet = stateRegelvalidierungTooltip4();
+		_regelverletzungen_tooltip4_faecherparallelitaet = stateClearErgebnisTooltip4();
+	}
+
+	private @NotNull String stateClearErgebnisTooltip4() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		for (int nr = 1; nr <= _schienenNR_to_schiene.size(); nr++) {
+			final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
+			final @NotNull String proSchiene = stateClearErgebnisTooltip4proSchiene(schiene.id);
+			if (!proSchiene.isEmpty())
+				sb.append("Schiene " + nr + ":\n" + proSchiene);
+		}
+
+		return sb.toString();
+	}
+
+	private @NotNull String stateClearErgebnisTooltip4proSchiene(final long idSchiene) {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		for (final long idFachart : _fachartIDList_sortiert) {
+			final @NotNull String proFachart = stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene, idFachart);
+			if (!proFachart.isEmpty())
+				sb.append(proFachart + "\n");
+		}
+
+		return sb.toString();
+	}
+
+	private @NotNull String stateClearErgebnisTooltip4proSchieneUndFachart(final long idSchiene, final long idFachart) {
+		final @NotNull StringBuilder sb = new StringBuilder();
+
+		if (_schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
+			final int n = kursGruppe.size();
+			if (n >= 2) {
+				sb.append("  " + getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
+				for (int i = 0; i < n; i++) {
+					final @NotNull GostBlockungsergebnisKurs kurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
+					sb.append((i == 0 ? "" : ",") + " " + getOfKursName(kurs.id));
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	private void update_0_schienenIDset_schienenNRset() {
@@ -801,115 +929,6 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			if (!_schuelerID_fachID_to_kurs_or_null.contains(gFachwahl.schuelerID, gFachwahl.fachID))
 				_schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
-	}
-
-	private @NotNull String stateRegelvalidierungTooltip1() {
-		final @NotNull StringBuilder sb = new StringBuilder();
-
-		int konflikte = 0;
-		int konflikte_ignored = 0;
-		for (final int idRegeltyp : GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
-			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungList, idRegeltyp)) {
-				if (konflikte < 10) {
-					sb.append(fehlermeldung + "\n");
-				} else {
-					konflikte_ignored++;
-				}
-				konflikte++;
-			}
-		if (konflikte == 0)
-			return "";
-
-		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikte_ignored == 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
-	}
-
-	private @NotNull String stateRegelvalidierungTooltip2() {
-		final @NotNull StringBuilder sb = new StringBuilder();
-
-		// Nichtwahlen des Schülers.
-		int wahlkonflikte = 0;
-		int wahlkonflikte_ignored = 0;
-		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (final @NotNull Entry<@NotNull Long, GostBlockungsergebnisKurs> e : _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
-				if (e.getValue() != null)
-					continue;
-
-				if (wahlkonflikte < 10) {
-					final long idFach = e.getKey();
-					final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
-				} else {
-					wahlkonflikte_ignored++;
-				}
-				wahlkonflikte++;
-			}
-
-		// Kollisionen des Schülers.
-		for (final long idSchueler : _schuelerID_schienenID_to_kurseSet.getKeySet())
-			for (final @NotNull Entry<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> e : _schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
-				final Set<@NotNull GostBlockungsergebnisKurs> set = e.getValue();
-				if (set == null)
-					continue;
-				if (set.size() <= 1)
-					continue;
-
-				final @NotNull ArrayList<@NotNull GostBlockungsergebnisKurs> list = new ArrayList<@NotNull GostBlockungsergebnisKurs>(set);
-
-				if (wahlkonflikte < 10) {
-					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in " + _parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
-					for (int i = 0; i < list.size(); i++)
-						sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimple(list.get(i).id));
-					sb.append("\n");
-				} else {
-					wahlkonflikte_ignored++;
-				}
-
-				wahlkonflikte += list.size() - 1;
-			}
-
-		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString() + (wahlkonflikte_ignored == 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
-	}
-
-	private @NotNull String stateRegelvalidierungTooltip4() {
-		final @NotNull StringBuilder sb = new StringBuilder();
-
-		for (int nr = 1; nr <= _schienenNR_to_schiene.size(); nr++) {
-			final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
-			final @NotNull String proSchiene = stateRegelvalidierungTooltip4proSchiene(schiene.id);
-			if (!proSchiene.isEmpty())
-				sb.append("Schiene " + nr + ":\n" + proSchiene);
-		}
-
-		return sb.toString();
-	}
-
-	private @NotNull String stateRegelvalidierungTooltip4proSchiene(final long idSchiene) {
-		final @NotNull StringBuilder sb = new StringBuilder();
-
-		for (final long idFachart : _fachartIDList_sortiert) {
-			final @NotNull String proFachart = stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene, idFachart);
-			if (!proFachart.isEmpty())
-				sb.append(proFachart + "\n");
-		}
-
-		return sb.toString();
-	}
-
-	private @NotNull String stateRegelvalidierungTooltip4proSchieneUndFachart(final long idSchiene, final long idFachart) {
-		final @NotNull StringBuilder sb = new StringBuilder();
-
-		if (_schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
-			final int n = kursGruppe.size();
-			if (n >= 2) {
-				sb.append("  " + getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
-				for (int i = 0; i < n; i++) {
-					final @NotNull GostBlockungsergebnisKurs kurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
-					sb.append((i == 0 ? "" : ",") + " " + getOfKursName(kurs.id));
-				}
-			}
-		}
-		return sb.toString();
 	}
 
 	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
@@ -3517,6 +3536,15 @@ public class GostBlockungsergebnisManager {
 	 */
 	final @NotNull String regelGetTooltipFuerWahlkonflikte() {
 		return _regelverletzungen_tooltip2_wahlkonflikte;
+	}
+
+	/**
+	 * Liefert einen Tooltip für alle Kursdifferenzen.
+	 *
+	 * @return einen Tooltip für alle Kursdifferenzen.
+	 */
+	final @NotNull String regelGetTooltipFuerKursdifferenzen() {
+		return _regelverletzungen_tooltip3_kursdifferenzen;
 	}
 
 	private static boolean regelupdateIsEqualPair(final long a1, final long a2, final long b1, final long b2) {

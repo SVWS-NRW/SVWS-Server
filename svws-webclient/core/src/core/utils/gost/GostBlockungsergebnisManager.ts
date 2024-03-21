@@ -215,6 +215,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private _regelverletzungen_tooltip2_wahlkonflikte : string = "";
 
 	/**
+	 * Textuelle Darstellung aller Regelverletzungen der Kursdifferenzen.
+	 */
+	private _regelverletzungen_tooltip3_kursdifferenzen : string = "";
+
+	/**
 	 * Textuelle Darstellung aller Regelverletzungen der Fächerparallelität.
 	 */
 	private _regelverletzungen_tooltip4_faecherparallelitaet : string = "";
@@ -403,7 +408,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const sizeIst : number = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, idKurs).size();
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(sizeSoll - sizeIst);
 		}
-		this._regelverletzungen_tooltip1_regeln = this.stateRegelvalidierungTooltip1();
+		this._regelverletzungen_tooltip1_regeln = this.stateClearErgebnisTooltip1();
+	}
+
+	private stateClearErgebnisTooltip1() : string {
+		const sb : StringBuilder = new StringBuilder();
+		let konflikte : number = 0;
+		let konflikte_ignored : number = 0;
+		for (const idRegeltyp of GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
+			for (const fehlermeldung of MapUtils.getOrCreateArrayList(this._regelTyp_to_verletzungList, idRegeltyp)) {
+				if (konflikte < 10) {
+					sb.append(fehlermeldung! + "\n");
+				} else {
+					konflikte_ignored++;
+				}
+				konflikte++;
+			}
+		if (konflikte === 0)
+			return "";
+		return konflikte + " Regelverletzungen\n" + sb.toString()! + (konflikte_ignored === 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
 	}
 
 	private stateClearErgebnisBewertung2() : void {
@@ -423,7 +446,45 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const kollisionen : number = DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kollisionen, idSchueler).valueOf();
 			this._ergebnis.bewertung.anzahlSchuelerKollisionen += kollisionen;
 		}
-		this._regelverletzungen_tooltip2_wahlkonflikte = this.stateRegelvalidierungTooltip2();
+		this._regelverletzungen_tooltip2_wahlkonflikte = this.stateClearErgebnisTooltip2();
+	}
+
+	private stateClearErgebnisTooltip2() : string {
+		const sb : StringBuilder = new StringBuilder();
+		let wahlkonflikte : number = 0;
+		let wahlkonflikte_ignored : number = 0;
+		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
+			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
+				if (e.getValue() !== null)
+					continue;
+				if (wahlkonflikte < 10) {
+					const idFach : number = e.getKey().valueOf();
+					const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+				wahlkonflikte++;
+			}
+		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
+			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
+				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();
+				if (set === null)
+					continue;
+				if (set.size() <= 1)
+					continue;
+				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
+				if (wahlkonflikte < 10) {
+					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist in " + this._parent.toStringSchieneSimple(e.getKey()!)! + " in mehreren Kursen:");
+					for (let i : number = 0; i < list.size(); i++)
+						sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimple(list.get(i).id)!);
+					sb.append("\n");
+				} else {
+					wahlkonflikte_ignored++;
+				}
+				wahlkonflikte += list.size() - 1;
+			}
+		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString()! + (wahlkonflikte_ignored === 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
 	}
 
 	private stateClearErgebnisBewertung3() : void {
@@ -447,6 +508,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				}
 			}
 		}
+		this._regelverletzungen_tooltip3_kursdifferenzen = this.stateClearErgebnisTooltip3();
+	}
+
+	private stateClearErgebnisTooltip3() : string {
+		const sb : StringBuilder = new StringBuilder();
+		const histo : Array<number> = this._ergebnis.bewertung.kursdifferenzHistogramm;
+		sb.append("Maximale Kursdifferenz (LK, GK, REST): " + this._bewertung3_KD_nur_LK + ", " + this._bewertung3_KD_nur_GK + ", " + this._bewertung3_KD_nur_REST + "\n");
+		if (histo.length >= 2)
+			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x\n");
+		for (let i : number = 2; i < histo.length; i++)
+			if (histo[i] > 0)
+				sb.append("Differenz " + i + ": " + histo[i] + "x\n");
+		return sb.toString();
 	}
 
 	private stateClearErgebnisBewertung4() : void {
@@ -457,7 +531,44 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (gleicheKurseInSchiene >= 2)
 					this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += gleicheKurseInSchiene - 1;
 			}
-		this._regelverletzungen_tooltip4_faecherparallelitaet = this.stateRegelvalidierungTooltip4();
+		this._regelverletzungen_tooltip4_faecherparallelitaet = this.stateClearErgebnisTooltip4();
+	}
+
+	private stateClearErgebnisTooltip4() : string {
+		const sb : StringBuilder = new StringBuilder();
+		for (let nr : number = 1; nr <= this._schienenNR_to_schiene.size(); nr++) {
+			const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
+			const proSchiene : string = this.stateClearErgebnisTooltip4proSchiene(schiene.id);
+			if (!JavaString.isEmpty(proSchiene))
+				sb.append("Schiene " + nr + ":\n" + proSchiene!);
+		}
+		return sb.toString();
+	}
+
+	private stateClearErgebnisTooltip4proSchiene(idSchiene : number) : string {
+		const sb : StringBuilder = new StringBuilder();
+		for (const idFachart of this._fachartIDList_sortiert) {
+			const proFachart : string = this.stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene, idFachart);
+			if (!JavaString.isEmpty(proFachart))
+				sb.append(proFachart! + "\n");
+		}
+		return sb.toString();
+	}
+
+	private stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene : number, idFachart : number) : string {
+		const sb : StringBuilder = new StringBuilder();
+		if (this._schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
+			const kursGruppe : List<GostBlockungsergebnisKurs> = this._schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
+			const n : number = kursGruppe.size();
+			if (n >= 2) {
+				sb.append("  " + this.getOfFachartName(idFachart)! + " (+" + (n - 1) + "):");
+				for (let i : number = 0; i < n; i++) {
+					const kurs : GostBlockungsergebnisKurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
+					sb.append((i === 0 ? "" : ",") + " " + this.getOfKursName(kurs.id)!);
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
@@ -750,99 +861,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gFachwahl of this._parent.daten().fachwahlen)
 			if (!this._schuelerID_fachID_to_kurs_or_null.contains(gFachwahl.schuelerID, gFachwahl.fachID))
 				this._schuelerID_fachID_to_kurs_or_null.put(gFachwahl.schuelerID, gFachwahl.fachID, null);
-	}
-
-	private stateRegelvalidierungTooltip1() : string {
-		const sb : StringBuilder = new StringBuilder();
-		let konflikte : number = 0;
-		let konflikte_ignored : number = 0;
-		for (const idRegeltyp of GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
-			for (const fehlermeldung of MapUtils.getOrCreateArrayList(this._regelTyp_to_verletzungList, idRegeltyp)) {
-				if (konflikte < 10) {
-					sb.append(fehlermeldung! + "\n");
-				} else {
-					konflikte_ignored++;
-				}
-				konflikte++;
-			}
-		if (konflikte === 0)
-			return "";
-		return konflikte + " Regelverletzungen\n" + sb.toString()! + (konflikte_ignored === 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
-	}
-
-	private stateRegelvalidierungTooltip2() : string {
-		const sb : StringBuilder = new StringBuilder();
-		let wahlkonflikte : number = 0;
-		let wahlkonflikte_ignored : number = 0;
-		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet())
-			for (const e of this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet()) {
-				if (e.getValue() !== null)
-					continue;
-				if (wahlkonflikte < 10) {
-					const idFach : number = e.getKey().valueOf();
-					const kursart : number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart)! + " keinem Kurs zugeordnet.\n");
-				} else {
-					wahlkonflikte_ignored++;
-				}
-				wahlkonflikte++;
-			}
-		for (const idSchueler of this._schuelerID_schienenID_to_kurseSet.getKeySet())
-			for (const e of this._schuelerID_schienenID_to_kurseSet.getSubMapOrException(idSchueler).entrySet()) {
-				const set : JavaSet<GostBlockungsergebnisKurs> | null = e.getValue();
-				if (set === null)
-					continue;
-				if (set.size() <= 1)
-					continue;
-				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
-				if (wahlkonflikte < 10) {
-					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist in " + this._parent.toStringSchieneSimple(e.getKey()!)! + " in mehreren Kursen:");
-					for (let i : number = 0; i < list.size(); i++)
-						sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimple(list.get(i).id)!);
-					sb.append("\n");
-				} else {
-					wahlkonflikte_ignored++;
-				}
-				wahlkonflikte += list.size() - 1;
-			}
-		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString()! + (wahlkonflikte_ignored === 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
-	}
-
-	private stateRegelvalidierungTooltip4() : string {
-		const sb : StringBuilder = new StringBuilder();
-		for (let nr : number = 1; nr <= this._schienenNR_to_schiene.size(); nr++) {
-			const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
-			const proSchiene : string = this.stateRegelvalidierungTooltip4proSchiene(schiene.id);
-			if (!JavaString.isEmpty(proSchiene))
-				sb.append("Schiene " + nr + ":\n" + proSchiene!);
-		}
-		return sb.toString();
-	}
-
-	private stateRegelvalidierungTooltip4proSchiene(idSchiene : number) : string {
-		const sb : StringBuilder = new StringBuilder();
-		for (const idFachart of this._fachartIDList_sortiert) {
-			const proFachart : string = this.stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene, idFachart);
-			if (!JavaString.isEmpty(proFachart))
-				sb.append(proFachart! + "\n");
-		}
-		return sb.toString();
-	}
-
-	private stateRegelvalidierungTooltip4proSchieneUndFachart(idSchiene : number, idFachart : number) : string {
-		const sb : StringBuilder = new StringBuilder();
-		if (this._schienenID_fachartID_to_kurseList.contains(idSchiene, idFachart)) {
-			const kursGruppe : List<GostBlockungsergebnisKurs> = this._schienenID_fachartID_to_kurseList.getNonNullOrException(idSchiene, idFachart);
-			const n : number = kursGruppe.size();
-			if (n >= 2) {
-				sb.append("  " + this.getOfFachartName(idFachart)! + " (+" + (n - 1) + "):");
-				for (let i : number = 0; i < n; i++) {
-					const kurs : GostBlockungsergebnisKurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
-					sb.append((i === 0 ? "" : ",") + " " + this.getOfKursName(kurs.id)!);
-				}
-			}
-		}
-		return sb.toString();
 	}
 
 	private stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
@@ -3320,6 +3338,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	regelGetTooltipFuerWahlkonflikte() : string {
 		return this._regelverletzungen_tooltip2_wahlkonflikte;
+	}
+
+	/**
+	 * Liefert einen Tooltip für alle Kursdifferenzen.
+	 *
+	 * @return einen Tooltip für alle Kursdifferenzen.
+	 */
+	regelGetTooltipFuerKursdifferenzen() : string {
+		return this._regelverletzungen_tooltip3_kursdifferenzen;
 	}
 
 	private static regelupdateIsEqualPair(a1 : number, a2 : number, b1 : number, b2 : number) : boolean {
