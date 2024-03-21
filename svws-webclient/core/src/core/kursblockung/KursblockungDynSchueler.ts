@@ -527,7 +527,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	regel11_zusammen_mit_schueler_in_fach(that : KursblockungDynSchueler, idFach : number) : void {
+	regel_11_zusammen_mit_schueler_in_fach(that : KursblockungDynSchueler, idFach : number) : void {
 		const fachart1 : KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2 : KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr())
@@ -541,7 +541,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	regel12_verbieten_mit_schueler_in_fach(that : KursblockungDynSchueler, idFach : number) : void {
+	regel_12_verbieten_mit_schueler_in_fach(that : KursblockungDynSchueler, idFach : number) : void {
 		const fachart1 : KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2 : KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr())
@@ -554,7 +554,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	public regel13_zusammen_mit_schueler(that : KursblockungDynSchueler) : void {
+	public regel_13_zusammen_mit_schueler(that : KursblockungDynSchueler) : void {
 		for (const fachart1 of this.fachartArr)
 			for (const fachart2 of this.fachartArr)
 				if (fachart1.gibNr() === fachart2.gibNr())
@@ -566,7 +566,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	regel14_verbieten_mit_schueler(that : KursblockungDynSchueler) : void {
+	regel_14_verbieten_mit_schueler(that : KursblockungDynSchueler) : void {
 		for (const fachart1 of this.fachartArr)
 			for (const fachart2 of this.fachartArr)
 				if (fachart1.gibNr() === fachart2.gibNr())
@@ -576,7 +576,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	/**
 	 * Wendet an, dasss der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
 	 */
-	regel16_sperre() : void {
+	regel_16_sperre() : void {
 		for (let i : number = 0; i < this.schieneBelegt.length; i++)
 			this.schieneBelegt[i] = true;
 	}

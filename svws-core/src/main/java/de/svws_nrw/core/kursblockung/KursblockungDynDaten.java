@@ -151,7 +151,7 @@ public class KursblockungDynDaten {
 
 		fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
 
-		fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL();
+		fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL(); // Muss nach Regel 4 (Schüler-Kurs-Fixierung) passieren.
 
 		fehlerBeiRegel_16_SCHUELER_IGNORIEREN();
 
@@ -813,7 +813,9 @@ public class KursblockungDynDaten {
 			final @NotNull KursblockungDynKurs fixierterKurs = gibKurs(kursID);
 			// Alle anderen Kurse der selben Fachart verbieten ...
 			for (final @NotNull KursblockungDynKurs kurs : fixierterKurs.gibFachart().gibKurse())
-				if (kurs != fixierterKurs)
+				if (kurs == fixierterKurs)
+					kurs.regel_04_setzeSchuelerFixierung(schueler.internalSchuelerID);
+				else
 					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 		}
 
@@ -828,7 +830,6 @@ public class KursblockungDynDaten {
 					final @NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
 					final @NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
 					_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-					// TODO BAR check if aufgerufen.
 				}
 		}
 
@@ -914,7 +915,7 @@ public class KursblockungDynDaten {
 			// Regel 11 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel11_zusammen_mit_schueler_in_fach(sch2, idF);
+			sch1.regel_11_zusammen_mit_schueler_in_fach(sch2, idF);
 		}
 
 		// Regel 12: SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
@@ -927,7 +928,7 @@ public class KursblockungDynDaten {
 			// Regel 12 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel12_verbieten_mit_schueler_in_fach(sch2, idF);
+			sch1.regel_12_verbieten_mit_schueler_in_fach(sch2, idF);
 		}
 
 		// Regel 13: SCHUELER_ZUSAMMEN_MIT_SCHUELER
@@ -940,7 +941,7 @@ public class KursblockungDynDaten {
 				// Regel 13 persistieren
 				final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 				final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-				sch1.regel13_zusammen_mit_schueler(sch2);
+				sch1.regel_13_zusammen_mit_schueler(sch2);
 			}
 		}
 
@@ -955,7 +956,7 @@ public class KursblockungDynDaten {
 			// Regel 14 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel14_verbieten_mit_schueler(sch2);
+			sch1.regel_14_verbieten_mit_schueler(sch2);
 		}
 
 	}
@@ -966,7 +967,7 @@ public class KursblockungDynDaten {
 			final int maxSuS = r15.parameter.get(1).intValue();
 
 			final @NotNull KursblockungDynKurs kurs = gibKurs(idKurs);
-			kurs.setzeMaxSuS(maxSuS);
+			kurs.regel_15_setzeMaxSuS(maxSuS);
 		}
 	}
 
@@ -975,7 +976,7 @@ public class KursblockungDynDaten {
 			final long idSchueler = r16.parameter.get(0);
 
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(idSchueler);
-			schueler.regel16_sperre();
+			schueler.regel_16_sperre();
 		}
 	}
 
@@ -986,7 +987,7 @@ public class KursblockungDynDaten {
 			final int maximalProSchiene = r18.parameter.get(2).intValue();
 
 			final @NotNull KursblockungDynFachart fachart = gibFachart(idFach, idKursart);
-			fachart.regel18_maximalProSchiene(maximalProSchiene);
+			fachart.regel_18_maximalProSchiene(maximalProSchiene);
 		}
 	}
 

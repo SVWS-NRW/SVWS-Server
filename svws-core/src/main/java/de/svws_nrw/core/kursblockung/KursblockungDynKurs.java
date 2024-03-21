@@ -57,19 +57,22 @@ public class KursblockungDynKurs {
 	private final @NotNull KursblockungDynSchiene @NotNull [] schienenFreiSaveG;
 
 	/** Die Anzahl an SuS in diesem Kurs. */
-	private int schuelerAnz;
+	private int schuelerAnzahl;
 
 	/** Die Anzahl an Dummy-SuS in diesem Kurs. */
-	private int schuelerAnzDummy;
+	private int schuelerAnzahlDummy;
 
 	/** Die maximale Anzahl an erlaubten SuS in diesem Kurs. */
-	private int schuelerAnzMax;
+	private int schuelerAnzahlMaximal;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
 	private final @NotNull Logger logger;
 
 	/** Eine Array, welches dynamisch definiert, ob ein Schüler für diesen Kurs verboten ist.*/
 	private final @NotNull int[] schuelerVerboten;
+
+	/** Eine Array, welches definiert, ob ein Schüler in diesem Kurs fixiert ist.*/
+	private final @NotNull boolean[] schuelerFixiert;
 
 	/**
 	 * Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
@@ -100,12 +103,13 @@ public class KursblockungDynKurs {
 		schienenFrei = pSchienenFrei;
 		databaseID = pKursID;
 		fachart = pFachart;
-		schuelerAnz = 0;
-		schuelerAnzDummy = 0;
+		schuelerAnzahl = 0;
+		schuelerAnzahlDummy = 0;
 		logger = pLogger;
 		internalKursID = pInternalID;
-		schuelerAnzMax = MAX_SUS_DEFAULT;
+		schuelerAnzahlMaximal = MAX_SUS_DEFAULT;
 		schuelerVerboten = new int[pSchuelerAnzahl];
+		schuelerFixiert = new boolean[pSchuelerAnzahl];
 
 		schienenLageSaveS = new KursblockungDynSchiene[schienenLage.length];
 		schienenLageSaveK = new KursblockungDynSchiene[schienenLage.length];
@@ -165,7 +169,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs. */
 	int gibSchuelerAnzahl() {
-		return schuelerAnz + schuelerAnzDummy;
+		return schuelerAnzahl + schuelerAnzahlDummy;
 	}
 
 	/**
@@ -287,18 +291,6 @@ public class KursblockungDynKurs {
 	}
 
 	/**
-	 * Liefert die Anzahl der freien Schüler-Plätze in diesem Kurs.
-	 *
-	 * <br>Falls die maximale Anzahl nicht begrenzt wurde, ist dieser Wert utopisch hoch.
-	 *
-	 * @return die Anzahl der freien Schüler-Plätze in diesem Kurs.
-	 *
-	 */
-	int gibAnzahlFreiePlaetze() {
-		return schuelerAnzMax - schuelerAnz - schuelerAnzDummy;
-	}
-
-	/**
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
 	 * @param s  Das  {@link KursblockungDynSchueler}-Objekt.
@@ -306,7 +298,20 @@ public class KursblockungDynKurs {
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
 	boolean gibIstErlaubtFuerSchueler(final @NotNull KursblockungDynSchueler s) {
-		return (schuelerAnzMax - schuelerAnz - schuelerAnzDummy > 0) && !s.kursGesperrt[internalKursID] && (schuelerVerboten[s.internalSchuelerID] <= 0);
+		// Ist der Kurs generell für diesen Schüler gesperrt?
+		if (s.kursGesperrt[internalKursID])
+			return false;
+
+		// Ist der Kurs momentan für diesen Schüler gesperrt, weil ein anderer Schüler im Kurs ist?
+		if (schuelerVerboten[s.internalSchuelerID] > 0)
+			return false;
+
+		// Ist der Schüler im Kurs fixiert? Dann ist die Obergrenze nicht relevant.
+		if (schuelerFixiert[s.internalSchuelerID])
+			return true;
+
+		// Ist noch Platz für nicht fixierte SuS?
+		return (schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy > 0);
 	}
 
 	/** Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
@@ -361,7 +366,7 @@ public class KursblockungDynKurs {
 			return;
 
 		// Sind SuS im Kurs? --> Fehler ('schuelerAnzDummy' sind aber erlaubt)
-		if (schuelerAnz > 0) {
+		if (schuelerAnzahl > 0) {
 			logger.log(LogLevel.ERROR, "Kurs.aktionZufaelligVerteilen: schuelerAnz > 0 (Ein Kurs mit SuS darf nicht verteilt werden)");
 			return;
 		}
@@ -441,12 +446,18 @@ public class KursblockungDynKurs {
 	 */
 	void aktionSchuelerHinzufuegen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
-		schuelerAnz++; // Darf erst hier passieren.
+
+		schuelerAnzahl++; // Darf erst hier passieren.
+		if (schuelerFixiert[schuelerNr]) // Ein fixierter Schüler erhöht die Obergrenze des Kurses!
+			schuelerAnzahlMaximal++;
+
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
+
 		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs verboten.
 		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
 			schuelerVerboten[verbotenMitNr]++;
+
 		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen verboten.
 		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
 			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
@@ -461,12 +472,18 @@ public class KursblockungDynKurs {
 	 */
 	void aktionSchuelerEntfernen(final int schuelerNr) {
 		fachart.aktionKursdifferenzEntfernen();
-		schuelerAnz--; // Darf erst hier passieren.
+
+		schuelerAnzahl--; // Darf erst hier passieren.
+		if (schuelerFixiert[schuelerNr]) // Ein fixierter Schüler verringert die Obergrenze des Kurses!
+			schuelerAnzahlMaximal--;
+
 		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
+
 		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs wieder erlaubt.
 		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
 			schuelerVerboten[verbotenMitNr]--;
+
 		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen wieder erlaubt.
 		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
 			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
@@ -479,8 +496,22 @@ public class KursblockungDynKurs {
 	 *
 	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
 	 */
-	void setzeMaxSuS(final int maxSuS) {
-		schuelerAnzMax = maxSuS;
+	void regel_15_setzeMaxSuS(final int maxSuS) {
+		schuelerAnzahlMaximal = maxSuS;
+
+		// Verringere die Obergrenze um die Anzahl der fixierten SuS.
+		for (final boolean istFixiert : schuelerFixiert)
+			if (istFixiert)
+				schuelerAnzahlMaximal--;
+	}
+
+	/**
+	 * Merkt sich, dass ein Schüler in diesem Kurs fixiert ist.
+	 *
+	 * @param internalSchuelerID  Die interne ID des Schülers.
+	 */
+	void regel_04_setzeSchuelerFixierung(final int internalSchuelerID) {
+		schuelerFixiert[internalSchuelerID] = true;
 	}
 
 	/**
@@ -488,7 +519,7 @@ public class KursblockungDynKurs {
 	 */
 	void aktionSchuelerDummyHinzufuegen() {
 		fachart.aktionKursdifferenzEntfernen();
-		schuelerAnzDummy++; // Darf erst hier passieren.
+		schuelerAnzahlDummy++; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 	}
@@ -500,7 +531,7 @@ public class KursblockungDynKurs {
 	 */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
 		logger.modifyIndent(+4);
-		logger.logLn(toString() + " --> " + schuelerAnz + " SuS.");
+		logger.logLn(toString() + " --> " + schuelerAnzahl + " SuS.");
 		for (final KursblockungDynSchueler s : schuelerArr) {
 			final @NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
 			for (final KursblockungDynKurs kurs : kurse)

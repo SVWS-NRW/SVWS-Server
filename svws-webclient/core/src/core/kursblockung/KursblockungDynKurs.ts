@@ -83,17 +83,17 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Die Anzahl an SuS in diesem Kurs.
 	 */
-	private schuelerAnz : number = 0;
+	private schuelerAnzahl : number = 0;
 
 	/**
 	 * Die Anzahl an Dummy-SuS in diesem Kurs.
 	 */
-	private schuelerAnzDummy : number = 0;
+	private schuelerAnzahlDummy : number = 0;
 
 	/**
 	 * Die maximale Anzahl an erlaubten SuS in diesem Kurs.
 	 */
-	private schuelerAnzMax : number = 0;
+	private schuelerAnzahlMaximal : number = 0;
 
 	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
@@ -104,6 +104,11 @@ export class KursblockungDynKurs extends JavaObject {
 	 * Eine Array, welches dynamisch definiert, ob ein Schüler für diesen Kurs verboten ist.
 	 */
 	private readonly schuelerVerboten : Array<number>;
+
+	/**
+	 * Eine Array, welches definiert, ob ein Schüler in diesem Kurs fixiert ist.
+	 */
+	private readonly schuelerFixiert : Array<boolean>;
 
 
 	/**
@@ -127,12 +132,13 @@ export class KursblockungDynKurs extends JavaObject {
 		this.schienenFrei = pSchienenFrei;
 		this.databaseID = pKursID;
 		this.fachart = pFachart;
-		this.schuelerAnz = 0;
-		this.schuelerAnzDummy = 0;
+		this.schuelerAnzahl = 0;
+		this.schuelerAnzahlDummy = 0;
 		this.logger = pLogger;
 		this.internalKursID = pInternalID;
-		this.schuelerAnzMax = KursblockungDynKurs.MAX_SUS_DEFAULT;
+		this.schuelerAnzahlMaximal = KursblockungDynKurs.MAX_SUS_DEFAULT;
 		this.schuelerVerboten = Array(pSchuelerAnzahl).fill(0);
+		this.schuelerFixiert = Array(pSchuelerAnzahl).fill(false);
 		this.schienenLageSaveS = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveK = Array(this.schienenLage.length).fill(null);
 		this.schienenLageSaveG = Array(this.schienenLage.length).fill(null);
@@ -186,7 +192,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs.
 	 */
 	gibSchuelerAnzahl() : number {
-		return this.schuelerAnz + this.schuelerAnzDummy;
+		return this.schuelerAnzahl + this.schuelerAnzahlDummy;
 	}
 
 	/**
@@ -311,17 +317,6 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl der freien Schüler-Plätze in diesem Kurs.
-	 *
-	 * <br>Falls die maximale Anzahl nicht begrenzt wurde, ist dieser Wert utopisch hoch.
-	 *
-	 * @return die Anzahl der freien Schüler-Plätze in diesem Kurs.
-	 */
-	gibAnzahlFreiePlaetze() : number {
-		return this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy;
-	}
-
-	/**
 	 * Liefert TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 *
 	 * @param s  Das  {@link KursblockungDynSchueler}-Objekt.
@@ -329,7 +324,13 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return TRUE, falls der Schueler theoretisch in den Kurs könnte.
 	 */
 	gibIstErlaubtFuerSchueler(s : KursblockungDynSchueler) : boolean {
-		return (this.schuelerAnzMax - this.schuelerAnz - this.schuelerAnzDummy > 0) && !s.kursGesperrt[this.internalKursID] && (this.schuelerVerboten[s.internalSchuelerID] <= 0);
+		if (s.kursGesperrt[this.internalKursID])
+			return false;
+		if (this.schuelerVerboten[s.internalSchuelerID] > 0)
+			return false;
+		if (this.schuelerFixiert[s.internalSchuelerID])
+			return true;
+		return (this.schuelerAnzahlMaximal - this.schuelerAnzahl - this.schuelerAnzahlDummy > 0);
 	}
 
 	/**
@@ -395,7 +396,7 @@ export class KursblockungDynKurs extends JavaObject {
 	aktionZufaelligVerteilen() : void {
 		if (!this.gibHatFreiheitsgrade())
 			return;
-		if (this.schuelerAnz > 0) {
+		if (this.schuelerAnzahl > 0) {
 			this.logger.log(LogLevel.ERROR, "Kurs.aktionZufaelligVerteilen: schuelerAnz > 0 (Ein Kurs mit SuS darf nicht verteilt werden)");
 			return;
 		}
@@ -463,7 +464,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	aktionSchuelerHinzufuegen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
-		this.schuelerAnz++;
+		this.schuelerAnzahl++;
+		if (this.schuelerFixiert[schuelerNr])
+			this.schuelerAnzahlMaximal++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 		for (const verbotenMitNr of this.fachart.gibVonSchuelerVerbotenMit(schuelerNr))
@@ -481,7 +484,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	aktionSchuelerEntfernen(schuelerNr : number) : void {
 		this.fachart.aktionKursdifferenzEntfernen();
-		this.schuelerAnz--;
+		this.schuelerAnzahl--;
+		if (this.schuelerFixiert[schuelerNr])
+			this.schuelerAnzahlMaximal--;
 		this.fachart.aktionSchuelerWurdeEntfernt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 		for (const verbotenMitNr of this.fachart.gibVonSchuelerVerbotenMit(schuelerNr))
@@ -497,8 +502,20 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
 	 */
-	setzeMaxSuS(maxSuS : number) : void {
-		this.schuelerAnzMax = maxSuS;
+	regel_15_setzeMaxSuS(maxSuS : number) : void {
+		this.schuelerAnzahlMaximal = maxSuS;
+		for (const istFixiert of this.schuelerFixiert)
+			if (istFixiert)
+				this.schuelerAnzahlMaximal--;
+	}
+
+	/**
+	 * Merkt sich, dass ein Schüler in diesem Kurs fixiert ist.
+	 *
+	 * @param internalSchuelerID  Die interne ID des Schülers.
+	 */
+	regel_04_setzeSchuelerFixierung(internalSchuelerID : number) : void {
+		this.schuelerFixiert[internalSchuelerID] = true;
 	}
 
 	/**
@@ -506,7 +523,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	aktionSchuelerDummyHinzufuegen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
-		this.schuelerAnzDummy++;
+		this.schuelerAnzahlDummy++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 	}
@@ -518,7 +535,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
 		this.logger.modifyIndent(+4);
-		this.logger.logLn(this.toString()! + " --> " + this.schuelerAnz + " SuS.");
+		this.logger.logLn(this.toString()! + " --> " + this.schuelerAnzahl + " SuS.");
 		for (const s of schuelerArr) {
 			const kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
 			for (const kurs of kurse)

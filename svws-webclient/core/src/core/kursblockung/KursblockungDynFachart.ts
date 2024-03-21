@@ -423,7 +423,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 *
 	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	regel18_maximalProSchiene(maximalProSchiene : number) : void {
+	regel_18_maximalProSchiene(maximalProSchiene : number) : void {
 		this._maxKurseProSchiene = maximalProSchiene;
 	}
 

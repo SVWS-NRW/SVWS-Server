@@ -686,7 +686,9 @@ export class KursblockungDynDaten extends JavaObject {
 			const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
 			const fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
 			for (const kurs of fixierterKurs.gibFachart().gibKurse())
-				if (kurs as unknown !== fixierterKurs as unknown)
+				if (kurs as unknown === fixierterKurs as unknown)
+					kurs.regel_04_setzeSchuelerFixierung(schueler.internalSchuelerID);
+				else
 					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 		}
 		for (const idSchueler of mapSchuelerZuFixierungen.keySet()) {
@@ -767,7 +769,7 @@ export class KursblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
-			sch1.regel11_zusammen_mit_schueler_in_fach(sch2, idF);
+			sch1.regel_11_zusammen_mit_schueler_in_fach(sch2, idF);
 		}
 		for (const regel12 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel12.parameter.get(0).valueOf();
@@ -777,7 +779,7 @@ export class KursblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
-			sch1.regel12_verbieten_mit_schueler_in_fach(sch2, idF);
+			sch1.regel_12_verbieten_mit_schueler_in_fach(sch2, idF);
 		}
 		for (const regel13 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
 			const idS1 : number = regel13.parameter.get(0).valueOf();
@@ -787,7 +789,7 @@ export class KursblockungDynDaten extends JavaObject {
 				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
 				const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 				const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
-				sch1.regel13_zusammen_mit_schueler(sch2);
+				sch1.regel_13_zusammen_mit_schueler(sch2);
 			}
 		}
 		for (const r14 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
@@ -799,7 +801,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
-			sch1.regel14_verbieten_mit_schueler(sch2);
+			sch1.regel_14_verbieten_mit_schueler(sch2);
 		}
 	}
 
@@ -808,7 +810,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const idKurs : number = r15.parameter.get(0).valueOf();
 			const maxSuS : number = r15.parameter.get(1)!;
 			const kurs : KursblockungDynKurs = this.gibKurs(idKurs);
-			kurs.setzeMaxSuS(maxSuS);
+			kurs.regel_15_setzeMaxSuS(maxSuS);
 		}
 	}
 
@@ -816,7 +818,7 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const r16 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
 			const idSchueler : number = r16.parameter.get(0).valueOf();
 			const schueler : KursblockungDynSchueler = this.gibSchueler(idSchueler);
-			schueler.regel16_sperre();
+			schueler.regel_16_sperre();
 		}
 	}
 
@@ -826,7 +828,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const idKursart : number = r18.parameter.get(1)!;
 			const maximalProSchiene : number = r18.parameter.get(2)!;
 			const fachart : KursblockungDynFachart = this.gibFachart(idFach, idKursart);
-			fachart.regel18_maximalProSchiene(maximalProSchiene);
+			fachart.regel_18_maximalProSchiene(maximalProSchiene);
 		}
 	}
 

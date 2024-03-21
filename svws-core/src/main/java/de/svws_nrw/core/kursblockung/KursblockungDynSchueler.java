@@ -621,7 +621,7 @@ public class KursblockungDynSchueler {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	void regel11_zusammen_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
+	void regel_11_zusammen_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
 		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
@@ -637,7 +637,7 @@ public class KursblockungDynSchueler {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	void regel12_verbieten_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
+	void regel_12_verbieten_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
 		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
@@ -652,7 +652,7 @@ public class KursblockungDynSchueler {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	public void regel13_zusammen_mit_schueler(final @NotNull KursblockungDynSchueler that) {
+	public void regel_13_zusammen_mit_schueler(final @NotNull KursblockungDynSchueler that) {
 		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr)
 			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr)
 				if (fachart1.gibNr() == fachart2.gibNr())
@@ -664,7 +664,7 @@ public class KursblockungDynSchueler {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	void regel14_verbieten_mit_schueler(final @NotNull KursblockungDynSchueler that) {
+	void regel_14_verbieten_mit_schueler(final @NotNull KursblockungDynSchueler that) {
 		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr)
 			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr)
 				if (fachart1.gibNr() == fachart2.gibNr())
@@ -674,7 +674,7 @@ public class KursblockungDynSchueler {
 	/**
 	 * Wendet an, dasss der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
 	 */
-	void regel16_sperre() {
+	void regel_16_sperre() {
 		for (int i = 0; i < schieneBelegt.length; i++)
 			schieneBelegt[i] = true;
 	}

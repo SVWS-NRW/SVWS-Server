@@ -438,7 +438,7 @@ public class KursblockungDynFachart {
 	 *
 	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	void regel18_maximalProSchiene(final int maximalProSchiene) {
+	void regel_18_maximalProSchiene(final int maximalProSchiene) {
 		_maxKurseProSchiene = maximalProSchiene;
 	}
 
