@@ -207,6 +207,7 @@ export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurpla
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
 export { JahrgangsKatalogEintragBezeichnung } from './core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
+export { PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from './core/data/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';
 export { KAOAAnschlussoptionEintrag } from './core/data/kaoa/KAOAAnschlussoptionEintrag';
@@ -448,6 +449,7 @@ export { KlausurterminblockungAlgorithmen } from './core/types/gost/klausurplanu
 export { KlausurterminblockungModusKursarten } from './core/types/gost/klausurplanung/KlausurterminblockungModusKursarten';
 export { KlausurterminblockungModusQuartale } from './core/types/gost/klausurplanung/KlausurterminblockungModusQuartale';
 export { Jahrgaenge } from './core/types/jahrgang/Jahrgaenge';
+export { PrimarstufeSchuleingangsphaseBesuchsjahre } from './core/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
 export { KAOAAnschlussoptionen } from './core/types/kaoa/KAOAAnschlussoptionen';
 export { KAOABerufsfeld } from './core/types/kaoa/KAOABerufsfeld';
 export { KAOAEbene4 } from './core/types/kaoa/KAOAEbene4';
