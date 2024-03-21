@@ -461,61 +461,63 @@
 		@apply grid grid-cols-1;
 		grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
 
-	  .svws-zeitraster-1 & {
-        grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.1rem, 1fr));
-	  }
+		.svws-zeitraster-1 & {
+			grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.1rem, 1fr));
+		}
 
 		&.svws-zeitachse {
 			@apply print:hidden h-full border-b-0 border-r border-black/25 dark:border-white/25;
 		}
 	}
 
-	.svws-ui-stundenplan--stunde,
-	.svws-ui-stundenplan--pause {
-		@apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
+	.svws-ui-stundenplan--stunde {
 		@apply border border-l-0 border-black/25 dark:border-white/10;
 
 		.svws-ui-stundenplan--zeitraster:last-child & {
 			@apply border-r-0;
 		}
 
-	  .svws-ohne-zeitachse & {
-		+ .svws-ui-stundenplan--stunde {
-		  @apply border-t-0;
+		.svws-ohne-zeitachse & {
+			+ .svws-ui-stundenplan--stunde {
+				@apply border-t-0;
+			}
 		}
-	  }
+	}
+
+	.svws-ui-stundenplan--stunde,
+	.svws-ui-stundenplan--pause {
+		@apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-hidden;
 
 		.svws-multiple {
 			@apply grid h-full grid-flow-col -m-1 flex-grow;
 			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 		}
 
-    .svws-ui-stundenplan--mode-planung & {
-      &:hover,
-      &:focus-visible {
-        .svws-ui-stundenplan--unterricht,
-        .svws-ui-stundenplan--pausen-aufsicht,
-        &.svws-label {
-          @apply bg-light dark:bg-white/5;
-        }
+		.svws-ui-stundenplan--mode-planung & {
+			&:hover,
+			&:focus-visible {
+				.svws-ui-stundenplan--unterricht,
+				.svws-ui-stundenplan--pausen-aufsicht,
+				&.svws-label {
+					@apply bg-light dark:bg-white/5;
+				}
+			}
 
-      }
-
-      &.svws-selected-stunde {
-        @apply text-svws;
-      }
-    }
+			&.svws-selected-stunde {
+				@apply text-svws;
+			}
+		}
 	}
 
 	.svws-ui-stundenplan--pause {
 		@apply border-y-0;
 
-    .svws-ui-stundenplan--mode-planung &:not(.svws-no-hover) {
-      &:hover,
-      &:focus-visible {
-          @apply bg-light dark:bg-white/5;
-      }
-    }
+		.svws-ui-stundenplan--mode-planung &:not(.svws-no-hover) {
+			&:hover,
+			&:focus-visible {
+				@apply bg-light dark:bg-white/5;
+			}
+		}
 	}
 
 	.svws-ui-stundenplan--unterricht,
@@ -526,9 +528,9 @@
 			@apply grid-cols-2 py-1;
 		}
 
-    .svws-ui-stundenplan--mode-planung & {
-      @apply flex flex-col gap-1 items-center flex-grow justify-center;
-    }
+		.svws-ui-stundenplan--mode-planung & {
+			@apply flex flex-col gap-1 items-center flex-grow justify-center;
+		}
 
 		+ .svws-ui-stundenplan--unterricht,
 		+ .svws-ui-stundenplan--pausen-aufsicht {
@@ -540,33 +542,33 @@
 		}
 	}
 
-  .svws-ui-stundenplan--mode-planung {
-    .svws-wochentag-label {
-      @apply font-bold text-center inline-flex items-center w-full justify-center cursor-pointer;
+	.svws-ui-stundenplan--mode-planung {
+		.svws-wochentag-label {
+			@apply font-bold text-center inline-flex items-center w-full justify-center cursor-pointer;
 
-      &:hover,
-      &:focus-visible {
-        span {
-          @apply bg-light dark:bg-white/5;
-        }
-      }
+			&:hover,
+			&:focus-visible {
+				span {
+					@apply bg-light dark:bg-white/5;
+				}
+			}
 
-      &.svws-selected {
-        span {
-          @apply bg-svws/5 text-svws font-bold border-svws/25;
-        }
-      }
-    }
+			&.svws-selected {
+				span {
+					@apply bg-svws/5 text-svws font-bold border-svws/25;
+				}
+			}
+		}
 
-    .svws-ui-stundenplan--zeitraster.svws-selected,
-    .svws-ui-stundenplan--stunde.svws-selected,
-    .svws-ui-stundenplan--pause.svws-selected {
-      .svws-ui-stundenplan--unterricht,
-      .svws-ui-stundenplan--pausen-aufsicht {
-        @apply bg-svws/5 text-svws font-bold;
-      }
-    }
-  }
+		.svws-ui-stundenplan--zeitraster.svws-selected,
+		.svws-ui-stundenplan--stunde.svws-selected,
+		.svws-ui-stundenplan--pause.svws-selected {
+			.svws-ui-stundenplan--unterricht,
+			.svws-ui-stundenplan--pausen-aufsicht {
+				@apply bg-svws/5 text-svws font-bold;
+			}
+		}
+	}
 
 	.svws-ui-stundenplan--unterricht--warning {
 		@apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;
