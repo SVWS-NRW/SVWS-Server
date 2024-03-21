@@ -26,7 +26,7 @@
 					<div class="-my-1 ml-auto inline-flex">
 						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
 							<template v-if="allow_berechne_blockung">
-								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" v-slot="{ openModal }">
+								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
 									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
 									</svws-ui-button>
@@ -41,7 +41,7 @@
 									</div>
 								</template>
 							</svws-ui-tooltip>
-							<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
+							<s-gost-kursplanung-remove-blockung-modal :remove-blockung v-slot="{ openModal }">
 								<svws-ui-button type="icon" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
@@ -84,11 +84,9 @@
 		</template>
 	</svws-ui-table>
 	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3">
-		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status="apiStatus" />
+		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status />
 	</div>
-	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
-		:get-datenmanager="getDatenmanager" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
-		:goto-ergebnis="gotoErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr :api-status :get-datenmanager :patch-ergebnis :remove-ergebnisse :goto-ergebnis :auswahl-ergebnis />
 </template>
 
 <script setup lang="ts">
@@ -119,6 +117,8 @@
 		restoreBlockung: () => Promise<void>;
 		istBlockungPersistiert: boolean;
 		mode: ServerMode;
+		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
+		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
 	}>();
 
 	const edit_blockungsname = ref<boolean>(false);

@@ -14,11 +14,12 @@
 				</div>
 			</template>
 		</svws-ui-table>
-		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :remove-blockung="removeBlockung"
-			:goto-blockung="gotoBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
-			:get-datenmanager="getDatenmanager" :add-ergebnisse="addErgebnisse" :patch-ergebnis="patchErgebnis" :remove-ergebnisse="removeErgebnisse"
-			:goto-ergebnis="gotoErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
-			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :mode="mode" :get-ergebnismanager="getErgebnismanager">
+		<s-gost-kursplanung-blockung-auswahl :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)"
+			:halbjahr :patch-blockung :remove-blockung :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz
+			:goto-blockung :auswahl-blockung :map-blockungen :api-status="apiStatus"
+			:get-datenmanager :add-ergebnisse :patch-ergebnis :remove-ergebnisse
+			:goto-ergebnis :hat-blockung :auswahl-ergebnis :rechne-gost-blockung
+			:restore-blockung :mode :get-ergebnismanager>
 			<template #blockungAuswahlActions>
 				<svws-ui-button type="icon" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
 					<span class="icon-sm i-ri-add-line -mx-0.5" />

@@ -2,26 +2,31 @@
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="big" class="hidden" :auto-close="false" :close-in-title="false">
 		<template #modalTitle>Ausführliche Berechnung lokal im Browser</template>
+		<template #hilfe>
+			Zum Start auf „Berechnung starten“ klicken. Sobald die Bedingungen erfüllt sind,
+			<br>mit denen die Berechnung durchgeführt wird, wird die Berechnung abgebrochen.
+			<br>Alternativ kann die Berechnung durch das Anklicken des Berechnung pausieren“ Knopfes unterbrochen werden.
+			<br>Die Ergebnisse können anschließend auf Wunsch in die Datenbank importiert werden.
+			<br>Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
+		</template>
 		<template #modalDescription>
-			<div class="text-left pb-4">
-				Zum Start auf „Berechnung starten“ klicken, sobald die Bedingungen erfüllt sind, mit denen die Berechnung durchgeführt wird,
-				wird die Berechnung abgebrochen. Alternativ kann die Berechnung durch das Anklicken des Berechnung pausieren“ Knopfes unterbrochen werden.
-				Die Ergebnisse können anschließend auf Wunsch in die Datenbank importiert werden. Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
-			</div>
 			<div v-if="workerManager !== undefined" class="text-left pb-4 flex flex-row">
 				Anzahl der parallelen Berechnungen:
 				<div class="pl-4 pr-2">
 					<svws-ui-button type="secondary" size="small" title="" @click="removeWorker" :disabled="workerManager.threads === 1">
-						<span class="icon-xs i-ri-subtract-line" />
+						<span class="icon i-ri-subtract-line py-3" />
 					</svws-ui-button>
 				</div>
-				{{ workerManager.threads }}
+				<span class="py-1">{{ workerManager.threads }}</span>
 				<div class="pl-2">
 					<svws-ui-button type="secondary" size="small" title="" @click="addWorker" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER">
-						<span class="icon-xs i-ri-add-line" />
+						<span class="icon i-ri-add-line py-3" />
 					</svws-ui-button>
 				</div>
 				<div class="pl-4"><svws-ui-button type="secondary" size="small" title="Maximum" @click="setWorkerMaximum" :disabled="workerManager.threads === WorkerManagerKursblockung.MAX_WORKER"> Maximum </svws-ui-button></div>
+			</div>
+			<div class="text-left pb-4 flex flex-row">
+				<svws-ui-checkbox :model-value="ausfuehrlicheDarstellungKursdifferenz()" @update:model-value="setAusfuehrlicheDarstellungKursdifferenz">Ausführliche Darstellung für Kursdifferenz verwenden</svws-ui-checkbox>
 			</div>
 			<svws-ui-table clickable v-model="selected" :selectable="items.size() > 0 && !running" class="z-20 relative" :columns :items :count="!items.isEmpty()">
 				<template #cell(wert1)="{ rowIndex }">
@@ -49,11 +54,14 @@
 				<template #cell(wert3)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-between flex gap-2" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
-							</span>
+							<template class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
+								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
+								</template>
+								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
+							</template>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>
@@ -104,6 +112,8 @@
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
+		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
+		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
 	}>();
 
 	const columns = [

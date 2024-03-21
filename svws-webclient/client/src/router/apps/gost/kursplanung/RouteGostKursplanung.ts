@@ -40,6 +40,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),
 			new ConfigElement("gost.kursplanung.umkursen.fixierteVerschieben", "user", "false"),
 			new ConfigElement("gost.kursplanung.umkursen.inZielkursFixieren", "user", "false"),
+			new ConfigElement("gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz", "user", "true"),
 		]);
 	}
 
@@ -225,6 +226,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			restoreBlockung: this.data.restoreBlockung,
 			aktAbschnitt: api.abschnitt,
 			mode: api.mode,
+			ausfuehrlicheDarstellungKursdifferenz: () => this.data.ausfuehrlicheDarstellungKursdifferenz,
+			setAusfuehrlicheDarstellungKursdifferenz: this.data.setAusfuehrlicheDarstellungKursdifferenz,
 		}
 	}
 

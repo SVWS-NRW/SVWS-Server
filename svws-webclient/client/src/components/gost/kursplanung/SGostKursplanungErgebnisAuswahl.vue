@@ -43,12 +43,7 @@
 						<span v-else class="svws-ui-badge min-w-[2.75rem] text-center justify-center" title="0 Wahlkonflikte" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung2Farbcode())}">0</span>
 						<!-- Wert 3-->
 						<svws-ui-tooltip autosize>
-							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-between flex gap-2" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung3Farbcode())}">
-								<!-- {{ getErgebnismanager(row).getOfBewertung3Wert() }} -->
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung3Farbcode_nur_LK())}"> {{ getErgebnismanager(row).getOfBewertung3Wert_nur_LK() }} </span>
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung3Farbcode_nur_GK())}"> {{ getErgebnismanager(row).getOfBewertung3Wert_nur_GK() }} </span>
-								<span class="svws-ui-badge min-w-1 text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung3Farbcode_nur_REST())}"> {{ getErgebnismanager(row).getOfBewertung3Wert_nur_REST() }} </span>
-							</span>
+							<span class="svws-ui-badge min-w-[2.75rem] text-center justify-center" :style="{'background-color': bgColor(getErgebnismanager(row).getOfBewertung3Farbcode())}"> {{ getErgebnismanager(row).getOfBewertung3Wert() }} </span>
 							<template #content>
 								<pre>{{ getErgebnismanager(row).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>

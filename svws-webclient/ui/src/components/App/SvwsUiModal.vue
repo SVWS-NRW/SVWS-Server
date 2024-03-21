@@ -24,6 +24,13 @@
 							<span class="icon i-ri-alert-fill icon-error inline-block" v-if="type === 'danger'" />
 							<slot name="modalTitle" />
 						</DialogTitle>
+						<svws-ui-tooltip v-if="$slots.hilfe" autosize>
+							<svws-ui-button type="secondary" @click.stop>
+								<span class="icon i-ri-question-line" />
+								<span>Hilfe</span>
+							</svws-ui-button>
+							<template #content><slot name="hilfe" /></template>
+						</svws-ui-tooltip>
 						<svws-ui-button v-if="closeInTitle" type="icon" @click="closeModal">
 							<span class="icon i-ri-close-line" />
 						</svws-ui-button>
