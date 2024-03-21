@@ -17,8 +17,9 @@ import jakarta.validation.constraints.NotNull;
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
  * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 -->
- * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              -->
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
+ * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    --> DONE
+ * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
  * <br> {@link KursblockungDynDaten#schritt01FehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)    -->
  * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1 aktualisieren.                 -->
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            -->
@@ -220,10 +221,22 @@ public enum GostKursblockungRegelTyp {
 	 */
 	KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(17, "Kurs: Kursdifferenz bei der Visualisierung ignorieren", Arrays.asList(
 		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass eine Fachart (Fach + Kursart) eine Obergrenze pro Schiene hat.
+	 * <br>- Parameter A: Datenbank-ID des Faches (long)
+	 * <br>- Parameter B: Datenbank-ID der Kursart (long)
+	 * <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9.
+	 */
+	FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(
+		GostKursblockungRegelParameterTyp.FACH_ID,
+		GostKursblockungRegelParameterTyp.KURSART,
+		GostKursblockungRegelParameterTyp.GANZZAHL
 	));
 
 	/** Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen. */
-	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] {1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
 
 	/** Die ID des Regel-Typs */
 	public final int typ;

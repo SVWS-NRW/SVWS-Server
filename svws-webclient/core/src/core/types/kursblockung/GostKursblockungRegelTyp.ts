@@ -156,9 +156,17 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	public static readonly KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN", 17, 17, "Kurs: Kursdifferenz bei der Visualisierung ignorieren", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
+	 *  Der Regel-Typ zum forcieren, dass eine Fachart (Fach + Kursart) eine Obergrenze pro Schiene hat.
+	 *  <br>- Parameter A: Datenbank-ID des Faches (long)
+	 *  <br>- Parameter B: Datenbank-ID der Kursart (long)
+	 *  <br>- Parameter C: Die maximal erlaubte Anzahl (in jeder Schiene). Gültige Werte sind 1 bis 9.
+	 */
+	public static readonly FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE", 18, 18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.FACH_ID, GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.GANZZAHL));
+
+	/**
 	 * Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen.
 	 */
-	public static readonly ANZEIGE_REIHENFOLGE : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+	public static readonly ANZEIGE_REIHENFOLGE : Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 	/**
 	 * Die ID des Regel-Typs
