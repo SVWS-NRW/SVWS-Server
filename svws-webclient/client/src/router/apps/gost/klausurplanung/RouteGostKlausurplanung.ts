@@ -84,7 +84,11 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			const hjChanged = !this.data.hatAbiturjahr || (this.data.abiturjahr !== abiturjahr);
 			await this.data.setAbiturjahr(abiturjahr);
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, hjChanged);
-			if ((changedHalbjahr) || (to.name === this.name))
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+			if (changedHalbjahr || (to.name === this.name))
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 		} catch(e: unknown) {
 			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
