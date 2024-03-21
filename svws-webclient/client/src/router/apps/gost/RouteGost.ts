@@ -84,6 +84,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
+			serverMode: api.mode,
 			auswahl: this.data.auswahl,
 			jahrgangsdaten: () => this.data.auswahl === undefined ? undefined : this.data.jahrgangsdaten,
 			mapAbiturjahrgaenge: () => this.data.mapAbiturjahrgaenge,

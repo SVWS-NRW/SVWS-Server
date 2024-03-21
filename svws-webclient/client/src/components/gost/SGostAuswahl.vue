@@ -2,10 +2,11 @@
 	<svws-ui-secondary-menu>
 		<template #headline><span class="select-none">Oberstufe</span></template>
 		<template #abschnitt>
-			<span class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
+			<abschnitt-auswahl v-if="serverMode !== ServerMode.STABLE" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
+			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items :columns>
 				<template #cell(abiturjahr)="{ value }">
 					<span v-if="value === -1" class="opacity-25">
 						—
@@ -48,24 +49,24 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgang } from "@core";
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
+	import type { GostJahrgang } from "@core";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<GostAuswahlProps>();
 
-	const cols = [
+	const columns = [
 		{ key: "bezeichnung", label: "Abiturjahrgang", sortable: true, span: 2 },
 		{ key: "abiturjahr", label: "Jahr", sortable: true },
 		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
-	const rows: ComputedRef<GostJahrgang[]> = computed(() => {
+	const items = computed<GostJahrgang[]>(() => {
 		const list = [...props.mapAbiturjahrgaenge().values()];
 		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 
-	const pending: ComputedRef<boolean> = computed(() => props.apiStatus.pending);
+	const pending = computed<boolean>(() => props.apiStatus.pending);
 
 	function isRemovable(value : GostJahrgang) : boolean {
 		if ((value.abiturjahr < 0) || (value.istAbgeschlossen))
