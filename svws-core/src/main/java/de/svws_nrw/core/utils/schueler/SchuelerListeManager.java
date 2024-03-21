@@ -243,7 +243,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 	@Override
 	protected boolean checkFilter(final @NotNull SchuelerListeEintrag eintrag) {
 		// Filtere nun anhand der Filterkriterien
-		if (this._filterNurMitLernabschitt && (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt))
+		if (this._filterNurMitLernabschitt && (!this.istSchuljahresabschnittAktuell()) && (eintrag.idSchuljahresabschnitt != this._schuljahresabschnitt))
 			return false;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 			return false;
@@ -259,7 +259,7 @@ public final class SchuelerListeManager extends AuswahlManager<@NotNull Long, @N
 		}
 		if (this.schulgliederungen.auswahlExists() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
 			return false;
-		if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
+		if (this.schuelerstatus.auswahlExists() && (this.istSchuljahresabschnittAktuell()) && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
 			return false;
 		return true;
 	}
