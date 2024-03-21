@@ -4457,6 +4457,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Kursen einer bestimmten Fachart (in jeder Schiene) zu begrenzen.
+	 * <br>(1) Falls die Regel bereits existiert, wird sie zunächst entfernt.
+	 * <br>(2) Falls der "maximal"-Wert 1 ist und es Regeln KURS_VERBIETEN_MIT_KURS bei Paaren dieser Fachart gibt, werden die Regeln entfernt.
+	 * <br>(3) Zuletzt wird die neue Regel hinzugefügt.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 * @param maximal    Die maximale Kursanzahl dieser Fachart (in jeder Schiene). Gültige Werte sind 1 bis 9.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Kursen einer bestimmten Fachart (in jeder Schiene) zu begrenzen.
+	 */
+	public regelupdateCreate_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(idFach : number, idKursart : number, maximal : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const r18 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE))
+			if ((r18.parameter.get(0) === idFach) && (r18.parameter.get(1) === idKursart))
+				u.listEntfernen.add(r18);
+		if (maximal === 1)
+			for (const r7 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
+				const idKurs1 : number = r7.parameter.get(0).valueOf();
+				const idKurs2 : number = r7.parameter.get(1).valueOf();
+				const kurs1 : GostBlockungsergebnisKurs = this.getKursE(idKurs1);
+				const kurs2 : GostBlockungsergebnisKurs = this.getKursE(idKurs2);
+				if ((kurs1.fachID === idFach) && (kurs2.fachID === idFach) && (kurs1.kursart === idKursart) && (kurs2.kursart === idKursart))
+					u.listEntfernen.add(r7);
+			}
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE.typ, idFach, idKursart, maximal));
+		return u;
+	}
+
+	/**
 	 * Entfernt erst alle Regeln aus {@link GostBlockungRegelUpdate#listEntfernen} und
 	 * fügt dann die neuen Regeln aus {@link GostBlockungRegelUpdate#listHinzuzufuegen} hinzu.
 	 *

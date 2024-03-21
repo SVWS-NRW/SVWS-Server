@@ -308,6 +308,9 @@ public class KursblockungDynDaten {
 				case KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN:
 					schritt01FehlerBeiReferenzen_Regeltyp17(daten, setKurse);
 					break;
+				case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE:
+					schritt01FehlerBeiReferenzen_Regeltyp18(daten, setFaecher, setKursarten);
+					break;
 				default:
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
 			}
@@ -500,6 +503,21 @@ public class KursblockungDynDaten {
 
 		final long kursID = daten[0];
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	}
+
+	private static void schritt01FehlerBeiReferenzen_Regeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setFaecher, final @NotNull HashSet<@NotNull Integer> setKursarten) {
+		final int length = daten.length;
+		DeveloperNotificationException.ifTrue("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=" + length + ", statt 3!", length != 3);
+
+		final long fachID = daten[0];
+		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+
+		final int kursartID = daten[1].intValue();
+		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
+
+		final int fachArtProSchieneMaximal = daten[2].intValue();
+		DeveloperNotificationException.ifSmaller("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 1);
+		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
 	}
 
 	private void schritt02FehlerBeiRegelGruppierung(final @NotNull List<@NotNull GostBlockungRegel> pRegeln) {
