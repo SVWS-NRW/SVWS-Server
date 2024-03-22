@@ -1,8 +1,10 @@
 package de.svws_nrw.module.reporting.pdf;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.reporting.html.base.HtmlBuilder;
@@ -99,15 +101,9 @@ public final class PdfFactory {
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus einem html-Template zu erzeugen.
 	 * @param conn Die Verbindung zur Datenbank.
-	 * @param dateipfadHtmlTemplate Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird.
-	 * @param dateipfadCss Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren.
-	 * @param idsHauptdaten Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.
-	 * @param einzelausgabeHauptdaten Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.
-	 * @param idsDetaildaten Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.
-	 * @param einzelausgabeDetaildaten Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.
-	 * @param parameterDetailLevel Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.
+	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 */
-	public PdfFactory(final DBEntityManager conn, final String dateipfadHtmlTemplate, final String dateipfadCss, final List<Long> idsHauptdaten, final boolean einzelausgabeHauptdaten, final List<Long> idsDetaildaten, final boolean einzelausgabeDetaildaten, final int parameterDetailLevel) {
+	public PdfFactory(final DBEntityManager conn, final ReportingAusgabedaten reportingAusgabedaten) {
 
 		logger.addConsumer(log);
 
@@ -118,28 +114,28 @@ public final class PdfFactory {
 		this.conn = conn;
 
 		// Validiere html-Template-Angabe
-		if (dateipfadHtmlTemplate == null || dateipfadHtmlTemplate.isEmpty() || dateipfadHtmlTemplate.isBlank() || !dateipfadHtmlTemplate.toLowerCase().endsWith(".html"))
+		if (reportingAusgabedaten.dateipfadHtmlTemplate == null || reportingAusgabedaten.dateipfadHtmlTemplate.isEmpty() || reportingAusgabedaten.dateipfadHtmlTemplate.isBlank() || !reportingAusgabedaten.dateipfadHtmlTemplate.toLowerCase().endsWith(".html"))
 			throw OperationError.NOT_FOUND.exception("Es wurde kein gültiger Pfad zu einem html-Template übergeben.");
 
-		this.dateipfadHtmlTemplate = dateipfadHtmlTemplate;
+		this.dateipfadHtmlTemplate = reportingAusgabedaten.dateipfadHtmlTemplate;
 		this.dateinameHtmlTemplate = dateipfadHtmlTemplate.substring(dateipfadHtmlTemplate.lastIndexOf('/') + 1);
 
 		if (supportedSchuelerTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)) && supportedGostKursplanungTemplates.stream().noneMatch(t -> t.equals(dateinameHtmlTemplate)))
 			throw OperationError.NOT_FOUND.exception("Keine für die Erstellung der PDF-Datei unterstützte Vorlage gefunden.");
 
-		this.dateipfadCss = dateipfadCss;
+		this.dateipfadCss = reportingAusgabedaten.dateipfadCss;
 
 		// Validiere Hauptdaten-Angabe
-		if (idsHauptdaten == null || idsHauptdaten.isEmpty())
+		if (reportingAusgabedaten.idsHauptdaten == null || reportingAusgabedaten.idsHauptdaten.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
 
-		this.idsHauptdaten = idsHauptdaten;
+		this.idsHauptdaten = reportingAusgabedaten.idsHauptdaten;
 
 		// Setze weitere Werte.
-		this.einzelausgabeHauptdaten = einzelausgabeHauptdaten;
-		this.idsDetaildaten = (idsDetaildaten == null) ? new ArrayList<>() : idsDetaildaten;
-		this.einzelausgabeDetaildaten = einzelausgabeDetaildaten;
-		this.parameterDetailLevel = parameterDetailLevel;
+		this.einzelausgabeHauptdaten = reportingAusgabedaten.einzelausgabeHauptdaten;
+		this.idsDetaildaten = (reportingAusgabedaten.idsDetaildaten == null) ? new ArrayList<>() : reportingAusgabedaten.idsDetaildaten;
+		this.einzelausgabeDetaildaten = reportingAusgabedaten.einzelausgabeDetaildaten;
+		this.parameterDetailLevel = reportingAusgabedaten.detailLevel;
 
 		getContexts();
 	}
@@ -161,13 +157,24 @@ public final class PdfFactory {
 		final HtmlContextDruckparameter htmlContextDruckparameter = new HtmlContextDruckparameter(this.parameterDetailLevel, this.idsDetaildaten);
 		mapHtmlContexts.put("Druckparameter", htmlContextDruckparameter);
 
+		// Da alle Datenquellen auf Schüler-Daten zugreifen, prüfe zunächst das Recht, ab darauf vom Benutzer zugegriffen werden darf.
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN))
+			throw OperationError.FORBIDDEN.exception("Der Benutzer hat nicht die erforderlichen Rechte, um den Datenkontext Schüler zu verwenden.");
+
+
 		if (supportedSchuelerTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
 			logger.logLn("Erzeuge Datenkontext Schüler - %d IDs von Schülern wurden übergeben für Template %s.".formatted(idsHauptdaten.size(), this.dateinameHtmlTemplate));
 			switch (dateinameHtmlTemplate) {
 				case "APOGOStAnlage12.html" :
+					if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN))
+						throw OperationError.FORBIDDEN.exception("Der Benutzer hat nicht die erforderlichen Rechte, um den Datenkontext Schüler mit Abiturdaten zu verwenden.");
+
 					reportingValidierung.validiereSchuelerDaten(reportingRepository, idsHauptdaten, false, true, true);
 					break;
 				case "GostLaufbahnplanungWahlbogen.html", "GostLaufbahnplanungErgebnisuebersicht.html" :
+					if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN))
+						throw OperationError.FORBIDDEN.exception("Der Benutzer hat nicht die erforderlichen Rechte, um den Datenkontext Schüler mit Laufbahnplanungsdaten zu verwenden.");
+
 					reportingValidierung.validiereSchuelerDaten(reportingRepository, idsHauptdaten, true, false, true);
 					break;
 				default :
@@ -179,6 +186,9 @@ public final class PdfFactory {
 
 		if (supportedGostKursplanungTemplates.stream().anyMatch(t -> t.equals(dateinameHtmlTemplate))) {
 			logger.logLn("Erzeuge Datenkontext Kursplanung-Blockungsergebnis mit ID %s für Template %s.".formatted(idsHauptdaten.getFirst(), this.dateinameHtmlTemplate));
+			if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN))
+				throw OperationError.FORBIDDEN.exception("Der Benutzer hat nicht die erforderlichen Rechte, um den Datenkontext Kursplanung-Blockungsergebnis zu verwenden");
+
 			final HtmlContextGostKursplanungBlockungsergebnis htmlContextBlockung;
             if (dateinameHtmlTemplate.equals("GostKursplanungSchuelerMitSchienenKursen.html") || dateinameHtmlTemplate.equals("GostKursplanungSchuelerMitKursen.html") || dateinameHtmlTemplate.equals("GostKursplanungKursMitKursschuelern.html")) {
                 htmlContextBlockung = new HtmlContextGostKursplanungBlockungsergebnis(conn, idsHauptdaten.getFirst());

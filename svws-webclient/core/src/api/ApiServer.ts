@@ -123,6 +123,7 @@ import { Raum } from '../core/data/schule/Raum';
 import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
+import { ReportingAusgabedaten } from '../core/data/reporting/ReportingAusgabedaten';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
 import { Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
@@ -4095,99 +4096,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode pdfGostKursplanungKurseMitKursschuelern für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{idblockungsergebnis : \d+}
-	 *
-	 * Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.
-	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idblockungsergebnis - der Pfad-Parameter idblockungsergebnis
-	 *
-	 * @returns Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung
-	 */
-	public async pdfGostKursplanungKurseMitKursschuelern(data : List<number>, schema : string, idblockungsergebnis : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{idblockungsergebnis : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idblockungsergebnis\s*(:[^{}]+({[^{}]+})*)?}/g, idblockungsergebnis.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode pdfGostKursplanungKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{idblockungsergebnis : \d+}
-	 *
-	 * Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
-	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idblockungsergebnis - der Pfad-Parameter idblockungsergebnis
-	 *
-	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
-	 */
-	public async pdfGostKursplanungKurseSchienenZuordnung(data : List<number>, schema : string, idblockungsergebnis : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{idblockungsergebnis : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idblockungsergebnis\s*(:[^{}]+({[^{}]+})*)?}/g, idblockungsergebnis.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode pdfGostKursplanungSchuelerMitKursen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{idblockungsergebnis : \d+}
-	 *
-	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.
-	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idblockungsergebnis - der Pfad-Parameter idblockungsergebnis
-	 *
-	 * @returns Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
-	 */
-	public async pdfGostKursplanungSchuelerMitKursen(data : List<number>, schema : string, idblockungsergebnis : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{idblockungsergebnis : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idblockungsergebnis\s*(:[^{}]+({[^{}]+})*)?}/g, idblockungsergebnis.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
 	 * Implementierung der DELETE-Methode deleteGostBlockungRegelnByID für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/regeln
 	 *
 	 * Entfernt mehrere Regeln einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
@@ -6406,101 +6314,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode pdfGostAnlage12 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/gostanlage12/{einzelpdfs : \d+}
-	 *
-	 * Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Anlage 12 besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Anlage 12 (Abiturzeugnis) für die Gymnasialen Oberstufe eines Schülers zu erstellen.
-	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} einzelpdfs - der Pfad-Parameter einzelpdfs
-	 *
-	 * @returns Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.
-	 */
-	public async pdfGostAnlage12(data : List<number>, schema : string, einzelpdfs : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/gostanlage12/{einzelpdfs : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{einzelpdfs\s*(:[^{}]+({[^{}]+})*)?}/g, einzelpdfs.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerErgebnisuebersicht für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \d+}
-	 *
-	 * Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Ergebnisübersicht besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.
-	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
-	 *
-	 * @returns Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.
-	 */
-	public async pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(data : List<number>, schema : string, detaillevel : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{detaillevel\s*(:[^{}]+({[^{}]+})*)?}/g, detaillevel.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \d+}/{einzelpdfs : \d+}
-	 *
-	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.
-	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
-	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
-	 * @param {number} einzelpdfs - der Pfad-Parameter einzelpdfs
-	 *
-	 * @returns Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
-	 */
-	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string, detaillevel : number, einzelpdfs : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}/{einzelpdfs : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{detaillevel\s*(:[^{}]+({[^{}]+})*)?}/g, detaillevel.toString())
-			.replace(/{einzelpdfs\s*(:[^{}]+({[^{}]+})*)?}/g, einzelpdfs.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
-		return result;
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu001
 	 *
 	 * Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.
@@ -8304,6 +8117,35 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<OrtsteilKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode pdfReport für den Zugriff auf die URL https://{hostname}/db/{schema}/reporting/pdf
+	 *
+	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.
+	 *   Code 404: Kein Eintrag zu den übergebenen Daten gefunden.
+	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {ReportingAusgabedaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
+	 */
+	public async pdfReport(data : ReportingAusgabedaten, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/reporting/pdf"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ReportingAusgabedaten.transpilerToJSON(data);
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
 	}
 
 

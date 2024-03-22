@@ -1,6 +1,18 @@
 import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
+import {
+	AbiturdatenManager,
+	BenutzerTyp,
+	GostBelegpruefungErgebnis,
+	GostBelegpruefungsArt,
+	GostFaecherManager,
+	GostJahrgang,
+	GostJahrgangsdaten,
+	GostLaufbahnplanungBeratungsdaten,
+	GostHalbjahr,
+	DeveloperNotificationException,
+	ArrayList,
+	ReportingAusgabedaten, ReportingAusgabeformat
+} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -155,11 +167,19 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	getPdfWahlbogen = async(title: string) => {
 		const list = new ArrayList<number>();
 		list.add(this.auswahl.id);
+		const reportingAusgabedaten = new ReportingAusgabedaten();
+		reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
+		reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html";
+		reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css";
+		reportingAusgabedaten.idsHauptdaten = list;
+		reportingAusgabedaten.einzelausgabeHauptdaten = false;
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, 1, 0);
+				reportingAusgabedaten.detailLevel = 1;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, 0, 0);
+				reportingAusgabedaten.detailLevel = 0;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			default:
 				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
 		}

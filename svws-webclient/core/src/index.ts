@@ -257,6 +257,7 @@ export { LehrerPersonalabschnittsdatenLehrerfunktion } from './core/data/lehrer/
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { OAuth2ClientSecret } from './core/data/oauth2/OAuth2ClientSecret';
+export { ReportingAusgabedaten } from './core/data/reporting/ReportingAusgabedaten';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
@@ -478,6 +479,7 @@ export { LehrerMinderleistungArt } from './core/types/lehrer/LehrerMinderleistun
 export { LehrerRechtsverhaeltnis } from './core/types/lehrer/LehrerRechtsverhaeltnis';
 export { LehrerZugangsgrund } from './core/types/lehrer/LehrerZugangsgrund';
 export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
+export { ReportingAusgabeformat } from './core/types/reporting/ReportingAusgabeformat';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { Einschulungsart } from './core/types/schueler/Einschulungsart';
 export { Foerderschwerpunkt } from './core/types/schueler/Foerderschwerpunkt';

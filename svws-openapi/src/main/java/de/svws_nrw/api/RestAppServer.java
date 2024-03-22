@@ -1,7 +1,5 @@
 package de.svws_nrw.api;
 
-import java.util.Set;
-
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
 import de.svws_nrw.api.server.APIBenutzer;
@@ -25,12 +23,15 @@ import de.svws_nrw.api.server.APIKlassen;
 import de.svws_nrw.api.server.APIKurse;
 import de.svws_nrw.api.server.APILehrer;
 import de.svws_nrw.api.server.APIOAuth;
+import de.svws_nrw.api.server.APIReporting;
 import de.svws_nrw.api.server.APISchema;
 import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStundenplan;
 import jakarta.ws.rs.core.Application;
+
+import java.util.Set;
 
 
 /**
@@ -75,6 +76,7 @@ public final class RestAppServer extends Application {
 		APIEmail.class,
 		APIGostKlausuren.class,
 		APIOAuth.class,
+		APIReporting.class,
 		OpenAPICorsFilter.class,
 		OpenApiServer.class
 	);

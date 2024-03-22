@@ -1,5 +1,12 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
-import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, SimpleOperationResponse } from "@core";
+import {
+	ArrayList,
+	DeveloperNotificationException,
+	GostBelegpruefungsArt,
+	OpenApiError,
+	ReportingAusgabedaten, ReportingAusgabeformat,
+	SimpleOperationResponse
+} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -108,13 +115,22 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number, einzelpdfs: boolean) => {
 		try {
 			api.status.start();
+			const reportingAusgabedaten = new ReportingAusgabedaten();
+			reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
+			reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html";
+			reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css";
+			reportingAusgabedaten.idsHauptdaten = list;
+			reportingAusgabedaten.einzelausgabeHauptdaten = einzelpdfs;
+			reportingAusgabedaten.detailLevel = detaillevel;
 			switch (title) {
 				case 'Laufbahnwahlbogen':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel, einzelpdfs ? 1 : 0 );
+					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 				case 'Laufbahnwahlbogen (nur Belegung)':
-					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema, detaillevel, einzelpdfs ? 1 : 0);
+					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 				case 'Ergebnisliste Laufbahnwahlen':
-					return await api.server.pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(list, api.schema, detaillevel);
+					reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html";
+					reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css";
+					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 				default:
 					throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
 			}

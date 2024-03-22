@@ -4,7 +4,19 @@ import { ref, computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
-import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, HashSet } from "@core";
+import {
+	GostBlockungsdaten,
+	GostBlockungsergebnis,
+	ArrayList,
+	DeveloperNotificationException,
+	GostBlockungsdatenManager,
+	GostBlockungsergebnisManager,
+	GostFaecherManager,
+	GostHalbjahr,
+	SchuelerStatus,
+	HashSet,
+	ReportingAusgabedaten, ReportingAusgabeformat
+} from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -748,28 +760,53 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
+		const reportingAusgabedaten = new ReportingAusgabedaten();
+		reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
+		reportingAusgabedaten.idsHauptdaten = new ArrayList<number>();
+		reportingAusgabedaten.idsHauptdaten.add(this.ergebnismanager.getErgebnis().id);
+		reportingAusgabedaten.einzelausgabeHauptdaten = false;
+		reportingAusgabedaten.idsDetaildaten = new ArrayList<number>();
+		reportingAusgabedaten.einzelausgabeDetaildaten = false;
+		reportingAusgabedaten.detailLevel = 0;
 		const list = new ArrayList<number>();
 		switch (title) {
 			case "Schülerliste markierte Kurse":
 				for (const kurs of this.kursAuswahl.value)
 					list.add(kurs);
-				return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css";
+				reportingAusgabedaten.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung":
-				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				reportingAusgabedaten.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				reportingAusgabedaten.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kursbelegung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css";
+				reportingAusgabedaten.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kursbelegung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html";
+				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css";
+				reportingAusgabedaten.idsDetaildaten = list;
+				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			default:
 				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}

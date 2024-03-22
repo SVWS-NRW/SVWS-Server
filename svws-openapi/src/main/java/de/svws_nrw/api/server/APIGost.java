@@ -41,7 +41,6 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.reporting.pdf.PdfFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,7 +67,6 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -878,157 +876,6 @@ public class APIGost {
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
     }
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Anlage 12 APO-GOSt (Abiturzeugnis) als PDF-Datei.
-	 *
-	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idsSchueler   Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
-	 * @param einzelpdfs 	gibt an, ob bei mehreren Schülern pro Schüler eine eigene PDF-Datei erzeugt werden soll. 0 = false, 1 = true
-	 * @param request     	die Informationen zur HTTP-Anfrage
-	 *
-	 * @return Die zu den übergebenen IDs gehörigen Anlage 12 APO-GOSt (Abiturzeugnis) der gymnasialen Oberstufe
-	 */
-	@POST
-	@Produces("application/pdf")
-	@Path("/schueler/pdf/gostanlage12/{einzelpdfs : \\d+}")
-	@Operation(
-		summary = "Erstellt die Anlage 12 (Abiturzeugnis) zu den Schülern mit den angegebenen IDs.",
-		description = "Erstellt die Anlage 12 (Abiturzeugnis)  der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Anlage 12 besitzt.")
-	@ApiResponse(
-		responseCode = "200",
-		description = "Die PDF-Datei mit den Abiturzeugnissen der gymnasialen Oberstufe.",
-		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Anlage 12 - Abiturzeugnis")))
-	@ApiResponse(
-		responseCode = "403",
-		description = "Der SVWS-Benutzer hat keine Rechte, um die Anlage 12 (Abiturzeugnis) für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
-	@ApiResponse(
-		responseCode = "404",
-		description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	@ApiResponse(
-		responseCode = "500",
-		description = "Es ist ein unbekannter Fehler aufgetreten.",
-		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response pdfGostAnlage12(
-		@PathParam("schema") final String schema,
-		@PathParam("einzelpdfs") final int einzelpdfs,
-		@RequestBody(
-			description = "Schüler-IDs, für die die Anlage 12 erstellt werden soll.",
-			required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
-		final List<Long> idsSchueler,
-		@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.html", "de/svws_nrw/module/reporting/gost/apogostanlagen/APOGOStAnlage12.css", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, 0))
-					.create(),
-			request, ServerMode.DEV,
-			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
-	 *
-	 * @param schema      	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idsSchueler   Liste der IDs der SuS, deren Laufbahnwahlbögen erstellt werden soll.
-	 * @param detaillevel	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = nur belegte Fächer, 1 = alle Fächer
-	 * @param einzelpdfs 	gibt an, ob bei mehreren Schülern pro Schüler eine eigene PDF-Datei erzeugt werden soll. 0 = false, 1 = true
-	 * @param request 		die Informationen zur HTTP-Anfrage
-	 *
-	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
-	 */
-	@POST
-	@Produces("application/pdf")
-	@Path("/schueler/pdf/laufbahnplanungwahlbogen/{detaillevel : \\d+}/{einzelpdfs : \\d+}")
-	@Operation(
-		summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
-		description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
-	@ApiResponse(
-		responseCode = "200",
-		description = "Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.",
-		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Wahlbogen Laufbahnplanung")))
-	@ApiResponse(
-		responseCode = "403",
-		description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
-	@ApiResponse(
-		responseCode = "404",
-		description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	@ApiResponse(
-		responseCode = "500",
-		description = "Es ist ein unbekannter Fehler aufgetreten.",
-		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response pdfGostLaufbahnplanungSchuelerWahlbogen(
-            @PathParam("schema") final String schema,
-			@PathParam("detaillevel") final int detaillevel,
-			@PathParam("einzelpdfs") final int einzelpdfs,
-            @RequestBody(
-                    description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.",
-                    required = true,
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
-            final List<Long> idsSchueler,
-            @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css", idsSchueler, (einzelpdfs == 1), new ArrayList<>(), false, detaillevel))
-					.create(),
-			request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Ergebnisliste zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
-	 *
-	 * @param schema      		Das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idsSchueler       Liste der IDs der SuS, deren Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe erstellt werden soll.
-	 * @param detaillevel		gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
-	 * @param request     		die Informationen zur HTTP-Anfrage
-	 *
-	 * @return Die zu den übergebenen IDs zugehörige Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe
-	 */
-	@POST
-	@Produces("application/pdf")
-	@Path("/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}")
-	@Operation(
-		summary = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
-		description = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Ergebnisübersicht besitzt.")
-	@ApiResponse(
-		responseCode = "200",
-		description = "Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.",
-		content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Ergebnisliste Laufbahnplanung")))
-	@ApiResponse(
-		responseCode = "403",
-		description = "Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(
-		responseCode = "404",
-		description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	@ApiResponse(
-		responseCode = "500",
-		description = "Es ist ein unbekannter Fehler aufgetreten.",
-		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	public Response pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(
-            @PathParam("schema") final String schema,
-            @RequestBody(description = "Schüler-IDs, für die die Ergebnisliste Laufbahnplanung erstellt werden soll.",
-                    required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
-            final List<Long> idsSchueler,
-            @PathParam("detaillevel") final int detaillevel,
-            @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->
-				(new PdfFactory(conn, "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html", "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css", idsSchueler, false, new ArrayList<>(), false, detaillevel))
-					.create(),
-			request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
-	}
 
 
     /**
