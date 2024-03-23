@@ -94,7 +94,9 @@ public final class DataKlassendaten extends DataManager<Long> {
 		daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz) == null
 				? null : WeiterbildungskollegOrganisationsformen.getByKuerzel(klasse.OrgFormKrz).daten.id;
 		daten.pruefungsordnung = klasse.PruefOrdnung;
-		final Schulgliederung gliederung = Schulgliederung.getBySchulformAndKuerzel(schulform, klasse.ASDSchulformNr);
+		Schulgliederung gliederung = Schulgliederung.getBySchulformAndKuerzel(schulform, klasse.ASDSchulformNr);
+		if (gliederung == null)
+			gliederung = Schulgliederung.getDefault(schulform);
 		if (gliederung == null)
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Kann für die Schulform %s keine gültige Schulgliederung ermitteln.".formatted(schulform.toString()));
 		daten.idSchulgliederung = gliederung.daten.id;
