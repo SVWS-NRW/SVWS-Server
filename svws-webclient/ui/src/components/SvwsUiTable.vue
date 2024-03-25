@@ -211,16 +211,12 @@
 		isEditing?: boolean
 	}
 
-	type UseColumnProps = {
-		columns: DataTableColumnSource[];
-		items: Iterable<DataTableItem>;
-	}
-
 	defineOptions({ inheritAttrs: false });
 
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
+			hiddenColumns?: Set<string>;
 			items?: Iterable<DataTableItem> | DataTableItem[];
 			modelValue?: DataTableItem[];
 			uniqueKey?: string;
@@ -247,6 +243,7 @@
 		}>(),
 		{
 			columns: () => [],
+			hiddenColumns: () => new Set<string>(),
 			items: () => [],
 			modelValue: undefined,
 			uniqueKey: undefined,
@@ -278,6 +275,7 @@
 		"update:sortByAndOrder": [obj: SortByAndOrder];
 		"update:clicked": [items: any | null];
 		"update:filterOpen": [open: boolean];
+		"update:hiddenColumns": [keys: Set<string>];
 	}>();
 
 	const attrs = useAttrs();
@@ -315,17 +313,10 @@
 		}
 	}
 
-	const buildColumnsFromItems = (props: UseColumnProps) => {
-		return getKeys(props.items).map((item, index) => buildTableColumn(item, index));
-	}
-
-	const buildNormalizedColumns = (props: UseColumnProps) => {
-		return props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !hiddenColumns.value.has(column.key));
-	}
-
 	const columnsComputed = computed(() =>
-		(props.columns.length === 0) ? buildColumnsFromItems(props) : buildNormalizedColumns(props)
-	)
+		(props.columns.length === 0)
+			? getKeys(props.items).map((item, index) => buildTableColumn(item, index))
+			: props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !props.hiddenColumns.has(column.key)))
 
 	const gridTemplateColumns = computed(() => {
 		return columnsComputed.value.map(column =>
@@ -490,10 +481,24 @@
 
 	const noDataCalculated = computed(() => (sortedRows.value.length === 0));
 
-	const hiddenColumns = ref<Set<string>>(new Set());
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const data = ref<Set<string>>(props.hiddenColumns);
+
+	watch(() => props.hiddenColumns, (value: Set<string>) => updateHiddenColumnsSet(value), { immediate: false });
+
+	function updateHiddenColumnsSet(value: Set<string>) {
+		if ((data.value.size === value.size) && [...data.value].every(dataVal => value.has(dataVal)))
+			return;
+		data.value = value;
+	}
 
 	function updateHiddenColumns(columnKey: string, ok: any) {
-		ok ? hiddenColumns.value.delete(columnKey) : hiddenColumns.value.add(columnKey);
+		if (ok) {
+			data.value.delete(columnKey);
+		} else {
+			data.value.add(columnKey);
+		}
+		emit("update:hiddenColumns", data.value);
 	}
 
 	const win11FForMacOS = computed<boolean>(() => {

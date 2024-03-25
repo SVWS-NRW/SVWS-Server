@@ -4,7 +4,7 @@
 			<div class="px-3">
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols" :clickable="state.clickable" :disable-header="state.disableHeader" :disable-footer="state.disableFooter" :selectable="state.selectable" :count="state.count" v-model:clicked="clickedRow" :filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
-						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'">
+						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns">
 						<template #search v-if="state.docsWithSearch">
 							<svws-ui-text-input type="search" placeholder="Suche" v-model="search" />
 						</template>
@@ -37,25 +37,6 @@
 					</svws-ui-table>
 				</svws-ui-content-card>
 			</div>
-			<template #source>
-				{{ `
-<svws-ui-table :items="[]" :columns="[{key: 'key', label: 'Label'}]">
-  <template #header>
-    <div class="svws-ui-tr" role="row">
-      <div class="svws-ui-td" role="columnheader">Column</div>
-    </div>
-  </template>
-  <template #body>
-    <div class="svws-ui-tr" role="row">
-      <div class="svws-ui-td" role="cell">Cell</div>
-    </div>
-  </template>
-  <template #actions>
-    <svws-ui-button>Button</svws-ui-button>
-  </template>
-</svws-ui-table>
-` }}
-			</template>
 			<template #controls>
 				<HstCheckbox v-model="state.docsWithSearch" title="Suche" />
 				<HstCheckbox v-model="state.docsWithFilter" title="Einfacher Filter" />
@@ -98,6 +79,9 @@
 	import type { DataTableColumn, SortByAndOrder } from "../types";
 
 	const itemRefs = ref(new Map());
+	const hiddenColumns = ref<Set<string>>(new Set<string>());
+	hiddenColumns.value.add('fach');
+	hiddenColumns.value.add('email');
 
 	const state = reactive({
 		disableHeader: false,
@@ -119,11 +103,12 @@
 		docsWithFilterAdvanced: true,
 		docsToggleValue: true,
 		typeGrid: false,
+		hiddenColumns,
 	});
 
 	const cols = ref<DataTableColumn[]>([
 		{key: "name", label: "Name", sortable: true, span: 1, toggleInvisible: true},
-		{key: "fach", label: "Fach", span: 0.5},
+		{key: "fach", label: "Fach", span: 0.5, toggle: true},
 		{key: "email", label: "E-Mail", toggle: true},
 		{key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25},
 		{key: "test", label: "Column", sortable: true},
