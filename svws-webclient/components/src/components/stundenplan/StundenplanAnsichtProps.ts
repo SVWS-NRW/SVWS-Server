@@ -17,5 +17,5 @@ export interface StundenplanAnsichtProps {
 	useDragAndDrop?: boolean;
 	dragData?: () => StundenplanAnsichtDragData;
 	onDrag?: (data: StundenplanAnsichtDragData, event?: DragEvent) => void;
-	onDrop?: (zone: StundenplanAnsichtDropZone) => void;
+	onDrop?: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => void;
 }
