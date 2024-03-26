@@ -34,7 +34,7 @@ stages:
     - build_installer
     - publish
 
-publish_sona:
+publish_maven:
         stage: publish
         rules:
             -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
@@ -51,7 +51,7 @@ publish_sona:
             - ./deployment/setupVersion.sh
             - ./gradlew signJar publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 
-publish_maven:
+publish_all:
     stage: publish
     rules:
         -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
