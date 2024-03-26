@@ -58,28 +58,6 @@ task publishNpmLaufbahnplanung(type: NpmPublish) {
 publishReleaseAll.dependsOn publishNexusLaufbahnplanung
 publishReleaseAll.dependsOn publishNpmLaufbahnplanung
 
-project.tasks.withType(PublishToMavenRepository).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-//	dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusLaufbahnplanung
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-//	dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmLaufbahnplanung
-}
-
-project.tasks.withType(Sign).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-//	dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusLaufbahnplanung
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-//	dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmLaufbahnplanung
-}
-
 
 publishing {
     repositories {
