@@ -64,7 +64,12 @@ ext.getSchild2AccessPassword = { ->
 	return '';
 }
 
-configurations.implementation.setCanBeResolved(true)
+configurations {
+	extendedImplementation {
+		extendsFrom configurations.implementation
+		canBeResolved = true
+	}
+}
 
 dependencies {
 	implementation project(':svws-server-app')
@@ -99,7 +104,7 @@ task downloadJarsAll(type: Copy) {
 	doLast {
 		file("download/svws-" + project.version + "/run_server.cmd").text =
 			'@echo off' + System.lineSeparator() +
-			'.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
+			'.\\java\\bin\\java.exe --class-path ' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator() +
 			'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
 			'IF %exitcode% EQU 42 (' + System.lineSeparator() +
@@ -113,7 +118,7 @@ task downloadJarsAll(type: Copy) {
 			')'
 		file("download/svws-" + project.version + "/run_server.sh").text =
 			'#!/bin/sh' + '\n' +
-			'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
+			'java.exe --class-path "' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator()
 		file("download/svws-" + project.version + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
@@ -125,7 +130,7 @@ task downloadJarsAll(type: Copy) {
 			"set keystorepassword=%7" + System.lineSeparator() +
 			"set dbhost=%8" + System.lineSeparator() +
 			"set dbport=%9" + System.lineSeparator() +
-			".\\java\\bin\\java.exe --class-path " + configurations.implementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
+			".\\java\\bin\\java.exe --class-path " + configurations.extendedImplementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
 	}
 }
 

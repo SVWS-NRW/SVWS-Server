@@ -128,11 +128,18 @@ allprojects {
 	    useJUnitPlatform()
 	}
 
+	configurations {
+		extendedDefault {
+			extendsFrom configurations.default
+			canBeResolved = true
+		} 
+	}
+
 	task printDependencies {
 		group = 'build'
 		doLast {
 			println "Dependencies:"
-			configurations.default.each { println it }
+			configurations.extendedDefault.each { println it }
 		}
 	}
 
