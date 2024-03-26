@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 plugins {
 	id 'svws.gradle.node.plugin'
 }
@@ -16,7 +14,7 @@ task assembleComponents(type: NpmRun) {
 	outputs.dir file("$projectDir/dist")
 }
 
-task assembleUiHistoire(type: NpmRun) {
+task assembleComponentsHistoire(type: NpmRun) {
 	dependsOn assembleComponents
 	group "build"
 	args = ['story:build']
@@ -25,6 +23,7 @@ task assembleUiHistoire(type: NpmRun) {
 }
 
 assemble.dependsOn assembleComponents
+build.dependsOn assembleComponentsHistoire
 
 task cleanComponents(type: Delete) {
 	delete file("$projectDir/dist"), file("$projectDir/.histoire")
@@ -32,9 +31,8 @@ task cleanComponents(type: Delete) {
 
 clean.dependsOn cleanComponents
 
-/*
 task publishNexusComponents(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -44,7 +42,7 @@ task publishNexusComponents(type: NpmPublish) {
 }
 
 task publishNpmComponents(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
@@ -55,4 +53,4 @@ task publishNpmComponents(type: NpmPublish) {
 
 publishReleaseAll.dependsOn publishNexusComponents
 publishReleaseAll.dependsOn publishNpmComponents
-*/
+

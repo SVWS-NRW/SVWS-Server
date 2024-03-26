@@ -19,7 +19,7 @@ task cleanCore(type: Delete) {
 clean.dependsOn cleanCore
 
 task publishNexusCore(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -29,7 +29,7 @@ task publishNexusCore(type: NpmPublish) {
 }
 
 task publishNpmCore(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"

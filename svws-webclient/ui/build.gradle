@@ -19,7 +19,7 @@ task assembleUiHistoire(type: NpmRun) {
 }
 
 assemble.dependsOn assembleUi
-assemble.dependsOn assembleUiHistoire
+build.dependsOn assembleUiHistoire
 
 task cleanUi(type: Delete) {
 	delete file("$projectDir/dist"), file("$projectDir/.histoire")
@@ -28,7 +28,7 @@ task cleanUi(type: Delete) {
 clean.dependsOn cleanUi
 
 task publishNexusUi(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -38,7 +38,7 @@ task publishNexusUi(type: NpmPublish) {
 }
 
 task publishNpmUi(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
@@ -49,3 +49,4 @@ task publishNpmUi(type: NpmPublish) {
 
 publishReleaseAll.dependsOn publishNexusUi
 publishReleaseAll.dependsOn publishNpmUi
+

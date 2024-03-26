@@ -4,9 +4,9 @@ plugins {
 
 task assembleClient(type: NpmRun) {
 	dependsOn rootProject.npmPrepare 
-	dependsOn project(':svws-webclient:core').tasks.assemble 
-	dependsOn ':svws-webclient:ui:assemble'
-	dependsOn ':svws-webclient:components:assemble'
+	dependsOn project(':svws-webclient:core').tasks.assemble
+	dependsOn project(':svws-webclient:ui').tasks.assemble
+	dependsOn project(':svws-webclient:components').tasks.assemble
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" }, 
@@ -25,7 +25,7 @@ task doZip(type: Zip) {
     from "$buildDir/output"
 }
 
-assemble.dependsOn doZip
+build.dependsOn doZip
 
 task cleanClient(type: Delete) {
 	delete file("$buildDir/output")
@@ -34,7 +34,7 @@ task cleanClient(type: Delete) {
 clean.dependsOn cleanClient
 
 task publishNexusClient(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -44,7 +44,7 @@ task publishNexusClient(type: NpmPublish) {
 }
 
 task publishNpmClient(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
@@ -55,29 +55,6 @@ task publishNpmClient(type: NpmPublish) {
 
 publishReleaseAll.dependsOn publishNexusClient
 publishReleaseAll.dependsOn publishNpmClient
-
-project.tasks.withType(PublishToMavenRepository).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusClient
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmClient
-}
-
-project.tasks.withType(Sign).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusClient
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmClient
-}
-
 
 publishing {
     repositories {

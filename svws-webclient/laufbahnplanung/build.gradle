@@ -27,7 +27,7 @@ task doZip(type: Zip) {
     from "$buildDir/output"
 }
 
-assemble.dependsOn doZip
+build.dependsOn doZip
 
 task cleanLaufbahnplanung(type: Delete) {
 	delete file("$buildDir/output")
@@ -36,7 +36,7 @@ task cleanLaufbahnplanung(type: Delete) {
 clean.dependsOn cleanLaufbahnplanung
 
 task publishNexusLaufbahnplanung(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -46,7 +46,7 @@ task publishNexusLaufbahnplanung(type: NpmPublish) {
 }
 
 task publishNpmLaufbahnplanung(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"

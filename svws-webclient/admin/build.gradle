@@ -25,7 +25,7 @@ task doZip(type: Zip) {
     from "$buildDir/output"
 }
 
-assemble.dependsOn doZip
+build.dependsOn doZip
 
 task cleanAdminClient(type: Delete) {
 	delete file("$buildDir/output")
@@ -34,7 +34,7 @@ task cleanAdminClient(type: Delete) {
 clean.dependsOn cleanAdminClient
 
 task publishNexusAdminClient(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -44,7 +44,7 @@ task publishNexusAdminClient(type: NpmPublish) {
 }
 
 task publishNpmAdminClient(type: NpmPublish) {
-	dependsOn assemble
+	dependsOn build
 	group "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
@@ -55,28 +55,6 @@ task publishNpmAdminClient(type: NpmPublish) {
 
 publishReleaseAll.dependsOn publishNexusAdminClient
 publishReleaseAll.dependsOn publishNpmAdminClient
-
-project.tasks.withType(PublishToMavenRepository).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusAdminClient
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmAdminClient
-}
-
-project.tasks.withType(Sign).configureEach {
-	dependsOn ':svws-webclient:core:publishNexusCore'
-	dependsOn ':svws-webclient:ui:publishNexusUi'
-	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusAdminClient
-	dependsOn ':svws-webclient:core:publishNpmCore'
-	dependsOn ':svws-webclient:ui:publishNpmUi'
-	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmAdminClient
-}
 
 
 publishing {
