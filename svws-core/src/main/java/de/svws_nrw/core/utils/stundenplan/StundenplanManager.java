@@ -4908,15 +4908,39 @@ public class StundenplanManager {
 	/**
 	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 *
+	 * @deprecated  Diese Methode muss in Zukunft durch "unterrichtIstVerschiebenErlaubtNach" eretzt werden
+	 *
 	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
 	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
 	 *
 	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
+	@Deprecated(forRemoval = true)
 	public boolean unterrichtIstVerschiebenErlaubt(final @NotNull StundenplanUnterricht u, final @NotNull StundenplanZeitraster z) {
 		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, u.id))
 			if ((partner.idZeitraster == z.id) && ((partner.wochentyp == 0) || (u.wochentyp == 0) || (u.wochentyp == partner.wochentyp)))
 				return false;
+		return true;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
+	 *
+	 * @param quelleU  Der {@link StundenplanUnterricht}, welcher verschoben werden soll und noch nicht verschoben wurde.
+	 * @param zielZ    Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
+	 * @param zielW    Der Wochentyp, wohin verschoben werden soll.
+	 *
+	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
+	 */
+	public boolean unterrichtIstVerschiebenErlaubtNach(final @NotNull StundenplanUnterricht quelleU, final @NotNull StundenplanZeitraster zielZ, final int zielW) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, quelleU.id)) {
+			// Ein anderes Zeitraster kollidiert nie.
+			if (partner.idZeitraster != zielZ.id)
+				continue;
+			// Wir sind im selben Zeitraster, hier kann es zur Kollision kommen.
+			if ((partner.wochentyp == 0) || (quelleU.wochentyp == 0) || (zielW == partner.wochentyp))
+				return false;
+		}
 		return true;
 	}
 

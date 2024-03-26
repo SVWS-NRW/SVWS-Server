@@ -4574,6 +4574,8 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 *
+	 * @deprecated  Diese Methode muss in Zukunft durch "unterrichtIstVerschiebenErlaubtNach" eretzt werden
+	 *
 	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
 	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
 	 *
@@ -4583,6 +4585,25 @@ export class StundenplanManager extends JavaObject {
 		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, u.id))
 			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (u.wochentyp === 0) || (u.wochentyp === partner.wochentyp)))
 				return false;
+		return true;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
+	 *
+	 * @param quelleU  Der {@link StundenplanUnterricht}, welcher verschoben werden soll und noch nicht verschoben wurde.
+	 * @param zielZ    Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
+	 * @param zielW    Der Wochentyp, wohin verschoben werden soll.
+	 *
+	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
+	 */
+	public unterrichtIstVerschiebenErlaubtNach(quelleU : StundenplanUnterricht, zielZ : StundenplanZeitraster, zielW : number) : boolean {
+		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, quelleU.id)) {
+			if (partner.idZeitraster !== zielZ.id)
+				continue;
+			if ((partner.wochentyp === 0) || (quelleU.wochentyp === 0) || (zielW === partner.wochentyp))
+				return false;
+		}
 		return true;
 	}
 
