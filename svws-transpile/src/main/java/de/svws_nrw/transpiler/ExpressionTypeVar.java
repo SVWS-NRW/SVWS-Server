@@ -32,6 +32,8 @@ public final class ExpressionTypeVar extends ExpressionType {
 
 	@Override
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
+		if ("?".equals(this.name))
+			return 1;
 		if (other instanceof final ExpressionTypeVar otherETV) {
 			if ("?".equals(otherETV.name) && (otherETV.extendsBound != null))
 				return isAssignable(transpiler, otherETV.extendsBound);
