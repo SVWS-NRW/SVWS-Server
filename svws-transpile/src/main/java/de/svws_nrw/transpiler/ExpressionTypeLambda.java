@@ -120,7 +120,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 			if (index < 0)
 				throw new TranspilerException("Transpiler Error: Lambda Expression is expected to be in the method invocation argument list.");
 			final ExecutableElement ee = transpiler.findExecutableElement(mit);
-			if (index >= ee.getParameters().size())
+			if ((ee == null) || (index >= ee.getParameters().size()))
 				throw new TranspilerException("Transpiler Error: Unexpected internal error.");
 			final VariableElement ve = ee.getParameters().get(index);
 			final Element type = ((DeclaredType) ve.asType()).asElement();
