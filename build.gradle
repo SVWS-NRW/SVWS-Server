@@ -18,10 +18,19 @@ if (file(".git/HEAD").exists()) {
 		gitHASH = gitHEADFileString.trim()
 	} else {
 		def gitHEADRefParts = gitHEADFileString.split(":");
-		if ((gitHEADRefParts.length == 2) && (gitHEADRefParts[0].trim().equals("ref")) && (file(".git/" + gitHEADRefParts[1].trim()).exists())) {
-			def gitHEADHASHFileString = file(".git/" + gitHEADRefParts[1].trim()).text
-			if (gitHEADHASHFileString.trim().length() == 40)
-				gitHASH = gitHEADHASHFileString.trim()
+		if ((gitHEADRefParts.length == 2) && (gitHEADRefParts[0].trim().equals("ref"))) {
+			if (file(".git/" + gitHEADRefParts[1].trim()).exists()) {
+				def gitHEADHASHFileString = file(".git/" + gitHEADRefParts[1].trim()).text
+				if (gitHEADHASHFileString.trim().length() == 40)
+					gitHASH = gitHEADHASHFileString.trim()
+			} else if (file(".git/packed-refs").exists()) {
+				def gitPackedRefsFileString = file(".git/packed-refs").text
+				gitPackedRefsFileString.eachLine {
+					String[] tokens = it.split(" ");
+					if ((tokens.length == 2) && (tokens[1].trim().equals(gitHEADRefParts[1].trim())))
+						gitHASH = tokens[0].trim()
+				} 
+			}
 		}
 	}
 }
