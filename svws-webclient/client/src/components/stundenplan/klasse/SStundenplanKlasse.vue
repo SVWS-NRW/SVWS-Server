@@ -192,11 +192,8 @@
 		if (dragData.value === undefined)
 			return;
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && props.stundenplanManager().unterrichtIstVerschiebenErlaubt(dragData.value, zone)) {
-			if (wochentyp !== undefined)
-				dragData.value.wochentyp = wochentyp
-			return await props.patchUnterricht([dragData.value], zone);
-		}
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
+			return await props.patchUnterricht([dragData.value], zone, wochentyp);
 		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
 		// Fall List<StundenplanKurs> -> StundenplanZeitraster
 		// Fall List<StundenplanUnterricht> -> undefined
@@ -205,21 +202,15 @@
 			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
 			const casted: List<unknown> = cast_java_util_List(dragData.value);
 			for (const item of casted)
-				if (item instanceof StundenplanUnterricht && zone instanceof StundenplanZeitraster) {
-					if (wochentyp !== undefined)
-						item.wochentyp = wochentyp;
-					if (props.stundenplanManager().unterrichtIstVerschiebenErlaubt(item, zone))
-						listStundenplanUnterricht.add(item);
-				}
-				else if (item instanceof StundenplanUnterricht && zone === undefined)
+				if (item instanceof StundenplanUnterricht)
 					listStundenplanUnterricht.add(item);
 				else if ((item instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp))
 					listStundenplanKurs.add(item);
 			if (listStundenplanKurs.size() > 0)
 				return await props.addUnterrichtKlasse(listStundenplanKurs);
 			if (listStundenplanUnterricht.size() > 0)
-				if (zone instanceof StundenplanZeitraster)
-					return await props.patchUnterricht(listStundenplanUnterricht, zone);
+				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
+					return await props.patchUnterricht(listStundenplanUnterricht, zone, wochentyp);
 				else if (zone === undefined)
 					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
 		}

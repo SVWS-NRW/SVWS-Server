@@ -376,13 +376,14 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
-	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster) => {
+	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster, wochentyp: number) => {
 		api.status.start();
 		const list: List<StundenplanUnterricht> = new ArrayList();
 		loop: for (const datum of data) {
-			if (!this.stundenplanManager.unterrichtIstVerschiebenErlaubt(datum, zeitraster))
+			if (!this.stundenplanManager.unterrichtIstVerschiebenErlaubtNach(datum, zeitraster, wochentyp))
 				continue loop;
 			datum.idZeitraster = zeitraster.id;
+			datum.wochentyp = wochentyp;
 			list.add(datum);
 		}
 		await api.server.patchStundenplanUnterrichte(list, api.schema);
