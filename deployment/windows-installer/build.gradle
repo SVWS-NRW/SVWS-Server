@@ -20,8 +20,10 @@ println "Version " + project.ext.svwsArtifactVersion
 
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
-sourceCompatibility = 21
-targetCompatibility = 21
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
 
 ext.svws_version = version
 
