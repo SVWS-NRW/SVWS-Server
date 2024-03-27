@@ -2,8 +2,8 @@
 //TODO das environment darf nicht 'local' als default wert haben und gleichzeitig überall local.properties voraussetzen,
 // 		weil die nicht jeder eingerichtet hat
 def SVWS_TEST_ENVIRONMENT = project.hasProperty("environment") ? project.getProperty("environment") : "local"
-println '#################'
-println "SVWS_TEST_ENVIRONMENT=${SVWS_TEST_ENVIRONMENT}"
+//println '#################'
+//println "SVWS_TEST_ENVIRONMENT=${SVWS_TEST_ENVIRONMENT}"
 
 def localProperties
 if('local'.equals(SVWS_TEST_ENVIRONMENT)) {

@@ -13,7 +13,7 @@ def targetPort = project.TESTING_SVWS_PORT
 def propertyFile = "../testing/svws-browser-test/local.properties"
 // Variable fängt das execResult des Browser-Tests, da bei forbidOnly ein fehlerfreies results.xml erstellt wird
 def execResult = 0
-print ('targetport' + targetPort)
+// print ('targetport' + targetPort)
 
 // Test-Task für die Browsertests, konfiguration wird in 
 task browserTest(type: Test) {
