@@ -380,10 +380,12 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.start();
 		const list: List<StundenplanUnterricht> = new ArrayList();
 		loop: for (const datum of data) {
+			console.log(datum, this.stundenplanManager.unterrichtIstVerschiebenErlaubtNach(datum, zeitraster, wochentyp))
 			if (!this.stundenplanManager.unterrichtIstVerschiebenErlaubtNach(datum, zeitraster, wochentyp))
 				continue loop;
 			datum.idZeitraster = zeitraster.id;
 			datum.wochentyp = wochentyp;
+			console.log(datum)
 			list.add(datum);
 		}
 		await api.server.patchStundenplanUnterrichte(list, api.schema);

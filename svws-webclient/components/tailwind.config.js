@@ -1,6 +1,7 @@
+import preset from "../tailwind.preset.js"
 export default {
-	presets: [ require("../tailwind.preset.js") ],
+	presets: [ preset ],
 	content: [
-		"./src/components/**/*.{vue,js,ts,jsx,tsx}",
+		"./src/components/**/*.{vue,js,ts}",
 	],
 }
