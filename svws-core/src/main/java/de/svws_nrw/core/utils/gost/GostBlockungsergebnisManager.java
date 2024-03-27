@@ -5165,6 +5165,53 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
+	 * <br>(1) Wenn der Schüler den Ziel-Kurs nicht wählen darf (falsche Fachwahlen), dann passiert nichts.
+	 * <br>(2) Wenn ein Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
+	 * <br>(3) Der Schüler wird ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
+	 * <br>(4) Der Schüler wird einem neuen Kurs hinzugefügt und wird ggf. im neuen Kurs fixiert.
+	 *
+	 * @param kursSchuelerZuordnungen           Alle Kurs-Schüler-Paare, welche hinzugefügt werden sollen.
+	 * @param verschiebeFixierteDesQuellkurses  TRUE, dann werden fixierte SuS aus potentiell alten Kursen entfernt.
+	 * @param fixiereImZielkurs                 TRUE, dann werden die SuS im Zielkurs fixiert.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN(final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen, final boolean verschiebeFixierteDesQuellkurses, final boolean fixiereImZielkurs) {
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
+			final @NotNull GostBlockungKurs kursNeu = _parent.kursGet(z.idKurs);
+
+			// (1)
+			if (!getOfSchuelerHatFachwahl(z.idSchueler, kursNeu.fach_id, kursNeu.kursart))
+				continue;
+
+			final GostBlockungsergebnisKurs kursAlt = getOfSchuelerOfFachZugeordneterKurs(z.idSchueler, kursNeu.fach_id);
+			if (kursAlt != null) {
+				final @NotNull LongArrayKey keyFixiertAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, kursAlt.id});
+				final GostBlockungRegel regelFixiertAlt = _parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
+
+				// (2)
+				if ((regelFixiertAlt != null) && (!verschiebeFixierteDesQuellkurses))
+					continue;
+
+				// (3a)
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursAlt.id, z.idSchueler));
+				if (regelFixiertAlt != null)
+					u.regelUpdates.listEntfernen.add(regelFixiertAlt);
+			}
+
+			// (4)
+			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursNeu.id, z.idSchueler));
+			if (fixiereImZielkurs)
+				u.regelUpdates.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, kursNeu.id));
+		}
+
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler aus Kursen zu entfernen.
 	 * <br>(1) Wenn der Schüler im Kurs ist, wird er entfernt.
 	 *
