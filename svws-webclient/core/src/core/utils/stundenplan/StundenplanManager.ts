@@ -2398,17 +2398,19 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
 	 *
-	 * @param kurs       Der {@link StundenplanKurs}, welcher gesetzt oder verschoben werden soll.
-	 * @param wochentag  Der Typ des {@link Wochentag}-Objekts.
-	 * @param stunde     Die Unterrichtsstunde an dem Wochentag.
-	 * @param wochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param quellKurs      Der {@link StundenplanKurs}, welcher gesetzt oder verschoben werden soll.
+	 * @param zielWochentag  Der Typ des {@link Wochentag}-Objekts.
+	 * @param zielStunde     Die Unterrichtsstunde an dem Wochentag.
+	 * @param zielWochentyp  Der Typ der Woche (beispielsweise bei AB-Wochen).
 	 *
 	 * @return TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
 	 */
-	public kursDarfInZelle(kurs : StundenplanKurs, wochentag : number, stunde : number, wochentyp : number) : boolean {
-		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idKurs, kurs.id)) {
-			const z : StundenplanZeitraster = DeveloperNotificationException.ifMap2DGetIsNull(this._zeitraster_by_wochentag_and_stunde, wochentag, stunde);
-			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (wochentyp === 0) || (wochentyp === partner.wochentyp)))
+	public kursDarfInZelle(quellKurs : StundenplanKurs, zielWochentag : number, zielStunde : number, zielWochentyp : number) : boolean {
+		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idKurs, quellKurs.id)) {
+			const z : StundenplanZeitraster = DeveloperNotificationException.ifMap2DGetIsNull(this._zeitraster_by_wochentag_and_stunde, zielWochentag, zielStunde);
+			if (partner.idZeitraster !== z.id)
+				continue;
+			if ((partner.wochentyp === 0) || (zielWochentyp === 0) || (zielWochentyp === partner.wochentyp))
 				return false;
 		}
 		return true;
@@ -4574,34 +4576,17 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 *
-	 * @deprecated  Diese Methode muss in Zukunft durch "unterrichtIstVerschiebenErlaubtNach" eretzt werden
-	 *
-	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
-	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
-	 *
-	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
-	 */
-	public unterrichtIstVerschiebenErlaubt(u : StundenplanUnterricht, z : StundenplanZeitraster) : boolean {
-		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, u.id))
-			if ((partner.idZeitraster === z.id) && ((partner.wochentyp === 0) || (u.wochentyp === 0) || (u.wochentyp === partner.wochentyp)))
-				return false;
-		return true;
-	}
-
-	/**
-	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
-	 *
-	 * @param quelleU  Der {@link StundenplanUnterricht}, welcher verschoben werden soll und noch nicht verschoben wurde.
-	 * @param zielZ    Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
-	 * @param zielW    Der Wochentyp, wohin verschoben werden soll.
+	 * @param quellUnterricht  Der {@link StundenplanUnterricht}, welcher verschoben werden soll und noch nicht verschoben wurde.
+	 * @param zielZeitraster   Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
+	 * @param zielWochentyp    Der Wochentyp, wohin verschoben werden soll.
 	 *
 	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
-	public unterrichtIstVerschiebenErlaubtNach(quelleU : StundenplanUnterricht, zielZ : StundenplanZeitraster, zielW : number) : boolean {
-		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, quelleU.id)) {
-			if (partner.idZeitraster !== zielZ.id)
+	public unterrichtIstVerschiebenErlaubtNach(quellUnterricht : StundenplanUnterricht, zielZeitraster : StundenplanZeitraster, zielWochentyp : number) : boolean {
+		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, quellUnterricht.id)) {
+			if (partner.idZeitraster !== zielZeitraster.id)
 				continue;
-			if ((partner.wochentyp === 0) || (quelleU.wochentyp === 0) || (zielW === partner.wochentyp))
+			if ((partner.wochentyp === 0) || (zielWochentyp === 0) || (zielWochentyp === partner.wochentyp))
 				return false;
 		}
 		return true;
