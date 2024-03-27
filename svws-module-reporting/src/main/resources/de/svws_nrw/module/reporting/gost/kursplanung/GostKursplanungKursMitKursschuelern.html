@@ -7,7 +7,7 @@
 	</head>
 
 	<body>
-		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.kurse()}" th:if="${DruckparameterIdsListe.contains(Kurs.id())}">
+		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(DruckparameterIdsListe)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung()} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefteAuflistung()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>

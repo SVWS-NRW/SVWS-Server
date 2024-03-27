@@ -480,6 +480,7 @@ export { LehrerRechtsverhaeltnis } from './core/types/lehrer/LehrerRechtsverhael
 export { LehrerZugangsgrund } from './core/types/lehrer/LehrerZugangsgrund';
 export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
 export { ReportingAusgabeformat } from './core/types/reporting/ReportingAusgabeformat';
+export { ReportingReportvorlage } from './core/types/reporting/ReportingReportvorlage';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { Einschulungsart } from './core/types/schueler/Einschulungsart';
 export { Foerderschwerpunkt } from './core/types/schueler/Foerderschwerpunkt';

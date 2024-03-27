@@ -1,6 +1,8 @@
 package de.svws_nrw.core.data.reporting;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -18,20 +20,16 @@ import java.util.List;
 public class ReportingAusgabedaten {
 
 	/** Die ID des Schuljahres, auf den sich die Ausgabe des Reports beziehen soll. */
-	@Schema(description = "Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.", example = "0")
+	@Schema(description = "Der Schuljahresabschnitt, für den der Report erstellt werden soll.", example = "0")
 	public long idSchuljahresabschnitt = -1;
 
-//	/** Das Dateiformat, in dem der Report ausgegeben werden soll. */
-//	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll.", example = "2")
-//	public ReportingAusgabeformat ausgabeformat = ReportingAusgabeformat.PDF;
+	/** Das Dateiformat, in dem der Report ausgegeben werden soll, als Wert gemäß CoreType {@link ReportingAusgabeformat} */
+	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2).", example = "2")
+	public int ausgabeformat = ReportingAusgabeformat.PDF.getId();
 
-	/** Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird. */
-	@Schema(description = "Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird", example = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html")
-	public @NotNull String dateipfadHtmlTemplate = "";
-
-	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
-	@Schema(description = "Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren", example = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css")
-	public @NotNull String dateipfadCss = "";
+	/** Die Bezeichnung des auszugebenden Reports gemäß Definition im CoreType {@link ReportingReportvorlage} */
+	@Schema(description = "Die Bezeichnung der Vorlage des auszugebenden Reports gemäß Definition im Core Type ReportingReportvorlage", example = "Schueler-GostAbiturApoAnlage12")
+	public @NotNull String reportvorlage = "";
 
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
 	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[12,54,123]")

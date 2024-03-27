@@ -1,0 +1,18 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Dateinamensdefinition</title>
+	</head>
+	<body>
+		<!--
+		Diese Datei dient zur Generierung des Dateinamensvorlagen Eintrags in der Template-Definition.
+		Sie wird im Code nicht verwendet.
+		-->
+		<p th:if="${Schueler.isEmpty()}">APO-GOSt-Anlage12</p>
+		<th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			<p th:if="${iterState.first && (Schueler.size() == 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + '_' + #strings.replace(schueler.nachname(), ' ', '_') + ',_' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')'}"></p>
+			<p th:if="${iterState.first && (Schueler.size() > 1)}" th:text="${'Abitur_' + schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12'}"></p>
+		</th:block>
+	</body>
+</html>

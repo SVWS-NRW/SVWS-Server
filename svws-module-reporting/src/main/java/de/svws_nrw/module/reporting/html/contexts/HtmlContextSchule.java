@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.html.contexts;
 
 import org.thymeleaf.context.Context;
 
-import de.svws_nrw.module.reporting.html.base.HtmlContext;
 import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 

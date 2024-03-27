@@ -33,7 +33,7 @@ public class PdfBuilder {
 	private final String ressourcenDateipfad;
 
 	/** Dateiname der PDF-Datei. */
-	private final String pdfDateiname;
+	private final String dateiname;
 
 
 	/**
@@ -42,12 +42,12 @@ public class PdfBuilder {
 	 *
 	 * @param html					Das html, aus dem schließlich die PDF-Datei erzeugt wird.
 	 * @param ressourcenDateipfad 	Pfad im Projekt, an dem der Builder die CSS-Datei finden kann.
-	 * @param pdfDateiname 			Dateiname der PDF_Datei.
+	 * @param dateiname 			Dateiname der PDF-Datei ohne Dateiendung
 	 */
-	public PdfBuilder(final String html, final String ressourcenDateipfad, final String pdfDateiname) {
+	public PdfBuilder(final String html, final String ressourcenDateipfad, final String dateiname) {
 		this.html = html;
 		this.ressourcenDateipfad = ressourcenDateipfad;
-		this.pdfDateiname = pdfDateiname;
+		this.dateiname = dateiname;
 	}
 
 
@@ -55,14 +55,21 @@ public class PdfBuilder {
 	 * Gibt den Dateinamen der PDF-Datei zurück.
 	 * @return Dateiname der PDF-Datei.
 	 */
-	public String getPdfDateiname() {
-		return pdfDateiname;
+	public String getDateiname() {
+		return dateiname;
+	}
+
+	/**
+	 * Gibt den Dateinamen der PDF-Datei mit Dateiendung zurück.
+	 * @return Dateiname der PDF-Datei mit Endung.
+	 */
+	public String getDateinameMitEndung() {
+		return dateiname + ".pdf";
 	}
 
 
 	/**
 	 * Erzeugt die PDF-Datei in Form eines Byte-Arrays.
-	 *
 	 * @return 	das Byte-Array mit der PDF-Datei oder null im Fehlerfall
 	 */
 	public byte[] getPdfByteArray() {
@@ -78,7 +85,6 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt eine Response mit der PDF-Datei als Content
-	 *
 	 * @return Response mit der PDF-Datei als Content oder im Fehlerfall eine Response als WebApplicationException
 	 */
 	public Response getPdfResponse() {
@@ -88,7 +94,7 @@ public class PdfBuilder {
 			if (data == null)
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
-			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdfDateiname, StandardCharsets.UTF_8);
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(dateiname, StandardCharsets.UTF_8);
 
 			return Response.ok(data, "application/pdf")
 					.header("Content-Disposition", "attachment; " + encodedFilename)

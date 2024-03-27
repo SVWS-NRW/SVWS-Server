@@ -5,7 +5,6 @@ import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.reporting.html.base.HtmlContext;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;

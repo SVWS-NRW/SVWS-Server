@@ -15,7 +15,8 @@ import {
 	GostHalbjahr,
 	SchuelerStatus,
 	HashSet,
-	ReportingAusgabedaten, ReportingAusgabeformat
+	ReportingAusgabedaten,
+	ReportingReportvorlage
 } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -773,38 +774,32 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			case "Schülerliste markierte Kurse":
 				for (const kurs of this.kursAuswahl.value)
 					list.add(kurs);
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
 				reportingAusgabedaten.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung":
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				reportingAusgabedaten.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN.getBezeichnung();
 				reportingAusgabedaten.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kursbelegung markierter Schüler":
 				list.add(this.auswahlSchueler.id);
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingAusgabedaten.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			case "Kursbelegung gefilterte Schüler":
 				for (const schueler of this.schuelerFilter.filtered.value)
 					list.add(schueler.id);
-				reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.html";
-				reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css";
+				reportingAusgabedaten.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingAusgabedaten.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 			default:

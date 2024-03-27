@@ -12,13 +12,13 @@ public enum ReportingAusgabeformat {
 	PDF(2);
 
 	/** Die ID des Report-Ausgabeformats */
-	private final long id;
+	private final int id;
 
 	/**
 	 * Erstellt ein neues Report-Ausgabeformat
 	 * @param id Die ID des Report-Ausgabeformats
 	 */
-	ReportingAusgabeformat(final long id) {
+	ReportingAusgabeformat(final int id) {
 		this.id = id;
 	}
 
@@ -26,7 +26,7 @@ public enum ReportingAusgabeformat {
 	 * Gibt die ID dieses Report-Ausgabeformats zurück
 	 * @return Die ID dieses Report-Ausgabeformats
 	 */
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
@@ -35,7 +35,7 @@ public enum ReportingAusgabeformat {
 	 * @param id   	Die ID des gesuchten Report-Ausgabeformats
 	 * @return 		Das Report-Ausgabeformat
 	 */
-	public static ReportingAusgabeformat getByID(final long id) {
+	public static ReportingAusgabeformat getByID(final int id) {
 		for (final ReportingAusgabeformat af : ReportingAusgabeformat.values())
 			if (af.id == id)
 				return af;

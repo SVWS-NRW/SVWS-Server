@@ -1,4 +1,4 @@
-package de.svws_nrw.module.reporting.html.base;
+package de.svws_nrw.module.reporting.html.contexts;
 
 import org.thymeleaf.context.Context;
 

@@ -4,7 +4,7 @@ import {
 	DeveloperNotificationException,
 	GostBelegpruefungsArt,
 	OpenApiError,
-	ReportingAusgabedaten, ReportingAusgabeformat,
+	ReportingAusgabedaten, ReportingAusgabeformat, ReportingReportvorlage,
 	SimpleOperationResponse
 } from "@core";
 
@@ -117,8 +117,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 			api.status.start();
 			const reportingAusgabedaten = new ReportingAusgabedaten();
 			reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
-			reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html";
-			reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css";
+			reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
 			reportingAusgabedaten.idsHauptdaten = list;
 			reportingAusgabedaten.einzelausgabeHauptdaten = einzelpdfs;
 			reportingAusgabedaten.detailLevel = detaillevel;
@@ -128,8 +127,7 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 				case 'Laufbahnwahlbogen (nur Belegung)':
 					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 				case 'Ergebnisliste Laufbahnwahlen':
-					reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.html";
-					reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungErgebnisuebersicht.css";
+					reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getBezeichnung();
 					return await api.server.pdfReport(reportingAusgabedaten, api.schema);
 				default:
 					throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')

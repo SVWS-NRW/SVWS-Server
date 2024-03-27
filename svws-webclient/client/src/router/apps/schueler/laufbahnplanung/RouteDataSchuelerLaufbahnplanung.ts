@@ -11,7 +11,7 @@ import {
 	GostHalbjahr,
 	DeveloperNotificationException,
 	ArrayList,
-	ReportingAusgabedaten, ReportingAusgabeformat
+	ReportingAusgabedaten, ReportingAusgabeformat, ReportingReportvorlage
 } from "@core";
 
 import { api } from "~/router/Api";
@@ -169,8 +169,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		list.add(this.auswahl.id);
 		const reportingAusgabedaten = new ReportingAusgabedaten();
 		reportingAusgabedaten.idSchuljahresabschnitt = api.abschnitt.id;
-		reportingAusgabedaten.dateipfadHtmlTemplate = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.html";
-		reportingAusgabedaten.dateipfadCss = "de/svws_nrw/module/reporting/gost/laufbahnplanung/GostLaufbahnplanungWahlbogen.css";
+		reportingAusgabedaten.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
 		reportingAusgabedaten.idsHauptdaten = list;
 		reportingAusgabedaten.einzelausgabeHauptdaten = false;
 		switch (title) {

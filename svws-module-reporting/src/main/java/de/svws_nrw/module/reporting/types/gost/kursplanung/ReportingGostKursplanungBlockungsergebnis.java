@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -88,6 +89,30 @@ public class ReportingGostKursplanungBlockungsergebnis {
 		this.schienen = schienen;
 		this.schueler = schueler;
 	}
+
+
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Gibt eine Liste mit Kursen zurück, deren IDs in der Filterliste enthalten sind.
+	 * @param idsKurseFilter Die IDs der Kurse, die zurückgegebenen werden sollen.
+	 * @return Die Liste der Kurse, die in der Filterliste enthalten waren.
+	 */
+	@JsonIgnore
+	public List<ReportingGostKursplanungKurs> getKurseGefiltert(final List<Long> idsKurseFilter) {
+		return kurse.stream().filter(k -> idsKurseFilter.contains(k.id())).toList();
+	}
+
+	/**
+	 * Gibt eine Liste mit Kursen zurück, deren IDs in der Filterliste enthalten sind.
+	 * @param idsSchuelerFilter Die IDs der Schüler, die zurückgegebenen werden sollen.
+	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren.
+	 */
+	@JsonIgnore
+	public List<ReportingSchueler> getSchuelerFiltert(final List<Long> idsSchuelerFilter) {
+		return schueler.stream().filter(s -> idsSchuelerFilter.contains(s.id())).toList();
+	}
+
 
 
     // ##### Getter und Setter #####

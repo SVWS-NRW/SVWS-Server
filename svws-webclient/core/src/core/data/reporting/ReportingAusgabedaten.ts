@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
 
 export class ReportingAusgabedaten extends JavaObject {
 
@@ -10,14 +11,14 @@ export class ReportingAusgabedaten extends JavaObject {
 	public idSchuljahresabschnitt : number = -1;
 
 	/**
-	 * Pfad und Dateiname mit der Thymeleaf-html-Dokumentvorlage, aus der später die PDF-Datei erzeugt wird.
+	 * Das Dateiformat, in dem der Report ausgegeben werden soll, als Wert gemäß CoreType {@link ReportingAusgabeformat}
 	 */
-	public dateipfadHtmlTemplate : string = "";
+	public ausgabeformat : number = ReportingAusgabeformat.PDF.getId();
 
 	/**
-	 * Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren.
+	 * Die Bezeichnung des auszugebenden Reports gemäß Definition im CoreType {@link ReportingReportvorlage}
 	 */
-	public dateipfadCss : string = "";
+	public reportvorlage : string = "";
 
 	/**
 	 * Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.
@@ -63,12 +64,12 @@ export class ReportingAusgabedaten extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (typeof obj.dateipfadHtmlTemplate === "undefined")
-			 throw new Error('invalid json format, missing attribute dateipfadHtmlTemplate');
-		result.dateipfadHtmlTemplate = obj.dateipfadHtmlTemplate;
-		if (typeof obj.dateipfadCss === "undefined")
-			 throw new Error('invalid json format, missing attribute dateipfadCss');
-		result.dateipfadCss = obj.dateipfadCss;
+		if (typeof obj.ausgabeformat === "undefined")
+			 throw new Error('invalid json format, missing attribute ausgabeformat');
+		result.ausgabeformat = obj.ausgabeformat;
+		if (typeof obj.reportvorlage === "undefined")
+			 throw new Error('invalid json format, missing attribute reportvorlage');
+		result.reportvorlage = obj.reportvorlage;
 		if ((obj.idsHauptdaten !== undefined) && (obj.idsHauptdaten !== null)) {
 			for (const elem of obj.idsHauptdaten) {
 				result.idsHauptdaten?.add(elem);
@@ -94,8 +95,8 @@ export class ReportingAusgabedaten extends JavaObject {
 	public static transpilerToJSON(obj : ReportingAusgabedaten) : string {
 		let result = '{';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"dateipfadHtmlTemplate" : ' + JSON.stringify(obj.dateipfadHtmlTemplate!) + ',';
-		result += '"dateipfadCss" : ' + JSON.stringify(obj.dateipfadCss!) + ',';
+		result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
+		result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage!) + ',';
 		if (!obj.idsHauptdaten) {
 			result += '"idsHauptdaten" : []';
 		} else {
@@ -133,11 +134,11 @@ export class ReportingAusgabedaten extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
-		if (typeof obj.dateipfadHtmlTemplate !== "undefined") {
-			result += '"dateipfadHtmlTemplate" : ' + JSON.stringify(obj.dateipfadHtmlTemplate!) + ',';
+		if (typeof obj.ausgabeformat !== "undefined") {
+			result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
 		}
-		if (typeof obj.dateipfadCss !== "undefined") {
-			result += '"dateipfadCss" : ' + JSON.stringify(obj.dateipfadCss!) + ',';
+		if (typeof obj.reportvorlage !== "undefined") {
+			result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage!) + ',';
 		}
 		if (typeof obj.idsHauptdaten !== "undefined") {
 			if (!obj.idsHauptdaten) {

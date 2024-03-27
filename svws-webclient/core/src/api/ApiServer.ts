@@ -8121,7 +8121,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode pdfReport für den Zugriff auf die URL https://{hostname}/db/{schema}/reporting/pdf
+	 * Implementierung der POST-Methode pdfReport für den Zugriff auf die URL https://{hostname}/db/{schema}/reporting/ausgabe
 	 *
 	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.
 	 *
@@ -8141,7 +8141,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
 	 */
 	public async pdfReport(data : ReportingAusgabedaten, schema : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/reporting/pdf"
+		const path = "/db/{schema}/reporting/ausgabe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ReportingAusgabedaten.transpilerToJSON(data);
 		const result : ApiFile = await super.postJSONtoPDF(path, body);

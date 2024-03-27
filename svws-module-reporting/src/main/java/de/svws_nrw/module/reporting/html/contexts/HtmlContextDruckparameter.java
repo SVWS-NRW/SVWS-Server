@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import de.svws_nrw.module.reporting.html.base.HtmlContext;
 import jakarta.ws.rs.WebApplicationException;
 import org.thymeleaf.context.Context;
 
