@@ -1,5 +1,8 @@
-import type { SimpleOperationResponse } from "@core";
+import { type AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface SchuleDatenaustauschKurs42Props {
-	setGostKurs42ImportZip: (formData: FormData) => Promise<SimpleOperationResponse>;
+	setTab: (value: AuswahlChildData) => Promise<void>;
+	tab: AuswahlChildData;
+	tabs: AuswahlChildData[];
+	tabsHidden: boolean[];
 }

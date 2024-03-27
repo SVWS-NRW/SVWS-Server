@@ -1,47 +1,48 @@
 <template>
-	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
+	<svws-ui-header>
 		<span class="inline-block mr-3">Import aus Untis</span>
 		<br>
 		<span class="opacity-50 flex"><span class="i-ri-download-2-line icon-xl" /></span>
-	</Teleport>
-	<div class="page--content overflow-hidden flex flex-col">
-		<div class="flex flex-col items-start gap-2">
-			<svws-ui-input-wrapper :grid="2">
-				<abschnitt-auswahl :disable-headless="true" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="a => setAbschnitt(a)" :akt-schulabschnitt="aktSchulabschnitt" />
-				<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
-				<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
-				<div class="col-span-full flex flex-row gap-2">
-					<svws-ui-tooltip>
-						<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
-						<template #content>
-							Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
-						</template>
-					</svws-ui-tooltip>
-					<input type="file" accept=".txt" @change="onFileChanged" :disabled="loading">
+	</svws-ui-header>
+	<div class="svws-ui-page w-full">
+		<div class="svws-ui-tab-content">
+			<div class="page--content overflow-hidden flex flex-col">
+				<div class="flex flex-col items-start gap-2">
+					<svws-ui-input-wrapper :grid="2">
+						<abschnitt-auswahl :disable-headless="true" :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="a => setAbschnitt(a)" :akt-schulabschnitt="aktSchulabschnitt" />
+						<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
+						<svws-ui-text-input placeholder="Gültig ab" v-model="gueltigAb" type="date" />
+						<div class="col-span-full flex flex-row gap-2">
+							<svws-ui-tooltip>
+								<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
+								<template #content>
+									Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
+								</template>
+							</svws-ui-tooltip>
+							<input type="file" accept=".txt" @change="onFileChanged" :disabled="loading">
+						</div>
+						<div class="col-span-full">
+							<svws-ui-button type="secondary" @click="import_file" :disabled="bezeichnung.length < 1 || !file || loading"> Stundenplan importieren </svws-ui-button>
+						</div>
+					</svws-ui-input-wrapper>
+					<div>
+						<svws-ui-spinner :spinning="loading" />
+					</div>
 				</div>
-				<div class="col-span-full">
-					<svws-ui-button type="secondary" @click="import_file" :disabled="bezeichnung.length < 1 || !file || loading"> Stundenplan importieren </svws-ui-button>
-				</div>
-			</svws-ui-input-wrapper>
-			<div>
-				<svws-ui-spinner :spinning="loading" />
+				<log-box :logs="logs" :status="status" hfull />
 			</div>
 		</div>
-		<log-box :logs="logs" :status="status" hfull />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { ref, onMounted } from 'vue';
+	import { ref } from 'vue';
 	import type { SchuleDatenaustauschUntisProps } from './SSchuleDatenaustauschUntisProps';
 	import type { List, Schuljahresabschnitt } from "@core";
 	import { StundenplanListeEintragMinimal } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschUntisProps>();
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 	const bezeichnung = ref<string>("Import Untis");
 	// eslint-disable-next-line vue/no-setup-props-destructure

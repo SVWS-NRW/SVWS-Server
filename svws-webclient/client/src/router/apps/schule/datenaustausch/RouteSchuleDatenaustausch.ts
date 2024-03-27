@@ -10,7 +10,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchule, type RouteSchule } from "~/router/apps/schule/RouteSchule";
 
-import { routeSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschKurs42";
+import { routeSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschENM } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschWenom } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschWenom";
@@ -32,8 +32,8 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		super.text = "Datenaustausch";
 		super.setView("liste", SSchuleDatenaustauschAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschSchulbewerbung,
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
