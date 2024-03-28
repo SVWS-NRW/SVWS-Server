@@ -155,6 +155,7 @@ allprojects {
 }
 
 subprojects {
+
 	// Publishing-Plugin für alle Module aktivieren (mit Ausnahme des Moduls 'gradle-build-src')
 	if (it.name != 'gradle-build-src') {
 		apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
@@ -165,6 +166,7 @@ subprojects {
 			githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
 		}
 	}
+
 }
 
 println "Prüfe die Projekt-Version und passe diese ggf. an:"
@@ -242,6 +244,29 @@ task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
 }
 
 
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+			snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            username =  getOssrhActor()
+            password = getOssrhToken()
+        }
+    }
+}
+
+
+task allJavadoc(type: Javadoc) {
+    project.subprojects.each {
+        if (it.plugins.hasPlugin('java')) {
+            source += it.java.sourceSets.main.allJava
+            classpath += it.java.sourceSets.main.compileClasspath
+        }
+    }
+    destinationDir = file("${buildDir}/docs/javadoc-all")
+}
+
+
 
 
 import com.github.jk1.license.render.*
@@ -285,23 +310,4 @@ licenseReport {
     // This is for the allowed-licenses-file in checkLicense Task
     allowedLicensesFile = new File("$projectDir/allowed-licenses.json")
 }
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username =  getOssrhActor()
-            password = getOssrhToken()
-        }
-    }
-}
 
-task allJavadoc(type: Javadoc) {
-    project.subprojects.each {
-        if (it.plugins.hasPlugin('java')) {
-            source += it.java.sourceSets.main.allJava
-            classpath += files(it.java.sourceSets.main.compileClasspath)
-        }
-    }
-    destinationDir = file("${buildDir}/docs/javadoc-all")
-}
