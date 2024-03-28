@@ -682,7 +682,7 @@ public final class MethodNode {
 			sb.append(" {");
 			sb.append(System.lineSeparator());
 			if (isConstructor() && !isEnumConstructor) {
-				if (_class.getExtendsClause() == null) {
+				if ((_class.getExtendsClause() == null) || (superConstructorCall == null)) {
 					sb.append(indent + "\t");
 					sb.append("super();");
 					sb.append(System.lineSeparator());
