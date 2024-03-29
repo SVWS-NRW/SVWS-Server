@@ -25,17 +25,17 @@
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
-						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :get-datenmanager :ergebnis-aktivieren :blockungsname v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
 								<span class="icon-sm i-ri-arrow-right-circle-line" /> Übertragen
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-blockung-aktivieren>
-						<s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren v-else :get-datenmanager :ergebnis-synchronisieren :blockungsname v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Gleicht die Daten dieses Blockungsergebnisses mit den Daten der Kurstabelle und den Leistungsdaten der Schüler ab. Dabei werden ggf. nicht vorhandene Kurs in der Kurstabelle angelegt und die Kurs-Schienen-Zuordnung angepasst. Leere Kurse werden nicht entfernt. Außerdem wird die Kurs-Schüler-Zuordnung in den Leistungsdaten des Schüler aktualisiert. Neue Fächer werden in den Leistungsdaten dabei allerdings nicht hinzugefügt.">
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
-						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
 							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
 								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
 							</svws-ui-button>
@@ -49,11 +49,9 @@
 								<span class="icon-sm icon-error i-ri-error-warning-line" /> Ungültige Kurszuordnungen
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-irrlaeufer>
-						<s-gost-kursplanung-schueler-auswahl-umkursen-modal :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-							:update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :regeln-update="regelnUpdate" :allow-regeln="allowRegeln"
-							:schueler-filter="schuelerFilter" v-slot="{ openModal }" :api-status="apiStatus"
-							:fixierte-verschieben="fixierteVerschieben" :set-fixierte-verschieben="setFixierteVerschieben"
-							:in-zielkurs-fixieren="inZielkursFixieren" :set-in-zielkurs-fixieren="setInZielkursFixieren">
+						<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-slot="{ openModal }"
+							:get-datenmanager :get-ergebnismanager :update-kurs-schueler-zuordnungen :regeln-update :allow-regeln
+							:schueler-filter :api-status :fixierte-verschieben :set-fixierte-verschieben :in-zielkurs-fixieren :set-in-zielkurs-fixieren>
 							<svws-ui-button size="small" type="transparent" @click="openModal">
 								<span class="icon-sm i-ri-group-line" /> Schülerzuordnung
 							</svws-ui-button>
@@ -92,18 +90,12 @@
 					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
-			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen="zeigeSchienenbezeichnungen" :set-zeige-schienenbezeichnungen="setZeigeSchienenbezeichnungen"
-				:halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
-				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
-				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
-				:regeln-update="regelnUpdate" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer"
-				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
-				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
-				:ergebnis-hochschreiben="ergebnisHochschreiben" :api-status="apiStatus"
-				:toggle-blockungstabelle="toggleBlockungstabelle"
-				:blockungstabelle-visible="!blockungstabelleHidden()"
-				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs" />
+			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
+				:halbjahr="halbjahr" :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :toggle-blockungstabelle
+				:get-datenmanager :get-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
+				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
+				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
+				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
@@ -113,7 +105,7 @@
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
-						<s-gost-kursplanung-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler" :regeln-update="regelnUpdate" :get-ergebnismanager="getErgebnismanager" :api-status="apiStatus" />
+						<s-gost-kursplanung-regelansicht :get-datenmanager :faecher-manager :map-schueler :regeln-update :get-ergebnismanager :api-status />
 					</div>
 				</aside>
 			</Teleport>
@@ -185,14 +177,11 @@
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
 		const result: Array<{ text: string; action: () => Promise<void|boolean>; default?: boolean; separator?: true }> = [];
-		const kursIdsAlle = new HashSet<number>();
-		for (const k of props.getErgebnismanager().getKursmenge())
-			kursIdsAlle.add(k.id);
 		result.push({ text: "Leere alle Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(false)) });
 		result.push({ text: "Leere alle Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01_LEERE_ALLE_KURSE(true)) });
 		if ((props.getKursauswahl().size() !== 0) && (props.getDatenmanager().kursGetAnzahl() !== props.getKursauswahl().size())) {
-			result.push({ text: "Kursauswahl: Leere Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIdsAlle, false)) });
-			result.push({ text: "Kursauswahl: Leere Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIdsAlle, true)) });
+			result.push({ text: "Kursauswahl: Leere Kurse, beachte Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(props.getKursauswahl(), false)) });
+			result.push({ text: "Kursauswahl: Leere Kurse, ignoriere Fixierungen", action: async () => await props.updateKursSchuelerZuordnungen(props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(props.getKursauswahl(), true)) });
 		}
 		if (filter.kurs !== undefined) {
 			const idSet = SetUtils.create1(filter.kurs.id);
