@@ -35,9 +35,9 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Dies Klassen stellt Hilfmethoden für den Datenbankzugriff
@@ -57,15 +57,15 @@ public final class DBUtilsGost {
 	 *
 	 * @return das Datenbank-DTO der Schule, falls eine Schule mit Gymnasialer Oberstufe vorliegt
 	 *
-	 * @throws WebApplicationException    falls keine Schule definiert ist oder die Schulform keine Gymnasiale Oberstufe hat
+	 * @throws ApiOperationException    falls keine Schule definiert ist oder die Schulform keine Gymnasiale Oberstufe hat
 	 */
-	public static DTOEigeneSchule pruefeSchuleMitGOSt(final DBEntityManager conn) throws WebApplicationException {
+	public static DTOEigeneSchule pruefeSchuleMitGOSt(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Schulform schulform = schule.Schulform;
 		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return schule;
 	}
 
@@ -155,19 +155,21 @@ public final class DBUtilsGost {
 	 *
 	 * @return die Leistungsdaten der gymnasialen Oberstufe für den Schüler mit der
 	 *         angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) {
+	public static GostLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
 		if (abschnittSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
@@ -293,8 +295,10 @@ public final class DBUtilsGost {
 	 *
 	 * @return die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
 	 *         angegebenen IDs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) {
+	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) throws ApiOperationException {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, null);
@@ -305,15 +309,15 @@ public final class DBUtilsGost {
     	final HashMap<Long, GostLeistungen> result = new HashMap<>();
     	for (final Long id : ids) {
     		if (id == null)
-    			throw OperationError.BAD_REQUEST.exception();
+    			throw new ApiOperationException(Status.BAD_REQUEST);
 
 			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 			if (schueler == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 
 			final DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
 			if (abschnittSchueler == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 
 			final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
@@ -438,22 +442,24 @@ public final class DBUtilsGost {
 	 *
 	 * @return die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
 	 *         angegebenen IDs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Map<Long, GostLeistungen> getLeistungsdatenFromDTOs(final List<Long> ids, final GostFaecherManager gostFaecherManager,
 			final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte, final Map<Long, DTOSchueler> mapSchueler,
 			final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapAlleGostAbschnitte,
 			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungenByAbschnittID,
 			final Map<Long, Sprachendaten> mapSprachendaten,
-			final Map<Long, DTOJahrgang> mapJahrgaenge) {
+			final Map<Long, DTOJahrgang> mapJahrgaenge) throws ApiOperationException {
     	final HashMap<Long, GostLeistungen> result = new HashMap<>();
     	for (final long id : ids) {
 			final DTOSchueler schueler = mapSchueler.get(id);
 			if (schueler == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 
 			final DTOSchuljahresabschnitte abschnittSchueler = mapSchuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
 			if (abschnittSchueler == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 
 			final Sprachendaten sprachendaten = mapSprachendaten.get(id);
 

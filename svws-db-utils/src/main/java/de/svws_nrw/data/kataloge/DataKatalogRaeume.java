@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schule.Raum;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -39,7 +39,7 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogRaum} in einen Core-DTO {@link Raum}.
 	 */
-	private static final Function<DTOKatalogRaum, Raum> dtoMapper = (final DTOKatalogRaum r) -> {
+	private static final DTOMapper<DTOKatalogRaum, Raum> dtoMapper = (final DTOKatalogRaum r) -> {
 		final Raum daten = new Raum();
 		daten.id = r.ID;
 		daten.kuerzel = r.Kuerzel;
@@ -50,7 +50,7 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -60,8 +60,10 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Räume
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<Raum> getRaeume(final @NotNull DBEntityManager conn) {
+	public static List<Raum> getRaeume(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogRaum> raeume = conn.queryAll(DTOKatalogRaum.class);
 		final ArrayList<Raum> daten = new ArrayList<>();
 		for (final DTOKatalogRaum r : raeume)
@@ -71,19 +73,19 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<Raum> daten = getRaeume(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Raum mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Raum mit der ID null ist unzulässig.");
 		final DTOKatalogRaum raum = conn.queryByKey(DTOKatalogRaum.class, id);
 		if (raum == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Raum mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Raum mit der ID %d gefunden.".formatted(id));
 		final Raum daten = dtoMapper.apply(raum);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -93,7 +95,7 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
@@ -102,7 +104,7 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOKatalogRaum.class, patchMappings);
 	}
 
@@ -118,8 +120,10 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -131,8 +135,10 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		return super.addBasicMultiple(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -143,8 +149,10 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @param id   die ID des Raums
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOKatalogRaum.class, dtoMapper);
 	}
 
@@ -155,8 +163,10 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @param ids   die IDs der Räume
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOKatalogRaum.class, dtoMapper);
 	}
 

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -22,7 +22,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLeh
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -48,7 +48,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -105,23 +105,23 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		if (idStundenplan == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final List<StundenplanUnterricht> daten = getUnterrichte(conn, idStundenplan);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
-	private StundenplanUnterricht getUnterricht(final Long id) {
+	private StundenplanUnterricht getUnterricht(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw OperationError.BAD_REQUEST.exception("Eine Anfrage zu einem Unterricht mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Unterricht mit der ID null ist unzulässig.");
 		final DTOStundenplanUnterricht dtoUnterricht = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 		if (dtoUnterricht == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
 		final List<Long> raeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtRaum.class)
 				.stream().map(b -> b.Raum_ID).toList();
 		final List<Long> schienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtSchiene.class)
@@ -144,7 +144,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final StundenplanUnterricht daten = getUnterricht(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -154,12 +154,12 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("idZeitraster", (conn, dto, value, map) -> {
 			final DTOStundenplanZeitraster zeitraster = conn.queryByKey(DTOStundenplanZeitraster.class, value);
 			if (zeitraster == null)
-				throw OperationError.NOT_FOUND.exception("Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
+				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
 			dto.Zeitraster_ID = zeitraster.ID;
 		}),
 		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToIntegerInRange(value, false, 0, 100)),
@@ -169,14 +169,14 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 			} else {
 				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
 				if (kurs == null)
-					throw OperationError.NOT_FOUND.exception("Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
+					throw new ApiOperationException(Status.NOT_FOUND, "Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
 				dto.Kurs_ID = kurs.ID;
 			}
 		}),
 		Map.entry("idFach", (conn, dto, value, map) -> {
 			final DTOFach fach = conn.queryByKey(DTOFach.class, value);
 			if (fach == null)
-				throw OperationError.NOT_FOUND.exception("Fach mit der ID %d nicht gefunden.".formatted((Long) value));
+				throw new ApiOperationException(Status.NOT_FOUND, "Fach mit der ID %d nicht gefunden.".formatted((Long) value));
 			dto.Fach_ID = fach.ID;
 		}),
 		Map.entry("lehrer", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
@@ -186,7 +186,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	);
 
 
-	private void patchLehrer(final long idUnterricht, final Map<String, Object> map) {
+	private void patchLehrer(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("lehrer"))
 			return;
 		final List<Long> lehrer = JSONMapper.convertToListOfLong(map.get("lehrer"), false);
@@ -201,7 +201,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 
-	private void patchKlassen(final long idUnterricht, final Map<String, Object> map) {
+	private void patchKlassen(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("klassen"))
 			return;
 		final List<Long> klassen = JSONMapper.convertToListOfLong(map.get("klassen"), false);
@@ -216,7 +216,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 
-	private void patchRaeume(final long idUnterricht, final Map<String, Object> map) {
+	private void patchRaeume(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("raeume"))
 			return;
 		final List<Long> raeume = JSONMapper.convertToListOfLong(map.get("raeume"), false);
@@ -231,7 +231,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 
-	private void patchSchienen(final long idUnterricht, final Map<String, Object> map) {
+	private void patchSchienen(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
 		if (!map.containsKey("schienen"))
 			return;
 		final List<Long> schienen = JSONMapper.convertToListOfLong(map.get("schienen"), false);
@@ -246,11 +246,11 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 
-	private void patchInternal(final DTOStundenplanUnterricht dto, final Map<String, Object> map) {
+	private void patchInternal(final DTOStundenplanUnterricht dto, final Map<String, Object> map) throws ApiOperationException {
 		applyPatchMappings(conn, dto, map, patchMappings, null);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		// Passe ggf. die Listen an
 		patchLehrer(dto.ID, map);
@@ -262,15 +262,15 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
 		final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		patchInternal(dto, map);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -282,18 +282,20 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @param is   der Input-Stream mit der Liste der Patches
 	 *
 	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response patchMultiple(final InputStream is) {
+	public Response patchMultiple(final InputStream is) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps) {
 			final Long id = JSONMapper.convertToLong(map.get("id"), true);
 			if (id == null)
-				throw OperationError.BAD_REQUEST.exception("Ein Patch mit der ID null ist nicht möglich.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 			if (map.size() == 1)
-				return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine zu patchenden Daten enthalten.");
+				throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine zu patchenden Daten enthalten.");
 			final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 			if (dto == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			patchInternal(dto, map);
 		}
 		return Response.status(Status.NO_CONTENT).build();
@@ -304,9 +306,9 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	private static final Set<String> requiredCreateAttributes = Set.of("idZeitraster", "wochentyp", "idKurs", "idFach");
 
 
-	private final Function<DTOStundenplanUnterricht, StundenplanUnterricht> dtoMapper = (final DTOStundenplanUnterricht u) -> getUnterricht(u.ID);
+	private final DTOMapper<DTOStundenplanUnterricht, StundenplanUnterricht> dtoMapper = (final DTOStundenplanUnterricht u) -> getUnterricht(u.ID);
 
-	private StundenplanUnterricht addInternal(final long newID, final Map<String, Object> map) {
+	private StundenplanUnterricht addInternal(final long newID, final Map<String, Object> map) throws ApiOperationException {
 		final DTOStundenplanUnterricht dto = newDTO(DTOStundenplanUnterricht.class, newID, (obj, id) -> obj.ID = id);
 		patchInternal(dto, map);
 		return dtoMapper.apply(dto);
@@ -320,12 +322,14 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		for (final String attr : requiredCreateAttributes)
 			if (!map.containsKey(attr))
-				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		final StundenplanUnterricht daten = addInternal(conn.transactionGetNextID(DTOStundenplanUnterricht.class), map);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -338,13 +342,15 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps)
 			for (final String attr : requiredCreateAttributes)
 				if (!map.containsKey(attr))
-					return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage bei mindestens einem Unterricht".formatted(attr));
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage bei mindestens einem Unterricht".formatted(attr));
 		final List<StundenplanUnterricht> daten = new ArrayList<>();
 		long newID = conn.transactionGetNextID(DTOStundenplanUnterricht.class);
 		for (final Map<String, Object> map : multipleMaps)
@@ -359,8 +365,10 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @param id   die ID des Unterrichts
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOStundenplanUnterricht.class, dtoMapper);
 	}
 
@@ -371,14 +379,16 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @param ids   die IDs der Unterrichte
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanUnterricht.primaryKeyQuery.multiple", ids, DTOStundenplanUnterricht.class)
 				.stream().map(u -> u.Zeitraster_ID).toList();
 		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", idsZeitraster, DTOStundenplanZeitraster.class);
 		for (final DTOStundenplanZeitraster dto : dtos)
 			if (dto.Stundenplan_ID != this.idStundenplan)
-				throw OperationError.BAD_REQUEST.exception("Der Zeitraster-Eintrag eines Unterrichtes gehört nicht zu dem angegebenen Stundenplan.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag eines Unterrichtes gehört nicht zu dem angegebenen Stundenplan.");
 		return super.deleteBasicMultiple(ids, DTOStundenplanUnterricht.class, dtoMapper);
 	}
 

@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
@@ -600,9 +601,12 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten der Abiturdaten der GOSt.
+	 *
 	 * @return Inhalt des Feldes gostAbitur
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ReportingSchuelerGostAbitur gostAbitur() {
+	public ReportingSchuelerGostAbitur gostAbitur() throws ApiOperationException {
 		return gostAbitur;
 	}
 

@@ -8,16 +8,16 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import de.svws_nrw.core.data.oauth2.OAuth2ClientSecret;
 import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataOauthClientSecrets extends DataManager<Long> {
 
 	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleOAuthSecrets} in einen Core-DTO {@link OAuth2ClientSecret}. */
-	private static final Function<DTOSchuleOAuthSecrets, OAuth2ClientSecret> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
+	private static final DTOMapper<DTOSchuleOAuthSecrets, OAuth2ClientSecret> dtoMapper = (final DTOSchuleOAuthSecrets secrets) -> {
 		final OAuth2ClientSecret daten = new OAuth2ClientSecret();
 		daten.id = secrets.ID;
 		daten.authServer = secrets.AuthServer;
@@ -51,17 +51,17 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<DTOSchuleOAuthSecrets> daten = conn.queryNamed("DTOSchuleOAuthSecrets.all", DTOSchuleOAuthSecrets.class).getResultList();
 		final List<OAuth2ClientSecret> result = new ArrayList<>();
 		if (daten == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final DTOSchuleOAuthSecrets secret : daten)
 			result.add(dtoMapper.apply(secret));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
@@ -69,12 +69,12 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		// Bestimme den Typ des OAuth2-Servers, dessen Secrets aus der Darenbank ermittelt werden sollen
 		final OAuth2ServerTyp typ = OAuth2ServerTyp.getByID(id);
 		final DTOSchuleOAuthSecrets daten = getDto(typ);
 		if (daten == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(daten)).build();
 	}
 
@@ -99,7 +99,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID)
 					|| OAuth2ServerTyp.getByID(patch_id.longValue()) == null)
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("authServer", (conn, dto, value, map) -> {
 			try {
@@ -107,7 +107,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 				new URI(authServer).toURL();
 				dto.AuthServer = authServer;
 			} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
-				throw OperationError.BAD_REQUEST.exception(e);
+				throw new ApiOperationException(Status.BAD_REQUEST, e);
 			}
 		}),
 		Map.entry("clientID", (conn, dto, value, map) -> dto.ClientID = JSONMapper.convertToString(value, false, false, null)),
@@ -116,7 +116,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOSchuleOAuthSecrets.class, patchMappings);
 	}
 
@@ -127,8 +127,10 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @param id die ID des {@link DTOSchuleOAuthSecrets}
 	 *
 	 * @return die HTTP-Response, welche den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOSchuleOAuthSecrets.class, dtoMapper);
 	}
 
@@ -141,23 +143,25 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @param is der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		try {
 			final OAuth2ClientSecret data =  JSONMapper.mapper.readValue(is, OAuth2ClientSecret.class);
 			if (getDto(OAuth2ServerTyp.getByID(data.id)) != null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			final DTOSchuleOAuthSecrets toPersist = new DTOSchuleOAuthSecrets(data.id, data.authServer, data.clientID, data.clientSecret);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(toPersist)) {
 				conn.transactionRollback();
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 			}
 			conn.transactionFlush();
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(toPersist)).build();
 		} catch (final IOException e) {
 			conn.transactionRollback();
-			throw OperationError.BAD_REQUEST.exception(e);
+			throw new ApiOperationException(Status.BAD_REQUEST, e);
 		}
 	}
 

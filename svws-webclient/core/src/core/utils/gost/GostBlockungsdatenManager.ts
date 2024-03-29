@@ -1828,7 +1828,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @param regelmenge  Die Menge der IDs der Regeln.
 	 *
-	 * @throws DeveloperNotificationException, falls die Regel nicht gefunden wird.
+	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
 	 */
 	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
 		UserNotificationException.ifTrue("Ein Löschen von Regeln ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());

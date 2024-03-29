@@ -1,11 +1,15 @@
 package de.svws_nrw.module.reporting.proxytypes.klasse;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
@@ -111,7 +115,14 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 			super.setFolgeklasse(
 				new ProxyReportingKlasse(
 					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse()))));
+					reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
+						try {
+							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new KlassenDaten();
+						}
+					})));
 		}
 		return super.folgeklasse();
 	}
@@ -126,7 +137,14 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 			super.setJahrgang(
 				new ProxyReportingJahrgang(
 					this.reportingRepository,
-					this.reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), j -> new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idJahrgang()))));
+					this.reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), j -> {
+						try {
+							return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idJahrgang());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new JahrgangsDaten();
+						}
+					})));
 		}
 		return super.jahrgang();
 	}
@@ -140,7 +158,14 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		if (super.klassenleitungen().isEmpty() && !super.idsKlassenleitungen().isEmpty()) {
 			super.setKlassenleitungen(
 				super.idsKlassenleitungen().stream()
-					.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(klId)))
+					.map(klId -> this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(klId, l -> {
+						try {
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(klId);
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new LehrerStammdaten();
+						}
+					}))
 					.map(l ->
 						(ReportingLehrer) new ProxyReportingLehrer(
 							this.reportingRepository,
@@ -162,7 +187,14 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty() && !super.idsSchueler().isEmpty()) {
-			final KlassenDaten tempKlasse = this.reportingRepository.mapKlassen().compute(super.id(), (k, v) -> new DataKlassendaten(this.reportingRepository.conn()).getFromID(super.id()));
+			final KlassenDaten tempKlasse = this.reportingRepository.mapKlassen().compute(super.id(), (k, v) -> {
+				try {
+					return new DataKlassendaten(this.reportingRepository.conn()).getFromID(super.id());
+				} catch (final ApiOperationException e) {
+					e.printStackTrace();
+					return new KlassenDaten();
+				}
+			});
 			super.setSchueler(
 				DataSchuelerStammdaten.getListStammdaten(this.reportingRepository.conn(), tempKlasse.schueler.stream().map(s -> s.id).toList()).stream()
 					.map(s -> this.reportingRepository.mapSchuelerStammdaten().computeIfAbsent(s.id, k -> s))
@@ -191,7 +223,14 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 			super.setVorgaengerklasse(
 				new ProxyReportingKlasse(
 					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idVorgaengerklasse(), k -> new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idVorgaengerklasse()))));
+					reportingRepository.mapKlassen().computeIfAbsent(super.idVorgaengerklasse(), k -> {
+						try {
+							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idVorgaengerklasse());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new KlassenDaten();
+						}
+					})));
 		}
 		return super.vorgaengerklasse();
 	}

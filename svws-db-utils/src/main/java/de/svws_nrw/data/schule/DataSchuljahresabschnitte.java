@@ -12,7 +12,7 @@ import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -123,12 +123,12 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw OperationError.BAD_REQUEST.exception("Die ID des Abschnitts darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Abschnitts darf nicht null sein.");
 		final Schuljahresabschnitt daten = getByID(conn, id);
 		if (daten == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(id));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -4,12 +4,12 @@ import de.svws_nrw.core.data.reporting.ReportingAusgabedaten;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.ReportingErrorResponse;
 import de.svws_nrw.module.reporting.html.HtmlBuilder;
 import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,12 +44,15 @@ public final class PdfFactory {
 
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen Html-Inhalten zu erzeugen.
+	 *
 	 * @param htmlBuilders Eine Map mit den Dateinamen und Html-Dateiinhalten.
 	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 * @param logger Logger, der die Erstellung der Reports protokolliert.
 	 * @param log Log, das die Erstellung des Reports protokolliert.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) {
+	public PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
@@ -62,30 +65,33 @@ public final class PdfFactory {
 
 		// Validiere die htmlBuilders
 		if (htmlBuilders == null || htmlBuilders.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Die Html-Dateiinhalte sind nicht vorhanden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Html-Dateiinhalte sind nicht vorhanden.");
 
 		this.htmlBuilders = htmlBuilders;
 
 		// Validiere Reporting-Ausgabedaten
 		if (reportingAusgabedaten == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine Daten zur Ausgabe im Report übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Daten zur Ausgabe im Report übergeben.");
 
 		this.reportingAusgabedaten = reportingAusgabedaten;
 
 		// Validiere die Angaben zur Vorlage für den Report
 		if (ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage) == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine gültige Report-Vorlage übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine gültige Report-Vorlage übergeben.");
 
 		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage));
 
 		if (this.htmlTemplateDefinition == null)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Template-Definitionen inkonsistent.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Template-Definitionen inkonsistent.");
 	}
 
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen PDF-Datei oder ZIP-Datei mit den mehreren generierten PDF-Dateien.
-	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine WebApplicationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 *
+	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response createPdfResponse() {
 
@@ -94,17 +100,13 @@ public final class PdfFactory {
 			if (!pdfBuilders.isEmpty()) {
 				if (!reportingAusgabedaten.einzelausgabeHauptdaten || pdfBuilders.size() == 1) {
 					return pdfBuilders.getFirst().getPdfResponse();
-				} else {
-					final byte[] zipData = createZIP(pdfBuilders);
-					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlTemplateDefinition.getDateiname() + ".zip", StandardCharsets.UTF_8);
-					return Response.ok(zipData, "application/zip")
-						.header("Content-Disposition", "attachment; " + encodedFilename)
-						.build();
 				}
-			} else {
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Es sind keine PDF-Builder generiert worden.");
+				final byte[] zipData = createZIP(pdfBuilders);
+				final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlTemplateDefinition.getDateiname() + ".zip", StandardCharsets.UTF_8);
+				return Response.ok(zipData, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename).build();
 			}
-		} catch (Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es sind keine PDF-Builder generiert worden.");
+		} catch (final Exception e) {
 			return new ReportingErrorResponse(e, logger, log).getResponse();
 		}
 	}
@@ -129,10 +131,14 @@ public final class PdfFactory {
 
 	/**
 	 * Erstellt eine ZIP-Datei, die alle PDF-Dateien der übergebenen PDF-Builder enthält.
+	 *
 	 * @param pdfBuilders Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
+	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws WebApplicationException {
+	private static byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws ApiOperationException {
 		final byte[] zipData;
 		try {
 			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -147,7 +153,7 @@ public final class PdfFactory {
 				zipData = baos.toByteArray();
 			}
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die erzeugten PDF-Dateien konnten nicht als ZIP-Datei zusammengestellt werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die erzeugten PDF-Dateien konnten nicht als ZIP-Datei zusammengestellt werden.");
 		}
 		return zipData;
 	}

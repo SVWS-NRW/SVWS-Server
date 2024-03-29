@@ -12,8 +12,7 @@ import de.svws_nrw.data.datenaustausch.UntisGPU001MultipartBody;
 import de.svws_nrw.data.gost.DataKurs42;
 import de.svws_nrw.data.gost.DataLupo;
 import de.svws_nrw.db.Benutzer;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +29,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -69,12 +69,16 @@ public class APIGostDatenaustausch {
     		@PathParam("mode") final String mode, @RequestBody(description = "Die LuPO-Datei", required = true, content =
 				@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode)))
-    		return OperationError.BAD_REQUEST.getResponse("Der Modus zum Ersetzen von Daten muss auf 'none', 'schueler' oder 'all' gesetzt sein");
-    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
-    	final boolean replaceJahrgang = "all".equals(mode);
-    	final boolean replaceSchueler = "all".equals(mode) || "schueler".equals(mode);
-    	return DataLupo.importMDB(user, multipart, replaceJahrgang, replaceSchueler);
+    	return DBBenutzerUtils.run(() -> {
+	    	if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode)))
+	    		return new ApiOperationException(Status.BAD_REQUEST, "Der Modus zum Ersetzen von Daten muss auf 'none', 'schueler' oder 'all' gesetzt sein").getResponse();
+	    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
+	    	final boolean replaceJahrgang = "all".equals(mode);
+	    	final boolean replaceSchueler = "all".equals(mode) || "schueler".equals(mode);
+	    	return DataLupo.importMDB(user, multipart, replaceJahrgang, replaceSchueler);
+    	}, request,
+    		ServerMode.STABLE,
+    		BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
     }
 
 
@@ -101,8 +105,10 @@ public class APIGostDatenaustausch {
     public Response getGostLupoExportMDBFuerJahrgang(@PathParam("schema") final String schemaname,
     		@PathParam("jahrgang") final String jahrgang,
     		@Context final HttpServletRequest request) {
-    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
-		return DataLupo.exportMDB(user, jahrgang);
+    	return DBBenutzerUtils.run(() -> {
+    		final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
+    		return DataLupo.exportMDB(user, jahrgang);
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
     }
 
 
@@ -135,9 +141,9 @@ public class APIGostDatenaustausch {
     		@RequestBody(description = "Die Zip-Datei mit den Textdateien der Kurs 42-Blockung", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
-	    	return DataKurs42.importZip(conn, multipart);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataKurs42.importZip(conn, multipart), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
     }
 
 

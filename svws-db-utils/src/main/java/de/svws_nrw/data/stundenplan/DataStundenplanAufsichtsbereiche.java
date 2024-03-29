@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -43,7 +43,7 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanAufsichtsbereich} in einen Core-DTO {@link StundenplanAufsichtsbereich}.
 	 */
-	private static final Function<DTOStundenplanAufsichtsbereich, StundenplanAufsichtsbereich> dtoMapper = (final DTOStundenplanAufsichtsbereich a) -> {
+	private static final DTOMapper<DTOStundenplanAufsichtsbereich, StundenplanAufsichtsbereich> dtoMapper = (final DTOStundenplanAufsichtsbereich a) -> {
 		final StundenplanAufsichtsbereich daten = new StundenplanAufsichtsbereich();
 		daten.id = a.ID;
 		daten.kuerzel = a.Kuerzel;
@@ -53,7 +53,7 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -64,8 +64,10 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Liste der Aufsichtsbereiche
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanAufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanAufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final List<DTOStundenplanAufsichtsbereich> aufsichtsbereiche = conn.queryNamed("DTOStundenplanAufsichtsbereich.stundenplan_id", idStundenplan, DTOStundenplanAufsichtsbereich.class);
 		final ArrayList<StundenplanAufsichtsbereich> daten = new ArrayList<>();
 		for (final DTOStundenplanAufsichtsbereich a : aufsichtsbereiche)
@@ -74,18 +76,18 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanAufsichtsbereich> daten = getAufsichtsbereiche(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Aufsichtsbereich eines Stundenplans mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Aufsichtsbereich eines Stundenplans mit der ID null ist unzulässig.");
 		final DTOStundenplanAufsichtsbereich aufsichtsbereich = conn.queryByKey(DTOStundenplanAufsichtsbereich.class, id);
 		if (aufsichtsbereich == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Aufsichtsbereich eines Stundenplans mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Aufsichtsbereich eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanAufsichtsbereich daten = dtoMapper.apply(aufsichtsbereich);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -95,14 +97,14 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOStundenplanAufsichtsbereich.class, patchMappings);
 	}
 
@@ -121,8 +123,10 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -135,8 +139,10 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -148,8 +154,10 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @param id   die ID des Aufsichtsbereichs
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOStundenplanAufsichtsbereich.class, dtoMapper);
 	}
 
@@ -160,12 +168,14 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @param ids   die IDs der Aufsichtsbereiche
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		final List<DTOStundenplanAufsichtsbereich> dtos = conn.queryNamed("DTOStundenplanAufsichtsbereich.primaryKeyQuery.multiple", ids, DTOStundenplanAufsichtsbereich.class);
 		for (final DTOStundenplanAufsichtsbereich dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
-				throw OperationError.BAD_REQUEST.exception("Der Aufsichtsbereich-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Aufsichtsbereich-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
 		return super.deleteBasicMultiple(ids, DTOStundenplanAufsichtsbereich.class, dtoMapper);
 	}
 

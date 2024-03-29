@@ -115,8 +115,9 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
     public Response getKatalogJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-        return (new DataKatalogJahrgaenge()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogJahrgaenge()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 

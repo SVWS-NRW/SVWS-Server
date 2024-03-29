@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import de.svws_nrw.config.SVWSKonfiguration;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse dient als Cache für Datei-Ressourcen, wie dem SVWS-Client, die über
@@ -115,15 +116,17 @@ public final class ResourceFileManager {
 	 * @param response   das {@link HttpServletResponse}-Objekt für die Daten der Ressource
 	 *
 	 * @return true, falls die Response gültige Daten beinhaltet, ansonsten false
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public boolean handleResponse(final String path, final HttpServletResponse response) {
+    public boolean handleResponse(final String path, final HttpServletResponse response) throws ApiOperationException {
     	final ResourceFile res = files.get(path);
     	if (res == null)
     		return false;
     	try {
 			res.write(response);
 		} catch (final IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
     	return true;
     }
@@ -138,8 +141,10 @@ public final class ResourceFileManager {
      * @param path   der Pfad der Datei-Ressource
      *
      * @return die Daten der Datei-Ressource oder null im Fehlerfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public byte[] getData(final String path) {
+    public byte[] getData(final String path) throws ApiOperationException {
     	final ResourceFile res = files.get(path);
     	if (res == null)
     		return new byte[0];

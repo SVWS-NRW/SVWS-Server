@@ -5,8 +5,8 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.schema.DBUtilsSchema;
-import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +20,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -57,11 +56,12 @@ public class APISchema {
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates ...
-    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
-    	// ... führe das Update aus ...
-    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
-    	// ... und gebe den Log zurück
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+	    	// ... führe das Update aus ...
+	    	final LogConsumerList log = DBUtilsSchema.updateSchema(conn.getUser(), revision);
+	    	// ... und gebe den Log zurück
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
 
@@ -108,7 +108,7 @@ public class APISchema {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 	    	if (version == null)
-	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+	    		throw new ApiOperationException(Status.NOT_FOUND);
 	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.Revision).build();
     	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
@@ -139,7 +139,7 @@ public class APISchema {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
 	    	if (version == null)
-	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+	    		throw new ApiOperationException(Status.NOT_FOUND);
 	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.IsTainted).build();
     	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }

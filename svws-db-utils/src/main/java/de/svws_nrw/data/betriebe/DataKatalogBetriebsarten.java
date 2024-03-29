@@ -16,7 +16,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -60,26 +60,26 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<DTOKatalogAdressart> katalog = conn.queryAll(DTOKatalogAdressart.class);
     	if (katalog == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse("Die ID der gesuchten Beshäftigungart darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der gesuchten Beshäftigungart darf nicht null sein.");
 		final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
 		if (art == null)
-			return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID " + id + " existiert nicht.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit der ID " + id + " existiert nicht.");
 		final KatalogEintrag eintrag = dtoMapper.apply(art);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(eintrag).build();
 	}
@@ -90,8 +90,10 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
      * @param is            das JSON-Objekt mit den Daten
      *
      * @return Eine Response mit der neuen Betriebsart
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response create(final InputStream is) {
+    public Response create(final InputStream is) throws ApiOperationException {
         DTOKatalogAdressart k_addressart = null;
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
@@ -112,7 +114,7 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
                     case "text" -> k_addressart.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
                     case "istSichtbar" -> k_addressart.Sichtbar = JSONMapper.convertToBoolean(value, true);
                     case "istAenderbar" -> k_addressart.Aenderbar = JSONMapper.convertToBoolean(value, true);
-                    default -> throw OperationError.BAD_REQUEST.exception();
+                    default -> throw new ApiOperationException(Status.BAD_REQUEST);
                 }
             }
             conn.transactionPersist(k_addressart);
@@ -122,14 +124,14 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
     }
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
-            return OperationError.NOT_FOUND.getResponse("Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
             final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
             if (art == null)
-                return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+                throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
             for (final Entry<String, Object> entry : map.entrySet()) {
                 final String key = entry.getKey();
                 final Object value = entry.getValue();
@@ -137,12 +139,12 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
                     case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
 					case "istSichtbar" -> art.Sichtbar = JSONMapper.convertToBoolean(value, true);
 					case "istAenderbar" -> art.Aenderbar = JSONMapper.convertToBoolean(value, true);
-                   	default -> throw OperationError.BAD_REQUEST.exception();
+                   	default -> throw new ApiOperationException(Status.BAD_REQUEST);
                 }
             }
             conn.transactionPersist(art);

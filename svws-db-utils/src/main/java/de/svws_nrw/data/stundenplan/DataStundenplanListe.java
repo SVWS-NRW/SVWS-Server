@@ -15,8 +15,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -129,13 +128,15 @@ public final class DataStundenplanListe extends DataManager<Long> {
      * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 *
 	 * @return Eine Response mit dem neuen Stundenplan-Listeneintrag
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addEmpty(final long idSchuljahresabschnitt) {
+	public Response addEmpty(final long idSchuljahresabschnitt) throws ApiOperationException {
 		try {
 			// Bestimme den Schuljahresabschnitt
 			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresabschnitt);
 			if (abschnitt == null)
-				throw OperationError.NOT_FOUND.exception("Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
+				throw new ApiOperationException(Status.NOT_FOUND, "Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTOSchemaAutoInkremente dbStundenplanID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Stundenplan");
 			final long idStundenplan = dbStundenplanID == null ? 1 : dbStundenplanID.MaxID + 1;
@@ -164,10 +165,10 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			if (exception instanceof IllegalArgumentException)
-				return OperationError.NOT_FOUND.getResponse();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
+				throw new ApiOperationException(Status.NOT_FOUND);
+			if (exception instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, exception);
 		}
 	}
 
@@ -178,12 +179,14 @@ public final class DataStundenplanListe extends DataManager<Long> {
      * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final long idStundenplan) {
+	public Response delete(final long idStundenplan) throws ApiOperationException {
 		// Bestimme den Stundenplan zu der ID und lösche ihn, falls er vorhanden ist
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Ein Stundenplan mit der ID %d konnte nicht gefunden werden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Ein Stundenplan mit der ID %d konnte nicht gefunden werden.".formatted(idStundenplan));
 		conn.transactionRemove(stundenplan);
 		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}

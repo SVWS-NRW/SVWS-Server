@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -25,6 +26,7 @@ import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -73,10 +75,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis eines Stammdaten-Objektes.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param reportingSchueler	Schüler, dessen GOSt-Laufbahnplanung gelesen werden soll.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) {
+	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) throws ApiOperationException {
 		super(0, "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		this.reportingRepository = reportingRepository;
 
@@ -88,8 +93,22 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		super.setAbiturjahr(abiturdaten.abiturjahr);
 
 		// Erstelle die Maps und Manager, welche zum Abiturjahr die notwendigen Informationen liefern, und ergänze sie jeweils bei Bedarf.
-		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id()));
-		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr()));
+		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten = this.reportingRepository.mapGostBeratungsdaten().computeIfAbsent(reportingSchueler.id(), s -> {
+			try {
+				return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
+			} catch (final ApiOperationException e) {
+				e.printStackTrace();
+				return new GostLaufbahnplanungBeratungsdaten();
+			}
+		});
+		final GostJahrgangsdaten gostJahrgangsdaten = this.reportingRepository.mapGostAbiturjahrgangDaten().computeIfAbsent(super.abiturjahr(), a -> {
+			try {
+				return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
+			} catch (final ApiOperationException e) {
+				e.printStackTrace();
+				return new GostJahrgangsdaten();
+			}
+		});
 		if (!this.reportingRepository.mapGostAbiturjahrgangFaecher().containsKey(super.abiturjahr())) {
 			final GostFaecherManager tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
 			tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(), super.abiturjahr()));
@@ -199,7 +218,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		if (gostBeratungsdaten.beratungslehrerID != null) {
 			super.setLetzteBeratungLehrkraft(new ProxyReportingLehrer(
 				this.reportingRepository,
-				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID))));
+				this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
+					try {
+						return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
+					} catch (final ApiOperationException e) {
+						e.printStackTrace();
+						return new LehrerStammdaten();
+					}
+				})));
 		}
 		// Beratungslehrkräfte der Stufe bestimmen aus den GOSt-Daten der Jahrgangsstufe
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
@@ -208,7 +234,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				super.beratungslehrkraefte().add(
 					new ProxyReportingLehrer(
 						this.reportingRepository,
-						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id))));
+						this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(lehrkraft.id, l -> {
+							try {
+								return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id);
+							} catch (final ApiOperationException e) {
+								e.printStackTrace();
+								return new LehrerStammdaten();
+							}
+						})));
 			}
 			super.beratungslehrkraefte().sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
 		}

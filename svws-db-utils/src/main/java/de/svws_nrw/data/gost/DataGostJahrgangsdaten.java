@@ -20,7 +20,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -81,26 +81,28 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	 * @param abijahrgang   der Abiturjahrgang
 	 *
 	 * @return die Jahrgangsdaten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) {
+	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
     	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final DTOGostJahrgangsdaten jahrgangsdaten = (abijahrgang == -1)
 				? getVorlage(conn)
 				: conn.queryByKey(DTOGostJahrgangsdaten.class, abijahrgang);
 		if (jahrgangsdaten == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
 		final GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
@@ -147,20 +149,20 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	}
 
 	@Override
-	public Response get(final Integer abi_jahrgang) {
+	public Response get(final Integer abi_jahrgang) throws ApiOperationException {
 		final GostJahrgangsdaten daten = getJahrgangsdaten(conn, abi_jahrgang);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(final Integer abiturjahr, final InputStream is) {
+	public Response patch(final Integer abiturjahr, final InputStream is) throws ApiOperationException {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() <= 0)
 	    	return Response.status(Status.OK).build();
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
     	if (jahrgangsdaten == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	for (final Entry<String, Object> entry : map.entrySet()) {
     		final String key = entry.getKey();
     		final Object value = entry.getValue();
@@ -168,11 +170,11 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 				case "abiturjahr" -> {
 					final Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
 					if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 				}
-				case "jahrgang" -> throw OperationError.BAD_REQUEST.exception();
-				case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
-				case "istAbgeschlossen" -> throw OperationError.BAD_REQUEST.exception();
+				case "jahrgang" -> throw new ApiOperationException(Status.BAD_REQUEST);
+				case "bezeichnung" -> throw new ApiOperationException(Status.BAD_REQUEST);
+				case "istAbgeschlossen" -> throw new ApiOperationException(Status.BAD_REQUEST);
 				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
 				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
 				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
@@ -180,7 +182,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 					final String tmp = JSONMapper.convertToString(value, false, false, null);
 					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
 					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 					jahrgangsdaten.ZusatzkursGEErstesHalbjahr = halbjahr.kuerzel;
 				}
 				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
@@ -188,11 +190,11 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 					final String tmp = JSONMapper.convertToString(value, false, false, null);
 					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
 					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
 				}
 				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API
-    			default -> throw OperationError.BAD_REQUEST.exception();
+    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
     		}
     	}
     	conn.transactionPersist(jahrgangsdaten);

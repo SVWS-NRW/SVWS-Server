@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.api.ResourceFile;
 import de.svws_nrw.api.ResourceFileManager;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -30,10 +31,14 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
     private static Response getFile(final String filename) {
-    	final byte[] data = ResourceFileManager.client().getData(filename);
-    	if ((data == null) || (data.length == 0))
-    		return Response.status(Status.NOT_FOUND).build();
-        return Response.ok(data).build();
+		try {
+			final byte[] data = ResourceFileManager.client().getData(filename);
+	    	if ((data == null) || (data.length == 0))
+	    		throw new ApiOperationException(Status.NOT_FOUND);
+	        return Response.ok(data).build();
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
+		}
     }
 
 

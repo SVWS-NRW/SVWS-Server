@@ -20,8 +20,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -54,7 +53,7 @@ public final class DataStundenplan extends DataManager<Long> {
 
 	/**
 	 * Prüft, ob ein Stundenplan mit der angegegeben ID vorhanden ist und gibt das Datenbank-DTO
-	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link WebApplicationException}
+	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link ApiOperationException}
 	 * geworfen.
 	 *
 	 * @param conn   die zu verwendende Datenbank-Verbindung
@@ -62,15 +61,15 @@ public final class DataStundenplan extends DataManager<Long> {
 	 *
 	 * @return das Datenbank-DTO
 	 *
-	 * @throws WebApplicationException falls kein Stundenplan mit der ID gefunden wurde
+	 * @throws ApiOperationException falls kein Stundenplan mit der ID gefunden wurde
 	 */
-	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws WebApplicationException {
+	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
 		if (id == null)
-			throw OperationError.NOT_FOUND.exception("Die StundenplanID darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die StundenplanID darf nicht null sein.");
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(id));
 		return stundenplan;
 	}
 
@@ -82,8 +81,10 @@ public final class DataStundenplan extends DataManager<Long> {
 	 * @param id   die ID des Stundenplans
 	 *
 	 * @return das Stundenplan-Objekt
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static Stundenplan getStundenplan(final DBEntityManager conn, final long id) {
+	public static Stundenplan getStundenplan(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
 			return null;
@@ -120,12 +121,12 @@ public final class DataStundenplan extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
 		final Stundenplan stundenplan = DataStundenplan.getStundenplan(conn, id);
 		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
@@ -134,9 +135,9 @@ public final class DataStundenplan extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
-		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }),
+		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> { throw new ApiOperationException(Status.BAD_REQUEST); }),
 		Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
@@ -167,7 +168,7 @@ public final class DataStundenplan extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOStundenplan.class, patchMappings);
 	}
 

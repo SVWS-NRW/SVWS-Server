@@ -15,8 +15,8 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -45,8 +45,10 @@ public final class DataLupo {
 	 *                           sollen, sofern sie bereits vorhanden sind.
      *
      * @return die HTTP-Response mit dem Log
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang, final boolean replaceSchueler) {
+    public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang, final boolean replaceSchueler) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -112,8 +114,10 @@ public final class DataLupo {
      * @param jahrgang   der Jahrgang, für den die LuPO-Datenbank erstellt werden soll
      *
      * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public static Response exportMDB(final Benutzer user, final String jahrgang) {
+    public static Response exportMDB(final Benutzer user, final String jahrgang) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -141,7 +145,7 @@ public final class DataLupo {
 			} catch (@SuppressWarnings("unused") final IOException e) {
 				logger.logLn("Kann die temporäre Datei nicht entfernen");
 			}
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 
         // Lese die Datenbank in die Response ein

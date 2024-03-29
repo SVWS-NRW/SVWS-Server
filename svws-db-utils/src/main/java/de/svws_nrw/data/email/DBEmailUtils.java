@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.email.SMTPServerKonfiguration;
 import de.svws_nrw.data.benutzer.DataBenutzerEMailDaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerMail;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
  * Diese Klasse stellt Hilfsmethoden zur Verfügung, um auf E-Mail-Informationen aus der Datenbank zuzugreifen.
@@ -19,8 +20,10 @@ public final class DBEmailUtils {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die E-Mail-Konfiguration
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static MailSmtpSessionConfig getSMTPConfig(final DBEntityManager conn) {
+	public static MailSmtpSessionConfig getSMTPConfig(final DBEntityManager conn) throws ApiOperationException {
 		try {
 			final AES aes = conn.getUser().getAES();
 			final SMTPServerKonfiguration daten = DataEmailSMTPServerKonfiguration.getOrCreateSMTPServerKonfiguration(conn);

@@ -315,8 +315,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerZugangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerZugangsgruende()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerZugangsgruende()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -337,8 +338,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerAbgangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerAbgangsgruende()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAbgangsgruende()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -359,8 +361,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
     public Response getLehrerBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerBeschaeftigungsarten()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerBeschaeftigungsarten()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -381,8 +384,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
     public Response getLehrerEinsatzstatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerEinsatzstatus()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerEinsatzstatus()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -403,8 +407,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerFachrichtungen()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -425,8 +430,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerFachrichtungAnerkennungen()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerFachrichtungAnerkennungen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -447,8 +453,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
     public Response getLehrerLehraemter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerLehraemter()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehraemter()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -469,8 +476,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehramtAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerLehramtAnerkennungen()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehramtAnerkennungen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -491,8 +499,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerLehrbefaehigungen()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -513,8 +522,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -535,8 +545,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMehrleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerMehrleistungsarten()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMehrleistungsarten()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -557,8 +568,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMinderleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerMinderleistungsarten()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerMinderleistungsarten()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -579,8 +591,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
     public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerRechtsverhaeltnis()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerRechtsverhaeltnis()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -602,8 +615,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getLehrerAnrechnungsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataKatalogLehrerAnrechnungsgruende()).getList();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogLehrerAnrechnungsgruende()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 }

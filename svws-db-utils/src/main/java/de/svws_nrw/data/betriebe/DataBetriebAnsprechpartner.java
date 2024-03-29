@@ -14,7 +14,7 @@ import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -54,16 +54,16 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<DTOAnsprechpartnerAllgemeineAdresse> katalog = conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class);
 		if (katalog == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<BetriebAnsprechpartner> daten = katalog.stream().map(dtoMapper).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
@@ -71,32 +71,35 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 * Liefert die Ansprechparnter des Betriebs mit der betrieb_id zurück
 	 *
 	 * @param  betrieb_id  ID des Betriebs
+	 *
 	 * @return Eine Response mit der Ansprechpartnerliste
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getBetriebansprechpartner(final Long betrieb_id) {
+	public Response getBetriebansprechpartner(final Long betrieb_id) throws ApiOperationException {
 		final List<DTOAnsprechpartnerAllgemeineAdresse> liste = conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.adresse_id", betrieb_id, DTOAnsprechpartnerAllgemeineAdresse.class);
 		if (liste == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<BetriebAnsprechpartner> daten = liste.stream().map(dtoMapper).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse("Die Methode erwartet einen Wert für id. Sie ist nicht übergeben!!");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Methode erwartet einen Wert für id. Sie ist nicht übergeben!!");
 		final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
 		final BetriebAnsprechpartner daten = dtoMapper.apply(ansprechpartner);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
 			if (ansprechpartner == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -104,15 +107,15 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.intValue() != id.intValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
 					case "betrieb_id" -> {
 						final Long betrieb_id = JSONMapper.convertToLong(value, true);
 						if (betrieb_id == null)
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 						if (betrieb == null)
-							throw OperationError.NOT_FOUND.exception();
+							throw new ApiOperationException(Status.NOT_FOUND);
 						ansprechpartner.Adresse_ID = betrieb.ID;
 					}
 					case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Titel.datenlaenge());
@@ -123,7 +126,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 					case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Telefon.datenlaenge());
 					case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Abteilung.datenlaenge());
 					case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_GU_ID.datenlaenge());
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(ansprechpartner);
@@ -136,12 +139,15 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 *
 	 * @param  betrieb_id  ID des Betriebs
 	 * @param  is					JSON-Objekt mit den Daten
+	 *
 	 * @return Eine Response mit dem neuen Ansprechpartner
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final Long betrieb_id, final InputStream is) {
+	public Response create(final Long betrieb_id, final InputStream is) throws ApiOperationException {
 		DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = null;
 		if (betrieb_id == null)
-		    throw OperationError.NOT_FOUND.exception("Parameter betrieb_id darf nicht leer sein.");
+		    throw new ApiOperationException(Status.NOT_FOUND, "Parameter betrieb_id darf nicht leer sein.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			// Bestimme die ID des neuen Ansprechpartners
@@ -149,7 +155,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 			final Long id = (lastID == null) ? 1 : lastID.MaxID + 1;
 			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 			if (betrieb == null)
-				throw OperationError.NOT_FOUND.exception("Ein Betrieb mit der ID " + betrieb_id + " existiert in der Datenbank nicht.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Ein Betrieb mit der ID " + betrieb_id + " existiert in der Datenbank nicht.");
 			// Ansprechpartner anlegen
 			ansprechpartner = new DTOAnsprechpartnerAllgemeineAdresse(id, betrieb_id);
 			for (final Entry<String, Object> entry : map.entrySet()) {
@@ -162,9 +168,9 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 					case "betrieb_id" -> {
 						final Long bid = JSONMapper.convertToLong(value, true);
 						if (bid == null)
-							throw OperationError.BAD_REQUEST.exception("Betireb_ID darf nicht fehlen.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "Betireb_ID darf nicht fehlen.");
 						if (bid.longValue() != betrieb_id.longValue())
-							throw OperationError.BAD_REQUEST.exception("Betrieb_ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "Betrieb_ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
 					case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Titel.datenlaenge());
 					case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge());
@@ -174,7 +180,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 					case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Telefon.datenlaenge());
 					case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Abteilung.datenlaenge());
 					case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_GU_ID.datenlaenge());
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(ansprechpartner);
@@ -189,13 +195,15 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 * @param bids die IDs der Benutzer
 	 *
 	 * @return bei Erfolg eine HTTP-Response 200
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response remove(final List<Long> bids) {
+	public Response remove(final List<Long> bids) throws ApiOperationException {
 		final String strErrorAnsprechpartnerIDFehlt = "Der zu löschende Datensatz in DTOAnsprechpartnerAllgemeineAdresse mit der ID %d existiert nicht.";
 		for (final Long id : bids) {
 			final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
 			if (ansprechpartner == null)
-				throw OperationError.NOT_FOUND.exception(strErrorAnsprechpartnerIDFehlt.formatted(id));
+				throw new ApiOperationException(Status.NOT_FOUND, strErrorAnsprechpartnerIDFehlt.formatted(id));
 			conn.transactionRemove(ansprechpartner);
 		}
 		return Response.status(Status.OK).build();

@@ -17,8 +17,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -152,11 +151,13 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	 * @param id    die Schüler-ID
 	 *
 	 * @return die Liste der Schülerstammdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public SchuelerStammdaten getStammdaten(final DBEntityManager conn, final long id) {
+	public SchuelerStammdaten getStammdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final SchuelerStammdaten daten = dtoMapper.apply(schueler);
 		final DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
 		if (schuelerFoto != null)
@@ -165,9 +166,9 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final SchuelerStammdaten daten = getStammdaten(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -176,7 +177,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("id", (conn, schueler, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
 				if ((patch_id == null) || (patch_id.longValue() != schueler.ID))
-					throw OperationError.BAD_REQUEST.exception();
+					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
 			Map.entry("foto", (conn, schueler, value, map) -> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);
@@ -195,7 +196,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("geschlecht", (conn, schueler, value, map) -> {
 				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 				if (geschlecht == null)
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				schueler.Geschlecht = geschlecht;
 			}),
 			Map.entry("geburtsdatum", (conn, schueler, value, map) -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false, null)),
@@ -221,7 +222,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				} else {
 					final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
 					if (nat == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 					schueler.StaatKrz = nat;
 				}
 			}),
@@ -232,7 +233,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				} else {
 					final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeit2ID);
 					if (nat == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 					schueler.StaatKrz2 = nat;
 				}
 			}),
@@ -240,10 +241,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				final Long religionID = JSONMapper.convertToLong(value, true);
 				if (religionID != null) {
 					if (religionID < 0)
-						throw OperationError.CONFLICT.exception();
+						throw new ApiOperationException(Status.CONFLICT);
 					final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
 					if (rel == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 				}
 				schueler.Religion_ID = religionID;
 			}),
@@ -261,28 +262,28 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);
 				final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 				if (nat == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				schueler.GeburtslandSchueler = nat;
 			}),
 			Map.entry("verkehrspracheFamilie", (conn, schueler, value, map) -> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);
 				final Verkehrssprache vs = Verkehrssprache.getByKuerzelAuto(strData);
 				if (vs == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				schueler.VerkehrsspracheFamilie = vs;
 			}),
 			Map.entry("geburtslandVater", (conn, schueler, value, map) -> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);
 				final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 				if (nat == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				schueler.GeburtslandVater = nat;
 			}),
 			Map.entry("geburtslandMutter", (conn, schueler, value, map) -> {
 				final String strData = JSONMapper.convertToString(value, true, true, null);
 				final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 				if (nat == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				schueler.GeburtslandMutter = nat;
 			}),
 
@@ -290,7 +291,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 			Map.entry("status", (conn, schueler, value, map) -> {
 				final SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
 				if (s == null)
-					throw OperationError.BAD_REQUEST.exception();
+					throw new ApiOperationException(Status.BAD_REQUEST);
 				schueler.Status = s;
 			}),
 			Map.entry("externeSchulNr", (conn, schueler, value, map) -> {
@@ -299,33 +300,33 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 					schueler.ExterneSchulNr = null;
 				} else {
 					if (externeSchulNr.length() != 6)
-						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Ziffern einer Schulnummer aus NRW muss 6 betragen.");
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl der Ziffern einer Schulnummer aus NRW muss 6 betragen.");
 					schueler.ExterneSchulNr = externeSchulNr;
 				}
 			}),
 			Map.entry("fahrschuelerArtID", (conn, schueler, value, map) -> {
 				final Long fid = JSONMapper.convertToLong(value, true);
 				if ((fid != null) && (fid < 0))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				if (fid == null) {
 					schueler.Fahrschueler_ID = null;
 				} else {
 					final DTOFahrschuelerart f = conn.queryByKey(DTOFahrschuelerart.class, fid);
 					if (f == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 					schueler.Fahrschueler_ID = fid;
 				}
 			}),
 			Map.entry("haltestelleID", (conn, schueler, value, map) -> {
 				final Long hid = JSONMapper.convertToLong(value, true);
 				if ((hid != null) && (hid < 0))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				if (hid == null) {
 					schueler.Haltestelle_ID = null;
 				} else {
 					final DTOHaltestellen h = conn.queryByKey(DTOHaltestellen.class, hid);
 					if (h == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 					schueler.Haltestelle_ID = hid;
 				}
 			}),
@@ -348,7 +349,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOSchueler.class, patchMappings);
 	}
 
@@ -361,13 +362,13 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	 * @param wohnortID    die zu setzende Wohnort-ID
 	 * @param ortsteilID   die zu setzende O	eil-ID
 	 *
-	 * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
+	 * @throws ApiOperationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
 	 */
-	private void setWohnort(final DTOSchueler schueler, final Long wohnortID, final Long ortsteilID) throws WebApplicationException {
+	private void setWohnort(final DTOSchueler schueler, final Long wohnortID, final Long ortsteilID) throws ApiOperationException {
 		if ((wohnortID != null) && (wohnortID < 0))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		if ((ortsteilID != null) && (ortsteilID < 0))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		schueler.Ort_ID = wohnortID;
 		// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;

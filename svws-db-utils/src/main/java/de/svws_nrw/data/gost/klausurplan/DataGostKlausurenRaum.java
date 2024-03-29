@@ -1,13 +1,14 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -16,7 +17,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -47,7 +48,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
 	 * {@link GostKlausurraum}.
 	 */
-	public static final Function<DTOGostKlausurenRaeume, GostKlausurraum> dtoMapper = (final DTOGostKlausurenRaeume z) -> {
+	public static final DTOMapper<DTOGostKlausurenRaeume, GostKlausurraum> dtoMapper = (final DTOGostKlausurenRaeume z) -> {
 		final GostKlausurraum daten = new GostKlausurraum();
 		daten.id = z.ID;
 		daten.idTermin = z.Termin_ID;
@@ -63,12 +64,12 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 			Map.entry("idTermin", (conn, dto, value, map) -> {
 				dto.Termin_ID = JSONMapper.convertToLong(value, false);
 				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
-					throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(dto.Termin_ID));
+					throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(dto.Termin_ID));
 			}),
 			Map.entry("idStundenplanRaum", (conn, dto, value, map) -> {
 				dto.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true);
 				if (conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null)
-					throw OperationError.BAD_REQUEST.exception("Stundenplanraum nicht gefunden, ID: " + dto.Stundenplan_Raum_ID);
+					throw new ApiOperationException(Status.BAD_REQUEST, "Stundenplanraum nicht gefunden, ID: " + dto.Stundenplan_Raum_ID);
 			}),
 			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge()))
 		);
@@ -81,22 +82,27 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurräume
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurraum> getKlausurraeumeZuTermin(final DBEntityManager conn, final Long idTermin) {
+	public static List<GostKlausurraum> getKlausurraeumeZuTermin(final DBEntityManager conn, final Long idTermin) throws ApiOperationException {
 		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
-			throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
+			throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id", idTermin, DTOGostKlausurenRaeume.class);
-		return raeume.stream().map(dtoMapper::apply).toList();
+		final List<GostKlausurraum> daten = new ArrayList<>();
+		for (final DTOGostKlausurenRaeume r : raeume)
+			daten.add(dtoMapper.apply(r));
+		return daten;
 	}
 
 	@Override
-	public Response get(final Long idTermin) {
+	public Response get(final Long idTermin) throws ApiOperationException {
 		// Klausurräume zu einem Klausurtermin
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraeumeZuTermin(conn, idTermin)).build();
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasicFiltered(id, is, DTOGostKlausurenRaeume.class, patchMappings, requiredCreateAttributes);
 	}
 
@@ -111,8 +117,10 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @param is Das JSON-Objekt mit den Daten
 	 *
 	 * @return Eine Response mit dem neuen Gost-Klausurraum
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final InputStream is) {
+	public Response create(final InputStream is) throws ApiOperationException {
 		final ObjLongConsumer<DTOGostKlausurenRaeume> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOGostKlausurenRaeume.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -123,8 +131,10 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @param id die ID des zu löschenden Klausurraums
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOGostKlausurenRaeume.class, dtoMapper);
 	}
 

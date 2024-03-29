@@ -64,10 +64,9 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -98,9 +97,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long schueler_id) {
+	public Response get(final Long schueler_id) throws ApiOperationException {
 		if (schueler_id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -118,15 +117,17 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param fach_id       die ID des Faches
 	 *
 	 * @return Die HTTP-Response der Get-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getFachwahl(final Long schueler_id, final Long fach_id) {
+	public Response getFachwahl(final Long schueler_id, final Long fach_id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
 		final GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
 		fachwahl.halbjahre[0] = (fachbelegung == null) ? null : fachbelegung.EF1_Kursart;
@@ -156,9 +157,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 *
 	 * @return der zu übertragende Wert
 	 *
-	 * @throws WebApplicationException (CONFLICT) falls die Fachwahl ungültig ist
+	 * @throws ApiOperationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private String patchFachwahlHalbjahr(final DTOSchueler schueler, final String fwDB, final GostHalbjahr halbjahr, final GostHalbjahr aktHalbjahr, final DTOFach fach, final String fw) throws WebApplicationException {
+	private String patchFachwahlHalbjahr(final DTOSchueler schueler, final String fwDB, final GostHalbjahr halbjahr, final GostHalbjahr aktHalbjahr, final DTOFach fach, final String fw) throws ApiOperationException {
 		if ("".equals(fw))
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
@@ -184,7 +185,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 								|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
 								|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
 						if (!valid)
-							throw OperationError.CONFLICT.exception();
+							throw new ApiOperationException(Status.CONFLICT);
 						return fw;
 					}
 					for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
@@ -193,7 +194,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 						if (kursart == null)
 							continue;
 						if (fw == null)
-							throw OperationError.CONFLICT.exception();
+							throw new ApiOperationException(Status.CONFLICT);
 						switch (fw) {
 							case "M" -> {
 								if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)
@@ -217,14 +218,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 								if ("SP".equals(fach.StatistikFach.daten.kuerzelASD) && (leistung.NotenKrz == Note.ATTEST))
 									return fw;
 							}
-							default -> throw OperationError.CONFLICT.exception();
+							default -> throw new ApiOperationException(Status.CONFLICT);
 						}
 					}
 				}
 			}
 			if (fw == null)
 				return fw;
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		}
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
@@ -232,7 +233,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				|| (fw.equals("ZK") && !halbjahr.istEinfuehrungsphase())
 				|| (fw.equals("AT") && "SP".equals(fach.StatistikFach.daten.kuerzelASD));
 		if (!valid)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		return fw;
 	}
 
@@ -245,32 +246,34 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param is            der {@link InputStream} mit dem JSON-Patch für die Fachwahl
 	 *
 	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response patchFachwahl(final Long schueler_id, final Long fach_id, final InputStream is) {
+	public Response patchFachwahl(final Long schueler_id, final Long fach_id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 			if (schueler == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt
 			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
 			if (abschnitt == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
 					.setParameter("schueler_id", schueler.ID)
 					.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
 					.getResultList().stream().findFirst().orElse(null);
 			if (lernabschnitt == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			final GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)
 					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
 					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
 			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
 			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.TRUE.equals(!fach.IstOberstufenFach))
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
 			if (fachbelegung == null)
 				fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
@@ -281,7 +284,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					case "halbjahre" -> {
 						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
 						if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
-							throw OperationError.CONFLICT.exception();
+							throw new ApiOperationException(Status.CONFLICT);
 						if (wahlen.length == 0) {
 							fachbelegung.EF1_Kursart = null;
 							fachbelegung.EF2_Kursart = null;
@@ -301,10 +304,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					case "abiturFach" -> {
 						final Integer af = JSONMapper.convertToInteger(value, true);
 							if ((af != null) && ((af < 1) || (af > 4)))
-								throw OperationError.CONFLICT.exception();
+								throw new ApiOperationException(Status.CONFLICT);
 							fachbelegung.AbiturFach = af;
 					}
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(fachbelegung);
@@ -319,25 +322,27 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param dtoSchueler   das Schüler-DTO
 	 *
 	 * @return das Laufbahnplanungsdaten-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) {
+	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
 		if (kombis == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 		if (jahrgangsdaten == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abidaten.abiturjahr, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt);
 		if ((halbjahr == null) && (schuljahresabschnitt.Jahr >= abidaten.abiturjahr))
 			halbjahr = GostHalbjahr.Q22;
@@ -369,7 +374,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		try {
 			schuelerDaten.idEnc = aes.encryptBase64(ByteBuffer.wrap(new byte[8]).putLong(schuelerDaten.id).array());
 		} catch (final AESException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 		schuelerDaten.vorname = dtoSchueler.Vorname;
 		schuelerDaten.nachname = dtoSchueler.Nachname;
@@ -400,12 +405,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param idSchueler   die ID des Schülers
 	 *
 	 * @return die Response mit der GZip-Komprimierten Laufbahnplanungs-Datei
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response exportGZip(final long idSchueler) {
+	public Response exportGZip(final long idSchueler) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
 		final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.ID);
 		return JSONMapper.gzipFileResponseFromObject(daten, filename);
@@ -420,12 +427,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param ids   die ID der Schüler
 	 *
 	 * @return die Response mit der ZIP-Datei mit den GZip-Komprimierten Laufbahnplanungs-Dateien
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response exportGZip(final List<Long> ids) {
+	public Response exportGZip(final List<Long> ids) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOSchueler> dtos = conn.queryNamed("DTOSchueler.primaryKeyQuery.multiple", ids, DTOSchueler.class);
 		if (dtos.size() != ids.size())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final String zipname = "Laufbahnplanungen.zip";
 		final byte[] zipdata;
         try {
@@ -444,7 +453,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				zipdata = baos.toByteArray();
 			}
 		} catch (@SuppressWarnings("unused") final IOException | CompressionException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 		return Response.ok(zipdata).header("Content-Disposition", "attachment; filename=\"" + zipname + "\"").build();
 	}
@@ -457,12 +466,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param idSchueler   die ID des Schülers
 	 *
 	 * @return die Response mit den Laufbahnplanungsdaten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response exportJSON(final long idSchueler) {
+	public Response exportJSON(final long idSchueler) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
 		return Response.ok(daten).type(MediaType.APPLICATION_JSON).build();
 	}
@@ -477,8 +488,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param logger                  der Logger
 	 *
 	 * @return true im Erfolgsfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten, final Logger logger) {
+	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten, final Logger logger) throws ApiOperationException {
 		// Lese zunächst die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
@@ -508,9 +521,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		try {
 			final long idDec = ByteBuffer.wrap(aes.decryptBase64(daten.idEnc)).getLong();
 			if (idDec != daten.id)
-				throw OperationError.BAD_REQUEST.exception("Die ID des Schülers wurde verändert oder der AES-Schlüssel in der Datenbank wurde zwischenzeitlich angepasst. Die Daten können daher nicht geladen werden.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schülers wurde verändert oder der AES-Schlüssel in der Datenbank wurde zwischenzeitlich angepasst. Die Daten können daher nicht geladen werden.");
 		} catch (@SuppressWarnings("unused") final AESException e) {
-			throw OperationError.BAD_REQUEST.exception("Die ID des Schülers wurde verändert oder der AES-Schlüssel in der Datenbank wurde zwischenzeitlich angepasst. Die Daten können daher nicht geladen werden.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schülers wurde verändert oder der AES-Schlüssel in der Datenbank wurde zwischenzeitlich angepasst. Die Daten können daher nicht geladen werden.");
 		}
 
 		// Prüfe den Bilingualen Bildungsgang
@@ -718,8 +731,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param multipart   die Laufbahnplanungsdatein als GZIP-Komprimierte JSONs
 	 *
 	 * @return die HTTP-Response mit dem Log
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response importGZip(final MultipartFormDataInput multipart) {
+	public Response importGZip(final MultipartFormDataInput multipart) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstelle den Logger
@@ -787,13 +802,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param data         die Laufbahnplanungsdatei als GZIP-Komprimiertes JSON
 	 *
 	 * @return die HTTP-Response mit dem Log
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response importGZip(final long idSchueler, final byte[] data) {
+	public Response importGZip(final long idSchueler, final byte[] data) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle den Logger
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
@@ -825,13 +842,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param laufbahnplanungsdaten   die Laufbahnplanungsdaten
 	 *
 	 * @return die HTTP-Response mit dem Log
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response importJSON(final long idSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten) {
+	public Response importJSON(final long idSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle den Logger
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
@@ -854,8 +873,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param pruefungsArt   die Art der Belegprüfung
 	 *
 	 * @return die Belegprüfungsergebnisse
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response pruefeBelegungAbiturjahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
+	public Response pruefeBelegungAbiturjahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
@@ -933,8 +954,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param idSchueler   die ID des Schülers
 	 *
 	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response reset(final long idSchueler) {
+	public Response reset(final long idSchueler) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);

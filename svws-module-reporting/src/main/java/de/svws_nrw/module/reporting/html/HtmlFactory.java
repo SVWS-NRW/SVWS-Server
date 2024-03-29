@@ -6,7 +6,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.ReportingErrorResponse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextDruckparameter;
@@ -15,8 +15,8 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,17 +59,20 @@ public final class HtmlFactory {
 
 	/**
 	 * Erzeugt eine neue Html-Factory, um eine Html-Datei aus einem html-Template zu erzeugen.
+	 *
 	 * @param conn Die Verbindung zur Datenbank.
 	 * @param reportingAusgabedaten Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
 	 * @param logger Logger, der die Erstellung der Reports protokolliert.
 	 * @param log Log, das die Erstellung des Reports protokolliert.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlFactory(final DBEntityManager conn, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) {
+	public HtmlFactory(final DBEntityManager conn, final ReportingAusgabedaten reportingAusgabedaten, final Logger logger, final LogConsumerList log) throws ApiOperationException {
 
 		this.logger = logger;
 		this.log = log;
 
-		if (logger == null || log == null) {
+		if ((logger == null) || (log == null)) {
 			this.logger = new Logger();
 			this.log = new LogConsumerList();
 			this.logger.addConsumer(this.log);
@@ -77,33 +80,33 @@ public final class HtmlFactory {
 
 		// Validiere Datenbankverbindung
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine Verbindung zur Datenbank übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Verbindung zur Datenbank übergeben.");
 
 		this.conn = conn;
 
 		// Validiere Reporting-Ausgabedaten
 		if (reportingAusgabedaten == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine Daten zur Ausgabe im Report übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Daten zur Ausgabe im Report übergeben.");
 
 		this.reportingAusgabedaten = reportingAusgabedaten;
 
 		// Validiere die Angaben zur Vorlage für den Report.
 		if (ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage) == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine gültige Report-Vorlage übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine gültige Report-Vorlage übergeben.");
 
 		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingAusgabedaten.reportvorlage));
 
 		if (this.htmlTemplateDefinition == null)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Template-Definitionen inkonsistent.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Template-Definitionen inkonsistent.");
 
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
 		logger.logLn("Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
 		if (!conn.getUser().pruefeKompetenz(new HashSet<>(htmlTemplateDefinition.getBenutzerKompetenzen())))
-			throw OperationError.FORBIDDEN.exception("Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
+			throw new ApiOperationException(Status.FORBIDDEN, "Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 
 		// Validiere Hauptdaten-Angabe
 		if (reportingAusgabedaten.idsHauptdaten == null || reportingAusgabedaten.idsHauptdaten.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Es wurden keine Daten zum Drucken übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Daten zum Drucken übergeben.");
 
 		// Setze Werte nach Validierung, falls null.
 		if (reportingAusgabedaten.idsDetaildaten == null)
@@ -113,8 +116,12 @@ public final class HtmlFactory {
 	}
 
 
-	/** Erzeugte die Contexts für die html-Erstellung. */
-	private void getContexts() {
+	/**
+	 * Erzeugte die Contexts für die html-Erstellung.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void getContexts() throws ApiOperationException {
 		// Klasse für die Validierung der über die API übergebenen Daten.
 		final ReportingValidierung reportingValidierung = new ReportingValidierung();
 
@@ -154,42 +161,40 @@ public final class HtmlFactory {
 
 	/**
 	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die HtmlBuilder, aus denen die Html-Inhalte erzuegt werden können"
+	 *
 	 * @return Eine Liste mit HtmlBuilder.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<HtmlBuilder> createHtmlBuilders() {
+	public List<HtmlBuilder> createHtmlBuilders() throws ApiOperationException {
 		return getHtmlBuilders();
 	}
 
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen Html-Datei oder ZIP-Datei mit den mehreren generierten Html-Dateien.
-	 * @return Im Falle eines Success enthält die HTTP-Response das Html-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine WebApplicationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 *
+	 * @return Im Falle eines Success enthält die HTTP-Response das Html-Dokument oder die ZIP-Datei. Im Fehlerfall wird
+	 *     eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
 	 */
 	public Response createHtmlResponse() {
-
 		try {
 			final List<HtmlBuilder> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
 				if (!reportingAusgabedaten.einzelausgabeHauptdaten || htmlBuilders.size() == 1) {
 					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlBuilders.getFirst().getDateiname(), StandardCharsets.UTF_8);
-					return Response.ok(htmlBuilders.getFirst().getHtml(), "text/html")
-						.header("Content-Disposition", "attachment; " + encodedFilename)
-						.build();
-				} else {
-					if (htmlTemplateDefinition.getDateiname().isEmpty())
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Die gewählte Vorlage kann nicht einzelne Html-Inhalte erstellen.");
-
-					final byte[] zipData = createZIP(htmlBuilders);
-					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlTemplateDefinition.getDateiname() + ".zip", StandardCharsets.UTF_8);
-
-					return Response.ok(zipData, "application/zip")
-						.header("Content-Disposition", "attachment; " + encodedFilename)
-						.build();
+					return Response.ok(htmlBuilders.getFirst().getHtml(), "text/html").header("Content-Disposition", "attachment; " + encodedFilename).build();
 				}
-			} else {
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Es sind keine Html-Inhalte generiert worden.");
+				if (htmlTemplateDefinition.getDateiname().isEmpty())
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die gewählte Vorlage kann nicht einzelne Html-Inhalte erstellen.");
+
+				final byte[] zipData = createZIP(htmlBuilders);
+				final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlTemplateDefinition.getDateiname() + ".zip", StandardCharsets.UTF_8);
+
+				return Response.ok(zipData, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename).build();
 			}
-		} catch (Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es sind keine Html-Inhalte generiert worden.");
+		} catch (final Exception e) {
 			return new ReportingErrorResponse(e, logger, log).getResponse();
 		}
 	}
@@ -197,16 +202,19 @@ public final class HtmlFactory {
 
 	/**
 	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die Html-Dateiinhalte in Form einer Map "Dateiname > Dateiinhalt"
+	 *
 	 * @return Eine Map mit den Dateinamen und Html-Dateiinhalten.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private List<HtmlBuilder> getHtmlBuilders() {
+	private List<HtmlBuilder> getHtmlBuilders() throws ApiOperationException {
 
 		final List<HtmlBuilder> htmlBuilders = new ArrayList<>();
 
 		if (!reportingAusgabedaten.einzelausgabeHauptdaten) {
 			// Dateiname der Dateien aus den Daten erzeugen.
 			logger.logLn("Erzeuge Dateinamen.");
-			String dateiname = getDateiname(mapHtmlContexts);
+			final String dateiname = getDateiname(mapHtmlContexts);
 
 			// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
 			logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
@@ -221,7 +229,7 @@ public final class HtmlFactory {
 
 				// Dateiname der Dateien aus den Daten erzeugen.
 				logger.logLn("Erzeuge Dateinamen.");
-				String dateiname = getDateiname(mapHtmlContexts);
+				final String dateiname = getDateiname(mapHtmlContexts);
 
 				// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
 				logger.logLn("Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
@@ -233,11 +241,16 @@ public final class HtmlFactory {
 	}
 
 
-	/** Erstellt den Dateinamen gemäß der in der Template-Definition hinterlegten Vorlage für den Dateinamen. Dabei können die Daten den Contexts entnommen werden.
+	/**
+	 * Erstellt den Dateinamen gemäß der in der Template-Definition hinterlegten Vorlage für den Dateinamen. Dabei können die Daten den Contexts entnommen werden.
+	 *
 	 * @param mapHtmlContexts Map mit den bereits erzeugten html-Datenkontexten, um daraus Daten für den Dateinamen entnehmen zu können.
+	 *
 	 * @return Der fertige Dateiname.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private String getDateiname(final Map<String, HtmlContext> mapHtmlContexts) {
+	private String getDateiname(final Map<String, HtmlContext> mapHtmlContexts) throws ApiOperationException {
 
 		logger.logLn("Erzeuge den Dateinamen zum Template %s.".formatted(htmlTemplateDefinition.name()));
 
@@ -248,7 +261,7 @@ public final class HtmlFactory {
 			final String html = htmlBuilder.getHtml();
 
 			if (html == null || html.isEmpty() || html.isBlank() || !html.contains("<p>") || !html.contains("</p>") || (html.indexOf("<p>") + 3) >= html.indexOf("</p>"))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Dateiname konnte nicht gemäß des angegebenen Musters aus den Daten generiert werden.");
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Dateiname konnte nicht gemäß des angegebenen Musters aus den Daten generiert werden.");
 
 			dateiname = html.substring(html.indexOf("<p>") + 3, html.indexOf("</p>"));
 		}
@@ -256,8 +269,8 @@ public final class HtmlFactory {
 		try {
 			// Prüfe, ob der erzeugte Dateiname konform zu System ist. Andernfalls wird hier eine Exception ausgelöst.
 			(new File(dateiname + ".html")).getCanonicalFile();
-		} catch (Exception e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der generierte Dateiname enthält ungültige Zeichen.");
+		} catch (final Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der generierte Dateiname enthält ungültige Zeichen.");
 		}
 
 		return dateiname;
@@ -266,10 +279,14 @@ public final class HtmlFactory {
 
 	/**
 	 * Erstellt eine ZIP-Datei, die alle Html-Dateien aus der übergebenen Map enthält.
+	 *
 	 * @param htmlBuilders Eine Liste mit den HtmlBuilders, die die Html-Inhalte erzeugen.
+	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	private byte[] createZIP(final List<HtmlBuilder> htmlBuilders) throws WebApplicationException {
+	private static byte[] createZIP(final List<HtmlBuilder> htmlBuilders) throws ApiOperationException {
 		final byte[] zipData;
 		try {
 			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -284,8 +301,9 @@ public final class HtmlFactory {
 				zipData = baos.toByteArray();
 			}
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die erzeugten Html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die erzeugten Html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 		}
 		return zipData;
 	}
+
 }

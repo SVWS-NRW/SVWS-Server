@@ -17,7 +17,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,12 +92,12 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerAbschnittsdaten abschnittsdaten = conn.queryByKey(DTOLehrerAbschnittsdaten.class, id);
     	if (abschnittsdaten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 		final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(abschnittsdaten);
 		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
@@ -110,7 +110,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 		Map.entry("id", (conn, abschnittsdaten, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != abschnittsdaten.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("pflichtstundensoll", (conn, abschnittsdaten, value, map) -> {
 			abschnittsdaten.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
@@ -122,7 +122,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			} else {
 				final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getByKuerzel(strData);
 				if (rv == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				abschnittsdaten.Rechtsverhaeltnis = rv.daten.kuerzel;
 			}
 		}),
@@ -133,7 +133,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			} else {
 				final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.getByKuerzel(strData);
 				if (ba == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				abschnittsdaten.Beschaeftigungsart = ba.daten.kuerzel;
 			}
 		}),
@@ -144,7 +144,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			} else {
 				final LehrerEinsatzstatus es = LehrerEinsatzstatus.getByKuerzel(strData);
 				if (es == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				abschnittsdaten.Einsatzstatus = es.daten.kuerzel;
 			}
 		}),
@@ -154,7 +154,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOLehrerAbschnittsdaten.class, patchMappings);
 	}
 

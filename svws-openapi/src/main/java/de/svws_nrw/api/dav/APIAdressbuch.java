@@ -26,6 +26,7 @@ import de.svws_nrw.davapi.data.repos.bycategory.AdressbuchWithCategoriesReposito
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
@@ -68,7 +69,7 @@ public class APIAdressbuch {
 			final PropfindDavRootDispatcher dispatcher = createPropfindDavRootDispatcher(conn);
 			final Object result = dispatcher.dispatchCollection(inputStream);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -97,7 +98,7 @@ public class APIAdressbuch {
 			final PropfindPrincipalDispatcher dispatcher = createPropfindPrincipalDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, benutzerId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -123,7 +124,7 @@ public class APIAdressbuch {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -152,7 +153,7 @@ public class APIAdressbuch {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -181,7 +182,7 @@ public class APIAdressbuch {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -211,7 +212,7 @@ public class APIAdressbuch {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -245,7 +246,7 @@ public class APIAdressbuch {
 	 *
 	 * @return die HTTP-Response
 	 */
-	private static Response buildBadRequest(final IOException e) {
+	private static Response buildBadRequest(final Exception e) {
 		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
 	}
 

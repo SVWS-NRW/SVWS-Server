@@ -63,9 +63,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -117,13 +116,15 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param blockung   die zu prüfende Blockung
 	 *
 	 * @return das Vorlage-Ergebnis, falls dies das einzige Ergebnis ist, sonst null
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static DTOGostBlockungZwischenergebnis pruefeNurVorlageErgebnis(final DBEntityManager conn, final DTOGostBlockung blockung) {
+	public static DTOGostBlockungZwischenergebnis pruefeNurVorlageErgebnis(final DBEntityManager conn, final DTOGostBlockung blockung) throws ApiOperationException {
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception("Blockung nicht gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Blockung nicht gefunden.");
 		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id", blockung.ID, DTOGostBlockungZwischenergebnis.class);
 		if ((ergebnisse == null) || (ergebnisse.isEmpty()))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Kein Vorlage-Ergebnis für die Blockung in der Datenbank vorhanden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein Vorlage-Ergebnis für die Blockung in der Datenbank vorhanden.");
 		if (ergebnisse.size() > 1)
 			return null;
 		return ergebnisse.get(0);
@@ -140,19 +141,21 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param id     die ID der Blockung
 	 *
 	 * @return der Blockungsdaten-Manager
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final DBEntityManager conn, final Long id) {
+	public static GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		// Bestimme den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = mapSchuljahresabschnitte.get(schule.Schuljahresabschnitts_ID);
 		if (dtoSchuleSchuljahresabschnitt == null)
-			throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
 
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception("Keine Blockung mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Blockung mit der ID %d gefunden.".formatted(id));
 
 		// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
 		Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
@@ -162,7 +165,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Fächer hinzufügen.
 		final GostFaecherManager faecherManager = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 		if (faecherManager == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(dtoMapper.apply(blockung), faecherManager);
 
 		// Schienen hinzufügen.
@@ -177,7 +180,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<GostBlockungKurs> kursListeAdd = new ArrayList<>();
 		for (final DTOGostBlockungKurs kurs : kurse) {
 			if (faecherManager.get(kurs.Fach_ID) == null)
-				throw OperationError.NOT_FOUND.exception("Das Fach mit der ID " + kurs.Fach_ID + " ist nicht als Fach der gymnasialen Oberstufe gekennzeichnet.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Das Fach mit der ID " + kurs.Fach_ID + " ist nicht als Fach der gymnasialen Oberstufe gekennzeichnet.");
 			kursListeAdd.add(DataGostBlockungKurs.dtoMapper.apply(kurs));
 		}
 		manager.kursAddListe(kursListeAdd);
@@ -195,7 +198,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				for (final DTOGostBlockungKurslehrer kurslehrer : kurslehrerListe) {
 					final DTOLehrer lehrer = mapLehrer.get(kurslehrer.Lehrer_ID);
 					if (lehrer == null)
-						throw OperationError.NOT_FOUND.exception();
+						throw new ApiOperationException(Status.NOT_FOUND);
 					final DTOLehrerAbschnittsdaten abschnitt = mapLehrerabschnittsdaten.get(kurslehrer.Lehrer_ID);
 					final GostBlockungKursLehrer kl = new GostBlockungKursLehrer();
 					kl.id = lehrer.ID;
@@ -256,7 +259,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	}
 
 
-	private static GostBlockungsdaten getBlockungsdaten(final DBEntityManager conn, final Long id) {
+	private static GostBlockungsdaten getBlockungsdaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstellen den Manager mit den Blockungsdaten
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
@@ -267,7 +270,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final GostBlockungsdaten daten = getBlockungsdaten(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -281,8 +284,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param id   die ID der Blockung
 	 *
 	 * @return die Response mit der gz-Datei
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response getGZip(final DBEntityManager conn, final Long id) {
+	public static Response getGZip(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstellen den Manager mit den Blockungsdaten
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
@@ -302,8 +307,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param aktiv        gibt an,
 	 *
 	 * @return das DTO zur Blockung, falls damit weitergearbeitet werden soll
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static DTOGostBlockung markiereBlockungAktiv(final DBEntityManager conn, final long idBlockung, final boolean aktiv) {
+	public static DTOGostBlockung markiereBlockungAktiv(final DBEntityManager conn, final long idBlockung, final boolean aktiv) throws ApiOperationException {
 		conn.transactionFlush();
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (aktiv) {
@@ -317,14 +324,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 		blockung.IstAktiv = aktiv;
     	if (!conn.transactionPersist(blockung))
-        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		return blockung;
 	}
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() <= 0)
 			return Response.status(Status.OK).build();
@@ -332,7 +339,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Bestimme die Blockung
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
@@ -340,10 +347,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				case "id" -> {
 					final Long patch_id = JSONMapper.convertToLong(value, true);
 					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 				case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
-				case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
+				case "gostHalbjahr" -> throw new ApiOperationException(Status.BAD_REQUEST);
 				case "istAktiv" -> {
 					final boolean result = JSONMapper.convertToBoolean(value, false);
 					if (result)
@@ -352,7 +359,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						blockung.IstAktiv = false;
 				}
 				// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
-				default -> throw OperationError.BAD_REQUEST.exception();
+				default -> throw new ApiOperationException(Status.BAD_REQUEST);
 			}
 		}
 		conn.transactionPersist(blockung);
@@ -367,23 +374,25 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param  halbjahr     das Halbjahr der gymnasialen Oberstufe
 	 *
 	 * @return Eine Response mit der neuen Blockung
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final int abiturjahr, final int halbjahr) {
+	public Response create(final int abiturjahr, final int halbjahr) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Prüfe die Parameter
 		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
 		if (gostHalbjahr == null)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		final int anzahlSchienen = GostBlockungsdatenManager.schieneGetDefaultAnzahl(gostHalbjahr);
 		final DTOGostJahrgangsdaten abijahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 		if (abijahrgang == null)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		// Lese die Fachwahlstatistiken aus der Datenbank - liegen keine vor, so kann auch keine Blockung erstellt
 		// werden.
 		final DataGostAbiturjahrgangFachwahlen dataFachwahlen = new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr);
 		final List<GostStatistikFachwahl> fachwahlen = dataFachwahlen.getFachwahlen();
 		if (fachwahlen == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die ID der neuen Blockung
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 		final Long blockungID = lastID == null ? 1 : lastID.MaxID + 1;
@@ -399,7 +408,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Lese die Fächer der gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
 		final GostFaecherManager faecherManager = DataGostFaecher.getFaecherManager(conn, abiturjahr);
 		if (faecherManager == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Lege ein "leeres" Ergebnis für manuelles Blocken an
 		final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 		final long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
@@ -499,13 +508,15 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param id   die ID der zu löschenden Blockung
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Entferne die Blockung
 		conn.transactionRemove(blockung);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
@@ -547,26 +558,28 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param  zeit   die maximale Zeit in ms
 	 *
 	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response berechne(final long id, final long zeit) {
+	public Response berechne(final long id, final long zeit) throws ApiOperationException {
 		try {
 			// Erzeuge den Input für den Kursblockungsalgorithmus
 			final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 			if (manager.daten().fachwahlen.isEmpty())
-				return OperationError.NOT_FOUND.getResponse("Keine Fachwahlen für den Abiturjahrgang gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Keine Fachwahlen für den Abiturjahrgang gefunden.");
 			if (manager.faecherManager().faecher().isEmpty())
-				return OperationError.NOT_FOUND.getResponse("Keine Fächer für den Abiturjahrgang gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Keine Fächer für den Abiturjahrgang gefunden.");
 			if (manager.daten().kurse.isEmpty())
-				return OperationError.NOT_FOUND.getResponse("Es sind keine Kurse für die Blockung angelegt.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Es sind keine Kurse für die Blockung angelegt.");
 			manager.setMaxTimeMillis(zeit);
 			final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
 			final ArrayList<GostBlockungsergebnisManager> outputs = algo.handle(manager);
 			final List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException wae)
-				throw wae;
-			return OperationError.INTERNAL_SERVER_ERROR.exception(e, e.getMessage(), MediaType.TEXT_PLAIN).getResponse();
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, e.getMessage(), MediaType.TEXT_PLAIN);
 		}
 	}
 
@@ -578,18 +591,20 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param idErgebnisOriginal   das zu duplizierende Blockungsergebnis
 	 *
 	 * @return die Blockungsdaten der duplizierten Blockung
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response dupliziere(final long idErgebnisOriginal) {
+	public Response dupliziere(final long idErgebnisOriginal) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung und das zugehörige Ergebnis
 		DTOGostBlockung blockungOriginal;
 		final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
 		if (ergebnisOriginal == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Blockung
 		blockungOriginal = conn.queryByKey(DTOGostBlockung.class, ergebnisOriginal.Blockung_ID);
 		if (blockungOriginal == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die ID für das Duplikat der Blockung
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 		final Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
@@ -731,20 +746,22 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param idErgebnisOriginal   das hochzuschreibende Blockungsergebnis
 	 *
 	 * @return die Blockungsdaten der hochgeschriebenen Blockung
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response hochschreiben(final long idErgebnisOriginal) {
+	public Response hochschreiben(final long idErgebnisOriginal) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung und das zugehörige Ergebnis
 		DTOGostBlockung blockungOriginal;
 		final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
 		if (ergebnisOriginal == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Blockung
 		blockungOriginal = conn.queryByKey(DTOGostBlockung.class, ergebnisOriginal.Blockung_ID);
 		if (blockungOriginal == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		if (blockungOriginal.Halbjahr == GostHalbjahr.Q22)   // Blockungen der Q2.2 können nicht hochgeschrieben werden...
-			throw OperationError.BAD_REQUEST.exception();
+			throw new ApiOperationException(Status.BAD_REQUEST);
 		// Bestimme die ID für die hochgeschriebene Blockung
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 		final Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
@@ -881,14 +898,16 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @param halbjahrID   die ID des Halbjahres der gymnasialen Oberstufe (siehe auch {@link GostHalbjahr})
 	 *
 	 * @return die Blockungsdaten der restaurierten Blockung
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response restore(final int abiturjahr, final int halbjahrID) {
+	public Response restore(final int abiturjahr, final int halbjahrID) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme das Halbjahr der gymnasialen Oberstufe und das Schuljahr, wo der Abiturjahrgang in diesem Halbjahr war
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(halbjahrID);
 		if (halbjahr == null)
-			throw OperationError.BAD_REQUEST.exception();
+			throw new ApiOperationException(Status.BAD_REQUEST);
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
 
 		// Bestimme den zugehörigen Schuljahresabschnitt
@@ -897,21 +916,21 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
 						DTOSchuljahresabschnitte.class, schuljahr, halbjahr.halbjahr);
 		if (listSchuljahresabschnitte.size() != 1)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOSchuljahresabschnitte schuljahresabschnitt = listSchuljahresabschnitte.get(0);
 
 		// Bestimme die ID des Jahrgangs
 		final List<DTOJahrgang> listJahrgaenge = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1",
 						DTOJahrgang.class, halbjahr.jahrgang);
 		if (listJahrgaenge.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<Long> jahrgangIDs = listJahrgaenge.stream().map(j -> j.ID).toList();
 
 		// Lese die Kurse für den Schuljahresabschnitt und den zugehörigen Jahrgang ein
 		final List<DTOKurs> listKurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
 						DTOKurs.class, schuljahresabschnitt.ID, jahrgangIDs);
 		if (listKurse.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Fächer und die Schienen aus der Kurstabelle
 		final HashMap<Long, DTOKurs> mapKurse = new HashMap<>();
 		int maxSchiene = -1;

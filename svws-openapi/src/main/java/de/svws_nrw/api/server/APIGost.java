@@ -40,7 +40,7 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,7 +58,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -323,7 +322,7 @@ public class APIGost {
     public Response getGostAbiturjahrgangSchueler(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
 		    		return (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getList();
     			},
         		request, ServerMode.STABLE,
@@ -454,7 +453,7 @@ public class APIGost {
     public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
 		    		return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getList();
     			},
         		request, ServerMode.STABLE,
@@ -493,7 +492,7 @@ public class APIGost {
             @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
 		            return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponse();
     			},
         		request, ServerMode.STABLE,
@@ -532,7 +531,7 @@ public class APIGost {
             @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
 		            return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponseHalbjahr(halbjahr);
     			},
         		request, ServerMode.STABLE,
@@ -570,7 +569,7 @@ public class APIGost {
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
 		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.GESAMT);
 		    	},
         		request, ServerMode.STABLE,
@@ -606,7 +605,7 @@ public class APIGost {
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		if (abiturjahr < 0)
-		    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+		    			throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
 		            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbiturjahrgang(abiturjahr, GostBelegpruefungsArt.EF1);
     			},
         		request, ServerMode.STABLE,
@@ -1111,7 +1110,7 @@ public class APIGost {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			    	if (!schule.Schulform.daten.hatGymOb)
-			    		throw OperationError.NOT_FOUND.exception();
+			    		throw new ApiOperationException(Status.NOT_FOUND);
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
@@ -1153,7 +1152,7 @@ public class APIGost {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
 		    		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			    	if (!schule.Schulform.daten.hatGymOb)
-			    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+			    		throw new ApiOperationException(Status.NOT_FOUND);
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 			    	GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);

@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -43,7 +43,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanPausenzeit} in einen Core-DTO {@link StundenplanPausenzeit}.
 	 */
-	private static final Function<DTOStundenplanPausenzeit, StundenplanPausenzeit> dtoMapper = (final DTOStundenplanPausenzeit p) -> {
+	private static final DTOMapper<DTOStundenplanPausenzeit, StundenplanPausenzeit> dtoMapper = (final DTOStundenplanPausenzeit p) -> {
 		final StundenplanPausenzeit daten = new StundenplanPausenzeit();
 		daten.id = p.ID;
 		daten.wochentag = p.Tag;
@@ -55,7 +55,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -66,8 +66,10 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Liste der Pausenzeiten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final List<DTOStundenplanPausenzeit> pausenzeiten = conn.queryNamed("DTOStundenplanPausenzeit.stundenplan_id", idStundenplan, DTOStundenplanPausenzeit.class);
 		final ArrayList<StundenplanPausenzeit> daten = new ArrayList<>();
 		for (final DTOStundenplanPausenzeit p : pausenzeiten)
@@ -76,18 +78,18 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanPausenzeit> daten = getPausenzeiten(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Pausenzeit eines Stundenplans mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Pausenzeit eines Stundenplans mit der ID null ist unzulässig.");
 		final DTOStundenplanPausenzeit pausenzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, id);
 		if (pausenzeit == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde keine Pausenzeit eines Stundenplans mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenzeit eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanPausenzeit daten = dtoMapper.apply(pausenzeit);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -97,7 +99,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 		Map.entry("beginn", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
@@ -106,7 +108,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOStundenplanPausenzeit.class, patchMappings);
 	}
 
@@ -125,8 +127,10 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -139,8 +143,10 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -152,8 +158,10 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @param id   die ID der Pausenzeit
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOStundenplanPausenzeit.class, dtoMapper);
 	}
 
@@ -164,14 +172,16 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 	 * @param ids   die IDs der Pausenzeiten
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		if (ids.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<DTOStundenplanPausenzeit> dtos = conn.queryNamed("DTOStundenplanPausenzeit.primaryKeyQuery.multiple", ids, DTOStundenplanPausenzeit.class);
 		for (final DTOStundenplanPausenzeit dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
-				throw OperationError.BAD_REQUEST.exception("Der Pausenzeit-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
 		return super.deleteBasicMultiple(ids, DTOStundenplanPausenzeit.class, dtoMapper);
 	}
 

@@ -3,10 +3,11 @@ package de.svws_nrw.module.reporting;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
 import org.thymeleaf.exceptions.TemplateProcessingException;
 
 
@@ -53,12 +54,11 @@ public final class ReportingErrorResponse {
 	 */
 	public Response getResponse() {
 		String htmlTemplate = "";
-		String webAppExBody = "";
 
 		logger.logLn("###  FEHLER  ####################################");
 
 		if (exception != null) {
-			if (exception instanceof TemplateProcessingException tPE) {
+			if (exception instanceof final TemplateProcessingException tPE) {
 				// Wenn ein Fehler in der Template-Verarbeitung auftritt, speichere das verwendete html-Template für einen späteren Log-Eintrag.
 				htmlTemplate = tPE.getTemplateName();
 			}
@@ -84,19 +84,19 @@ public final class ReportingErrorResponse {
 
 
 		// Erstelle eine SimpleOperationResponse mit dem Log zum Fehler und gebe diese zurück.
-		SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
+		final SimpleOperationResponse simpleOperationResponse = new SimpleOperationResponse();
 		simpleOperationResponse.success = false;
 		simpleOperationResponse.log = log.getStrings();
 
-		int code = OperationError.INTERNAL_SERVER_ERROR.getCode();
-		if (exception != null && exception instanceof WebApplicationException wAE) {
-			code = wAE.getResponse().getStatus();
-			// Wenn eine WebApplicationException auftritt, gebe den Body der Response als Text aus.
-			webAppExBody = wAE.getResponse().readEntity(String.class);
-			if (webAppExBody != null)
-				logger.logLn(4, "WebApplicationException - Code: %d - Message: %s".formatted(wAE.getResponse().getStatus(), webAppExBody));
+		Status code = Status.INTERNAL_SERVER_ERROR;
+		if ((exception != null) && (exception instanceof final ApiOperationException aoe)) {
+			code = aoe.getStatus();
+			// Wenn eine ApiOperationException auftritt, gebe den Body der Response als Text aus.
+			final String message = aoe.getMessage();
+			if (message != null)
+				logger.logLn(4, "ApiOperationException - Code: %d - Message: %s".formatted(aoe.getStatus().getStatusCode(), message));
 			else
-				logger.logLn(4, "WebApplicationException - Code: %d".formatted(wAE.getResponse().getStatus()));
+				logger.logLn(4, "ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
 		}
 
 		return Response.status(code).type(MediaType.APPLICATION_JSON).entity(simpleOperationResponse).build();

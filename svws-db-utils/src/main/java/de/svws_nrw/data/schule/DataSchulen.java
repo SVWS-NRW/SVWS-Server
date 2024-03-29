@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -41,7 +41,7 @@ public final class DataSchulen extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleNRW} in einen Core-DTO {@link SchulEintrag}.
 	 */
-	private static final Function<DTOSchuleNRW, SchulEintrag> dtoMapper = (final DTOSchuleNRW e) -> {
+	private static final DTOMapper<DTOSchuleNRW, SchulEintrag> dtoMapper = (final DTOSchuleNRW e) -> {
 		final SchulEintrag daten = new SchulEintrag();
 		daten.id = e.ID;
 		daten.kuerzel = e.Kuerzel;
@@ -66,7 +66,7 @@ public final class DataSchulen extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -77,8 +77,10 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Schulen
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<SchulEintrag> getSchulen(final @NotNull DBEntityManager conn) {
+	public static List<SchulEintrag> getSchulen(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOSchuleNRW> eintraege = conn.queryAll(DTOSchuleNRW.class);
 		final ArrayList<SchulEintrag> daten = new ArrayList<>();
 		for (final DTOSchuleNRW e : eintraege)
@@ -93,8 +95,10 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Schulen, welche ein Kürzel gesetzt haben
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<SchulEintrag> getSchulenMitKuerzel(final @NotNull DBEntityManager conn) {
+	public static List<SchulEintrag> getSchulenMitKuerzel(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOSchuleNRW> eintraege = conn.queryAll(DTOSchuleNRW.class);
 		final ArrayList<SchulEintrag> daten = new ArrayList<>();
 		for (final DTOSchuleNRW e : eintraege)
@@ -105,19 +109,19 @@ public final class DataSchulen extends DataManager<Long> {
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<SchulEintrag> daten = getSchulen(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Eintrag im Katalog der Schulen mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Eintrag im Katalog der Schulen mit der ID null ist unzulässig.");
 		final DTOSchuleNRW schule = conn.queryByKey(DTOSchuleNRW.class, id);
 		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Eintrag im Katalog der Schulen mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Schulen mit der ID %d gefunden.".formatted(id));
 		final SchulEintrag daten = dtoMapper.apply(schule);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -127,7 +131,7 @@ public final class DataSchulen extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, true, false, 10)),
 		Map.entry("kurzbezeichnung", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, true, false, 40)),
@@ -141,7 +145,7 @@ public final class DataSchulen extends DataManager<Long> {
 			} else {
 				final SchulformKatalogEintrag sf = Schulform.getEintragByID(id);
 				if (sf == null)
-					throw OperationError.BAD_REQUEST.exception();
+					throw new ApiOperationException(Status.BAD_REQUEST);
 				dto.SchulformBez = sf.bezeichnung;
 				dto.SchulformKrz = sf.kuerzel;
 				dto.SchulformNr = sf.nummer;
@@ -163,7 +167,7 @@ public final class DataSchulen extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOSchuleNRW.class, patchMappings);
 	}
 
@@ -180,8 +184,10 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOSchuleNRW.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -192,8 +198,10 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param id   die ID des Schul-Katalog-Eintrag
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOSchuleNRW.class, dtoMapper);
 	}
 
@@ -204,8 +212,10 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param ids   die IDs der Einträge
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOSchuleNRW.class, dtoMapper);
 	}
 

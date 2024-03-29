@@ -16,7 +16,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -62,7 +62,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -73,11 +73,13 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Liste der Kurse
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<StundenplanKurs> getKurse(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanKurs> getKurse(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class);
 		if (kurse.isEmpty())
 			return new ArrayList<>();
@@ -100,7 +102,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		for (final DTOKurs k : kurse) {
 			final DTOFach f = mapFaecher.get(k.Fach_ID);
 			if (f == null)
-				throw OperationError.NOT_FOUND.exception("Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(k.Fach_ID, k.ID));
+				throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(k.Fach_ID, k.ID));
 			final StundenplanKurs kurs = dtoMapper.apply(k, f);
 			if (k.Jahrgang_ID == null) {
 				kurs.jahrgaenge.addAll(strLongToList(k.Jahrgaenge));
@@ -134,7 +136,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanKurs> daten = getKurse(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -157,17 +159,17 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
 		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
 		if (kurs == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
 		if (kurs.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
-			return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt %d des Kurses mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein.".formatted(kurs.Schuljahresabschnitts_ID, kurs.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Schuljahresabschnitt %d des Kurses mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein.".formatted(kurs.Schuljahresabschnitts_ID, kurs.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		// Jahrgänge bestimmen
 		final List<Long> jahrgangsIDs = new ArrayList<>();
 		if (kurs.Jahrgang_ID == null) {
@@ -184,7 +186,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		// Fachdefinition laden
 		final DTOFach fach = conn.queryByKey(DTOFach.class, kurs.Fach_ID);
 		if (fach == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(kurs.Fach_ID, kurs.ID));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(kurs.Fach_ID, kurs.ID));
 		// DTO erstellen
 		final StundenplanKurs daten = dtoMapper.apply(kurs, fach);
 		daten.jahrgaenge.addAll(jahrgangsIDs);

@@ -26,9 +26,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.json.JsonDaten;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -77,8 +76,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @param schuljahresabschnitt   der Schuljahresabschnitt
 	 *
 	 * @return die Lernabschnittsdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response get(final Long schueler_id, final long schuljahresabschnitt) {
+	public Response get(final Long schueler_id, final long schuljahresabschnitt) throws ApiOperationException {
 		final SchuelerLernabschnittsdaten daten = getFromSchuelerIDUndSchuljahresabschnittID(schueler_id, schuljahresabschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -90,9 +91,11 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @param id die Lernabschnitt-ID
 	 *
 	 * @return die Lernabschnittsdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final SchuelerLernabschnittsdaten daten = getFromID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -104,23 +107,25 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @param schueler_id           	die Schüler-ID
 	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
 	 *
-	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+	 * @return die Lernabschnittsdaten zu den übergebenen IDs.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-	public SchuelerLernabschnittsdaten getFromSchuelerIDUndSchuljahresabschnittID(final Long schueler_id, final long schuljahresabschnitt_id) throws WebApplicationException {
+	public SchuelerLernabschnittsdaten getFromSchuelerIDUndSchuljahresabschnittID(final Long schueler_id, final long schuljahresabschnitt_id) throws ApiOperationException {
 		// Prüfe, ob der Schüler mit der ID existiert
 		if (schueler_id == null)
-			throw OperationError.NOT_FOUND.exception("Es ist keine Schueler-ID angegeben worden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es ist keine Schueler-ID angegeben worden.");
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
-			throw OperationError.NOT_FOUND.exception("Keine Schüler mit der ID " + schueler_id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schüler mit der ID " + schueler_id + " gefunden.");
 
 		// Bestimme den aktuellen Lernabschnitt
 		final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt_id);
 		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
 		if (lernabschnittsdaten.size() > 1)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
 
 		return getFromID(lernabschnittsdaten.getFirst().ID);
 	}
@@ -133,12 +138,14 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @param mitWechseln				legt fest, ob auch die Lernabschnitte berücksichtigt werden soll,
 	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
 	 *
-	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+	 * @return die Lernabschnittsdaten zu den übergebenen IDs.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitWechseln) throws WebApplicationException {
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitWechseln) throws ApiOperationException {
 		// Prüfe, ob die Liste der Schüler-IDs existiert
 		if (schueler_ids == null)
-			throw OperationError.NOT_FOUND.exception("Es sind keine Schueler-ID angegeben worden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es sind keine Schueler-ID angegeben worden.");
 		if (schueler_ids.isEmpty())
 			return new ArrayList<>();
 
@@ -146,7 +153,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : schueler_ids)
 			if (mapSchueler.get(schuelerID) == null)
-				throw OperationError.NOT_FOUND.exception("Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
+				throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
 
 		// Hole alle Lernabschnitte der übergebenen Schüler-IDs und filtere sie auf den Schuljahresabschnitt und die Wechsel-Nr.
 		final List<DTOSchuelerLernabschnittsdaten> dtoLernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", schueler_ids, DTOSchuelerLernabschnittsdaten.class).stream()
@@ -157,7 +164,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 				.thenComparing((final DTOSchuelerLernabschnittsdaten a) -> a.WechselNr))
 			.toList();
 
-		return dtoLernabschnitte.stream().map(a -> getFromID(a.ID)).toList();
+		final List<SchuelerLernabschnittsdaten> daten = new ArrayList<>();
+		for (final DTOSchuelerLernabschnittsdaten a : dtoLernabschnitte)
+			daten.add(getFromID(a.ID));
+		return daten;
 	}
 
 	/**
@@ -169,8 +179,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 *                                  die durch einen Wechsel entstanden sind, also Abschnitt mit Wechsel-Nr größer 0.
 	 *
 	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id, final boolean mitWechseln) throws WebApplicationException {
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id, final boolean mitWechseln) throws ApiOperationException {
 
 		return getListFromSchuelerIDs(schueler_ids, mitWechseln).stream()
 			.filter(a -> a.schuljahresabschnitt == schuljahresabschnitt_id)
@@ -180,22 +192,26 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 	/**
 	 * Gibt die Lernabschnittsdaten zur ID des Abschnitts zurück.
+	 *
 	 * @param id	die ID des Lernabschnitts.
+	 *
 	 * @return		die SchuelerLernabschnittsdaten zur ID.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public SchuelerLernabschnittsdaten getFromID(final Long id) throws WebApplicationException {
+	public SchuelerLernabschnittsdaten getFromID(final Long id) throws ApiOperationException {
 		// Prüfe, ob der Lernabschnitt mit der ID existiert
 		if (id == null)
-			throw OperationError.NOT_FOUND.exception("Es ist keine Abschnitt-ID angegeben worden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es ist keine Abschnitt-ID angegeben worden.");
 		final DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
 		if (aktuell == null)
-			throw OperationError.NOT_FOUND.exception("Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
 		// Ermittle die Fachbemerkungen
 		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
 		if (bemerkungen == null)
-			throw OperationError.NOT_FOUND.exception("Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
 		if (bemerkungen.size() > 1)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
 
 		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
 		daten.id = aktuell.ID;
@@ -284,7 +300,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		}
 
 		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(aktuell.ID, daten.leistungsdaten)))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Keine Leistungsdaten zur Abschnitt-ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Leistungsdaten zur Abschnitt-ID " + id + " gefunden.");
 
 		return daten;
 	}
@@ -293,18 +309,18 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("schuelerID", (conn, dto, value, map) -> {
 			final long idSchueler = JSONMapper.convertToLong(value, false);
 			if (conn.queryByKey(DTOSchueler.class, idSchueler) == null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Schueler_ID = idSchueler;
 		}),
 		Map.entry("schuljahresabschnitt", (conn, dto, value, map) -> {
 			final long schuljahresabschnitt = JSONMapper.convertToLong(value, false);
 			if (conn.queryByKey(DTOSchuljahresabschnitte.class, schuljahresabschnitt) == null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Schuljahresabschnitts_ID = schuljahresabschnitt;
 		}),
 		Map.entry("wechselNr", (conn, dto, value, map) -> dto.WechselNr = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
@@ -339,19 +355,19 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("tutorID", (conn, dto, value, map) -> {
 			final Long idLehrer = JSONMapper.convertToLong(value, true);
 			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Tutor_ID = idLehrer;
 		}),
 		Map.entry("klassenID", (conn, dto, value, map) -> {
 			final Long idKlasse = JSONMapper.convertToLong(value, true);
 			if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Klassen_ID = idKlasse;
 		}),
 		Map.entry("folgeklassenID", (conn, dto, value, map) -> {
 			final Long idKlasse = JSONMapper.convertToLong(value, true);
 			if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Folgeklasse_ID = idKlasse;
 		}),
 		Map.entry("schulgliederung", (conn, dto, value, map) -> {
@@ -361,7 +377,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("jahrgangID", (conn, dto, value, map) -> {
 			final Long idJahrgang = JSONMapper.convertToLong(value, true);
 			if ((idJahrgang != null) && (conn.queryByKey(DTOJahrgang.class, idJahrgang) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Jahrgang_ID = idJahrgang;
 		}),
 		Map.entry("fachklasseID", (conn, dto, value, map) -> {
@@ -369,7 +385,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			if (idFachklasse != null) {
 				final var manager = JsonDaten.fachklassenManager;
 				if (manager.getDaten(idFachklasse) == null)
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 			}
 			dto.Fachklasse_ID = idFachklasse;
 		}),
@@ -383,16 +399,16 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (str != null) {
 				if ((schule.Schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.getByKuerzel(str) == null))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				if ((AllgemeinbildendOrganisationsformen.getByKuerzel(str) == null) && (BerufskollegOrganisationsformen.getByKuerzel(str) == null))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 			}
 			dto.OrgFormKrz = str;
 		}),
 		Map.entry("Klassenart", (conn, dto, value, map) -> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
 			if ((str != null) && (Klassenart.getByKuerzel(str) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Klassenart = str;
 		}),
 		Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.SumFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
@@ -405,25 +421,25 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("foerderschwerpunkt1ID", (conn, dto, value, map) -> {
 			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
 			if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 			dto.Foerderschwerpunkt_ID = idFoerderschwerpunkt;
 		}),
 		Map.entry("foerderschwerpunkt2ID", (conn, dto, value, map) -> {
 			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
 			if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 			dto.Foerderschwerpunkt2_ID = idFoerderschwerpunkt;
 		}),
 		Map.entry("sonderpaedagogeID", (conn, dto, value, map) -> {
 			final Long idLehrer = JSONMapper.convertToLong(value, true);
 			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Sonderpaedagoge_ID = idLehrer;
 		}),
 		Map.entry("bilingualerZweig", (conn, dto, value, map) -> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
 			if ((str != null) && (BilingualeSprache.getByKuerzel(str) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.BilingualerZweig = str;
 		}),
 		Map.entry("istFachpraktischerAnteilAusreichend", (conn, dto, value, map) -> dto.FachPraktAnteilAusr = JSONMapper.convertToBoolean(value, true)),
@@ -431,7 +447,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
 			// TODO Prüfung des Versetzungsvermerks
 			//if ((str != null) && (???))
-			//	throw OperationError.CONFLICT.exception();
+			//	throw new ApiOperationException(Status.CONFLICT);
 			dto.VersetzungKrz = str;
 		}),
 		Map.entry("noteDurchschnitt", (conn, dto, value, map) -> {
@@ -450,13 +466,13 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("abschluss", (conn, dto, value, map) -> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
 			if ((str != null) && (SchulabschlussAllgemeinbildend.getByKuerzel(str) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Abschluss = str;
 		}),
 		Map.entry("abschlussBerufsbildend", (conn, dto, value, map) -> {
 			final String str = JSONMapper.convertToString(value, true, false, null);
 			if ((str != null) && (SchulabschlussBerufsbildend.getByKuerzel(str) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Abschluss_B = str;
 		}),
 		Map.entry("textErgebnisPruefungsalgorithmus", (conn, dto, value, map) -> dto.PruefAlgoErgebnis = JSONMapper.convertToString(value, true, false, null)),
@@ -464,7 +480,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOSchuelerLernabschnittsdaten.class, patchMappings);
 	}
 
@@ -475,16 +491,18 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @param is   ein Input-Stream mit den JSON-Daten des Patches
 	 *
 	 * @return die HTTP-Response für den Patch
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response patchBemerkungen(final Long id, final InputStream is) {
+	public Response patchBemerkungen(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
 		final DTOSchuelerLernabschnittsdaten dto = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", id, DTOSchuelerPSFachBemerkungen.class);
 		final DTOSchuelerPSFachBemerkungen dtoFachBem = (dtoListFachBem.isEmpty())
 				? new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), id)

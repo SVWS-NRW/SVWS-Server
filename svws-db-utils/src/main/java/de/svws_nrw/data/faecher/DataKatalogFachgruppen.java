@@ -9,7 +9,7 @@ import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -39,13 +39,13 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
         final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
         if (schule == null)
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
     	final var gruppen = Fachgruppe.get(schule.Schulform);
     	if (gruppen == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
         final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
         for (final Fachgruppe gruppe : gruppen)
             daten.addAll(Arrays.asList(gruppe.historie));
@@ -53,12 +53,12 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 	    if (id == null)
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
 	    final FachgruppenKatalogEintrag daten = Fachgruppe.getKatalogEintragByID(id);
 	    if (daten == null)
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

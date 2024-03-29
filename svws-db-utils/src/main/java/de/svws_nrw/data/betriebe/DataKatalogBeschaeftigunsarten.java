@@ -16,7 +16,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -61,26 +61,26 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<DTOBeschaeftigungsart> katalog = conn.queryAll(DTOBeschaeftigungsart.class);
 		if (katalog == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse("Die Id der gesuchten Beshäftigungart darf nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Id der gesuchten Beshäftigungart darf nicht null sein.");
 		final DTOBeschaeftigungsart art = conn.queryByKey(DTOBeschaeftigungsart.class, id);
 		if (art == null)
-			return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
 		final KatalogEintrag eintrag = dtoMapper.apply(art);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(eintrag).build();
 	}
@@ -91,8 +91,10 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 	 * @param is             das JSON-Objekt
 	 *
 	 * @return  die HTTP-Antwort mit der neuen Beschäftigungsart
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final InputStream is) {
+	public Response create(final InputStream is) throws ApiOperationException {
 		DTOBeschaeftigungsart dtoObjekt = null;
 		// Bestimme die ID der neuen Beschäftigungsart
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_BeschaeftigungsArt");
@@ -105,7 +107,7 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final DTOBeschaeftigungsart dtoObjekt = conn.queryByKey(DTOBeschaeftigungsart.class, id);
 		return persistDTO(is, dtoObjekt, id);
 	}
@@ -118,13 +120,14 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 	 * @param id            die ID des DTO-Objekts bei einem Patch, null bei create
 	 *
 	 * @return die HTTP-Antwort mit der neuen bzw. angepassten Beschäftigungsart.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-
-	public Response  persistDTO(final InputStream is, final DTOBeschaeftigungsart dtoObjekt, final Long id) {
+	public Response  persistDTO(final InputStream is, final DTOBeschaeftigungsart dtoObjekt, final Long id) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			if (dtoObjekt == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -133,14 +136,14 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 						if (id != null) {
 							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
+								throw new ApiOperationException(Status.BAD_REQUEST);
 						}
 					}
 					// TODO  Überbrüfe bei create Duplikate in DB mit dem gleichem "text"
 					case "text" -> dtoObjekt.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_BeschaeftigungsArt.col_Bezeichnung.datenlaenge());
 					case "istSichtbar" -> dtoObjekt.Sichtbar = JSONMapper.convertToBoolean(value, true);
 					case "istAenderbar" -> dtoObjekt.Aenderbar = JSONMapper.convertToBoolean(value, true);
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(dtoObjekt);

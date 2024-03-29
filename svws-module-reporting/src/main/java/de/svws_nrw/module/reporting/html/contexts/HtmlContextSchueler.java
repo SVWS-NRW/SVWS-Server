@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
+
 import org.thymeleaf.context.Context;
 
 import java.text.Collator;
@@ -37,20 +38,26 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler, final ReportingRepository reportingRepository) {
+	public HtmlContextSchueler(final List<ReportingSchueler> reportingSchueler, final ReportingRepository reportingRepository) throws ApiOperationException {
         this.reportingRepository = reportingRepository;
         erzeugeContextFromSchueler(reportingSchueler);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
 	 * @param idsSchueler			Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler) {
+	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<Long> idsSchueler) throws ApiOperationException {
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(idsSchueler);
 	}
@@ -58,12 +65,15 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 *
 	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) throws WebApplicationException {
+	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) throws ApiOperationException {
 
 		if (reportingSchueler == null || reportingSchueler.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Schueler übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler übergeben.");
 
 		// Sortiere die übergebene Liste der Schüler
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
@@ -84,17 +94,20 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 *
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void erzeugeContextFromIds(final List<Long> idsSchueler) throws WebApplicationException {
+	private void erzeugeContextFromIds(final List<Long> idsSchueler) throws ApiOperationException {
 
 		final DBEntityManager conn = this.reportingRepository.conn();
 
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Keine Datenbankverbindung übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenbankverbindung übergeben.");
 
-		if (idsSchueler == null || idsSchueler.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Schueler-IDs übergeben.");
+		if ((idsSchueler == null) || idsSchueler.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler-IDs übergeben.");
 
 		// Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, SchuelerStammdaten> mapSchueler = new HashMap<>();
@@ -139,6 +152,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Eine interne Liste des Contexts mit den Daten der Schüler.
+	 *
 	 * @return	Liste mit den Daten Schüler.
 	 */
 	public List<ReportingSchueler> getSchueler() {
@@ -148,9 +162,12 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Teil diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
+	 *
 	 * @return	Liste der Einzel-Contexts.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {
+	public List<HtmlContextSchueler> getEinzelSchuelerContexts() throws ApiOperationException {
 		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
 
 		for (final ReportingSchueler reportingSchueler : schueler) {
@@ -161,4 +178,5 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 		return resultContexts;
 	}
+
 }

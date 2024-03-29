@@ -41,6 +41,7 @@ import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -87,8 +88,9 @@ public class GenerateTestdatenLaufbahn {
 	 *
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
+	 * @throws ApiOperationException
 	 */
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws ApiOperationException {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein

@@ -20,9 +20,8 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -53,9 +52,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	}
 
 	@Override
-	public Response get(final Integer abijahr) {
+	public Response get(final Integer abijahr) throws ApiOperationException {
 		if (abijahr == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Abiturdaten daten = DBUtilsGostLaufbahn.getVorlage(conn, abijahr);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -74,15 +73,17 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param fach_id   die ID des Faches
 	 *
 	 * @return Die HTTP-Response der Get-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getFachwahl(final Integer abijahr, final Long fach_id) {
+	public Response getFachwahl(final Integer abijahr, final Long fach_id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
 		final GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
 		fachwahl.halbjahre[0] = (fachbelegung == null) ? null : fachbelegung.EF1_Kursart;
@@ -107,9 +108,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * @return der zu übertragende Wert
 	 *
-	 * @throws WebApplicationException (CONFLICT) falls die Fachwahl ungültig ist
+	 * @throws ApiOperationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw) throws WebApplicationException {
+	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw) throws ApiOperationException {
 		if ("".equals(fw))
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
@@ -119,7 +120,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 				|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
 				|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
 		if (!valid)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		return fw;
 	}
 
@@ -133,18 +134,20 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param is        der {@link InputStream} mit dem JSON-Patch für die Fachwahl
 	 *
 	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response patchFachwahl(final Integer abijahr, final Long fach_id, final InputStream is) {
+	public Response patchFachwahl(final Integer abijahr, final Long fach_id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 			if (jahrgang == null)
-				return OperationError.NOT_FOUND.getResponse();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
 			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
 			if (fachbelegung == null)
 				fachbelegung = new DTOGostJahrgangFachbelegungen(abijahr, fach.ID);
@@ -155,7 +158,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					case "halbjahre" -> {
 						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
 						if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
-							throw OperationError.CONFLICT.exception();
+							throw new ApiOperationException(Status.CONFLICT);
 						if (wahlen.length == 0) {
 							fachbelegung.EF1_Kursart = null;
 							fachbelegung.EF2_Kursart = null;
@@ -175,10 +178,10 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					case "abiturFach" -> {
 						final Integer af = JSONMapper.convertToInteger(value, true);
 							if ((af != null) && ((af < 1) || (af > 4)))
-								throw OperationError.CONFLICT.exception();
+								throw new ApiOperationException(Status.CONFLICT);
 							fachbelegung.AbiturFach = af;
 					}
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(fachbelegung);
@@ -195,9 +198,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * @param conn   die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
 	 *
-	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void transactionResetJahrgangVorlage(final DBEntityManager conn) throws WebApplicationException {
+	public static void transactionResetJahrgangVorlage(final DBEntityManager conn) throws ApiOperationException {
 		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, -1);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = -1");
 		// Setze Default-Einträge für die Fächer Deutsch, Mathematik und Sport und für die Sprachenfolge bei Englisch
@@ -247,9 +250,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param conn       die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
 	 * @param jahrgang   die Daten zum Abiturjahrgang
 	 *
-	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void transactionResetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws WebApplicationException {
+	public static void transactionResetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
     	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", -1, DTOGostJahrgangFachbelegungen.class);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
@@ -279,9 +282,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param jahrgang     die Daten zum Abiturjahrgang
 	 * @param idSchueler   die ID des Schülers
 	 *
-	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler) throws WebApplicationException {
+	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler) throws ApiOperationException {
 		final int abijahr = jahrgang.Abi_Jahrgang;
     	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
@@ -310,17 +313,17 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param conn       die zu nutzende Datenbank-Verbindung
 	 * @param jahrgang   die Daten zum Abiturjahrgang
 	 *
-	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void resetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws WebApplicationException {
+	public static void resetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws ApiOperationException {
 		try {
 			conn.transactionBegin();
 			transactionResetJahrgang(conn, jahrgang);
 			conn.transactionCommit();
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				throw webAppException;
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		} finally {
 			// Perform a rollback if necessary
 			conn.transactionRollback();
@@ -336,12 +339,14 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param abijahr   der Abiturjahrgang
 	 *
 	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response reset(final Integer abijahr) {
+	public Response reset(final Integer abijahr) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		if (abijahr == -1)
 			transactionResetJahrgangVorlage(conn);
 		else
@@ -357,12 +362,14 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @param abijahr   der Abiturjahrgang
 	 *
 	 * @return Die HTTP-Response der Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response resetSchuelerAlle(final Integer abijahr) {
+	public Response resetSchuelerAlle(final Integer abijahr) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
 		for (final DTOSchueler schueler : listSchueler)
 			transactionResetSchueler(conn, jahrgang, schueler.ID);

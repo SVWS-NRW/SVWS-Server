@@ -15,6 +15,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 
 /**
@@ -64,8 +65,10 @@ public class ExportLuPOMDB {
 	 *
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws ApiOperationException {
 		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
 

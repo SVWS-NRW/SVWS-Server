@@ -31,6 +31,7 @@ import de.svws_nrw.davapi.data.repos.kalender.KalenderRepository;
 import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BadRequestException;
@@ -79,7 +80,7 @@ public class APIKalender {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			final StringWriter out = new StringWriter();
 			final PrintWriter pw = new PrintWriter(out);
 			e.printStackTrace(pw);
@@ -108,7 +109,7 @@ public class APIKalender {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -135,7 +136,7 @@ public class APIKalender {
 			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -199,7 +200,7 @@ public class APIKalender {
 
 			return buildBadRequest(new BadRequestException("Ungültige Anfrage"));
 
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -237,7 +238,7 @@ public class APIKalender {
 			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			e.printStackTrace();
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
@@ -272,7 +273,7 @@ public class APIKalender {
 			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final IOException e) {
+		} catch (final IOException | ApiOperationException e) {
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
 		}

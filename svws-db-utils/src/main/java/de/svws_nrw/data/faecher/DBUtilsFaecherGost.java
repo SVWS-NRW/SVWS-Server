@@ -14,8 +14,9 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -135,8 +136,10 @@ public final class DBUtilsFaecherGost {
 	 * @param abiJahrgang   der Abiturjahrgang, für den die Liste erstellt werden soll
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull GostFaecherManager getFaecherManager(final DBEntityManager conn, final Integer abiJahrgang) {
+	public static @NotNull GostFaecherManager getFaecherManager(final DBEntityManager conn, final Integer abiJahrgang) throws ApiOperationException {
 		return getGostFaecherManager(conn, abiJahrgang, false);
     }
 
@@ -147,8 +150,10 @@ public final class DBUtilsFaecherGost {
 	 * @param abiJahrgang   der Abiturjahrgang, für den die Liste erstellt werden soll
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe die in mindestens einem Halbjahr des Abiturjahrgangs wählbar sind.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
+	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) throws ApiOperationException {
 		return getGostFaecherManager(conn, abiJahrgang, true);
 	}
 
@@ -160,14 +165,16 @@ public final class DBUtilsFaecherGost {
 	 * @param nurWaehlbareFaecher   legt fest, ob nur Fächer zurückgegeben werden, die in mindestens einem Halbjahr angewählt werden können.
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static @NotNull GostFaecherManager getGostFaecherManager(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) {
+	private static @NotNull GostFaecherManager getGostFaecherManager(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) throws ApiOperationException {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if (faecher == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
 			return new GostFaecherManager(faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 				.map(fach -> mapFromDTOFach(fach, faecher)).filter(Objects::nonNull).toList()

@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOKatalogPausenzeit;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -39,7 +39,7 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogPausenzeit} in einen Core-DTO {@link StundenplanPausenzeit}.
 	 */
-	private static final Function<DTOKatalogPausenzeit, StundenplanPausenzeit> dtoMapper = (final DTOKatalogPausenzeit p) -> {
+	private static final DTOMapper<DTOKatalogPausenzeit, StundenplanPausenzeit> dtoMapper = (final DTOKatalogPausenzeit p) -> {
 		final StundenplanPausenzeit daten = new StundenplanPausenzeit();
 		daten.id = p.ID;
 		daten.wochentag = p.Tag;
@@ -51,7 +51,7 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -61,8 +61,10 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Pausenzeiten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn) {
+	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogPausenzeit> pausenzeiten = conn.queryAll(DTOKatalogPausenzeit.class);
 		final ArrayList<StundenplanPausenzeit> daten = new ArrayList<>();
 		for (final DTOKatalogPausenzeit p : pausenzeiten)
@@ -71,18 +73,18 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanPausenzeit> daten = getPausenzeiten(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Pausenzeit mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Pausenzeit mit der ID null ist unzulässig.");
 		final DTOKatalogPausenzeit pausenzeit = conn.queryByKey(DTOKatalogPausenzeit.class, id);
 		if (pausenzeit == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde keine Pausenzeit mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenzeit mit der ID %d gefunden.".formatted(id));
 		final StundenplanPausenzeit daten = dtoMapper.apply(pausenzeit);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -92,7 +94,7 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 		Map.entry("beginn", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
@@ -101,7 +103,7 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOKatalogPausenzeit.class, patchMappings);
 	}
 
@@ -117,8 +119,10 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOKatalogPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -130,8 +134,10 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		return super.addBasicMultiple(is, DTOKatalogPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -142,8 +148,10 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @param id   die ID der Pausenzeit
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOKatalogPausenzeit.class, dtoMapper);
 	}
 
@@ -154,8 +162,10 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @param ids   die IDs der Pausenzeiten
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOKatalogPausenzeit.class, dtoMapper);
 	}
 

@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -48,8 +46,10 @@ public abstract class DataManager<ID> {
 	 * bevorzugen.
 	 *
 	 * @return eine Liste mit den Informationen
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public abstract Response getAll();
+	public abstract Response getAll() throws ApiOperationException;
 
 	/**
 	 * Ermittelt eine Liste mit Informationen. Wird üblicherweise durch GET-Methoden
@@ -57,8 +57,10 @@ public abstract class DataManager<ID> {
 	 * als sichtbar markierte Einträge)
 	 *
 	 * @return eine Liste mit den Informationen
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public abstract Response getList();
+	public abstract Response getList() throws ApiOperationException;
 
 	/**
 	 * Ermittelt die Informationen anhand der angegebenen ID. Wird üblicherweise
@@ -67,16 +69,20 @@ public abstract class DataManager<ID> {
 	 * @param id die ID der gesuchten Informationen
 	 *
 	 * @return die Information mit der angebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public abstract Response get(ID id);
+	public abstract Response get(ID id) throws ApiOperationException;
 
 	/**
 	 * Ermittelt die Informationen ohne eine gültige ID (null). Wird üblicherweise
 	 * durch GET-Methoden verwendet.
 	 *
 	 * @return die Information mit der angebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response get() {
+	public Response get() throws ApiOperationException {
 		return this.get(null);
 	}
 
@@ -88,8 +94,10 @@ public abstract class DataManager<ID> {
 	 * @param is der {@link InputStream} mit dem JSON-Patch
 	 *
 	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public abstract Response patch(ID id, InputStream is);
+	public abstract Response patch(ID id, InputStream is) throws ApiOperationException;
 
 	/**
 	 * Passt die Informationen mithilfe des JSON-Patches aus dem übergebenen
@@ -99,8 +107,10 @@ public abstract class DataManager<ID> {
 	 * @param is der {@link InputStream} mit dem JSON-Patch
 	 *
 	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response patch(final InputStream is) {
+	public Response patch(final InputStream is) throws ApiOperationException {
 		return this.patch(null, is);
 	}
 
@@ -117,16 +127,18 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper eine Map mit den Mappingfunktionen zum mappen von
 	 *                        Core-DTO-Attributen auf Datenbank-DTO-Attributen
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
 			if (attributesForbidden != null && attributesForbidden.contains(key))
-				throw OperationError.FORBIDDEN.exception("Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
+				throw new ApiOperationException(Status.FORBIDDEN, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
 			if (mapper == null)
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 			mapper.map(conn, dto, value, map);
 		}
 	}
@@ -144,15 +156,17 @@ public abstract class DataManager<ID> {
 	 * @param dtoClass        die Klasse des DTOs
 	 * @param attributeMapper die Mapper für das Anpassen des DTOs
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		if (id == null)
-			throw OperationError.BAD_REQUEST.exception("Ein Patch mit der ID null ist nicht möglich.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
 		if (map.isEmpty())
-			throw OperationError.NOT_FOUND.exception("In dem Patch sind keine Daten enthalten.");
+			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
 		final DTO dto = conn.queryByKey(dtoClass, id);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		applyPatchMappings(conn, dto, map, attributeMapper, attributesForbidden);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
@@ -172,8 +186,10 @@ public abstract class DataManager<ID> {
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
 		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, attributesForbidden);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -191,8 +207,10 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, null);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -210,9 +228,11 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps)
 			patchBasicInternal((ID) map.get(idAttr), map, dtoClass, attributeMapper, null);
@@ -228,8 +248,10 @@ public abstract class DataManager<ID> {
 	 * @param initDTO    der Consumer zum Initialisieren des DTO
 	 *
 	 * @return das neue DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO) {
+	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO) throws ApiOperationException {
 		return newDTO(dtoClass, conn.transactionGetNextID(dtoClass), initDTO);
 	}
 
@@ -243,8 +265,10 @@ public abstract class DataManager<ID> {
 	 * @param initDTO    der Consumer zum Initialisieren des DTO
 	 *
 	 * @return das neue DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final long newID, final ObjLongConsumer<DTO> initDTO) {
+	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final long newID, final ObjLongConsumer<DTO> initDTO) throws ApiOperationException {
 		try {
 			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
@@ -253,9 +277,9 @@ public abstract class DataManager<ID> {
 			initDTO.accept(dto, newID);
 			return dto;
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				throw webAppException;
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			if (e instanceof final ApiOperationException apiOperationException)
+				throw apiOperationException;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 	}
 
@@ -278,19 +302,21 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
 	 *
 	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
-			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		for (final String attr : attributesRequired)
 			if (!map.containsKey(attr))
-				throw OperationError.BAD_REQUEST.exception("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 		final DTO dto = newDTO(dtoClass, newID, initDTO);
 		applyPatchMappings(conn, dto, map, attributeMapper, null);
 		// Persistiere das DTO in der Datenbank
 		if (!conn.transactionPersist(dto))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		return dtoMapper.apply(dto);
 	}
@@ -313,9 +339,11 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response mit dem Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
-			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final long newID = conn.transactionGetNextID(dtoClass);
 		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -339,9 +367,11 @@ public abstract class DataManager<ID> {
 	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response mit dem Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response addBasicMultiple(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
-			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	protected <DTO, CoreData> Response addBasicMultiple(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final DTOMapper<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Bestimme die nächste verfügbare ID für das DTO
 		long newID = conn.transactionGetNextID(dtoClass);
 		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
@@ -367,14 +397,16 @@ public abstract class DataManager<ID> {
 	 *                   Core-DTO
 	 *
 	 * @return die Response - im Erfolgsfall mit dem gelöschten Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
 		// Bestimme das DTO
 		if (id == null)
-			throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
 		final DTO dto = conn.queryByKey(dtoClass, id);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
 		final CoreData daten = dtoMapper.apply(dto);
 		// Entferne das DTO
 		conn.transactionRemove(dto);
@@ -395,14 +427,16 @@ public abstract class DataManager<ID> {
 	 *                   Core-DTO
 	 *
 	 * @return die Response - im Erfolgsfall mit den gelöschten Core-DTOs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
 		// Bestimme die DTOs
 		if (ids == null)
-			throw OperationError.NOT_FOUND.exception("Es müssen IDs angegeben werden. Null ist nicht zulässig.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");
 		final List<DTO> dtos = conn.queryNamed(dtoClass.getSimpleName() + ".primaryKeyQuery.multiple", ids, dtoClass);
 		if (dtos == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde keine DTOs mit den angegebenen IDs gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine DTOs mit den angegebenen IDs gefunden.");
 		final List<CoreData> daten = new ArrayList<>();
 		for (final DTO dto : dtos) {
 			daten.add(dtoMapper.apply(dto));

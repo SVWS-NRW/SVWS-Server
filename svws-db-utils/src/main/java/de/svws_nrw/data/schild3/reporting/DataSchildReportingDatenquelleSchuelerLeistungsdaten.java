@@ -15,7 +15,8 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten"
@@ -33,14 +34,14 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 
 
     @Override
-    List<SchildReportingSchuelerLeistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) {
+    List<SchildReportingSchuelerLeistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
         // Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
         final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn
                 .queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", params, DTOSchuelerLernabschnittsdaten.class)
                 .stream().collect(Collectors.toMap(a -> a.ID, a -> a));
         for (final Long abschnittID : params)
             if (abschnitte.get(abschnittID) == null)
-                throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
+                throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
 
 		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
 		final ArrayList<SchildReportingSchuelerLeistungsdaten> result = new ArrayList<>();
@@ -67,12 +68,12 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
         for (final DTOSchuelerLeistungsdaten dto : leistungsdaten) {
 			final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
             if (dtoFach == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID, dto.ID));
+                throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID, dto.ID));
             String lehrerKuerzel = null;
             if (dto.Fachlehrer_ID != null) {
 	        	final DTOLehrer dtoLehrer = mapLehrer.get(dto.Fachlehrer_ID);
 	            if (dtoLehrer == null)
-	                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID, dto.ID));
+	                throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID, dto.ID));
 	            lehrerKuerzel = dtoLehrer.Kuerzel;
             }
         	final DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);

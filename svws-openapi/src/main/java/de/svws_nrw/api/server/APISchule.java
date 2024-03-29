@@ -501,8 +501,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Nationalitäten-Katalog-Einträge gefunden")
     public Response getNationaelitaeten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-		return (new DataKatalogNationalitaeten(null)).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogNationalitaeten(null)).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -524,8 +525,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Einschulungsart-Katalog-Einträge gefunden")
     public Response getEinschulungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-		return (new DataKatalogEinschulungsarten(null)).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogEinschulungsarten(null)).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -547,8 +549,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Allgemeine-Merkmal-Katalog-Einträge gefunden")
     public Response getAllgemeineMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-		return (new DataKatalogAllgemeineMerkmale(null)).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogAllgemeineMerkmale(null)).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -571,8 +574,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
     public Response getFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogFoerderschwerpunkte().getList(),
-    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	return DBBenutzerUtils.run(() -> (new DataKatalogFoerderschwerpunkte()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -891,8 +895,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogOrganisationsformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataKatalogOrganisationsformen()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogOrganisationsformen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -916,8 +921,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getSchulstufen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataSchulstufen()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataSchulstufen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -939,8 +945,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schulen-Katalog-Einträge gefunden")
     public Response getKatalogSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataKatalogSchulen()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogSchulen()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -962,8 +969,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schulträger-Katalog-Einträge gefunden")
     public Response getKatalogSchultraeger(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataKatalogSchultraeger()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogSchultraeger()).getList(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -985,8 +993,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataSchuelerStatus()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataSchuelerStatus()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -1007,8 +1016,9 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogHerkunftsschulnummern(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-        return (new DataKatalogHerkunftsschulnummern()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogHerkunftsschulnummern()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 

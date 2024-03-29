@@ -10,8 +10,8 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
@@ -161,10 +161,10 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 *
 	 * @return der Schüler-Lernabschnitt
 	 *
-	 * @throws WebApplicationException   falls ein Fehler beim Erstellen des Lernabschnitts auftritt
+	 * @throws ApiOperationException   falls ein Fehler beim Erstellen des Lernabschnitts auftritt
 	 */
 	public static DTOSchuelerLernabschnittsdaten createByPrevious(final long idSLA, final DBEntityManager conn, final long idSchueler,
-			final DTOSchuljahresabschnitte schuljahresabschnitt) throws WebApplicationException {
+			final DTOSchuljahresabschnitte schuljahresabschnitt) throws ApiOperationException {
 		// Prüfe, ob der vorige Lernabschnitt existiert
 		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
 		if (slaPrev != null) {
@@ -194,11 +194,11 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			sla.Folgeklasse_ID = null;
 			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
 			if (!conn.transactionPersist(sla))
-	        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+	        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 			conn.transactionFlush();
 	        return sla;
 		}
-    	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+    	throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 	}
 
 }

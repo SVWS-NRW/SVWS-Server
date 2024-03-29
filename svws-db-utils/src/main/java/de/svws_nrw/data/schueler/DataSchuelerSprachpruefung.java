@@ -17,9 +17,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -71,47 +70,47 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		throw new UnsupportedOperationException();
 	}
 
-	private List<DTOSchuelerSprachpruefungen> getDTOs() {
+	private List<DTOSchuelerSprachpruefungen> getDTOs() throws ApiOperationException {
 		// Überprüfe, ob die Schüler-ID gültig ist.
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
     	if (schueler == null)
-    		throw OperationError.NOT_FOUND.exception("Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
     	// Bestimme die Sprachprüfungen des Schülers
 		return conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", idSchueler, DTOSchuelerSprachpruefungen.class);
 	}
 
-	private List<Sprachpruefung> getSprachpruefungen() {
+	private List<Sprachpruefung> getSprachpruefungen() throws ApiOperationException {
 		return getDTOs().stream().map(dtoMapper).toList();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<Sprachpruefung> daten = getSprachpruefungen();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-	private DTOSchuelerSprachpruefungen getDTO(final @NotNull String kuerzel) {
+	private DTOSchuelerSprachpruefungen getDTO(final @NotNull String kuerzel) throws ApiOperationException {
 		if ((kuerzel == null) || (kuerzel.isBlank()))
-			throw OperationError.NOT_FOUND.exception("Es wurde kein gültiges Kürzel übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein gültiges Kürzel übergeben.");
 		// Überprüfe, ob die Schüler-ID gültig ist.
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
     	if (schueler == null)
-    		throw OperationError.NOT_FOUND.exception("Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
     	// Bestimme die zugehörige Sprachprüfung
 		final List<DTOSchuelerSprachpruefungen> belegungen = conn.queryList("SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = ?1 AND e.Sprache = ?2", DTOSchuelerSprachpruefungen.class, idSchueler, kuerzel);
 		if (belegungen.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Sprachprüfung mit dem Kürzel gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachprüfung mit dem Kürzel gefunden.");
 		if (belegungen.size() > 1)
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden.".formatted(idSchueler, kuerzel));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden.".formatted(idSchueler, kuerzel));
 		return belegungen.get(0);
 	}
 
-	private Sprachpruefung getSprachpruefung(final @NotNull String kuerzel) {
+	private Sprachpruefung getSprachpruefung(final @NotNull String kuerzel) throws ApiOperationException {
 		return dtoMapper.apply(getDTO(kuerzel));
 	}
 
 	@Override
-	public Response get(final @NotNull String kuerzel) {
+	public Response get(final @NotNull String kuerzel) throws ApiOperationException {
 		final Sprachpruefung daten = getSprachpruefung(kuerzel);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -120,7 +119,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		Map.entry("sprache", (conn, dto, value, map) -> {
 			final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
 			if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("jahrgang", (conn, dto, value, map) -> {
 			final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
@@ -129,7 +128,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 			} else {
 				final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
 				if (jg == null)
-					throw OperationError.BAD_REQUEST.exception("Ungültiges Jahrgangs-Kürzel verwendet.");
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
 				dto.ASDJahrgang = jg.daten.kuerzel;
 			}
 		}),
@@ -140,7 +139,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 			} else {
 				final Sprachpruefungniveau niveau = Sprachpruefungniveau.getByID(id);
 				if (niveau == null)
-					throw OperationError.BAD_REQUEST.exception("Ungültiges Sprachprüfungsniveau-Kürzel verwendet.");
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachprüfungsniveau-Kürzel verwendet.");
 				dto.Anspruchsniveau = niveau;
 			}
 		}),
@@ -159,7 +158,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 			} else {
 				final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
 				if (niveau == null)
-					throw OperationError.BAD_REQUEST.exception("Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
 				dto.Referenzniveau = niveau;
 			}
 		}),
@@ -170,20 +169,20 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 			} else {
 				final Note notePruefung = Note.fromNoteSekI(note);
 				if (notePruefung == null)
-					throw OperationError.BAD_REQUEST.exception("Ungültige Note angegeben.");
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ungültige Note angegeben.");
 				dto.NotePruefung = notePruefung;
 			}
 		})
 	);
 
 	@Override
-	public Response patch(final @NotNull String kuerzel, final InputStream is) {
+	public Response patch(final @NotNull String kuerzel, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
 		final DTOSchuelerSprachpruefungen dto = getDTO(kuerzel);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		applyPatchMappings(conn, dto, map, patchMappings, null);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
@@ -201,35 +200,37 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		// Prüfe, ob ein Schüler mit der idSchueler existiert und lade diesen
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (schueler == null)
-			throw OperationError.NOT_FOUND.exception("Ein Schüler mit der ID %d ist nicht vorhanden.".formatted(idSchueler));
+			throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d ist nicht vorhanden.".formatted(idSchueler));
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		for (final String attr : requiredCreateAttributes)
 			if (!map.containsKey(attr))
-				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		try {
 			// Bestimme die nächste verfügbare ID
 			final long newID = conn.transactionGetNextID(DTOSchuelerSprachpruefungen.class);
 			final String sprache = JSONMapper.convertToString(map.get("sprache"), false, false, 2);
 			if ((sprache == null) || (sprache.isBlank()))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 			final DTOSchuelerSprachpruefungen dto = new DTOSchuelerSprachpruefungen(newID, idSchueler, sprache);
 			applyPatchMappings(conn, dto, map, patchMappings, null);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(dto))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 			conn.transactionFlush();
 			final Sprachpruefung daten = dtoMapper.apply(dto);
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -240,12 +241,14 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 	 * @param kuerzel   das Kürzel der Sprache
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final @NotNull String kuerzel) {
+	public Response delete(final @NotNull String kuerzel) throws ApiOperationException {
 		// Bestimme das DTO
 		final DTOSchuelerSprachpruefungen dto = getDTO(kuerzel);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Sprachpruefung daten = dtoMapper.apply(dto);
 		// Entferne das DTO
 		conn.transactionRemove(dto);

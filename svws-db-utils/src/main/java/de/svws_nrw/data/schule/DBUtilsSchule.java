@@ -2,8 +2,8 @@ package de.svws_nrw.data.schule;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
@@ -22,12 +22,12 @@ public final class DBUtilsSchule {
 	 *
 	 * @return das Datenbank-DTO der Schule
 	 *
-	 * @throws WebApplicationException    falls keine Schule definiert ist
+	 * @throws ApiOperationException    falls keine Schule definiert ist
 	 */
-	public static DTOEigeneSchule get(final DBEntityManager conn) throws WebApplicationException {
+	public static DTOEigeneSchule get(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception("In der Datenbank wurde keine Schule definiert");
+			throw new ApiOperationException(Status.NOT_FOUND, "In der Datenbank wurde keine Schule definiert");
 		return schule;
 	}
 

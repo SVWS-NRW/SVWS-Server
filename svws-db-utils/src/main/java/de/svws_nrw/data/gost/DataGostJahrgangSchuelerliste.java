@@ -14,9 +14,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -48,11 +47,11 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	 *
 	 * @return die Liste der Schüler
 	 *
-	 * @throws WebApplicationException   für den Fall, dass keine Schüler für den Abiturjahrgang bestimmt werden konnten
+	 * @throws ApiOperationException   für den Fall, dass keine Schüler für den Abiturjahrgang bestimmt werden konnten
 	 */
-	List<DTOSchueler> getSchuelerDTOs() throws WebApplicationException {
+	List<DTOSchueler> getSchuelerDTOs() throws ApiOperationException {
 		if (abijahrgang == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abijahrgang);
 	}
 
@@ -60,16 +59,16 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	 * Ermittelt die Schüler des Abiturjahrgangs
 	 *
 	 * @return die Liste der Schüler
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<SchuelerListeEintrag> getAllSchueler() {
+	public List<SchuelerListeEintrag> getAllSchueler() throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
-		if (schuelerListe.isEmpty()) {
-			final List<SchuelerListeEintrag> daten = new ArrayList<>();
-			return daten;
-		}
+		if (schuelerListe.isEmpty())
+			return new ArrayList<>();
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();
 
     	// Bestimme die aktuellen Lernabschnitte für die Schüler
@@ -85,22 +84,20 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		// Erstelle die Schülerliste
-    	final List<SchuelerListeEintrag> daten = schuelerListe.stream()
+    	return schuelerListe.stream()
         		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
         		.sorted(DataSchuelerliste.dataComparator)
     	    	.toList();
-
-    	return daten;
 	}
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getAllSchueler()).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

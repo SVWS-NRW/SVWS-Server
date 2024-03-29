@@ -51,6 +51,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 
@@ -207,8 +208,10 @@ public class LupoMDB {
 	 *
 	 * @param user       der Datenbank-Benutzer für den SVWS-Datenbankzugriff (siehe {@link Benutzer})
 	 * @param jahrgang   der Jahrgang, der in diese LuPO-MDB geschrieben werden soll ("EF", "Q1" oder "Q2").
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void getFromLeistungsdaten(final Benutzer user, final String jahrgang) {
+	public void getFromLeistungsdaten(final Benutzer user, final String jahrgang) throws ApiOperationException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			final @NotNull DTOSchuljahresabschnitte schuljahresabschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
@@ -498,8 +501,10 @@ public class LupoMDB {
 	 *                           sollen, sofern sie bereits vorhanden sind.
 	 * @param replaceSchueler    gibt an, ob alte Daten für die Schüler der LuPO-Datei ersetzt werden
 	 *                           sollen, sofern sie bereits vorhanden sind.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void setLUPOTables(final Benutzer user, final boolean replaceJahrgang, final boolean replaceSchueler) {
+	public void setLUPOTables(final Benutzer user, final boolean replaceJahrgang, final boolean replaceSchueler) throws ApiOperationException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			try {
 				conn.transactionBegin();

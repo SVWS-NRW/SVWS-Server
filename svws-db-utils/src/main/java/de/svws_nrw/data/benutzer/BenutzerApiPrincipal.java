@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.security.Principal;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 
 /**
@@ -84,8 +85,10 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 	 * @param request    der HTTP-Request
 	 *
 	 * @return der Benutzerprincipal, falls der Login gültig ist, sonst null
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static BenutzerApiPrincipal login(final String username, final String password, final HttpServletRequest request) {
+	public static BenutzerApiPrincipal login(final String username, final String password, final HttpServletRequest request) throws ApiOperationException {
 		final String path = request.getPathInfo();
 		if (path == null)
 			return null;
@@ -173,9 +176,9 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if (config.getDBSchema() != null) {
 			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
-				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
-				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
 		}
 
 		if (config.useDBLogin()) {

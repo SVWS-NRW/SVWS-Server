@@ -11,8 +11,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -79,7 +78,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final LehrerStammdaten daten = getFromID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -88,14 +87,17 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	 * Gibt die Lehrerstammdaten zur ID der Lehrkraft zurück.
 	 *
 	 * @param id	Die ID der Lehrkraft.
+	 *
 	 * @return		Die Lehrerstammdaten zur ID.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public LehrerStammdaten getFromID(final Long id) throws WebApplicationException {
+	public LehrerStammdaten getFromID(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw OperationError.NOT_FOUND.exception("Keine ID für die Lehrkraft übergeben");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine ID für die Lehrkraft übergeben");
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
 		if (lehrer == null)
-			throw OperationError.NOT_FOUND.exception("Keine Lehrkraft zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lehrkraft zur ID " + id + " gefunden.");
 		final LehrerStammdaten daten = dtoMapper.apply(lehrer);
 		final DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
 		if (lehrerFoto != null)
@@ -105,12 +107,12 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (!map.isEmpty()) {
     		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
 	    	if (lehrer == null)
-	    		throw OperationError.NOT_FOUND.exception();
+	    		throw new ApiOperationException(Status.NOT_FOUND);
 	    	for (final Entry<String, Object> entry : map.entrySet()) {
 	    		final String key = entry.getKey();
 	    		final Object value = entry.getValue();
@@ -119,7 +121,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
 	    			case "foto" -> {
 	    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
@@ -136,7 +138,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			case "personalTyp" -> {
 		        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false, null));
 		        		if (p == null)
-		        			throw OperationError.CONFLICT.exception();
+		        			throw new ApiOperationException(Status.CONFLICT);
 		            	lehrer.PersonTyp = p;
 	    			}
 	    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge());
@@ -147,7 +149,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			case "geschlecht" -> {
 	    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 	    				if (geschlecht == null)
-	    					throw OperationError.CONFLICT.exception();
+	    					throw new ApiOperationException(Status.CONFLICT);
 	    				lehrer.Geschlecht = geschlecht;
 	    			}
 	    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
@@ -158,7 +160,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
     					} else {
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
 	    			    	if (nat == null)
-	    			    		throw OperationError.NOT_FOUND.exception();
+	    			    		throw new ApiOperationException(Status.NOT_FOUND);
 	    			    	lehrer.staatsangehoerigkeit = nat;
     					}
 	    			}
@@ -174,7 +176,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
 	    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
 
-	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    		}
 	    	}
 	    	conn.transactionPersist(lehrer);
@@ -192,13 +194,13 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
      * @param wohnortID    die zu setzende Wohnort-ID
      * @param ortsteilID   die zu setzende Ortsteil-ID
      *
-     * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
+     * @throws ApiOperationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
      */
-    private static void setWohnort(final DBEntityManager conn, final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID) throws WebApplicationException {
+    private static void setWohnort(final DBEntityManager conn, final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID) throws ApiOperationException {
     	if ((wohnortID != null) && (wohnortID < 0))
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
     	if ((ortsteilID != null) && (ortsteilID < 0))
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
 		lehrer.Ort_ID = wohnortID;
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;

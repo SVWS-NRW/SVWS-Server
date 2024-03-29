@@ -18,7 +18,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -61,10 +61,10 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 };
 
 	 @Override
-	 public Response getAll() {
+	 public Response getAll() throws ApiOperationException {
 		 final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryAll(DTOSchuelerAllgemeineAdresse.class);
 		 if (betriebe == null)
-			 return OperationError.NOT_FOUND.getResponse();
+			 throw new ApiOperationException(Status.NOT_FOUND);
 		 final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
 		 return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	 }
@@ -75,25 +75,25 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 }
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse("Die erwartete ID zur Anfrage ist nicht vorhanden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die erwartete ID zur Anfrage ist nicht vorhanden.");
 		final DTOSchuelerAllgemeineAdresse schuelerbetrieb = conn.queryByKey(DTOSchuelerAllgemeineAdresse.class, id);
 		if (schuelerbetrieb == null)
-			return OperationError.NOT_FOUND.getResponse("Es existiert mit der ID kein Schülerbetrieb.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert mit der ID kein Schülerbetrieb.");
 		final SchuelerBetriebsdaten daten = dtoMapper.apply(schuelerbetrieb);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOSchuelerAllgemeineAdresse s_betrieb = conn.queryByKey(DTOSchuelerAllgemeineAdresse.class, id);
 			if (s_betrieb == null)
-				return OperationError.NOT_FOUND.getResponse();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -101,25 +101,25 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.intValue() != id.intValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
 					case "schueler_id" -> {
 						final Long schueler_id = JSONMapper.convertToLong(value, true);
 						if (schueler_id == null)	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
-							throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID darf nicht fehlen.");
 						final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 						if (schueler == null)
-							throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
+							throw new ApiOperationException(Status.NOT_FOUND, "Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
 						s_betrieb.Schueler_ID = schueler_id;
 					}
 					case "betrieb_id" -> {
 
 						final Long betrieb_id = JSONMapper.convertToLong(value, true);
 						if (betrieb_id == null)
-							throw OperationError.BAD_REQUEST.exception("Es muss eine ID für den Betrieb angegeben werden.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "Es muss eine ID für den Betrieb angegeben werden.");
 						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 						if (betrieb == null)
-							throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
+							throw new ApiOperationException(Status.NOT_FOUND, "Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 						s_betrieb.Adresse_ID = betrieb_id;
 					}
 					case "beschaeftigungsart_id" -> {
@@ -129,7 +129,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
 							if (b_art == null)
-								throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
+								throw new ApiOperationException(Status.NOT_FOUND, "Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
 							s_betrieb.Vertragsart_ID = art_id;
 						}
 					}
@@ -146,7 +146,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
 							if (ansprechpartner == null)
-								throw OperationError.NOT_FOUND.exception();
+								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;
 						}
 					}
@@ -157,11 +157,11 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
 							if (lehrer == null)
-								throw OperationError.NOT_FOUND.exception();
+								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Betreuungslehrer_ID = lehrer_id;
 						}
 					}
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(s_betrieb);
@@ -175,11 +175,13 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 * @param schuelerID   die ID des Schülers, dessen {@link SchuelerBetriebsdaten	} ermittelt werden sollen
 	 *
 	 * @return eine Liste mit den {@link SchuelerBetriebsdaten} für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getListFromSchueler(final long schuelerID) {
+	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
     	final List<DTOSchuelerAllgemeineAdresse> betriebe = conn.queryNamed("DTOSchuelerAllgemeineAdresse.schueler_id", schuelerID, DTOSchuelerAllgemeineAdresse.class);
     	if (betriebe == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
         final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
         /*
         // TODO Isak später bitte entfernen
@@ -220,18 +222,20 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 	 * @param is			das JSON-Objekt mit den Daten
 	 *
 	 * @return Eine Response mit dem neuen Schülerbetrieb
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response create(final long schueler_id, final long betrieb_id, final InputStream is) {
+	public Response create(final long schueler_id, final long betrieb_id, final InputStream is) throws ApiOperationException {
 		DTOSchuelerAllgemeineAdresse s_betrieb = null;
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 			if (schueler == null)
-				throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
 
 			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 			if (betrieb == null)
-				throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Schueler_AllgAdr");
@@ -250,14 +254,14 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					case "schueler_id" -> {
 						final Long sid = JSONMapper.convertToLong(value, true);
 						if (sid == null)
-							throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID darf nicht fehlen.");
 						if (sid != schueler_id)
-							throw OperationError.BAD_REQUEST.exception("SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
 					case "betrieb_id" -> {
 						final Long bid = JSONMapper.convertToLong(value, true);
 						if ((bid == null) || (bid != betrieb_id))
-							throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+							throw new ApiOperationException(Status.BAD_REQUEST, "Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 					}
 					case "beschaeftigungsart_id" -> {
 						final Long art_id = JSONMapper.convertToLong(value, true);
@@ -266,7 +270,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
 							if (b_art == null)
-								throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
+								throw new ApiOperationException(Status.NOT_FOUND, "Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
 							s_betrieb.Vertragsart_ID = art_id;
 						}
 					}
@@ -283,7 +287,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
 							if (ansprechpartner == null)
-								throw OperationError.NOT_FOUND.exception();
+								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;
 						}
 					}
@@ -294,11 +298,11 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						} else {
 							final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
 							if (lehrer == null)
-								throw OperationError.NOT_FOUND.exception();
+								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Betreuungslehrer_ID = lehrer_id;
 						}
 					}
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(s_betrieb);

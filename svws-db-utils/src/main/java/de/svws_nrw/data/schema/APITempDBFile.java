@@ -12,7 +12,8 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse repräsentiert eine temporäre Datei, welche für eine MDB oder SQLite-DB
@@ -66,15 +67,17 @@ public class APITempDBFile implements AutoCloseable {
 	 * @param data         die DB als Byte-Array
 	 * @param password     ggf. das Kennwort für die DB
 	 * @param doDelete     gibt an, ob die Datei beim close gelöscht werden soll oder ob sich die aufrufende Methode darum kümmert.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public APITempDBFile(final DBDriver dbms, final String praefix, final Logger logger, final LogConsumerList log,
-			final byte[] data, final String password, final boolean doDelete) {
+			final byte[] data, final String password, final boolean doDelete) throws ApiOperationException {
 		this._dbms = dbms;
 		this._doDelete = doDelete;
 		this._logger = logger;
 		if (!dbms.isFileBased()) {
 			_logger.logLn("Fehler: Das DBMS %s wird für das Erstellen von temporären DBMS nicht unterstützt.");
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 		}
 		this._password = password;
     	// Erstelle temporär eine Datenbank-Datei aus dem übergebenen Byte-Array
@@ -92,7 +95,7 @@ public class APITempDBFile implements AutoCloseable {
     			Files.write(Paths.get(_tmpDir + "/" + _tmpFilename), data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			_logger.logLn(2, "Fehler beim Erstellen der temporären Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\"");
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 		}
 	}
 

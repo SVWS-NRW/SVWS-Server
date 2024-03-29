@@ -7,7 +7,7 @@ import java.util.List;
 import de.svws_nrw.core.data.schule.SchuelerstatusKatalogEintrag;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -26,7 +26,7 @@ public final class DataSchuelerStatus extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<SchuelerstatusKatalogEintrag> katalog = Arrays.stream(SchuelerStatus.values()).map(s -> {
 		    final var eintrag = new SchuelerstatusKatalogEintrag();
 		    eintrag.StatusNr = s.id;
@@ -35,12 +35,12 @@ public final class DataSchuelerStatus extends DataManager<Long> {
 		    return eintrag;
 		}).toList();
     	if (katalog == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

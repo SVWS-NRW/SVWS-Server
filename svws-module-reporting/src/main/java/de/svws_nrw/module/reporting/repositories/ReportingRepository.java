@@ -27,9 +27,10 @@ import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,12 +117,13 @@ public class ReportingRepository {
 	 * </ul>
 	 *
 	 * @param conn	Die Verbindung zur Datenbank der Schule.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public ReportingRepository(final DBEntityManager conn) {
+	public ReportingRepository(final DBEntityManager conn) throws ApiOperationException {
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Datenbankverbindung wurde nicht angegeben.");
-		else
-			this.conn = conn;
+			throw new ApiOperationException(Status.NOT_FOUND, "Datenbankverbindung wurde nicht angegeben.");
+		this.conn = conn;
 
 		// Ermittle die Daten der Schule. Wenn diese nicht gefunden wird oder sie keinen aktuellen Schuljahresabschnitt besitzt, dann wird ein Fehler geworfen.
 		schulstammdaten = DataSchuleStammdaten.getStammdaten(this.conn);

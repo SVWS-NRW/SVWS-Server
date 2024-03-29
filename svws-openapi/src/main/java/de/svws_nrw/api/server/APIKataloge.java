@@ -60,8 +60,9 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Straßen-Katalog-Einträge gefunden")
     public Response getKatalogStrassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	return (new DataStrassen()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataStrassen()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -83,8 +84,9 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Orts-Katalog-Einträge gefunden")
     public Response getKatalogOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-        return (new DataKatalogOrte()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogOrte()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 
@@ -132,8 +134,9 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getKatalogOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-        return (new DataKatalogOrtsteile()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogOrtsteile()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 

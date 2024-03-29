@@ -42,9 +42,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -94,16 +93,18 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * für den angegebenen Blockungsdaten-Manager
 	 *
 	 * @param datenManager   der Blockungsdaten-Manager
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void getErgebnisListe(@NotNull final GostBlockungsdatenManager datenManager) {
+	void getErgebnisListe(@NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
 	    // Bestimme die Liste der Ergebnisse aus der Datenbank
         final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
                 "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
         if (ergebnisse == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         final List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).toList();
         if (ergebnisIDs.isEmpty()) // Es muss immer mindestens ein aktuelles Ergebnis vorliegen
-            throw OperationError.INTERNAL_SERVER_ERROR.exception();
+            throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 
         // Bestimme die Kurs-Schienen-Zuordnungen für alle Zwischenergebnisse
         final Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen =
@@ -154,10 +155,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @return das Core-DTO für das Blockungsergebnis
 	 *
-	 * @throws WebApplicationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
 	public GostBlockungsergebnis getErgebnis(@NotNull final DTOGostBlockungZwischenergebnis ergebnis,
-	        @NotNull final GostBlockungsdatenManager datenManager) throws WebApplicationException {
+	        @NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
         final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
 
         // Bestimme alle Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
@@ -195,20 +196,20 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @return 				das Core-DTO für das Blockungsergebnis
 	 *
-	 * @throws WebApplicationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	public GostBlockungsergebnis getErgebnisFromID(@NotNull final Long id) throws WebApplicationException {
+	public GostBlockungsergebnis getErgebnisFromID(@NotNull final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
-			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben.");
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, ergebnis.Blockung_ID);
 		return getErgebnis(ergebnis, datenManager);
 	}
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final GostBlockungsergebnis daten = getErgebnisFromID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -216,7 +217,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() <= 0)
 			return Response.status(Status.OK).build();
@@ -224,7 +225,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		// Bestimme die Blockung
 		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
@@ -232,7 +233,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				case "id" -> {
 					final Long patch_id = JSONMapper.convertToLong(value, true);
 					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 				case "istAktiv" -> {
 					final boolean result = JSONMapper.convertToBoolean(value, false);
@@ -241,7 +242,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 					else
 						ergebnis.IstAktiv = false;
 				}
-				default -> throw OperationError.BAD_REQUEST.exception();
+				default -> throw new ApiOperationException(Status.BAD_REQUEST);
 			}
 		}
 		conn.transactionPersist(ergebnis);
@@ -255,13 +256,15 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param id   die ID des zu löschenden Blockungsergebnis
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (erg == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Entferne das Ergebnis
 		conn.transactionRemove(erg);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
@@ -274,17 +277,19 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param ids   die IDs der zu löschenden Blockungsergebnisse
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Zwischenergebnis
 		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryByKeyList(DTOGostBlockungZwischenergebnis.class, ids);
 		if ((ergebnisse == null) || (ergebnisse.size() != ids.size()))
-			throw OperationError.NOT_FOUND.exception("Mindestens ein Ergebnis wurde nicht gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Mindestens ein Ergebnis wurde nicht gefunden.");
 		final long idBlockung = ergebnisse.get(0).Blockung_ID;
 		for (final DTOGostBlockungZwischenergebnis ergebnis : ergebnisse)
 			if (idBlockung != ergebnis.Blockung_ID)
-				throw OperationError.BAD_REQUEST.exception("Die Ergebnisse gehören zu mehreren Blockungen");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Ergebnisse gehören zu mehreren Blockungen");
 		// Entferne die Ergebnisse
 		conn.transactionRemoveAll(ergebnisse);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ids).build();
@@ -300,8 +305,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param aktiv        gibt an,
 	 *
 	 * @return das DTO zur Blockung, falls damit weitergearbeitet werden soll
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static DTOGostBlockungZwischenergebnis markiereErgebnisAktiv(final DBEntityManager conn, final long idErgebnis, final boolean aktiv) {
+	public static DTOGostBlockungZwischenergebnis markiereErgebnisAktiv(final DBEntityManager conn, final long idErgebnis, final boolean aktiv) throws ApiOperationException {
 		conn.transactionFlush();
 		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (aktiv) {
@@ -314,37 +321,37 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		}
 		ergebnis.IstAktiv = aktiv;
     	if (!conn.transactionPersist(ergebnis))
-        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		return ergebnis;
 	}
 
 
-	private void _createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
+	private void _createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (idSchueler == null)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
 		if (ergebnis == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die zugehörige Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerAbijahrgang = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Set<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toSet());
 		if (!schuelerIDs.contains(idSchueler))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		// Bestimme die Kurse, welche für die Blockung angelegt wurden
 		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 		if (kurs == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		if (!Objects.equals(kurs.Blockung_ID, ergebnis.Blockung_ID))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 
 		// Füge die neue Kurszuordnung hinzu
 		conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(idZwischenergebnis, idKurs, idSchueler));
@@ -353,14 +360,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 
-	private void _deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
+	private void _deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if ((idSchueler == null) || (idKurs == null))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		// Entferne die Zuordnung
 		final DTOGostBlockungZwischenergebnisKursSchueler dto = conn.queryByKey(DTOGostBlockungZwischenergebnisKursSchueler.class, idZwischenergebnis, idKurs, idSchueler);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		conn.transactionRemove(dto);
 		conn.transactionFlush();
 	}
@@ -374,8 +381,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param idKurs               die ID des neuen Kurses
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
+	public Response createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) throws ApiOperationException {
 		this._createKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
         return Response.status(Status.NO_CONTENT).build();
 	}
@@ -390,8 +399,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param idKursNeu            die ID des neuen Kurses
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response updateKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKursAlt, final Long idKursNeu) {
+	public Response updateKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKursAlt, final Long idKursNeu) throws ApiOperationException {
 		if (idKursNeu == null)
 			return deleteKursSchuelerZuordnung(idZwischenergebnis, idKursAlt, idSchueler);
 		// TODO prüfe, ob die Kursarten übereinstimmen...
@@ -409,28 +420,30 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param update               die zu entfernenden Kurs-Schüler-Zuordnungen und die hinzuzufügenden Kurs-Schüler-Zuordnungen
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public Response updateKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
+    public Response updateKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
 		if (ergebnis == null)
-			throw OperationError.NOT_FOUND.exception("Das Blockungsergebnis mit der ID %d wurde nicht gefunden.".formatted(idZwischenergebnis));
+			throw new ApiOperationException(Status.NOT_FOUND, "Das Blockungsergebnis mit der ID %d wurde nicht gefunden.".formatted(idZwischenergebnis));
 		// Bestimme die zugehörige Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d wurde nicht gefunden.".formatted(ergebnis.Blockung_ID));
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d wurde nicht gefunden.".formatted(ergebnis.Blockung_ID));
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerAbijahrgang = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
-			throw OperationError.NOT_FOUND.exception("Es wurden keine Schüler in dem Abiturjahrgang gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler in dem Abiturjahrgang gefunden.");
 		final Set<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toSet());
 		// Bestimme alle Kurse der Blockung
 		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
 		if (kurse.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Es wurden keine Kurse in der Blockung gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Kurse in der Blockung gefunden.");
 		final Set<Long> kursIDs = kurse.stream().map(k -> k.ID).collect(Collectors.toSet());
 
 		// Entferne die Kurs-Schüler-Zuordnungen
@@ -440,16 +453,16 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
 				if (setEntfernt.contains(eintrag))
-					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt entfernt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+					throw new ApiOperationException(Status.CONFLICT, "Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt entfernt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
 				setEntfernt.add(eintrag);
 				if (!schuelerIDs.contains(zuordnung.idSchueler))
-					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
+					throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
 				if (!kursIDs.contains(zuordnung.idKurs))
-					throw OperationError.NOT_FOUND.exception("Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
+					throw new ApiOperationException(Status.NOT_FOUND, "Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
 				// Prüfe, ob die Zuordnung überhaupt existiert und entfernt werden kann
 				final DTOGostBlockungZwischenergebnisKursSchueler dto = conn.queryByKey(DTOGostBlockungZwischenergebnisKursSchueler.class, idZwischenergebnis, zuordnung.idKurs, zuordnung.idSchueler);
 				if (dto == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				conn.transactionRemove(dto);
 			}
 			conn.transactionFlush();
@@ -462,12 +475,12 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
 				if (setHinzugefuegt.contains(eintrag))
-					throw OperationError.CONFLICT.exception("Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt hinzugefügt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
+					throw new ApiOperationException(Status.CONFLICT, "Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt hinzugefügt werden.".formatted(zuordnung.idSchueler, zuordnung.idKurs));
 				setHinzugefuegt.add(eintrag);
 				if (!schuelerIDs.contains(zuordnung.idSchueler))
-					throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
+					throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
 				if (!kursIDs.contains(zuordnung.idKurs))
-					throw OperationError.NOT_FOUND.exception("Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
+					throw new ApiOperationException(Status.NOT_FOUND, "Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
 				// Füge die neue Kurszuordnung hinzu
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(idZwischenergebnis, zuordnung.idKurs, zuordnung.idSchueler));
 			}
@@ -490,8 +503,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @param idKurs               die ID des Kurses
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
+	public Response deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) throws ApiOperationException {
 		this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKurs);
         return Response.status(Status.NO_CONTENT).build();
 	}
@@ -504,38 +519,40 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param zuordnungen          die Kurs-Schüler-Zuordnungen
      *
      * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response deleteKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> zuordnungen) {
+    public Response deleteKursSchuelerZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> zuordnungen) throws ApiOperationException {
     	for (final GostBlockungsergebnisKursSchuelerZuordnung zuordnung : zuordnungen)
     		this._deleteKursSchuelerZuordnung(idZwischenergebnis, zuordnung.idSchueler, zuordnung.idKurs);
         return Response.status(Status.NO_CONTENT).build();
     }
 
 
-    private void _createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
+    private void _createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) throws ApiOperationException {
         DBUtilsGost.pruefeSchuleMitGOSt(conn);
         if (idSchiene == null)
-            throw OperationError.CONFLICT.exception();
+            throw new ApiOperationException(Status.CONFLICT);
         // Bestimme das Blockungs-Zwischenergebnis
         final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
         if (ergebnis == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         // Bestimme die zugehörige Blockung
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
         if (blockung == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         // Bestimme Schienen-IDs der Blockung
         final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, idSchiene);
         if (schiene == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         if (!Objects.equals(schiene.Blockung_ID, ergebnis.Blockung_ID)) // Fehler in der DB
-            throw OperationError.CONFLICT.exception();
+            throw new ApiOperationException(Status.CONFLICT);
         // Bestimme die Kurse, welche für die Blockung angelegt wurden
         final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
         if (kurs == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         if (!Objects.equals(kurs.Blockung_ID, ergebnis.Blockung_ID))
-            throw OperationError.CONFLICT.exception(); // Fehler in der DB
+            throw new ApiOperationException(Status.CONFLICT); // Fehler in der DB
         // Füge die neue Kurs-Schienen-Zuordnung hinzu
         conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(idZwischenergebnis, idKurs, idSchiene));
         conn.transactionFlush();
@@ -543,14 +560,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 
-    private void _deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
+    private void _deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) throws ApiOperationException {
         DBUtilsGost.pruefeSchuleMitGOSt(conn);
         if ((idSchiene == null) || (idKurs == null))
-            throw OperationError.CONFLICT.exception();
+            throw new ApiOperationException(Status.CONFLICT);
         // Entferne die Zuordnung
         final DTOGostBlockungZwischenergebnisKursSchiene dto = conn.queryByKey(DTOGostBlockungZwischenergebnisKursSchiene.class, idZwischenergebnis, idKurs, idSchiene);
         if (dto == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         conn.transactionRemove(dto);
         conn.transactionFlush();
     }
@@ -564,8 +581,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param idKurs               die ID des neuen Kurses
      *
      * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
+    public Response createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) throws ApiOperationException {
         this._createKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
         return Response.status(Status.NO_CONTENT).build();
     }
@@ -580,8 +599,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param idSchieneNeu         die ID der neuen Schiene
      *
      * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response updateKursSchieneZuordnung(final Long idZwischenergebnis, final Long idKurs, final Long idSchieneAlt, final Long idSchieneNeu) {
+    public Response updateKursSchieneZuordnung(final Long idZwischenergebnis, final Long idKurs, final Long idSchieneAlt, final Long idSchieneNeu) throws ApiOperationException {
         if (idSchieneNeu == null)
             return deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
         this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
@@ -598,8 +619,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param idKurs               die ID des Kurses
      *
      * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
+    public Response deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) throws ApiOperationException {
         this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
         return Response.status(Status.NO_CONTENT).build();
     }
@@ -612,8 +635,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param zuordnungen          die Kurs-Schienen-Zuordnungen
      *
      * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response deleteKursSchieneZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchienenZuordnung> zuordnungen) {
+    public Response deleteKursSchieneZuordnungen(final Long idZwischenergebnis, final @NotNull List<@NotNull GostBlockungsergebnisKursSchienenZuordnung> zuordnungen) throws ApiOperationException {
     	for (final GostBlockungsergebnisKursSchienenZuordnung zuordnung : zuordnungen)
     		this._deleteKursSchieneZuordnung(idZwischenergebnis, zuordnung.idSchiene, zuordnung.idKurs);
         return Response.status(Status.NO_CONTENT).build();
@@ -711,14 +736,16 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param ergebnisManager   der Ergebnis-Manager
      * @param abschnitt         der Schuljahresabschnitt, in dem die Blockung aktiviert wird
      * @param halbjahr          das Halbjahr der gymnasialen Oberstufe
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    private void aktiviere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) {
+    private void aktiviere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) throws ApiOperationException {
     	// Bestimme die ID des Jahrgangs
     	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
     	if (jahrgangsliste.isEmpty())
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	if (jahrgangsliste.size() > 1)
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
     	final DTOJahrgang jahrgang = jahrgangsliste.get(0);
 		// Bestimme die ID, mit welcher ein weiterer Kurs eingefügt wird
 		final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Kurse.name());
@@ -864,14 +891,16 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param idErgebnis   das zu persistierende Blockungsergebnis
      *
      * @return die HTTP-Response, welchen den Erfolg der Operation angibt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response aktiviere(final Long idErgebnis) {
+    public Response aktiviere(final Long idErgebnis) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (dtoErgebnis == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
 		// Bestimme die Daten des Ergebnisses
         final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
@@ -883,7 +912,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         // Prüfe, ob der Schuljahresabschnitt bereits angelegt wurde
     	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
     	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
-    		return OperationError.CONFLICT.getResponse();
+    		throw new ApiOperationException(Status.CONFLICT);
     	aktiviere(ergebnisManager, abschnitt, halbjahr);
         // Markiere die Blockung und das Ergebnis als aktiviert
     	DataGostBlockungsdaten.markiereBlockungAktiv(conn, dtoErgebnis.Blockung_ID, true);
@@ -901,14 +930,16 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param ergebnisManager   der Ergebnis-Manager
      * @param abschnitt         der Schuljahresabschnitt, in dem die Blockung synchronisiert wird
      * @param halbjahr          das Halbjahr der gymnasialen Oberstufe
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    private void synchronisiere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) {
+    private void synchronisiere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) throws ApiOperationException {
     	// Bestimme die ID des Jahrgangs
     	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
     	if (jahrgangsliste.isEmpty())
-    		throw OperationError.NOT_FOUND.exception("Der Jahrgang '%s' wurde in der Datenbank nicht gefunden.".formatted(halbjahr.jahrgang));
+    		throw new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang '%s' wurde in der Datenbank nicht gefunden.".formatted(halbjahr.jahrgang));
     	if (jahrgangsliste.size() > 1)
-    		throw OperationError.CONFLICT.exception("Der Jahrgang '%s' wurde mehrfach in der Datenbank gefunden.".formatted(halbjahr.jahrgang));
+    		throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang '%s' wurde mehrfach in der Datenbank gefunden.".formatted(halbjahr.jahrgang));
     	final DTOJahrgang jahrgang = jahrgangsliste.get(0);
 		// Bestimme die ID, mit welcher ggf. ein weiterer Kurs eingefügt wird
     	long idKurs = conn.transactionGetNextID(DTOKurs.class);
@@ -923,7 +954,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     				DTOKurs.class, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id, jahrgang.ID, halbjahr.jahrgang,
     				GostKursart.fromID(kurs.kursart).kuerzel);
     		if (kurseVorhanden.size() > 1)
-    			throw OperationError.CONFLICT.exception("Es existieren mehrere Kurse für einen Kurs der Blockung. Dies ist nicht zulässig und sollte in der Liste der Kurse zuvor korrigiert werden.");
+    			throw new ApiOperationException(Status.CONFLICT, "Es existieren mehrere Kurse für einen Kurs der Blockung. Dies ist nicht zulässig und sollte in der Liste der Kurse zuvor korrigiert werden.");
     		if (kurseVorhanden.isEmpty()) {
     			kursHinzufuegen(ergebnisManager, abschnitt, halbjahr, jahrgang, idKurs++, kurs, mapKursIDs, mapKursDTOs);
     		} else {
@@ -1056,8 +1087,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param idErgebnis   das zu synchronisierende Blockungsergebnis
      *
      * @return die HTTP-Response, welchen den Erfolg der Operation angibt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response synchronisiere(final Long idErgebnis) {
+    public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
     	// Bestimm die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchuljahresabschnitte schuleAbschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
@@ -1065,7 +1098,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		// Bestimme das Blockungsergebnis und erzeuge die zugehörigen Manager-Klassen
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
 		if (dtoErgebnis == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
         final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
         final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
@@ -1076,10 +1109,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         // Prüfe, ob der Schuljahresabschnitt des Ergebnisses in der Vergangenheit liegt
         final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
         if ((schuleAbschnitt.Jahr > abschnitt.Jahr) || ((schuleAbschnitt.Jahr == abschnitt.Jahr) && (schuleAbschnitt.Abschnitt > abschnitt.Abschnitt)))
-        	return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt des Blockungsergebnisses liegt bereits in der Vergangenheit und darf deswegen nicht mehr synchronisiert werden.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Der Schuljahresabschnitt des Blockungsergebnisses liegt bereits in der Vergangenheit und darf deswegen nicht mehr synchronisiert werden.");
        	// Prüfe, ob der Schuljahresabschnitt bereits angelegt sind - wenn nicht, dann existiert auch keine persistierte Blockung
     	if (!DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
-    		return OperationError.CONFLICT.getResponse("Der Schuljahresabschnitt des Blockungsergebnisses hat noch keine persistierte Blockung. Daher ist eine Synchronisation nicht möglich. Sie können die Blockung stattdessen aktivieren.");
+    		throw new ApiOperationException(Status.CONFLICT, "Der Schuljahresabschnitt des Blockungsergebnisses hat noch keine persistierte Blockung. Daher ist eine Synchronisation nicht möglich. Sie können die Blockung stattdessen aktivieren.");
     	// Versuche die Synchronisation durchzuführen
     	synchronisiere(ergebnisManager, abschnitt, halbjahr);
         return Response.status(Status.NO_CONTENT).build();
@@ -1094,19 +1127,21 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      *
      * @return die HTTP-Response mit der Liste der hinzugefügten Ergebnisse, welche dann die Datenbank-IDs
      *         der persistierten Ergebnisse beinhalten.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-	public Response addErgebnisse(final long idBlockung, final List<GostBlockungsergebnis> ergebnisse) {
+	public Response addErgebnisse(final long idBlockung, final List<GostBlockungsergebnis> ergebnisse) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
         // Prüfe, Bestimme die Blockung
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
         if (blockung == null)
-        	throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d konnte nicht gefunden werden".formatted(idBlockung));
+        	throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d konnte nicht gefunden werden".formatted(idBlockung));
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Blockung_Zwischenergebnisse.name());
 		long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
         for (final GostBlockungsergebnis ergebnis : ergebnisse) {
         	if ((ergebnis.blockungID != idBlockung) || (ergebnis.gostHalbjahr != blockung.Halbjahr.id))
-        		throw OperationError.BAD_REQUEST.exception();
+        		throw new ApiOperationException(Status.BAD_REQUEST);
 			// Schreibe das Ergebnis in die Datenbank.
 			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, idBlockung, false);
 			conn.transactionPersist(erg);

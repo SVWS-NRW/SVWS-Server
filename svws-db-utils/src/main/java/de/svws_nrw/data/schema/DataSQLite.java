@@ -11,9 +11,8 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -53,8 +52,10 @@ public final class DataSQLite {
      * @param schemaname   Name des Schemas, in das hinein migriert werden soll
      *
      * @return Die SQLite-Datenbank
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static Response exportSQLite(final DBEntityManager conn, final String schemaname) {
+    public static Response exportSQLite(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -65,7 +66,7 @@ public final class DataSQLite {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
 			if (srcManager == null)
-				throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
+				throw new ApiOperationException(Status.FORBIDDEN);
 
 			// Führe den Export mithilfe des Schema-Managers durch.
 			logger.modifyIndent(2);
@@ -78,8 +79,8 @@ public final class DataSQLite {
 				try {
 					FileUtils.move(sqlite.getFilename(), output);
 					output.flush();
-				} catch (final Exception e) {
-					throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+				} catch (@SuppressWarnings("unused") final Exception e) {
+					// TODO throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 				}
 	        }).header("Content-Disposition", "attachment; filename=\"" + schemaname + ".sqlite\"").build();
 			if (!response.hasEntity())
@@ -99,8 +100,10 @@ public final class DataSQLite {
 	 * @param srcDB           die SQLite-Quell-Datenbank
 	 *
 	 * @return die HTTP-Response mit dem LOG des Imports
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-    public static Response importSQLite(final DBEntityManager conn, final byte[] srcDB) {
+    public static Response importSQLite(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -134,11 +137,11 @@ public final class DataSQLite {
 					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
 					logger.modifyIndent(2);
 					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
-						return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 					logger.modifyIndent(-2);
 				}
 			} catch (@SuppressWarnings("unused") final DBException e) {
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 			}
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration

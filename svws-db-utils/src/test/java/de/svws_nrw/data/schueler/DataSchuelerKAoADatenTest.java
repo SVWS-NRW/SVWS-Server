@@ -14,7 +14,7 @@ import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
 import de.svws_nrw.core.types.kaoa.KAOAKategorie;
 import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
 import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
  * Diese Klasse testet die Klasse {@link DataSchuelerKAoADaten}.
@@ -45,9 +45,10 @@ class DataSchuelerKAoADatenTest {
 
     /**
      * Testet den einen fehlerfreien Fall
+     * @throws ApiOperationException
      */
     @Test
-    void testValidateOK() {
+    void testValidateOK() throws ApiOperationException {
         DataSchuelerKAoADaten.validate(daten);
     }
 
@@ -58,7 +59,7 @@ class DataSchuelerKAoADatenTest {
     void testValidateKategorieNotFound() {
         daten.kategorie = -1L;
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
     }
 
     /**
@@ -68,7 +69,7 @@ class DataSchuelerKAoADatenTest {
     void testValidateKategorieNull() {
         daten.kategorie = null;
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
     }
 
     /**
@@ -79,7 +80,7 @@ class DataSchuelerKAoADatenTest {
         daten.merkmal = 35L;
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
         final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
     }
 
     /**
@@ -90,7 +91,7 @@ class DataSchuelerKAoADatenTest {
         daten.merkmal = -1L;
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
         final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateMerkmal(daten, kategorie, merkmal));
     }
 
     /**
@@ -101,7 +102,7 @@ class DataSchuelerKAoADatenTest {
         daten.zusatzmerkmal = 13L;
         final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
     }
 
     /**
@@ -112,7 +113,7 @@ class DataSchuelerKAoADatenTest {
         daten.zusatzmerkmal = -1L;
         final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateZusatzmerkmal(daten, merkmal, zusatzmerkmal));
     }
 
     /**
@@ -123,7 +124,7 @@ class DataSchuelerKAoADatenTest {
         daten.anschlussoption = -1L;
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
         final KAOAAnschlussoptionen anschlussoptionen = KAOAAnschlussoptionen.getByID(daten.anschlussoption);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
     }
 
     /**
@@ -134,7 +135,7 @@ class DataSchuelerKAoADatenTest {
         daten.anschlussoption = 26L;
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
         final KAOAAnschlussoptionen anschlussoptionen = KAOAAnschlussoptionen.getByID(daten.anschlussoption);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen));
     }
 
     /**
@@ -146,7 +147,7 @@ class DataSchuelerKAoADatenTest {
         daten.zusatzmerkmal = 44L;
         final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
         final KAOABerufsfeld berufsfeld = KAOABerufsfeld.getByID(daten.berufsfeld);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateBerufsfeld(daten, zusatzmerkmal, berufsfeld));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateBerufsfeld(daten, zusatzmerkmal, berufsfeld));
     }
 
     /**
@@ -156,6 +157,6 @@ class DataSchuelerKAoADatenTest {
     void testValidateJahrgang() {
         daten.jahrgang = "xxx";
         final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-        assertThrows(WebApplicationException.class, () -> DataSchuelerKAoADaten.validateJahrgang(daten, kategorie));
+        assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateJahrgang(daten, kategorie));
     }
 }

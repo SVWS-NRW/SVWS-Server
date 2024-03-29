@@ -12,7 +12,6 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.schema.DataMigration;
 import de.svws_nrw.data.schema.DataSQLite;
 import de.svws_nrw.db.DBDriver;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -62,9 +61,9 @@ public class APIDatabase {
     			 schema = @Schema(type = "string", format = "binary", description = "Die SQLite-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_EXPORT)) {
-    		return DataSQLite.exportSQLite(conn, schemaname);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataSQLite.exportSQLite(conn, schemaname), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_EXPORT);
     }
 
 
@@ -94,9 +93,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die SQLite-Datenbank-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDataOnly multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_IMPORT)) {
-    		return DataSQLite.importSQLite(conn, multipart.database);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataSQLite.importSQLite(conn, multipart.database), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_IMPORT);
     }
 
 
@@ -125,9 +124,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die MDB-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -155,9 +154,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, null);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, null), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -188,9 +187,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, schulnummer);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, schulnummer), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -218,9 +217,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, null);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, null), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -251,9 +250,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, schulnummer);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, schulnummer), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -281,9 +280,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, null);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, null), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 
@@ -314,9 +313,9 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
-    		return DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, schulnummer);
-    	}
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, schulnummer), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
 
 }

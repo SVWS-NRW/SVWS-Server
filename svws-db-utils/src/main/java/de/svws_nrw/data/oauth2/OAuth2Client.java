@@ -21,7 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -81,8 +82,10 @@ public final class OAuth2Client {
 	 * @param basicAuth    der BasicAuth String zur Authentifizierung
 	 *
 	 * @return der erstellte OAuth2Client mit validem Token
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static OAuth2Client getClient(final String url, final String oauth2Path, final String basicAuth) {
+	private static OAuth2Client getClient(final String url, final String oauth2Path, final String basicAuth) throws ApiOperationException {
 		final OAuth2Client client = OAUTH2_CLIENT_CACHE_BY_URL.computeIfAbsent(url, s -> new OAuth2Client(url, oauth2Path));
 		if (!client.isTokenValid()) {
 			client.requestToken(basicAuth);
@@ -99,8 +102,10 @@ public final class OAuth2Client {
 	 * @param basicAuth   für die Basisauthentifizierung
 	 *
 	 * @return den OAuth2Client
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static OAuth2Client getClient(final String url, final String basicAuth) {
+	public static OAuth2Client getClient(final String url, final String basicAuth) throws ApiOperationException {
 		return getClient(url, OAUTH2_PATH, basicAuth);
 	}
 
@@ -111,11 +116,13 @@ public final class OAuth2Client {
 	 * @param dto   das DTO mit den OAuth2-Secrets der Schule
 	 *
 	 * @return den OAuth2-Client
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static OAuth2Client getClient(final DTOSchuleOAuthSecrets dto) {
+	public static OAuth2Client getClient(final DTOSchuleOAuthSecrets dto) throws ApiOperationException {
 		if (dto == null || dto.AuthServer == null || dto.AuthServer.isBlank() || dto.ClientID == null
 				|| dto.ClientID.isBlank() || dto.ClientSecret == null || dto.ClientSecret.isBlank()) {
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		}
 		final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
 		return getClient(dto.AuthServer, basicAuth);
@@ -139,8 +146,10 @@ public final class OAuth2Client {
 	 * Erzeugt auf Basis eines Basic-Auth Strings ein Token und hinterlegt es an diesem Client
 	 *
 	 * @param basicAuthString   String für die BasicAuth, Base64 encoded clientId:password
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private void requestToken(final String basicAuthString) {
+	private void requestToken(final String basicAuthString) throws ApiOperationException {
 		// Bereite des HTTP-Request vor...
 		final String client_secret_b64 = basicAuthString;
 		final URI uri = URI.create(url + oauth2Path);
@@ -152,16 +161,16 @@ public final class OAuth2Client {
 		// ... prüfe, den Response-Code ...
 		final int statusCode = response.statusCode();
 		if (statusCode == 401)
-			throw OperationError.BAD_GATEWAY.exception("Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten überprüft werden.");
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized). Die Client Credentials sollten überprüft werden.");
 		if ((statusCode != 200) && (statusCode != 201))
-			throw OperationError.BAD_GATEWAY.exception("Verbindung zu dem OAuth2-Server fehlgeschlagen: " + statusCode);
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server fehlgeschlagen: " + statusCode);
 		// ... und validiere im Erfolgsfall die HTTP-Response
 		final String stringResponse = response.body();
 		this.authenticateTimestamp = System.currentTimeMillis();
 		try {
 			this.token = getTokenfromJson(stringResponse);
 		} catch (@SuppressWarnings("unused") final JsonProcessingException e) {
-			throw OperationError.BAD_GATEWAY.exception("Antwort des OAuthServers inkorrekt:\n" + stringResponse);
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des OAuthServers inkorrekt:\n" + stringResponse);
 		}
 	}
 
@@ -175,13 +184,15 @@ public final class OAuth2Client {
 	 * @param handler   der BodyHandler
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static <T> HttpResponse<T> send(final HttpRequest request, final BodyHandler<T> handler) {
+	private static <T> HttpResponse<T> send(final HttpRequest request, final BodyHandler<T> handler) throws ApiOperationException {
 		try (HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1)
 				.connectTimeout(Duration.ofSeconds(20)).build()) {
 			return client.send(request, handler);
 		} catch (IOException | InterruptedException e) {
-			throw OperationError.BAD_GATEWAY.exception(e);
+			throw new ApiOperationException(Status.BAD_GATEWAY, e);
 		}
 	}
 
@@ -206,8 +217,10 @@ public final class OAuth2Client {
 	 * @param handler    der BodyHandler für die Response
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler) {
+	public <T> HttpResponse<T> postMultipart(final String path, final String filename, final byte[] bytes, final BodyHandler<T> handler) throws ApiOperationException {
 		final URI uri = URI.create(url + path);
 		final String actualBoundary = UUID.randomUUID().toString() + "--";
 		final String boundary = "--" + actualBoundary;
@@ -235,8 +248,10 @@ public final class OAuth2Client {
 	 * @param keyValuePairs   Schlüssel-Wert-Paare für die Form-Parameter, gerader Index = Schlüssel, ungerader Index = Wert
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) {
+	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) throws ApiOperationException {
 		final URI uri = URI.create(url + path);
 		if (keyValuePairs.length % 2 != 0)
 			throw new IllegalArgumentException("Invalid nameValuePairs");
@@ -258,8 +273,10 @@ public final class OAuth2Client {
 	 * @param handler   der BodyHandler für den Response-Body
 	 *
 	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler) {
+	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler) throws ApiOperationException {
 		final URI uri = URI.create(url + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.header("Authorization", "Bearer " + token.accessToken).build();

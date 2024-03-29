@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -19,7 +20,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -48,7 +49,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanRaum} in einen Core-DTO {@link StundenplanRaum}.
 	 */
-	private static final Function<DTOStundenplanRaum, StundenplanRaum> dtoMapper = (final DTOStundenplanRaum r) -> {
+	private static final DTOMapper<DTOStundenplanRaum, StundenplanRaum> dtoMapper = (final DTOStundenplanRaum r) -> {
 		final StundenplanRaum daten = new StundenplanRaum();
 		daten.id = r.ID;
 		daten.kuerzel = r.Kuerzel;
@@ -59,7 +60,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -71,8 +72,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Liste der Räume
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanRaum> getRaeume(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanRaum> getRaeume(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final List<DTOStundenplanRaum> raeume = conn.queryNamed("DTOStundenplanRaum.stundenplan_id", idStundenplan, DTOStundenplanRaum.class);
 		final ArrayList<StundenplanRaum> daten = new ArrayList<>();
 		for (final DTOStundenplanRaum r : raeume)
@@ -89,9 +92,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param unterrichtIds   die Unterrichte, für die die Räume gesucht und gemappt werden sollen
 	 *
 	 * @return eine Map, in der die Räume der jeweiligen UnterrichtId zugeordnet ist
+	 * @throws ApiOperationException
 	 */
 	public static Map<Long, List<StundenplanRaum>> getRaeumeByUnterrichtId(final @NotNull DBEntityManager conn,
-			final long idStundenplan, final List<Long> unterrichtIds) {
+			final long idStundenplan, final List<Long> unterrichtIds) throws ApiOperationException {
 		final Map<Long, StundenplanRaum> raumById = DataStundenplanRaeume.getRaeume(conn, idStundenplan).stream()
 				.collect(Collectors.toMap(r -> r.id, Function.identity()));
 		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = new HashMap<>();
@@ -115,8 +119,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param kuerzel             das Kürzel des Raums
 	 *
 	 * @return der Zeitrastereintrag
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static StundenplanRaum getOrCreateRaum(final @NotNull DBEntityManager conn, final long idStundenplan, final String kuerzel) {
+	public static StundenplanRaum getOrCreateRaum(final @NotNull DBEntityManager conn, final long idStundenplan, final String kuerzel) throws ApiOperationException {
 		final List<DTOStundenplanRaum> raeume = conn.queryList("SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = ?1 AND e.Kuerzel = ?2", DTOStundenplanRaum.class, idStundenplan, kuerzel);
 		final DTOStundenplanRaum raum;
 		if (raeume.isEmpty()) {
@@ -128,24 +134,24 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		}
 		if (raeume.size() == 1)
 			return dtoMapper.apply(raeume.get(0));
-		throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanRaum> daten = getRaeume(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Raum eines Stundenplans mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Raum eines Stundenplans mit der ID null ist unzulässig.");
 		final DTOStundenplanRaum raum = conn.queryByKey(DTOStundenplanRaum.class, id);
 		if (raum == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Raum eines Stundenplans mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Raum eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanRaum daten = dtoMapper.apply(raum);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -155,7 +161,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
@@ -164,7 +170,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOStundenplanRaum.class, patchMappings);
 	}
 
@@ -183,8 +189,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -197,8 +205,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -211,6 +221,8 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param conn             die Datenbankverbindung
 	 * @param dtoStundenplan   das DTO des Stundenplans
 	 * @param raeume           die hinzuzufügenden Räume
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static void addRaeume(final @NotNull DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<Raum> raeume) {
 		long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
@@ -226,8 +238,10 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param id   die ID des Raums
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOStundenplanRaum.class, dtoMapper);
 	}
 
@@ -238,12 +252,14 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param ids   die IDs der Räume
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		final List<DTOStundenplanRaum> dtos = conn.queryNamed("DTOStundenplanRaum.primaryKeyQuery.multiple", ids, DTOStundenplanRaum.class);
 		for (final DTOStundenplanRaum dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
-				throw OperationError.BAD_REQUEST.exception("Der Raum-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Raum-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
 		return super.deleteBasicMultiple(ids, DTOStundenplanRaum.class, dtoMapper);
 	}
 

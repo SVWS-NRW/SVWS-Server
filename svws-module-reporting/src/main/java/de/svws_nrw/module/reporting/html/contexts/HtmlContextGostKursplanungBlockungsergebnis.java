@@ -2,11 +2,12 @@ package de.svws_nrw.module.reporting.html.contexts;
 
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
+
 import org.thymeleaf.context.Context;
 
 
@@ -20,8 +21,10 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 *
 	 * @param conn         			Datenbank-Verbindung
 	 * @param idBlockungsergebnis	ID des Blockungsergebnisses, aus der Context erstellt werden soll.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnis(final DBEntityManager conn, final Long idBlockungsergebnis) {
+	public HtmlContextGostKursplanungBlockungsergebnis(final DBEntityManager conn, final Long idBlockungsergebnis) throws ApiOperationException {
 		erzeugeContext(conn, idBlockungsergebnis);
 	}
 
@@ -30,22 +33,24 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 *
 	 * @param conn         			Datenbank-Verbindung
 	 * @param idBlockungsergebnis	ID des Blockungsergebnisses, aus dem der Context erstellt werden soll.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void erzeugeContext(final DBEntityManager conn, final Long idBlockungsergebnis) throws WebApplicationException {
+	private void erzeugeContext(final DBEntityManager conn, final Long idBlockungsergebnis) throws ApiOperationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Datenbankverbindung ungültig.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Datenbankverbindung ungültig.");
 
 		if (idBlockungsergebnis == null)
-			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben.");
 
 		// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		} catch (WebApplicationException ex) {
-			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e, "Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
 		final ReportingRepository reportingRepository = new ReportingRepository(conn);

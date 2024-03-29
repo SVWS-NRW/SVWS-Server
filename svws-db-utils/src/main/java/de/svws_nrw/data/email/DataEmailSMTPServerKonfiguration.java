@@ -6,7 +6,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schule.DTOSchuleEmail;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -110,7 +110,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("host", (conn, dto, value, map) -> dto.SMTPServer = JSONMapper.convertToString(value, false, true, 256)),
 		Map.entry("port", (conn, dto, value, map) -> dto.SMTPPort = JSONMapper.convertToIntegerInRange(value, false, 1, 65536)),
@@ -121,7 +121,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final InputStream is) {
+	public Response patch(final InputStream is) throws ApiOperationException {
 		final DTOSchuleEmail dto = getOrCreate(conn);
 		applyPatchMappings(conn, dto, JSONMapper.toMap(is), patchMappings, null);
 		conn.transactionPersist(dto);

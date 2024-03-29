@@ -7,6 +7,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10;
 import de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA9;
 import de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA;
@@ -14,7 +16,7 @@ import de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ;
 import de.svws_nrw.core.abschluss.ge.ServicePrognose;
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -50,17 +52,17 @@ public class APIAlgoGesamtschuleAbschluss {
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten",
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = AbschlussErgebnis.class)))
-    public AbschlussErgebnis getGesamtschuleAbschlussHA9(
+    public Response getGesamtschuleAbschlussHA9(
     		@RequestBody(description = "Die Fächerdaten für die Abschlussberechnung", required = true,
     		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
                          schema = @Schema(implementation = GEAbschlussFaecher.class))) final GEAbschlussFaecher faecher,
     		@Context final HttpServletRequest request) {
         final ServiceAbschlussHA9 ha9 = new ServiceAbschlussHA9();
-        final AbschlussErgebnis ergebnis = ha9.handle(faecher);
-        if (ergebnis == null)
-        	throw OperationError.BAD_REQUEST.exception();
-		ergebnis.log = ha9.getLog().getStrings();
-    	return ergebnis;
+        final AbschlussErgebnis daten = ha9.handle(faecher);
+        if (daten == null)
+        	return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+        daten.log = ha9.getLog().getStrings();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 
@@ -81,17 +83,17 @@ public class APIAlgoGesamtschuleAbschluss {
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten",
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = AbschlussErgebnis.class)))
-    public AbschlussErgebnis getGesamtschuleAbschlussHA10(
+    public Response getGesamtschuleAbschlussHA10(
     		@RequestBody(description = "Die Fächerdaten für die Abschlussberechnung", required = true,
     		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
                          schema = @Schema(implementation = GEAbschlussFaecher.class))) final GEAbschlussFaecher faecher,
     		@Context final HttpServletRequest request) {
         final ServiceAbschlussHA10 ha10 = new ServiceAbschlussHA10();
-        final AbschlussErgebnis ergebnis = ha10.handle(faecher);
-        if (ergebnis == null)
-        	throw OperationError.BAD_REQUEST.exception();
-		ergebnis.log = ha10.getLog().getStrings();
-    	return ergebnis;
+        final AbschlussErgebnis daten = ha10.handle(faecher);
+        if (daten == null)
+        	return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+        daten.log = ha10.getLog().getStrings();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 
@@ -112,17 +114,17 @@ public class APIAlgoGesamtschuleAbschluss {
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten",
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = AbschlussErgebnis.class)))
-    public AbschlussErgebnis getGesamtschuleAbschlussMSA(
+    public Response getGesamtschuleAbschlussMSA(
     		@RequestBody(description = "Die Fächerdaten für die Abschlussberechnung", required = true,
     		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
                          schema = @Schema(implementation = GEAbschlussFaecher.class))) final GEAbschlussFaecher faecher,
     		@Context final HttpServletRequest request) {
         final ServiceAbschlussMSA msa = new ServiceAbschlussMSA();
-        final AbschlussErgebnis ergebnis = msa.handle(faecher);
-        if (ergebnis == null)
-        	throw OperationError.BAD_REQUEST.exception();
-		ergebnis.log = msa.getLog().getStrings();
-    	return ergebnis;
+        final AbschlussErgebnis daten = msa.handle(faecher);
+        if (daten == null)
+        	return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+        daten.log = msa.getLog().getStrings();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 
@@ -143,17 +145,17 @@ public class APIAlgoGesamtschuleAbschluss {
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten",
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = AbschlussErgebnis.class)))
-    public AbschlussErgebnis getGesamtschuleAbschlussMSAQ(
+    public Response getGesamtschuleAbschlussMSAQ(
     		@RequestBody(description = "Die Fächerdaten für die Prüfung der Berechtigung", required = true,
     		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
                          schema = @Schema(implementation = GEAbschlussFaecher.class))) final GEAbschlussFaecher faecher,
     		@Context final HttpServletRequest request) {
         final ServiceBerechtigungMSAQ msaq = new ServiceBerechtigungMSAQ();
-        final AbschlussErgebnis ergebnis = msaq.handle(faecher);
-        if (ergebnis == null)
-        	throw OperationError.BAD_REQUEST.exception();
-		ergebnis.log = msaq.getLog().getStrings();
-    	return ergebnis;
+        final AbschlussErgebnis daten = msaq.handle(faecher);
+        if (daten == null)
+        	return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+        daten.log = msaq.getLog().getStrings();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 
@@ -173,17 +175,17 @@ public class APIAlgoGesamtschuleAbschluss {
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Prognoseberechnung, ggf. mit Nachprüfungsmöglichkeiten",
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = AbschlussErgebnis.class)))
-    public AbschlussErgebnis getGesamtschuleAbschlussPrognose(
+    public Response getGesamtschuleAbschlussPrognose(
     		@RequestBody(description = "Der Jahrgang und die Fächerdaten für die Prognose", required = true,
     		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
                          schema = @Schema(implementation = GEAbschlussFaecher.class))) final GEAbschlussFaecher faecher,
     		@Context final HttpServletRequest request) {
         final ServicePrognose prognose = new ServicePrognose();
-        final AbschlussErgebnis ergebnis = prognose.handle(faecher);
-        if (ergebnis == null)
-        	throw OperationError.BAD_REQUEST.exception();
-		ergebnis.log = prognose.getLog().getStrings();
-    	return ergebnis;
+        final AbschlussErgebnis daten = prognose.handle(faecher);
+        if (daten == null)
+        	return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		daten.log = prognose.getLog().getStrings();
+    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 }

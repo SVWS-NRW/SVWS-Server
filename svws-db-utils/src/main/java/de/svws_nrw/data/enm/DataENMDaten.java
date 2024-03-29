@@ -52,7 +52,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -79,7 +79,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final ENMDaten daten = getDaten(null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -88,8 +88,10 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Gibt die ENM-Daten als mit GZIP komprimiertes JSON-Objekt zurück.
 	 *
 	 * @return das GZIP-komprimierte JSON-Objekt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getAllGZip() {
+	public Response getAllGZip() throws ApiOperationException {
 		final ENMDaten daten = getDaten(null);
 		return JSONMapper.gzipFileResponseFromObject(daten, "enm.json.gz");
 	}
@@ -100,9 +102,9 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final ENMDaten daten = getDaten(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -117,13 +119,15 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Gibt die ENM-Daten aller Lehrer als mit GZIP komprimiertes byte[] zurück.
 	 *
 	 * @return das GZIP-komprimierte byte[].
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public byte[] getAllGZIPBytes() {
+	public byte[] getAllGZIPBytes() throws ApiOperationException {
 		final ENMDaten daten = getDaten(null);
 		try {
 			return JSONMapper.gzipByteArrayFromObject(daten);
 		} catch (final CompressionException ce) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(ce);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, ce);
 		}
 	}
 
@@ -135,15 +139,17 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param id   die ID des Lehrers oder null
 	 *
 	 * @return die ENMDaten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private ENMDaten getDaten(final Long id) {
+	private ENMDaten getDaten(final Long id) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank ein
 		final DTOEigeneSchule schule = getSchule();
     	final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(schule);
     	final Map<Long, DTOLehrer> mapLehrer = getLehrerListe();
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
     	if ((id != null) && (dtoLehrer == null))
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(schule);
     	final Map<Long, DTOFach> mapFaecher = getFaecherListe();
     	final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe();
@@ -314,55 +320,55 @@ public final class DataENMDaten extends DataManager<Long> {
 		manager.addFoerderschwerpunkte(schule.Schulform);
 	}
 
-	private DTOEigeneSchule getSchule() {
+	private DTOEigeneSchule getSchule() throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return schule;
 	}
 
-	private DTOSchuljahresabschnitte getSchuljahresabschnitt(final DTOEigeneSchule schule) {
+	private DTOSchuljahresabschnitte getSchuljahresabschnitt(final DTOEigeneSchule schule) throws ApiOperationException {
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (abschnitt == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return abschnitt;
 	}
 
 	// TODO Optimierung: Lese nur die aktiven Lehrer aus der Datenbank aus.
-	private Map<Long, DTOLehrer> getLehrerListe() {
+	private Map<Long, DTOLehrer> getLehrerListe() throws ApiOperationException {
 		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
 		if (lehrer.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
-	private Map<Long, DTOSchueler> getSchuelerListe(final DTOEigeneSchule schule) {
+	private Map<Long, DTOSchueler> getSchuelerListe(final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOSchueler.class);
 		if (schueler.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return schueler.stream()
 				.filter(s -> s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN)
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
-	private Map<Long, DTOFach> getFaecherListe() {
+	private Map<Long, DTOFach> getFaecherListe() throws ApiOperationException {
 		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
 		if (faecher.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 	}
 
-	private Map<Long, DTOJahrgang> getJahrgangsListe() {
+	private Map<Long, DTOJahrgang> getJahrgangsListe() throws ApiOperationException {
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if (jahrgaenge.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 	}
 
-	private Map<String, DTOKlassen> getKlassenListe(final DTOEigeneSchule schule) {
+	private Map<String, DTOKlassen> getKlassenListe(final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
 		if (klassen.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
 	}
 
@@ -372,10 +378,10 @@ public final class DataENMDaten extends DataManager<Long> {
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}
 
-	private Map<Long, DTOKurs> getKurse(final DTOEigeneSchule schule) {
+	private Map<Long, DTOKurs> getKurse(final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKurs.class);
 		if (kurse == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return conn.queryAll(DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 	}
 
@@ -426,15 +432,17 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
 	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void importEnmDaten(final byte[] enmBytes) {
+	public void importEnmDaten(final byte[] enmBytes) throws ApiOperationException {
 		ENMSchueler[] enmDaten;
 		try {
 			enmDaten = JSONMapper.mapper.readValue(enmBytes, ENMSchueler[].class);
 			// TODO kein ZIP auf diesem Endpunkt
 			// JSONMapper.toObjectGZip(httpResponse.body(), ENMSchueler[].class);
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw OperationError.BAD_GATEWAY.exception("Antwort des ENM-Servers nicht parsebar.");
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des ENM-Servers nicht parsebar.");
 		}
 		conn.transactionBegin();
 		final DTOEigeneSchule schule = getSchule();
@@ -442,7 +450,7 @@ public final class DataENMDaten extends DataManager<Long> {
 				"DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID,
 				DTOSchuelerLernabschnittsdaten.class);
 		if (slaDatenList == null || slaDatenList.size() == 0) {
-			throw OperationError.NOT_FOUND.exception("Lernabschnittsdaten für Schuljahresabschnitt nicht gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten für Schuljahresabschnitt nicht gefunden.");
 		}
 		final Map<Long, DTOSchuelerLernabschnittsdaten> slaBySchuelerId = slaDatenList.stream()
 				.collect(Collectors.toMap((sla) -> sla.Schueler_ID, Function.identity()));
@@ -450,7 +458,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final List<DTOSchuelerLeistungsdaten> slDatenList = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
 				schule.Schuljahresabschnitts_ID, DTOSchuelerLeistungsdaten.class);
 		if (slDatenList == null) {
-			throw OperationError.NOT_FOUND.exception("Leistungsdaten für Schuljahresabschnitt nicht gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Leistungsdaten für Schuljahresabschnitt nicht gefunden.");
 		}
 
 		for (final ENMSchueler enmSchueler : enmDaten) {
@@ -458,14 +466,14 @@ public final class DataENMDaten extends DataManager<Long> {
 			final List<DTOEnmLernabschnittsdaten> dtoEnmLAList = conn.queryNamed("DTOEnmLernabschnittsdaten.id", sla.ID,
 					DTOEnmLernabschnittsdaten.class);
 			if (dtoEnmLAList == null || dtoEnmLAList.size() != 1) {
-				throw OperationError.NOT_FOUND.exception("Lernabschnittsdaten nicht gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten nicht gefunden.");
 			}
 			final DTOEnmLernabschnittsdaten enmLA = dtoEnmLAList.get(0);
 
 			final List<DTOSchuelerPSFachBemerkungen> dtoFachbemerkungenList = conn.queryNamed(
 					"DTOSchuelerPSFachBemerkungen.abschnitt_id", sla.ID, DTOSchuelerPSFachBemerkungen.class);
 			if (dtoFachbemerkungenList == null || dtoFachbemerkungenList.size() != 1) {
-				throw OperationError.NOT_FOUND.exception("Fachbemerkungen nicht gefunden.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Fachbemerkungen nicht gefunden.");
 			}
 			final DTOSchuelerPSFachBemerkungen fachBemerkungen = dtoFachbemerkungenList.get(0);
 			boolean laUpdaten = false;
@@ -518,7 +526,7 @@ public final class DataENMDaten extends DataManager<Long> {
 				final List<DTOEnmLeistungsdaten> dtoEnmLDList = conn.queryNamed("DTOEnmLeistungsdaten.id", leistung.id,
 						DTOEnmLeistungsdaten.class);
 				if (dtoSchuelerLeistungsdaten == null || dtoEnmLDList == null || dtoEnmLDList.size() != 1) {
-					throw OperationError.NOT_FOUND.exception("Schuelerleistungsdaten nicht gefunden.");
+					throw new ApiOperationException(Status.NOT_FOUND, "Schuelerleistungsdaten nicht gefunden.");
 				}
 				final var dtoEnmLD = dtoEnmLDList.get(0);
 				boolean dtoUpdaten = false;
@@ -593,12 +601,15 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Erstellt mit einer gegebenen Datenbankverbindung einen {@link OAuthClient}
 	 *
 	 * @param conn die Datenbankverbindung
+	 *
 	 * @return der OAuthClient
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn) {
+	private static OAuth2Client getWenomOAuthClient(final DBEntityManager conn) throws ApiOperationException {
 		final DTOSchuleOAuthSecrets dto = new DataOauthClientSecrets(conn).getDto(OAuth2ServerTyp.WENOM);
 		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return OAuth2Client.getClient(dto);
 	}
 
@@ -607,12 +618,15 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Datenbank
 	 *
 	 * @param client  der OAuthClient
+	 *
 	 * @param dataENM der ENM DataManager
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void downloadENMDaten(final OAuth2Client client, final DataENMDaten dataENM) {
+	private static void downloadENMDaten(final OAuth2Client client, final DataENMDaten dataENM) throws ApiOperationException {
 		final HttpResponse<byte[]> httpResponse = client.get(ENM_DOWNLOAD_PATH, BodyHandlers.ofByteArray());
 		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
-			throw OperationError.BAD_GATEWAY.exception(httpResponse.body());
+			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		}
 		dataENM.importEnmDaten(httpResponse.body());
 	}
@@ -622,13 +636,15 @@ public final class DataENMDaten extends DataManager<Long> {
 	 *
 	 * @param client       der OAuth-Client zur Verbindung mit dem ENM
 	 * @param dataENMDaten der DataManager für ENM-Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void uploadENMDaten(final OAuth2Client client, final DataENMDaten dataENMDaten) {
+	private static void uploadENMDaten(final OAuth2Client client, final DataENMDaten dataENMDaten) throws ApiOperationException {
 		final byte[] daten = dataENMDaten.getAllGZIPBytes();
 		final HttpResponse<String> response = client.postMultipart(ENM_UPLOAD_PATH, "json.gz", daten,
 				BodyHandlers.ofString());
 		if (response.statusCode() != Status.OK.getStatusCode()) {
-			throw OperationError.BAD_GATEWAY.exception(response.body());
+			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 		}
 	}
 
@@ -641,8 +657,10 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response synchronize(final DBEntityManager conn) {
+	public static Response synchronize(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
 		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
 		uploadENMDaten(client, dataENMDaten);
@@ -657,8 +675,10 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response upload(final DBEntityManager conn) {
+	public static Response upload(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
 		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
 		uploadENMDaten(client, dataENMDaten);
@@ -672,8 +692,10 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response download(final DBEntityManager conn) {
+	public static Response download(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
 		final DataENMDaten dataENM = new DataENMDaten(conn);
 		downloadENMDaten(client, dataENM);
@@ -687,12 +709,14 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response truncate(final DBEntityManager conn) {
+	public static Response truncate(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
 		final HttpResponse<String> response = client.get(ENM_TRUNCATE_PATH, BodyHandlers.ofString());
 		if (response.statusCode() != Status.OK.getStatusCode())
-			throw OperationError.BAD_GATEWAY.exception(response.body());
+			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
 	}
 

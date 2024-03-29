@@ -14,7 +14,7 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -66,17 +66,17 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		// Prüfe, ob der Schüler mit der ID existiert
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
     	if (schueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	// Bestimme die Lernabschnitte
     	final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class);
     	if (abschnitte == null)
-    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
     	// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
     	final List<Long> klassenIDs = abschnitte.stream().filter(a -> a.Klassen_ID != null).map(a -> a.Klassen_ID).toList();
     	final List<DTOKlassen> klassen = klassenIDs.isEmpty() ? new ArrayList<>() : conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
@@ -96,7 +96,7 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     		}
     		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
     		if (schuljahresabschnitt == null)
-    			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
     		e.schuljahr = schuljahresabschnitt.Jahr;
     		e.abschnitt = schuljahresabschnitt.Abschnitt;
     		daten.add(e);

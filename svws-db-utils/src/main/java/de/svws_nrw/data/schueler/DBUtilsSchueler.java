@@ -16,7 +16,8 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
+
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -41,9 +42,9 @@ public final class DBUtilsSchueler {
 	 *
 	 * @return das AES-Crypto-Objekt zum Ver- und Entschlüsseln von Daten
 	 *
-	 * @throws WebApplicationException falls ein Fehler auftritt
+	 * @throws ApiOperationException falls ein Fehler auftritt
 	 */
-	public static AES getOrCreateSchuelerAES(final DBEntityManager conn, final long id) throws WebApplicationException {
+	public static AES getOrCreateSchuelerAES(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOCredentials cred = DBUtilsCrypto.getOrCreateSchuelerCredentials(conn, id);
 		if (cred.AES == null)
 			DBUtilsCrypto.addAESKey(conn, cred);

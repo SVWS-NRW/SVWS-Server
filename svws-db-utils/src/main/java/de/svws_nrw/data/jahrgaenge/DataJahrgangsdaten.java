@@ -3,13 +3,14 @@ package de.svws_nrw.data.jahrgaenge;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -18,7 +19,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 /**
@@ -39,7 +39,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.
 	 */
-	private final Function<DTOJahrgang, JahrgangsDaten> dtoMapper = (final DTOJahrgang jahrgang) -> {
+	private final DTOMapper<DTOJahrgang, JahrgangsDaten> dtoMapper = (final DTOJahrgang jahrgang) -> {
 		final JahrgangsDaten daten = new JahrgangsDaten();
 		daten.id = jahrgang.ID;
 		daten.kuerzel = jahrgang.InternKrz;
@@ -66,7 +66,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final JahrgangsDaten daten = getFromID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -75,14 +75,17 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * Gibt die Jahrgangsdaten zur ID eines Jahrgangs zurück.
 	 *
  	 * @param id	Die ID des Jahrgangs.
+ 	 *
 	 * @return		Die Jahrgangsdaten zur ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public JahrgangsDaten getFromID(final Long id) {
+	public JahrgangsDaten getFromID(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw OperationError.NOT_FOUND.exception("Keine ID für den Jahrgang übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine ID für den Jahrgang übergeben.");
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
 		if (jahrgang == null)
-			throw OperationError.NOT_FOUND.exception("Kein Jahrgang zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang zur ID " + id + " gefunden.");
 
 		return dtoMapper.apply(jahrgang);
 	}
@@ -91,18 +94,19 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * Gibt die Jahrgangsdaten der Schule zurück.
 	 *
 	 * @return		Die Jahrgangsdaten der Schule.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<JahrgangsDaten> getJahrgaenge() {
+	public List<JahrgangsDaten> getJahrgaenge() throws ApiOperationException {
 		final List<DTOJahrgang> jahrgang = conn.queryAll(DTOJahrgang.class);
-
-		return jahrgang.stream().map(dtoMapper).toList();
+		return DTOMapper.mapList(jahrgang, dtoMapper);
 	}
 
 	private static final Map<String, DataBasicMapper<DTOJahrgang>> patchMappings = Map.ofEntries(
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
 		Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
@@ -110,7 +114,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
 			final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.getByKuerzel(strJahrgang);
 			if ((jahrgang == null) && (strJahrgang != null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten.kuerzel;
 			dto.ASDBezeichnung = (jahrgang == null) ? null : jahrgang.getBezeichnung(schule.Schulform);
 		}),
@@ -121,7 +125,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			final Schulgliederung sgl = Schulgliederung.getBySchulformAndKuerzel(schule.Schulform, str);
 			if ((sgl == null) && (str != null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Gliederung = sgl;
 		}),
 		Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
@@ -130,7 +134,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 				conn.transactionFlush();
 				final DTOJahrgang folgeJahrgang = conn.queryByKey(DTOJahrgang.class, idFolgejahrgang);
 				if (folgeJahrgang == null)
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				conn.transactionFlush();
 			}
 			dto.Folgejahrgang_ID = idFolgejahrgang;
@@ -143,7 +147,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOJahrgang.class, patchMappings);
 	}
 
@@ -161,8 +165,10 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @param  is	JSON-Objekt mit den Daten
 	 *
 	 * @return Eine Response mit dem neuen Jahrgang
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOJahrgang.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -188,10 +194,12 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @param id   die ID des Jahrgangs
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		if (!isDeletable(id))
-			throw OperationError.CONFLICT.exception("Der Jahrgang kann nicht sicher gelöscht werden.");
+			throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang kann nicht sicher gelöscht werden.");
 		return super.deleteBasic(id, DTOJahrgang.class, dtoMapper);
 	}
 
@@ -202,11 +210,13 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 	 * @param ids   die IDs der Jahrgänge
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		for (final Long id : ids)
 			if (!isDeletable(id))
-				throw OperationError.CONFLICT.exception("Der Jahrgang kann nicht sicher gelöscht werden.");
+				throw new ApiOperationException(Status.CONFLICT, "Der Jahrgang kann nicht sicher gelöscht werden.");
 		return super.deleteBasicMultiple(ids, DTOJahrgang.class, dtoMapper);
 	}
 

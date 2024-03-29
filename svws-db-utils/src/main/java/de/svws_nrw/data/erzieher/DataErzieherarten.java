@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -39,19 +39,19 @@ public final class DataErzieherarten extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
     	if (erzieherarten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
     	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
     	if (erzieherarten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<Erzieherart> daten = erzieherarten.stream().filter(e -> (e.Sichtbar == null) || e.Sichtbar).map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

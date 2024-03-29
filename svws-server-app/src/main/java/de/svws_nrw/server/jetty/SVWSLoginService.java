@@ -3,6 +3,7 @@ package de.svws_nrw.server.jetty;
 import javax.security.auth.Subject;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
@@ -11,6 +12,7 @@ import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.security.Password;
 
 import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 
 
@@ -73,9 +75,14 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		}
 
 		// Prüfe, ob ein Login bei der OpenAPI-Applikation erfolgreich ist
-		final BenutzerApiPrincipal principal = BenutzerApiPrincipal.login(username, password, req);
-		if (principal == null)
-			return null;
+		BenutzerApiPrincipal principal;
+		try {
+			principal = BenutzerApiPrincipal.login(username, password, req);
+			if (principal == null)
+				return null;
+		} catch (final ApiOperationException e) {
+			throw new WebApplicationException(e.getMessage(), e, e.getStatus());
+		}
 
 		// Erzeuge UserIdentity zur weiteren Handhabung im Rahmen des Jetty-LoginService, diese erlaubt auch den Zugriff auf den
 		// UserPrincpial mit den SchILD-BenutzerInformationen

@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -83,7 +84,14 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				new ProxyReportingJahrgang(
 					this.reportingRepository,
 					this.reportingRepository.mapJahrgaenge()
-						.computeIfAbsent(super.idFolgejahrgang(), j -> new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idFolgejahrgang()))));
+						.computeIfAbsent(super.idFolgejahrgang(), j -> {
+							try {
+								return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idFolgejahrgang());
+							} catch (final ApiOperationException e) {
+								e.printStackTrace();
+								return new JahrgangsDaten();
+							}
+						})));
 		}
 		return super.folgejahrgang();
 	}

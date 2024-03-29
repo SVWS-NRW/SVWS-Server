@@ -20,11 +20,10 @@ import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import de.svws_nrw.db.utils.schema.DBSchemaStatus;
 import de.svws_nrw.db.utils.schema.DBSchemaVersion;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -85,8 +84,10 @@ public final class DBUtilsSchema {
 	 * @param revision   die Datenbank-Revision, auf die aktualisiert werden soll
 	 *
 	 * @return der Log der Update-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-    public static LogConsumerList updateSchema(final Benutzer user, final long revision) {
+    public static LogConsumerList updateSchema(final Benutzer user, final long revision) throws ApiOperationException {
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
 		final long max_revision = SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE
 		        ? SchemaRevisionen.maxRevision.revision
@@ -95,7 +96,7 @@ public final class DBUtilsSchema {
 		if (rev < 0)
 			rev = max_revision;
 		if (rev > max_revision)
-			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+			throw new ApiOperationException(Status.BAD_REQUEST);
 
 		// Erzeuge einen Logger für das Update
 		final Logger logger = new Logger();
@@ -105,18 +106,18 @@ public final class DBUtilsSchema {
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
 		final DBSchemaManager manager = DBSchemaManager.create(user, true, logger);
 		if (manager == null)
-			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
+			throw new ApiOperationException(Status.FORBIDDEN);
 
 		// Prüfe, ob das Schema aktuell ist
 		if (!manager.updater.isUptodate(rev, false)) {
 			// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
 			if (!manager.updater.isUpdatable(rev, false))
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+				throw new ApiOperationException(Status.BAD_REQUEST);
 
 			// Führe die Aktualisierung durch
 			final boolean success = manager.updater.update(user, rev, false, true);
 			if (!success)
-				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 
 		// return log from logger
@@ -176,16 +177,18 @@ public final class DBUtilsSchema {
      * @param schemaname   der Name des Schemas
      *
      * @return ein Objekt für den Zugriff auf den Schema-Status
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static DBSchemaStatus getSchemaStatus(final DBEntityManager conn, final String schemaname) {
+    public static DBSchemaStatus getSchemaStatus(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
     	final List<String> schemata = DTOInformationSchema.queryNames(conn);
     	final Set<String> setSchemata = schemata.stream().map(String::toLowerCase).collect(Collectors.toSet());
     	if (!setSchemata.contains(schemaname.toLowerCase()))
-    		throw OperationError.FORBIDDEN.exception("Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
+    		throw new ApiOperationException(Status.FORBIDDEN, "Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
 		final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
 		final DBSchemaVersion version = status.getVersion();
 		if (version == null)
-			throw OperationError.BAD_REQUEST.exception("Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
 		return status;
     }
 
@@ -197,12 +200,14 @@ public final class DBUtilsSchema {
      * @param schemaname   der Name des Schemas
      *
      * @return die Informationen zu der Schule in dem SVWS-Schema
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static SchuleInfo getSchuleInfo(final DBEntityManager conn, final String schemaname) {
+    public static SchuleInfo getSchuleInfo(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
 		final DBSchemaStatus status = getSchemaStatus(conn, schemaname);
 		final SchuleInfo schuleInfo = status.getSchuleInfo();
 		if (schuleInfo == null)
-			throw OperationError.NOT_FOUND.exception("Das Schema %s ist noch nicht mit den Informationen einer Schule initialisiert".formatted(schemaname));
+			throw new ApiOperationException(Status.NOT_FOUND, "Das Schema %s ist noch nicht mit den Informationen einer Schule initialisiert".formatted(schemaname));
 		return status.getSchuleInfo();
     }
 
@@ -215,8 +220,10 @@ public final class DBUtilsSchema {
      * @param schemaname   der Name des Schemas
      *
      * @return der Datenbank-Benutzer für die neue Verbindung
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname) {
+    public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
     	final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn, true);
     	SchemaListeEintrag schema = null;
     	for (final SchemaListeEintrag s : schemata) {
@@ -226,16 +233,16 @@ public final class DBUtilsSchema {
     		}
     	}
     	if (schema == null)
-    		throw OperationError.BAD_REQUEST.exception("Es existiert kein SVWS-Schema mit dem Namen %s.".formatted(schemaname));
+    		throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein SVWS-Schema mit dem Namen %s.".formatted(schemaname));
     	final SchemaRevisionen rev = SVWSKonfiguration.get().getServerMode() == ServerMode.DEV ? SchemaRevisionen.maxDeveloperRevision : SchemaRevisionen.maxRevision;
     	if (schema.revision < rev.revision)
-    		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist nicht aktuell (%d).".formatted(schemaname, schema.revision));
+    		throw new ApiOperationException(Status.BAD_REQUEST, "Das SVWS-Schema %s ist nicht aktuell (%d).".formatted(schemaname, schema.revision));
     	if (schema.revision > rev.revision)
-    		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist neuer (%d) als die vom Server unterstützte Version (%d).".formatted(schemaname, schema.revision, rev.revision));
+    		throw new ApiOperationException(Status.BAD_REQUEST, "Das SVWS-Schema %s ist neuer (%d) als die vom Server unterstützte Version (%d).".formatted(schemaname, schema.revision, rev.revision));
     	try {
 			return conn.getUser().connectTo(schemaname);
 		} catch (@SuppressWarnings("unused") final DBException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Zugriff auf das SVWS-Schema %s.".formatted(schemaname));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Zugriff auf das SVWS-Schema %s.".formatted(schemaname));
 		}
     }
 
@@ -247,8 +254,10 @@ public final class DBUtilsSchema {
      * @param schemaname   der Name des Schemas
      *
      * @return die Informationen zu den administrativen Benutzern in dem SVWS-Schema
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) {
+    public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
 		final Benutzer neu = getBenutzerFuerSVWSSchema(conn, schemaname);
 		try (DBEntityManager schemaConn = neu.getEntityManager()) {
 	    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryNamed("DTOViewBenutzerdetails.istadmin", true, DTOViewBenutzerdetails.class);

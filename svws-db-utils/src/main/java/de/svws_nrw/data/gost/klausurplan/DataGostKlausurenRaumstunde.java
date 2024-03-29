@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumst
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -56,8 +57,10 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurraumstunden
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final DBEntityManager conn, final Long idTermin) {
+	public static List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final DBEntityManager conn, final Long idTermin) throws ApiOperationException {
 		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin);
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
@@ -108,7 +111,7 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long idTermin) {
+	public Response get(final Long idTermin) throws ApiOperationException {
 		// Klausurraumstunden zu einem Klausurtermin
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraumstundenZuTermin(conn, idTermin)).build();
 	}

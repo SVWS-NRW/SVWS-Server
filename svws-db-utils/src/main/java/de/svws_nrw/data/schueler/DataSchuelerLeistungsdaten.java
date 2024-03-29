@@ -4,12 +4,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -19,7 +19,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -56,7 +56,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuelerLeistungsdaten} in einen Core-DTO {@link SchuelerLeistungsdaten}.
 	 */
-	private final Function<DTOSchuelerLeistungsdaten, SchuelerLeistungsdaten> dtoMapper = (final DTOSchuelerLeistungsdaten dto) -> {
+	private final DTOMapper<DTOSchuelerLeistungsdaten, SchuelerLeistungsdaten> dtoMapper = (final DTOSchuelerLeistungsdaten dto) -> {
 		final SchuelerLeistungsdaten daten = new SchuelerLeistungsdaten();
 		daten.id = dto.ID;
 		daten.lernabschnittID = dto.Abschnitt_ID;
@@ -98,8 +98,10 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param list          die Liste, in die eingefügt wird
 	 *
 	 * @return eine Liste mit der Leistungsdaten des Lernabschnitts
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) {
+	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) throws ApiOperationException {
     	// Bestimme die Leistungsdaten des Lernabschnitts
     	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", abschnittID, DTOSchuelerLeistungsdaten.class);
     	if (leistungsdaten == null)
@@ -112,13 +114,13 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		// Prüfe, ob die Leistungsdaten mit der ID existieren
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
     	if (dto == null)
-    		return OperationError.NOT_FOUND.getResponse("Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
+    		throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
 		final SchuelerLeistungsdaten daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -128,19 +130,19 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("lernabschnittID", (conn, dto, value, map) -> {
 			final long idAbschnitt = JSONMapper.convertToLong(value, false);
 			if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Abschnitt_ID = idAbschnitt;
 		}),
 		Map.entry("fachID", (conn, dto, value, map) -> {
 			final long idFach = JSONMapper.convertToLong(value, false);
 			final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 			if (fach == null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Fach_ID = idFach;
 			dto.Sortierung = fach.SortierungAllg;
 			dto.Kurs_ID = null;
@@ -151,7 +153,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 				/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
 				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
 				if (kurs == null)
-					throw OperationError.CONFLICT.exception();
+					throw new ApiOperationException(Status.CONFLICT);
 				// Setze Fachlehrer
 				dto.Fachlehrer_ID = kurs.Lehrer_ID;
 				// Passe ggf. die Kursart an, wenn sie sich geändert hat
@@ -190,14 +192,14 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			final String strKursart = JSONMapper.convertToString(value, true, false, null);
 			final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
 			if (kursart == null)
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Kursart = kursart.daten.kuerzel;
 			dto.KursartAllg = kursart.daten.kuerzelAllg;
 		}),
 		Map.entry("abifach", (conn, dto, value, map) -> {
 			final Integer abiFach = JSONMapper.convertToInteger(value, true);
 			if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.AbiFach = (abiFach == null) ? null : "" + abiFach;
 		}),
 		Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
@@ -205,14 +207,14 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		Map.entry("lehrerID", (conn, dto, value, map) -> {
 			final Long idLehrer = JSONMapper.convertToLong(value, true);
 			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Fachlehrer_ID = idLehrer;
 		}),
 		Map.entry("wochenstunden", (conn, dto, value, map) -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
 		Map.entry("zusatzkraftID", (conn, dto, value, map) -> {
 			final Long idLehrer = JSONMapper.convertToLong(value, true);
 			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Zusatzkraft_ID = idLehrer;
 		}),
 		Map.entry("zusatzkraftWochenstunden", (conn, dto, value, map) -> dto.WochenstdZusatzkraft = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
@@ -237,7 +239,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		Map.entry("umfangLernstandsbericht", (conn, dto, value, map) -> {
 			final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
 			if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
-				throw OperationError.CONFLICT.exception();
+				throw new ApiOperationException(Status.CONFLICT);
 			dto.Umfang = (strUmfang == null) || strUmfang.isBlank() ? null : strUmfang;
 		}),
 		Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
@@ -245,7 +247,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOSchuelerLeistungsdaten.class, patchMappings);
 	}
 
@@ -261,8 +263,10 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -274,8 +278,10 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		return super.addBasicMultiple(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -286,8 +292,10 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param id   die ID der Leistungsdaten
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOSchuelerLeistungsdaten.class, dtoMapper);
 	}
 
@@ -298,8 +306,10 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param ids   die IDs der Leistungsdaten
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOSchuelerLeistungsdaten.class, dtoMapper);
 	}
 

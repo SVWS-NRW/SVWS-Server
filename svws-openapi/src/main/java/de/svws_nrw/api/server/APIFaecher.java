@@ -208,8 +208,9 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fach-Katalog-Einträge gefunden")
     public Response getKatalogFaecher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-        return (new DataKatalogZulaessigeFaecher()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogZulaessigeFaecher()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 

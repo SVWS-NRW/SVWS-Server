@@ -1,11 +1,17 @@
 package de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -140,7 +146,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setFolgeklasse(
 				new ProxyReportingKlasse(
 					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse()))));
+					reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
+						try {
+							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idFolgeklasse());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new KlassenDaten();
+						}
+					})));
 		}
 		return super.folgeklasse();
 	}
@@ -155,7 +168,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setJahrgang(
 				new ProxyReportingJahrgang(
 					reportingRepository,
-					reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang()))));
+					reportingRepository.mapJahrgaenge().computeIfAbsent(super.idJahrgang(), k -> {
+						try {
+							return new DataJahrgangsdaten(reportingRepository.conn()).getFromID(super.idJahrgang());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new JahrgangsDaten();
+						}
+					})));
 		}
 		return super.jahrgang();
 	}
@@ -170,7 +190,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setKlasse(
 				new ProxyReportingKlasse(
 					reportingRepository,
-					reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse()))));
+					reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
+						try {
+							return new DataKlassendaten(reportingRepository.conn()).getFromIDOhneSchueler(super.idKlasse());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new KlassenDaten();
+						}
+					})));
 		}
 		return super.klasse();
 	}
@@ -189,7 +216,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setSchueler(
 				new ProxyReportingSchueler(
 					reportingRepository,
-					reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler()))));
+					reportingRepository.mapSchuelerStammdaten().computeIfAbsent(super.idSchueler(), l -> {
+						try {
+							return new DataSchuelerStammdaten(reportingRepository.conn()).getStammdaten(reportingRepository.conn(), super.idSchueler());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new SchuelerStammdaten();
+						}
+					})));
 		}
 		return super.schueler();
 	}
@@ -218,7 +252,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setSonderpaedagoge(
 				new ProxyReportingLehrer(
 					reportingRepository,
-					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge()))));
+					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
+						try {
+							return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idSonderpaedagoge());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new LehrerStammdaten();
+						}
+					})));
 		}
 		return super.sonderpaedagoge();
 	}
@@ -233,7 +274,14 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.setTutor(
 				new ProxyReportingLehrer(
 					reportingRepository,
-					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor()))));
+					reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
+						try {
+							return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(super.idTutor());
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new LehrerStammdaten();
+						}
+					})));
 		}
 		return super.tutor();
 	}

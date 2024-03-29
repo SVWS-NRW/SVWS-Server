@@ -3,13 +3,14 @@ package de.svws_nrw.data.schule;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.core.types.schule.Religion;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 /**
@@ -41,7 +41,7 @@ public final class DataReligionen extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStatkueNationalitaeten} in einen Core-DTO {@link ReligionEintrag}.
 	 */
-	private static final Function<DTOKonfession, ReligionEintrag> dtoMapper = (final DTOKonfession k) -> {
+	private static final DTOMapper<DTOKonfession, ReligionEintrag> dtoMapper = (final DTOKonfession k) -> {
 		final ReligionEintrag daten = new ReligionEintrag();
 		daten.id = k.ID;
 		daten.text = k.Bezeichnung;
@@ -54,7 +54,7 @@ public final class DataReligionen extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final var daten = getReligionen(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -62,13 +62,15 @@ public final class DataReligionen extends DataManager<Long> {
 
 	/**
 	 * Gibt die Liste der Religionen zurück.
+	 *
 	 * @return die Liste der Religionen
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<ReligionEintrag> getListReligionen() {
+	public List<ReligionEintrag> getListReligionen() throws ApiOperationException {
 		if (this.conn != null)
 			return getReligionen(this.conn);
-		else
-			return new ArrayList<>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -77,11 +79,13 @@ public final class DataReligionen extends DataManager<Long> {
 	 * @param conn            die Datenbankverbindung
 	 *
 	 * @return die Liste der Religionen
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<ReligionEintrag> getReligionen(final @NotNull DBEntityManager conn) {
+	public static List<ReligionEintrag> getReligionen(final @NotNull DBEntityManager conn) throws ApiOperationException {
     	final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
     	if (katalog == null)
-    		throw OperationError.NOT_FOUND.exception("Keine Religion gefunden.");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Keine Religion gefunden.");
 		final ArrayList<ReligionEintrag> daten = new ArrayList<>();
 		for (final DTOKonfession r : katalog)
 			daten.add(dtoMapper.apply(r));
@@ -90,7 +94,7 @@ public final class DataReligionen extends DataManager<Long> {
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
@@ -102,19 +106,21 @@ public final class DataReligionen extends DataManager<Long> {
 	 * @param id     die ID des Religion-Katalog-Eintrags
 	 *
 	 * @return der Eintrag der Religion
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static ReligionEintrag getReligion(final @NotNull DBEntityManager conn, final long id) {
+	public static ReligionEintrag getReligion(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
 		if (reli == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return dtoMapper.apply(reli);
 	}
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Religion mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Religion mit der ID null ist unzulässig.");
 		final ReligionEintrag daten = getReligion(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -124,14 +130,14 @@ public final class DataReligionen extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> {
 			dto.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
 			if (dto.StatistikKrz != null) {
 				final ReligionKatalogEintrag rke = Religion.getByKuerzel(dto.StatistikKrz).daten;
 				if (rke == null)
-					throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
+					throw new ApiOperationException(Status.NOT_FOUND, "Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
 			}
 		}),
 		Map.entry("text", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge())),
@@ -143,7 +149,7 @@ public final class DataReligionen extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOKonfession.class, patchMappings);
 	}
 
@@ -159,9 +165,12 @@ public final class DataReligionen extends DataManager<Long> {
 	 * Erstellt eine neue Religion
 	 *
 	 * @param  is					JSON-Objekt mit den Daten
+	 *
 	 * @return Eine Response mit der neuen Religion
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOKonfession.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -172,8 +181,10 @@ public final class DataReligionen extends DataManager<Long> {
 	 * @param id   die ID des Religion-Katalog-Eintrags
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOKonfession.class, dtoMapper);
 	}
 
@@ -184,8 +195,10 @@ public final class DataReligionen extends DataManager<Long> {
 	 * @param ids   die IDs der Religion-Katalog-Einträge
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOKonfession.class, dtoMapper);
 	}
 

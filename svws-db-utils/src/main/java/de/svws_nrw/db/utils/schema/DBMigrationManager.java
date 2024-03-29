@@ -90,6 +90,7 @@ import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattfo
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.constraints.NotNull;
@@ -501,8 +502,10 @@ public final class DBMigrationManager {
 	 * Überprüft die Schulform im Rahmen der Migration und korrigiert diese gegebenenfalls.
 	 *
 	 * @return true, falls die Schulform korrekt war oder korrigiert werden konnte, ansonsten false
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private boolean fixSchulform() {
+	private boolean fixSchulform() throws ApiOperationException {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
 			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			logger.logLn("- Schulnummer: " + schule.SchulNr);

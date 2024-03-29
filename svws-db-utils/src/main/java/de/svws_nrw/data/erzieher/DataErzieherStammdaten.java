@@ -16,8 +16,7 @@ import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -103,11 +102,13 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	 * @param schuelerID   die ID des Schülers, dessen {@link ErzieherStammdaten} ermittelt werden sollen
 	 *
 	 * @return eine Liste mit den {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getListFromSchueler(final long schuelerID) {
+	public Response getListFromSchueler(final long schuelerID) throws ApiOperationException {
 		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
 		if (erzieher == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<ErzieherStammdaten> daten = new ArrayList<>();
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList());
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
@@ -115,34 +116,34 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long tmpid) {
+	public Response get(final Long tmpid) throws ApiOperationException {
 		if (tmpid == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
         final long id = tmpid / 10;
         final long nr = tmpid % 10;
         if ((nr != 1) && (nr != 2))
-        	return OperationError.NOT_FOUND.getResponse();
+        	throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
     	if (erzieher == null) {
-        	return OperationError.NOT_FOUND.getResponse();
+        	throw new ApiOperationException(Status.NOT_FOUND);
     	}
 		final ErzieherStammdaten daten = (nr == 1) ? dtoMapperErzieher1.apply(erzieher) : dtoMapperErzieher2.apply(erzieher);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(final Long tmpid, final InputStream is) {
+	public Response patch(final Long tmpid, final InputStream is) throws ApiOperationException {
         if (tmpid == null)
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
         final long id = tmpid / 10;
         final long nr = tmpid % 10;
         if ((nr != 1) && (nr != 2))
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
             final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
             if (erzieher == null)
-                return OperationError.NOT_FOUND.getResponse();
+                throw new ApiOperationException(Status.NOT_FOUND);
             for (final Entry<String, Object> entry : map.entrySet()) {
                 final String key = entry.getKey();
                 final Object value = entry.getValue();
@@ -150,9 +151,9 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != tmpid.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
-                    case "idSchueler" -> throw OperationError.BAD_REQUEST.exception();
+                    case "idSchueler" -> throw new ApiOperationException(Status.BAD_REQUEST);
                     case "idErzieherArt" -> {
 	    		    	final Long artID = JSONMapper.convertToLong(value, true);
 	    		    	if (artID == null) {
@@ -160,7 +161,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
     					} else {
                             final DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
 	    			    	if (art == null)
-	    			    		throw OperationError.NOT_FOUND.exception();
+	    			    		throw new ApiOperationException(Status.NOT_FOUND);
     					    erzieher.ErzieherArt_ID = artID;
     					}
                     }
@@ -215,7 +216,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
     					} else {
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
 	    			    	if (nat == null)
-	    			    		throw OperationError.NOT_FOUND.exception();
+	    			    		throw new ApiOperationException(Status.NOT_FOUND);
                             if (nr == 1)
                             	erzieher.Erz1StaatKrz = nat;
                             else
@@ -224,7 +225,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	    			}
                     case "erhaeltAnschreiben" -> erzieher.ErzAnschreiben = JSONMapper.convertToBoolean(value, true);
                     case "bemerkungen" -> erzieher.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Bemerkungen.datenlaenge());
-                    default -> throw OperationError.BAD_REQUEST.exception();
+                    default -> throw new ApiOperationException(Status.BAD_REQUEST);
                 }
             }
             conn.transactionPersist(erzieher);
@@ -242,13 +243,13 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
      * @param wohnortID    die zu setzende Wohnort-ID
      * @param ortsteilID   die zu setzende Ortsteil-ID
      *
-     * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
+     * @throws ApiOperationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
      */
-    private static void setWohnort(final DBEntityManager conn, final DTOSchuelerErzieherAdresse erzieher, final Long wohnortID, final Long ortsteilID) throws WebApplicationException {
+    private static void setWohnort(final DBEntityManager conn, final DTOSchuelerErzieherAdresse erzieher, final Long wohnortID, final Long ortsteilID) throws ApiOperationException {
     	if ((wohnortID != null) && (wohnortID < 0))
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
     	if ((ortsteilID != null) && (ortsteilID < 0))
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
 		erzieher.ErzOrt_ID = wohnortID;
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;

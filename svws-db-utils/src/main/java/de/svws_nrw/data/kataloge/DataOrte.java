@@ -4,7 +4,7 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -46,23 +46,26 @@ public final class DataOrte extends DataManager<Long> {
 
 	/**
 	 * Liest die Orte aus der Datenbank aus und gibt sie als Katalog zurück
+	 *
 	 * @return Liste der Orte als Katalog.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<OrtKatalogEintrag> getOrte() {
+	public List<OrtKatalogEintrag> getOrte() throws ApiOperationException {
 		final List<DTOOrt> katalog = conn.queryAll(DTOOrt.class);
 		if (katalog == null)
-			throw OperationError.NOT_FOUND.exception("Keine Orte gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Orte gefunden.");
 		return katalog.stream().map(dtoMapper).toList();
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<OrtKatalogEintrag> daten = this.getOrte();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

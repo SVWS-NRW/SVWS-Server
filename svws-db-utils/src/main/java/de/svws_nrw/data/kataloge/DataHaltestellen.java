@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -42,10 +42,10 @@ public final class DataHaltestellen extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<DTOHaltestellen> katalog = conn.queryAll(DTOHaltestellen.class);
     	if (katalog == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted((a, b) -> {
     		if ((a.text == null) && (b.text == null))
     			return 0;
@@ -59,7 +59,7 @@ public final class DataHaltestellen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

@@ -1,21 +1,22 @@
 package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -38,7 +39,7 @@ public final class DataFachdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FachDaten}.
 	 */
-	private final Function<DTOFach, FachDaten> dtoMapperFach = (final DTOFach f) -> {
+	private final DTOMapper<DTOFach, FachDaten> dtoMapperFach = (final DTOFach f) -> {
 		final FachDaten daten = new FachDaten();
 		daten.id = f.ID;
 		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
@@ -73,22 +74,28 @@ public final class DataFachdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOFach fach = conn.queryByKey(DTOFach.class, id);
     	if (fach == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 		final FachDaten daten = dtoMapperFach.apply(fach);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
 	 * Erstellt eine Map, die alle Fächer der DB als Fachdaten-Objekte zur Fach-ID enthält.
+	 *
 	 * @return Map der Fachdaten zur Fach-ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Map<Long, FachDaten> getFaecherdaten() {
-		return conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, dtoMapperFach));
+	public Map<Long, FachDaten> getFaecherdaten() throws ApiOperationException {
+		final Map<Long, FachDaten> mapFaecher = new HashMap<>();
+		for (final DTOFach f : conn.queryAll(DTOFach.class))
+			mapFaecher.put(f.ID, dtoMapperFach.apply(f));
+		return mapFaecher;
 	}
 
 	/**
@@ -104,13 +111,13 @@ public final class DataFachdaten extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 		Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
 			final ZulaessigesFach f = ZulaessigesFach.getByKuerzelASD(JSONMapper.convertToString(value, false, false, 2));
 			if (f == null)
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 			dto.StatistikFach = f;
 		}),
 		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
@@ -132,7 +139,7 @@ public final class DataFachdaten extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOFach.class, patchMappings);
 	}
 
@@ -145,8 +152,10 @@ public final class DataFachdaten extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		// füge den Raum in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
 		final ObjLongConsumer<DTOFach> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOFach.class, initDTO, dtoMapperFach, requiredCreateAttributes, patchMappings);

@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKalenderinformationen;
 import de.svws_nrw.db.schema.Schema;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -36,7 +37,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -45,7 +46,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * {@link DTOGostKlausurenKalenderinformationen} in einen Core-DTO
 	 * {@link GostKlausurenKalenderinformation}.
 	 */
-	private final Function<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper = (final DTOGostKlausurenKalenderinformationen z) -> {
+	private final DTOMapper<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper = (final DTOGostKlausurenKalenderinformationen z) -> {
 		final GostKlausurenKalenderinformation daten = new GostKlausurenKalenderinformation();
 		daten.id = z.ID;
 		daten.bemerkung = z.Bemerkungen;
@@ -63,8 +64,10 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * Gost-Halbjahr zurück.
 	 *
 	 * @return die Liste der Kursklausuren
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private List<GostKlausurenKalenderinformation> getKalenderinformationen() {
+	private List<GostKlausurenKalenderinformation> getKalenderinformationen() throws ApiOperationException {
 		final List<DTOGostKlausurenKalenderinformationen> kalInfos = conn.queryAll(DTOGostKlausurenKalenderinformationen.class);
 		final List<GostKlausurenKalenderinformation> daten = new ArrayList<>();
 		for (final DTOGostKlausurenKalenderinformationen ki : kalInfos)
@@ -91,12 +94,12 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 			);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOGostKlausurenKalenderinformationen.class, patchMappings);
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKalenderinformationen()).build();
 	}
 
@@ -106,8 +109,9 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * @param is das Objekt
 	 *
 	 * @return Eine Response mit der neuen Gost-KlausurenKalenderinformation
+	 * @throws ApiOperationException
 	 */
-	public Response create(final InputStream is) {
+	public Response create(final InputStream is) throws ApiOperationException {
 		final ObjLongConsumer<DTOGostKlausurenKalenderinformationen> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOGostKlausurenKalenderinformationen.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -118,8 +122,9 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * @param id die ID der zu löschenden KlausurenKalenderinformation
 	 *
 	 * @return die Response
+	 * @throws ApiOperationException
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOGostKlausurenKalenderinformationen.class, dtoMapper);
 	}
 

@@ -32,7 +32,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -60,12 +60,12 @@ public final class DataSchuelerliste extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		Long tmpAbschnitt = this.abschnitt;
 		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
-				return OperationError.NOT_FOUND.getResponse();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, false);
@@ -73,12 +73,12 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		Long tmpAbschnitt = this.abschnitt;
 		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
-				return OperationError.NOT_FOUND.getResponse();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, true);
@@ -238,8 +238,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * @param nurAktive   gibt an, dass nur aktive Schüler zurückgegeben werden sollen
 	 *
 	 * @return die Schülerliste
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive) {
+	private static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive) throws ApiOperationException {
 		// Lese die Schüler aus der Datenbank
 		List<DTOSchueler> schueler = null;
 		if (nurAktive) {
@@ -252,7 +254,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			schueler = querySchueler.getResultList();
 		}
     	if (schueler == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
     	final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
     	if (schuelerIDs.isEmpty())
@@ -309,16 +311,18 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * @param idSchuljahresabschnitt    die ID des Schuljahresabschnitt für welchen die Daten aggregiert werden sollen
 	 *
 	 * @return die Daten für die Schüler-Auswahlliste
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) {
+	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
 		// Bestimme die Schulform
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if ((schule == null) || (schule.Schulform == null))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Schulform der Schule konnte nicht ermittelt werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schulform der Schule konnte nicht ermittelt werden.");
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
 		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
 		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
-			throw OperationError.NOT_FOUND.exception("Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden".formatted(idSchuljahresabschnitt));
 		// Erstelle das Ergebnis-DTO ...
 		final SchuelerListe result = new SchuelerListe();
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;

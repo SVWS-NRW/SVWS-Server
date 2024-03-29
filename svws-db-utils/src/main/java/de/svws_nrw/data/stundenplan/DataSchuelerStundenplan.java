@@ -16,7 +16,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -53,16 +53,16 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long idSchueler) {
+	public Response get(final Long idSchueler) throws ApiOperationException {
 		// Bestimme den Schüler und die Daten des Stundenplans
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
-			return OperationError.NOT_FOUND.getResponse("Kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
 
 		// Bestimme den Schüler und die Daten des Stundenplans
 		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (dtoStundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 
 		// Erzeuge damit das Grundgerüst für den Stundenplan
 		final @NotNull StundenplanKomplett stundenplan = new StundenplanKomplett();

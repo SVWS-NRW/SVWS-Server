@@ -11,7 +11,7 @@ import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -89,26 +89,28 @@ public final class DataLehrerliste extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Lehrer
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<LehrerListeEintrag> getLehrerListe(final DBEntityManager conn) {
+	public static List<LehrerListeEintrag> getLehrerListe(final DBEntityManager conn) throws ApiOperationException {
     	final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
     	if (lehrer == null)
-    		throw OperationError.NOT_FOUND.exception("Es wurden keine Lehrer in der Datenbank gefunden.");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Lehrer in der Datenbank gefunden.");
     	return lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<LehrerListeEintrag> daten = getLehrerListe(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<DTOLehrer> lehrer = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
     	if (lehrer == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

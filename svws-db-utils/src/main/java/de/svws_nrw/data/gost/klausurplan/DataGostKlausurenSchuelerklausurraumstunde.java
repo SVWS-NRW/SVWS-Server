@@ -30,7 +30,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -130,16 +130,16 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 	}
 
-	private static long ermittleRaumidAusSchuelerklausurterminen(final DBEntityManager conn, final List<Long> idsSchuelerklausurtermine) {
+	private static long ermittleRaumidAusSchuelerklausurterminen(final DBEntityManager conn, final List<Long> idsSchuelerklausurtermine) throws ApiOperationException {
 		if (idsSchuelerklausurtermine.isEmpty())
-			throw OperationError.NOTHING_TO_DO.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<GostSchuelerklausurterminraumstunde> sktrs = getSchuelerklausurterminraumstundenZuSchuelerklausurterminids(conn, idsSchuelerklausurtermine);
 		if (sktrs.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine SchuelerklausurenTermineRaumstunden gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine SchuelerklausurenTermineRaumstunden gefunden.");
 		final List<GostKlausurraumstunde> listKrs = DataGostKlausurenRaumstunde.getKlausurraumstundenZuSchuelerklausurterminraumstunden(conn, sktrs);
 		final List<Long> idsRaeume = listKrs.stream().map(krs -> krs.idRaum).distinct().toList();
 		if (idsRaeume.size() != 1)
-			throw OperationError.CONFLICT.exception("Verschiedene Raumids in Schuelerklausuren gefunden.");
+			throw new ApiOperationException(Status.CONFLICT, "Verschiedene Raumids in Schuelerklausuren gefunden.");
 		return idsRaeume.get(0);
 	}
 
@@ -187,8 +187,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param idAbschnitt          die ID des Schuljahresabschnitts
 	 *
 	 * @return die Antwort
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response setzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausuren, final long idAbschnitt) {
+	public static Response setzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausuren, final long idAbschnitt) throws ApiOperationException {
 		final GostKlausurenCollectionSkrsKrs result = transactionSetzeRaumZuSchuelerklausuren(conn, _idRaum, idsSchuelerklausuren, idAbschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
@@ -202,11 +204,13 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param idAbschnitt          die ID des Schuljahresabschnitts
 	 *
 	 * @return die Antwort
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static GostKlausurenCollectionSkrsKrs transactionSetzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausurtermine,
-			final long idAbschnitt) {
+			final long idAbschnitt) throws ApiOperationException {
 		if (idsSchuelerklausurtermine.isEmpty())
-			throw OperationError.NOTHING_TO_DO.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final long idRaum = _idRaum != null ? _idRaum : ermittleRaumidAusSchuelerklausurterminen(conn, idsSchuelerklausurtermine);
 
 		// Raum und Termin holen
@@ -216,7 +220,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		// Neue Schülerklausuren ermitteln
 		final List<GostSchuelerklausurTermin> listSchuelerklausurtermineNeu = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idsSchuelerklausurtermine);
 		if (listSchuelerklausurtermineNeu.isEmpty())
-			throw OperationError.NOTHING_TO_DO.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Schon im Raum existente Schülerklausuren ermitteln
 		final List<GostSchuelerklausurterminraumstunde> listSchuelerklausurtermineSchonImRaumRaumstunden = getSchuelerklausurterminraumstundenZuRaumid(conn, idRaum);
@@ -266,7 +270,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<StundenplanZeitraster> zeitrasterRaum = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
 				maxEnd - minStart);
 		if (zeitrasterRaum.isEmpty())
-			throw OperationError.NOTHING_TO_DO.exception("Zeitraster konnte nicht ermittelt werden");
+			throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
 
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		result.idsSchuelerklausurtermine = idsSchuelerklausurtermine;
@@ -336,11 +340,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param vorgabenManager          x
 	 * @param raumManager              x
 	 * @param stundenplanManager       x
+	 *
 	 * @return List
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private static List<GostSchuelerklausurterminraumstunde> createSchuelerklausurraumstundenInDb(final DBEntityManager conn, final List<GostSchuelerklausurTermin> listSchuelerklausurenNeu, final long idRaum,
 			final GostKlausurtermin termin, final GostKursklausurManager kursklausurManager, final GostKlausurvorgabenManager vorgabenManager, final StundenplanManager stundenplanManager,
-			final GostKlausurraumManager raumManager) {
+			final GostKlausurraumManager raumManager) throws ApiOperationException {
 		final List<GostSchuelerklausurterminraumstunde> result = new ArrayList<>();
 		final LocalDate klausurdatum = LocalDate.parse(termin.datum);
 		for (final GostSchuelerklausurTermin sk : listSchuelerklausurenNeu) {
@@ -350,7 +357,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit,
 					v.dauer);
 			if (zeitrasterSk.isEmpty())
-				throw OperationError.NOTHING_TO_DO.exception("Zeitraster konnte nicht ermittelt werden");
+				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
 			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.id));
 			for (final StundenplanZeitraster stunde : zeitrasterSk) {
 				final DTOGostKlausurenSchuelerklausurenTermineRaumstunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenTermineRaumstunden(sk.id,
@@ -381,8 +388,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurraumstunden
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) {
+	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) throws ApiOperationException {
 		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
 		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin);
 		if (listRaeume.isEmpty())
@@ -393,7 +402,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	}
 
 	@Override
-	public Response get(final Long idTermin) {
+	public Response get(final Long idTermin) throws ApiOperationException {
 		// Schuelerklausurraumstunden zu einem Klausurtermin
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerklausurraumstunden(idTermin)).build();
 	}

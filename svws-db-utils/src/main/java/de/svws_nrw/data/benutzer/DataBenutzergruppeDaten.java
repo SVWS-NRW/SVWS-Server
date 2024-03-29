@@ -21,8 +21,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -79,12 +78,12 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      *
      * @return das DTO
      */
-    private DTOBenutzergruppe getDTO(final Long id) throws WebApplicationException {
+    private DTOBenutzergruppe getDTO(final Long id) throws ApiOperationException {
         if (id == null)
-            throw OperationError.NOT_FOUND.exception("Die ID der zu ändernden Benutzergruppe darf nicht null sein.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu ändernden Benutzergruppe darf nicht null sein.");
         final DTOBenutzergruppe bg = conn.queryByKey(DTOBenutzergruppe.class, id);
         if (bg == null)
-            throw OperationError.NOT_FOUND.exception("Die Benutzergruppe mit der ID existiert nicht.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzergruppe mit der ID existiert nicht.");
         return bg;
     }
 
@@ -95,9 +94,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param id die ID der Benutzergruppe
      *
      * @return der Benutzergruppen-Manager
-     * @throws WebApplicationException im Fehlerfall
+     *
+     * @throws ApiOperationException   im Fehlerfall
      */
-    private BenutzergruppenManager getManager(final Long id) throws WebApplicationException {
+    private BenutzergruppenManager getManager(final Long id) throws ApiOperationException {
         // Bestimme die Benutzergruppe
         final DTOBenutzergruppe benutzergruppe = getDTO(id);
         final BenutzergruppenManager manager = new BenutzergruppenManager(benutzergruppe.ID, benutzergruppe.Bezeichnung);
@@ -120,13 +120,13 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @return true, wenn alle Kompetenzen zulässig sind, sonst false
      *
      */
-    private boolean istKompetenzZulaessig(final List<Long> kids) throws WebApplicationException {
+    private boolean istKompetenzZulaessig(final List<Long> kids) throws ApiOperationException {
       //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
         //Nehme als Schulform GY als Beispiel
 
         final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
         if (schule == null)
-            throw OperationError.NOT_FOUND.exception("Keine Schule angelegt.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
         final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
 
         final List<BenutzerKompetenz> bks = new ArrayList<>();
@@ -136,7 +136,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 
         for (final BenutzerKompetenz bk : bks) {
             if (!bk.hatSchulform(schulform))
-                throw OperationError.FORBIDDEN.exception("Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
+                throw new ApiOperationException(Status.FORBIDDEN, "Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
                                                         + schulform.daten.bezeichnung + "nicht zulässig");
         }
         return true;
@@ -145,7 +145,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 
 
     @Override
-    public Response get(final Long id) throws WebApplicationException {
+    public Response get(final Long id) throws ApiOperationException {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getManager(id).daten()).build();
     }
 
@@ -161,11 +161,12 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param bezeichnung die neue Bezeichnung
      *
      * @return die Response 204 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response setBezeichnung(final Long id, final String bezeichnung) {
+    public Response setBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
         if ((bezeichnung == null) || "".equals(bezeichnung))
-            return OperationError.CONFLICT
-                    .getResponse("Die Bezeichnung muss gültig sein und darf nicht null oder leer sein");
+            throw new ApiOperationException(Status.CONFLICT, "Die Bezeichnung muss gültig sein und darf nicht null oder leer sein");
         final DTOBenutzergruppe bg = getDTO(id);
         bg.Bezeichnung = bezeichnung;
         conn.transactionPersist(bg);
@@ -178,8 +179,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param id die ID der Benutzergruppe
      *
      * @return die Response 204 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response addAdmin(final Long id) {
+    public Response addAdmin(final Long id) throws ApiOperationException {
         final DTOBenutzergruppe bg = getDTO(id);
         if (!bg.IstAdmin) {
             bg.IstAdmin = true;
@@ -194,11 +197,13 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param id die ID der Benutzergruppe
      *
      * @return bei Erfolg eine HTTP-Response 200
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response removeAdmin(final Long id) {
+    public Response removeAdmin(final Long id) throws ApiOperationException {
         final DTOBenutzergruppe bg = getDTO(id);
         if (!bg.IstAdmin)
-            throw OperationError.BAD_REQUEST.exception("Die Gruppe mit der ID " + id + " ist nicht administrativ, "
+            throw new ApiOperationException(Status.BAD_REQUEST, "Die Gruppe mit der ID " + id + " ist nicht administrativ, "
                     + "weshalb keine Admin-Berechtigung entfernt werden kann.");
         pruefeAdminUeberGruppe(id);
         bg.IstAdmin = false;
@@ -214,20 +219,22 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 	 * @param kids die ID der Kompetenz
 	 *
 	 * @return die Response 204 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addKompetenzen(final Long id, final List<Long> kids) {
+	public Response addKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
 
 		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
 		this.istKompetenzZulaessig(kids);
 
 		if (id == null || kids == null)
-			throw OperationError.NOT_FOUND.exception("Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
 		getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
 		if (!kids.isEmpty()) {
 			// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
 			for (final Long kid : kids)
 				if (BenutzerKompetenz.getByID(kid) == null)
-					throw OperationError.NOT_FOUND.exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+					throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
 			for (final Long k_id : kids) {
 				// Hat die Gruppe die Kompetenz?
 				DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
@@ -249,18 +256,20 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 	 * @param kids die ID der Kompetenz
 	 *
 	 * @return die Response 204 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response removeKompetenzen(final Long id, final List<Long> kids) {
+	public Response removeKompetenzen(final Long id, final List<Long> kids) throws ApiOperationException {
 		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
         this.istKompetenzZulaessig(kids);
         if (id == null || kids == null)
-            throw OperationError.NOT_FOUND.exception("Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!kids.isEmpty()) {
             // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
             for (final Long kid : kids)
                 if (BenutzerKompetenz.getByID(kid) == null)
-                    throw OperationError.NOT_FOUND.exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+                    throw new ApiOperationException(Status.NOT_FOUND, "Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
             for (final Long k_id : kids) {
                 // Hat die Gruppe die Kompetenz?
                 final DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
@@ -280,17 +289,19 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param bids die ID der Benutzer
      *
      * @return die Response 200 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response addBenutzer(final Long id, final List<Long> bids) {
+    public Response addBenutzer(final Long id, final List<Long> bids) throws ApiOperationException {
         if ((id == null) || (bids == null))
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!bids.isEmpty()) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
             for (final Long bid : bids) {
                 final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, bid);
                 if (benutzer == null)
-                    return OperationError.NOT_FOUND.getResponse("Der Benutzermit der ID " + bid + " existiert nicht!");
+                    throw new ApiOperationException(Status.NOT_FOUND, "Der Benutzermit der ID " + bid + " existiert nicht!");
             }
             for (final Long bid : bids) {
                 // Hat die Gruppe den Benutzer?
@@ -313,21 +324,23 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param bids  die ID der Benutzer
      *
      * @return die Response 200 bei Erfolg.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response removeBenutzer(final Long id, final List<Long> bids) {
+    public Response removeBenutzer(final Long id, final List<Long> bids) throws ApiOperationException {
         if (id == null || bids == null)
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
+            throw new ApiOperationException(Status.NOT_FOUND, "Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
         final DTOBenutzergruppe dto = getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!bids.isEmpty()) {
         	// Prüfe, ob die Benutzer mit den Ids existieren.
         	final List<DTOBenutzer> benutzer = conn.queryNamed("DTOBenutzer.id.multiple", bids, DTOBenutzer.class);
         	if (benutzer.size() != bids.size())
-        		return OperationError.NOT_FOUND.getResponse("Ein übergebener Benutzer existiert nicht!");
+        		throw new ApiOperationException(Status.NOT_FOUND, "Ein übergebener Benutzer existiert nicht!");
             for (final Long bid : bids) {
                 // Prüfe zunächst, ob der Benutzer überhaupt Mitglied der Gruppe ist...
                 final DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
                 if (bgm == null)
-                    throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
+                    throw new ApiOperationException(Status.NOT_FOUND, "Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
                             + "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
                 // Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
                 if ((bid.equals(conn.getUser().getId())) && (dto.IstAdmin))
@@ -347,10 +360,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      *
      * @param idGruppe     die ID der Gruppe
      *
-     * @throws WebApplicationException   falls die Admin-Berechitigung des aktuellen Benutzers
-     *                                   von der Admin-Berechtigung der angegebenen Gruppe abhängt.
+     * @throws ApiOperationException   falls die Admin-Berechitigung des aktuellen Benutzers
+     *                                 von der Admin-Berechtigung der angegebenen Gruppe abhängt.
      */
-    private void pruefeAdminUeberGruppe(final long idGruppe) throws WebApplicationException {
+    private void pruefeAdminUeberGruppe(final long idGruppe) throws ApiOperationException {
         // Ermittle den aktuellen Benutzer und prüfe, ob dieser direkt als Benutzer Admin-Rechte besitzt.
         final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
         if (benutzer.IstAdmin)
@@ -366,13 +379,13 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             // Dieser Fall sollte nicht auftreten, da der aktuelle Benutzer dann weder als Benutzer
             // noch über eine Gruppe administrative Berechtigungen erhalte hätte und diese Operation
             // unzulässig wäre...
-            throw OperationError.INTERNAL_SERVER_ERROR.exception("Der aktuelle Benutzer verfügt über keine "
+            throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der aktuelle Benutzer verfügt über keine "
                     + "administrative Berechtigung und darf daher diese API-Methode nicht aufrufen.");
         }
         if ((bgs.size() == 1) && (bgs.get(0).ID == idGruppe)) {
             // Der aktuelle Benutzer ist nur in genau der administrativen Gruppe,
             // aus der er entfernt werden soll. Dies ist nicht zulässig.
-            throw OperationError.FORBIDDEN.exception("Der aktuelle Benutzer bezieht seine administrative Berechtigung über "
+            throw new ApiOperationException(Status.FORBIDDEN, "Der aktuelle Benutzer bezieht seine administrative Berechtigung über "
                     + "die Benutzergruppe und würde die administrative Berechtigung durch diese Operation verlieren.");
         }
     }
@@ -383,8 +396,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param is   das JSON-Objekt mit den Daten
      *
      * @return Eine Response mit dem neuen Benutzer
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response create(final InputStream is) {
+    public Response create(final InputStream is) throws ApiOperationException {
         DTOBenutzergruppe bg = null;
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
@@ -401,18 +416,18 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                     case "id" -> {
                         final Long create_id = JSONMapper.convertToLong(value, true);
                         if (create_id != null && create_id != -1)
-                            throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
+                            throw new ApiOperationException(Status.BAD_REQUEST, "ID muss leer sein.");
                     }
                     case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
                     case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
-                    case "kompetenzen" -> throw OperationError.BAD_REQUEST.exception("Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
-                    default -> throw OperationError.BAD_REQUEST.exception();
+                    case "kompetenzen" -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
+                    default -> throw new ApiOperationException(Status.BAD_REQUEST);
                 }
             }
             conn.transactionPersist(bg);
         }
         if (bg == null)
-            throw OperationError.NOT_FOUND.exception();
+            throw new ApiOperationException(Status.NOT_FOUND);
         final BenutzergruppeDaten daten = dtoMapper.apply(getDTO(bg.ID));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
@@ -424,11 +439,13 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 	 * @param bgids    die IDs der Bentuzergruppen
 	 *
 	 * @return bei Erfolg eine HTTP-Response 200
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response remove(final List<Long> bgids) {
+	public Response remove(final List<Long> bgids) throws ApiOperationException {
 		final DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
 		if (user == null)
-			throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
+			throw new ApiOperationException(Status.NOT_FOUND, "Der User-Benutzer existiert nicht !!!");
 
 		// In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
 		if (!user.IstAdmin) {
@@ -443,10 +460,16 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 					user_admingruppen_ids.add(id);
 
 			// Lese aus den bgids die ids der administrativen Benutzergruppen vom User.
-			final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).toList();
+			final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> {
+				try {
+					return getDTO(item).IstAdmin && user_admingruppen_ids.contains(item);
+				} catch (@SuppressWarnings("unused") final ApiOperationException e) {
+					return false;
+				}
+			}).toList();
 
 			if (user_admingruppen_ids_request.size() == user_admingruppen_ids.size())
-				throw OperationError.BAD_REQUEST.exception("Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");
 		}
 		for (final Long id : bgids)
 			conn.transactionRemove(getDTO(id));

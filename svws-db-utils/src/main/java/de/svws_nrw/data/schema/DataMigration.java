@@ -10,7 +10,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBMigrationManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -52,8 +52,10 @@ public final class DataMigration {
 	 * @param srcDBPassword   das Kennwort für den Zugriff auf die Quell-Datenbank
 	 *
 	 * @return die HTTP-Response mit dem LOG der Migration
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-    public static Response migrateMDB(final DBEntityManager conn, final byte[] srcDB, final String srcDBPassword) {
+    public static Response migrateMDB(final DBEntityManager conn, final byte[] srcDB, final String srcDBPassword) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -78,7 +80,7 @@ public final class DataMigration {
 			// Führe die Migration durch
 			if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, null, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 			}
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration

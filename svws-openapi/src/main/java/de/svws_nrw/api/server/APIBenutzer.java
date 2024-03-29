@@ -23,7 +23,7 @@ import de.svws_nrw.data.benutzer.DataBenutzerkompetenzGruppenliste;
 import de.svws_nrw.data.benutzer.DataBenutzerkompetenzliste;
 import de.svws_nrw.data.benutzer.DataBenutzerliste;
 import de.svws_nrw.db.Benutzer;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,6 +43,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
@@ -100,7 +101,7 @@ public class APIBenutzer {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
         	final Benutzer user = conn.getUser();
         	if (user == null)
-        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+        		throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
             return (new DataBenutzerDaten(conn).get(user.getId()));
         }, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
@@ -756,7 +757,7 @@ public class APIBenutzer {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
         	final Benutzer user = conn.getUser();
         	if (user == null)
-        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+        		throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
             return (new DataBenutzerEMailDaten(conn).get(user.getId()));
         }, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
@@ -789,7 +790,7 @@ public class APIBenutzer {
     	return DBBenutzerUtils.runWithTransaction(conn -> {
         	final Benutzer user = conn.getUser();
         	if (user == null)
-        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+        		throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
     		return new DataBenutzerEMailDaten(conn).patch(user.getId(), is);
     	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }

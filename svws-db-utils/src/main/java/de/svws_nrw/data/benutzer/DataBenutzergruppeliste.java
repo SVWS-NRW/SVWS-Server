@@ -17,7 +17,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -36,15 +36,15 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<DTOBenutzergruppe> benutzergruppe = conn.queryAll(DTOBenutzergruppe.class);
     	if (benutzergruppe == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	// Erstelle die Benutzerliste und sortiere sie
     	final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

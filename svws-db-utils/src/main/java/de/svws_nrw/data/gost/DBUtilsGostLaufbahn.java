@@ -37,10 +37,9 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.ArrayList;
@@ -71,8 +70,10 @@ public final class DBUtilsGostLaufbahn {
 	 * @param abijahr      der Abiturjahrgang
 	 *
 	 * @return die Daten des Schülers
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) {
+	public static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) throws ApiOperationException {
 		final boolean needTransaction = !conn.hasActiveTransaction();
 		try {
 			if (needTransaction)
@@ -80,13 +81,13 @@ public final class DBUtilsGostLaufbahn {
     		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
 			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 			if (jahrgang == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			// Lese den Schüler aus
 	    	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, idSchueler);
 	    	if (dtoGostSchueler == null) {
 	    		dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
 	    		if (!conn.transactionPersist(dtoGostSchueler))
-	    			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+	    			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 	    		// Initialisiere die Laufbahnplanung mit Default-Einträgen
 	    		DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
 	    	}
@@ -94,9 +95,9 @@ public final class DBUtilsGostLaufbahn {
 	    		conn.transactionCommit();
 			return dtoGostSchueler;
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				throw webAppException;
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		} finally {
 			// Perform a rollback if necessary
 			if (needTransaction)
@@ -113,15 +114,17 @@ public final class DBUtilsGostLaufbahn {
 	 * @param id     die ID des Schülers
 	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten get(final DBEntityManager conn, final long id) {
+    public static Abiturdaten get(final DBEntityManager conn, final long id) throws ApiOperationException {
     	final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
     	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOSchuljahresabschnitte dtoAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchueler.Schuljahresabschnitts_ID);
     	if (dtoAbschnitt == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
     	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class);
     	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
@@ -129,7 +132,7 @@ public final class DBUtilsGostLaufbahn {
     			.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)
     			.getResultList().stream().findFirst().orElse(null);
     	if (aktAbschnitt == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
     	// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
@@ -149,7 +152,7 @@ public final class DBUtilsGostLaufbahn {
     	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
     	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
     	if (leistungen == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
     	final Abiturdaten abidaten = new Abiturdaten();
     	abidaten.schuelerID = id;
@@ -292,11 +295,13 @@ public final class DBUtilsGostLaufbahn {
 	 * @param abijahr    das Abiturjahr
 	 *
 	 * @return die Fachwahlinformationen für die Laufbahnplanungs-Vorlage des angegebenen Abiturjahrgangs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getVorlage(final DBEntityManager conn, final int abijahr) {
+    public static Abiturdaten getVorlage(final DBEntityManager conn, final int abijahr) throws ApiOperationException {
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
     	final Map<Long, DTOGostJahrgangFachbelegungen> dtoFachwahlen =
     			conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class)
@@ -389,12 +394,14 @@ public final class DBUtilsGostLaufbahn {
 	 * @param abijahr       der Abiturjahrgang
 	 *
 	 * @return die Daten der Schüler
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull DTOGostSchueler> getSchuelerOrInit(final DBEntityManager conn, final @NotNull List<@NotNull Long> schuelerIDs, final int abijahr) {
+	public static @NotNull List<@NotNull DTOGostSchueler> getSchuelerOrInit(final DBEntityManager conn, final @NotNull List<@NotNull Long> schuelerIDs, final int abijahr) throws ApiOperationException {
 		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Schülereinträge aus der Datenbank
 		final @NotNull List<@NotNull DTOGostSchueler> result = conn.queryByKeyList(DTOGostSchueler.class, schuelerIDs);
 		if (result.size() == schuelerIDs.size())
@@ -406,7 +413,7 @@ public final class DBUtilsGostLaufbahn {
 			final DTOGostSchueler dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
 			result.add(dtoGostSchueler);
     		if (!conn.transactionPersist(dtoGostSchueler))
-    			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+    			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
     		conn.transactionFlush();
     		// Initialisiere die Laufbahnplanung mit Default-Einträgen
         	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class);
@@ -440,8 +447,10 @@ public final class DBUtilsGostLaufbahn {
 	 * @param abijahrgang   der Abiturjahrgang
 	 *
 	 * @return die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static @NotNull Map<@NotNull Long, @NotNull Abiturdaten> getAbiturdaten(final DBEntityManager conn, final DTOEigeneSchule schule, final int abijahrgang) {
+    public static @NotNull Map<@NotNull Long, @NotNull Abiturdaten> getAbiturdaten(final DBEntityManager conn, final DTOEigeneSchule schule, final int abijahrgang) throws ApiOperationException {
     	final @NotNull Map<@NotNull Long, @NotNull Abiturdaten> result = new HashMap<>();
     	// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
@@ -482,7 +491,7 @@ public final class DBUtilsGostLaufbahn {
         	final DTOSchuljahresabschnitte dtoAbschnitt = mapSchuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
         	final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitteBySchuelerID.get(idSchueler);
         	if (aktAbschnitt == null)
-        		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+        		throw new ApiOperationException(Status.NOT_FOUND);
         	// Bestimme das Abiturjahr
         	final Schulgliederung schulgliederung = aktAbschnitt.Schulgliederung == null
         			? Schulgliederung.getDefault(schule.Schulform)
@@ -494,7 +503,7 @@ public final class DBUtilsGostLaufbahn {
         	// Bestimme die bereits vorhandenen Leistungsdaten
         	final GostLeistungen leistungen = mapGostLeistungen.get(idSchueler);
         	if (leistungen == null)
-        		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+        		throw new ApiOperationException(Status.NOT_FOUND);
 
 	    	final Abiturdaten abidaten = new Abiturdaten();
 	    	abidaten.schuelerID = idSchueler;
@@ -646,8 +655,10 @@ public final class DBUtilsGostLaufbahn {
      * @param abijahrgang   der Abiturjahrgang
      *
      * @return die Menge der Schüler-IDs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public static List<DTOSchueler> getSchuelerOfAbiturjahrgang(final DBEntityManager conn, final int abijahrgang) {
+    public static List<DTOSchueler> getSchuelerOfAbiturjahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
     	// Bestimme die Schule, die Schuljahresabschnitte und alle Jahrgänge der Schule
     	final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
@@ -692,14 +703,16 @@ public final class DBUtilsGostLaufbahn {
      * @param abijahrgang   der Abiturjahrgang
      *
      * @return die Fachwahlen des Abiturjahrgangs als Map
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-    public static Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final DBEntityManager conn, final int abijahrgang) {
+    public static Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, GostJahrgangFachwahlen> result = new HashMap<>();
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
-	        throw OperationError.NOT_FOUND.exception("Es konnten keine Fächer in der Datenbank gefunden werden.");
+	        throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Fächer in der Datenbank gefunden werden.");
 		final Map<Long, Abiturdaten> mapAbiturdaten = getAbiturdaten(conn, schule, abijahrgang);
 		// Erstelle die Fachwahl-Objekte
 		for (final Abiturdaten abidaten : mapAbiturdaten.values()) {

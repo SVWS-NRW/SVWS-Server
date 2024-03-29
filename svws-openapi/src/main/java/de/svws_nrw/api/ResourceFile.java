@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.IOException;
 
 import de.svws_nrw.base.FileUtils;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse dient als Cache für Datei-Ressourcen.
@@ -49,15 +50,17 @@ public final class ResourceFile {
 	 * auf die Datei-Ressource aktualisiert.
 	 *
 	 * @return die Daten dieser Datei-Ressource
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public byte[] getData() {
+	public byte[] getData() throws ApiOperationException {
 		try {
 			if ((cache == null) || (cacheTimestamp != file.lastModified())) {
 				this.cache = FileUtils.file2ByteArray(file);
 				this.cacheTimestamp = file.lastModified();
 			}
 		} catch (final SecurityException | IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 		return this.cache;
 	}

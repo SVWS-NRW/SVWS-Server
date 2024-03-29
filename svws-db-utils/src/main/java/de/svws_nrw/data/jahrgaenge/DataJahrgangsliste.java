@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -54,23 +54,25 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 	 * @param conn                     die Datenbankverbindung
 	 *
 	 * @return die Liste mit den Daten der Jahrgänge
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<JahrgangsDaten> getJahrgangsliste(final DBEntityManager conn) {
+	public static List<JahrgangsDaten> getJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
     	final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
     	if (jahrgaenge == null)
-    		throw OperationError.NOT_FOUND.exception("Keine Jahrgänge gefunden");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Keine Jahrgänge gefunden");
     	return jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
 	}
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<JahrgangsDaten> daten = getJahrgangsliste(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

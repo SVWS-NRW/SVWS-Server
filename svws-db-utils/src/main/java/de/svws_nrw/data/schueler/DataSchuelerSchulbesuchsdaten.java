@@ -17,7 +17,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -49,12 +49,12 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
     	if (schueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final Map<String, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
     	final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
     	// Basisdaten
@@ -117,12 +117,12 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
     		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 	    	if (schueler == null)
-	    		throw OperationError.NOT_FOUND.exception();
+	    		throw new ApiOperationException(Status.NOT_FOUND);
 	    	final Map<Long, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	    	for (final Entry<String, Object> entry : map.entrySet()) {
 	    		final String key = entry.getKey();
@@ -131,7 +131,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
+							throw new ApiOperationException(Status.BAD_REQUEST);
 					}
 
 	    			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
@@ -148,7 +148,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	    				} else {
 	    					final DTOEntlassarten tmpVorigeEntlassgrund = entlassgruende.get(vorigeEntlassgrundID);
 	    					if (tmpVorigeEntlassgrund == null)
-	    						throw OperationError.CONFLICT.exception();
+	    						throw new ApiOperationException(Status.CONFLICT);
 	    					schueler.LSEntlassgrund = tmpVorigeEntlassgrund.Bezeichnung;
 	    				}
 	    			}
@@ -164,7 +164,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	    				} else {
 	    					final DTOEntlassarten tmpEntlassungGrund = entlassgruende.get(entlassungGrundID);
 	    					if (tmpEntlassungGrund == null)
-	    						throw OperationError.CONFLICT.exception();
+	    						throw new ApiOperationException(Status.CONFLICT);
 	    					schueler.Entlassgrund = tmpEntlassungGrund.Bezeichnung;
 	    				}
 	    			}
@@ -211,7 +211,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 	    				// case "jahrgangVon"         -> dtoBisherigeSchule.LSBeginnJahrgang = (...);
 	    				// case "jahrgangBis"         -> dtoBisherigeSchule.LSJahrgang = (...);
 	    			}
-	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    		}
 	    	}
 	    	conn.transactionPersist(schueler);

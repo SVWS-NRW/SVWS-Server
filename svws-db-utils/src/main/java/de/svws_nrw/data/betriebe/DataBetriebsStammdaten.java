@@ -15,8 +15,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -83,12 +82,12 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, id);
 		if (betrieb == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final BetriebStammdaten daten = dtoMapper.apply(betrieb);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -99,8 +98,10 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 * @param is             das JSON-Objekt
 	 *
 	 * @return  die HTTP-Antwort mit der neuen Betriebsart
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final InputStream is) {
+	public Response create(final InputStream is) throws ApiOperationException {
 		DTOKatalogAllgemeineAdresse betrieb = null;
 		// Bestimme die ID des neuen Betriebs
 		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_AllgAdresse");
@@ -113,7 +114,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, id);
 		return persistDTO(is, betrieb, id);
 	}
@@ -124,22 +125,24 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 * @param bids die IDs der Betrieber
 	 *
 	 * @return bei Erfolg eine HTTP-Response 200
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response remove(final List<Long> bids) {
+	public Response remove(final List<Long> bids) throws ApiOperationException {
 		final String strErrorBetriebIDFehlt = "Der zu löschende Datensatz in DTOKatalogAllgemeineAdresse mit der ID %d existiert nicht.";
 		try {
 			conn.transactionBegin();
 			for (final Long id : bids) {
 				final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, id);
 				if (betrieb == null)
-					throw OperationError.NOT_FOUND.exception(strErrorBetriebIDFehlt.formatted(id));
+					throw new ApiOperationException(Status.NOT_FOUND, strErrorBetriebIDFehlt.formatted(id));
 				conn.transactionRemove(betrieb);
 			}
 			conn.transactionCommit();
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webApplicationException)
-				return webApplicationException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		} finally {
 			conn.transactionRollback();
 		}
@@ -153,15 +156,17 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 * @param schueler_id   die ID des Schülers
 	 *
 	 * @return die HTTP-Antwort mit den Stammdaten aller Betriebe, die dem Schüler zugeordnet sind.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getSchuelerBetriebe(final Long schueler_id) {
+	public Response getSchuelerBetriebe(final Long schueler_id) throws ApiOperationException {
 		if (schueler_id == null)
-			return OperationError.NOT_FOUND.getResponse("Die Id des Schülers darf nicht leer sein.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Id des Schülers darf nicht leer sein.");
 
 		final List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryList("SELECT dtoa FROM DTOKatalogAllgemeineAdresse dtoa, DTOSchuelerAllgemeineAdresse dtos WHERE dtoa.ID=dtos.Adresse_ID and dtos.Schueler_ID = ?1 ", DTOKatalogAllgemeineAdresse.class, schueler_id);
 
 		if (betriebe == null || betriebe.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Schüler mit der ID" + schueler_id + " hat keine Betriebe");
+			throw new ApiOperationException(Status.NOT_FOUND, "Schüler mit der ID" + schueler_id + " hat keine Betriebe");
 		final List<BetriebStammdaten> daten = betriebe.stream().map(dtoMapper).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -174,13 +179,14 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 * @param id            die ID des DTO-Objekts bei einem Patch, null bei create
 	 *
 	 * @return die HTTP-Antwort mit dem neuen bzw. angepassten Betrieb.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-
-	public Response persistDTO(final InputStream is, final DTOKatalogAllgemeineAdresse betrieb, final Long id) {
+	public Response persistDTO(final InputStream is, final DTOKatalogAllgemeineAdresse betrieb, final Long id) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			if (betrieb == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -189,7 +195,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 						if (id != null) {
 							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
+								throw new ApiOperationException(Status.BAD_REQUEST);
 						}
 					}
 					case "adressArt" -> {
@@ -199,7 +205,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 						} else {
 							final DTOKatalogAdressart adressart = conn.queryByKey(DTOKatalogAdressart.class, adressartID);
 							if (adressart == null)
-								throw OperationError.NOT_FOUND.exception();
+								throw new ApiOperationException(Status.NOT_FOUND);
 							betrieb.adressArt = adressartID;
 						}
 					}
@@ -230,7 +236,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 					case "ErwFuehrungszeugnis" -> betrieb.ErwFuehrungszeugnis = JSONMapper.convertToBoolean(value, true);
 					case "ExtID" -> betrieb.ExtID = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_ExtID.datenlaenge());
 
-					default -> throw OperationError.BAD_REQUEST.exception();
+					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}
 			conn.transactionPersist(betrieb);
@@ -250,13 +256,13 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 * @param ortID    die zu setzende Ort-ID
 	 * @param ortsteilID   die zu setzende Ortsteil-ID
 	 *
-	 * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
+	 * @throws ApiOperationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
 	 */
-	private void setOrt(final DTOKatalogAllgemeineAdresse betrieb, final Long ortID, final Long ortsteilID) throws WebApplicationException {
+	private void setOrt(final DTOKatalogAllgemeineAdresse betrieb, final Long ortID, final Long ortsteilID) throws ApiOperationException {
 		if ((ortID != null) && (ortID < 0))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		if ((ortsteilID != null) && (ortsteilID < 0))
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		betrieb.ort_id = ortID;
 		// Prüfe, ob die Ortsteil ID in Bezug auf die ortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;

@@ -14,7 +14,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Definition der Schild-Reporting-Datenquelle "Schuelerlernabschnitte"
@@ -31,14 +32,14 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
     }
 
 	@Override
-    List<SchildReportingSchuelerLernabschnitt> getDaten(final DBEntityManager conn, final List<Long> params) {
+    List<SchildReportingSchuelerLernabschnitt> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
         // Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
         for (final Long schuelerID : params)
             if (schueler.get(schuelerID) == null)
-                throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
+                throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
 
 		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
 		final ArrayList<SchildReportingSchuelerLernabschnitt> result = new ArrayList<>();
@@ -66,13 +67,13 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 			final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
 
             if (dtoSJA == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt",  dto.Schuljahresabschnitts_ID, dto.ID));
+                throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt",  dto.Schuljahresabschnitts_ID, dto.ID));
             final DTOKlassen dtoKlasse = mapKlassen.get(dto.Klassen_ID);
             if (dtoKlasse == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID, dto.ID));
+                throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID, dto.ID));
             final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(dto.Jahrgang_ID);
             if (dtoJahrgang == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID, dto.ID));
+                throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID, dto.ID));
             final SchildReportingSchuelerLernabschnitt data = new SchildReportingSchuelerLernabschnitt();
             data.id = dto.ID;
             data.schuelerID = dto.Schueler_ID;

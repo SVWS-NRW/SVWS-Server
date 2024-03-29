@@ -5,7 +5,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.enm.DataENMDaten;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -135,9 +134,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response synchronizeENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
-			return DataENMDaten.synchronize(conn);
-		}
+		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::synchronize, request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 	/**
@@ -161,9 +160,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response uploadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
-			return DataENMDaten.upload(conn);
-		}
+		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::upload, request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 	/**
@@ -186,9 +185,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server")
 	public Response downloadENMDaten(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
-			return DataENMDaten.download(conn);
-		}
+		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::download, request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 	/**
@@ -210,9 +209,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "502", description = "Fehler bei der Verbindung zum WeNoM-Server, u.U. auch fehlende OAuth-Daten.")
 	public Response truncateENMServer(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
-			return DataENMDaten.truncate(conn);
-		}
+		return DBBenutzerUtils.runWithoutTransaction(DataENMDaten::truncate, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
 	}
 
 }

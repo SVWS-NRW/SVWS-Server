@@ -17,8 +17,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -106,7 +105,7 @@ public final class DataKurs42 {
     	logger.addConsumer(new LogConsumerConsole());
 
     	boolean success = true;
-    	int statusCode = Status.OK.getStatusCode();
+    	Status statusCode = Status.OK;
     	try {
 	    	// Erstelle temporär eine Zip-Datei aus dem übergebenen Byte-Array
 	    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
@@ -119,7 +118,7 @@ public final class DataKurs42 {
 			final Path path = Paths.get(tmpDirectory).resolve(tmpFilename);
 			if (!unzipMultipartData(path, multipart.data)) {
 				logger.logLn(2, "Fehler beim Erstellen der temporären Zip-Datei unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-				throw OperationError.CONFLICT.exception("Fehler beim Erstellen der temporären Zip-Datei unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
+				throw new ApiOperationException(Status.CONFLICT, "Fehler beim Erstellen der temporären Zip-Datei unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
 			}
 
 	    	logger.logLn("Importiere die Blockung mithilfe der extrahierten Daten:");
@@ -139,11 +138,11 @@ public final class DataKurs42 {
 			}
     	} catch (final Exception e) {
 			success = false;
-    		if (e instanceof final WebApplicationException wae) {
-    			statusCode = wae.getResponse().getStatus();
+    		if (e instanceof final ApiOperationException aoe) {
+    			statusCode = aoe.getStatus();
     		} else {
     			logger.logLn("  [FEHLER] Unerwarteter Fehler: " + e.getLocalizedMessage());
-    			statusCode = Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    			statusCode = Status.INTERNAL_SERVER_ERROR;
     		}
     	}
 		final SimpleOperationResponse daten = new SimpleOperationResponse();

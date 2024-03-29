@@ -2,8 +2,10 @@ package de.svws_nrw.module.reporting.proxytypes.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
@@ -67,7 +69,14 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 			super.setBlock2Pruefer(
 				new ProxyReportingLehrer(
 					this.reportingRepository,
-					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer))));
+					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
+						try {
+							return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(abiturFachbelegung.block2Pruefer);
+						} catch (final ApiOperationException e) {
+							e.printStackTrace();
+							return new LehrerStammdaten();
+						}
+					})));
 		}
 
 	 	super.setFach(this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID));

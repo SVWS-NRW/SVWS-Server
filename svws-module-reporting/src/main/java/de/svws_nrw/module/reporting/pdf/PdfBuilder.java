@@ -3,9 +3,11 @@ package de.svws_nrw.module.reporting.pdf;
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.util.XRLog;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
@@ -85,22 +87,24 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt eine Response mit der PDF-Datei als Content
-	 * @return Response mit der PDF-Datei als Content oder im Fehlerfall eine Response als WebApplicationException
+	 *
+	 * @return Response mit der PDF-Datei als Content
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getPdfResponse() {
-
 		try {
 			final byte[] data = getPdfByteArray();
 			if (data == null)
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler bei der Generierung der PDF-Datei.");
 
 			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(dateiname, StandardCharsets.UTF_8);
 
 			return Response.ok(data, "application/pdf")
 					.header("Content-Disposition", "attachment; " + encodedFilename)
 					.build();
-		} catch (final WebApplicationException ex) {
-			return ex.getResponse();
+		} catch (final ApiOperationException aoe) {
+			return aoe.getResponse();
 		}
 	}
 

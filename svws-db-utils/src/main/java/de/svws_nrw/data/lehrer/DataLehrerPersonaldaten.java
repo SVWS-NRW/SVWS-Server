@@ -13,7 +13,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -64,12 +64,12 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
     	final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
     	if (lehrer == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 		final LehrerPersonaldaten daten = dtoMapper.apply(lehrer);
 		daten.abschnittsdaten.addAll(DataLehrerPersonalabschnittsdaten.getByLehrerId(conn, id));
 		daten.lehraemter.addAll(DataLehrerLehramt.getByLehrerId(conn, id));
@@ -82,7 +82,7 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 		Map.entry("id", (conn, lehrer, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != lehrer.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("identNrTeil1", (conn, lehrer, value, map) -> {
 			lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
@@ -110,7 +110,7 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 			} else {
 				final LehrerZugangsgrund zg = LehrerZugangsgrund.getByKuerzel(strData);
 				if (zg == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				lehrer.GrundZugang = zg.daten.kuerzel;
 			}
 		}),
@@ -125,14 +125,14 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 			} else {
 				final LehrerAbgangsgrund ag = LehrerAbgangsgrund.getByKuerzel(strData);
 				if (ag == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 				lehrer.GrundAbgang = ag.daten.kuerzel;
 			}
 		})
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOLehrer.class, patchMappings);
 	}
 

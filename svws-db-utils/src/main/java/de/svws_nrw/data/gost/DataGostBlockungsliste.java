@@ -12,7 +12,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -60,11 +60,11 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
 		if (blockungen == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id.multiple", blockungsIDs, DTOGostBlockungZwischenergebnis.class)
 				.stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
@@ -73,21 +73,21 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
 	@Override
-	public Response get(final Integer id) {
+	public Response get(final Integer id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(id);
 		if (halbjahr == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		if (blockungen.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();

@@ -9,19 +9,22 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * TODO
+ */
 public class ReportingValidierung {
 
 	/**
-	 * Validiert von der API übergebene Daten für Schüler. Bei fehlenden oder unstimmigen Daten wird eine WebApplicationException geworfen.
+	 * Validiert von der API übergebene Daten für Schüler. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
 	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
 	 *
 	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
@@ -29,23 +32,25 @@ public class ReportingValidierung {
 	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 * @param cacheDaten 			Legt fest, ob die zur Validierung geladenen Daten im Repository gespeichert werden sollen.
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public void validiereSchuelerDaten(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostDaten, final boolean mitAbiturDaten, final boolean cacheDaten) throws WebApplicationException {
+	public void validiereSchuelerDaten(final ReportingRepository reportingRepository, final List<Long> idsSchueler, final boolean mitGostDaten, final boolean mitAbiturDaten, final boolean cacheDaten) throws ApiOperationException {
 
 		// Grunddaten prüfen.
 		final DBEntityManager conn = reportingRepository.conn();
 
 		if (conn == null)
-			throw OperationError.NOT_FOUND.exception("Keine Datenbankverbindung übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenbankverbindung übergeben.");
 
 		if (idsSchueler == null || idsSchueler.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Schueler-IDs übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schueler-IDs übergeben.");
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, SchuelerStammdaten> mapSchueler = DataSchuelerStammdaten.getListStammdaten(conn, idsSchueler).stream().collect(Collectors.toMap(s -> s.id, s -> s));
 		for (final Long sID : idsSchueler)
 			if (mapSchueler.get(sID) == null)
-				throw OperationError.NOT_FOUND.exception("Es wurden ungültige Schüler-IDs übergeben.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden ungültige Schüler-IDs übergeben.");
 
 
 		// Nur, wenn Daten zur gymnasialen Oberstufe mit angefordert werden.
@@ -53,15 +58,15 @@ public class ReportingValidierung {
 			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 			try {
 				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (WebApplicationException ex) {
-				throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+			} catch (final ApiOperationException aoe) {
+				throw new ApiOperationException(Status.NOT_FOUND, aoe, "Keine Schule oder Schule ohne GOSt gefunden.");
 			}
 
 			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsSchueler));
 
 			for (final Long sID : idsSchueler)
 				if (mapGostBeratungsdaten.get(sID) == null)
-					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+					throw new ApiOperationException(Status.NOT_FOUND, "Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 
 			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
 		}
@@ -71,8 +76,8 @@ public class ReportingValidierung {
 			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 			try {
 				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (WebApplicationException ex) {
-				throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+			} catch (final ApiOperationException aoe) {
+				throw new ApiOperationException(Status.NOT_FOUND, aoe, "Keine Schule oder Schule ohne GOSt gefunden.");
 			}
 
 			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
@@ -80,8 +85,8 @@ public class ReportingValidierung {
 			for (final Long sID : idsSchueler) {
 				try {
 					mapGostSchuelerAbiturdaten.put(sID, DBUtilsGostAbitur.getAbiturdaten(conn, sID));
-				} catch (WebApplicationException ex) {
-					throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				} catch (final ApiOperationException aoe) {
+					throw new ApiOperationException(Status.NOT_FOUND, aoe, "Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
 				}
 			}
 

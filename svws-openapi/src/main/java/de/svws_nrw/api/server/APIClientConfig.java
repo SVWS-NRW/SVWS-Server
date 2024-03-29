@@ -11,6 +11,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationBenutzer;
 import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationGlobal;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +25,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -161,7 +161,7 @@ public class APIClientConfig {
 	    		config.Wert = strData;
 	    	}
 			if (!conn.transactionPersist(config))
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+				throw new ApiOperationException(Status.BAD_REQUEST);
 			return Response.status(Status.NO_CONTENT).build();
     	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
@@ -204,7 +204,7 @@ public class APIClientConfig {
 	    		config.Wert = strData;
 	    	}
 			if (!conn.transactionPersist(config))
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+				throw new ApiOperationException(Status.BAD_REQUEST);
 			return Response.status(Status.NO_CONTENT).build();
     	}, request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }

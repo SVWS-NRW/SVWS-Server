@@ -15,7 +15,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -59,17 +59,19 @@ public final class DataFaecherliste extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Fächer
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<FachDaten> getFaecherListe(final DBEntityManager conn) {
+	public static List<FachDaten> getFaecherListe(final DBEntityManager conn) throws ApiOperationException {
     	final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
     	if (faecher == null)
-    		throw OperationError.NOT_FOUND.exception("Es wurden keine Fächer in der Datenbank gefunden.");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer in der Datenbank gefunden.");
     	return faecher.stream().map(dtoMapperFach::apply).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
 	}
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
     	final List<FachDaten> daten = getFaecherListe(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -99,21 +101,23 @@ public final class DataFaecherliste extends DataManager<Long> {
 	 * @param conn                   die Datenbankverbindung
 	 *
 	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response setDefaultSortierungSekII(final DBEntityManager conn) {
+	public static Response setDefaultSortierungSekII(final DBEntityManager conn) throws ApiOperationException {
 		// Bestimme zunächst die Schulform
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Schulform schulform = schule.Schulform;
 		if ((schulform == null) || (schulform.daten == null))
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Bestimme die Fächer
 		final @NotNull List<@NotNull DTOFach> faecher = conn.queryAll(DTOFach.class);
     	if ((faecher == null) || (faecher.isEmpty()))
-    		throw OperationError.NOT_FOUND.exception("Es wurden keine Fächer gefunden.");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer gefunden.");
     	if (!schulform.daten.hatGymOb)
-    		throw OperationError.BAD_REQUEST.exception("Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
+    		throw new ApiOperationException(Status.BAD_REQUEST, "Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
     	// Lege Datenstrukturen für die Zuordnung zu den einzelnen Statistik-Fächern an und befülle diese
     	final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
     	final @NotNull ArrayMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(ZulaessigesFach.values());

@@ -29,7 +29,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -73,12 +73,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Regel der Blockung
 		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", regel.ID, DTOGostBlockungRegelParameter.class);
 		final GostBlockungRegel daten = dtoMapper.apply(regel, params);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -86,7 +86,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() <= 0)
 	    	return Response.status(Status.OK).build();
@@ -94,12 +94,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		// Bestimme die Regel der Blockung
 		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regel kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
     	for (final Entry<String, Object> entry : map.entrySet()) {
     		final String key = entry.getKey();
     		final Object value = entry.getValue();
@@ -107,23 +107,23 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 				case "id" -> {
 					final Long patch_id = JSONMapper.convertToLong(value, true);
 					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
 				}
     			case "typ" -> {
 					final Integer patch_typ = JSONMapper.convertToInteger(value, true);
 					if ((patch_typ == null) || (patch_typ != regel.Typ.typ))
-						throw OperationError.BAD_REQUEST.exception();
+						throw new ApiOperationException(Status.BAD_REQUEST);
     			}
     			case "parameter" -> {
     				if (!(value instanceof List))
-    					throw OperationError.BAD_REQUEST.exception();
+    					throw new ApiOperationException(Status.BAD_REQUEST);
     				@SuppressWarnings("unchecked")
 					final
 					List<? extends Number> params = (List<? extends Number>) value;
     				// Überprüfe zunächst die Anzahl der Parameter
     				final int pcount = regel.Typ.getParamCount();
     				if (pcount != params.size())
-    					throw OperationError.BAD_REQUEST.exception();
+    					throw new ApiOperationException(Status.BAD_REQUEST);
     				// Aktualisiere die Parameter
     				for (int i = 0; i < pcount; i++) {
     					// Bestimme Typ und Wert
@@ -134,39 +134,39 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 							case KURSART -> {
 								final GostKursart kursart = GostKursart.fromIDorNull((int) pvalue);
 								if (kursart == null)
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case KURS_ID -> {
 								final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, pvalue);
 								if ((kurs == null) || (kurs.Blockung_ID != regel.Blockung_ID))
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case SCHIENEN_NR -> {
 								final List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
 								if ((dtos == null) || (dtos.isEmpty()))
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 								final Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
 								if (!schienen.contains((int) pvalue))
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case SCHUELER_ID -> {
 								final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, pvalue);
 								if (schueler == null)
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case FACH_ID -> {
 								final DTOFach fach = conn.queryByKey(DTOFach.class, pvalue);
 								if ((fach == null) || ((fach.IstOberstufenFach != null) && (!fach.IstOberstufenFach)))
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case BOOLEAN -> {
 								if ((pvalue < 0) || (pvalue > 1))
-									throw OperationError.BAD_REQUEST.exception();
+									throw new ApiOperationException(Status.BAD_REQUEST);
 							}
 							case GANZZAHL -> {
 								break; // immer gültig
 							}
-							default -> throw OperationError.BAD_REQUEST.exception();
+							default -> throw new ApiOperationException(Status.BAD_REQUEST);
     					}
     					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
     					final DTOGostBlockungRegelParameter param = conn.queryByKey(DTOGostBlockungRegelParameter.class, id, i);
@@ -176,7 +176,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 						}
     				}
     			}
-    			default -> throw OperationError.BAD_REQUEST.exception();
+    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
     		}
     	}
     	return Response.status(Status.OK).build();
@@ -191,22 +191,24 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param regelParameter   die Parameter der Regel oder null, falls Default-Parameter verwendet werden sollen
 	 *
 	 * @return Eine Response mit der neuen Regel
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addRegel(final long idBlockung, final int idRegelTyp, final List<Long> regelParameter) {
+	public Response addRegel(final long idBlockung, final int idRegelTyp, final List<Long> regelParameter) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regel kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 		// Prüfe ob die ID des Typs korrekt ist
 		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
 		if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
-			throw OperationError.CONFLICT.exception();
+			throw new ApiOperationException(Status.CONFLICT);
 		// Prüfe, ob die Anzahl der Parameter korrekt ist
     	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
 		// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
 		final List<DTOGostBlockungRegel> regeln = conn.queryList("SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1 AND e.Typ = ?2", DTOGostBlockungRegel.class, idBlockung, regelTyp);
 		final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
@@ -214,13 +216,13 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			switch (regelTyp) {
 				case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
 					if (regelParameter == null)
-						throw OperationError.CONFLICT.exception();
+						throw new ApiOperationException(Status.CONFLICT);
 					final List<DTOGostBlockungRegelParameter> duplicates = conn.queryList("SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN ?1 AND e.Nummer = 0 AND e.Parameter = ?2", DTOGostBlockungRegelParameter.class, regelIDs, regelParameter.get(0));
 					if (!duplicates.isEmpty())
-						throw OperationError.CONFLICT.exception("Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regelParameter.get(0)));
+						throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regelParameter.get(0)));
 					final long anzahl = regelParameter.get(1);
 					if ((anzahl < 1) || (anzahl > 99))
-						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
 				}
 				default -> { /* TODO weitere Regeltypen prüfen */ }
 			}
@@ -247,23 +249,23 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					case KURS_ID -> {
 				    	final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
 						if ((kurse == null) || (kurse.isEmpty()))
-							throw OperationError.NOT_FOUND.exception();
+							throw new ApiOperationException(Status.NOT_FOUND);
 						yield kurse.get(0).ID;
 					}
 					case SCHIENEN_NR -> {
 						final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min(Integer::compare);
 						if (minSchiene.isEmpty())
-							throw OperationError.NOT_FOUND.exception();
+							throw new ApiOperationException(Status.NOT_FOUND);
 						yield minSchiene.get();
 					}
 					case SCHUELER_ID -> {
 						if (schueler.isEmpty())
-							throw OperationError.NOT_FOUND.exception();
+							throw new ApiOperationException(Status.NOT_FOUND);
 						yield schueler.get(0).ID;
 					}
 					case FACH_ID -> {
 						if (faecher.faecher().isEmpty())
-							throw OperationError.NOT_FOUND.exception();
+							throw new ApiOperationException(Status.NOT_FOUND);
 						yield faecher.faecher().get(0).id;
 					}
 					case BOOLEAN -> 0L;
@@ -281,34 +283,34 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private static void validateRegelParameter(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostKursblockungRegelParameterTyp paramType, final long paramValue) {
+	private static void validateRegelParameter(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostKursblockungRegelParameterTyp paramType, final long paramValue) throws ApiOperationException {
 		switch (paramType) {
 			case KURSART -> {
 				if (GostKursart.fromIDorNull((int) paramValue) == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case KURS_ID -> {
 				final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, paramValue);
 				if (kurs == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case SCHIENEN_NR -> {
 				final List<DTOGostBlockungSchiene> schienen = conn.queryList("SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = ?1 AND e.Nummer = ?2",
 						DTOGostBlockungSchiene.class, idBlockung, paramValue);
 				if (schienen.isEmpty())
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case SCHUELER_ID -> {
 				if (!setSchuelerIDs.contains(paramValue))
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case FACH_ID -> {
 				if (faecher.get(paramValue) == null)
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case BOOLEAN -> {
 				if ((paramValue < 0) || (paramValue > 1))
-					throw OperationError.NOT_FOUND.exception();
+					throw new ApiOperationException(Status.NOT_FOUND);
 			}
 			case GANZZAHL -> {
 				break; // immer gültig
@@ -317,14 +319,14 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private static void validateRegel(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) {
+	private static void validateRegel(final @NotNull DBEntityManager conn, final int abijahrgang, final long idBlockung, final Set<Long> setSchuelerIDs, final GostFaecherManager faecher, final GostBlockungRegel regel, final Map<Integer, List<DTOGostBlockungRegel>> mapVorhanden) throws ApiOperationException {
 		// Prüfe ob der Regel-Typ korrekt ist
 		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
-			throw OperationError.CONFLICT.exception("Der Typ der Regel ist unbekannt.");
+			throw new ApiOperationException(Status.CONFLICT, "Der Typ der Regel ist unbekannt.");
 		// Prüfe, ob die Anzahl der Parameter korrekt ist
     	if (regelTyp.getParamCount() != regel.parameter.size())
-    		throw OperationError.CONFLICT.exception();
+    		throw new ApiOperationException(Status.CONFLICT);
     	// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
         final List<DTOGostBlockungRegel> regelnVorhanden = mapVorhanden.get(regelTyp.typ);
 		if ((regelnVorhanden != null) && (!regelnVorhanden.isEmpty())) {
@@ -333,10 +335,10 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					final List<Long> regelIDs = regelnVorhanden.stream().map(r -> r.ID).toList();
 					final List<DTOGostBlockungRegelParameter> duplicates = conn.queryList("SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN ?1 AND e.Nummer = 0 AND e.Parameter = ?2", DTOGostBlockungRegelParameter.class, regelIDs, regel.parameter.get(0));
 					if (!duplicates.isEmpty())
-						throw OperationError.CONFLICT.exception("Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regel.parameter.get(0)));
+						throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regel.parameter.get(0)));
 					final long anzahl = regel.parameter.get(1);
 					if ((anzahl < 1) || (anzahl > 99))
-						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
+						throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
 				}
 				default -> { /* TODO weitere Regeltypen prüfen */ }
 			}
@@ -350,7 +352,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private static List<GostBlockungRegel> addRegelnInternal(final @NotNull DBEntityManager conn, final DTOGostBlockung blockung, final List<GostBlockungRegel> regeln) {
+	private static List<GostBlockungRegel> addRegelnInternal(final @NotNull DBEntityManager conn, final DTOGostBlockung blockung, final List<GostBlockungRegel> regeln) throws ApiOperationException {
 		if (regeln.isEmpty())
 			return new ArrayList<>();
 		try {
@@ -384,7 +386,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			return regeln;
 		} catch (final Exception exception) {
 			if (exception instanceof final IllegalArgumentException e)
-				throw OperationError.NOT_FOUND.exception(e);
+				throw new ApiOperationException(Status.NOT_FOUND, e);
 			throw exception;
 		}
 	}
@@ -397,16 +399,18 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
      * @param idBlockung  die ID der Blockung
 	 * @param regeln      die hinzuzufügenden Regeln
 	 *
-	 * @return Die HTTP-response
+	 * @return Die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addRegeln(final long idBlockung, final List<GostBlockungRegel> regeln) {
+	public Response addRegeln(final long idBlockung, final List<GostBlockungRegel> regeln) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
         final List<GostBlockungRegel> daten = addRegelnInternal(conn, blockung, regeln);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -418,25 +422,27 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param id   die ID der Regel
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Regel
 		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regel kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 		// Bestimme die Regel-Parameter (diese werden beim Entfernen der Regel automatisch mit entfernt.
 		final GostBlockungRegel daten = new GostBlockungRegel();
 		daten.id = id;
     	final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", id, DTOGostBlockungRegelParameter.class);
     	if (params == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	params.sort((a, b) -> Integer.compare(a.Nummer, b.Nummer));
 		for (final DTOGostBlockungRegelParameter param : params)
 			daten.parameter.add(param.Parameter);
@@ -447,26 +453,26 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	}
 
 
-	private static void deleteMultipleInternal(final @NotNull DBEntityManager conn, final List<Long> regelIDs) {
+	private static void deleteMultipleInternal(final @NotNull DBEntityManager conn, final List<Long> regelIDs) throws ApiOperationException {
 		if (regelIDs.isEmpty())
 			return;
 		// Bestimme die Regeln
 		final List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.id.multiple", regelIDs, DTOGostBlockungRegel.class);
 		if (regeln.size() != regelIDs.size())
-    		throw OperationError.NOT_FOUND.exception("Mindestens eine Regel wurde für die angegebenen IDs nicht gefunden.");
+    		throw new ApiOperationException(Status.NOT_FOUND, "Mindestens eine Regel wurde für die angegebenen IDs nicht gefunden.");
 		// Prüfe, ob alle eingelesenen Regeln die gleiche Blockungs-ID haben
 		final long idBlockung = regeln.get(0).Blockung_ID;
 		for (final DTOGostBlockungRegel regel : regeln)
 			if (regel.Blockung_ID != idBlockung)
-				throw OperationError.BAD_REQUEST.exception("Alle zu löschenden Regeln müssen zur gleichen Blockung gehören.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Alle zu löschenden Regeln müssen zur gleichen Blockung gehören.");
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regeln können nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 		// Entferne die Regeln
         if (!conn.transactionRemoveAll(regeln))
-        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler bei der Datenbank-Transaktion.");
+        	throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler bei der Datenbank-Transaktion.");
 	}
 
 	/**
@@ -475,10 +481,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param regelIDs   die IDs der Regeln
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> regelIDs) {
+	public Response deleteMultiple(final List<Long> regelIDs) throws ApiOperationException {
 		if (regelIDs.isEmpty())
-			throw OperationError.BAD_REQUEST.exception("Es wurden keine IDs für Regeln angegeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurden keine IDs für Regeln angegeben.");
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		deleteMultipleInternal(conn, regelIDs);
@@ -495,12 +503,14 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param update     die zu entfernenden Regeln und die hinzuzufügenden Regeln
 	 *
 	 * @return die hinzugefügten Regeln mit den neuen IDs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static @NotNull List<@NotNull GostBlockungRegel> updateBlockungsregeln(final @NotNull DBEntityManager conn, final @NotNull DTOGostBlockung blockung, final @NotNull GostBlockungRegelUpdate update) {
+	public static @NotNull List<@NotNull GostBlockungRegel> updateBlockungsregeln(final @NotNull DBEntityManager conn, final @NotNull DTOGostBlockung blockung, final @NotNull GostBlockungRegelUpdate update) throws ApiOperationException {
         // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
         final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
         if (vorlage == null)
-        	throw OperationError.BAD_REQUEST.exception("Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+        	throw new ApiOperationException(Status.BAD_REQUEST, "Die Regeln können nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 		// Entferne die Regeln
 		if (!update.listEntfernen.isEmpty()) {
 			final @NotNull List<@NotNull Long> listEntfernenIDs = update.listEntfernen.stream().map(r -> r.id).toList();
@@ -520,15 +530,17 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param update       die zu entfernenden Regeln und die hinzuzufügenden Regeln
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public Response updateRegeln(final Long idBlockung, final @NotNull GostBlockungRegelUpdate update) {
+    public Response updateRegeln(final Long idBlockung, final @NotNull GostBlockungRegelUpdate update) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty())
 			return Response.status(Status.NO_CONTENT).build();
 		// Bestimme die zugehörige Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception("Die Blockung mit der ID %d wurde nicht gefunden.".formatted(idBlockung));
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d wurde nicht gefunden.".formatted(idBlockung));
 		// Füge die Kurs-Schüler-Zuordnungen hinzu
         final List<GostBlockungRegel> daten = updateBlockungsregeln(conn, blockung, update);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -583,10 +595,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @param conn         die Datenbankverbindung
 	 * @param kursDelete   der Kurs der entfernt wurde und dessen Regeln angepasst werden müssen.
 	 * @param kursTo       der Kurs, aud den Regeln übertragen wurden
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void updateKursRegelnOnDelete(final DBEntityManager conn, final @NotNull DTOGostBlockungKurs kursDelete, final DTOGostBlockungKurs kursTo) {
+	public static void updateKursRegelnOnDelete(final DBEntityManager conn, final @NotNull DTOGostBlockungKurs kursDelete, final DTOGostBlockungKurs kursTo) throws ApiOperationException {
 		if ((kursTo != null) && (kursTo.Blockung_ID != kursDelete.Blockung_ID))
-			throw OperationError.BAD_REQUEST.exception("Die beiden Kurse, die zusammengeführt werden sollen, gehören nicht zur gleichen Blockung.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die beiden Kurse, die zusammengeführt werden sollen, gehören nicht zur gleichen Blockung.");
 		final List<DTOGostBlockungRegel> regeln = conn.queryList("SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1 AND e.Typ IN ?2",
 				DTOGostBlockungRegel.class, kursDelete.Blockung_ID, GostKursblockungRegelTyp.getKursRegelTypen());
 		if (regeln.isEmpty())
@@ -609,14 +623,14 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 				case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE, KURS_MAXIMALE_SCHUELERANZAHL -> {
 					final DTOGostBlockungRegelParameter param = params.get(0);
 					if (param.Nummer != 0)
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
 					if (kursDelete.ID == param.Parameter)
 						conn.transactionRemove(regel);
 				}
 				case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS -> {
 					final DTOGostBlockungRegelParameter param = params.get(1);
 					if (param.Nummer != 1)
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
 					if (kursDelete.ID == param.Parameter)
 						conn.transactionRemove(regel);
 				}
@@ -624,14 +638,14 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					final DTOGostBlockungRegelParameter param1 = params.get(0);
 					final DTOGostBlockungRegelParameter param2 = params.get(1);
 					if ((param1.Nummer != 0) || (param2.Nummer != 1))
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
 					if ((kursDelete.ID == param1.Parameter) || (kursDelete.ID == param2.Parameter))
 						conn.transactionRemove(regel);
 				}
 				case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
 					final DTOGostBlockungRegelParameter param = params.get(0);
 					if (param.Nummer != 0)
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
 					if (kursTo == null) {
 						conn.transactionRemove(regel);
 					} else {
@@ -641,7 +655,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 							mapRegelDummySuS.put(kursTo.ID, regel);
 					}
 				}
-				default -> throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Regel-Typ wird noch nicht beim Entfernen der Regeln zu einem Kurs unterstützt, obwohl dieser sich (auch) auf Kurse bezieht.");
+				default -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Regel-Typ wird noch nicht beim Entfernen der Regeln zu einem Kurs unterstützt, obwohl dieser sich (auch) auf Kurse bezieht.");
 			}
 		}
 		conn.transactionFlush();
@@ -656,7 +670,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					final DTOGostBlockungRegelParameter paramVorhanden = paramsVorhanden.get(1);
 					final DTOGostBlockungRegelParameter paramEntfernt = paramsEntfernt.get(1);
 					if ((paramVorhanden.Nummer != 1) && (paramEntfernt.Nummer != 1))
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelVorhanden.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelVorhanden.ID));
 					paramVorhanden.Parameter += paramEntfernt.Parameter;
 					conn.transactionPersist(paramVorhanden);
 				}
@@ -666,7 +680,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 				if (paramsEntfernt != null) {
 					final DTOGostBlockungRegelParameter paramEntfernt = paramsEntfernt.get(0);
 					if (paramEntfernt.Nummer != 0)
-						throw OperationError.INTERNAL_SERVER_ERROR.exception("Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelEntfernt.ID));
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regelEntfernt.ID));
 					paramEntfernt.Parameter = kursTo.ID;
 					conn.transactionPersist(paramEntfernt);
 					conn.transactionFlush();

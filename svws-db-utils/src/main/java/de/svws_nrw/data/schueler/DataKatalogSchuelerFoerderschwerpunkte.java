@@ -4,7 +4,7 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -43,33 +43,36 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<FoerderschwerpunktEintrag> daten = getAllFromDB();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
 	 * Ermittelt alle Förderschwerpunkte aus der Datenbank.
+	 *
 	 * @return Liste der Förderschwerpunkte.
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<FoerderschwerpunktEintrag> getAllFromDB() {
+	public List<FoerderschwerpunktEintrag> getAllFromDB() throws ApiOperationException {
 		final List<DTOFoerderschwerpunkt> katalog = conn.queryAll(DTOFoerderschwerpunkt.class);
 		if (katalog == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return katalog.stream().map(dtoMapper).toList();
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final DTOFoerderschwerpunkt fs = conn.queryByKey(DTOFoerderschwerpunkt.class, id);
 		if (fs == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final FoerderschwerpunktEintrag daten = dtoMapper.apply(fs);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

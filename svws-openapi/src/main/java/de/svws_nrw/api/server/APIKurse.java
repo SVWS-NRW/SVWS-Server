@@ -225,8 +225,9 @@ public class APIKurse {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kursart-Katalog-Einträge gefunden")
     public Response getKatalogKursarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-        return (new DataKatalogKursarten()).getAll();
+    	return DBBenutzerUtils.run(() -> (new DataKatalogKursarten()).getAll(), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KEINE);
     }
 
 }

@@ -42,8 +42,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKla
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -59,13 +58,13 @@ public final class DataUntis {
 	}
 
 	private static void _importGPU001(final Logger logger, final DBEntityManager conn, final long idSchuljahresabschnitt,
-			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp) {
+			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp) throws ApiOperationException {
 		// Prüfe die ID des Schuljahreabschnitts
 		logger.logLn("-> Prüfe, ob der Schuljahresabschnitt existiert... ");
 		final Schuljahresabschnitt schuljahresabschnitt = DataSchuljahresabschnitte.getByID(conn, idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
 			logger.logLn(2, "[Fehler] - Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
-			throw OperationError.NOT_FOUND.exception("Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
 		}
 		// Bestimme die Lehrer
 		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = DataLehrerliste.getLehrerListe(conn).stream().collect(Collectors.toMap(l -> l.kuerzel, l -> l));
@@ -84,11 +83,11 @@ public final class DataUntis {
 		final int schuljahr = DateUtils.getSchuljahrFromDateISO8601(beginn);
 		if (schuljahr > schuljahresabschnitt.schuljahr) {
 			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
-			throw OperationError.CONFLICT.exception("Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+			throw new ApiOperationException(Status.CONFLICT, "Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
 		}
 		if (schuljahr < schuljahresabschnitt.schuljahr) {
 			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
-			throw OperationError.CONFLICT.exception("Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+			throw new ApiOperationException(Status.CONFLICT, "Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
 		}
 		// Erstelle den neuen Stundenplan
 		final long idStundenplan = conn.transactionGetNextID(DTOStundenplan.class);
@@ -121,13 +120,13 @@ public final class DataUntis {
 			final DTOKlassen klasse = mapKlassenByKuerzel.get(u.klasseKuerzel);
 			if (klasse == null) {
 				logger.logLn(2, "[Fehler] - Die Klasse mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.klasseKuerzel));
-				throw OperationError.NOT_FOUND.exception("Die Klasse mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.klasseKuerzel));
+				throw new ApiOperationException(Status.NOT_FOUND, "Die Klasse mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.klasseKuerzel));
 			}
 			// Bestimme den Fachlehrer
 			final LehrerListeEintrag lehrer = mapLehrerByKuerzel.get(u.lehrerKuerzel);
 			if ((u.lehrerKuerzel != null) && (lehrer == null)) {
 				logger.logLn(2, "[Fehler] - Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
-				throw OperationError.NOT_FOUND.exception("Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
+				throw new ApiOperationException(Status.NOT_FOUND, "Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
 			}
 			// Prüfe, ob es sich um Kursunterricht handelt
 			final KursDaten kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
@@ -136,7 +135,7 @@ public final class DataUntis {
 				final FachDaten fach = mapFaecherByKuerzel.get(u.fachKuerzel);
 				if (fach == null) {
 					logger.logLn(2, "[Fehler] - Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
-					throw OperationError.NOT_FOUND.exception("Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
+					throw new ApiOperationException(Status.NOT_FOUND, "Das Fach mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.fachKuerzel));
 				}
 				// Erstelle den Klassen-Unterricht ...
 				final long uid = next_uid++;
@@ -173,7 +172,7 @@ public final class DataUntis {
 					for (final int schiene : kurs.schienen) {
 						final StundenplanSchiene s = mapSchienen.getOrNull(idJahrgang, schiene);
 						if (s == null)
-							throw OperationError.INTERNAL_SERVER_ERROR.exception("Interner Fehler beim Anlegen der Schienen für den Kursunterricht des Stundenplans.");
+							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Interner Fehler beim Anlegen der Schienen für den Kursunterricht des Stundenplans.");
 						conn.transactionPersist(new DTOStundenplanUnterrichtSchiene(next_sid++, uid, s.id));
 					}
 				}
@@ -214,14 +213,11 @@ public final class DataUntis {
 			daten.success = false;
 			daten.log = log.getStrings();
 			return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final WebApplicationException e) {
-			logger.logLn("  [FEHLER] beim Import");
+		} catch (final ApiOperationException e) {
+			logger.logLn(2, "[FEHLER] beim Import");
 			daten.success = false;
 			daten.log = log.getStrings();
-			try (Response r = e.getResponse()) {
-				final int status = r.getStatus();
-				return Response.status(status).type(MediaType.APPLICATION_JSON).entity(daten).build();
-			}
+			return Response.status(e.getStatus()).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
 		daten.success = true;
 		daten.log = log.getStrings();

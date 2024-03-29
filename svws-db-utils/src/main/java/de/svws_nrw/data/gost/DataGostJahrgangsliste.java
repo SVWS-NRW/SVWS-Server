@@ -35,9 +35,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -65,19 +64,21 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Abiturjahrgänge
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn) {
+	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-			throw OperationError.NOT_FOUND.exception("Aktueller Schuljahresabschnitt konnte nicht bestimmt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Aktueller Schuljahresabschnitt konnte nicht bestimmt werden.");
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
-			throw OperationError.NOT_FOUND.exception("Es konnten keine Jahrgänge gefunden werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Jahrgänge gefunden werden.");
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final ArrayList<GostJahrgang> daten = new ArrayList<>();
@@ -118,13 +119,13 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<GostJahrgang> daten = getGostJahrgangsliste(conn);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 
@@ -146,26 +147,28 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 * @param jahrgang_id die ID des Jahrgangs
 	 *
 	 * @return die HTTP-Response, im Erfolgsfall mit dem Abiturjahrgang
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response create(final long jahrgang_id) {
+	public Response create(final long jahrgang_id) throws ApiOperationException {
 		// Prüfe die Schuldaten
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Ermittle die Jahrgangsdaten und bestimme das Abiturjahr
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
 		if (jahrgang == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, jahrgang.Gliederung, aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
 		if (abiturjahr == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Prüfe, ob der Abiturjahrgang bereits angelegt wurde
 		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 		if (jahrgangsdaten != null)
-			return OperationError.CONFLICT.getResponse();
+			throw new ApiOperationException(Status.CONFLICT);
 
 		// Lade die Vorlage für den neuen Abiturjahrgang
 		final DTOGostJahrgangsdaten jahrgangsdatenVorlage = DataGostJahrgangsdaten.getVorlage(conn);
@@ -180,7 +183,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		jahrgangsdaten.TextBeratungsbogen = jahrgangsdatenVorlage.TextBeratungsbogen;
 		jahrgangsdaten.TextMailversand = jahrgangsdatenVorlage.TextMailversand;
 		if (!conn.transactionPersist(jahrgangsdaten))
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		conn.transactionFlush();
 		// Kopiere die Fächer der Gymnasialen Oberstufe aus der allgemeinen Vorlage
 		final List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
@@ -193,7 +196,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 					fach.IstMoeglichQ22, fach.IstMoeglichAbiGK, fach.IstMoeglichAbiLK);
 			gostFach.WochenstundenQPhase = fach.WochenstundenQualifikationsphase;
 			if (!conn.transactionPersist(gostFach))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren des Faches der gymnasialen Oberstufe");
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren des Faches der gymnasialen Oberstufe");
 		}
 		conn.transactionFlush();
 		// Kopiere die Informationen zu nicht möglichen und geforderten
@@ -211,7 +214,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				k.Kursart1 = kombi.Kursart1;
 				k.Kursart2 = kombi.Kursart2;
 				if (!conn.transactionPersist(k))
-					return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 			}
 		}
 		conn.transactionFlush();
@@ -219,9 +222,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		try {
 			DataGostJahrgangLaufbahnplanung.transactionResetJahrgang(conn, jahrgangsdaten);
 		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			if (e instanceof final ApiOperationException aoe)
+				throw aoe;
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 		conn.transactionFlush();
 		// Bestimme die Fachwahlen aus ggf. schon bestehenden Lernabschnitten
@@ -315,11 +318,11 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						if (abifach[i - 1] != null)
 							abifach[i - 1].AbiturFach = i;
 					if (!conn.transactionPersist(new DTOGostSchueler(schueler_id, false)))
-						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 					conn.transactionFlush();
 					for (final Map.Entry<Long, DTOGostSchuelerFachbelegungen> entry : fachbelegungen.entrySet()) {
 						if (!conn.transactionPersist(entry.getValue()))
-							return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 					}
 					conn.transactionFlush();
 				}
@@ -367,19 +370,21 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 * @param abiturjahrgang   der zu entfernende Abiturjahrgang
 	 *
 	 * @return die HTTP-Response im Erfolgsfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final int abiturjahrgang) {
+	public Response delete(final int abiturjahrgang) throws ApiOperationException {
 		// Prüfe, ob der Abiturjahrgang existiert und bereits persistierte Leistungsdaten hat...
 		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahrgang);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			if (jahrgangsdaten.istBlockungFestgelegt[hj.id])
-				throw OperationError.BAD_REQUEST.exception("Ein Abiturjahrgang mit bereits vorhandenen Leistungsdaten kann nicht entfernt werden.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Ein Abiturjahrgang mit bereits vorhandenen Leistungsdaten kann nicht entfernt werden.");
 		if (jahrgangsdaten.istAbgeschlossen)
-			throw OperationError.BAD_REQUEST.exception("Ein abgeschlossener Abiturjahrgang kann nicht entfernt werden.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein abgeschlossener Abiturjahrgang kann nicht entfernt werden.");
 		// Entferne die Jahrgangsdaten des Abiturjahrgangs aus der Datenbank. Die zugehörigen Fachwahlen, etc. werden dann kaskadierend entfernt.
 		final DTOGostJahrgangsdaten dto = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahrgang);
 		if (dto == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		conn.transactionRemove(dto);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();

@@ -22,6 +22,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
@@ -64,7 +65,7 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final StundenplanKomplett stundenplan = new StundenplanKomplett();
 		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (dtoStundenplan == null)
@@ -102,7 +103,7 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 	}
 
 
-	private void getUnterricht(final StundenplanKomplett stundenplan, final long idLehrer, final List<StundenplanZeitraster> zeitraster) {
+	private void getUnterricht(final StundenplanKomplett stundenplan, final long idLehrer, final List<StundenplanZeitraster> zeitraster) throws ApiOperationException {
 		final @NotNull List<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		final List<DTOStundenplanUnterricht> unterrichte = conn.query(
 				"SELECT u FROM DTOStundenplanUnterricht u JOIN DTOStundenplanUnterrichtLehrer ul ON ul.Unterricht_ID = u.ID "

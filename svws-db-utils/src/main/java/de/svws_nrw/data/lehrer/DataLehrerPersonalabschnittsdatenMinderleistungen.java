@@ -13,7 +13,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -78,12 +78,12 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen extends Dat
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerEntlastungsstunde dto = conn.queryByKey(DTOLehrerEntlastungsstunde.class, id);
     	if (dto == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -92,18 +92,18 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen extends Dat
 		Map.entry("id", (conn, anrechnung, value, map) -> {
 			final long patch_id = JSONMapper.convertToLong(value, false);
 			if ((patch_id != anrechnung.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("idAbschnittsdaten", (conn, anrechnung, value, map) -> {
 			final long patch_id = JSONMapper.convertToLong(value, false);
 			if (patch_id != anrechnung.Abschnitt_ID)
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("idGrund", (conn, anrechnung, value, map) -> {
 			final long idGrund = JSONMapper.convertToLong(value, false);
 			final LehrerMinderleistungArt grund = LehrerMinderleistungArt.getByID(idGrund);
 			if (grund == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			anrechnung.EntlastungsgrundKrz = grund.daten.kuerzel;
 		}),
 		Map.entry("anzahl", (conn, anrechnung, value, map) -> {
@@ -112,7 +112,7 @@ public final class DataLehrerPersonalabschnittsdatenMinderleistungen extends Dat
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOLehrerEntlastungsstunde.class, patchMappings);
 	}
 

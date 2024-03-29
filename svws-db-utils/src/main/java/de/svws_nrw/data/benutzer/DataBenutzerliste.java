@@ -17,7 +17,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -36,15 +36,15 @@ public final class DataBenutzerliste extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<DTOViewBenutzerdetails> benutzer = conn.queryAll(DTOViewBenutzerdetails.class);
 		if (benutzer == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle die Benutzerliste und sortiere sie
 		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
 				.toList();
@@ -52,14 +52,19 @@ public final class DataBenutzerliste extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Benutzer für die Gruppe mit der angegebenen ID zurück.
+	 *
 	 * @param id ID der Benutzergruppe
+	 *
 	 * @return Benutzer, die in der Benutzergruppe sind.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getListMitGruppenID(final Long id) {
+	public Response getListMitGruppenID(final Long id) throws ApiOperationException {
 		// Bestimme die IDs der Benutzer in der Benutzergruppe mit id
 		final DTOBenutzergruppe benutzergruppe = conn.queryByKey(DTOBenutzergruppe.class, id);
 		if (benutzergruppe == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<Long> benutzerIDs = conn
 				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
@@ -67,7 +72,7 @@ public final class DataBenutzerliste extends DataManager<Long> {
 		        ? Collections.emptyList()
 		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
 		if (benutzer == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle die Benutzerliste und sortiere sie
 		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
 				.toList();

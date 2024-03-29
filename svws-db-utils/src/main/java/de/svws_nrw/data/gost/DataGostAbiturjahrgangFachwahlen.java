@@ -21,7 +21,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -48,30 +48,30 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<GostStatistikFachwahl> daten = this.getFachwahlen();
 		if (daten == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<GostStatistikFachwahl> alle = this.getFachwahlen();
 		if (alle == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		for (final GostStatistikFachwahl wahl : alle) {
 			if (wahl.id == id)
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(wahl).build();
 		}
-		return OperationError.NOT_FOUND.getResponse();
+		throw new ApiOperationException(Status.NOT_FOUND);
 	}
 
 	@Override
@@ -84,8 +84,10 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
 	 *
 	 * @return die Statistik zu den Fachwahlen des Abiturjahrgangs dieses Objektes
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<GostStatistikFachwahl> getFachwahlen() {
+	public List<GostStatistikFachwahl> getFachwahlen() throws ApiOperationException {
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
@@ -158,8 +160,10 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
      * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
      *
      * @return eine HTTP-Response, bei einem Erfolg: Die Fachwahlen des Abiturjahrgangs dieses Objektes
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-	public Response getSchuelerFachwahlenResponse() {
+	public Response getSchuelerFachwahlenResponse() throws ApiOperationException {
         final GostJahrgangFachwahlen daten = this.getSchuelerFachwahlen();
         for (final GostHalbjahr halbjahr : GostHalbjahr.values())
         	if (daten.halbjahr[halbjahr.id] == null)
@@ -175,11 +179,13 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
      *                      Fachwahlen bestimmt werden sollen
      *
      * @return eine HTTP-Response, bei einem Erfolg: Die Fachwahlen des Abiturjahrgangs dieses Objektes
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
      */
-	public Response getSchuelerFachwahlenResponseHalbjahr(final int halbjahr_id) {
+	public Response getSchuelerFachwahlenResponseHalbjahr(final int halbjahr_id) throws ApiOperationException {
         final GostJahrgangFachwahlenHalbjahr daten = this.getSchuelerFachwahlenHalbjahr(GostHalbjahr.fromID(halbjahr_id));
         if (daten.fachwahlen.isEmpty())
-            return OperationError.NOT_FOUND.getResponse();
+            throw new ApiOperationException(Status.NOT_FOUND);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -192,8 +198,10 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 *                   Fachwahlen bestimmt werden sollen
 	 *
 	 * @return der Fachwahl-Manager für die Fachwahlen dieses Abiturjahrgangs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostFachwahlManager getFachwahlManager(final GostHalbjahr halbjahr) {
+	public GostFachwahlManager getFachwahlManager(final GostHalbjahr halbjahr) throws ApiOperationException {
 		return new GostFachwahlManager(this.getSchuelerFachwahlenHalbjahr(halbjahr));
 	}
 
@@ -205,8 +213,10 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 *                   Fachwahlen bestimmt werden sollen
 	 *
 	 * @return die Fachwahlen des Abiturjahrgangs dieses Objektes
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostJahrgangFachwahlenHalbjahr getSchuelerFachwahlenHalbjahr(final GostHalbjahr halbjahr) {
+	public GostJahrgangFachwahlenHalbjahr getSchuelerFachwahlenHalbjahr(final GostHalbjahr halbjahr) throws ApiOperationException {
 	    if (halbjahr == null)
 	        return new GostJahrgangFachwahlenHalbjahr();
 	    final GostJahrgangFachwahlenHalbjahr result = this.getSchuelerFachwahlen().halbjahr[halbjahr.id];
@@ -218,8 +228,10 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
 	 *
 	 * @return die Fachwahlen des Abiturjahrgangs dieses Objektes
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostJahrgangFachwahlen getSchuelerFachwahlen() {
+	public GostJahrgangFachwahlen getSchuelerFachwahlen() throws ApiOperationException {
 		final Map<Long, GostJahrgangFachwahlen> mapFachwahlen = DBUtilsGostLaufbahn.getFachwahlenByAbiJahrgang(conn, abijahr);
 		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, new ArrayList<>(mapFachwahlen.keySet())).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));

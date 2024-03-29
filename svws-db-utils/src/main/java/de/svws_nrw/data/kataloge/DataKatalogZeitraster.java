@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOKatalogZeitraster;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -39,7 +39,7 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogZeitraster} in einen Core-DTO {@link StundenplanZeitraster}.
 	 */
-	private static final Function<DTOKatalogZeitraster, StundenplanZeitraster> dtoMapper = (final DTOKatalogZeitraster z) -> {
+	private static final DTOMapper<DTOKatalogZeitraster, StundenplanZeitraster> dtoMapper = (final DTOKatalogZeitraster z) -> {
 		final StundenplanZeitraster daten = new StundenplanZeitraster();
 		daten.id = z.ID;
 		daten.wochentag = z.Tag;
@@ -51,7 +51,7 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -61,8 +61,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return das Zeitraster
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn) {
+	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogZeitraster> zeitraster = conn.queryAll(DTOKatalogZeitraster.class);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOKatalogZeitraster z : zeitraster)
@@ -71,18 +73,18 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanZeitraster> daten = getZeitraster(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Zeitrastereintrag mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Zeitrastereintrag mit der ID null ist unzulässig.");
 		final DTOKatalogZeitraster eintrag = conn.queryByKey(DTOKatalogZeitraster.class, id);
 		if (eintrag == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde keine Zeitrastereintrag mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Zeitrastereintrag mit der ID %d gefunden.".formatted(id));
 		final StundenplanZeitraster daten = dtoMapper.apply(eintrag);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -92,7 +94,7 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 		Map.entry("unterrichtstunde", (conn, dto, value, map) -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30)),
@@ -101,7 +103,7 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOKatalogZeitraster.class, patchMappings);
 	}
 
@@ -111,8 +113,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param is   der Input-Stream mit der Liste der Patches
 	 *
 	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response patchMultiple(final InputStream is) {
+	public Response patchMultiple(final InputStream is) throws ApiOperationException {
 		return super.patchBasicMultiple("id", is, DTOKatalogZeitraster.class, patchMappings);
 	}
 
@@ -127,8 +131,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOKatalogZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -140,8 +146,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		return super.addBasicMultiple(is, DTOKatalogZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -152,8 +160,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param id   die ID des Zeitrastereintrags
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOKatalogZeitraster.class, dtoMapper);
 	}
 
@@ -164,8 +174,10 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @param ids   die IDs der Zeitrastereinträge
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOKatalogZeitraster.class, dtoMapper);
 	}
 

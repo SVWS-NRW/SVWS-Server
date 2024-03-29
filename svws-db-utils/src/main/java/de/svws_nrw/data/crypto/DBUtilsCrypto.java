@@ -19,8 +19,8 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -123,13 +123,13 @@ public final class DBUtilsCrypto {
 	 *
 	 * @return die Credentials
 	 *
-	 * @throws WebApplicationException falls ein Fehler auftritt
+	 * @throws ApiOperationException falls ein Fehler auftritt
 	 */
-	public static DTOCredentials getOrCreateSchuelerCredentials(final DBEntityManager conn, final long id) throws WebApplicationException {
+	public static DTOCredentials getOrCreateSchuelerCredentials(final DBEntityManager conn, final long id) throws ApiOperationException {
 		conn.transactionFlush();
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
-			throw OperationError.NOT_FOUND.exception("Der Schüler mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(id));
 		final DTOCredentials cred;
 		if (schueler.CredentialID == null) {
 			final long credId = conn.transactionGetNextID(DTOCredentials.class);
@@ -162,10 +162,12 @@ public final class DBUtilsCrypto {
 	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param cred   die anzupassenden Credentials
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void addRSAKeyPair(final DBEntityManager conn, final DTOCredentials cred) {
+	public static void addRSAKeyPair(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
 		if ((cred.RSAPrivateKey != null) || (cred.RSAPublicKey != null))
-			throw OperationError.BAD_REQUEST.exception("Das Erstellen eines neuen RSA-Schlüsselpaares ist fehlgeschlagen, da bereits ein Schlüsselpaar vorhanden ist.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Erstellen eines neuen RSA-Schlüsselpaares ist fehlgeschlagen, da bereits ein Schlüsselpaar vorhanden ist.");
 		conn.transactionFlush();
 		try {
 			final var keypair = RSA.createKey();
@@ -174,7 +176,7 @@ public final class DBUtilsCrypto {
 			conn.transactionPersist(cred);
 			conn.transactionFlush();
 		} catch (@SuppressWarnings("unused") final RSAException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim erstellen des RSA-Schlüsselpaares für die Credentials mit der ID %d.".formatted(cred.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim erstellen des RSA-Schlüsselpaares für die Credentials mit der ID %d.".formatted(cred.ID));
 		}
 	}
 
@@ -186,17 +188,19 @@ public final class DBUtilsCrypto {
 	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param cred   die anzupassenden Credentials
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static void addAESKey(final DBEntityManager conn, final DTOCredentials cred) {
+	public static void addAESKey(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
 		if (cred.AES != null)
-			throw OperationError.BAD_REQUEST.exception("Das Erstellen eines neuen AES-Schlüssel ist fehlgeschlagen, da bereits ein Schlüssel vorhanden ist.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Erstellen eines neuen AES-Schlüssel ist fehlgeschlagen, da bereits ein Schlüssel vorhanden ist.");
 		conn.transactionFlush();
 		try {
 			cred.AES = Base64.getEncoder().encodeToString(AES.getRandomKey256().getEncoded());
 			conn.transactionPersist(cred);
 			conn.transactionFlush();
 		} catch (@SuppressWarnings("unused") final AESException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim erstellen des AES-Schlüssels für die Credentials mit der ID %d.".formatted(cred.ID));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim erstellen des AES-Schlüssels für die Credentials mit der ID %d.".formatted(cred.ID));
 		}
 	}
 

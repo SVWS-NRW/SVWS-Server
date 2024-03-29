@@ -4,7 +4,7 @@ import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -29,12 +29,15 @@ public final class DataOrtsteile extends DataManager<Long> {
 
 	/**
 	 * Liest die Ortsteile aus der Datenbank aus und gibt sie als Katalog zurück
+	 *
 	 * @return Liste der Ortsteil als Katalog.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<OrtsteilKatalogEintrag> getOrtsteile() {
+	public List<OrtsteilKatalogEintrag> getOrtsteile() throws ApiOperationException {
 		final var katalog = conn.queryAll(DTOOrtsteil.class);
 		if (katalog == null)
-			throw OperationError.NOT_FOUND.exception("Keine Ortsteile gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Ortsteile gefunden.");
 		return katalog.stream().map(k -> {
 			final var eintrag = new OrtsteilKatalogEintrag();
 			eintrag.id = k.ID;
@@ -48,13 +51,13 @@ public final class DataOrtsteile extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<OrtsteilKatalogEintrag> daten = getOrtsteile();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

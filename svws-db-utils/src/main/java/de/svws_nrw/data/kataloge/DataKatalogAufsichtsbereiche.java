@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -39,7 +39,7 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAufsichtsbereich} in einen Core-DTO {@link Aufsichtsbereich}.
 	 */
-	private static final Function<DTOKatalogAufsichtsbereich, Aufsichtsbereich> dtoMapper = (final DTOKatalogAufsichtsbereich a) -> {
+	private static final DTOMapper<DTOKatalogAufsichtsbereich, Aufsichtsbereich> dtoMapper = (final DTOKatalogAufsichtsbereich a) -> {
 		final Aufsichtsbereich daten = new Aufsichtsbereich();
 		daten.id = a.ID;
 		daten.kuerzel = a.Kuerzel;
@@ -49,7 +49,7 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -59,8 +59,10 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Aufsichtsbereiche
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<Aufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn) {
+	public static List<Aufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogAufsichtsbereich> aufsichtsbereiche = conn.queryAll(DTOKatalogAufsichtsbereich.class);
 		final ArrayList<Aufsichtsbereich> daten = new ArrayList<>();
 		for (final DTOKatalogAufsichtsbereich a : aufsichtsbereiche)
@@ -69,18 +71,18 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<Aufsichtsbereich> daten = getAufsichtsbereiche(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Aufsichtsbereich der Schule mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Aufsichtsbereich der Schule mit der ID null ist unzulässig.");
 		final DTOKatalogAufsichtsbereich aufsichtsbereich = conn.queryByKey(DTOKatalogAufsichtsbereich.class, id);
 		if (aufsichtsbereich == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Aufsichtsbereich der Schule mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Aufsichtsbereich der Schule mit der ID %d gefunden.".formatted(id));
 		final Aufsichtsbereich daten = dtoMapper.apply(aufsichtsbereich);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -90,14 +92,14 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOKatalogAufsichtsbereich.class, patchMappings);
 	}
 
@@ -113,8 +115,10 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		return super.addBasic(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -126,8 +130,10 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		return super.addBasicMultiple(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -138,8 +144,10 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @param id   die ID des Aufsichtsbereichs
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOKatalogAufsichtsbereich.class, dtoMapper);
 	}
 
@@ -150,8 +158,10 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @param ids   die IDs der Aufsichtsbereiche
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		return super.deleteBasicMultiple(ids, DTOKatalogAufsichtsbereich.class, dtoMapper);
 	}
 

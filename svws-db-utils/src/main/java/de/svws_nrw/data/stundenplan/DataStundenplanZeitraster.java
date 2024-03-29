@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -44,7 +44,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanZeitraster} in einen Core-DTO {@link StundenplanZeitraster}.
 	 */
-	private static final Function<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (final DTOStundenplanZeitraster z) -> {
+	private static final DTOMapper<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (final DTOStundenplanZeitraster z) -> {
 		final StundenplanZeitraster daten = new StundenplanZeitraster();
 		daten.id = z.ID;
 		daten.wochentag = z.Tag;
@@ -56,7 +56,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
@@ -67,8 +67,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return das Zeitraster
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOStundenplanZeitraster z : zeitraster)
@@ -87,8 +89,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param unterrichtsstunde   die Unterrichtsstunde
 	 *
 	 * @return der Zeitrastereintrag
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static StundenplanZeitraster getOrCreateZeitrasterEintrag(final @NotNull DBEntityManager conn, final long idStundenplan, final int wochentag, final int unterrichtsstunde) {
+	public static StundenplanZeitraster getOrCreateZeitrasterEintrag(final @NotNull DBEntityManager conn, final long idStundenplan, final int wochentag, final int unterrichtsstunde) throws ApiOperationException {
 		final List<DTOStundenplanZeitraster> eintraege = conn.queryList("SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = ?1 AND e.Tag = ?2 AND e.Stunde = ?3", DTOStundenplanZeitraster.class, idStundenplan, wochentag, unterrichtsstunde);
 		final DTOStundenplanZeitraster eintrag;
 		if (eintraege.isEmpty()) {
@@ -99,24 +103,24 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		} else if (eintraege.size() == 1) {
 			eintrag = eintraege.get(0);
 		} else
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehrfach-Einträge für die Kombination Wochentag %d und Stunde %d im Stundenplan mit der ID %d.".formatted(wochentag, unterrichtsstunde, idStundenplan));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehrfach-Einträge für die Kombination Wochentag %d und Stunde %d im Stundenplan mit der ID %d.".formatted(wochentag, unterrichtsstunde, idStundenplan));
 		return dtoMapper.apply(eintrag);
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanZeitraster> daten = getZeitraster(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Zeitrastereintrag eines Stundenplans mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Zeitrastereintrag eines Stundenplans mit der ID null ist unzulässig.");
 		final DTOStundenplanZeitraster eintrag = conn.queryByKey(DTOStundenplanZeitraster.class, id);
 		if (eintrag == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Zeitrastereintrag eines Stundenplans mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Zeitrastereintrag eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanZeitraster daten = dtoMapper.apply(eintrag);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -126,7 +130,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 		Map.entry("unterrichtstunde", (conn, dto, value, map) -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30)),
@@ -135,7 +139,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
@@ -145,8 +149,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param is   der Input-Stream mit der Liste der Patches
 	 *
 	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response patchMultiple(final InputStream is) {
+	public Response patchMultiple(final InputStream is) throws ApiOperationException {
 		return super.patchBasicMultiple("id", is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
@@ -165,8 +171,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response add(final InputStream is) {
+	public Response add(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -179,8 +187,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param is   der InputStream mit den JSON-Daten
 	 *
 	 * @return die Response mit den Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addMultiple(final InputStream is) {
+	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
@@ -208,8 +218,10 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param id   die ID des Zeitrastereintrags
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response delete(final Long id) {
+	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOStundenplanZeitraster.class, dtoMapper);
 	}
 
@@ -220,14 +232,16 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @param ids   die IDs der Zeitrastereinträge
 	 *
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteMultiple(final List<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		if (ids.isEmpty())
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
 		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", ids, DTOStundenplanZeitraster.class);
 		for (final DTOStundenplanZeitraster dto : dtos)
 			if (dto.Stundenplan_ID != this.stundenplanID)
-				throw OperationError.BAD_REQUEST.exception("Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
 		return super.deleteBasicMultiple(ids, DTOStundenplanZeitraster.class, dtoMapper);
 	}
 

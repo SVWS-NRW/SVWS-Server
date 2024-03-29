@@ -6,7 +6,7 @@ import java.util.List;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragLaender;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -25,16 +25,16 @@ public final class DataSchildLaender extends DataManager<Long> {
 	}
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragLaender> katalog = CsvReader.fromResource("daten/csv/schild3/Laender.csv", Schild3KatalogEintragLaender.class);
     	if (katalog == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	katalog.sort((a, b) -> Integer.compare(a.Sortierung, b.Sortierung));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		return this.getAll();
 	}
 

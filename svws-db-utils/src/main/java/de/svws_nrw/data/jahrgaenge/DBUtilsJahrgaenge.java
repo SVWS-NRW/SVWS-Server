@@ -2,8 +2,8 @@ package de.svws_nrw.data.jahrgaenge;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
@@ -23,12 +23,12 @@ public final class DBUtilsJahrgaenge {
 	 *
 	 * @return das DTO zum Jahrgang
 	 *
-	 * @throws WebApplicationException   HTTP-Response NOT_FOUND, falls der Jahrgang nicht gefunden werden kann
+	 * @throws ApiOperationException   HTTP-Response NOT_FOUND, falls der Jahrgang nicht gefunden werden kann
 	 */
-	public static DTOJahrgang get(final DBEntityManager conn, final long idJahrgang) throws WebApplicationException {
+	public static DTOJahrgang get(final DBEntityManager conn, final long idJahrgang) throws ApiOperationException {
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, idJahrgang);
 		if (jahrgang == null)
-	    	throw OperationError.NOT_FOUND.exception("Konnte den Jahrgang mit der ID " + idJahrgang + " nicht finden.");
+	    	throw new ApiOperationException(Status.NOT_FOUND, "Konnte den Jahrgang mit der ID " + idJahrgang + " nicht finden.");
 		return jahrgang;
 	}
 

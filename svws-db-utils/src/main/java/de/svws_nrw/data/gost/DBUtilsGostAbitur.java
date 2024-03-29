@@ -22,8 +22,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 import java.util.List;
@@ -50,11 +49,13 @@ public final class DBUtilsGostAbitur {
 	 * @param id     die ID des Schülers
 	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) {
+    public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
     	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
     	if (leistungen == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
     	// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
 
@@ -132,30 +133,32 @@ public final class DBUtilsGostAbitur {
 	 * @param id     die ID des Schülers
 	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) {
+    public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
     	final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
 
     	// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
     	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
 		if (dtoAbschnitt == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw new ApiOperationException(Status.NOT_FOUND);
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryNamed("DTOSchuelerAbitur.schueler_id", id, DTOSchuelerAbitur.class);
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
-			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+			throw new ApiOperationException(Status.NOT_FOUND);
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
 		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
 		final List<DTOSchuelerAbiturFach> faecher = conn.queryNamed("DTOSchuelerAbiturFach.schueler_id", id, DTOSchuelerAbiturFach.class);
 		if (faecher == null)
-			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+			throw new ApiOperationException(Status.NOT_FOUND);
 
         // Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);

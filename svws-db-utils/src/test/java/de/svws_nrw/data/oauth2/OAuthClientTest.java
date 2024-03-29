@@ -10,6 +10,8 @@ import java.util.Base64;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import de.svws_nrw.db.utils.ApiOperationException;
+
 /**
  * Eine Testklasse für die Klasse {@link OAuth2Client}
  */
@@ -30,10 +32,11 @@ class OAuthClientTest {
 	 *
 	 * @throws IOException            beim Parsen des Tokens i
 	 * @throws InterruptedException   bei Verbindungsproblemen
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Test
 	@Disabled("Ein entsprechender Test-Server muss zur Verfügung und konfugiert sein. Dies ist bei einem Build nicht gewährleistet.")
-	void testWenomConnection() throws IOException, InterruptedException {
+	void testWenomConnection() throws IOException, InterruptedException, ApiOperationException {
 		final String client_id = "1";
 		final String client_secret = "1IbLT9WQr2JZrXuBcmB8K7bDvTkK2hcrZvfG5V9l";
 

@@ -13,7 +13,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchulfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -77,12 +77,12 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw new ApiOperationException(Status.NOT_FOUND);
 		final DTOLehrerFunktion dto = conn.queryByKey(DTOLehrerFunktion.class, id);
     	if (dto == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final LehrerPersonalabschnittsdatenLehrerfunktion daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -91,24 +91,24 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 		Map.entry("id", (conn, funktion, value, map) -> {
 			final long patch_id = JSONMapper.convertToLong(value, false);
 			if ((patch_id != funktion.ID))
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("idAbschnittsdaten", (conn, funktion, value, map) -> {
 			final long patch_id = JSONMapper.convertToLong(value, false);
 			if (patch_id != funktion.Abschnitt_ID)
-				throw OperationError.BAD_REQUEST.exception();
+				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
 		Map.entry("idFunktion", (conn, funktion, value, map) -> {
 			final long idFunktion = JSONMapper.convertToLong(value, false);
 			final DTOSchulfunktion f = conn.queryByKey(DTOSchulfunktion.class, idFunktion);
 			if (f == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw new ApiOperationException(Status.NOT_FOUND);
 			funktion.Funktion_ID = idFunktion;
 		})
 	);
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		return super.patchBasic(id, is, DTOLehrerFunktion.class, patchMappings);
 	}
 

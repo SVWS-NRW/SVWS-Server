@@ -19,7 +19,7 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -46,20 +46,20 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<StundenplanKlassenunterricht> daten = getKlassenunterrichte(conn, this.stundenplanID);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
-	public Response get(final Long idKlasse) {
+	public Response get(final Long idKlasse) throws ApiOperationException {
 		final List<StundenplanKlassenunterricht> daten = getKlassenunterricht(conn, idKlasse);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -136,15 +136,17 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Liste der Klassenunterrichte
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<StundenplanKlassenunterricht> getKlassenunterrichte(final @NotNull DBEntityManager conn, final long idStundenplan) {
+	public static List<StundenplanKlassenunterricht> getKlassenunterrichte(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		// Klassen bestimmen
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class);
 		if (klassen.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Es wurden keine Klassen für den Schuljahresabschnitt des Stundenplans mit der ID %d gefunden.".formatted(idStundenplan));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Klassen für den Schuljahresabschnitt des Stundenplans mit der ID %d gefunden.".formatted(idStundenplan));
 		final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		return getKlassenunterrichteFuerKlassen(conn, stundenplan.Schuljahresabschnitts_ID, mapKlassen);
 	}
@@ -158,24 +160,26 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	 * @param idFach     die ID des Faches
 	 *
 	 * @return der Klassenunterricht
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static StundenplanKlassenunterricht getKlassenunterrichtFuerFach(final @NotNull DBEntityManager conn, final long idKlasse, final long idFach) {
+	public static StundenplanKlassenunterricht getKlassenunterrichtFuerFach(final @NotNull DBEntityManager conn, final long idKlasse, final long idFach) throws ApiOperationException {
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
-			throw OperationError.NOT_FOUND.exception("Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
-			throw OperationError.NOT_FOUND.exception("Kein Fach mit der ID %d gefunden.".formatted(idFach));
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		// Bestimme die Daten anhand der Leistungsdaten, die einem Lernabschnitt der Klasse zugeordnet sind.
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID);
 		final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
 		if (lernabschnittIDs.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Kein Lernabschnitt für die Klasse mit der ID %d gefunden.".formatted(idKlasse));
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Lernabschnitt für die Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID = ?2 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')".formatted(ZulaessigeKursart.PUK.daten.kuerzel), DTOSchuelerLeistungsdaten.class, lernabschnittIDs, fach.ID);
 		if (leistungsdaten.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Keine Leistungsdaten für die Klasse mit der ID %d und das Fach mit der ID %d gefunden.".formatted(klasse.ID, fach.ID));
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Leistungsdaten für die Klasse mit der ID %d und das Fach mit der ID %d gefunden.".formatted(klasse.ID, fach.ID));
 		// Aggregiere die Klassenunterrichte aus den Leistungsdaten
 		StundenplanKlassenunterricht daten = null;
 		for (final DTOSchuelerLeistungsdaten ls : leistungsdaten) {
@@ -207,12 +211,14 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	 * @param idKlasse   die ID der Klasse
 	 *
 	 * @return die Liste mit dem Klassenunterricht
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<StundenplanKlassenunterricht> getKlassenunterricht(final @NotNull DBEntityManager conn, final long idKlasse) {
+	public static List<StundenplanKlassenunterricht> getKlassenunterricht(final @NotNull DBEntityManager conn, final long idKlasse) throws ApiOperationException {
 		// Klasse bestimmen
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
-			throw OperationError.NOT_FOUND.exception("Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		final Map<Long, DTOKlassen> mapKlassen = new HashMap<>();
 		mapKlassen.put(klasse.ID, klasse);
 		return getKlassenunterrichteFuerKlassen(conn, klasse.Schuljahresabschnitts_ID, mapKlassen);

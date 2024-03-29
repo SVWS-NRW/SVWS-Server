@@ -13,7 +13,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -44,12 +44,12 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
 		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, id);
 		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, id);
 		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, id);

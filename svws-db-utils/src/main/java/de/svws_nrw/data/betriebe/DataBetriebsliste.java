@@ -11,7 +11,7 @@ import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -56,15 +56,15 @@ public final class DataBetriebsliste extends DataManager<Long> {
 	};
 
 	@Override
-	public Response getAll() {
+	public Response getAll() throws ApiOperationException {
 		return this.getList();
 	}
 
 	@Override
-	public Response getList() {
+	public Response getList() throws ApiOperationException {
 		final List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryAll(DTOKatalogAllgemeineAdresse.class);
 		if (betriebe == null)
-			return OperationError.NOT_FOUND.getResponse("Keine Betriebe vorhanden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Betriebe vorhanden.");
 		final List<BetriebListeEintrag> daten = betriebe.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

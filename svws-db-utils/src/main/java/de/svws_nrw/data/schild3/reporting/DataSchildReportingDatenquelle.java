@@ -9,10 +9,9 @@ import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -156,8 +155,10 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
      * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
      *
      * @return die Datensätze der Datenquelle
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    List<DTO> getDaten(final DBEntityManager conn) {
+    List<DTO> getDaten(final DBEntityManager conn) throws ApiOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -171,34 +172,36 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
      * @param params   die Parameter für das Attribut der Masterdatenquelle
      *
      * @return die Datensätze der Datenquelle
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    List<DTO> getDaten(final DBEntityManager conn, final List<JMT> params) {
+    List<DTO> getDaten(final DBEntityManager conn, final List<JMT> params) throws ApiOperationException {
         throw new UnsupportedOperationException();
     }
 
 
-	private List<DTO> getDatenBoolean(final DBEntityManager conn, final List<? extends Object> params) {
+	private List<DTO> getDatenBoolean(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
         // Daten vorhanden?
         if (params.isEmpty())
-            throw OperationError.NOT_FOUND.exception(meldungKeinParameter);
+            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
         if (this.masterclass != Boolean.class)
-            throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         // Prüfe, ob alle Parameter vom Typ Boolean sind
         for (final Object p : params)
             if (!(p instanceof Boolean))
-                throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         @SuppressWarnings("unchecked")
 		final List<JMT> paramListe = (List<JMT>) params;
         return getDaten(conn, paramListe);
     }
 
 
-	private List<DTO> getDatenInteger(final DBEntityManager conn, final List<? extends Object> params) {
+	private List<DTO> getDatenInteger(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
         // Daten vorhanden?
         if (params.isEmpty())
-            throw OperationError.NOT_FOUND.exception(meldungKeinParameter);
+            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
         if (this.masterclass != Long.class)
-            throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         // Prüfe, ob alle Parameter vom Typ Long sind
         final ArrayList<Long> paramListe = new ArrayList<>();
         for (final Object p : params) {
@@ -211,7 +214,7 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
             else if (p instanceof final Byte b)
                 paramListe.add(b.longValue());
             else
-                throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         }
         @SuppressWarnings("unchecked")
 		final List<JMT> paramListeJMT = (List<JMT>) paramListe;
@@ -219,12 +222,12 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	}
 
 
-	private List<DTO> getDatenNumber(final DBEntityManager conn, final List<? extends Object> params) {
+	private List<DTO> getDatenNumber(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
         // Daten vorhanden?
         if (params.isEmpty())
-            throw OperationError.NOT_FOUND.exception(meldungKeinParameter);
+            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
         if (this.masterclass != Double.class)
-            throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         // Prüfe, ob alle Parameter vom Typ Double sind
         final ArrayList<Double> paramListe = new ArrayList<>();
         for (final Object p : params) {
@@ -233,7 +236,7 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
             else if (p instanceof final Float f)
                 paramListe.add(f.doubleValue());
             else
-                throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         }
         @SuppressWarnings("unchecked")
 		final List<JMT> paramListeJMT = (List<JMT>) paramListe;
@@ -241,16 +244,16 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	}
 
 
-	private List<DTO> getDatenString(final DBEntityManager conn, final List<? extends Object> params) {
+	private List<DTO> getDatenString(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
         // Daten vorhanden?
         if (params.isEmpty())
-            throw OperationError.NOT_FOUND.exception(meldungKeinParameter);
+            throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
         if (this.masterclass != String.class)
-            throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+            throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         // Prüfe, ob alle Parameter vom Typ String sind
         for (final Object p : params)
             if (!(p instanceof String))
-                throw OperationError.CONFLICT.exception(meldungUngueltigerParameter);
+                throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
         @SuppressWarnings("unchecked")
 		final List<JMT> paramListeJMT = (List<JMT>) params;
         return getDaten(conn, paramListeJMT);
@@ -268,30 +271,28 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
      *                 werden sollen - ist keine Masterquelle definiert, so muss diese Liste leer sein
      *
      * @return die HTTP-Response, im Erfolgsfall mit den Daten der Datenquelle
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static Response getDaten(final DBEntityManager conn, final String name, final List<? extends Object> params) {
-    	try {
-	        final DataSchildReportingDatenquelle<?, ?> datenquelle = getMapDatenquellen().get(name);
-	        if (datenquelle == null)
-	            throw OperationError.NOT_FOUND.exception("Keine Datenquelle \"" + name + "\" vorhanden.");
-	        List<? extends Object> result = null;
-	        result = switch (datenquelle.mastertyp) {
-	            case BOOLEAN -> datenquelle.getDatenBoolean(conn, params);
-	            case INT -> datenquelle.getDatenInteger(conn, params);
-	            case NUMBER -> datenquelle.getDatenNumber(conn, params);
-				case STRING, MEMO -> datenquelle.getDatenString(conn, params);
-	            default -> {
-	                if (!params.isEmpty())
-	                    throw OperationError.CONFLICT.exception("Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
-	                yield datenquelle.getDaten(conn);
-	            }
-	        };
-	        if (result == null)
-	            throw OperationError.NOT_FOUND.exception("Fehler beim Lesen der Daten aus der Datenquelle \"" + name + "\".");
-	        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
-    	} catch (final WebApplicationException wae) {
-    		return wae.getResponse();
-    	}
+    public static Response getDaten(final DBEntityManager conn, final String name, final List<? extends Object> params) throws ApiOperationException {
+        final DataSchildReportingDatenquelle<?, ?> datenquelle = getMapDatenquellen().get(name);
+        if (datenquelle == null)
+            throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenquelle \"" + name + "\" vorhanden.");
+        List<? extends Object> result = null;
+        result = switch (datenquelle.mastertyp) {
+            case BOOLEAN -> datenquelle.getDatenBoolean(conn, params);
+            case INT -> datenquelle.getDatenInteger(conn, params);
+            case NUMBER -> datenquelle.getDatenNumber(conn, params);
+			case STRING, MEMO -> datenquelle.getDatenString(conn, params);
+            default -> {
+                if (!params.isEmpty())
+                    throw new ApiOperationException(Status.CONFLICT, "Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
+                yield datenquelle.getDaten(conn);
+            }
+        };
+        if (result == null)
+            throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Lesen der Daten aus der Datenquelle \"" + name + "\".");
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
     }
 
 
@@ -301,12 +302,14 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
      * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
      *
      * @return die HTTP-Response mit der Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen
+	 *
+	 * @throws ApiOperationException im Fehlerfall
      */
-    public static Response getDatenquellen(final DBEntityManager conn) {
+    public static Response getDatenquellen(final DBEntityManager conn) throws ApiOperationException {
         final var datenquellen = getMapDatenquellen();
         final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
         if (schule == null)
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse("Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
+            throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
         final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
         for (final var datenquelle : datenquellen.values()) {
             if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schule.Schulform)))

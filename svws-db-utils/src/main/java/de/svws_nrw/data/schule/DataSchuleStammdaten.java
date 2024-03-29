@@ -38,8 +38,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchulformen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -120,21 +119,23 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return die Stammdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) throws WebApplicationException {
+	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-			throw OperationError.NOT_FOUND.exception("Keine Schuldaten für die Schule vorhanden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schuldaten für die Schule vorhanden.");
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null)
-			throw OperationError.NOT_FOUND.exception("Die Schule hat keinen gültigen aktuellen Schuljahresabschnitt.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat keinen gültigen aktuellen Schuljahresabschnitt.");
 		final SchuleStammdaten daten = dtoMapper.apply(schule, schuljahresabschnitt);
 		daten.abschnitte.addAll((new DataSchuljahresabschnitte(conn)).getAbschnitte());
 		return daten;
 	}
 
 	@Override
-	public Response get(final Long id) {
+	public Response get(final Long id) throws ApiOperationException {
 		final SchuleStammdaten daten = getStammdaten(conn);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -156,11 +157,13 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * Bestimmt die Schulnummer der Schule
 	 *
 	 * @return Die HTTP-Response (NOT_FOUND im Fehlerfall)
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getSchulnummerResponse() {
+	public Response getSchulnummerResponse() throws ApiOperationException {
     	final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
     	if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(schule.SchulNr).build();
 	}
 
@@ -181,18 +184,18 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) {
+	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 	    	if (schule == null)
-	    		return OperationError.NOT_FOUND.getResponse();
+	    		throw new ApiOperationException(Status.NOT_FOUND);
 	    	for (final Entry<String, Object> entry : map.entrySet()) {
 	    		final String key = entry.getKey();
 	    		final Object value = entry.getValue();
 	    		switch (key) {
-	    			case "schulNr" -> throw OperationError.BAD_REQUEST.exception();
-	    			case "schulform" -> throw OperationError.BAD_REQUEST.exception();
+	    			case "schulNr" -> throw new ApiOperationException(Status.BAD_REQUEST);
+	    			case "schulform" -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    			case "bezeichnung1" -> schule.Bezeichnung1 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung1.datenlaenge());
 	    			case "bezeichnung2" -> schule.Bezeichnung2 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung2.datenlaenge());
 	    			case "bezeichnung3" -> schule.Bezeichnung3 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung3.datenlaenge());
@@ -209,8 +212,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_WebAdresse.datenlaenge());
 
 	    			case "idSchuljahresabschnitt" -> schule.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false); // TODO ID des Schuljahresabschnittes überprüfen
-					case "textSchuljahr" -> throw OperationError.BAD_REQUEST.exception();
-					case "textSchuljahresabschnitt" -> throw OperationError.BAD_REQUEST.exception();
+					case "textSchuljahr" -> throw new ApiOperationException(Status.BAD_REQUEST);
+					case "textSchuljahresabschnitt" -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    			case "anzJGS_Jahr" -> schule.AnzJGS_Jahr = JSONMapper.convertToInteger(value, false); // TODO Abschnitt überprüfen
 
 	    			case "schuleAbschnitte" -> {
@@ -219,7 +222,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	    				if (mapAbschnitte.containsKey("anzahlAbschnitte")) {
 	    					final Integer anzahlAbschnitte = JSONMapper.convertToInteger(mapAbschnitte.get("anzahlAbschnitte"), false);
 	    					if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4))
-	    						throw OperationError.CONFLICT.exception();
+	    						throw new ApiOperationException(Status.CONFLICT);
 	    					schule.AnzahlAbschnitte = anzahlAbschnitte;
 	    				}
 	    				if (mapAbschnitte.containsKey("abschnittBez"))
@@ -227,26 +230,26 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	    				if (mapAbschnitte.containsKey("bezAbschnitte")) {
 	    					final List<?> bezAbschnitte = (List<?>) mapAbschnitte.get("bezAbschnitte");
 	    					if (bezAbschnitte.size() != schule.AnzahlAbschnitte)
-	    						throw OperationError.CONFLICT.exception();
+	    						throw new ApiOperationException(Status.CONFLICT);
 	    					for (int i = 0; i < bezAbschnitte.size(); i++) {
 	    						final Object objBezeichnung = bezAbschnitte.get(i);
 	    						if (!(objBezeichnung instanceof String))
-	    							throw OperationError.BAD_REQUEST.exception();
+	    							throw new ApiOperationException(Status.BAD_REQUEST);
 	    						switch (i) {
 	    							case 0 -> schule.BezAbschnitt1 = (String) objBezeichnung;
 	    							case 1 -> schule.BezAbschnitt2 = (String) objBezeichnung;
 	    							case 2 -> schule.BezAbschnitt3 = (String) objBezeichnung;
 	    							case 3 -> schule.BezAbschnitt4 = (String) objBezeichnung;
-	    							default -> throw OperationError.BAD_REQUEST.exception();
+	    							default -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    						}
 	    					}
 	    				}
 	    			}
 
 	    			case "dauerUnterrichtseinheit" -> schule.DauerUnterrichtseinheit = JSONMapper.convertToInteger(value, false); // TODO Dauer in Minuten prüfen, evtl. einschränken
-	    			case "abschnitte" -> throw OperationError.BAD_REQUEST.exception();
+	    			case "abschnitte" -> throw new ApiOperationException(Status.BAD_REQUEST);
 
-	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    			default -> throw new ApiOperationException(Status.BAD_REQUEST);
 	    		}
 	    	}
 	    	conn.transactionPersist(schule);
@@ -259,11 +262,13 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * Ermittelt das Schullogo.
 	 *
 	 * @return Die HTTP-Response der Get-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getSchullogo() {
+	public Response getSchullogo() throws ApiOperationException {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
 		if (logo == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	final String daten = "\"" + logo.LogoBase64 + "\"";
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -286,11 +291,13 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @param is            der {@link InputStream} mit dem JSON-Patch für das Logo
 	 *
 	 * @return Die HTTP-Response der Patch-Operation
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response putSchullogo(final InputStream is) {
+	public Response putSchullogo(final InputStream is) throws ApiOperationException {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
 		if (logo == null)
-    		throw OperationError.NOT_FOUND.exception();
+    		throw new ApiOperationException(Status.NOT_FOUND);
     	logo.LogoBase64 = JSONMapper.toString(is);
     	conn.transactionPersist(logo);
 		return Response.ok().build();
@@ -303,12 +310,14 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @param schulnummer   die Schulnummer der anzulegenden Schule
 	 *
 	 * @return die HTTP-Response mit den Stammdaten der Schule
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response init(final int schulnummer) {
+	public Response init(final int schulnummer) throws ApiOperationException {
 		// Prüfe, ob bereits ein Eintrag in der Tabelle EigeneSchule vorliegt...
 		DTOEigeneSchule eigeneSchule = conn.querySingle(DTOEigeneSchule.class);
 		if (eigeneSchule != null)
-			return OperationError.CONFLICT.getResponse("Das Datenbank-Schema kann nicht mit einer Schule initialisiert werden, da es bereits einen Schuleintrag enthält.");
+			throw new ApiOperationException(Status.CONFLICT, "Das Datenbank-Schema kann nicht mit einer Schule initialisiert werden, da es bereits einen Schuleintrag enthält.");
 		// Prüfe, ob die Schulnummer im Katalog der Schulen vorkommt.
 		final List<SchulenKatalogEintrag> katalogSchulen = DataKatalogSchulen.getKatalog();
 		SchulenKatalogEintrag schulEintrag = null;
@@ -319,7 +328,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			}
 		}
 		if (schulEintrag == null)
-			return OperationError.NOT_FOUND.getResponse("Keine Schule mit der Schulnummer " + schulnummer + " im Katalog der Schulen gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule mit der Schulnummer " + schulnummer + " im Katalog der Schulen gefunden.");
 		// Bestimme das aktuelle Datum
 		final LocalDate date = LocalDate.now();
 		final int month = date.getMonthValue();

@@ -9,7 +9,7 @@ import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.proxytypes.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
@@ -18,7 +18,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -159,10 +159,13 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.
+	 *
 	 * @return Daten zum Abitur in der GOSt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public ReportingSchuelerGostAbitur gostAbitur() {
+	public ReportingSchuelerGostAbitur gostAbitur() throws ApiOperationException {
 		if (super.gostAbitur() == null) {
 			if (this.reportingRepository.mapGostSchuelerAbiturdaten().containsKey(this.id())) {
 				super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id())));
@@ -170,8 +173,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				try {
 					final Abiturdaten abiturdaten = DBUtilsGostAbitur.getAbiturdaten(this.reportingRepository.conn(), this.id());
 					super.setGostAbitur(new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten));
-				} catch (WebApplicationException ex) {
-					throw OperationError.NOT_FOUND.exception("Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
+				} catch (final ApiOperationException aoe) {
+					throw new ApiOperationException(Status.NOT_FOUND, aoe, "Es wurde eine Schüler-ID übergeben, für die keine Abiturdaten in der GOSt existieren.");
 				}
 			}
 		}
@@ -180,12 +183,18 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten der GOSt-Laufbahnplanung des Schülers zur Verfügung.
+	 *
 	 * @return Daten der GOSt-Laufbahnplanung
 	 */
 	@Override
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		if (super.gostLaufbahnplanung() == null) {
-			super.setGostLaufbahnplanung(new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this));
+			try {
+				super.setGostLaufbahnplanung(new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this));
+			} catch (final ApiOperationException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		return super.gostLaufbahnplanung();
 	}
@@ -197,15 +206,20 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte().isEmpty()) {
-			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true);
+			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = new ArrayList<>();
+			try {
+				schuelerLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn()).getListFromSchuelerIDs(new ArrayList<>(List.of(this.id())), true));
+			} catch (final ApiOperationException e) {
+				e.printStackTrace();
+			}
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, gebe die leere Liste zurück.
 			if (schuelerLernabschnittsdaten.isEmpty())
 				return super.lernabschnitte();
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
 				.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
 				.sorted(Comparator
-					.comparing((ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
-					.thenComparing((ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
+					.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
+					.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
 					.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
 				.toList());
 			// Aktuellen Lernabschnitt in der Map im Repository speichern. Gibt es nur einen Abschnitt, dann wird dieser gespeichert, andernfalls der mit WechselNr. 0 im aktuellen Schuljahresabschnitt.

@@ -11,7 +11,7 @@ import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.schema.SchemaRevisionen;
-import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -96,10 +96,14 @@ public class APIConfig {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = String.class)))
     public Response getServerVersion() {
-        final String version = SVWSVersion.version();
-        if (version == null)
-            return OperationError.NOT_FOUND.getResponse();
-        return JSONMapper.fromString(version);
+        try {
+            final String version = SVWSVersion.version();
+            if (version == null)
+                throw new ApiOperationException(Status.NOT_FOUND);
+			return JSONMapper.fromString(version);
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
+		}
     }
 
 
@@ -117,8 +121,12 @@ public class APIConfig {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = String.class)))
     public Response getServerModus() {
-        final ServerMode mode = SVWSKonfiguration.get().getServerMode();
-        return JSONMapper.fromString(mode.text);
+        try {
+        	final ServerMode mode = SVWSKonfiguration.get().getServerMode();
+			return JSONMapper.fromString(mode.text);
+		} catch (final ApiOperationException e) {
+			return e.getResponse();
+		}
     }
 
 
@@ -163,7 +171,7 @@ public class APIConfig {
         try {
 			return Response.ok(SVWSKonfiguration.getCertificateBase64()).header("Content-Disposition", "attachment; filename=\"SVWS.cer\"").build();
 		} catch (final KeyStoreException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		}
     }
 
@@ -212,9 +220,9 @@ public class APIConfig {
     	try {
 			return Response.ok(SVWSKonfiguration.getCertificate().getEncoded()).header("Content-Disposition", "attachment; filename=\"SVWS.cer\"").build();
 		} catch (final CertificateEncodingException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		} catch (final KeyStoreException e) {
-			throw OperationError.NOT_FOUND.exception(e);
+			return new ApiOperationException(Status.NOT_FOUND, e).getResponse();
 		}
     }
 

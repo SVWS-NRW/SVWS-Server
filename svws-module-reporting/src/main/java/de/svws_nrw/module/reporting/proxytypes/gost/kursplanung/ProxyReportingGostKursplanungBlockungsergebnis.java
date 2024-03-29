@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
+import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -14,6 +15,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.proxytypes.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
@@ -72,10 +74,13 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt anhand der Blockungsergebnis-ID.
+	 *
 	 * @param reportingRepository	Repository für die Reporting.
 	 * @param id 					Die ID des Blockungsergebnisses aus der Kursplanung der gymnasialen Oberstufe.
-	*/
-	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final long id) {
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final long id) throws ApiOperationException {
 		super(0, 0, 0, 0, 0, 0, "", null, null, id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		this.reportingRepository = reportingRepository;
 
@@ -155,7 +160,14 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					.stream()
 					.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
 						reportingRepository,
-						reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id))))
+						reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
+							try {
+								return new DataLehrerStammdaten(reportingRepository.conn()).getFromID(l.id);
+							} catch (final ApiOperationException e) {
+								e.printStackTrace();
+								return new LehrerStammdaten();
+							}
+						})))
 					.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
@@ -228,6 +240,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 *
 	 * @return Map mit den Fachwahlstatistiken zu den Fächern.
 	 */
 	@Override
@@ -235,13 +248,17 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		if (super.fachwahlstatistik() == null || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
 			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen = new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
-			final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
-			if (gostFachwahlenStatistik != null && !gostFachwahlenStatistik.isEmpty()) {
-				mapFachwahlStatistik.putAll(
-					gostFachwahlenStatistik.stream().collect(
-						Collectors.toMap(
-							f -> f.id,
-							f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
+			try {
+				final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
+				if ((gostFachwahlenStatistik != null) && (!gostFachwahlenStatistik.isEmpty())) {
+					mapFachwahlStatistik.putAll(
+						gostFachwahlenStatistik.stream().collect(
+							Collectors.toMap(
+								f -> f.id,
+								f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(this.reportingRepository, this.gostHalbjahr(), f, this.ergebnisManager))));
+				}
+			} catch (final ApiOperationException e) {
+				e.printStackTrace();
 			}
 			super.setFachwahlstatistik(mapFachwahlStatistik);
 		}

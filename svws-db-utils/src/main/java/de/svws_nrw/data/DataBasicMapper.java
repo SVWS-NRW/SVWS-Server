@@ -3,6 +3,7 @@ package de.svws_nrw.data;
 import java.util.Map;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
  * Dieses Interface definiert das Format für Mapping-Funktionen, die
@@ -23,7 +24,9 @@ public interface DataBasicMapper<DTO> {
 	 * @param t       das DTO
 	 * @param value   der zu mappende Attributwert des JSON-Objektes
 	 * @param map     die Map mit den JSON-Attributwerten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-    void map(DBEntityManager conn, DTO t, Object value, Map<String, Object> map);
+    void map(DBEntityManager conn, DTO t, Object value, Map<String, Object> map) throws ApiOperationException;
 
 }
