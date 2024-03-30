@@ -1169,32 +1169,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt den Schüler dem Kurs hinzu.<br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
-	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private stateSchuelerKursHinzufuegen(idSchueler : number, idKurs : number) : void {
-		this.stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
-		this.stateRevalidateEverything();
-	}
-
-	/**
-	 * Entfernt den Schüler aus dem Kurs.<br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
-	 *          Zuordnung aller ungültigen Wahlen gelöscht.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private stateSchuelerKursEntfernen(idSchueler : number, idKurs : number) : void {
-		this.stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
-		this.stateRevalidateEverything();
-	}
-
-	/**
 	 * Fügt den Kurs der Schiene hinzu.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
@@ -5255,8 +5229,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const nSchienen : number = this._parent.schieneGetAnzahl();
 		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
 		this.stateRevalidateEverything();
-		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
-			this.setKursSchienenNr(idKurs, nr);
+		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++) {
+			const eSchiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
+			this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, eSchiene.id);
+		}
+		this.stateRevalidateEverything();
 	}
 
 	/**
@@ -5335,11 +5312,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setSplitKurs(kurs1alt : GostBlockungKurs, kurs2neu : GostBlockungKurs, susVon1nach2 : Array<number>) : void {
 		this._parent.kursAdd(kurs2neu);
-		this.setAddKursByID(kurs2neu.id);
+		this.stateRevalidateEverything();
+		for (const eSchiene of this.getOfKursSchienenmenge(kurs1alt.id))
+			this.stateKursSchieneHinzufuegenOhneRegelvalidierung(kurs2neu.id, eSchiene.id);
 		for (const schuelerID of susVon1nach2) {
-			this.stateSchuelerKursEntfernen(schuelerID, kurs1alt.id);
-			this.stateSchuelerKursHinzufuegen(schuelerID, kurs2neu.id);
+			this.stateSchuelerKursEntfernenOhneRevalidierung(schuelerID, kurs1alt.id);
+			this.stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID, kurs2neu.id);
 		}
+		this.stateRevalidateEverything();
 	}
 
 	/**

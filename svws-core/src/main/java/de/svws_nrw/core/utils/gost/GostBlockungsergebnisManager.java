@@ -1256,32 +1256,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Fügt den Schüler dem Kurs hinzu.<br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
-	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private void stateSchuelerKursHinzufuegen(final long idSchueler, final long idKurs) {
-		stateSchuelerKursHinzufuegenOhneRevalidierung(idSchueler, idKurs);
-		stateRevalidateEverything();
-	}
-
-	/**
-	 * Entfernt den Schüler aus dem Kurs.<br>
-	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
-	 *          Zuordnung aller ungültigen Wahlen gelöscht.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 */
-	private void stateSchuelerKursEntfernen(final long idSchueler, final long idKurs) {
-		stateSchuelerKursEntfernenOhneRevalidierung(idSchueler, idKurs);
-		stateRevalidateEverything();
-	}
-
-	/**
 	 * Fügt den Kurs der Schiene hinzu.
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
@@ -5789,12 +5763,17 @@ public class GostBlockungsergebnisManager {
 		final int nSchienen = _parent.schieneGetAnzahl();
 		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
 
-		// Muss vor 'setKursSchienenNr' aufgerufen werden.
+		// Erst nach der Revalidierung gibt es "eKurs".
 		stateRevalidateEverything();
 
 		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
-		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++)
-			setKursSchienenNr(idKurs, nr);
+		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++) {
+			final @NotNull GostBlockungsergebnisSchiene eSchiene = getSchieneEmitNr(nr);
+			stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, eSchiene.id);
+		}
+
+		// Nach dieser Revalidierung gibt ist der Kurs der Schiene zugeordnet.
+		stateRevalidateEverything();
 	}
 
 	/**
@@ -5891,14 +5870,21 @@ public class GostBlockungsergebnisManager {
 		// 1) Kurs2 erzeugen (beim Parent-Manager).
 		_parent.kursAdd(kurs2neu);
 
-		// 2) Kurs2 erzeugen (in diesem Manager).
-		setAddKursByID(kurs2neu.id);
+		// 2) Erst nach der Revalidierung gibt es "eKurs".
+		stateRevalidateEverything();
 
-		// 3) Verschieben der SuS von Kurs1 nach Kurs2 (in diesem Manager).
+		// 3) Den neuen Kurs in die selben Schienen wie den alten Kurs setzen.
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : getOfKursSchienenmenge(kurs1alt.id))
+			stateKursSchieneHinzufuegenOhneRegelvalidierung(kurs2neu.id, eSchiene.id);
+
+		// 4) Verschieben der SuS von Kurs1 nach Kurs2 (in diesem Manager).
 		for (final long schuelerID : susVon1nach2) {
-			stateSchuelerKursEntfernen(schuelerID, kurs1alt.id);
-			stateSchuelerKursHinzufuegen(schuelerID, kurs2neu.id);
+			stateSchuelerKursEntfernenOhneRevalidierung(schuelerID, kurs1alt.id);
+			stateSchuelerKursHinzufuegenOhneRevalidierung(schuelerID, kurs2neu.id);
 		}
+
+		// 5) Erst nach der Revalidierung sind die SuS in den Kursen gewandert.
+		stateRevalidateEverything();
 	}
 
 	/**
