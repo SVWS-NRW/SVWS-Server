@@ -1169,17 +1169,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt den Kurs der Schiene hinzu.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene  Die Datenbank-ID der Schiene.
-	 */
-	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : void {
-		this.stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
-		this.stateRevalidateEverything();
-	}
-
-	/**
 	 * Liefert die Anzahl an externen SuS.
 	 *
 	 * @return die Anzahl an externen SuS.
@@ -5121,22 +5110,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const kurs of this.getSchieneE(idSchiene).kurse)
 			summe += this.getOfKursAnzahlSchuelerDummy(kurs.id);
 		return summe;
-	}
-
-	/**
-	 * Verknüpft einen Kurs mit einer Schiene.
-	 * Die Schiene wird anhand ihrer Nummer (nicht anhand der Datenbank-ID) identifiziert.
-	 *
-	 * @deprecated  Diese Methode muss in Zukunft über Kurs-Schienen-Updates erfolgen.
-	 *
-	 * @param  kursID      Die Datenbank-ID des Kurses.
-	 * @param  schienenNr  Die Nummer der Schiene (nicht die Datenbank-ID).
-	 *
-	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
-	 */
-	public setKursSchienenNr(kursID : number, schienenNr : number) : void {
-		const eSchiene : GostBlockungsergebnisSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schienenNR_to_schiene, schienenNr);
-		this.stateKursSchieneHinzufuegen(kursID, eSchiene.id);
 	}
 
 	/**

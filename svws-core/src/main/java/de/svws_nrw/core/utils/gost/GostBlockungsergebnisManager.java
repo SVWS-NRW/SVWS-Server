@@ -1255,17 +1255,6 @@ public class GostBlockungsergebnisManager {
 			}
 	}
 
-	/**
-	 * Fügt den Kurs der Schiene hinzu.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene  Die Datenbank-ID der Schiene.
-	 */
-	private void stateKursSchieneHinzufuegen(final long idKurs, final long idSchiene) {
-		stateKursSchieneHinzufuegenOhneRegelvalidierung(idKurs, idSchiene);
-		stateRevalidateEverything();
-	}
-
 	// #########################################################################
 	// ##########           Allgemeine Anfragen                       ##########
 	// #########################################################################
@@ -5635,23 +5624,6 @@ public class GostBlockungsergebnisManager {
 			summe += getOfKursAnzahlSchuelerDummy(kurs.id);
 
 		return summe;
-	}
-
-	/**
-	 * Verknüpft einen Kurs mit einer Schiene.
-	 * Die Schiene wird anhand ihrer Nummer (nicht anhand der Datenbank-ID) identifiziert.
-	 *
-	 * @deprecated  Diese Methode muss in Zukunft über Kurs-Schienen-Updates erfolgen.
-	 *
-	 * @param  kursID      Die Datenbank-ID des Kurses.
-	 * @param  schienenNr  Die Nummer der Schiene (nicht die Datenbank-ID).
-	 *
-	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
-	 */
-	@Deprecated(forRemoval = true)
-	public void setKursSchienenNr(final long kursID, final int schienenNr) throws DeveloperNotificationException {
-		final @NotNull GostBlockungsergebnisSchiene eSchiene = DeveloperNotificationException.ifMapGetIsNull(_schienenNR_to_schiene, schienenNr);
-		stateKursSchieneHinzufuegen(kursID, eSchiene.id);
 	}
 
 	/**
