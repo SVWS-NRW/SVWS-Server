@@ -169,6 +169,7 @@ public class Kurs42Import {
 		curRegelID = initKurse(curRegelID, mapLehrer);
 		initSchienen();
 		curRegelID = initBlockplan(curRegelID);
+		initKurseSchienenanzahlKorrektur();
 		initFachwahlen();
 	}
 
@@ -311,6 +312,16 @@ public class Kurs42Import {
 			}
 		}
 		return curRegelID;
+	}
+
+	private void initKurseSchienenanzahlKorrektur() {
+		for (final GostBlockungKurs kurs : kurse) {
+			final int zugeordnet = zuordnung_kurs_schiene.getSubMapSizeOrZero(kurs.id);
+			if (kurs.anzahlSchienen != zugeordnet) {
+				logger.logLn("Der Kurs %s hat laut den Kurs42-Daten %x Schienen, aber er ist %x Schienen zugeordnet. Der letzte Wert wird als richtig übernommen.".formatted(mapKursByID.get(kurs.id).Name, kurs.anzahlSchienen, zugeordnet));
+				kurs.anzahlSchienen = zugeordnet;
+			}
+		}
 	}
 
 	private void initFachwahlen() throws IOException {
