@@ -26,8 +26,7 @@ public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlg
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKOptimiereBest(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKOptimiereBest(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		algoS = new KursblockungAlgorithmusSSchnellW(pRandom, pLogger, pDynDat);
 	}

@@ -23,10 +23,20 @@ public final class KursblockungAlgorithmusPermanent  {
 
 	private final @NotNull Random _random = new Random();
 	private final @NotNull Logger _logger = new Logger();
+
+	/** Die TOP-Ergebnisse werden als {@link KursblockungDynDaten}-Objekt gespeichert, da diese sortierbar sind. */
 	private final @NotNull ArrayList<@NotNull KursblockungDynDaten> _top;
-	private final @NotNull GostBlockungsdatenManager _input;
+
+	/** Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig. */
 	private final @NotNull KursblockungAlgorithmusPermanentK @NotNull [] algorithmenK;
-	private long _zeitBisNeustart;
+
+	/** Die Eingabe-Daten von der GUI. */
+	private final @NotNull GostBlockungsdatenManager _input;
+
+	/** Die Zeitspanne nachdem alle Algorithmen neu erzeugt werden. */
+	private long _zeitMax;
+
+	/** Die Zeitspanne reduziert sich schrittweise, da die GUI nur kurze Rechenintervalle dem Algorithmus gibt.*/
 	private long _zeitRest;
 
 	/**
@@ -40,8 +50,8 @@ public final class KursblockungAlgorithmusPermanent  {
 		_logger.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
 
 		_input = pInput;
-		_zeitBisNeustart = MILLIS_START;
-		_zeitRest = _zeitBisNeustart;
+		_zeitMax = MILLIS_START;
+		_zeitRest = MILLIS_START;
 		_top = new ArrayList<>();
 
 		algorithmenK = new KursblockungAlgorithmusPermanentK @NotNull [] {
@@ -62,9 +72,8 @@ public final class KursblockungAlgorithmusPermanent  {
 	 * @return TRUE, falls der Blockungsalgorithmus innerhalb der erlaubten Zeit seine Ergebnisse verbessern konnte.
 	 */
 	public boolean next(final long zeitProAufruf) {
-		final long zeitFuerBerechnung = Math.min(zeitProAufruf, _zeitRest);
-
 		final long zeitStart = System.currentTimeMillis();
+		final long zeitFuerBerechnung = Math.min(zeitProAufruf, _zeitRest);
 		final long zeitEnde = zeitStart + zeitFuerBerechnung;
 
 		// Jeder Algorithmus optimiert innerhalb seiner Zeit sein eigenes "KursblockungDynDaten"-Objekt.
@@ -78,12 +87,17 @@ public final class KursblockungAlgorithmusPermanent  {
 		return (_zeitRest <= 100) ? _neustart() : false;
 	}
 
+	/**
+	 * Liefert TRUE, falls mindestens ein Algorithmus ein besseres Ergebnis gefunden hat.
+	 *
+	 * @return TRUE, falls mindestens ein Algorithmus ein besseres Ergebnis gefunden hat.
+	 */
 	private boolean _neustart() {
-		// Überprüfe, ob einer der Algorithmen ein besseres Ergebnis gefunden hat. Verteile aber vorher die SuS.
 
+		// Verteile aber vorher die SuS.
 		int verbesserung = 0;
 		for (int iK = 0; iK < algorithmenK.length; iK++) {
-			verteileSuS(algorithmenK[iK]);
+			_verteileSuS(algorithmenK[iK]);
 			if (_fuegeHinzuFallsBesser(iK))
 				verbesserung++;
 		}
@@ -95,8 +109,8 @@ public final class KursblockungAlgorithmusPermanent  {
 		algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input);
 
 		// Die Berechnungszeit steigt.
-		_zeitBisNeustart += MILLIS_INCREMENT;
-		_zeitRest = _zeitBisNeustart;
+		_zeitMax += MILLIS_INCREMENT;
+		_zeitRest = _zeitMax;
 
 		return verbesserung > 0;
 	}
@@ -124,7 +138,7 @@ public final class KursblockungAlgorithmusPermanent  {
 		return false;
 	}
 
-	private void verteileSuS(final @NotNull KursblockungAlgorithmusPermanentK k) {
+	private void _verteileSuS(final @NotNull KursblockungAlgorithmusPermanentK k) {
 		final @NotNull KursblockungDynDaten dynDaten = k.gibDynDaten();
 
 		final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
@@ -158,6 +172,7 @@ public final class KursblockungAlgorithmusPermanent  {
 
 	/**
 	 * Liefert die Liste der aktuellen Top-Blockungsergebnisse.
+	 * <br> Die ID der Blockungsergebnisse entspricht dem Index in der TOP-Liste.
 	 *
 	 * @return die Liste der aktuellen Top-Blockungsergebnisse.
 	 */

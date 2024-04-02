@@ -385,13 +385,10 @@ export { UserNotificationException } from './core/exceptions/UserNotificationExc
 export { KursblockungAlgorithmus } from './core/kursblockung/KursblockungAlgorithmus';
 export { KursblockungAlgorithmusK } from './core/kursblockung/KursblockungAlgorithmusK';
 export { KursblockungAlgorithmusKFachwahlmatrix } from './core/kursblockung/KursblockungAlgorithmusKFachwahlmatrix';
-export { KursblockungAlgorithmusKFachwahlmatrix2 } from './core/kursblockung/KursblockungAlgorithmusKFachwahlmatrix2';
 export { KursblockungAlgorithmusKMatching } from './core/kursblockung/KursblockungAlgorithmusKMatching';
-export { KursblockungAlgorithmusKMatching2 } from './core/kursblockung/KursblockungAlgorithmusKMatching2';
 export { KursblockungAlgorithmusKOptimiereBest } from './core/kursblockung/KursblockungAlgorithmusKOptimiereBest';
 export { KursblockungAlgorithmusKSchnellW } from './core/kursblockung/KursblockungAlgorithmusKSchnellW';
 export { KursblockungAlgorithmusKSchuelervorschlag } from './core/kursblockung/KursblockungAlgorithmusKSchuelervorschlag';
-export { KursblockungAlgorithmusKmitS } from './core/kursblockung/KursblockungAlgorithmusKmitS';
 export { KursblockungAlgorithmusPermanent } from './core/kursblockung/KursblockungAlgorithmusPermanent';
 export { KursblockungAlgorithmusPermanentK } from './core/kursblockung/KursblockungAlgorithmusPermanentK';
 export { KursblockungAlgorithmusPermanentKFachwahlmatrix } from './core/kursblockung/KursblockungAlgorithmusPermanentKFachwahlmatrix';

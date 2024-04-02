@@ -30,14 +30,29 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 
 	private readonly _logger : Logger = new Logger();
 
+	/**
+	 * Die TOP-Ergebnisse werden als {@link KursblockungDynDaten}-Objekt gespeichert, da diese sortierbar sind.
+	 */
 	private readonly _top : ArrayList<KursblockungDynDaten>;
 
-	private readonly _input : GostBlockungsdatenManager;
-
+	/**
+	 * Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig.
+	 */
 	private readonly algorithmenK : Array<KursblockungAlgorithmusPermanentK>;
 
-	private _zeitBisNeustart : number = 0;
+	/**
+	 * Die Eingabe-Daten von der GUI.
+	 */
+	private readonly _input : GostBlockungsdatenManager;
 
+	/**
+	 * Die Zeitspanne nachdem alle Algorithmen neu erzeugt werden.
+	 */
+	private _zeitMax : number = 0;
+
+	/**
+	 * Die Zeitspanne reduziert sich schrittweise, da die GUI nur kurze Rechenintervalle dem Algorithmus gibt.
+	 */
 	private _zeitRest : number = 0;
 
 
@@ -51,8 +66,8 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		const seed : number = this._random.nextLong();
 		this._logger.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
 		this._input = pInput;
-		this._zeitBisNeustart = KursblockungAlgorithmusPermanent.MILLIS_START;
-		this._zeitRest = this._zeitBisNeustart;
+		this._zeitMax = KursblockungAlgorithmusPermanent.MILLIS_START;
+		this._zeitRest = KursblockungAlgorithmusPermanent.MILLIS_START;
 		this._top = new ArrayList();
 		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input)];
 	}
@@ -65,8 +80,8 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 * @return TRUE, falls der Blockungsalgorithmus innerhalb der erlaubten Zeit seine Ergebnisse verbessern konnte.
 	 */
 	public next(zeitProAufruf : number) : boolean {
-		const zeitFuerBerechnung : number = Math.min(zeitProAufruf, this._zeitRest);
 		const zeitStart : number = System.currentTimeMillis();
+		const zeitFuerBerechnung : number = Math.min(zeitProAufruf, this._zeitRest);
 		const zeitEnde : number = zeitStart + zeitFuerBerechnung;
 		for (let iK : number = 0; (iK < this.algorithmenK.length) && (System.currentTimeMillis() < zeitEnde); iK++)
 			this.algorithmenK[iK].next(zeitStart + Math.trunc((zeitFuerBerechnung * (iK + 1)) / this.algorithmenK.length));
@@ -74,10 +89,15 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		return (this._zeitRest <= 100) ? this._neustart() : false;
 	}
 
+	/**
+	 * Liefert TRUE, falls mindestens ein Algorithmus ein besseres Ergebnis gefunden hat.
+	 *
+	 * @return TRUE, falls mindestens ein Algorithmus ein besseres Ergebnis gefunden hat.
+	 */
 	private _neustart() : boolean {
 		let verbesserung : number = 0;
 		for (let iK : number = 0; iK < this.algorithmenK.length; iK++) {
-			this.verteileSuS(this.algorithmenK[iK]);
+			this._verteileSuS(this.algorithmenK[iK]);
 			if (this._fuegeHinzuFallsBesser(iK))
 				verbesserung++;
 		}
@@ -85,8 +105,8 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input);
 		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
 		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
-		this._zeitBisNeustart += KursblockungAlgorithmusPermanent.MILLIS_INCREMENT;
-		this._zeitRest = this._zeitBisNeustart;
+		this._zeitMax += KursblockungAlgorithmusPermanent.MILLIS_INCREMENT;
+		this._zeitRest = this._zeitMax;
 		return verbesserung > 0;
 	}
 
@@ -106,7 +126,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		return false;
 	}
 
-	private verteileSuS(k : KursblockungAlgorithmusPermanentK) : void {
+	private _verteileSuS(k : KursblockungAlgorithmusPermanentK) : void {
 		const dynDaten : KursblockungDynDaten = k.gibDynDaten();
 		const algorithmenS : Array<KursblockungAlgorithmusS> = [new KursblockungAlgorithmusSSchnellW(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSZufaellig(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSMatching(this._random, this._logger, dynDaten), new KursblockungAlgorithmusSMatchingW(this._random, this._logger, dynDaten)];
 		dynDaten.aktionZustandSpeichernK();
@@ -122,6 +142,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 
 	/**
 	 * Liefert die Liste der aktuellen Top-Blockungsergebnisse.
+	 * <br> Die ID der Blockungsergebnisse entspricht dem Index in der TOP-Liste.
 	 *
 	 * @return die Liste der aktuellen Top-Blockungsergebnisse.
 	 */
