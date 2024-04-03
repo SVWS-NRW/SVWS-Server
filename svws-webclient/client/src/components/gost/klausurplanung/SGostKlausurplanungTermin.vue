@@ -88,7 +88,8 @@
 							:k-man="kMan"
 							:on-drag="onDrag"
 							:draggable="draggable"
-							:patch-klausur="patchKlausur" />
+							:patch-klausur="patchKlausur"
+							:klausur-css-classes="klausurCssClasses" />
 					</slot>
 					<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
@@ -117,7 +118,7 @@
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;
 		kMan: () => GostKursklausurManager;
-		klausurCssClasses?: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
+		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 		draggable?: (data: GostKlausurplanungDragData) => boolean;
 		//onDrop?: (zone: GostKlausurplanungDropZone) => void;

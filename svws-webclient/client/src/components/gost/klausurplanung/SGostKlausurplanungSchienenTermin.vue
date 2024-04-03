@@ -50,7 +50,7 @@
 		kMan: () => GostKursklausurManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
-		klausurCssClasses: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
+		klausurCssClasses: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;

@@ -14,7 +14,8 @@
 				:draggable="onDrag && draggable(schuelertermin)"
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
-				class="svws-ui-tr" role="row">
+				class="svws-ui-tr" role="row"
+				:class="[props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(schuelertermin, undefined)]">
 				<div class="svws-ui-td" role="cell">
 					<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
@@ -46,7 +47,7 @@
 
 <script setup lang="ts">
 	import { DateUtils } from "@core";
-	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrs } from "@core";
+	import type { GostKursklausurManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import { computed} from "vue";
@@ -59,12 +60,14 @@
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 	}>(), {
 		onDrag: undefined,
 		draggable: () => false,
 		onDrop: undefined,
 		selectedItems: undefined,
 		patchKlausur: undefined,
+		klausurCssClasses: undefined,
 	});
 
 

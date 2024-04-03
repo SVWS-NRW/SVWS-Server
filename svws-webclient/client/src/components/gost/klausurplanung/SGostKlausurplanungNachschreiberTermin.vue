@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())">
+	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:k-man="kMan"
 			:termin-selected="terminSelected || false"
@@ -46,7 +46,7 @@
 		kMan: () => GostKursklausurManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
 		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
-		klausurCssClasses: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
+		klausurCssClasses: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		dragData: GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;

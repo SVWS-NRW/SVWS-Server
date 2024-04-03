@@ -277,7 +277,8 @@
 		loading.value = false;
 	};
 
-	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
+	const klausurCssClasses = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
+		const klausur = kl as GostKursklausur;
 		let konfliktfreiZuFremdtermin = false;
 		for (const oTermin of termine.value) {
 			if (oTermin.id !== klausur.idTermin && oTermin.quartal === props.kMan().vorgabeByKursklausur(klausur).quartal || oTermin.quartal === 0)

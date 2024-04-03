@@ -177,12 +177,17 @@
 
 	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
 
-	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
+	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		if (dragData.value === undefined)
 			return {};
-		return {
-			"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur(props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur), klausur),
-		}
+		if (klausur instanceof GostKursklausur)
+			return {
+				"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur(props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur), klausur),
+			}
+		else if (klausur instanceof GostSchuelerklausurTermin)
+			return {
+				"bg-red-500": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur).idSchueler,
+			}
 	};
 
 	const isMounted = ref(false);
