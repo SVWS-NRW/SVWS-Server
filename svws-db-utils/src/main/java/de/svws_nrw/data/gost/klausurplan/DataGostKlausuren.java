@@ -81,7 +81,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 			data.klausurdata.termine.addAll(klausuren.termine);
 			data.klausurdata.vorgaben.addAll(klausuren.vorgaben);
 			data.faecher.addAll(DataGostFaecher.getFaecherManager(conn, jg).faecher());
-			data.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, abiturjahr).getAllSchueler());
+			data.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg).getAllSchueler());
 		}
 		data.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, abschnitte.getFirst().ID, true));
 		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));

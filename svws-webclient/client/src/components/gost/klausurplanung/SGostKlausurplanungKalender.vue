@@ -95,7 +95,7 @@
 									</span>
 								</div>
 							</li>
-							<li v-if="!showMoreKonflikte" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte2(4, false, true).length - 3 }} weitere</li>
+							<li v-if="!showMoreKonflikte" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte(4, false, true).length - 3 }} weitere</li>
 						</ul>
 					</div>
 				</div>
