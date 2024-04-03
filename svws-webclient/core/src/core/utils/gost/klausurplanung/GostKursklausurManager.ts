@@ -1296,6 +1296,21 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob der zu einer Schülerklausur gehörige Schüler in einer Kursklausur enthalten ist.
+	 *
+	 * @param schuelerklausur die zu prüfende Schülerklausur
+	 * @param kursklausur  die zu prüfende Kursklausur
+	 *
+	 * @return die Anzahl der Konflikte
+	 */
+	public konfliktZuKursklausurBySchuelerklausur(schuelerklausur : GostSchuelerklausur, kursklausur : GostKursklausur) : boolean {
+		let schuelerids : List<number> = new ArrayList();
+		for (let sk of this.schuelerklausurGetMengeByKursklausurid(kursklausur.id))
+			schuelerids.add(sk.idSchueler);
+		return schuelerids.contains(schuelerklausur.idSchueler);
+	}
+
+	/**
 	 * Liefert eine Map Kursklausur -> Schülerids, die die Konflikte in jeder
 	 * Klausur der übergebenen Termin-ID enthält
 	 *

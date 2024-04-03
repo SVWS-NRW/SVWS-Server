@@ -178,12 +178,10 @@
 	const termine = computed(() => props.kMan().terminGetNTMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true));
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
-		let konfliktfreiZuFremdtermin = false;
-		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : true;
+		if (dragData.value === undefined)
+			return {};
 		return {
-			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			"svws-warning": !konfliktfreiZuFremdtermin,
-			"svws-error": konfliktZuEigenemTermin,
+			"bg-red-500": props.kMan().konfliktZuKursklausurBySchuelerklausur(props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur), klausur),
 		}
 	};
 

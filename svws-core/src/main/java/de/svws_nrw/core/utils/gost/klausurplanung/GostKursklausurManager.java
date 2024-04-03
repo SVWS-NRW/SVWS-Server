@@ -1380,7 +1380,20 @@ public class GostKursklausurManager {
 	}
 
 
-
+	/**
+	 * Prüft, ob der zu einer Schülerklausur gehörige Schüler in einer Kursklausur enthalten ist.
+	 *
+	 * @param schuelerklausur die zu prüfende Schülerklausur
+	 * @param kursklausur  die zu prüfende Kursklausur
+	 *
+	 * @return die Anzahl der Konflikte
+	 */
+	public boolean konfliktZuKursklausurBySchuelerklausur(final @NotNull GostSchuelerklausur schuelerklausur, final @NotNull GostKursklausur kursklausur) {
+		@NotNull List<@NotNull Long> schuelerids = new ArrayList<>();
+		for (@NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausurid(kursklausur.id))
+			schuelerids.add(sk.idSchueler);
+		return schuelerids.contains(schuelerklausur.idSchueler);
+	}
 
 
 	/**
