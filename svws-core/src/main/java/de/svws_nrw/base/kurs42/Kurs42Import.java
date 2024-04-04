@@ -236,20 +236,6 @@ public class Kurs42Import {
 					throw new IOException(nfe);
 				}
 			}
-			if ((k42Kurs.FixiertInSchiene != null) && (!"".equals(k42Kurs.FixiertInSchiene))) {
-				try {
-					final int schienenNummer = Integer.parseInt(k42Kurs.FixiertInSchiene) + 1;  // Die Schienen-Nummer (1-indiziert)
-					setSchienenBeiKursen.add(schienenNummer);
-					final GostBlockungRegel regel = new GostBlockungRegel();
-					regel.id = curRegelID++;
-					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-					regel.parameter.add(id);  // Kurs-ID
-					regel.parameter.add((long) schienenNummer);
-					regeln.add(regel);
-				} catch (final NumberFormatException nfe) {
-					throw new IOException(nfe);
-				}
-			}
 		}
 		return curRegelID;
 	}
