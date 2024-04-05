@@ -666,6 +666,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const idBlockung = this.datenmanager.daten().id;
 		const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
 		this.datenmanager.ergebnisAddListe(ergebnisseMitIDs);
+		this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
 		this.commit();
 	});
 
@@ -682,6 +683,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const reselect = liste.contains(ergebnisid);
 		await api.server.deleteGostBlockungsergebnisse(liste, api.schema);
 		this.datenmanager.ergebnisRemoveListeByIDs(set);
+		this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
 		if (reselect) {
 			for (const e of this.ergebnisse)
 				if (!set.contains(e.id)) {
@@ -698,8 +700,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		try {
 			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
+			this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size() + liste.size();
 			await this.setAuswahlBlockung(this.auswahlBlockung, true);
-			await this.gotoErgebnis(this._state.value.auswahlErgebnis)
+			await this.gotoErgebnis(this._state.value.auswahlErgebnis);
 			api.status.stop();
 		} catch (e) {
 			api.status.stop(e instanceof Error ? e : undefined);
