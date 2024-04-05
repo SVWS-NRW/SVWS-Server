@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenDaten, JahrgangsDaten, KursDaten, GostJahrgang, Schuljahresabschnitt } from "@core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, Schuljahresabschnitt } from "@core";
 
 import { SchuelerListeManager, ArrayList, DeveloperNotificationException, SchuelerListe } from "@core";
 import { SchuelerStatus } from "@core";

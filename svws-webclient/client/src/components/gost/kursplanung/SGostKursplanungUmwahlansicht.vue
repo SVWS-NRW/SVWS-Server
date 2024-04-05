@@ -101,14 +101,14 @@
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
 										<template v-if="(allow_regeln && fach_gewaehlt(kurs))">
-											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
+											<span class="cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
 												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
-												<span class="icon i-ri-prohibited-line inline-block" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
+												<span class="icon i-ri-prohibited-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
 											</span>
-											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
+											<span class="cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id)" :title="fixier_regel(kurs.id) ? 'Fixiert' : 'Fixieren'">
 												<span class="icon i-ri-pushpin-fill inline-block" v-if="fixier_regel(kurs.id)"
 													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
-												<span class="icon i-ri-pushpin-line inline-block" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
+												<span class="icon i-ri-pushpin-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id)"
 													:class="[hatSchieneKollisionen(schiene.id).value ? 'icon-white' : '']" />
 											</span>
 										</template>
