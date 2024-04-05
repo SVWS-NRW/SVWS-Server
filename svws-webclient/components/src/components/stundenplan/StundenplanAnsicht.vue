@@ -474,7 +474,7 @@
 
 	.svws-ui-stundenplan--head {
 		@apply bg-white dark:bg-black py-1 text-button;
-		@apply h-[2.75rem] sticky -top-px z-10;
+		@apply h-[2.75rem] sticky -top-px z-20;
 		@apply border border-black/25 dark:border-white/10;
 
 		.svws-hat-zeitachse & {
@@ -580,6 +580,10 @@
 
 		&:not(:last-child) {
 			@apply rounded-b-none;
+		}
+
+		.tooltip-trigger {
+			@apply max-w-[14rem];
 		}
 	}
 

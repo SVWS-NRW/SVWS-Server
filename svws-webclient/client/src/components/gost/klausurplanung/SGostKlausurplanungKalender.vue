@@ -44,7 +44,7 @@
 					</div>
 				</div>
 			</svws-ui-content-card>
-			<svws-ui-content-card>
+			<svws-ui-content-card class="svws-card-stundenplan">
 				<template v-if="kwAuswahl">
 					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl" :jahrgangsdaten
 						:manager="stundenplanmanager" :k-man="kMan" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
@@ -286,9 +286,41 @@
 	}
 }
 
+.svws-ui-tab-content {
+	@apply overflow-y-hidden items-start;
+
+	.page--content {
+		@apply h-full py-0 auto-rows-auto;
+
+		.content-card {
+			@apply max-h-full pt-8 pb-16 px-4 -mx-4 overflow-y-auto h-[unset];
+			scrollbar-gutter: stable;
+		}
+
+		.svws-card-stundenplan {
+			@apply overflow-y-hidden overflow-x-hidden pb-0;
+			scrollbar-gutter: auto;
+		}
+	}
+}
+
 .svws-kw-auswahl {
   .wrapper--headless {
     @apply opacity-0 -ml-4 mt-1;
   }
+}
+</style>
+
+<style lang="postcss">
+.svws-card-stundenplan {
+	@apply pb-16;
+
+	.content-card--content {
+		@apply h-full overflow-x-scroll overflow-y-auto pt-px;
+	}
+
+	.svws-ui-stundenplan {
+		@apply overflow-visible h-auto pb-8;
+	}
 }
 </style>
