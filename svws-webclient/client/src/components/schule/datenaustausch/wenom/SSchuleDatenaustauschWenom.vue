@@ -10,7 +10,29 @@
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
 			<div class="page--content page--content--full">
-				<s-card-schule-datenaustausch-wenom />
+				<svws-ui-content-card title="Aktuelle Abschnittsdaten sychronisieren">
+					<div class="flex items-start gap-3">
+						<svws-ui-button type="primary">
+							synchronisieren
+						</svws-ui-button>
+					</div>
+				</svws-ui-content-card>
+				<svws-ui-content-card title="Aktuelle Abschnittsdaten löschen">
+					<div class="flex items-start gap-3">
+						<svws-ui-button type="primary">
+							löschen
+						</svws-ui-button>
+					</div>
+				</svws-ui-content-card>
+				<svws-ui-content-card title="Zugangsdaten zum Webnotenmanager">
+					<div class="flex items-start gap-3">
+						<svws-ui-text-input v-model.trim="url" type="text" placeholder="WeNoM URL" />
+						<svws-ui-text-input v-model.trim="token" type="text" placeholder="WeNoM Token" />
+						<svws-ui-button type="primary" @click="setWenomCredentials(url, token)" :disabled="!url || !token">
+							speichern
+						</svws-ui-button>
+					</div>
+				</svws-ui-content-card>
 			</div>
 		</div>
 	</div>
@@ -18,8 +40,13 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { SchuleDatenaustauschWenomProps } from './SSchuleDatenaustauschWenomProps';
 
 	const props = defineProps<SchuleDatenaustauschWenomProps>();
+
+
+	const url = ref<string>("");
+	const token = ref<string>("");
 
 </script>
