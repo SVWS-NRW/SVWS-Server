@@ -185,6 +185,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _schienenID_fachartID_to_kurseList : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D();
 
 	/**
+	 * Map von Kursdifferenz nach String-List (Facharten mit dieser Kursdifferenzen).
+	 */
+	private readonly _kursdifferenz_to_fachartenList : JavaMap<number, List<string>> = new HashMap();
+
+	/**
 	 * Map von Schüler-ID Integer (Summe aller Kollisionen des Schülers).
 	 */
 	private readonly _schuelerID_to_kollisionen : JavaMap<number, number> = new HashMap();
@@ -335,6 +340,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.update_2_schienenID_to_susAnzahl();
 		this.update_2_schuelerID_schienenID_to_kurseSet();
 		this.update_2_schienenID_fachartID_to_kurseList();
+		this.update_3_kursdifferenz_to_fachartenList();
 		this.update_3_schuelerID_to_kollisionen();
 		this.update_3_schuelerID_fachID_to_kurs_or_null();
 		if (!this._fehlermeldungen.isEmpty()) {
@@ -517,9 +523,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		sb.append("Maximale Kursdifferenz (LK, GK, REST): " + this._bewertung3_KD_nur_LK + ", " + this._bewertung3_KD_nur_GK + ", " + this._bewertung3_KD_nur_REST + "\n");
 		if (histo.length >= 2)
 			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x\n");
-		for (let i : number = 2; i < histo.length; i++)
-			if (histo[i] > 0)
-				sb.append("Differenz " + i + ": " + histo[i] + "x\n");
+		for (let i : number = 2; i < histo.length; i++) {
+			if (histo[i] <= 0)
+				continue;
+			const listFacharten : List<string> = DeveloperNotificationException.ifMapGetIsNull(this._kursdifferenz_to_fachartenList, i);
+			sb.append("Differenz " + i + ": " + histo[i] + "x (" + listFacharten.get(0)!);
+			for (let j : number = 1; j < listFacharten.size(); j++)
+				sb.append(", " + listFacharten.get(j)!);
+			sb.append(")\n");
+		}
 		return sb.toString();
 	}
 
@@ -838,6 +850,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchiene of this._schienenIDset)
 			for (const idFachart of this._fachartID_to_kurseList.keySet())
 				Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart);
+	}
+
+	private update_3_kursdifferenz_to_fachartenList() : void {
+		this._kursdifferenz_to_fachartenList.clear();
+		for (const idFachart of this._fachartID_to_kursdifferenz.keySet()) {
+			const kursdifferenz : number = DeveloperNotificationException.ifMapGetIsNull(this._fachartID_to_kursdifferenz, idFachart).valueOf();
+			const sFachart : string = this._parent.toStringFachartSimpleByFachartID(idFachart);
+			MapUtils.getOrCreateArrayList(this._kursdifferenz_to_fachartenList, kursdifferenz).add(sFachart);
+		}
 	}
 
 	private update_3_schuelerID_to_kollisionen() : void {

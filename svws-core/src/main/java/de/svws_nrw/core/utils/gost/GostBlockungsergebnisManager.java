@@ -148,6 +148,9 @@ public class GostBlockungsergebnisManager {
 
 	// ################################# UPDATE 3 #################################
 
+	/** Map von Kursdifferenz nach String-List (Facharten mit dieser Kursdifferenzen). */
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull String>> _kursdifferenz_to_fachartenList = new HashMap<>();
+
 	/** Map von Schüler-ID Integer (Summe aller Kollisionen des Schülers). */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _schuelerID_to_kollisionen = new HashMap<>();
 
@@ -266,6 +269,7 @@ public class GostBlockungsergebnisManager {
 		update_2_schuelerID_schienenID_to_kurseSet();								// _schienenID_to_kursIDSet, _kursID_to_schuelerIDSet, _schuelerIDset
 		update_2_schienenID_fachartID_to_kurseList();								// _kursID_to_schienenSet, _fachartID_to_kurseList, _kursID_to_kurs, _schienenIDset
 
+		update_3_kursdifferenz_to_fachartenList();                                  // _fachartID_to_kursdifferenz
 		update_3_schuelerID_to_kollisionen();										// _schuelerID_schienenID_to_kurseSet
 		update_3_schuelerID_fachID_to_kurs_or_null();                               // _schuelerID_to_kurseSet
 
@@ -506,9 +510,16 @@ public class GostBlockungsergebnisManager {
 		if (histo.length >= 2)
 			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x\n");
 
-		for (int i = 2; i < histo.length; i++)
-			if (histo[i] > 0)
-				sb.append("Differenz " + i + ": " + histo[i] + "x\n");
+		for (int i = 2; i < histo.length; i++) {
+			if (histo[i] <= 0)
+				continue;
+
+			final @NotNull List<@NotNull String> listFacharten = DeveloperNotificationException.ifMapGetIsNull(_kursdifferenz_to_fachartenList, i);
+			sb.append("Differenz " + i + ": " + histo[i] + "x (" + listFacharten.get(0));
+			for (int j = 1; j < listFacharten.size(); j++)
+				sb.append(", " + listFacharten.get(j));
+			sb.append(")\n");
+		}
 
 		return sb.toString();
 	}
@@ -899,6 +910,16 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchiene : _schienenIDset)
 			for (final long idFachart : _fachartID_to_kurseList.keySet())
 				Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart);
+	}
+
+	private void update_3_kursdifferenz_to_fachartenList() {
+		_kursdifferenz_to_fachartenList.clear();
+
+		for (final long idFachart : _fachartID_to_kursdifferenz.keySet()) {
+			final int kursdifferenz = DeveloperNotificationException.ifMapGetIsNull(_fachartID_to_kursdifferenz, idFachart);
+			final @NotNull String sFachart = _parent.toStringFachartSimpleByFachartID(idFachart);
+			MapUtils.getOrCreateArrayList(_kursdifferenz_to_fachartenList, kursdifferenz).add(sFachart);
+		}
 	}
 
 	private void update_3_schuelerID_to_kollisionen() {
