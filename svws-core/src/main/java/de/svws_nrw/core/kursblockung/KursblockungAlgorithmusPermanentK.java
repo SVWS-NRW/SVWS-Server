@@ -15,13 +15,13 @@ import jakarta.validation.constraints.NotNull;
 public abstract class KursblockungAlgorithmusPermanentK {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	protected final @NotNull Random _random;
+	final @NotNull Random _random;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	protected final @NotNull Logger logger;
+	final @NotNull Logger logger;
 
 	/** Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. */
-	protected final @NotNull KursblockungDynDaten dynDaten;
+	final @NotNull KursblockungDynDaten dynDaten;
 
 	/**
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur

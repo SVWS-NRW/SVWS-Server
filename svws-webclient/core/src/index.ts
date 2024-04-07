@@ -393,6 +393,7 @@ export { KursblockungAlgorithmusPermanent } from './core/kursblockung/Kursblocku
 export { KursblockungAlgorithmusPermanentK } from './core/kursblockung/KursblockungAlgorithmusPermanentK';
 export { KursblockungAlgorithmusPermanentKFachwahlmatrix } from './core/kursblockung/KursblockungAlgorithmusPermanentKFachwahlmatrix';
 export { KursblockungAlgorithmusPermanentKMatching } from './core/kursblockung/KursblockungAlgorithmusPermanentKMatching';
+export { KursblockungAlgorithmusPermanentKOptimiereBest } from './core/kursblockung/KursblockungAlgorithmusPermanentKOptimiereBest';
 export { KursblockungAlgorithmusPermanentKSchnellW } from './core/kursblockung/KursblockungAlgorithmusPermanentKSchnellW';
 export { KursblockungAlgorithmusPermanentKSchuelervorschlag } from './core/kursblockung/KursblockungAlgorithmusPermanentKSchuelervorschlag';
 export { KursblockungAlgorithmusS } from './core/kursblockung/KursblockungAlgorithmusS';

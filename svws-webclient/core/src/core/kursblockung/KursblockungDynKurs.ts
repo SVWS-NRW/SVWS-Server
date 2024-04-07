@@ -334,8 +334,8 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenS} zu laden.
+	 *Speichert die aktuelle Lage der Schienen im Zustand S,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenS} zu laden.
 	 */
 	aktionZustandSpeichernS() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveS, 0, this.schienenLage.length);
@@ -343,8 +343,8 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Speichert die aktuelle Lage der Schienen im Zustand K, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenK} zu laden.
+	 *Speichert die aktuelle Lage der Schienen im Zustand K,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenK} zu laden.
 	 */
 	aktionZustandSpeichernK() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveK, 0, this.schienenLage.length);
@@ -352,8 +352,8 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Speichert die aktuelle Lage der Schienen im Zustand G, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenG} zu laden.
+	 *Speichert die aktuelle Lage der Schienen im Zustand G,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenG} zu laden.
 	 */
 	aktionZustandSpeichernG() : void {
 		System.arraycopy(this.schienenLage, 0, this.schienenLageSaveG, 0, this.schienenLage.length);
@@ -377,6 +377,21 @@ export class KursblockungDynKurs extends JavaObject {
 		this.aktionSchienenLageEntfernen();
 		System.arraycopy(this.schienenLageSaveK, 0, this.schienenLage, 0, this.schienenLage.length);
 		System.arraycopy(this.schienenFreiSaveK, 0, this.schienenFrei, 0, this.schienenFrei.length);
+		this.aktionSchienenLageHinzufuegen();
+	}
+
+	/**
+	 * Lädt die Schienenlage des anderen {@link KursblockungDynKurs}-Objekts.
+	 *
+	 * @param b            Das andere {@link KursblockungDynKurs}-Objekt.
+	 * @param schienenArr  Das Array aller {@link KursblockungDynSchiene}-Objekte.
+	 */
+	aktionZustandLadenVon(b : KursblockungDynKurs, schienenArr : Array<KursblockungDynSchiene>) : void {
+		this.aktionSchienenLageEntfernen();
+		for (let i : number = 0; i < this.schienenLage.length; i++)
+			this.schienenLage[i] = schienenArr[b.schienenLage[i].gibNr()];
+		for (let i : number = 0; i < this.schienenFrei.length; i++)
+			this.schienenFrei[i] = schienenArr[b.schienenFrei[i].gibNr()];
 		this.aktionSchienenLageHinzufuegen();
 	}
 

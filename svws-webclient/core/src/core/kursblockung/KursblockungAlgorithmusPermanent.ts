@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { KursblockungAlgorithmusPermanentKOptimiereBest } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKOptimiereBest';
 import { GostBlockungsergebnisManager } from '../../core/utils/gost/GostBlockungsergebnisManager';
 import { KursblockungAlgorithmusS } from '../../core/kursblockung/KursblockungAlgorithmusS';
 import { KursblockungAlgorithmusSSchnellW } from '../../core/kursblockung/KursblockungAlgorithmusSSchnellW';
@@ -69,7 +70,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this._zeitMax = KursblockungAlgorithmusPermanent.MILLIS_START;
 		this._zeitRest = KursblockungAlgorithmusPermanent.MILLIS_START;
 		this._top = new ArrayList();
-		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input)];
+		this.algorithmenK = [new KursblockungAlgorithmusPermanentKSchnellW(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, null)];
 	}
 
 	/**
@@ -105,9 +106,14 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(this._random, this._logger, this._input);
 		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
 		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
+		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, this._gibBestOrNull());
 		this._zeitMax += KursblockungAlgorithmusPermanent.MILLIS_INCREMENT;
 		this._zeitRest = this._zeitMax;
 		return verbesserung > 0;
+	}
+
+	private _gibBestOrNull() : KursblockungDynDaten | null {
+		return this._top.isEmpty() ? null : this._top.get(0);
 	}
 
 	private _fuegeHinzuFallsBesser(algNr : number) : boolean {

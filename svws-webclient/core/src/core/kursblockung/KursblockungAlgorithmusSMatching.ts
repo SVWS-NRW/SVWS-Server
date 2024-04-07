@@ -68,13 +68,12 @@ export class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 		this.dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 		schueler.aktionKurseAlleEntfernen();
-		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
+		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatching();
 		const cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0) {
+		if (cmp < 0)
 			schueler.aktionZustandLadenS();
-		}
 		return cmp > 0;
 	}
 

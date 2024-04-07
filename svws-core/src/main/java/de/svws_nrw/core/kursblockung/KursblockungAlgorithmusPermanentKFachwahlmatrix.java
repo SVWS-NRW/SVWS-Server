@@ -8,16 +8,13 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Algorithmus arbeitet wie folgt:
+ *
  * <pre>
  * init: (1) Alle Kurse zufällig verteilen. SuS werden nicht verteilt.
  *
  * next: (1) Einige wenige Kurse werden verändert. SuS werden nicht verteilt.
  *       (2) Bei Verschlechterung der Fachwahl-Bewertung Veränderung rückgängig machen.
- *
  * </pre>
- *
- * <br> init: Die Kurse werden zufällig verteilt (ohne SuS).
- * <br> next: Die Kurse werden weiterhin zufällig verteilt (ohne SuS). Bewertet wird nur die Fachwahl-Lage der Kurse.
  *
  * @author Benjamin A. Bartsch
  */

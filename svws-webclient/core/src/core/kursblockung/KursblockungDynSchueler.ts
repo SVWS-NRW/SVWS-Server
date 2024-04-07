@@ -278,6 +278,26 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
+	 * Entfernt zunächst den Schüler aus seinen aktuellen Kursen und setzt ihn dann in die Kurse, die im {@link KursblockungDynSchueler}-Objekt gespeichert wurden.
+	 *
+	 * @param b        Das {@link KursblockungDynSchueler}-Objekt.
+	 * @param kursArr  Das Array aller {@link KursblockungDynKurs}-Objekte.
+	 */
+	aktionZustandLadenVon(b : KursblockungDynSchueler, kursArr : Array<KursblockungDynKurs>) : void {
+		this.aktionKurseAlleEntfernen();
+		for (let i : number = 0; i < b.fachartZuKurs.length; i++) {
+			const kursB : KursblockungDynKurs | null = b.fachartZuKurs[i];
+			if (kursB !== null) {
+				const kurs : KursblockungDynKurs | null = kursArr[kursB.gibInternalID()];
+				if (kurs.gibIstErlaubtFuerSchueler(this))
+					this.aktionKursHinzufuegen(i, kurs);
+				else
+					throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.")
+			}
+		}
+	}
+
+	/**
 	 * Entfernt zunächst den Schüler aus seinen aktuellen Kursen und setzt ihn dann in die Kurse, die zuvor im Zustand G gespeichert wurden.
 	 */
 	aktionZustandLadenG() : void {

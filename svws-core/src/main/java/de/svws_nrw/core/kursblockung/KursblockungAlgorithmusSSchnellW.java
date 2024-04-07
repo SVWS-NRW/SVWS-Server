@@ -77,8 +77,8 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 
 		// S. auf seine Kurse neu verteilen.
 		schueler.aktionKurseAlleEntfernen();
-		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
+		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 
 		// Schlechter? --> Kurszuordnung zurück.

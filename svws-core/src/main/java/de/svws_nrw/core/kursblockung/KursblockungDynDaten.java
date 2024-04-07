@@ -1341,6 +1341,32 @@ public class KursblockungDynDaten {
 	}
 
 	/**
+	 * Lädt den zuvor gespeicherten Zustand K einer anderen {@link KursblockungDynDaten}-Objekts (Kursverteilung und Schülerverteilung).
+	 *
+	 * @param b  Das andere {@link KursblockungDynDaten}-Objekt.
+	 */
+	void aktionZustandLadenVon(final @NotNull KursblockungDynDaten b) {
+		if (this == b) {
+			System.out.println("Identisch!");
+			return;
+		}
+
+		// Die Reihenfolge ist wichtig!
+
+		// 1) Alle SuS aus den Kursen entfernen
+		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+			schueler.aktionKurseAlleEntfernen();
+
+		// 2) Dann Kurse verschieben
+		for (int i = 0; i < _kursArr.length; i++)
+			_kursArr[i].aktionZustandLadenVon(b._kursArr[i], _schienenArr);
+
+		// 3) Dann SuS den Kursen hinzufügen.
+		for (int i = 0; i < _schuelerArr.length; i++)
+			_schuelerArr[i].aktionZustandLadenVon(b._schuelerArr[i], _kursArr);
+	}
+
+	/**
 	 * Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung).
 	 */
 	void aktionZustandLadenG() {

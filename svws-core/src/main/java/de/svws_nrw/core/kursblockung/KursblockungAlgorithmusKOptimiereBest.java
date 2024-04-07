@@ -13,9 +13,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithmusK {
 
-	/**
-	 * Mit diesem Algorithmus werden die SuS verteilt.
-	 */
+	/** Mit diesem Algorithmus werden die SuS verteilt. */
 	private final @NotNull KursblockungAlgorithmusSSchnellW algoS;
 
 	/**
@@ -33,7 +31,7 @@ public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlg
 
 	@Override
 	public @NotNull String toString() {
-		return "OptimiereBest";
+		return "KursblockungAlgorithmusKOptimiereBest";
 	}
 
 	@Override

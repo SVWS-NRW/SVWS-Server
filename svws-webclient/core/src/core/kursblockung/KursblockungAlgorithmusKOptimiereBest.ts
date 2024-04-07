@@ -8,7 +8,7 @@ import { System } from '../../java/lang/System';
 export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithmusK {
 
 	/**
-	 *  Mit diesem Algorithmus werden die SuS verteilt.
+	 * Mit diesem Algorithmus werden die SuS verteilt.
 	 */
 	private readonly algoS : KursblockungAlgorithmusSSchnellW;
 
@@ -27,7 +27,7 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	}
 
 	public toString() : string {
-		return "OptimiereBest";
+		return "KursblockungAlgorithmusKOptimiereBest";
 	}
 
 	public berechne(pEndzeit : number) : void {

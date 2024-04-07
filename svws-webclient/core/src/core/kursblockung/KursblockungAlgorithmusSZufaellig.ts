@@ -70,6 +70,7 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 		this.dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 		schueler.aktionKurseAlleEntfernen();
+		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenZufaellig();
 		const cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
 		if (cmp < 0)

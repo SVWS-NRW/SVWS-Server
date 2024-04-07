@@ -86,8 +86,9 @@ public final class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorit
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 
-		// Schueler auf seine Kurse neu verteilen.
+		// S. auf seine Kurse neu verteilen.
 		schueler.aktionKurseAlleEntfernen();
+		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 

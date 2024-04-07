@@ -86,8 +86,9 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 
-		// Schueler auf seine Kurse neu verteilen.
+		// S. auf seine Kurse neu verteilen.
 		schueler.aktionKurseAlleEntfernen();
+		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenZufaellig();
 
 		// Schlechter? --> Kurszuordnung zurück.

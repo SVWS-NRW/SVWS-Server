@@ -60,6 +60,7 @@ public final class KursblockungAlgorithmusPermanent  {
 			new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input),
 			new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input),
 			new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input),
+			new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, null),
 			// ... Ende der K-Algorithmen.
 		};
 	}
@@ -107,12 +108,17 @@ public final class KursblockungAlgorithmusPermanent  {
 		algorithmenK[1] = new KursblockungAlgorithmusPermanentKFachwahlmatrix(_random, _logger, _input);
 		algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(_random, _logger, _input);
 		algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input);
+		algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, _gibBestOrNull());
 
 		// Die Berechnungszeit steigt.
 		_zeitMax += MILLIS_INCREMENT;
 		_zeitRest = _zeitMax;
 
 		return verbesserung > 0;
+	}
+
+	private KursblockungDynDaten _gibBestOrNull() {
+		return _top.isEmpty() ? null : _top.get(0);
 	}
 
 	private boolean _fuegeHinzuFallsBesser(final int algNr) {

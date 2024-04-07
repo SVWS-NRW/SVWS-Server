@@ -132,9 +132,6 @@ public class KursblockungDynKurs {
 		// Der Schiene hinzufügen
 		for (int i = 0; i < schienenLage.length; i++)
 			schienenLage[i].aktionKursHinzufuegen(this);
-
-
-
 	}
 
 	/**
@@ -314,22 +311,22 @@ public class KursblockungDynKurs {
 		return (schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy > 0);
 	}
 
-	/** Speichert die aktuelle Lage der Schienen im Zustand S, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenS} zu laden. */
+	/** Speichert die aktuelle Lage der Schienen im Zustand S,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenS} zu laden. */
 	void aktionZustandSpeichernS() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveS, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveS, 0, schienenFrei.length);
 	}
 
-	/** Speichert die aktuelle Lage der Schienen im Zustand K, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenK} zu laden. */
+	/** Speichert die aktuelle Lage der Schienen im Zustand K,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenK} zu laden. */
 	void aktionZustandSpeichernK() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveK, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveK, 0, schienenFrei.length);
 	}
 
-	/** Speichert die aktuelle Lage der Schienen im Zustand G, um diese bei Bedarf mit der Methode
-	 * {@link #aktionZustandLadenG} zu laden. */
+	/** Speichert die aktuelle Lage der Schienen im Zustand G,
+	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenG} zu laden. */
 	void aktionZustandSpeichernG() {
 		System.arraycopy(schienenLage, 0, schienenLageSaveG, 0, schienenLage.length);
 		System.arraycopy(schienenFrei, 0, schienenFreiSaveG, 0, schienenFrei.length);
@@ -348,6 +345,25 @@ public class KursblockungDynKurs {
 		aktionSchienenLageEntfernen();
 		System.arraycopy(schienenLageSaveK, 0, schienenLage, 0, schienenLage.length);
 		System.arraycopy(schienenFreiSaveK, 0, schienenFrei, 0, schienenFrei.length);
+		aktionSchienenLageHinzufuegen();
+	}
+
+	/**
+	 * Lädt die Schienenlage des anderen {@link KursblockungDynKurs}-Objekts.
+	 *
+	 * @param b            Das andere {@link KursblockungDynKurs}-Objekt.
+	 * @param schienenArr  Das Array aller {@link KursblockungDynSchiene}-Objekte.
+	 */
+	void aktionZustandLadenVon(final @NotNull KursblockungDynKurs b, final @NotNull KursblockungDynSchiene @NotNull [] schienenArr) {
+		// Vorsicht: Ein Kopieren von schienenLage/schienenFrei funktioniert nicht, da es sich um Schienen-Objekte handelt!!!
+		aktionSchienenLageEntfernen();
+
+		for (int i = 0; i < schienenLage.length; i++)
+			schienenLage[i] = schienenArr[b.schienenLage[i].gibNr()];
+
+		for (int i = 0; i < schienenFrei.length; i++)
+			schienenFrei[i] = schienenArr[b.schienenFrei[i].gibNr()];
+
 		aktionSchienenLageHinzufuegen();
 	}
 

@@ -266,6 +266,29 @@ public class KursblockungDynSchueler {
 	}
 
 	/**
+	 * Entfernt zunächst den Schüler aus seinen aktuellen Kursen und setzt ihn dann in die Kurse, die im {@link KursblockungDynSchueler}-Objekt gespeichert wurden.
+	 *
+	 * @param b        Das {@link KursblockungDynSchueler}-Objekt.
+	 * @param kursArr  Das Array aller {@link KursblockungDynKurs}-Objekte.
+	 */
+	void aktionZustandLadenVon(final @NotNull KursblockungDynSchueler b, final @NotNull KursblockungDynKurs @NotNull [] kursArr) {
+		// Vorsicht: Man muss den Schüler in das EIGENE Kurs-Objekt hinzufügen!!!
+		aktionKurseAlleEntfernen();
+
+		for (int i = 0; i < b.fachartZuKurs.length; i++) {
+			final KursblockungDynKurs kursB = b.fachartZuKurs[i];
+			if (kursB != null) {
+				final KursblockungDynKurs kurs = kursArr[kursB.gibInternalID()];
+
+				if (kurs.gibIstErlaubtFuerSchueler(this))
+					aktionKursHinzufuegen(i, kurs);
+				else
+					throw new DeveloperNotificationException("FEHLER: Schüler " + guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
+			}
+		}
+	}
+
+	/**
 	 * Entfernt zunächst den Schüler aus seinen aktuellen Kursen und setzt ihn dann in die Kurse, die zuvor im Zustand G gespeichert wurden.
 	 */
 	void aktionZustandLadenG() {
@@ -348,7 +371,7 @@ public class KursblockungDynSchueler {
 			if (erlaubt != 1)
 				continue;
 
-			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
+			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar. Es wird genau ein Kurs sein.
 			for (int iKurse = 0; iKurse < kurse.length; iKurse++) {
 				final @NotNull KursblockungDynKurs kurs = kurse[iKurse];
 

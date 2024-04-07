@@ -9,17 +9,17 @@ export abstract class KursblockungAlgorithmusPermanentK extends JavaObject {
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	protected readonly _random : Random;
+	readonly _random : Random;
 
 	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	protected readonly logger : Logger;
+	readonly logger : Logger;
 
 	/**
 	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges.
 	 */
-	protected readonly dynDaten : KursblockungDynDaten;
+	readonly dynDaten : KursblockungDynDaten;
 
 
 	/**

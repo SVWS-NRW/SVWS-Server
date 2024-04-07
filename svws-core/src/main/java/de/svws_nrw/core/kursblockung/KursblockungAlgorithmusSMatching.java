@@ -83,17 +83,16 @@ public final class KursblockungAlgorithmusSMatching extends KursblockungAlgorith
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
 
-		// Schueler auf seine Kurse neu verteilen.
+		// S. auf seine Kurse neu verteilen.
 		schueler.aktionKurseAlleEntfernen();
-		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
+		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatching();
 
 		// Schlechter? --> Kurszuordnung zurück.
 		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0) {
+		if (cmp < 0)
 			schueler.aktionZustandLadenS();
-		}
 
 		// Besser?
 		return cmp > 0;

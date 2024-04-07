@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Algorithmus arbeitet wie folgt:
+ *
  * <pre>
  * init: (1) Alle Kurse zufällig verteilen
  *       (2) SuS mit "gewichteten bipartiten Matching" verteilen.

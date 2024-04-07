@@ -1138,6 +1138,24 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
+	 * Lädt den zuvor gespeicherten Zustand K einer anderen {@link KursblockungDynDaten}-Objekts (Kursverteilung und Schülerverteilung).
+	 *
+	 * @param b  Das andere {@link KursblockungDynDaten}-Objekt.
+	 */
+	aktionZustandLadenVon(b : KursblockungDynDaten) : void {
+		if (this as unknown === b as unknown) {
+			console.log(JSON.stringify("Identisch!"));
+			return;
+		}
+		for (const schueler of this._schuelerArr)
+			schueler.aktionKurseAlleEntfernen();
+		for (let i : number = 0; i < this._kursArr.length; i++)
+			this._kursArr[i].aktionZustandLadenVon(b._kursArr[i], this._schienenArr);
+		for (let i : number = 0; i < this._schuelerArr.length; i++)
+			this._schuelerArr[i].aktionZustandLadenVon(b._schuelerArr[i], this._kursArr);
+	}
+
+	/**
 	 * Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenG() : void {
