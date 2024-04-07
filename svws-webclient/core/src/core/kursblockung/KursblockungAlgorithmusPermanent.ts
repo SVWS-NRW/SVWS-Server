@@ -23,8 +23,6 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 
 	private static readonly MILLIS_START : number = 1000;
 
-	private static readonly MILLIS_INCREMENT : number = 1000;
-
 	private static readonly TOP_ERGEBNISSE : number = 10;
 
 	private readonly _random : Random = new Random();
@@ -107,7 +105,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
 		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
 		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, this._gibBestOrNull());
-		this._zeitMax += KursblockungAlgorithmusPermanent.MILLIS_INCREMENT;
+		this._zeitMax = this._zeitMax + Math.trunc(this._zeitMax / 2);
 		this._zeitRest = this._zeitMax;
 		return verbesserung > 0;
 	}

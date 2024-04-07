@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KursblockungAlgorithmusPermanent  {
 	private static final long MILLIS_START = 1000;
-	private static final long MILLIS_INCREMENT = 1000;
+	// private static final long MILLIS_INCREMENT = 1000 --> lineares Wachstum doch nicht so gut.
 	private static final int TOP_ERGEBNISSE = 10;
 
 	private final @NotNull Random _random = new Random();
@@ -110,8 +110,8 @@ public final class KursblockungAlgorithmusPermanent  {
 		algorithmenK[3] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(_random, _logger, _input);
 		algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(_random, _logger, _input, _gibBestOrNull());
 
-		// Die Berechnungszeit steigt.
-		_zeitMax += MILLIS_INCREMENT;
+		// Die Berechnungszeit steigt exponentiell. Mehrere Tests ergaben, dass dies besser ist als linear.
+		_zeitMax = _zeitMax + _zeitMax / 2;
 		_zeitRest = _zeitMax;
 
 		return verbesserung > 0;
