@@ -17,5 +17,6 @@ export interface SchemaAuswahlProps {
 	addExistingSchemaToConfig: (data: BenutzerKennwort, schema: string) => Promise<void>;
 	refresh: () => Promise<void>;
 	apiStatus: ApiStatus;
+	revision: number | null;
 }
 

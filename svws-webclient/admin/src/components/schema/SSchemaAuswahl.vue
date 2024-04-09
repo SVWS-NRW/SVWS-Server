@@ -25,7 +25,14 @@
 					<span class="line-clamp-1 break-all -my-[0.1em] py-[0.1em]">{{ value }}</span>
 				</template>
 				<template #cell(revision)="{ value }">
-					<span v-if="value > 0">{{ value }}</span>
+					<template v-if="(value > 0) && (revision !== null)">
+						<svws-ui-tooltip v-if="value > revision">
+							<span>{{ value }}</span>
+							<span class="icon i-ri-alert-fill icon-error -my-0.5" />
+							<template #content>Dieser SVWS-Server unterstützt nur Schemata bis zur Version {{ revision }}. Um dieses Schema verwenden zu können, ist ein Upgrade des SVWS-Server notwendig.</template>
+						</svws-ui-tooltip>
+						<span v-else>{{ value }}</span>
+					</template>
 					<span v-else class="opacity-25">–</span>
 				</template>
 				<template #cell(isTainted)="{ value }">
