@@ -151,6 +151,27 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	}
 
 	/**
+	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
+	 * Gost-Halbjahr zurück.
+	 *
+	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param termin Termin
+	 *
+	 * @return die Liste der Kursklausuren
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static List<GostKlausurtermin> getKlausurtermineMitGleichemDatum(final DBEntityManager conn, final GostKlausurtermin termin) throws ApiOperationException {
+		if (termin.datum == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
+
+		final List<GostKlausurtermin> termine = DTOMapper.mapList(conn.queryNamed("DTOGostKlausurenTermine.datum", termin.datum, DTOGostKlausurenTermine.class), dtoMapper);
+		termine.remove(termin);
+
+		return termine;
+	}
+
+	/**
 	 * Gibt den Klausurtermin zur übergebenen ID zurück oder eine Exception, falls er nicht in der DB vorhanden ist.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff

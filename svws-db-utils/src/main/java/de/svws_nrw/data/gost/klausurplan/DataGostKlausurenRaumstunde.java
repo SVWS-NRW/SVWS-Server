@@ -61,7 +61,7 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final DBEntityManager conn, final Long idTermin) throws ApiOperationException {
-		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin);
+		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin, false);
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
 		return getKlausurraumstundenZuRaeumen(conn, listRaeume);

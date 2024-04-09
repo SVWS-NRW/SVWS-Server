@@ -393,7 +393,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 */
 	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) throws ApiOperationException {
 		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
-		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin);
+		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin, false);
 		if (listRaeume.isEmpty())
 			return retCollection;
 		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, listRaeume);

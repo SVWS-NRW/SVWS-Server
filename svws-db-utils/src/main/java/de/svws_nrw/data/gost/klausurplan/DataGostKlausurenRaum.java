@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -80,15 +81,26 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idTermin die ID des Klausurtermins
+	 * @param includeDatum true, wenn Termine am selben Datum mit einbezogen werden sollen, sonst false
 	 *
 	 * @return die Liste der Klausurräume
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurraum> getKlausurraeumeZuTermin(final DBEntityManager conn, final Long idTermin) throws ApiOperationException {
-		if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
+	public static List<GostKlausurraum> getKlausurraeumeZuTermin(final DBEntityManager conn, final Long idTermin, final boolean includeDatum) throws ApiOperationException {
+		final GostKlausurtermin termin = DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin);
+		if (termin == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
-		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id", idTermin, DTOGostKlausurenRaeume.class);
+
+		final List<Long> terminIds = new ArrayList<>();
+		terminIds.add(idTermin);
+
+		if (includeDatum) {
+			final List<GostKlausurtermin> termineGleichesDatum = DataGostKlausurenTermin.getKlausurtermineMitGleichemDatum(conn, termin);
+			terminIds.addAll(termineGleichesDatum.stream().map(t -> t.id).toList());
+		}
+
+		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id.multiple", terminIds, DTOGostKlausurenRaeume.class);
 		final List<GostKlausurraum> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeume r : raeume)
 			daten.add(dtoMapper.apply(r));
@@ -98,7 +110,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	@Override
 	public Response get(final Long idTermin) throws ApiOperationException {
 		// Klausurräume zu einem Klausurtermin
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraeumeZuTermin(conn, idTermin)).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getKlausurraeumeZuTermin(conn, idTermin, true)).build();
 	}
 
 	@Override
