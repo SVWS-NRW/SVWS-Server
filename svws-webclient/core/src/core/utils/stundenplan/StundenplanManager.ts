@@ -3462,7 +3462,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
 	 */
 	public raumGetMengeAsList() : List<StundenplanRaum> {
-		return this._raummenge_sortiert;
+		return new ArrayList(this._raummenge_sortiert);
 	}
 
 	/**

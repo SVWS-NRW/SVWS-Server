@@ -10,21 +10,17 @@ import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	auswahl: Raum | undefined;
 	daten: Raum | undefined;
-	mapKatalogeintraege: Map<number, Raum>;
 	stundenplanManager: StundenplanManager | undefined;
 }
 
 const defaultState = <RouteStateKatalogRaeume> {
 	auswahl: undefined,
 	daten: undefined,
-	mapKatalogeintraege: new Map(),
 	stundenplanManager: undefined,
 	view: routeKatalogRaumDaten,
 };
 
 export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
-
-	private stundenplanKomplett = new StundenplanKomplett();
 
 	public constructor() {
 		super(defaultState);
@@ -32,10 +28,6 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 
 	get auswahl(): Raum | undefined {
 		return this._state.value.auswahl;
-	}
-
-	get mapKatalogeintraege(): Map<number, Raum> {
-		return new Map(this._state.value.mapKatalogeintraege);
 	}
 
 	get stundenplanManager(): StundenplanManager {
@@ -61,11 +53,11 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		stundenplanManager.raumAddAll(listKatalogeintraege);
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, stundenplanManager })
+		this.setPatchedDefaultState({ auswahl, stundenplanManager })
 	}
 
 	setEintrag = async (auswahl: Raum) => {
-		const daten = this.mapKatalogeintraege.get(auswahl.id);
+		const daten = this.stundenplanManager.raumGetByIdOrException(auswahl.id);
 		this.setPatchedState({ auswahl, daten })
 	}
 
@@ -79,27 +71,21 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
 		const stundenplanManager = this.stundenplanManager;
-		const mapKatalogeintraege = this.mapKatalogeintraege;
 		stundenplanManager.raumAdd(raum);
-		mapKatalogeintraege.set(raum.id, raum);
-		this.setPatchedState({mapKatalogeintraege, stundenplanManager});
+		this.setPatchedState({stundenplanManager});
 		await this.gotoEintrag(raum);
 	}
 
 	deleteEintraege = async (eintraege: Iterable<Raum>) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
 		const stundenplanManager = this.stundenplanManager;
 		const listID = new ArrayList<number>;
 		for (const eintrag of eintraege) {
 			listID.add(eintrag.id);
-			mapKatalogeintraege.delete(eintrag.id);
 		}
-		let auswahl;
 		const raeume = await api.server.deleteRaeume(listID, api.schema);
 		stundenplanManager.raumRemoveAll(raeume);
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl, stundenplanManager});
+		const auswahl = stundenplanManager.raumGetMengeAsList().getFirst() || undefined;
+		this.setPatchedState({auswahl, stundenplanManager});
 	}
 
 	patch = async (eintrag : Partial<Raum>) => {
@@ -113,4 +99,23 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		this.stundenplanManager.raumPatchAttributes(auswahl);
 		this.commit();
 	}
+
+	setKatalogRaeumeImportJSON = api.call(async (formData: FormData) => {
+		const jsonFile = formData.get("data");
+		if (!(jsonFile instanceof File))
+			return;
+		const json = await jsonFile.text();
+		const raeume: Partial<Raum>[] = JSON.parse(json);
+		const list = new ArrayList<Partial<Raum>>();
+		for (const item of raeume)
+			if (item.kuerzel && !this.stundenplanManager.raumExistsByKuerzel(item.kuerzel)) {
+				delete item.id;
+				list.add(item);
+			}
+		if (list.isEmpty())
+			return;
+		const res = await api.server.addRaeume(list, api.schema);
+		this.stundenplanManager.raumAddAll(res);
+		this.setPatchedState({stundenplanManager: this.stundenplanManager});
+	})
 }

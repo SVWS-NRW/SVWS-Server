@@ -3671,7 +3671,7 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanRaum> raumGetMengeAsList() {
-		return _raummenge_sortiert;
+		return new ArrayList<>(_raummenge_sortiert);
 	}
 
 	/**

@@ -12,9 +12,15 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
+				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items :columns selectable v-model="selected">
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+						<svws-ui-button type="transparent" title="Räume exportieren" @click="export_raeume" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
+						<s-raum-import-modal v-slot="{ openModal }" :set-katalog-raeume-import-j-s-o-n>
+							<svws-ui-button type="icon" @click="openModal()">
+								<span class="icon-sm i-ri-download-2-line" />
+							</svws-ui-button>
+						</s-raum-import-modal>
 						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
 							<svws-ui-button type="icon" @click="openModal()">
 								<span class="icon i-ri-add-line" />
@@ -30,21 +36,36 @@
 <script setup lang="ts">
 
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
-	import type { Raum } from "@core";
-	import { ref } from "vue";
+	import { Raum } from "@core";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<RaeumeAuswahlProps>();
 	const selected = ref<Raum[]>([]);
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "beschreibung", label: "Beschreibung", sortable: true },
 		{ key: "groesse", label: "Größe", sortable: true },
 	];
 
+	const items = computed(() => props.stundenplanManager().raumGetMengeAsList());
+
 	async function doDeleteEintraege() {
 		await props.deleteEintraege(selected.value);
 		selected.value = [];
+	}
+
+	function export_raeume() {
+		const arr = selected.value.map(r => Raum.transpilerToJSON(r));
+		const blob = new Blob(['['+arr.toString()+']'], {
+			type: "application/json",
+		});
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = "ExportRaeume.json";
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
 	}
 
 </script>
