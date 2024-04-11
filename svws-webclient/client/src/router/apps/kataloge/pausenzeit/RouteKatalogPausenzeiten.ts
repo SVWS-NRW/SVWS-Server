@@ -41,36 +41,31 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
+		if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty())
 			return;
-		let eintrag: StundenplanPausenzeit | undefined;
+		let eintrag: StundenplanPausenzeit | null = null;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
+			eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
 			return this.getRoute(eintrag?.id);
 		}
 		else {
 			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined)
-				return this.getRoute(undefined);
+			eintrag = this.data.stundenplanManager.pausenzeitGetByIdOrException(id);
 		}
 		if (eintrag !== undefined)
 			await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		const name = this.data.mapKatalogeintraege.size === 0
-			? this.name
-			: this.defaultChild!.name;
+		const name = (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty()) ? this.name : this.defaultChild!.name;
 		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -78,7 +73,9 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 			gotoEintrag: this.data.gotoEintrag,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
-			returnToKataloge: routeKataloge.returnToKataloge
+			returnToKataloge: routeKataloge.returnToKataloge,
+			setKatalogPausenzeitenImportJSON: this.data.setKatalogRaeumeImportJSON,
+			stundenplanManager: () => this.data.stundenplanManager,
 		};
 	}
 

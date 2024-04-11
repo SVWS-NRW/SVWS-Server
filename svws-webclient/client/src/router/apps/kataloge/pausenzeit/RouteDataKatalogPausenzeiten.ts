@@ -1,4 +1,4 @@
-import { ArrayList, StundenplanKomplett, StundenplanManager, UserNotificationException, type StundenplanPausenzeit, DeveloperNotificationException } from "@core";
+import { ArrayList, StundenplanKomplett, StundenplanManager, UserNotificationException, StundenplanPausenzeit, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -10,14 +10,12 @@ import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 interface RouteStateKatalogPausenzeiten extends RouteStateInterface {
 	auswahl: StundenplanPausenzeit | undefined;
 	daten: StundenplanPausenzeit | undefined;
-	mapKatalogeintraege: Map<number, StundenplanPausenzeit>;
 	stundenplanManager: StundenplanManager | undefined;
 }
 
 const defaultState = <RouteStateKatalogPausenzeiten> {
 	auswahl: undefined,
 	daten: undefined,
-	mapKatalogeintraege: new Map(),
 	stundenplanManager: undefined,
 	view: routeKatalogPausenzeitDaten,
 };
@@ -30,10 +28,6 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	get auswahl(): StundenplanPausenzeit | undefined {
 		return this._state.value.auswahl;
-	}
-
-	get mapKatalogeintraege(): Map<number, StundenplanPausenzeit> {
-		return new Map(this._state.value.mapKatalogeintraege);
 	}
 
 	get stundenplanManager(): StundenplanManager {
@@ -50,20 +44,17 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getPausenzeiten(api.schema);
-		const mapKatalogeintraege = new Map<number, StundenplanPausenzeit>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		const stundenplanKomplett = new StundenplanKomplett();
 		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
 		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
 		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
 		stundenplanManager.pausenzeitAddAll(listKatalogeintraege);
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, stundenplanManager })
+		this.setPatchedDefaultState({ auswahl, stundenplanManager })
 	}
 
 	setEintrag = async (auswahl: StundenplanPausenzeit) => {
-		const daten = this.mapKatalogeintraege.get(auswahl.id);
+		const daten = this.stundenplanManager.pausenzeitGetByIdOrException(auswahl.id);
 		this.setPatchedState({ auswahl, daten })
 	}
 
@@ -77,27 +68,18 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		delete eintrag.id;
 		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
 		const stundenplanManager = this.stundenplanManager;
-		const mapKatalogeintraege = this.mapKatalogeintraege;
 		stundenplanManager.pausenzeitAdd(pausenzeit);
-		mapKatalogeintraege.set(pausenzeit.id, pausenzeit);
-		this.setPatchedState({mapKatalogeintraege, stundenplanManager});
+		this.setPatchedState({stundenplanManager});
 		await this.gotoEintrag(pausenzeit);
 	}
 
 	deleteEintraege = async (eintraege: Iterable<StundenplanPausenzeit>) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
 		const stundenplanManager = this.stundenplanManager;
 		const list = new ArrayList<number>();
-		for (const eintrag of eintraege) {
-			list.add(eintrag.id)
-			mapKatalogeintraege.delete(eintrag.id);
-		}
 		const pausenzeiten = await api.server.deletePausenzeiten(list, api.schema);
 		stundenplanManager.pausenzeitRemoveAll(pausenzeiten);
-		let auswahl;
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl, stundenplanManager});
+		const auswahl = stundenplanManager.pausenzeitGetMengeAsList().getFirst() || undefined;
+		this.setPatchedState({auswahl, stundenplanManager});
 	}
 
 	patch = async (eintrag : Partial<StundenplanPausenzeit>) => {
@@ -109,4 +91,27 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		this.stundenplanManager.pausenzeitPatchAttributes(auswahl);
 		this.commit();
 	}
+
+	setKatalogRaeumeImportJSON = api.call(async (formData: FormData) => {
+		const jsonFile = formData.get("data");
+		if (!(jsonFile instanceof File))
+			return;
+		const json = await jsonFile.text();
+		const pausenzeiten: Partial<StundenplanPausenzeit>[] = JSON.parse(json);
+		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
+		for (const item of pausenzeiten)
+			if (item.wochentag && item.beginn && item.ende && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
+				// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
+				const p = JSON.stringify(item);
+				const pp: Partial<StundenplanPausenzeit> = StundenplanPausenzeit.transpilerFromJSON(p);
+				delete pp.id;
+				delete pp.klassen;
+				list.add(pp);
+			}
+		if (list.isEmpty())
+			return;
+		const res = await api.server.addPausenzeiten(list, api.schema);
+		this.stundenplanManager.pausenzeitAddAll(res);
+		this.setPatchedState({stundenplanManager: this.stundenplanManager});
+	})
 }
