@@ -52,7 +52,7 @@
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
-								<svws-ui-select class="flex-grow svws-kw-auswahl bg-svws text-white rounded-md h-7" title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
+								<svws-ui-select class="flex-grow svws-kw-auswahl" title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><span class="icon i-ri-arrow-right-s-line -m-0.5" /></svws-ui-button>
 							</div>
 						</template>
@@ -303,15 +303,21 @@
 		}
 	}
 }
-
-.svws-kw-auswahl {
-  .wrapper--headless {
-    @apply opacity-0 -ml-4 mt-1;
-  }
-}
 </style>
 
 <style lang="postcss">
+.svws-kw-auswahl {
+	@apply bg-primary text-white rounded-md h-7 -my-1;
+
+	.text-input--headless {
+		@apply !px-4 !text-button ;
+	}
+
+	.svws-dropdown-icon {
+		@apply !hidden;
+	}
+}
+
 .svws-card-stundenplan {
 	@apply pb-16;
 

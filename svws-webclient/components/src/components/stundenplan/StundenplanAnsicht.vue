@@ -495,6 +495,10 @@
 		.svws-time-icon {
 			@apply opacity-25 text-center self-center w-full;
 		}
+
+		> *:not(:first-child) {
+			@apply min-w-[10rem];
+		}
 	}
 
 	.svws-ui-stundenplan--body {
