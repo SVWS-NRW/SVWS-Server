@@ -1005,7 +1005,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     				case Q11 -> switch (fachwahl.Q11_Kursart) {
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "LK" -> (fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
 						default -> null;
@@ -1013,7 +1013,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     				case Q12 -> switch (fachwahl.Q12_Kursart) {
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "LK" -> (fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
 						default -> null;
@@ -1021,7 +1021,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     				case Q21 -> switch (fachwahl.Q21_Kursart) {
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "LK" -> (fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
 						default -> null;
@@ -1029,7 +1029,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     				case Q22 -> switch (fachwahl.Q22_Kursart) {
 						case "M" -> (fachwahl.AbiturFach == null) ? "GKM" : "AB" + fachwahl.AbiturFach;
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "LK" -> (fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
 						case "ZK" -> "ZK";
 						case "AT" -> "GKM";
 						default -> null;
