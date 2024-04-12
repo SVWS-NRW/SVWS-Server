@@ -1,5 +1,14 @@
-import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
-	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile, SimpleOperationResponse, GostHalbjahr } from "@core";
+import type { ApiFile } from "../../../../../core/src/api/BaseApi";
+import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+import type { GostBelegpruefungErgebnis } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
+import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
+import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+import type { GostLaufbahnplanungDaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
+import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;

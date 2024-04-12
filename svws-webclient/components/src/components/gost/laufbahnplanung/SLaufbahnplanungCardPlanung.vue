@@ -199,9 +199,13 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { DataTableColumn } from "@ui";
-	import type { GostFach, AbiturFachbelegungHalbjahr, AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
-	import { GostHalbjahr } from "@core";
+	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
+	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
+	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+	import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
+	import type { DataTableColumn } from "../../../../../ui/src/types";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;

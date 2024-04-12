@@ -7,9 +7,11 @@
 </template>
 
 <script setup lang="ts">
+	import { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
+	import type { List } from '../../../../../core/src/java/util/List';
 
-	import type { List} from "@core";
-	import { GostBelegpruefungErgebnisFehler, GostBelegungsfehlerArt, ArrayList } from "@core";
 
 	const fehlerliste: List<GostBelegpruefungErgebnisFehler> = new ArrayList()
 	const f1 = new GostBelegpruefungErgebnisFehler();

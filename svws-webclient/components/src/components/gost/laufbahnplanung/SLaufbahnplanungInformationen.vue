@@ -27,8 +27,11 @@
 
 <script setup lang="ts">
 
-	import { type List, type GostBelegpruefungErgebnisFehler, ArrayList, GostBelegungsfehlerArt } from "@core";
 	import { type ComputedRef, computed } from 'vue';
+	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import type { List } from '../../../../../core/src/java/util/List';
+	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 
 	const props = defineProps<{
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;

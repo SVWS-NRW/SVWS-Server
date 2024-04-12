@@ -31,10 +31,12 @@
 <script setup lang="ts">
 
 	import { onErrorCaptured, ref } from 'vue';
-	import type { SimpleOperationResponse } from '@core';
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
+	import { OpenApiError } from '../../../core/src/api/OpenApiError';
+	import type { SimpleOperationResponse } from '../../../core/src/core/data/SimpleOperationResponse';
+	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
+	import { UserNotificationException } from '../../../core/src/core/exceptions/UserNotificationException';
 
 	type CapturedError = {
 		id: number;
@@ -123,3 +125,4 @@
 	}
 
 </script>
+

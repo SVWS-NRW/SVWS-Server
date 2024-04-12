@@ -41,8 +41,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { GostJahrgangFachkombination, AbiturdatenManager} from "@core";
-	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@core";
+	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
+	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
+	import { GostLaufbahnplanungFachkombinationTyp } from "../../../../../core/src/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
+	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;

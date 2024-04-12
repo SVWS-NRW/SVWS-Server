@@ -5,10 +5,10 @@ import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeError } from "~/router/error/RouteError";
 
 import { routeLadeDaten } from "./RouteLadeDaten";
-import { GostLaufbahnplanungDaten } from "@core";
 
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
 import { type LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
+import { GostLaufbahnplanungDaten } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {

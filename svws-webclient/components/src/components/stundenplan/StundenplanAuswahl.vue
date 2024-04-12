@@ -31,8 +31,13 @@
 
 	import { computed } from "vue";
 	import type { StundenplanAuswahlProps } from "./StundenplanAuswahlProps";
-	import type { StundenplanKalenderwochenzuordnung, List, StundenplanListeEintrag } from "@core";
-	import { ArrayList, DateUtils, DeveloperNotificationException } from "@core";
+	import type { StundenplanKalenderwochenzuordnung } from "../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+	import type { StundenplanListeEintrag } from "../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+	import { DateUtils } from "../../../../core/src/core/utils/DateUtils";
+	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+	import type { List } from "../../../../core/src/java/util/List";
+
 
 	const props = defineProps<StundenplanAuswahlProps>();
 

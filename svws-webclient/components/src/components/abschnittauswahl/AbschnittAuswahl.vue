@@ -21,8 +21,7 @@
 
 
 <script setup lang="ts">
-
-	import type { Schuljahresabschnitt } from "@core";
+	import type { Schuljahresabschnitt } from '../../../../core/src/core/data/schule/Schuljahresabschnitt';
 
 	const props = defineProps<{
 		abschnitte: Map<number, Schuljahresabschnitt>;

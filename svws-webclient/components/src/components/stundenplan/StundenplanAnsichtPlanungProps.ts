@@ -1,4 +1,6 @@
-import type { Schulform, StundenplanManager, StundenplanZeitraster  } from "@core";
+import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
+import type { Schulform } from "../../../../core/src/core/types/schule/Schulform";
+import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
 
 export type StundenplanAnsichtPlanungProps = {
 	manager: () => StundenplanManager;

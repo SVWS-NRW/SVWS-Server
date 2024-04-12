@@ -22,7 +22,7 @@
 
 	import type { Ref } from 'vue';
 	import { ref } from 'vue';
-	import type { SimpleOperationResponse } from '@core';
+	import type { SimpleOperationResponse } from '../../../../../core/src/core/data/SimpleOperationResponse';
 
 	const props = defineProps<{
 		show: () => Ref<boolean>;

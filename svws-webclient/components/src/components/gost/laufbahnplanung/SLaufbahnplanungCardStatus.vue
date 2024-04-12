@@ -14,9 +14,12 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, AbiturdatenManager, Sprachendaten } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
+	import type { GostBelegpruefungErgebnisFehler } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler";
+	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+	import type { List } from "../../../../../core/src/java/util/List";
+	import type { Sprachendaten } from "../../../../../core/src/core/data/schueler/Sprachendaten";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;

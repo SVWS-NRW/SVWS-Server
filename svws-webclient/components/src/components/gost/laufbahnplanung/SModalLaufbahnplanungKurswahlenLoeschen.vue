@@ -33,7 +33,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import { type GostJahrgangsdaten } from '@core';
+	import type { GostJahrgangsdaten } from '../../../../../core/src/core/data/gost/GostJahrgangsdaten';
 
 	const props = withDefaults(defineProps<{
 		gostJahrgangsdaten: GostJahrgangsdaten;

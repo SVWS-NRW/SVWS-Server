@@ -118,9 +118,23 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type AbiturFachbelegung, type GostFach, type GostJahrgangFachkombination, type GostJahrgangsdaten, type GostSchuelerFachwahl, Note, type Sprachbelegung,
-		AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostAbiturFach, GostFachbereich, GostFachUtils, GostHalbjahr,
-		GostKursart, SprachendatenUtils, ZulaessigesFach } from "@core";
+	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
+	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+	import { ZulaessigesFach } from "../../../../../core/src/core/types/fach/ZulaessigesFach";
+	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
+	import type { Sprachbelegung } from "../../../../../core/src/core/data/schueler/Sprachbelegung";
+	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
+	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
+	import { Fachgruppe } from "../../../../../core/src/core/types/fach/Fachgruppe";
+	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
+	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
+	import { Note } from "../../../../../core/src/core/types/Note";
+	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
+	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
+	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
+	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;

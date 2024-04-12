@@ -88,10 +88,12 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import type { StundenplanPausenzeit, StundenplanZeitraster } from "@core";
-	import { Wochentag, Schulform } from "@core";
 	import { computed, ref, toRaw } from "vue";
+	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
+	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
+	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
+	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
+	import { Schulform } from "../../../../core/src/core/types/schule/Schulform";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
 

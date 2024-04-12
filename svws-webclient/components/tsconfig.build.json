@@ -6,15 +6,10 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["src/*"],
-			"@core": ["../core/src/index.ts"],
-			"@ui": ["../ui/src/index.ts"]
 		},
 		"types": [
 			"vite/client"
 		],
-		"vueCompilerOptions": {
-
-		}
 	},
 	"include": [
 		"src/**/*",

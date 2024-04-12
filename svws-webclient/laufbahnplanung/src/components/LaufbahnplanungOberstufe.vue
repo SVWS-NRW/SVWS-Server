@@ -49,9 +49,9 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
-	import type { GostHalbjahr } from "@core";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
+	import type { GostHalbjahr } from "../../../core/src/core/types/gost/GostHalbjahr";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 

@@ -20,9 +20,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { SimpleOperationResponse } from '@core';
-	import { DeveloperNotificationException, UserNotificationException, OpenApiError } from '@core';
 	import { ref } from "vue";
+	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
+	import { UserNotificationException } from "../../../../core/src/core/exceptions/UserNotificationException";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+	import { OpenApiError } from "../../../../core/src/api/OpenApiError";
 
 	type CapturedError = {
 		id: number;

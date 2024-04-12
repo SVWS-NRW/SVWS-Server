@@ -200,8 +200,17 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
-	import type { Wochentag, StundenplanPausenzeit, List } from "@core";
-	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht, StundenplanSchiene } from "@core";
+	import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+	import { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
+	import { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
+	import type { List } from "../../../../core/src/java/util/List";
+	import { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
+	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
+	import { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
+	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
+	import { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
+	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 

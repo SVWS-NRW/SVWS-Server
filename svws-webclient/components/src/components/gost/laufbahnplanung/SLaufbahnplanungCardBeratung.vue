@@ -26,11 +26,12 @@
 	import type { Ref } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 	import { ref, computed, watch } from "vue";
-	import type { SchuelerListeEintrag } from "@core";
-	import { GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@core";
 	import SvwsUiSelect from "../../../../../ui/src/components/SvwsUiSelect.vue";
 	import SvwsUiTextInput from "../../../../../ui/src/components/SvwsUiTextInput.vue";
 	import SvwsUiTextareaInput from "../../../../../ui/src/components/SvwsUiTextareaInput.vue";
+	import { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+	import { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
+	import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
 
 	const props = defineProps<{
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
@@ -84,4 +85,7 @@
 		return items.filter(i => (i.istSichtbar === true) && (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
 	};
 
-</script>
+</script>import { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+import { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
+import { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+

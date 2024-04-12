@@ -4,10 +4,31 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
-import type { ApiFile, GostBeratungslehrer, GostSchuelerFachwahl, List} from "@core";
-import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung, ArrayList} from "@core";
 import { RouteManager } from "../RouteManager";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
+import type { ApiFile } from "../../../../core/src/api/BaseApi";
+import { AbiturdatenManager } from "../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+import { GostBelegpruefungErgebnis } from "../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
+import { GostBelegpruefungsArt } from "../../../../core/src/core/abschluss/gost/GostBelegpruefungsArt";
+import { AbiturFachbelegung } from "../../../../core/src/core/data/gost/AbiturFachbelegung";
+import { AbiturFachbelegungHalbjahr } from "../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
+import { Abiturdaten } from "../../../../core/src/core/data/gost/Abiturdaten";
+import type { GostBeratungslehrer } from "../../../../core/src/core/data/gost/GostBeratungslehrer";
+import { GostJahrgang } from "../../../../core/src/core/data/gost/GostJahrgang";
+import { GostJahrgangsdaten } from "../../../../core/src/core/data/gost/GostJahrgangsdaten";
+import { GostLaufbahnplanungDaten } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
+import { GostLaufbahnplanungDatenFachbelegung } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenFachbelegung";
+import { GostLaufbahnplanungDatenSchueler } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenSchueler";
+import type { GostSchuelerFachwahl } from "../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+import { SchuelerListeEintrag } from "../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+import { SchuleStammdaten } from "../../../../core/src/core/data/schule/SchuleStammdaten";
+import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "../../../../core/src/core/exceptions/UserNotificationException";
+import { GostHalbjahr } from "../../../../core/src/core/types/gost/GostHalbjahr";
+import { GostKursart } from "../../../../core/src/core/types/gost/GostKursart";
+import { GostFaecherManager } from "../../../../core/src/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+import type { List } from "../../../../core/src/java/util/List";
 
 
 interface RouteState {

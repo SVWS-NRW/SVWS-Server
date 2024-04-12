@@ -29,9 +29,8 @@
 </template>
 
 <script setup lang="ts">
-
-	import type { Sprachendaten} from "@core";
-	import { Sprachpruefungniveau } from "@core";
+	import type { Sprachendaten } from '../../../../../core/src/core/data/schueler/Sprachendaten';
+	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
 
 	const props = defineProps<{
 		sprachendaten: () => Sprachendaten;

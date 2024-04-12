@@ -1,4 +1,6 @@
-import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanManager } from "@core";
+import type { StundenplanKalenderwochenzuordnung } from "../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanListeEintrag } from "../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
+import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
 
 export interface StundenplanAuswahlProps {
 	stundenplan: StundenplanListeEintrag | undefined;
