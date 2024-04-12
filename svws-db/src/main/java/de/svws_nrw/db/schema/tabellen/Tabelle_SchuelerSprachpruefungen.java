@@ -13,7 +13,6 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
-import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerSprachpruefungen.
@@ -112,12 +111,12 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 		col_Schueler_ID
 	).setRevision(SchemaRevisionen.REV_12);
 
-	/** Die Definition des Unique-Index SchuelerSprachpruefungen_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerSprachpruefungen_UC1 = addUniqueIndex("SchuelerSprachpruefungen_UC1",
+	/** Die Definition des Non-Unique-Index SchuelerSprachpruefungen_IDX2 */
+	public SchemaTabelleIndex unique_SchuelerSprachpruefungen_IDX2 = addIndex("SchuelerSprachpruefungen_IDX2",
 		col_Schueler_ID,
 		col_Sprache
 	)
-	.setRevision(SchemaRevisionen.REV_12);
+	.setRevision(SchemaRevisionen.REV_13);
 
 
 	/**

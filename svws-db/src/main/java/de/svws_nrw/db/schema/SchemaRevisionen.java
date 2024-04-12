@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.db.schema.revisionen.Revision11Updates;
+import de.svws_nrw.db.schema.revisionen.Revision13Updates;
 import de.svws_nrw.db.schema.revisionen.Revision1Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
@@ -105,7 +106,12 @@ public enum SchemaRevisionen {
 	/**
 	 * Ergänzen weitere Indizes zur Optimierung von Datenbankzugriffen
 	 */
-	REV_12(12, "2024-03-09");
+	REV_12(12, "2024-03-09"),
+
+	/**
+	 * Ergänzen eines Index und ggf. Entfernen einer fehlerhaften Unique-Constraints
+	 */
+	REV_13(13, "2024-04-12");
 
 
 	/**
@@ -113,14 +119,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_12;
+	public static final SchemaRevisionen maxRevision = REV_13;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_12;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_13;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -187,6 +193,7 @@ public enum SchemaRevisionen {
 	            case REV_4 -> new Revision4Updates();
 	            case REV_6 -> new Revision6Updates();
 	            case REV_11 -> new Revision11Updates();
+	            case REV_13 -> new Revision13Updates();
 	            default -> new RevisionNoUpdates(this);
 	        };
 	    }
