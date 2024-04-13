@@ -71,7 +71,12 @@
 									]">
 									<div class="svws-ui-td" role="cell">
 										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" />
-										<span class="svws-ui-badge" :class="{'!ml-2': draggable !== undefined && !draggable(klausur)}" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+									</div>
+									<div class="svws-ui-td" role="cell">
+										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
+									</div>
+									<div class="svws-ui-td" role="cell">
+										<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 									<div class="svws-ui-td svws-align-right" role="cell"><SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge> {{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) || 0 }}</div>
@@ -110,6 +115,7 @@
 <script setup lang="ts">
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrs} from "@core";
+	import { GostHalbjahr} from "@core";
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
@@ -164,6 +170,8 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
+			{ key: "dragHandle", label: " ", fixedWidth: 1 },
+			{ key: "jgst", label: "Jgst.", fixedWidth: 2 },
 			{ key: "kurs", label: "Kurs", span: 1.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },
 			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 4.5 },

@@ -23,8 +23,15 @@
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
 							<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+						</div>
+						<div class="svws-ui-td" role="cell">
+							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
+						</div>
+						<div class="svws-ui-td" role="cell">
 							<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 						</div>
+
+
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
@@ -52,7 +59,7 @@
 	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostKursklausurManager, GostKlausurenCollectionSkrsKrs, GostKlausurraum } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
-	import { GostKursklausur } from '@core';
+	import { GostKursklausur, GostHalbjahr } from '@core';
 	import { computed } from 'vue';
 	import { DateUtils} from "@core";
 
@@ -116,6 +123,8 @@
 	}
 
 	const cols: DataTableColumn[] = [
+		{ key: "dragHandle", label: " ", fixedWidth: 1 },
+		{ key: "jgst", label: "Jgst.", fixedWidth: 2 },
 		{ key: "kurs", label: "Kurs" },
 		{ key: "kuerzel", label: "Lehrkraft", span: 0.75 },
 		{ key: "schriftlich", label: "Schriftlich", span: 0.5, minWidth: 4.75 },

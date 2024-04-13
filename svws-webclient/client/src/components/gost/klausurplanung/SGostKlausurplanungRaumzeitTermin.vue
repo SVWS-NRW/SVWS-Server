@@ -9,10 +9,11 @@
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
 			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
+			<svws-ui-checkbox class="-mt-1" type="toggle" v-if="raummanager().anzahlTermine() > 1" v-model="zeigeAlleRaeume">Räume von Terminen anderer Jahrgangsstufen anzeigen</svws-ui-checkbox>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
-			<template v-if="raummanager()?.raumGetMengeAsList().size()">
-				<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager()?.raumGetMengeAsList()"
+			<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleRaeume).size()">
+				<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleRaeume)"
 					:key="raum.id"
 					:stundenplanmanager="stundenplanmanager"
 					:raum="raum"
@@ -37,6 +38,9 @@
 	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs} from '@core';
 	import { DateUtils} from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+	import { ref } from 'vue';
+
+	const zeigeAlleRaeume = ref(false);
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;

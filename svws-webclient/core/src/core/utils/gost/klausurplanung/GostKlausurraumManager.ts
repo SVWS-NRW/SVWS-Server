@@ -36,7 +36,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _raum_by_id : JavaMap<number, GostKlausurraum> = new HashMap<number, GostKlausurraum>();
 
-	private readonly _raummenge : List<GostKlausurraum> = new ArrayList<GostKlausurraum>();
+	private readonly _raummenge : List<GostKlausurraum> = new ArrayList();
+
+	private readonly _raummenge_by_idTermin : JavaMap<number, List<GostKlausurraum>> = new HashMap();
 
 	private readonly _klausurraum_by_idStundenplanraum : JavaMap<number, GostKlausurraum> = new HashMap<number, GostKlausurraum>();
 
@@ -144,6 +146,7 @@ export class GostKlausurraumManager extends JavaObject {
 		this.update_schuelerklausurmenge();
 		this.update_schuelerklausurraumstundenmenge();
 		this.update_klausurraum_by_idStundenplanraum();
+		this.update_raummenge_by_idTermin();
 		this.update_raumstundenmenge_by_idRaum();
 		this.update_raumstunde_by_idRaum_and_idZeitraster();
 		this.update_raumstundenmenge_by_idSchuelerklausurtermin();
@@ -160,6 +163,12 @@ export class GostKlausurraumManager extends JavaObject {
 		for (const raum of this._raummenge)
 			if (raum.idStundenplanRaum !== null)
 				DeveloperNotificationException.ifMapPutOverwrites(this._klausurraum_by_idStundenplanraum, raum.idStundenplanRaum, raum);
+	}
+
+	private update_raummenge_by_idTermin() : void {
+		this._raummenge_by_idTermin.clear();
+		for (const raum of this._raummenge)
+			MapUtils.getOrCreateArrayList(this._raummenge_by_idTermin, raum.idTermin).add(raum);
 	}
 
 	private update_raumstundenmenge_by_idRaum() : void {
@@ -891,6 +900,27 @@ export class GostKlausurraumManager extends JavaObject {
 				return null;
 		}
 		return start === null ? this._termin.startzeit : start;
+	}
+
+	/**
+	 * Liefert eine Liste von {@link GostKlausurraum}-Objekten. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @param terminOnly falls true, werden nur die Räume, die speziell zu diesem Termin gehören angezeigt, falls false werden alle angezeigt
+	 *
+	 * @return eine Liste der {@link GostKlausurraum}-Objekte.
+	 */
+	public raumGetMengeTerminOnlyAsList(terminOnly : boolean) : List<GostKlausurraum> {
+		return terminOnly ? MapUtils.getOrDefault(this._raummenge_by_idTermin, this._termin.id, new ArrayList()) : this.raumGetMengeAsList();
+	}
+
+	/**
+	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
+	 *
+	 * @return die Anzahl
+	 */
+	public anzahlTermine() : number {
+		return this._raummenge_by_idTermin.size();
 	}
 
 	transpilerCanonicalName(): string {
