@@ -620,7 +620,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 				continue;
 			// Prüfe, ob die Regel sich auf den Kurs bezieht und entferne sie ggf.
 			switch (regel.Typ) {
-				case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE, KURS_MAXIMALE_SCHUELERANZAHL -> {
+				case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE, KURS_MAXIMALE_SCHUELERANZAHL, KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN -> {
 					final DTOGostBlockungRegelParameter param = params.get(0);
 					if (param.Nummer != 0)
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Bei Regel %d kann der Regel-Parameter nicht fehlerfrei bestimmt werden.".formatted(regel.ID));
