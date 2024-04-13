@@ -242,7 +242,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKursklausuren);
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, null, listSchuelerklausuren, listSchuelerklausurtermine);
-		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausurtermine, kursklausurManager, termin);
+		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren.stream().map(skt -> skt.id).toList(), kursklausurManager, termin);
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
 
@@ -392,11 +392,15 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) throws ApiOperationException {
+		GostKlausurtermin termin = DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin);
+		List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuId(conn, termin);
+		List<Long> terminIDs = termine.stream().map(t -> t.id).toList();
 		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
-		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin, false);
-		if (listRaeume.isEmpty())
+		retCollection.idsSchuelerklausurtermine = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuTerminIds(conn, terminIDs).stream().map(skt -> skt.id).toList();
+		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, terminIDs);
+		if (retCollection.raeume.isEmpty())
 			return retCollection;
-		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, listRaeume);
+		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);
 		retCollection.sktRaumstunden = DataGostKlausurenSchuelerklausurraumstunde.getSchuelerklausurterminraumstundenZuKlausurraumstunden(conn, retCollection.raumstunden);
 		return retCollection;
 	}

@@ -8,6 +8,7 @@ import java.util.function.Function;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
@@ -61,7 +62,7 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final DBEntityManager conn, final Long idTermin) throws ApiOperationException {
-		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTermin(conn, idTermin, false);
+		final List<GostKlausurraum> listRaeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, ListUtils.create1(idTermin));
 		if (listRaeume.isEmpty())
 			return new ArrayList<>();
 		return getKlausurraumstundenZuRaeumen(conn, listRaeume);

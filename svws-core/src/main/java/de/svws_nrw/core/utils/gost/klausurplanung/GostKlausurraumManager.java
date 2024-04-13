@@ -70,18 +70,18 @@ public class GostKlausurraumManager {
 	 * @param raum              der Gost-Klausurraum
 	 * @param stunden           die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
-	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 * @param listSchuelerklausurterminIds die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
 	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
-			final @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
+			final @NotNull List<@NotNull Long> listSchuelerklausurterminIds, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
 		_kursklausurManager = kursklausurmanager;
 		_termin = termin;
 		final List<@NotNull GostKlausurraum> raeume = new ArrayList<>();
 		raeume.add(raum);
-		initAll(raeume, stunden, new ArrayList<>(), schuelerklausuren);
+		initAll(raeume, stunden, new ArrayList<>(), listSchuelerklausurterminIds);
 	}
 
 	/**
@@ -93,25 +93,26 @@ public class GostKlausurraumManager {
 	 * @param listRs            die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
 	 * @param listSkrs          die Liste der Schülerklausurraumstunden
-	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 * @param listSchuelerklausurterminIds die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
 	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> listRs,
-			final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
+			final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> listSkrs, final @NotNull List<@NotNull Long> listSchuelerklausurterminIds, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
 		_kursklausurManager = kursklausurmanager;
 		_termin = termin;
-		initAll(raeume, listRs, listSkrs, schuelerklausuren);
+		initAll(raeume, listRs, listSkrs, listSchuelerklausurterminIds);
 	}
 
 	private void initAll(final @NotNull List<@NotNull GostKlausurraum> listRaum, final @NotNull List<@NotNull GostKlausurraumstunde> listRaumstunde,
-			final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> listSchuelerklausurraumstunde, final @NotNull List<@NotNull GostSchuelerklausurTermin> listSchuelerklausur) {
+			final @NotNull List<@NotNull GostSchuelerklausurterminraumstunde> listSchuelerklausurraumstunde, final @NotNull List<@NotNull Long> listSchuelerklausurterminIds) {
 
-		raumAddAll(listRaum);
-		raumstundeAddAll(listRaumstunde);
-		schuelerklausurAddAll(listSchuelerklausur);
-		schuelerklausurraumstundeAddAll(listSchuelerklausurraumstunde);
+		raumAddAllOhneUpdate(listRaum);
+		raumstundeAddAllOhneUpdate(listRaumstunde);
+		for (@NotNull Long skt : listSchuelerklausurterminIds)
+			schuelerklausurAddOhneUpdate(_kursklausurManager.schuelerklausurterminGetByIdOrException(skt));
+		schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 
 		update_all();
 
@@ -473,6 +474,16 @@ public class GostKlausurraumManager {
 	 */
 	public void schuelerklausurAdd(final @NotNull GostSchuelerklausurTermin schuelerklausur) {
 		schuelerklausurAddAll(ListUtils.create1(schuelerklausur));
+	}
+
+	/**
+	 * Fügt ein {@link GostSchuelerklausurTermin}-Objekt hinzu.
+	 *
+	 * @param schuelerklausur Das {@link GostSchuelerklausurTermin}-Objekt, welches
+	 *                        hinzugefügt werden soll.
+	 */
+	public void schuelerklausurAddOhneUpdate(final @NotNull GostSchuelerklausurTermin schuelerklausur) {
+		schuelerklausurAddAllOhneUpdate(ListUtils.create1(schuelerklausur));
 	}
 
 	private void schuelerklausurAddAllOhneUpdate(final @NotNull List<@NotNull GostSchuelerklausurTermin> list) {

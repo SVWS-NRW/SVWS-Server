@@ -3,6 +3,7 @@ import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostK
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 
 export class GostKlausurenCollectionSkrsKrs extends JavaObject {
@@ -10,7 +11,12 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
+	public raeume : List<GostKlausurraum> = new ArrayList();
+
+	/**
+	 * Die ID der Schülerklausur.
+	 */
+	public raumstunden : List<GostKlausurraumstunde> = new ArrayList();
 
 	/**
 	 * Die ID der Schülerklausur.
@@ -53,6 +59,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkrsKrs {
 		const obj = JSON.parse(json);
 		const result = new GostKlausurenCollectionSkrsKrs();
+		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+			for (const elem of obj.raeume) {
+				result.raeume?.add(GostKlausurraum.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if ((obj.raumstunden !== undefined) && (obj.raumstunden !== null)) {
 			for (const elem of obj.raumstunden) {
 				result.raumstunden?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
@@ -82,6 +93,18 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurenCollectionSkrsKrs) : string {
 		let result = '{';
+		if (!obj.raeume) {
+			result += '"raeume" : []';
+		} else {
+			result += '"raeume" : [ ';
+			for (let i = 0; i < obj.raeume.size(); i++) {
+				const elem = obj.raeume.get(i);
+				result += GostKlausurraum.transpilerToJSON(elem);
+				if (i < obj.raeume.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (!obj.raumstunden) {
 			result += '"raumstunden" : []';
 		} else {
@@ -139,6 +162,20 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkrsKrs>) : string {
 		let result = '{';
+		if (typeof obj.raeume !== "undefined") {
+			if (!obj.raeume) {
+				result += '"raeume" : []';
+			} else {
+				result += '"raeume" : [ ';
+				for (let i = 0; i < obj.raeume.size(); i++) {
+					const elem = obj.raeume.get(i);
+					result += GostKlausurraum.transpilerToJSON(elem);
+					if (i < obj.raeume.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
 		if (typeof obj.raumstunden !== "undefined") {
 			if (!obj.raumstunden) {
 				result += '"raumstunden" : []';

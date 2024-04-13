@@ -80,12 +80,12 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param raum              der Gost-Klausurraum
 	 * @param stunden           die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
-	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 * @param listSchuelerklausurterminIds die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausurTermin>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
+	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, listSchuelerklausurterminIds : List<number>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -96,47 +96,48 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param listRs            die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
 	 * @param listSkrs          die Liste der Schülerklausurraumstunden
-	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 * @param listSchuelerklausurterminIds die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
 	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurterminraumstunde>, schuelerklausuren : List<GostSchuelerklausurTermin>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
+	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurterminraumstunde>, listSchuelerklausurterminIds : List<number>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausurTermin> | List<GostSchuelerklausurterminraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausurTermin>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
+	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausurterminraumstunde> | List<number>, __param3 : GostKursklausurManager | List<number>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
-			const schuelerklausuren : List<GostSchuelerklausurTermin> = cast_java_util_List(__param2);
+			const listSchuelerklausurterminIds : List<number> = cast_java_util_List(__param2);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager(__param3);
 			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param4);
 			this._kursklausurManager = kursklausurmanager;
 			this._termin = termin;
 			const raeume : List<GostKlausurraum> | null = new ArrayList<GostKlausurraum>();
 			raeume.add(raum);
-			this.initAll(raeume, stunden, new ArrayList(), schuelerklausuren);
+			this.initAll(raeume, stunden, new ArrayList(), listSchuelerklausurterminIds);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin'))))) {
 			const raeume : List<GostKlausurraum> = cast_java_util_List(__param0);
 			const listRs : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const listSkrs : List<GostSchuelerklausurterminraumstunde> = cast_java_util_List(__param2);
-			const schuelerklausuren : List<GostSchuelerklausurTermin> = cast_java_util_List(__param3);
+			const listSchuelerklausurterminIds : List<number> = cast_java_util_List(__param3);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKursklausurManager(__param4);
 			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param5);
 			this._kursklausurManager = kursklausurmanager;
 			this._termin = termin;
-			this.initAll(raeume, listRs, listSkrs, schuelerklausuren);
+			this.initAll(raeume, listRs, listSkrs, listSchuelerklausurterminIds);
 		} else throw new Error('invalid method overload');
 	}
 
-	private initAll(listRaum : List<GostKlausurraum>, listRaumstunde : List<GostKlausurraumstunde>, listSchuelerklausurraumstunde : List<GostSchuelerklausurterminraumstunde>, listSchuelerklausur : List<GostSchuelerklausurTermin>) : void {
-		this.raumAddAll(listRaum);
-		this.raumstundeAddAll(listRaumstunde);
-		this.schuelerklausurAddAll(listSchuelerklausur);
-		this.schuelerklausurraumstundeAddAll(listSchuelerklausurraumstunde);
+	private initAll(listRaum : List<GostKlausurraum>, listRaumstunde : List<GostKlausurraumstunde>, listSchuelerklausurraumstunde : List<GostSchuelerklausurterminraumstunde>, listSchuelerklausurterminIds : List<number>) : void {
+		this.raumAddAllOhneUpdate(listRaum);
+		this.raumstundeAddAllOhneUpdate(listRaumstunde);
+		for (let skt of listSchuelerklausurterminIds)
+			this.schuelerklausurAddOhneUpdate(this._kursklausurManager.schuelerklausurterminGetByIdOrException(skt!));
+		this.schuelerklausurraumstundeAddAllOhneUpdate(listSchuelerklausurraumstunde);
 		this.update_all();
 	}
 
@@ -462,6 +463,16 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public schuelerklausurAdd(schuelerklausur : GostSchuelerklausurTermin) : void {
 		this.schuelerklausurAddAll(ListUtils.create1(schuelerklausur));
+	}
+
+	/**
+	 * Fügt ein {@link GostSchuelerklausurTermin}-Objekt hinzu.
+	 *
+	 * @param schuelerklausur Das {@link GostSchuelerklausurTermin}-Objekt, welches
+	 *                        hinzugefügt werden soll.
+	 */
+	public schuelerklausurAddOhneUpdate(schuelerklausur : GostSchuelerklausurTermin) : void {
+		this.schuelerklausurAddAllOhneUpdate(ListUtils.create1(schuelerklausur));
 	}
 
 	private schuelerklausurAddAllOhneUpdate(list : List<GostSchuelerklausurTermin>) : void {

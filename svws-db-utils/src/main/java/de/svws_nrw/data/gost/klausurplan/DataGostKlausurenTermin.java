@@ -161,12 +161,12 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKlausurtermin> getKlausurtermineMitGleichemDatum(final DBEntityManager conn, final GostKlausurtermin termin) throws ApiOperationException {
+	public static List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuId(final DBEntityManager conn, final GostKlausurtermin termin) throws ApiOperationException {
 		if (termin.datum == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
 
 		final List<GostKlausurtermin> termine = DTOMapper.mapList(conn.queryNamed("DTOGostKlausurenTermine.datum", termin.datum, DTOGostKlausurenTermine.class), dtoMapper);
-		termine.remove(termin);
+//		termine.remove(termin);
 
 		return termine;
 	}

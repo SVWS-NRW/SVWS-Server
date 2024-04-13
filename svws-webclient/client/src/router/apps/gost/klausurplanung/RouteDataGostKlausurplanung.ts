@@ -390,12 +390,11 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
 		api.status.start();
-		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausurenTermine(api.schema, termin.id);
+		const manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, termin);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, schuelerklausuren, this.kursklausurmanager, termin);
+		return manager;
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
