@@ -23,7 +23,9 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             --> DONE
  * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
  * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               --> DONE
- * <br>
+
+ * <br> Weitere Schritte
+ * <br> API Anpassung überprüfen!
  * <br> GUI Regel-Einbindung nun möglich.
  * <br>
  * <br> Aktive Anpassung
