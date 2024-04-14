@@ -17,16 +17,16 @@ import jakarta.validation.constraints.NotNull;
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
  * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 --> DONE
- * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    --> DONE
- * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              --> DONE
- * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             --> DONE
- * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            --> DONE
- * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               --> DONE
+ * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 -->
+ * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    -->
+ * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              -->
+ * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             -->
+ * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            -->
+ * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               -->
 
  * <br> Weitere Schritte
- * <br> API Anpassung überprüfen!
- * <br> GUI Regel-Einbindung nun möglich.
+ * <br> API Anpassung überprüfen (Datei: DataGostBlockungRegel).                                          -->
+ * <br> GUI Regel-Einbindung nun möglich.                                                                 -->
  * <br>
  * <br> Aktive Anpassung
  * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
