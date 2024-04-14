@@ -36,5 +36,21 @@ export class RouteDataSchuleDatenaustauschKurs42 extends RouteData<RouteStateDat
 		}
 	}
 
+	setGostKurs42RaeumeTxt = async (formData: FormData) : Promise<SimpleOperationResponse> => {
+		try {
+			return await api.server.importKurs42Raeume(formData, api.schema);
+		} catch(e) {
+			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 404) || (e.response.status === 409) || (e.response.status === 500))) {
+				const json : string = await e.response.text();
+				return SimpleOperationResponse.transpilerFromJSON(json);
+			}
+			const result = new SimpleOperationResponse();
+			result.log.add("Fehler bei der Server-Anfrage. ");
+			if (e instanceof Error)
+				result.log.add("  " + e.message);
+			return result;
+		}
+	}
+
 }
 

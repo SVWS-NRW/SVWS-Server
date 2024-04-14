@@ -123,6 +123,40 @@ public final class CsvReader {
 
 
 	/**
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei aus dem übergebenen
+	 * String eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * konvertiert werden.
+	 *
+	 * @param <T>     der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param csv     der Inhalt der CSV-Datei
+	 * @param clazz   das Klassenobjekt zur generischen Klasse T
+	 *
+	 * @return die Liste der Objekte vom Typ T
+	 */
+	public static <T> List<T> from(final String csv, final Class<T> clazz) {
+		try {
+			final CsvMapper mapper = new CsvMapper()
+					.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+			final CsvSchema schema = CsvSchema
+					.emptySchema()
+					.withColumnSeparator(';')
+					.withQuoteChar('\"')
+					.withNullValue("")
+					.withHeader();
+			try (MappingIterator<T> it = mapper
+					.readerFor(clazz)
+					.with(schema)
+					.readValues(csv)) {
+				return it.readAll();
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
+
+	/**
 	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
 	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
 	 * konvertiert werden.

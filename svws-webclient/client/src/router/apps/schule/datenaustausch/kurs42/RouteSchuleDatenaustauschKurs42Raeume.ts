@@ -4,7 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../../RouteApp";
-import { type RouteSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
+import { routeSchuleDatenaustauschKurs42, type RouteSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 
 import type { SchuleDatenaustauschKurs42RaeumeProps } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42RaeumeProps";
 
@@ -25,8 +25,10 @@ export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<unknown, Ro
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42RaeumeProps {
 		return {
+			setGostKurs42RaeumeTxt: routeSchuleDatenaustauschKurs42.data.setGostKurs42RaeumeTxt,
 		};
 	}
+
 }
 
 export const routeSchuleDatenaustauschKurs42Raeume = new RouteSchuleDatenaustauschKurs42Raeume();

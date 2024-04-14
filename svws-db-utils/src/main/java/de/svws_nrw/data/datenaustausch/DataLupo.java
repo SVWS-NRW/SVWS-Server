@@ -1,4 +1,4 @@
-package de.svws_nrw.data.gost;
+package de.svws_nrw.data.datenaustausch;
 
 import java.io.IOException;
 import java.nio.file.Files;

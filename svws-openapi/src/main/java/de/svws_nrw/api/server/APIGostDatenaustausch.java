@@ -7,10 +7,10 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.datenaustausch.DataKurs42;
+import de.svws_nrw.data.datenaustausch.DataLupo;
 import de.svws_nrw.data.datenaustausch.DataUntis;
 import de.svws_nrw.data.datenaustausch.UntisGPU001MultipartBody;
-import de.svws_nrw.data.gost.DataKurs42;
-import de.svws_nrw.data.gost.DataLupo;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -144,6 +144,41 @@ public class APIGostDatenaustausch {
     	return DBBenutzerUtils.runWithoutTransaction(conn -> DataKurs42.importZip(conn, multipart), request,
     			ServerMode.STABLE,
     			BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für den Import des Raum-Katalogs aus Kurs42.
+     *
+     * @param multipart     Die Kurs42-Raumdatei (CSV)
+     * @param schemaname    Name des Schemas, in welches die Räume importiert werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/kurs42/import/raeume")
+    @Operation(summary = "Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.",
+				description = "Importiert die Räume aus Kurs 42 in das Schema mit dem angegebenen Namen.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Räume aus Kurs 42",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Räume aus Kurs 42 zu importieren.")
+    @ApiResponse(responseCode = "404", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response importKurs42Raeume(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die CSV-Datei Raeume.txt von Kurs 42", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataKurs42.importRaeume(conn, multipart), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
