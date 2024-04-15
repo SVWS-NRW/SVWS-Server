@@ -132,26 +132,23 @@ public final class CsvReader {
 	 * @param clazz   das Klassenobjekt zur generischen Klasse T
 	 *
 	 * @return die Liste der Objekte vom Typ T
+	 *
+	 * @throws IOException   im Falle eines Fehlers
 	 */
-	public static <T> List<T> from(final String csv, final Class<T> clazz) {
-		try {
-			final CsvMapper mapper = new CsvMapper()
-					.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-			final CsvSchema schema = CsvSchema
-					.emptySchema()
-					.withColumnSeparator(';')
-					.withQuoteChar('\"')
-					.withNullValue("")
-					.withHeader();
-			try (MappingIterator<T> it = mapper
-					.readerFor(clazz)
-					.with(schema)
-					.readValues(csv)) {
-				return it.readAll();
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return new ArrayList<>();
+	public static <T> List<T> from(final String csv, final Class<T> clazz) throws IOException {
+		final CsvMapper mapper = new CsvMapper()
+				.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+		final CsvSchema schema = CsvSchema
+				.emptySchema()
+				.withColumnSeparator(';')
+				.withQuoteChar('\"')
+				.withNullValue("")
+				.withHeader();
+		try (MappingIterator<T> it = mapper
+				.readerFor(clazz)
+				.with(schema)
+				.readValues(csv)) {
+			return it.readAll();
 		}
 	}
 

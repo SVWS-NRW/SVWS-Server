@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.base.kurs42.Kurs42Import;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -460,6 +462,14 @@ public final class DataKurs42 {
 			logger.logLn("[OK]");
 			logger.modifyIndent(-2);
 			return true;
+		} catch (final UnrecognizedPropertyException upe) {
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+			upe.printStackTrace(pw);
+			sw.toString().lines().forEach(logger::logLn);
+			logger.logLn("[Fehler] Konnte die CSV-Datei nicht einlesen. Prüfen sie ggf. auch die Zeichenkodierung der Datei. Diese muss UTF-8 (ohne BOM) sein.");
+			logger.modifyIndent(-2);
+			return false;
 		} catch (@SuppressWarnings("unused") final Exception exception) {
 			logger.logLn("[Fehler]");
 			logger.modifyIndent(-2);
