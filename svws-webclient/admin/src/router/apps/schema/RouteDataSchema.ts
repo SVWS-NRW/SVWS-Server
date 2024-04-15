@@ -179,6 +179,8 @@ export class RouteDataSchema {
 			// Wenn die Revision des Schemas aktuell ist, dann lade auch die Informationen zu den Admin-Benutzern
 			if (auswahl.revision === this.revision)
 				admins = await api.privileged.getSchemaAdmins(auswahl.name);
+		} else {
+			schulen = await api.privileged.getAllgemeinenKatalogSchulen();
 		}
 		this.setPatchedState({ auswahl, schuleInfo, admins, schulen });
 	}
