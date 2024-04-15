@@ -3,7 +3,24 @@
 		<div class="content-card--content">
 			<div class="flex flex-col items-start gap-3">
 				<div> <svws-ui-checkbox v-model="replaceSchueler">Laufbahndaten von Schüler ersetzen</svws-ui-checkbox> </div>
-				<div> <svws-ui-checkbox v-model="replaceJahrgang" :disabled="!replaceSchueler">Jahrgangs-spezifische Daten ersetzen</svws-ui-checkbox> </div>
+				<div>
+					<svws-ui-checkbox v-model="replaceJahrgang" :disabled="!replaceSchueler">
+						<svws-ui-tooltip>
+							<span class="flex flex-row gap-1">Jahrgangs-spezifische Daten ersetzen <span class="icon i-ri-information-line mt-0.5" /></span>
+							<template #content>
+								Es werden ersetzt:
+								<ol>
+									<li>- Texte für den Beratungsbogen und den Mailversand </li>
+									<li>- Beratungslehrer</li>
+									<li>- Die wählbaren Fächer </li>
+									<li>- Einstellungen zu den Zusatzkursen</li>
+									<li>- Unzulässige Fachkombinationen</li>
+									<li>- Geforderte Fachkombinationen</li>
+								</ol>
+							</template>
+						</svws-ui-tooltip>
+					</svws-ui-checkbox>
+				</div>
 				<div>
 					<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 					<svws-ui-spinner :spinning="loading" />
