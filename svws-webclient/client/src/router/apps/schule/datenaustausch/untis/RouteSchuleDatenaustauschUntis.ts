@@ -11,6 +11,7 @@ import { type AuswahlChildData } from "~/components/AuswahlChildData";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
 import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaustauschUntisStundenplan";
+import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustauschUntisRaeume";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
 
@@ -22,7 +23,8 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Untis";
 		super.children = [
-			routeSchuleDatenaustauschUntisStundenplan
+			routeSchuleDatenaustauschUntisStundenplan,
+			routeSchuleDatenaustauschUntisRaeume
 		];
 		super.defaultChild = routeSchuleDatenaustauschUntisStundenplan;
 	}

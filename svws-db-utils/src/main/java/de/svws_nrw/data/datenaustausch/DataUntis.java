@@ -1,6 +1,8 @@
 package de.svws_nrw.data.datenaustausch;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +11,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import de.svws_nrw.base.untis.UntisGPU001;
+import de.svws_nrw.base.untis.UntisGPU005;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -25,6 +29,7 @@ import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecherliste;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
@@ -35,7 +40,9 @@ import de.svws_nrw.data.stundenplan.DataStundenplanRaeume;
 import de.svws_nrw.data.stundenplan.DataStundenplanSchienen;
 import de.svws_nrw.data.stundenplan.DataStundenplanZeitraster;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
@@ -223,5 +230,124 @@ public final class DataUntis {
 		daten.log = log.getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
+
+
+    /**
+     * Importiert die in dem Multipart übergebene Datei.
+     *
+     * @param conn        die Datenbank-Verbindung
+     * @param multipart   der Multipart-Body mmit der Datei
+     *
+     * @return die HTTP-Response mit dem Log
+     */
+    public static Response importGPU005(final DBEntityManager conn, final SimpleBinaryMultipartBody multipart) {
+    	final Logger logger = new Logger();
+    	final LogConsumerList log = new LogConsumerList();
+    	logger.addConsumer(log);
+    	logger.addConsumer(new LogConsumerConsole());
+
+    	boolean success = true;
+    	Status statusCode = Status.OK;
+    	try {
+    		final String csv = new String(multipart.data, StandardCharsets.UTF_8);
+	    	logger.logLn("Importiere die Räume aus der Untis-Datei GPU005.txt:");
+			importUntisRaeume(conn, logger, csv);
+			logger.logLn("  Import beendet");
+    	} catch (final Exception e) {
+			success = false;
+    		if (e instanceof final ApiOperationException aoe) {
+    			statusCode = aoe.getStatus();
+    		} else {
+    			logger.logLn("  [FEHLER] Unerwarteter Fehler: " + e.getLocalizedMessage());
+    			statusCode = Status.INTERNAL_SERVER_ERROR;
+    		}
+    	}
+		final SimpleOperationResponse daten = new SimpleOperationResponse();
+		daten.success = success;
+		daten.log = log.getStrings();
+		return Response.status(statusCode).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    }
+
+
+	/**
+	 * Importiert Räume aus der Untis-Datei GPU005.txt in das Datenbank-Schema, welches durch die übergebene
+	 * Verbindung festgelegt ist.
+	 *
+	 * @param conn     die Datenbank-Verbindung.
+	 * @param logger   der Logger für Rückmeldungen zum Import-Prozess
+	 * @param csv      die CSV-Datei mit den Räumen (GPU005.txt)
+	 *
+	 * @return true im Erfolgsfall und false im Fehlerfall
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static boolean importUntisRaeume(final DBEntityManager conn, final Logger logger, final String csv) throws ApiOperationException {
+		// Lese zunächst die Informationen zur Schule aus der SVWS-Datenbank und überprüfe die Schulform
+		logger.logLn("-> Lese Informationen zu der Schule ein...");
+		logger.modifyIndent(2);
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null) {
+			logger.logLn("[Fehler] - Konnte die Informationen zur Schule nicht aus der Datenbank lesen");
+			throw new ApiOperationException(Status.NOT_FOUND, "Konnte die Informationen zur Schule nicht aus der Datenbank lesen.");
+		}
+		logger.logLn("[OK]");
+		logger.modifyIndent(-2);
+		try {
+			logger.logLn("-> Lese die Räume aus der CSV-Datei ein...");
+			logger.modifyIndent(2);
+			final List<UntisGPU005> raeume = UntisGPU005.readCSV(csv);
+			logger.logLn("[OK]");
+			logger.modifyIndent(-2);
+
+			conn.transactionBegin();
+
+			logger.logLn("-> Lese die bereits im Katalog vorhandenen Räume ein...");
+			logger.modifyIndent(2);
+			final Map<String, DTOKatalogRaum> raeumeVorhanden = conn.queryAll(DTOKatalogRaum.class).stream().collect(Collectors.toMap(r -> r.Kuerzel, r -> r));
+			logger.logLn("[OK]");
+			logger.modifyIndent(-2);
+
+			logger.logLn("-> Schreibe die Räume...");
+			logger.modifyIndent(2);
+			long id = conn.transactionGetNextID(DTOKatalogRaum.class);
+			for (final UntisGPU005 raum : raeume) {
+				if (raum.kuerzel == null) {
+					logger.logLn("[Fehler] - Konnte die Informationen zur Schule nicht aus der Datenbank lesen");
+					logger.modifyIndent(-2);
+					throw new ApiOperationException(Status.BAD_REQUEST, "Jeder Raum muss ein gültiges Kürzel haben.");
+				}
+				if (raeumeVorhanden.containsKey(raum.kuerzel)) {
+					logger.logLn("Raum '%s' wird nicht übernommen, da er bereits vorhanden ist.".formatted(raum.kuerzel));
+					continue;
+				}
+				final DTOKatalogRaum dto = new DTOKatalogRaum(id++, raum.kuerzel, raum.bezeichnung == null ? raum.kuerzel : raum.bezeichnung, raum.groesse == null ? 40 : raum.groesse);
+				conn.transactionPersist(dto);
+				logger.logLn("Raum '%s' hinzugefügt.".formatted(raum.kuerzel));
+			}
+
+			if (!conn.transactionCommit()) {
+				logger.logLn("[Fehler] Unerwarteter Fehler beim Schreiben in die Datenbank.");
+				logger.modifyIndent(-2);
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			}
+			logger.logLn("[OK]");
+			logger.modifyIndent(-2);
+			return true;
+		} catch (final UnrecognizedPropertyException upe) {
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+			upe.printStackTrace(pw);
+			sw.toString().lines().forEach(logger::logLn);
+			logger.logLn("[Fehler] Konnte die Datei GPU005.txt nicht einlesen. Prüfen sie ggf. auch die Zeichenkodierung der Datei. Diese muss UTF-8 (ohne BOM) sein.");
+			logger.modifyIndent(-2);
+			return false;
+		} catch (@SuppressWarnings("unused") final Exception exception) {
+			logger.logLn("[Fehler]");
+			logger.modifyIndent(-2);
+			return false;
+		} finally {
+			conn.transactionRollback();
+		}
+	}
 
 }

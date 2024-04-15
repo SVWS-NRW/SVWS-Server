@@ -9,7 +9,7 @@
 					<svws-ui-tooltip>
 						<span class="font-bold flex flex-row gap-1">GPU001.txt: <span class="icon i-ri-information-line mt-0.5" /></span>
 						<template #content>
-							Die CSV-Datei muss als Textkodierung UTF-8 verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
+							Die CSV-Datei muss als Textkodierung UTF-8 ohne BOM verwenden. Als Trennzeichen wird das Semikolon verwendet und für die textbegrenzung doppelte Anführungszeichen (")
 						</template>
 					</svws-ui-tooltip>
 					<input type="file" accept=".txt" @change="onFileChanged" :disabled="loading">

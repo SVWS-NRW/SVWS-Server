@@ -214,4 +214,38 @@ public class APIGostDatenaustausch {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für den Import des Raum-Katalogs aus Untis (GPU005.txt).
+     *
+     * @param multipart     Die Datei GPU005.txt aus Untis (CSV)
+     * @param schemaname    Name des Schemas, in welches die Räume importiert werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/untis/import/gpu005")
+    @Operation(summary = "Importiert die Räume aus der Untis-Datei GPU005.txt in das Schema mit dem angegebenen Namen.",
+				description = "Importiert die Räume aus der Untis-Datei GPU005.txt in das Schema mit dem angegebenen Namen.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Räume aus der Untis-Datei GPU005.txt",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Räume aus der Untis-Datei GPU005.txt zu importieren.")
+    @ApiResponse(responseCode = "404", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response importUntisRaeumeGPU005(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die Untis-Datei GPU005.txt für die Räume", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataUntis.importGPU005(conn, multipart), request,
+    			ServerMode.STABLE,
+    			BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
 }
