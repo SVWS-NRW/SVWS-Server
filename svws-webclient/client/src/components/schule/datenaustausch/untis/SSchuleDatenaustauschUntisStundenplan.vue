@@ -74,7 +74,7 @@
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", file.value);
-		const result = await props.setUntisImportGPU(formData);
+		const result = await props.importUntisStundenplanGPU001(formData);
 		logs.value = result.log;
 		status.value = result.success;
 		loading.value = false;

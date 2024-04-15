@@ -20,9 +20,9 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		super(defaultState);
 	}
 
-	setUntisImportGPU = async (formData: FormData) => {
+	public async importUntisGPU(apimethod : () => Promise<SimpleOperationResponse>) : Promise<SimpleOperationResponse> {
 		try {
-			return await api.server.importStundenplanUntisGPU001(formData, api.schema)
+			return await apimethod();
 		} catch(e) {
 			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 404) || (e.response.status === 409) || (e.response.status === 500))) {
 				const json : string = await e.response.text();
@@ -34,6 +34,10 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 				result.log.add("  " + e.message);
 			return result;
 		}
+	}
+
+	importUntisStundenplanGPU001 = async (formData: FormData) : Promise<SimpleOperationResponse> => {
+		return await this.importUntisGPU(() => api.server.importStundenplanUntisGPU001(formData, api.schema));
 	}
 
 }
