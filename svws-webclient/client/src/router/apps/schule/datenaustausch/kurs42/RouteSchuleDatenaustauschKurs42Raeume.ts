@@ -16,7 +16,7 @@ export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<unknown, Ro
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Kurs42 Räume";
+		super.text = "Räume";
 	}
 
 	public getRoute() : RouteLocationRaw {

@@ -17,7 +17,7 @@ export class RouteSchuleDatenaustauschKurs42Blockung extends RouteNode<unknown, 
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.blockung", "blockung", SSchuleDatenaustauschKurs42Blockung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Kurs42 Blockung";
+		super.text = "Blockung";
 	}
 
 	public getRoute() : RouteLocationRaw {
