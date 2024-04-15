@@ -1,7 +1,10 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Raumliste aus Kurs42 importieren">
-			<div>Laden Sie die Datei Raeume.txt von Kurs 42 hier hoch, um den Raum-Katalog um die Räume in dieser Datei zu ergänzen. </div>
+			<div class="flex flex-col gap-2 mb-4 lg:mb-8">
+				<p>Laden Sie die Datei Raeume.txt von Kurs 42 hier hoch, um den Raum-Katalog um die Räume in dieser Datei zu ergänzen. </p>
+				<p><b>Wichtig: </b>Die Zeichenkodierung muss UTF-8 ohne BOM sein. </p>
+			</div>
 			<svws-ui-input-wrapper>
 				<input type="file" accept=".txt,.csv" @change="import_file" :disabled="loading">
 				<svws-ui-spinner :spinning="loading" />

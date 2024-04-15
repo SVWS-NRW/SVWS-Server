@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Blockung aus Kurs42 importieren">
-			<div class="flex flex-col gap-2 mb-16 lg:mb-20">
+			<div class="flex flex-col gap-2 mb-4 lg:mb-8">
 				<p><span class="icon i-ri-information-line inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs42 exportiert werden müssen: </p>
 				<ul class="list-disc list-inside">
 					<li> Blockung.txt </li>
@@ -12,7 +12,7 @@
 					<li> Blockplan.txt </li>
 					<li> Fachwahlen.txt </li>
 				</ul>
-				<p> Diese Text-Dateien müssen für den Import im Hauptverzeichnis einer zip-Datei vorliegen. </p>
+				<p> Diese Text-Dateien müssen für den Import im Hauptverzeichnis einer zip-Datei vorliegen. Die Zeichenkodierung muss UTF-8 ohne BOM sein. </p>
 				<p>
 					Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs42 gut zu den Daten der Schild-Datenbank passen!<br>
 					Ist dies nicht der Fall, so schlägt der Import fehl.
