@@ -1,8 +1,8 @@
-import type { Schuljahresabschnitt, SimpleOperationResponse } from "@core";
+import { type AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface SchuleDatenaustauschUntisProps {
-	setUntisImportGPU: (formData: FormData) => Promise<SimpleOperationResponse>;
-	abschnitte: Map<number, Schuljahresabschnitt>;
-	aktAbschnitt: Schuljahresabschnitt;
-	aktSchulabschnitt: number;
+	setTab: (value: AuswahlChildData) => Promise<void>;
+	tab: AuswahlChildData;
+	tabs: AuswahlChildData[];
+	tabsHidden: boolean[];
 }

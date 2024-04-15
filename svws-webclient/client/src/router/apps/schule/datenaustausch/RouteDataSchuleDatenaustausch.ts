@@ -48,22 +48,6 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		return true;
 	}
 
-	setUntisImportGPU = async (formData: FormData) => {
-		try {
-			return await api.server.importStundenplanUntisGPU001(formData, api.schema)
-		} catch(e) {
-			if ((e instanceof OpenApiError) && (e.response !== null) && ((e.response.status === 400) || (e.response.status === 404) || (e.response.status === 409) || (e.response.status === 500))) {
-				const json : string = await e.response.text();
-				return SimpleOperationResponse.transpilerFromJSON(json);
-			}
-			const result = new SimpleOperationResponse();
-			result.log.add("Fehler bei der Server-Anfrage. ");
-			if (e instanceof Error)
-				result.log.add("  " + e.message);
-			return result;
-		}
-	}
-
 	setWenomCredentials = async (url: string, token: string) => {
 		const oauth = new OAuth2ClientSecret();
 		oauth.id = 1;
