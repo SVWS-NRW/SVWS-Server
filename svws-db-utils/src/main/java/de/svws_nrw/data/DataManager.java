@@ -434,10 +434,12 @@ public abstract class DataManager<ID> {
 		// Bestimme die DTOs
 		if (ids == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");
+		final List<CoreData> daten = new ArrayList<>();
+		if (ids.isEmpty())
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		final List<DTO> dtos = conn.queryNamed(dtoClass.getSimpleName() + ".primaryKeyQuery.multiple", ids, dtoClass);
 		if (dtos == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine DTOs mit den angegebenen IDs gefunden.");
-		final List<CoreData> daten = new ArrayList<>();
 		for (final DTO dto : dtos) {
 			daten.add(dtoMapper.apply(dto));
 			conn.transactionRemove(dto);
