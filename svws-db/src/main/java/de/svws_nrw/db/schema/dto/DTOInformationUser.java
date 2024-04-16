@@ -83,9 +83,9 @@ public final class DTOInformationUser {
 	 */
 	public static List<String> queryNames(final DBEntityManager conn) {
 		return switch (conn.getDBDriver()) {
-			case MARIA_DB -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(setSystemUserMariaDB::contains).toList();
-			case MYSQL -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(setSystemUserMySQL::contains).toList();
-			case MSSQL -> conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter(setSystemUserMSSQL::contains).toList();
+			case MARIA_DB -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMariaDB.contains(n)).toList();
+			case MYSQL -> conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(n -> !setSystemUserMySQL.contains(n)).toList();
+			case MSSQL -> conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter(n -> !setSystemUserMSSQL.contains(n)).toList();
 			case MDB, SQLITE -> Collections.emptyList();
 			default -> Collections.emptyList();
 		};

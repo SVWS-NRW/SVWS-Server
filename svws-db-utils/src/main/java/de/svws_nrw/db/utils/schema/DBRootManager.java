@@ -129,19 +129,20 @@ public final class DBRootManager {
 	/**
 	 * Erstellt einen neuen Datenbank-Benutzer mit administrativen Rechten auf dem angebenen Schema.
 	 *
+	 * @param conn         die Datenbank-Verbindung
 	 * @param nameUser     der Name des zu erstellenden Benutzers
 	 * @param pwUser       das Benutzerkennwort des zu erstellenden Benutzers
 	 * @param nameSchema   das Schema, auf dem der neue Benutzer seine Rechte bekommen soll
 	 *
 	 * @return true, wenn der Benutzer erstellt wurde, sonst false
 	 */
-	private boolean createDBAdminUser(final String nameUser, final String pwUser, final String nameSchema) {
+	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema) {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
 		final Benutzer user;
 		try {
-			user = this.conn.getUser().connectTo(nameSchema);
+			user = conn.getUser().connectTo(nameSchema);
 		} catch (@SuppressWarnings("unused") final DBException db) {
 			return false;
 		}
@@ -200,7 +201,7 @@ public final class DBRootManager {
 	 *
 	 * @return true wenn die administrativen Rechte gewährt wurden und ansonsten false
 	 */
-	private static boolean grantAdminRights(final DBEntityManager conn, final String nameUser, final String nameSchema) {
+	public static boolean grantAdminRights(final DBEntityManager conn, final String nameUser, final String nameSchema) {
 		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema))
 			return false;
 		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
@@ -263,7 +264,7 @@ public final class DBRootManager {
 		if (!createDBSchema(nameSchema))
 			return false;
 		// Erstelle dann den DB-Benutzer und gebe diesem Adminstrationsrechte auf das Schema
-		if (!createDBAdminUser(nameUser, pwUser, nameSchema)) {
+		if (!createDBAdminUser(conn, nameUser, pwUser, nameSchema)) {
 			dropDBSchemaIfExists(nameSchema);
 			return false;
 		}

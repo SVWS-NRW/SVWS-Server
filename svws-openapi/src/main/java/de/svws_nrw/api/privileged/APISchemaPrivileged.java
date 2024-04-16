@@ -1,5 +1,7 @@
 package de.svws_nrw.api.privileged;
 
+import java.util.List;
+
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -1199,19 +1201,32 @@ public class APISchemaPrivileged {
 			@RequestBody(description = "Der Benutzername und das Kennwort für den DB-Zugriff auf das Schema", required = true, content =
 				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			try {
+				// Prüfe zunächst den Status des Schemas mit dem angemeldeten Benutzer
+				final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schema);
+				if (status == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Ein Schema mit dem Namen %s konnte in den Datenbank nicht gefunden werden.".formatted(schema));
+				// Prüfe, ob das Schema bereits in der Konfiguration vorhanden ist
+				final SVWSKonfiguration config = SVWSKonfiguration.get();
+				if (config.hasSchema(schema))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ein Schema mit dem Namen %s existiert bereits in der Konfiguration!".formatted(schema));
+				// Prüfe, ob der Datenbank-Benutzer bereits existiert
+				final List<String> usernames = DTOInformationUser.queryNames(conn);
+				if (!usernames.contains(kennwort.user)) {
+					// Existiert er nicht, so muss er angelegt werden und mit administrativen Rechten ausgestattet werden...
+					DBRootManager.createDBAdminUser(conn, kennwort.user, kennwort.password, schema);
+				} else {
+					// TODO Prüfe, ob Rechte vorhanden sind, bevor diese gesetzt werden - z.B. durch eine Verbindung zur DB
+					// Vergebe die Admin-Rechte an den Benutzer, dies kann notwendig sein, wenn dieser noch keine Rechte auf dem Schema hat
+					DBRootManager.grantAdminRights(conn, kennwort.user, schema);
+				}
+				// Erstelle eine Datenbank-Konfiguration mit dem übergebenen Benutzernamen und dem übergebenen Kennwort. Ist dies möglich, so kann das Schema zu der Datenbank hinzugefügt werden.
 	    		final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
 	    		final Benutzer user2 = Benutzer.create(dbconfig);
 	    		try (DBEntityManager conn2 = user2.getEntityManager()) {
-					final DBSchemaStatus status = DBUtilsSchema.getSchemaStatus(conn2, schema);
-					if (status != null) {
-						final SVWSKonfiguration config = SVWSKonfiguration.get();
-						if (config.hasSchema(schema))
-							throw new ApiOperationException(Status.BAD_REQUEST, "Ein Schema mit dem Namen %s existiert bereits in der Konfiguration!".formatted(schema));
-						if (!config.createOrUpdateSchema(schema, kennwort.user, kennwort.password, false))
-							throw new ApiOperationException(Status.BAD_REQUEST, "Benutzername oder Kennwort konnten für das Schema nicht gesetzt werden.");
-					}
+					if (!config.createOrUpdateSchema(schema, kennwort.user, kennwort.password, false))
+						throw new ApiOperationException(Status.BAD_REQUEST, "Benutzername oder Kennwort konnten für das Schema nicht gesetzt werden.");
 					return Response.status(Status.NO_CONTENT).build();
 	    		}
 			} catch (final Exception e) {

@@ -428,4 +428,5 @@ export class RouteDataSchema {
 	}
 
 	refresh = async () => await this.init(undefined);
+
 }
