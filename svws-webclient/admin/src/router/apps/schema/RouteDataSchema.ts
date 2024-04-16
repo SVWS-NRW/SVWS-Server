@@ -144,14 +144,45 @@ export class RouteDataSchema {
 				auswahl = mapSchema.values().next().value;
 		}
 		const revision = await api.server.getServerDBRevision();
+		const schulen: List<SchulenKatalogEintrag> = await api.privileged.getAllgemeinenKatalogSchulen();
 		const view = routeSchemaUebersicht;
+		const result = await this.getSchemaInformation(auswahl);
 		this.setPatchedDefaultState({
 			mapSchema,
-			auswahl,
+			auswahl : result.auswahl,
+			schuleInfo: result.schuleInfo,
+			admins: result.admins,
 			revision,
+			schulen,
 			view
 		});
 		api.status.stop();
+	}
+
+	/**
+	 * Lädt die Informationen zu dem angegebenen Schema vom SVWS-Server.
+	 *
+	 * @param schema   das Schema
+	 */
+	private async getSchemaInformation(schema: SchemaListeEintrag | undefined) : Promise<{ auswahl : SchemaListeEintrag | undefined, schuleInfo : SchuleInfo | undefined, admins : List<BenutzerListeEintrag> }> {
+		if ((schema === undefined) || (this.mapSchema.size === 0))
+			return { auswahl: undefined, schuleInfo: undefined, admins: new ArrayList()};
+		const auswahl = this.mapSchema.has(schema.name.toLocaleLowerCase()) ? schema : undefined;
+		let schuleInfo = undefined;
+		let admins: List<BenutzerListeEintrag> = new ArrayList();
+		if (auswahl !== undefined && auswahl.revision > 0) {
+			// Es liegt ein SVWS-Schema vor ...
+			try {
+				// ... versuche die Informationen zur Schule zu laden
+				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			} catch (e) {
+				console.log("Die Information zur Schule konnten für das Schema " + auswahl.name + " nicht gefunden werden.")
+			}
+			// Wenn die Revision des Schemas aktuell ist, dann lade auch die Informationen zu den Admin-Benutzern
+			if (auswahl.revision === this.revision)
+				admins = await api.privileged.getSchemaAdmins(auswahl.name);
+		}
+		return { auswahl, schuleInfo, admins };
 	}
 
 	/**
@@ -160,29 +191,8 @@ export class RouteDataSchema {
 	 * @param schema   das ausgewählte Schema
 	 */
 	public async setSchema(schema: SchemaListeEintrag | undefined) {
-		if ((schema === undefined) || (this.mapSchema.size === 0))
-			return;
-		const auswahl = this.mapSchema.has(schema.name.toLocaleLowerCase()) ? schema : undefined;
-		let schuleInfo = undefined;
-		let schulen: List<SchulenKatalogEintrag> = new ArrayList();
-		let admins: List<BenutzerListeEintrag> = new ArrayList();
-		if (auswahl !== undefined && auswahl.revision > 0) {
-			// Es liegt ein SVWS-Schema vor ...
-			try {
-				// ... versuche die Informationen zur Schule zu laden
-				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
-			} catch (e) {
-				// Gelingt dies nicht, so muss die Initialisierung über den Schul-Katalog angeboten werden
-				console.log("Die Information zur Schule konnten für das Schema " + auswahl.name + " nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
-				schulen = await api.privileged.getAllgemeinenKatalogSchulen();
-			}
-			// Wenn die Revision des Schemas aktuell ist, dann lade auch die Informationen zu den Admin-Benutzern
-			if (auswahl.revision === this.revision)
-				admins = await api.privileged.getSchemaAdmins(auswahl.name);
-		} else {
-			schulen = await api.privileged.getAllgemeinenKatalogSchulen();
-		}
-		this.setPatchedState({ auswahl, schuleInfo, admins, schulen });
+		const result = await this.getSchemaInformation(schema);
+		this.setPatchedState({ auswahl : result.auswahl, schuleInfo: result.schuleInfo, admins: result.admins });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
