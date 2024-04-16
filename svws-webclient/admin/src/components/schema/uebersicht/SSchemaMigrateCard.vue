@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="ml-4 mt-4 mb-20">
+	<svws-ui-content-card class="ml-4 mt-4 mb-4">
 		<svws-ui-select v-model="migrationQuellinformationen().dbms" :items="items.keys()" :item-text="i => items.get(i) || ''" title="Datenbank" class="mb-8" />
 		<div class="flex flex-col items-start gap-3">
 			<div v-if="migrationQuellinformationen().dbms !== 'mdb'" class="flex flex-col gap-2">
@@ -19,7 +19,7 @@
 				</svws-ui-input-wrapper>
 				<div v-else class="flex flex-col gap-2 -mt-5 mb-5">
 					<div class="font-bold text-button">Quell-Datenbank: Access-Datei (.mdb) hochladen</div>
-					<input type="file" @change="onFileChanged" :disabled="loading" accept=".mdb">
+					<input type="file" @change="onFileChanged" :disabled="loading().value" accept=".mdb">
 				</div>
 				<svws-ui-input-wrapper v-if="targetSchema === undefined">
 					<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
@@ -29,34 +29,25 @@
 				</svws-ui-input-wrapper>
 			</div>
 		</div>
-		<div class="flex gap-1 items-start" :class="{'mt-12': status === undefined, 'mt-5 mb-12': status !== undefined}">
-			<template v-if="status === undefined">
-				<svws-ui-button @click="migrate" :disabled="loading || (migrationQuellinformationen().dbms === 'mdb' && !file)"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
-				<svws-ui-button type="secondary" @click="setCurrentAction('')" :disabled="loading"> Abbrechen </svws-ui-button>
-			</template>
-			<template v-else>
-				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
-			</template>
+		<div class="flex gap-1 items-start">
+			<svws-ui-button @click="migrate" :disabled="loading().value || (migrationQuellinformationen().dbms === 'mdb' && !file)"> <svws-ui-spinner :spinning="loading().value" /> Migrieren </svws-ui-button>
 		</div>
-		<log-box :logs="logs" :status="status">
-			<template #button>
-				<svws-ui-button v-if="status !== undefined" type="transparent" @click="clear" title="Verwerfe das Ergebnis des letzten Migrationsversuchs">Log verwerfen </svws-ui-button>
-			</template>
-		</log-box>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
 	import type { List, SimpleOperationResponse } from "@core";
-	import { shallowRef } from "vue";
+	import { type ShallowRef, shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 
 	const props = defineProps<{
 		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
-		setCurrentAction: (action: string) => void;
+		logs: () => ShallowRef<List<string | null> | undefined>;
+		status: () => ShallowRef<boolean | undefined>;
+		loading: () => ShallowRef<boolean>;
 	}>();
 
 	const items = new Map<string, string>();
@@ -69,12 +60,9 @@
 	const zielSchema = shallowRef("");
 	const zielUsername = shallowRef("");
 	const zielUserPassword = shallowRef("");
-	const loading = shallowRef<boolean>(false);
-	const logs = shallowRef<List<string|null>>();
-	const status = shallowRef<boolean>();
 
 	async function migrate() {
-		loading.value = true;
+		props.loading().value = true;
 		const formData = new FormData();
 		if (file.value !== null) {
 			formData.append("database", file.value);
@@ -91,13 +79,13 @@
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
 			const result = await props.migrateSchema(formData);
-			logs.value = result.log;
-			status.value = result.success;
+			props.logs().value = result.log;
+			props.status().value = result.success;
 		} catch (e) {
 			console.log(e);
-			status.value = false;
+			props.status().value = false;
 		}
-		loading.value = false;
+		props.loading().value = false;
 		zielSchema.value = '';
 		zielUserPassword.value = '';
 		zielUsername.value = '';
@@ -114,21 +102,9 @@
 	}
 
 	function clear() {
-		loading.value = false;
-		logs.value = undefined;
-		status.value = undefined;
-	}
-
-	function reset() {
-		clear();
-		zielSchema.value = '';
-		zielUserPassword.value = '';
-		zielUsername.value = '';
-	}
-
-	function close() {
-		props.setCurrentAction('');
-		reset();
+		props.loading().value = false;
+		props.logs().value = undefined;
+		props.status().value = undefined;
 	}
 
 </script>
