@@ -81,10 +81,10 @@
 							</div>
 						</template>
 					</div>
-					<div v-if="(regelzahl > 1) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
+					<div v-if="(regelzahl) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
-						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl > 0}">
+						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
 							<span class="icon-sm i-ri-settings-3-line" /> Detailansicht&nbsp;<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
 					</div>
