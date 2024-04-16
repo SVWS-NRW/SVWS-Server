@@ -31,7 +31,7 @@ export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume
 	public getProps(to: RouteLocationNormalized): RaumDatenProps {
 		return {
 			patch: routeKatalogRaeume.data.patch,
-			data: routeKatalogRaeume.data.daten,
+			auswahl: routeKatalogRaeume.data.auswahl,
 		};
 	}
 
