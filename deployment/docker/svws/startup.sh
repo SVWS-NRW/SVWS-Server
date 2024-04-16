@@ -1,7 +1,13 @@
 #!/bin/bash
 
 # Konfigurationsdatei generieren
-envsubst < /etc/app/svws/conf/svwsconfig-template.json > /opt/app/svws/svwsconfig.json
+if [[ ! -f /opt/app/svws/svwsconfig.json ]]; then
+    echo "Konfigurationsdatei nicht vorhanden. Erstelle Konfigurationsdatei..."
+	envsubst < /etc/app/svws/conf/svwsconfig-template.json > /opt/app/svws/svwsconfig.json
+else
+    echo "Konfigurationsdatei bereits vorhanden."
+fi
+
 
 # Testdatenbank importieren
 if [[ -d $INIT_SCRIPTS_DIR ]]; then
