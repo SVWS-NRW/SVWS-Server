@@ -72,6 +72,8 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		const listID = new ArrayList<number>;
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
+		if (listID.isEmpty())
+			return;
 		const religionen = await api.server.deleteReligionEintraege(listID, api.schema);
 		for (const eintrag of religionen)
 			mapKatalogeintraege.delete(eintrag.id);

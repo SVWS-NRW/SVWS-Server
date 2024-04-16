@@ -69,6 +69,8 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const listID = new ArrayList<number>();
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
+		if (listID.isEmpty())
+			return;
 		const raeume = await api.server.deleteRaeume(listID, api.schema);
 		stundenplanManager.raumRemoveAll(raeume);
 		const list = stundenplanManager.raumGetMengeAsList();

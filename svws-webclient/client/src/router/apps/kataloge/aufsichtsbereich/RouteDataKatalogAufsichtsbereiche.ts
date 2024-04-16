@@ -67,6 +67,8 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		const listID = new ArrayList<number>();
 		for (const eintrag of eintraege)
 			listID.add(eintrag.id);
+		if (listID.isEmpty())
+			return;
 		const aufsichtsbereiche = await api.server.deleteAufsichtsbereiche(listID, api.schema);
 		stundenplanManager.aufsichtsbereichRemoveAll(aufsichtsbereiche);
 		const liste = this.stundenplanManager.aufsichtsbereichGetMengeAsList();
