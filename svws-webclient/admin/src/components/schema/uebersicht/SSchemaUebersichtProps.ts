@@ -1,4 +1,4 @@
-import type { ApiFile, BenutzerListeEintrag, SchemaListeEintrag, SimpleOperationResponse, List, SchuleInfo, SchuleStammdaten, SchulenKatalogEintrag } from "@core";
+import type { ApiFile, BenutzerListeEintrag, SchemaListeEintrag, SimpleOperationResponse, List, SchuleInfo, SchuleStammdaten, SchulenKatalogEintrag, BenutzerKennwort } from "@core";
 import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
 import type { ApiStatus } from "~/components/ApiStatus";
 
@@ -10,6 +10,7 @@ export interface SchemaUebersichtProps {
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	upgradeSchema: () => Promise<SimpleOperationResponse>;
 	initSchema: (schulnummer: number) => Promise<SchuleStammdaten>;
+	addExistingSchemaToConfig: (data: BenutzerKennwort, schema: string) => Promise<void>;
 	revision: number | null;
 	schuleInfo: () => SchuleInfo | undefined;
 	schulen: () => List<SchulenKatalogEintrag>;

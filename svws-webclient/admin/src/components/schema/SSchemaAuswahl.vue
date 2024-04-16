@@ -41,10 +41,6 @@
 				<template #cell(isInConfig)="{ value, rowData }">
 					<span class="icon i-ri-check-line -my-0.5" v-if="value === true" />
 					<span class="icon i-ri-alert-fill icon-error -my-0.5" v-if="rowData.isDeactivated === true" />
-					<s-schema-auswahl-neu-modal v-if="value === false" v-slot="{ openModal }" :add-existing="addExistingSchemaToConfig" :schema="rowData.name">
-						<span class="icon i-ri-close-line -my-0.5 opacity-25" />
-						<svws-ui-button @click="openModal" type="icon" class="ml-auto" title="Schema in die Konfiguration übernehmen"> <span class="icon i-ri-share-forward-2-line" /> </svws-ui-button>
-					</s-schema-auswahl-neu-modal>
 				</template>
 				<template v-if="hasRootPrivileges && auswahlGruppe.length === 0" #actions>
 					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema" :migration-quellinformationen="migrationQuellinformationen">

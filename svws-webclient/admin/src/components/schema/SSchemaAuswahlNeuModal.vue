@@ -1,13 +1,10 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="big">
-		<template #modalTitle>{{ title }}</template>
+		<template #modalTitle>Neues Schema anlegen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input v-if="istModalNeuesSchema" v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading" />
-				<div v-else>
-					Schemaname: {{ props.schema }}
-				</div>
+				<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading" />
 				<svws-ui-spacing />
 				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" />
 				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading" type="password" />
@@ -15,9 +12,9 @@
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
-				<svws-ui-button type="secondary" @click="add" :disabled="(istModalNeuesSchema && schemaname.length === 0) || (!istModalNeuesSchema && props.schema === undefined) || user.length === 0 || loading">
+				<svws-ui-button type="secondary" @click="add" :disabled="(schemaname.length === 0) || user.length === 0 || loading">
 					<svws-ui-spinner :spinning="loading" />
-					{{ okButtonText }}
+					Schema anlegen
 				</svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
@@ -33,13 +30,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { ref } from "vue";
 	import { BenutzerKennwort, SimpleOperationResponse, type List } from "@core";
 
 	const props = defineProps<{
-		addSchema?: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);
-		addExisting?: ((data: BenutzerKennwort, schema: string) => Promise<void>);
-		schema?: string;
+		addSchema: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);
 	}>();
 
 	const schemaname = ref<string>('');
@@ -52,11 +47,6 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const istModalNeuesSchema = computed<boolean>(() => props.addSchema !== undefined);
-
-	const title = computed<string>(() => istModalNeuesSchema.value ? "Neues Schema anlegen" : "Schema in Konfiguration übernehmen");
-	const okButtonText = computed<string>(() => istModalNeuesSchema.value ? "Schema anlegen" : "Übernehmen");
-
 	const openModal = () => {
 		showModal().value = true;
 	}
@@ -67,15 +57,10 @@
 		data.user = user.value;
 		data.password = password.value;
 		let result = new SimpleOperationResponse();
-		if (istModalNeuesSchema.value && (props.addSchema !== undefined)) {
-			result = await props.addSchema(data, schemaname.value);
-			logs.value = result.log;
-			status.value = result.success;
-			schemaname.value = '';
-		} else if ((props.addExisting !== undefined) && (props.schema !== undefined)) {
-			result.success = true;
-			await props.addExisting(data, props.schema);
-		}
+		result = await props.addSchema(data, schemaname.value);
+		logs.value = result.log;
+		status.value = result.success;
+		schemaname.value = '';
 		user.value = '';
 		password.value = '';
 		loading.value = false;
