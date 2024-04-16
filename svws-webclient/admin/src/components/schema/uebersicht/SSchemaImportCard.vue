@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="mt-4 mb-20">
+	<svws-ui-content-card class="ml-4 mt-4 mb-20">
 		<div class="flex flex-col gap-2 mb-5">
 			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
 			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
