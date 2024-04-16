@@ -141,7 +141,8 @@
 		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;
-			error.value = {name: "Serverfehler", message: "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen."};
+			const message = e instanceof DeveloperNotificationException ? e.message : "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.";
+			error.value = {name: "Serverfehler", message};
 			return;
 		}
 		let hasDefault = false;
