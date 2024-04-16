@@ -9,13 +9,11 @@ import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
 interface RouteStateKatalogPausenzeiten extends RouteStateInterface {
 	auswahl: StundenplanPausenzeit | undefined;
-	daten: StundenplanPausenzeit | undefined;
 	stundenplanManager: StundenplanManager | undefined;
 }
 
 const defaultState = <RouteStateKatalogPausenzeiten> {
 	auswahl: undefined,
-	daten: undefined,
 	stundenplanManager: undefined,
 	view: routeKatalogPausenzeitDaten,
 };
@@ -36,12 +34,6 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		return this._state.value.stundenplanManager;
 	}
 
-	get daten(): StundenplanPausenzeit {
-		if (this._state.value.daten === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Pausenzeitdaten nicht initialisiert");
-		return this._state.value.daten;
-	}
-
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getPausenzeiten(api.schema);
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
@@ -53,14 +45,9 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		this.setPatchedDefaultState({ auswahl, stundenplanManager })
 	}
 
-	setEintrag = async (auswahl: StundenplanPausenzeit) => {
-		const daten = this.stundenplanManager.pausenzeitGetByIdOrException(auswahl.id);
-		this.setPatchedState({ auswahl, daten })
-	}
+	setEintrag = async (auswahl: StundenplanPausenzeit) => this.setPatchedState({ auswahl });
 
-	gotoEintrag = async (eintrag: StundenplanPausenzeit) => {
-		await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
-	}
+	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
 
 	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
 		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))

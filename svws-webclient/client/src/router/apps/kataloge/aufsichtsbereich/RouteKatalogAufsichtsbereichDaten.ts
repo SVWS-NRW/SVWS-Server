@@ -32,7 +32,7 @@ export class RouteKatalogAufsichtsbereichDaten extends RouteNode<unknown, RouteK
 	public getProps(to: RouteLocationNormalized): AufsichtsbereichDatenProps {
 		return {
 			patch: routeKatalogAufsichtsbereiche.data.patch,
-			data: routeKatalogAufsichtsbereiche.data.daten,
+			auswahl: routeKatalogAufsichtsbereiche.data.auswahl,
 		};
 	}
 

@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-content-card title="Allgemein">
+	<svws-ui-content-card v-if="auswahl" title="Allgemein">
 		<div class="input-wrapper">
-			<svws-ui-select :model-value="Wochentag.fromIDorException(data.wochentag)" @update:model-value="wt => wt && patch({wochentag: wt.id})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(data.beginn ?? 0)" @change="patchBeginn" required placeholder="Stundenbeginn" />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(data.ende ?? 0)" @change="patchEnde" placeholder="Stundenende" />
+			<svws-ui-select :model-value="Wochentag.fromIDorException(auswahl.wochentag)" @update:model-value="wt => wt && patch({wochentag: wt.id})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(auswahl.beginn ?? 0)" @change="patchBeginn" required placeholder="Stundenbeginn" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(auswahl.ende ?? 0)" @change="patchEnde" placeholder="Stundenende" />
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -14,7 +14,7 @@
 	import { Wochentag, DateUtils } from "@core";
 
 	const props = defineProps<{
-		data: StundenplanPausenzeit;
+		auswahl: StundenplanPausenzeit | undefined;
 		patch: (data : Partial<StundenplanPausenzeit>) => Promise<void>;
 	}>();
 

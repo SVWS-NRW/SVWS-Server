@@ -32,7 +32,7 @@ export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalog
 	public getProps(to: RouteLocationNormalized): PausenzeitDatenProps {
 		return {
 			patch: routeKatalogPausenzeiten.data.patch,
-			data: routeKatalogPausenzeiten.data.daten,
+			auswahl: routeKatalogPausenzeiten.data.auswahl,
 		};
 	}
 

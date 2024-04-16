@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
+				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" :columns="cols" selectable v-model="selected">
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 						<s-aufsichtsbereich-neu-modal v-slot="{ openModal }" :add-aufsichtsbereich="addEintrag">

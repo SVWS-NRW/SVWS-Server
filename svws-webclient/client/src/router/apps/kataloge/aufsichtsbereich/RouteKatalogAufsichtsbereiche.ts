@@ -42,18 +42,18 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
+		if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty())
 			return;
 		let eintrag: StundenplanAufsichtsbereich | undefined;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
+			eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
 			return this.getRoute(eintrag?.id);
 		}
 		else {
 			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
+			eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
 			if (eintrag === undefined)
 				return this.getRoute(undefined);
 		}
@@ -62,14 +62,13 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
-		const name = (this.data.mapKatalogeintraege.size === 0) ? this.name : this.defaultChild!.name;
+		const name = (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty()) ? this.name : this.defaultChild!.name;
 		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): AufsichtsbereicheAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -77,7 +76,8 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 			gotoEintrag: this.data.gotoEintrag,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
-			returnToKataloge: routeKataloge.returnToKataloge
+			returnToKataloge: routeKataloge.returnToKataloge,
+			stundenplanManager: () => this.data.stundenplanManager,
 		};
 	}
 
