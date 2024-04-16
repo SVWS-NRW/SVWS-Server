@@ -105,6 +105,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		if (list.isEmpty())
 			return;
 		const res = await api.server.addRaeume(list, api.schema);
+		this.stundenplanManager.raumAddAll(res);
 		this.setPatchedState({stundenplanManager: this.stundenplanManager});
 	})
 }

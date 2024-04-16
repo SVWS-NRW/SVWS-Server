@@ -1448,7 +1448,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public aufsichtsbereichGetMengeAsList() : List<StundenplanAufsichtsbereich> {
-		return this._aufsichtsbereichmenge_sortiert;
+		return new ArrayList(this._aufsichtsbereichmenge_sortiert);
 	}
 
 	/**
@@ -2868,7 +2868,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
 	public pausenaufsichtGetMengeAsList() : List<StundenplanPausenaufsicht> {
-		return this._pausenaufsichtmenge;
+		return new ArrayList(this._pausenaufsichtmenge);
 	}
 
 	/**
@@ -3108,7 +3108,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte.
 	 */
 	public pausenzeitGetMengeAsList() : List<StundenplanPausenzeit> {
-		return this._pausenzeitmenge_sortiert;
+		return new ArrayList(this._pausenzeitmenge_sortiert);
 	}
 
 	/**

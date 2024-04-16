@@ -1449,7 +1449,8 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichGetMengeAsList() {
-		return _aufsichtsbereichmenge_sortiert;
+		// TODO Durch neue new ... Methoden ersetzen
+		return new ArrayList<>(_aufsichtsbereichmenge_sortiert);
 	}
 
 	/**
@@ -3038,7 +3039,8 @@ public class StundenplanManager {
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeAsList() {
-		return _pausenaufsichtmenge;
+		// TODO Durch neue new ... Methoden ersetzen
+		return new ArrayList<>(_pausenaufsichtmenge);
 	}
 
 	/**
@@ -3299,7 +3301,8 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeitGetMengeAsList() {
-		return _pausenzeitmenge_sortiert;
+		// TODO Durch neue new ... Methoden ersetzen
+		return new ArrayList<>(_pausenzeitmenge_sortiert);
 	}
 
 	/**
@@ -3671,6 +3674,7 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
 	 */
 	public @NotNull List<@NotNull StundenplanRaum> raumGetMengeAsList() {
+		// TODO Durch neue new ... Methoden ersetzen
 		return new ArrayList<>(_raummenge_sortiert);
 	}
 
