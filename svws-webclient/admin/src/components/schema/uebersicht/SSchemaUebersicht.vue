@@ -116,7 +116,8 @@
 		return revServer !== eintrag.value.revision;
 	})
 
-	const zeigeInitialisierungMitSchulkatalog = computed<boolean>(() => (eintrag.value !== undefined) && (eintrag.value.isInConfig) && eintrag.value.isSVWS && (props.schuleInfo() === undefined));
+	const zeigeInitialisierungMitSchulkatalog = computed<boolean>(() =>
+		(eintrag.value !== undefined) && (eintrag.value.isInConfig) && eintrag.value.isSVWS && (props.schuleInfo() === undefined) && !revisionNotUpToDate.value);
 
 	const cols: DataTableColumn[] = [
 		{ key: "anzeigename", label: "Name", span: 2 },
