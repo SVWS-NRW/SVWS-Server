@@ -4,14 +4,14 @@
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-select :model-value="Wochentag.fromIDorException(item.wochentag!)" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentag" />
+				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" />
 			</div>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || !item.beginn"> Pausenzeit Hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer" :disabled="!item.beginn || !item.ende || (item.ende - item.beginn < 1) || !wochentage.length"> Pausenzeit Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -22,21 +22,24 @@
 	import { Wochentag, DateUtils } from "@core";
 
 	const props = defineProps<{
-		addPausenzeit: (raum: Partial<StundenplanPausenzeit>) => Promise<void>;
+		addEintraege: (pausenzeit: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
+	const wochentage = ref<Wochentag[]>([Wochentag.MONTAG]);
 
-	const item = ref<Partial<StundenplanPausenzeit>>({ wochentag: 1, beginn: 620, ende: 645, bezeichnung: 'Pause' });
+	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });
 
 	const openModal = () => {
 		showModal().value = true;
 	}
 
 	async function importer() {
-		await props.addPausenzeit(item.value);
-		item.value = { wochentag: 1, beginn: 620, ende: 645, bezeichnung: 'Pause' };
+		const list = [];
+		for (const tag of wochentage.value)
+			list.push({wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause'})
+		await props.addEintraege(list);
 		showModal().value = false;
 	}
 

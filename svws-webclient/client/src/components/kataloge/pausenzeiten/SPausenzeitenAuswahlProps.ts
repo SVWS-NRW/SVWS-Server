@@ -2,7 +2,7 @@ import type { StundenplanPausenzeit, Schuljahresabschnitt, StundenplanManager } 
 
 export interface PausenzeitenAuswahlProps {
 	auswahl: StundenplanPausenzeit | undefined;
-	addEintrag: (eintrag: Partial<StundenplanPausenzeit>) => Promise<void>;
+	addEintraege: (eintrag: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	gotoEintrag: (eintrag: StundenplanPausenzeit) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;

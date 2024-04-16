@@ -49,15 +49,21 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	gotoEintrag = async (eintrag: StundenplanPausenzeit) => await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
 
-	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
-		if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
-			throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
-		delete eintrag.id;
-		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
+	addEintraege = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
+		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
+		for (const eintrag of eintraege) {
+			if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
+				throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
+			delete eintrag.id;
+			list.add(eintrag);
+		}
+		if (list.isEmpty())
+			return;
+		const pausenzeiten = await api.server.addPausenzeiten(list, api.schema);
 		const stundenplanManager = this.stundenplanManager;
-		stundenplanManager.pausenzeitAdd(pausenzeit);
+		stundenplanManager.pausenzeitAddAll(pausenzeiten);
 		this.setPatchedState({stundenplanManager});
-		await this.gotoEintrag(pausenzeit);
+		await this.gotoEintrag(pausenzeiten.get(0));
 	}
 
 	deleteEintraege = async (eintraege: Iterable<StundenplanPausenzeit>) => {
