@@ -66,7 +66,7 @@ public final class DataENMDaten extends DataManager<Long> {
 
 	private static final String ENM_UPLOAD_PATH = "/api/secure/import";
 	private static final String ENM_DOWNLOAD_PATH = "/api/secure/export";
-	private static final String ENM_TRUNCATE_PATH = "/api/secure/truncate";
+	private static final String ENM_TRUNCATE_PATH = "/api/truncate";
 
 
 	/**
