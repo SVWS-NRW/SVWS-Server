@@ -40,8 +40,7 @@ class OAuthClientTest {
 		final String client_id = "1";
 		final String client_secret = "1IbLT9WQr2JZrXuBcmB8K7bDvTkK2hcrZvfG5V9l";
 
-		final String basicAuth = Base64.getEncoder()
-				.encodeToString((client_id + ":" + client_secret).getBytes());
+		final String basicAuth = Base64.getEncoder().encodeToString((client_id + ":" + client_secret).getBytes());
 		final OAuth2Client client = OAuth2Client.getClient("https://wenom2.svws-nrw.de", basicAuth);
 		assertNotNull(client.getToken());
 		// testet, ob ein nochmals angeforderter Client die gleichen credentials
