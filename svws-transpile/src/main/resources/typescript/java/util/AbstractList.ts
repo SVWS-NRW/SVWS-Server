@@ -182,16 +182,16 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
 	public addLast: (e: E | null) => void = java_util_List_addLast;
 
 	/* Implementierung der Default-Methode getFirst */
-	public getFirst: () => E | null = java_util_List_getFirst;
+	public getFirst: () => E = java_util_List_getFirst;
 
 	/* Implementierung der Default-Methode getLast */
-	public getLast: () => E | null = java_util_List_getLast;
+	public getLast: () => E = java_util_List_getLast;
 
 	/* Implementierung der Default-Methode removeFirst */
-	public removeFirst: () => E | null = java_util_List_removeFirst;
+	public removeFirst: () => E = java_util_List_removeFirst;
 
 	/* Implementierung der Default-Methode removeLast */
-	public removeLast: () => E | null = java_util_List_removeLast;
+	public removeLast: () => E = java_util_List_removeLast;
 
 
 	public transpilerCanonicalName(): string {

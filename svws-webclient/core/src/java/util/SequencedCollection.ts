@@ -1,5 +1,6 @@
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
 import type { Collection } from './Collection';
+import { NoSuchElementException } from './NoSuchElementException';
 
 
 export interface SequencedCollection<E> extends Collection<E> {
@@ -22,20 +23,28 @@ export function java_util_SequencedCollection_addLast<E>(this: SequencedCollecti
 
 
 /* Implementierung der Default-Methode getFirst */
-export function java_util_SequencedCollection_getFirst<E>(this: SequencedCollection<E>) : E | null {
-	return this.iterator().next();
+export function java_util_SequencedCollection_getFirst<E>(this: SequencedCollection<E>) : E {
+	const iter = this.iterator();
+	if (!iter.hasNext())
+		throw new NoSuchElementException();
+	return iter.next();
 }
 
 
 /* Implementierung der Default-Methode getLast */
-export function java_util_SequencedCollection_getLast<E>(this: SequencedCollection<E>) : E | null {
-	return this.reversed().iterator().next();
+export function java_util_SequencedCollection_getLast<E>(this: SequencedCollection<E>) : E {
+	const iter = this.reversed().iterator();
+	if (!iter.hasNext())
+		throw new NoSuchElementException();
+	return iter.next();
 }
 
 
 /* Implementierung der Default-Methode removeFirst */
-export function java_util_SequencedCollection_removeFirst<E>(this: SequencedCollection<E>) : E | null {
+export function java_util_SequencedCollection_removeFirst<E>(this: SequencedCollection<E>) : E {
 	const iter = this.iterator();
+	if (!iter.hasNext())
+		throw new NoSuchElementException();
 	const e: E = iter.next();
 	iter.remove();
 	return e;
@@ -43,8 +52,10 @@ export function java_util_SequencedCollection_removeFirst<E>(this: SequencedColl
 
 
 /* Implementierung der Default-Methode removeLast */
-export function java_util_SequencedCollection_removeLast<E>(this: SequencedCollection<E>) : E | null {
+export function java_util_SequencedCollection_removeLast<E>(this: SequencedCollection<E>) : E {
 	const iter = this.reversed().iterator();
+	if (!iter.hasNext())
+		throw new NoSuchElementException();
 	const e: E = iter.next();
 	iter.remove();
 	return e;

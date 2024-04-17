@@ -69,13 +69,13 @@ export interface List<E> extends Collection<E> {
 
 	addLast(e: E | null) : void;
 
-	getFirst() : E | null;
+	getFirst() : E;
 
-	getLast() : E | null;
+	getLast() : E;
 
-	removeFirst() : E | null;
+	removeFirst() : E;
 
-	removeLast() : E | null;
+	removeLast() : E;
 
 }
 
@@ -96,7 +96,7 @@ export function java_util_List_addLast<E>(this: List<E>, e: E | null) : void {
 
 
 /* Implementierung der Default-Methode getFirst */
-export function java_util_List_getFirst<E>(this: List<E>) : E | null {
+export function java_util_List_getFirst<E>(this: List<E>) : E {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
@@ -106,7 +106,7 @@ export function java_util_List_getFirst<E>(this: List<E>) : E | null {
 
 
 /* Implementierung der Default-Methode getLast */
-export function java_util_List_getLast<E>(this: List<E>) : E | null {
+export function java_util_List_getLast<E>(this: List<E>) : E {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
@@ -116,7 +116,7 @@ export function java_util_List_getLast<E>(this: List<E>) : E | null {
 
 
 /* Implementierung der Default-Methode removeFirst */
-export function java_util_List_removeFirst<E>(this: List<E>) : E | null {
+export function java_util_List_removeFirst<E>(this: List<E>) : E {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
@@ -128,7 +128,7 @@ export function java_util_List_removeFirst<E>(this: List<E>) : E | null {
 
 
 /* Implementierung der Default-Methode removeLast */
-export function java_util_List_removeLast<E>(this: List<E>) : E | null {
+export function java_util_List_removeLast<E>(this: List<E>) : E {
 	if (this.isEmpty()) {
 		throw new NoSuchElementException();
 	} else {
