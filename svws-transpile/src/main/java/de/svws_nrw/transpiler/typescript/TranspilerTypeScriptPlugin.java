@@ -93,8 +93,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.YieldTree;
 
-import jakarta.validation.constraints.NotNull;
-
 
 /**
  * This is the transpiler language plugin for Type Script.
@@ -377,6 +375,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final String result = switch (node.getName().toString()) {
 			case strString -> strTsString;
 			case "Enum" -> "JavaEnum";
+			case "Iterable" -> "JavaIterable";
 			case strLong, strInteger, strShort, strByte, strFloat, strDouble -> strTsNumber;
 			case strBoolean -> "boolean";
 			case strCharacter -> strTsString;
@@ -2395,17 +2394,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final TypeMirror type = unit.getIterableTypeArgument();
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: cannot determine iterable type");
-			String typeParam;
-			if (type instanceof final TypeVariable tv) {
-				typeParam = tv.asElement().getSimpleName() + ((type.getAnnotation(NotNull.class) == null) ? "" : " | null");
-			} else if (type instanceof final DeclaredType dt) {
-				if ("java.util.Map.Entry".equals(dt.asElement().toString()))
-					typeParam = "JavaMapEntry<any, any>";
-				else
-					throw new TranspilerException("Transpiler Error: Iterable types of Kind " + type.getKind() + " not yet fully supported");
-			} else {
-				throw new TranspilerException("Transpiler Error: Iterable types of Kind " + type.getKind() + " not yet supported");
-			}
+			final String typeParam = TypeScriptUtils.transpileTypeMirror(type);
 			sb.append(getIndent()).append("public [Symbol.iterator](): Iterator<").append(typeParam).append("> {").append(System.lineSeparator());
 			sb.append(getIndent()).append("\tconst iter : JavaIterator<").append(typeParam).append("> = this.iterator();").append(System.lineSeparator());
 			sb.append(getIndent()).append("\tconst result : Iterator<").append(typeParam).append("> = {").append(System.lineSeparator());
@@ -2608,6 +2597,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strFloat -> "JavaFloat";
 				case strDouble -> "JavaDouble";
 				case "Enum" -> "JavaEnum";
+				case "Iterable" -> "JavaIterable";
 				default -> className;
 			};
 			case "java.util" -> switch (className) {
@@ -2644,6 +2634,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case "java.lang" -> switch (className) {
 				case "Enum" -> "java.lang";
 				case strObject -> "java.lang";
+				case "Iterable" -> "java.lang";
 				default -> packageName;
 			};
 			case "java.util" -> switch (className) {
