@@ -56,5 +56,10 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 		oauth.clientSecret = token;
 		await api.server.addOAuthClientSecret(oauth, api.schema);
 	}
+
+	wenomSynchronize = api.call(async () => {await api.server.synchronizeENMDaten(api.schema)});
+
+	wenomTruncate = api.call(async () => {await api.server.truncateENMServer(api.schema)});
+
 }
 

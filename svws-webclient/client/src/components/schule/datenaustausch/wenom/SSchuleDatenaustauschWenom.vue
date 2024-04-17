@@ -12,14 +12,14 @@
 			<div class="page--content page--content--full">
 				<svws-ui-content-card title="Aktuelle Abschnittsdaten sychronisieren">
 					<div class="flex items-start gap-3">
-						<svws-ui-button type="primary">
+						<svws-ui-button type="primary" @click="wenomSynchronize">
 							synchronisieren
 						</svws-ui-button>
 					</div>
 				</svws-ui-content-card>
 				<svws-ui-content-card title="Aktuelle Abschnittsdaten löschen">
 					<div class="flex items-start gap-3">
-						<svws-ui-button type="primary">
+						<svws-ui-button type="primary" @click="wenomTruncate">
 							löschen
 						</svws-ui-button>
 					</div>
