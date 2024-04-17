@@ -2683,7 +2683,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			entries.add(0, new AbstractMap.SimpleEntry<>(strObject, "java.lang"));
 		if ((unit.isEnum()) && (!unit.imports.containsKey("Enum")))
 			entries.add(0, new AbstractMap.SimpleEntry<>("Enum", "java.lang"));
-		if (unit.superTypes.contains("java.util.Deque"))
+		if (unit.superTypes.contains("java.util.Deque") && (!unit.imports.containsKey("UnsupportedOperationException")))
 			entries.add(0, new AbstractMap.SimpleEntry<>("UnsupportedOperationException", "java.lang"));
 		if (unit.superTypes.contains("java.util.Map")) {
 			final String pkg = unit.imports.get("Function");
