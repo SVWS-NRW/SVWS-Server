@@ -33,9 +33,6 @@ public class AbschlussFaecherGruppe {
 	 * @param faecherFiltern    null bedeutet keinen Filter verwenden, ansonsten werden die gelisteten Fächer gefiltert
 	 */
 	public AbschlussFaecherGruppe(final @NotNull List<@NotNull GEAbschlussFach> faecherAlle, final List<@NotNull String> faecherNutzen, final List<@NotNull String> faecherFiltern) {
-		if (faecherAlle == null)
-			return;
-
 		// Gehe alle Leistungsdaten des Lernabschnittes durch und füge alle Fächer hinzu, die den Kriterien entsprechen
 		for (int i = 0; i < faecherAlle.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecherAlle.get(i);
@@ -98,7 +95,7 @@ public class AbschlussFaecherGruppe {
 			return false;
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if ((fach != null) && (fach.kuerzel.equals(kuerzel)))
+			if (fach.kuerzel.equals(kuerzel))
 				return true;
 		}
 		return false;

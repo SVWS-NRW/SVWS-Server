@@ -170,9 +170,7 @@ public final class AbschlussManager {
 		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if ((fach == null) || fach.kuerzel == null)
-				continue;
-			if (result.contains(fach.kuerzel))
+			if (fach.kuerzel == null || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);
 		}

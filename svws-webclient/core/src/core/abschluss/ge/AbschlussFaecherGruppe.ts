@@ -24,8 +24,6 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 */
 	public constructor(faecherAlle : List<GEAbschlussFach>, faecherNutzen : List<string> | null, faecherFiltern : List<string> | null) {
 		super();
-		if (faecherAlle === null)
-			return;
 		for (let i : number = 0; i < faecherAlle.size(); i++) {
 			const fach : GEAbschlussFach = faecherAlle.get(i);
 			if (fach.kuerzel === null)
@@ -84,7 +82,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 			return false;
 		for (let i : number = 0; i < this.faecher.size(); i++) {
 			const fach : GEAbschlussFach = this.faecher.get(i);
-			if ((fach !== null) && (JavaObject.equalsTranspiler(fach.kuerzel, (kuerzel))))
+			if (JavaObject.equalsTranspiler(fach.kuerzel, (kuerzel)))
 				return true;
 		}
 		return false;

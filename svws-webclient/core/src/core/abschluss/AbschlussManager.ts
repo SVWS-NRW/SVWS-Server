@@ -153,9 +153,7 @@ export class AbschlussManager extends JavaObject {
 		const result : ArrayList<string> = new ArrayList();
 		for (let i : number = 0; i < faecher.size(); i++) {
 			const fach : GEAbschlussFach = faecher.get(i);
-			if ((fach === null) || fach.kuerzel === null)
-				continue;
-			if (result.contains(fach.kuerzel))
+			if (fach.kuerzel === null || result.contains(fach.kuerzel))
 				continue;
 			result.add(fach.kuerzel);
 		}

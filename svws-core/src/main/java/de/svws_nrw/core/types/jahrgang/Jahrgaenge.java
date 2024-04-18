@@ -463,12 +463,10 @@ public enum Jahrgaenge {
 	private static final @NotNull HashMap<@NotNull Long, Jahrgaenge> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull
-	final ArrayList<Schulform> @NotNull[] schulformen;
+	private final @NotNull ArrayList<Schulform> @NotNull[] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull
-	final ArrayList<@NotNull String> @NotNull[] bezeichnungen;
+	private final @NotNull ArrayList<@NotNull String> @NotNull[] bezeichnungen;
 
 
 	/**
