@@ -12,6 +12,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 
@@ -640,7 +641,7 @@ public final class MethodNode {
 			}
 
 			// the abstract modifier
-			if (body == null)
+			if ((body == null) && (this._class.getKind() != Kind.INTERFACE))
 				sb.append("abstract ");
 
 			// the static modifier
