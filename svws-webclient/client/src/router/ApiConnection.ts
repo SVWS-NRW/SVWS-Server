@@ -2,7 +2,7 @@ import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode, DeveloperNotificationException } from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 
 import { Config } from "~/components/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -185,7 +185,7 @@ export class ApiConnection {
 	/**
 	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
 	 *
-	 * @param {string} hostname Der Hostname unter der der SVWS-Server erreichbar sein soll
+	 * @param {string} name Der Hostname unter der der SVWS-Server erreichbar sein soll
 	 *
 	 * @returns {Promise<List<DBSchemaListeEintrag>>}
 	 */
@@ -194,7 +194,10 @@ export class ApiConnection {
 		const host = url.host;
 		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {
-			return await this.connect(host);
+			const list = await this.connect(host);
+			if (url.port)
+				localStorage.setItem("SVWS-Client Port", url.port);
+			return list;
 		} catch (error) {
 			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
@@ -205,6 +208,15 @@ export class ApiConnection {
 				return await this.connect(hostname)
 			} catch (error) {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
+			}
+		}
+		const port = localStorage.getItem("SVWS-Client Port");
+		if ((port !== null) && (port !== url.port)) {
+			console.log(`Verbinde zum SVWS-Server unter https://${hostname}:${port}...`);
+			try {
+				return await this.connect(`${hostname}:${port}`);
+			} catch (error) {
+				console.log(`Verbindung zum SVWS-Server unter https://${hostname}:${port} fehlgeschlagen.`);
 			}
 		}
 		throw new Error();
