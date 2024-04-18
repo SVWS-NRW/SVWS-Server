@@ -207,7 +207,7 @@ export class ApiConnection {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 			}
 		}
-		return new ArrayList<DBSchemaListeEintrag>();
+		throw new Error();
 	}
 
 	/**
