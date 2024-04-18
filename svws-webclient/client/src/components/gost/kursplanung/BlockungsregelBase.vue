@@ -44,8 +44,8 @@
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungsdatenManager, List , GostKursblockungRegelTyp } from "@core";
-	import { ArrayList } from "@core";
+	import type { GostBlockungsergebnisManager, GostBlockungsdatenManager, List , GostKursblockungRegelTyp } from "@core";
+	import { GostBlockungRegel, ArrayList } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -86,7 +86,9 @@
 	}
 
 	function select_regel(r: GostBlockungRegel) {
-		emit('update:modelValue', r);
+		const regel = GostBlockungRegel.transpilerFromJSON(GostBlockungRegel.transpilerToJSON(r));
+		console.log(regel, r)
+		emit('update:modelValue', regel);
 	}
 
 </script>
