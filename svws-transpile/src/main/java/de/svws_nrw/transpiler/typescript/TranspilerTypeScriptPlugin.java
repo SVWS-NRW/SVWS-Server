@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -2241,6 +2244,49 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Fügt die übergebenen Typen zu den Importen hinzu sofern es sich nicht um Type-Variablen oder primitive Typen handelt.
+	 *
+	 * @param unit    die Transpiler-Unit, wo die Importe ergänzt werden
+	 * @param types   die hinzuzufügenden Typen
+	 */
+	private void transpileDefaultMethodImplementationsAddImports(final TranspilerUnit unit, final Collection<TypeMirror> types) {
+		for (final TypeMirror type : types) {
+			if ((type instanceof TypeVariable) || type.getKind().isPrimitive())
+				continue;
+			if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
+				final PackageElement pe = transpiler.getPackageOf(te);
+				if (unit.imports.get(te.getSimpleName().toString()) == null)
+					unit.imports.put(te.getSimpleName().toString(), pe.getQualifiedName().toString());
+			} else
+				throw new TranspilerException("Transpiler Error: TypeKind %s not yet supported here.".formatted(type.getKind()));
+		}
+	}
+
+
+	/**
+	 * Fügt die Typen der übergebenen Methoden-Parameter zu den Importen hinzu, sofern es sich nicht um Typ-Variablen
+	 * oder primitive Typen handelt.
+	 *
+	 * @param unit     die Transpiler-Unit, wo die Importe ergänzt werden
+	 * @param params   die Parameter, deren Typen hinzugefügt werden sollen
+	 */
+	private void transpileDefaultMethodParamsAddImports(final TranspilerUnit unit, final List<? extends VariableElement> params) {
+		final List<TypeMirror> types = new ArrayList<>();
+		for (final VariableElement param : params) {
+			final TypeMirror paramType = param.asType();
+			if ((paramType instanceof TypeVariable) || paramType.getKind().isPrimitive())
+				continue;
+			if ((paramType instanceof DeclaredType) || (paramType instanceof ArrayType))
+				types.add(paramType);
+			else
+				throw new TranspilerException("Transpiler Error: TypeKind %s not yet supported here.".formatted(paramType.getKind()));
+
+		}
+		transpileDefaultMethodImplementationsAddImports(unit, types);
+	}
+
+
+	/**
 	 * Erzeugt den Code für die Verwendung von Default-Methoden innerhalb der Klasse
 	 *
 	 * @param sb           the StringBuilder where the output is written to
@@ -2253,15 +2299,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final ExecutableElement method = methodWithPath.getKey();
 			final List<TypeElement> path = methodWithPath.getValue();
 			final Map<String, TypeMirror> resolved = ElementUtils.resolveTypeVariables(path, null);
+			transpileDefaultMethodImplementationsAddImports(unit, resolved.values());
 			for (final TypeParameterElement tpe : method.getTypeParameters()) {
 				// TODO add the type parameters to resolved and transpile them (see TODO below)
 				throw new TranspilerException("Transpiler Error: Methods with type parameters are not yet supported here");
 			}
 			final String methodName = method.getSimpleName().toString();
+			transpileDefaultMethodParamsAddImports(unit, method.getParameters());
 			final String methodParams = convertDefaultMethodParameters(method, resolved);
-			final String returnType = (new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method), resolved)).transpile(false);
+			transpileDefaultMethodImplementationsAddImports(unit, List.of(method.getReturnType()));
+			final TypeNode returnType = new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method), resolved);
+			final String returnTypeStr = returnType.transpile(false);
 			// TODO the methods type parameters
-			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnType).append(" {").append(System.lineSeparator());
+			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnTypeStr).append(" {").append(System.lineSeparator());
 			indentC++;
 			sb.append(getIndent());
 			if (method.getReturnType().getKind() != TypeKind.VOID)
@@ -2734,30 +2784,33 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final String importName = getImportName(key, value);
 					final String importPackage = importFullPackageName.replace(strIgnoreJavaPackagePrefix + ".", "");
 					final String importPath = importPathPrefix + importPackage.replace('.', '/') + "/";
-					final boolean hasClass = body.contains(importName);
-					final boolean hasCast = body.contains(importCast);
+					final boolean isSelf = unit.getClassName().equals(importName);
+					if (!isSelf) {
+						final boolean hasClass = body.contains(importName);
+						final boolean hasCast = body.contains(importCast);
 
-					final TypeElement elem = transpiler.getTypeElement(value + "." + key);
-					boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
-					if (renamedInterfaces.contains(importPackage + "." + importName))
-						isImportType = true;
-					final List<String> strImports = new ArrayList<>();
-					final List<String> strTypeImports = new ArrayList<>();
-					if (hasClass && isImportType)
-						strTypeImports.add(importName);
-					else if (hasClass && !isImportType)
-						strImports.add(importName);
-					if (hasCast)
-						strImports.add(importCast);
-					for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
-						strImports.add(m);
-					if (!strTypeImports.isEmpty()) {
-						sb.append(strTypeImports.stream().collect(Collectors.joining(", ", "import type { ", " } from '%s';".formatted(importPath + importName))));
-						sb.append(System.lineSeparator());
-					}
-					if (!strImports.isEmpty()) {
-						sb.append(strImports.stream().collect(Collectors.joining(", ", "import { ", " } from '%s';".formatted(importPath + importName))));
-						sb.append(System.lineSeparator());
+						final TypeElement elem = transpiler.getTypeElement(value + "." + key);
+						boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
+						if (renamedInterfaces.contains(importPackage + "." + importName))
+							isImportType = true;
+						final List<String> strImports = new ArrayList<>();
+						final List<String> strTypeImports = new ArrayList<>();
+						if (hasClass && isImportType)
+							strTypeImports.add(importName);
+						else if (hasClass && !isImportType)
+							strImports.add(importName);
+						if (hasCast)
+							strImports.add(importCast);
+						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
+							strImports.add(m);
+						if (!strTypeImports.isEmpty()) {
+							sb.append(strTypeImports.stream().collect(Collectors.joining(", ", "import type { ", " } from '%s';".formatted(importPath + importName))));
+							sb.append(System.lineSeparator());
+						}
+						if (!strImports.isEmpty()) {
+							sb.append(strImports.stream().collect(Collectors.joining(", ", "import { ", " } from '%s';".formatted(importPath + importName))));
+							sb.append(System.lineSeparator());
+						}
 					}
 				}
 			}
