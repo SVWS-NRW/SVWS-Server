@@ -181,125 +181,125 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _aufsichtsbereich_by_id : HashMap<number, StundenplanAufsichtsbereich> = new HashMap();
 
-	private readonly _aufsichtsbereich_by_kuerzel : HashMap<string, StundenplanAufsichtsbereich> = new HashMap();
+	private _aufsichtsbereich_by_kuerzel : HashMap<string, StundenplanAufsichtsbereich> = new HashMap();
 
-	private readonly _aufsichtsbereichmenge_sortiert : List<StundenplanAufsichtsbereich> = new ArrayList();
+	private _aufsichtsbereichmenge_sortiert : List<StundenplanAufsichtsbereich> = new ArrayList();
 
 	private readonly _fach_by_id : HashMap<number, StundenplanFach> = new HashMap();
 
-	private readonly _fachmenge_sortiert : List<StundenplanFach> = new ArrayList();
+	private _fachmenge_sortiert : List<StundenplanFach> = new ArrayList();
 
 	private readonly _jahrgang_by_id : HashMap<number, StundenplanJahrgang> = new HashMap();
 
-	private readonly _jahrgangmenge_sortiert : List<StundenplanJahrgang> = new ArrayList();
+	private _jahrgangmenge_sortiert : List<StundenplanJahrgang> = new ArrayList();
 
-	private readonly _jahrgangmenge_by_idKurs : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
+	private _jahrgangmenge_by_idKurs : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
 
-	private readonly _jahrgangmenge_by_idKlasse : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
+	private _jahrgangmenge_by_idKlasse : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
 
-	private readonly _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
+	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
 
-	private readonly _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
+	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
 
-	private readonly _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
+	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
 	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap();
 
-	private readonly _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList();
+	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList();
 
-	private readonly _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList();
+	private _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList();
 
-	private readonly _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
-	private readonly _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
-	private readonly _klassenmenge_by_idSchueler : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idSchueler : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
-	private readonly _klassenmenge_by_idPausenzeit : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idPausenzeit : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
-	private readonly _klassenmenge_by_idUnterricht : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idUnterricht : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
 	private readonly _klassenunterricht_by_idKlasse_and_idFach : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
 
-	private readonly _klassenunterrichtmenge : List<StundenplanKlassenunterricht> = new ArrayList();
+	private _klassenunterrichtmenge : List<StundenplanKlassenunterricht> = new ArrayList();
 
-	private readonly _klassenunterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
 
-	private readonly _klassenunterrichtmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKlassenunterricht>> = new HashMap2D();
+	private _klassenunterrichtmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKlassenunterricht>> = new HashMap2D();
 
-	private readonly _klassenunterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
 
-	private readonly _klassenunterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
 
-	private readonly _klassenunterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
 
 	private readonly _kurs_by_id : HashMap<number, StundenplanKurs> = new HashMap();
 
-	private readonly _kursmenge : List<StundenplanKurs> = new ArrayList();
+	private _kursmenge : List<StundenplanKurs> = new ArrayList();
 
-	private readonly _kursmenge_by_idSchueler : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idSchueler : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
-	private readonly _kursmenge_by_idSchiene : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idSchiene : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
-	private readonly _kursmenge_by_idLehrer : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idLehrer : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
-	private readonly _kursmenge_by_idKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
-	private readonly _kursmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKurs>> = new HashMap2D();
+	private _kursmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKurs>> = new HashMap2D();
 
-	private readonly _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
 	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap();
 
-	private readonly _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList();
+	private _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList();
 
-	private readonly _lehrermenge_by_idUnterricht : HashMap<number, List<StundenplanLehrer>> = new HashMap();
+	private _lehrermenge_by_idUnterricht : HashMap<number, List<StundenplanLehrer>> = new HashMap();
 
 	private readonly _pausenaufsicht_by_id : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
 
-	private readonly _pausenaufsichtmenge : List<StundenplanPausenaufsicht> = new ArrayList();
+	private _pausenaufsichtmenge : List<StundenplanPausenaufsicht> = new ArrayList();
 
-	private readonly _pausenaufsichtmenge_by_wochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_wochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private readonly _pausenaufsichtmenge_by_idPausenzeit : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idPausenzeit : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private readonly _pausenaufsichtmenge_by_idLehrer : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idLehrer : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private readonly _pausenaufsichtmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private readonly _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
 
-	private readonly _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
 
-	private readonly _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
 
-	private readonly _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
 
 	private readonly _pausenzeit_by_id : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
-	private readonly _pausenzeit_by_tag_and_beginn_and_ende : HashMap<LongArrayKey, StundenplanPausenzeit> = new HashMap();
+	private _pausenzeit_by_tag_and_beginn_and_ende : HashMap<LongArrayKey, StundenplanPausenzeit> = new HashMap();
 
-	private readonly _pausenzeitmenge_sortiert : List<StundenplanPausenzeit> = new ArrayList();
+	private _pausenzeitmenge_sortiert : List<StundenplanPausenzeit> = new ArrayList();
 
-	private readonly _pausenzeitmengeOhneLeere_sortiert : List<StundenplanPausenzeit> = new ArrayList();
+	private _pausenzeitmengeOhneLeere_sortiert : List<StundenplanPausenzeit> = new ArrayList();
 
-	private readonly _pausenzeitmenge_by_wochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_wochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
-	private readonly _pausenzeitmenge_by_idKlasse : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idKlasse : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
-	private readonly _pausenzeitmenge_by_idSchueler : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idSchueler : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
-	private readonly _pausenzeitmenge_by_idLehrer : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idLehrer : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
-	private readonly _pausenzeitmenge_by_idJahrgang : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idJahrgang : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
-	private readonly _pausenzeitmenge_by_idKlasse_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idKlasse_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
 
-	private readonly _pausenzeitmenge_by_idLehrer_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idLehrer_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
 
-	private readonly _pausenzeitmenge_by_idSchueler_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idSchueler_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
 
-	private readonly _pausenzeitmenge_by_idJahrgang_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idJahrgang_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
 
 	private _pausenzeitMinutenMin : number | null = null;
 
@@ -317,77 +317,77 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _raum_by_id : HashMap<number, StundenplanRaum> = new HashMap();
 
-	private readonly _raum_by_kuerzel : HashMap<string, StundenplanRaum> = new HashMap();
+	private _raum_by_kuerzel : HashMap<string, StundenplanRaum> = new HashMap();
 
-	private readonly _raummenge_sortiert : List<StundenplanRaum> = new ArrayList();
+	private _raummenge_sortiert : List<StundenplanRaum> = new ArrayList();
 
 	private readonly _schiene_by_id : HashMap<number, StundenplanSchiene> = new HashMap();
 
-	private readonly _schienenmenge : List<StundenplanSchiene> = new ArrayList();
+	private _schienenmenge : List<StundenplanSchiene> = new ArrayList();
 
-	private readonly _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
-	private readonly _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
-	private readonly _schienenmenge_by_idKlasse : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idKlasse : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
 	private readonly _schueler_by_id : HashMap<number, StundenplanSchueler> = new HashMap();
 
-	private readonly _schuelermenge : List<StundenplanSchueler> = new ArrayList();
+	private _schuelermenge : List<StundenplanSchueler> = new ArrayList();
 
-	private readonly _schuelermenge_by_idKlasse : HashMap<number, List<StundenplanSchueler>> = new HashMap();
+	private _schuelermenge_by_idKlasse : HashMap<number, List<StundenplanSchueler>> = new HashMap();
 
-	private readonly _schuelermenge_by_idKurs : HashMap<number, List<StundenplanSchueler>> = new HashMap();
+	private _schuelermenge_by_idKurs : HashMap<number, List<StundenplanSchueler>> = new HashMap();
 
 	private readonly _unterricht_by_id : HashMap<number, StundenplanUnterricht> = new HashMap();
 
-	private readonly _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList();
+	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList();
 
-	private readonly _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idRaum : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idRaum : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idKurs : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idKurs : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idSchueler_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idSchueler_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idLehrer_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idLehrer_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idJahrgang_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idJahrgang_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idKlasse_and_idFach : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idKlasse_and_idFach : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
-	private readonly _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
 	private _unterrichtHatMultiWochen : boolean = false;
 
 	private readonly _zeitraster_by_id : HashMap<number, StundenplanZeitraster> = new HashMap();
 
-	private readonly _zeitraster_by_wochentag_and_stunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
+	private _zeitraster_by_wochentag_and_stunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
 
-	private readonly _zeitrastermenge : List<StundenplanZeitraster> = new ArrayList();
+	private _zeitrastermenge : List<StundenplanZeitraster> = new ArrayList();
 
-	private readonly _zeitrastermengeOhneLeere_sortiert : List<StundenplanZeitraster> = new ArrayList();
+	private _zeitrastermengeOhneLeere_sortiert : List<StundenplanZeitraster> = new ArrayList();
 
-	private readonly _zeitrastermenge_by_wochentag : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+	private _zeitrastermenge_by_wochentag : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
 
-	private readonly _zeitrastermenge_by_stunde : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+	private _zeitrastermenge_by_stunde : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
 
 	private _zeitrasterMinutenMin : number | null = null;
 
@@ -397,9 +397,9 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterMinutenMaxOhneLeere : number | null = null;
 
-	private readonly _zeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
+	private _zeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
 
-	private readonly _zeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
+	private _zeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
 
 	private _zeitrasterWochentagMin : number = Wochentag.MONTAG.id;
 
@@ -419,9 +419,9 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterStundenRangeOhneLeere : Array<number> = [1];
 
-	private readonly _wertWochenminuten_by_idKurs : HashMap<number, number> = new HashMap();
+	private _wertWochenminuten_by_idKurs : HashMap<number, number> = new HashMap();
 
-	private readonly _wertWochenminuten_by_idKlasse_und_idFach : HashMap2D<number, number, number> = new HashMap2D();
+	private _wertWochenminuten_by_idKlasse_und_idFach : HashMap2D<number, number, number> = new HashMap2D();
 
 	private readonly _stundenplanID : number;
 
@@ -615,7 +615,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenzeit_by_tag_and_beginn_and_ende() : void {
-		this._pausenzeit_by_tag_and_beginn_and_ende.clear();
+		this._pausenzeit_by_tag_and_beginn_and_ende = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert) {
 			const beginn : number = pausenzeit.beginn === null ? -1 : pausenzeit.beginn;
 			const ende : number = pausenzeit.ende === null ? -1 : pausenzeit.ende;
@@ -625,19 +625,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_aufsichtsbereich_by_kuerzel() : void {
-		this._aufsichtsbereich_by_kuerzel.clear();
+		this._aufsichtsbereich_by_kuerzel = new HashMap();
 		for (const aufsichtsbereich of this._aufsichtsbereichmenge_sortiert)
 			this._aufsichtsbereich_by_kuerzel.put(aufsichtsbereich.kuerzel, aufsichtsbereich);
 	}
 
 	private update_raum_by_kuerzel() : void {
-		this._raum_by_kuerzel.clear();
+		this._raum_by_kuerzel = new HashMap();
 		for (const raum of this._raummenge_sortiert)
 			this._raum_by_kuerzel.put(raum.kuerzel, raum);
 	}
 
 	private update_unterrichtmenge_by_idUnterricht() : void {
-		this._unterrichtmenge_by_idUnterricht.clear();
+		this._unterrichtmenge_by_idUnterricht = new HashMap();
 		for (const menge of this._unterrichtmenge_by_idKurs.values())
 			for (const u of menge)
 				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
@@ -647,7 +647,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_wertWochenminuten_by_idKlasse_und_idFach() : void {
-		this._wertWochenminuten_by_idKlasse_und_idFach.clear();
+		this._wertWochenminuten_by_idKlasse_und_idFach = new HashMap2D();
 		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
 		for (const klasse of this._klassenmenge_sortiert)
 			for (const fach of this._fachmenge_sortiert) {
@@ -665,7 +665,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_wertWochenminuten_by_idKurs() : void {
-		this._wertWochenminuten_by_idKurs.clear();
+		this._wertWochenminuten_by_idKurs = new HashMap();
 		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
 		for (const kurs of this._kursmenge) {
 			let summe_minuten : number = 0;
@@ -682,7 +682,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_schienenmenge_by_idKlasse() : void {
-		this._schienenmenge_by_idKlasse.clear();
+		this._schienenmenge_by_idKlasse = new HashMap();
 		for (const klasse of this._klassenmenge_sortiert) {
 			const schienenIDs : HashSet<number> = new HashSet();
 			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, klasse.id))
@@ -698,7 +698,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_kursmenge_by_idKlasse_and_idSchiene() : void {
-		this._kursmenge_by_idKlasse_and_idSchiene.clear();
+		this._kursmenge_by_idKlasse_and_idSchiene = new HashMap2D();
 		for (const idKlasse of this._kursmenge_by_idKlasse.keySet())
 			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, idKlasse))
 				if (kurs.schienen.isEmpty()) {
@@ -713,7 +713,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenunterrichtmenge_by_idKlasse_and_idSchiene() : void {
-		this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.clear();
+		this._klassenunterrichtmenge_by_idKlasse_and_idSchiene = new HashMap2D();
 		for (const idKlasse of this._klassenunterrichtmenge_by_idKlasse.keySet())
 			for (const klassenunterricht of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse, idKlasse))
 				if (klassenunterricht.schienen.isEmpty()) {
@@ -728,7 +728,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_schienenmenge_by_idUnterricht() : void {
-		this._schienenmenge_by_idUnterricht.clear();
+		this._schienenmenge_by_idUnterricht = new HashMap();
 		for (const u of this._unterrichtmenge) {
 			for (const idSchiene of u.schienen) {
 				const schiene : StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
@@ -739,7 +739,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenmenge_by_idPausenzeit() : void {
-		this._klassenmenge_by_idPausenzeit.clear();
+		this._klassenmenge_by_idPausenzeit = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert)
 			if (pausenzeit.klassen.isEmpty()) {
 				MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id).addAll(this._klassenmenge_sortiert);
@@ -753,7 +753,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_jahrgangmenge_by_idKlasse() : void {
-		this._jahrgangmenge_by_idKlasse.clear();
+		this._jahrgangmenge_by_idKlasse = new HashMap();
 		for (const klasse of this._klassenmenge_sortiert)
 			for (const idJahrgang of klasse.jahrgaenge) {
 				const jahrgang : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._jahrgang_by_id, idJahrgang);
@@ -762,7 +762,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_jahrgangmenge_by_idKurs() : void {
-		this._jahrgangmenge_by_idKurs.clear();
+		this._jahrgangmenge_by_idKurs = new HashMap();
 		for (const kurs of this._kursmenge) {
 			for (const idJahrgang of kurs.jahrgaenge) {
 				const jahrgang : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._jahrgang_by_id, idJahrgang);
@@ -773,34 +773,33 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenunterrichtmenge_by_idSchiene() : void {
-		this._klassenunterrichtmenge_by_idSchiene.clear();
+		this._klassenunterrichtmenge_by_idSchiene = new HashMap();
 		for (const klassenunterricht of this._klassenunterrichtmenge)
 			for (const idSchiene of klassenunterricht.schienen)
 				MapUtils.addToList(this._klassenunterrichtmenge_by_idSchiene, idSchiene, klassenunterricht);
 	}
 
 	private update_kursmenge_by_idSchiene() : void {
-		this._kursmenge_by_idSchiene.clear();
+		this._kursmenge_by_idSchiene = new HashMap();
 		for (const kurs of this._kursmenge)
 			for (const idSchiene of kurs.schienen)
 				MapUtils.addToList(this._kursmenge_by_idSchiene, idSchiene, kurs);
 	}
 
 	private update_pausenaufsichtmenge_by_idAufsichtsbereich() : void {
-		this._pausenaufsichtmenge_by_idAufsichtsbereich.clear();
+		this._pausenaufsichtmenge_by_idAufsichtsbereich = new HashMap();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			for (const idAufsichtsbereich of aufsicht.bereiche)
 				MapUtils.addToList(this._pausenaufsichtmenge_by_idAufsichtsbereich, idAufsichtsbereich, aufsicht);
 	}
 
 	private update_pausenaufsichtmenge() : void {
-		this._pausenaufsichtmenge.clear();
-		this._pausenaufsichtmenge.addAll(this._pausenaufsicht_by_id.values());
+		this._pausenaufsichtmenge = new ArrayList(this._pausenaufsicht_by_id.values());
 		this._pausenaufsichtmenge.sort(StundenplanManager._compPausenaufsicht);
 	}
 
 	private update_pausenaufsichtmenge_by_wochentag() : void {
-		this._pausenaufsichtmenge_by_wochentag.clear();
+		this._pausenaufsichtmenge_by_wochentag = new HashMap();
 		for (const aufsicht of this._pausenaufsichtmenge) {
 			const zeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, aufsicht.idPausenzeit);
 			MapUtils.addToList(this._pausenaufsichtmenge_by_wochentag, zeit.wochentag, aufsicht);
@@ -808,13 +807,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenaufsichtmenge_by_idPausenzeit() : void {
-		this._pausenaufsichtmenge_by_idPausenzeit.clear();
+		this._pausenaufsichtmenge_by_idPausenzeit = new HashMap();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			MapUtils.addToList(this._pausenaufsichtmenge_by_idPausenzeit, aufsicht.idPausenzeit, aufsicht);
 	}
 
 	private update_pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit() : void {
-		this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit.clear();
+		this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit = new HashMap2D();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, aufsicht.idPausenzeit))
 				for (const jahrgang of MapUtils.getOrCreateArrayList(this._jahrgangmenge_by_idKlasse, klasse.id))
@@ -822,7 +821,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit() : void {
-		this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit.clear();
+		this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit = new HashMap2D();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, aufsicht.idPausenzeit))
 				for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, klasse.id))
@@ -830,28 +829,28 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit() : void {
-		this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit.clear();
+		this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit = new HashMap2D();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, aufsicht.idPausenzeit))
 				Map2DUtils.addToList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, klasse.id, aufsicht.idPausenzeit, aufsicht);
 	}
 
 	private update_pausenaufsichtmenge_by_idLehrer() : void {
-		this._pausenaufsichtmenge_by_idLehrer.clear();
+		this._pausenaufsichtmenge_by_idLehrer = new HashMap();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			if (aufsicht.idLehrer >= 0)
 				MapUtils.addToList(this._pausenaufsichtmenge_by_idLehrer, aufsicht.idLehrer, aufsicht);
 	}
 
 	private update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit() : void {
-		this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit.clear();
+		this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit = new HashMap2D();
 		for (const aufsicht of this._pausenaufsichtmenge)
 			if (aufsicht.idLehrer >= 0)
 				Map2DUtils.addToList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, aufsicht.idLehrer, aufsicht.idPausenzeit, aufsicht);
 	}
 
 	private update_klassenmenge_by_idSchueler() : void {
-		this._klassenmenge_by_idSchueler.clear();
+		this._klassenmenge_by_idSchueler = new HashMap();
 		for (const schueler of this._schuelermenge)
 			if (schueler.idKlasse >= 0) {
 				const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, schueler.idKlasse);
@@ -860,28 +859,27 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenmenge_by_idJahrgang() : void {
-		this._klassenmenge_by_idJahrgang.clear();
+		this._klassenmenge_by_idJahrgang = new HashMap();
 		for (const klasse of this._klassenmenge_sortiert)
 			for (const idJahrgang of klasse.jahrgaenge)
 				MapUtils.addToList(this._klassenmenge_by_idJahrgang, idJahrgang, klasse);
 	}
 
 	private update_kursmenge_by_idJahrgang() : void {
-		this._kursmenge_by_idJahrgang.clear();
+		this._kursmenge_by_idJahrgang = new HashMap();
 		for (const kurs of this._kursmenge)
 			for (const idJahrgang of kurs.jahrgaenge)
 				MapUtils.addToList(this._kursmenge_by_idJahrgang, idJahrgang, kurs);
 	}
 
 	private update_schienenmenge_by_idJahrgang() : void {
-		this._schienenmenge_by_idJahrgang.clear();
+		this._schienenmenge_by_idJahrgang = new HashMap();
 		for (const schiene of this._schienenmenge)
 			MapUtils.addToList(this._schienenmenge_by_idJahrgang, schiene.idJahrgang, schiene);
 	}
 
 	private update_pausenzeitmenge() : void {
-		this._pausenzeitmenge_sortiert.clear();
-		this._pausenzeitmenge_sortiert.addAll(this._pausenzeit_by_id.values());
+		this._pausenzeitmenge_sortiert = new ArrayList(this._pausenzeit_by_id.values());
 		this._pausenzeitmenge_sortiert.sort(StundenplanManager._compPausenzeit);
 		this._pausenzeitMinutenMin = null;
 		this._pausenzeitMinutenMax = null;
@@ -901,7 +899,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenzeitmengeOhnePausenaufsicht() : void {
-		this._pausenzeitmengeOhneLeere_sortiert.clear();
+		this._pausenzeitmengeOhneLeere_sortiert = new ArrayList();
 		for (const zeit of this._pausenzeitmenge_sortiert)
 			if (!MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idPausenzeit, zeit.id).isEmpty())
 				this._pausenzeitmengeOhneLeere_sortiert.add(zeit);
@@ -914,13 +912,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenzeitmenge_by_wochentag() : void {
-		this._pausenzeitmenge_by_wochentag.clear();
+		this._pausenzeitmenge_by_wochentag = new HashMap();
 		for (const zeit of this._pausenzeitmenge_sortiert)
 			MapUtils.addToList(this._pausenzeitmenge_by_wochentag, zeit.wochentag, zeit);
 	}
 
 	private update_pausenzeitmenge_by_idSchueler() : void {
-		this._pausenzeitmenge_by_idSchueler.clear();
+		this._pausenzeitmenge_by_idSchueler = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, klasse.id))
@@ -928,28 +926,28 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenzeitmenge_by_idSchueler_and_wochentag() : void {
-		this._pausenzeitmenge_by_idSchueler_and_wochentag.clear();
+		this._pausenzeitmenge_by_idSchueler_and_wochentag = new HashMap2D();
 		for (const idSchueler of this._pausenzeitmenge_by_idSchueler.keySet())
 			for (const zeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler, idSchueler))
 				Map2DUtils.addToList(this._pausenzeitmenge_by_idSchueler_and_wochentag, idSchueler, zeit.wochentag, zeit);
 	}
 
 	private update_pausenzeitmenge_by_idKlasse() : void {
-		this._pausenzeitmenge_by_idKlasse.clear();
+		this._pausenzeitmenge_by_idKlasse = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id))
 				MapUtils.addToList(this._pausenzeitmenge_by_idKlasse, klasse.id, pausenzeit);
 	}
 
 	private update_pausenzeitmenge_by_idKlasse_and_wochentag() : void {
-		this._pausenzeitmenge_by_idKlasse_and_wochentag.clear();
+		this._pausenzeitmenge_by_idKlasse_and_wochentag = new HashMap2D();
 		for (const idKlasse of this._pausenzeitmenge_by_idKlasse.keySet())
 			for (const pausenzeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse, idKlasse))
 				Map2DUtils.addToList(this._pausenzeitmenge_by_idKlasse_and_wochentag, idKlasse, pausenzeit.wochentag, pausenzeit);
 	}
 
 	private update_pausenzeitmenge_by_idLehrer() : void {
-		this._pausenzeitmenge_by_idLehrer.clear();
+		this._pausenzeitmenge_by_idLehrer = new HashMap();
 		for (const pausenaufsicht of this._pausenaufsichtmenge)
 			if (pausenaufsicht.idLehrer >= 0) {
 				const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
@@ -958,21 +956,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_pausenzeitmenge_by_idLehrer_and_wochentag() : void {
-		this._pausenzeitmenge_by_idLehrer_and_wochentag.clear();
+		this._pausenzeitmenge_by_idLehrer_and_wochentag = new HashMap2D();
 		for (const idLehrer of this._pausenzeitmenge_by_idLehrer.keySet())
 			for (const pausenzeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer, idLehrer))
 				Map2DUtils.addToList(this._pausenzeitmenge_by_idLehrer_and_wochentag, idLehrer, pausenzeit.wochentag, pausenzeit);
 	}
 
 	private update_pausenzeitmenge_by_idJahrgang_and_wochentag() : void {
-		this._pausenzeitmenge_by_idJahrgang_and_wochentag.clear();
+		this._pausenzeitmenge_by_idJahrgang_and_wochentag = new HashMap2D();
 		for (const idJahrgang of this._pausenzeitmenge_by_idJahrgang.keySet())
 			for (const pausenzeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idJahrgang, idJahrgang))
 				Map2DUtils.addToList(this._pausenzeitmenge_by_idJahrgang_and_wochentag, idJahrgang, pausenzeit.wochentag, pausenzeit);
 	}
 
 	private update_pausenzeitmenge_by_idJahrgang() : void {
-		this._pausenzeitmenge_by_idJahrgang.clear();
+		this._pausenzeitmenge_by_idJahrgang = new HashMap();
 		for (const pausenzeit of this._pausenzeitmenge_sortiert)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (const idJahrgang of klasse.jahrgaenge)
@@ -980,7 +978,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenmenge_by_idKurs() : void {
-		this._klassenmenge_by_idKurs.clear();
+		this._klassenmenge_by_idKurs = new HashMap();
 		for (const kurs of this._kursmenge) {
 			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0) {
@@ -992,27 +990,23 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_aufsichtsbereichmenge() : void {
-		this._aufsichtsbereichmenge_sortiert.clear();
-		this._aufsichtsbereichmenge_sortiert.addAll(this._aufsichtsbereich_by_id.values());
+		this._aufsichtsbereichmenge_sortiert = new ArrayList(this._aufsichtsbereich_by_id.values());
 		this._aufsichtsbereichmenge_sortiert.sort(StundenplanManager._compAufsichtsbereich);
 	}
 
 	private update_fachmenge() : void {
-		this._fachmenge_sortiert.clear();
-		this._fachmenge_sortiert.addAll(this._fach_by_id.values());
+		this._fachmenge_sortiert = new ArrayList(this._fach_by_id.values());
 		this._fachmenge_sortiert.sort(StundenplanManager._compFach);
 	}
 
 	private update_jahrgangmenge() : void {
-		this._jahrgangmenge_sortiert.clear();
-		this._jahrgangmenge_sortiert.addAll(this._jahrgang_by_id.values());
+		this._jahrgangmenge_sortiert = new ArrayList(this._jahrgang_by_id.values());
 		this._jahrgangmenge_sortiert.sort(StundenplanManager._compJahrgang);
 	}
 
 	private update_kwzmenge_update_kwz_by_jahr_and_kw() : void {
-		this._kwzmenge_sortiert.clear();
-		this._kwzmenge_sortiert.addAll(this._kwz_by_id.values());
-		this._kwz_by_jahr_and_kw.clear();
+		this._kwzmenge_sortiert = new ArrayList(this._kwz_by_id.values());
+		this._kwz_by_jahr_and_kw = new HashMap2D();
 		for (const kwz of this._kwzmenge_sortiert)
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
 		const infoVon : Array<number> = DateUtils.extractFromDateISO8601(this._stundenplanGueltigAb);
@@ -1040,62 +1034,60 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_klassenmenge() : void {
-		this._klassenmenge_sortiert.clear();
-		this._klassenmenge_sortiert.addAll(this._klasse_by_id.values());
+		this._klassenmenge_sortiert = new ArrayList(this._klasse_by_id.values());
 		this._klassenmenge_sortiert.sort(StundenplanManager._compKlasse);
+		this._klassenmenge_sichtbar_sortiert = new ArrayList();
 		for (const kl of this._klassenmenge_sortiert)
 			if (kl.istSichtbar)
 				this._klassenmenge_sichtbar_sortiert.add(kl);
 	}
 
 	private update_klassenunterrichtmenge() : void {
-		this._klassenunterrichtmenge.clear();
-		this._klassenunterrichtmenge.addAll(this._klassenunterricht_by_idKlasse_and_idFach.getNonNullValuesAsList());
+		this._klassenunterrichtmenge = new ArrayList(this._klassenunterricht_by_idKlasse_and_idFach.getNonNullValuesAsList());
 		this._klassenunterrichtmenge.sort(this._compKlassenunterricht);
 	}
 
 	private update_klassenunterrichtmenge_by_idKlasse() : void {
-		this._klassenunterrichtmenge_by_idKlasse.clear();
+		this._klassenunterrichtmenge_by_idKlasse = new HashMap();
 		for (const klassenunterricht of this._klassenunterrichtmenge)
 			MapUtils.addToList(this._klassenunterrichtmenge_by_idKlasse, klassenunterricht.idKlasse, klassenunterricht);
 	}
 
 	private update_klassenunterrichtmenge_by_idSchueler() : void {
-		this._klassenunterrichtmenge_by_idSchueler.clear();
+		this._klassenunterrichtmenge_by_idSchueler = new HashMap();
 		for (const klassenunterricht of this._klassenunterrichtmenge)
 			for (const idSchueler of klassenunterricht.schueler)
 				MapUtils.addToList(this._klassenunterrichtmenge_by_idSchueler, idSchueler, klassenunterricht);
 	}
 
 	private update_klassenunterrichtmenge_by_idLehrer() : void {
-		this._klassenunterrichtmenge_by_idLehrer.clear();
+		this._klassenunterrichtmenge_by_idLehrer = new HashMap();
 		for (const klassenunterricht of this._klassenunterrichtmenge)
 			for (const idLehrer of klassenunterricht.lehrer)
 				MapUtils.addToList(this._klassenunterrichtmenge_by_idLehrer, idLehrer, klassenunterricht);
 	}
 
 	private update_kursmenge() : void {
-		this._kursmenge.clear();
-		this._kursmenge.addAll(this._kurs_by_id.values());
+		this._kursmenge = new ArrayList(this._kurs_by_id.values());
 		this._kursmenge.sort(StundenplanManager._compKurs);
 	}
 
 	private update_kursmenge_by_idSchueler() : void {
-		this._kursmenge_by_idSchueler.clear();
+		this._kursmenge_by_idSchueler = new HashMap();
 		for (const kurs of this._kursmenge)
 			for (const idSchueler of kurs.schueler)
 				MapUtils.addToList(this._kursmenge_by_idSchueler, idSchueler, kurs);
 	}
 
 	private update_kursmenge_by_idLehrer() : void {
-		this._kursmenge_by_idLehrer.clear();
+		this._kursmenge_by_idLehrer = new HashMap();
 		for (const kurs of this._kursmenge)
 			for (const idLehrer of kurs.lehrer)
 				MapUtils.addToList(this._kursmenge_by_idLehrer, idLehrer, kurs);
 	}
 
 	private update_kursmenge_by_idKlasse() : void {
-		this._kursmenge_by_idKlasse.clear();
+		this._kursmenge_by_idKlasse = new HashMap();
 		for (const kurs of this._kursmenge)
 			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0)
@@ -1103,13 +1095,12 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_lehrermenge() : void {
-		this._lehrermenge_sortiert.clear();
-		this._lehrermenge_sortiert.addAll(this._lehrer_by_id.values());
+		this._lehrermenge_sortiert = new ArrayList(this._lehrer_by_id.values());
 		this._lehrermenge_sortiert.sort(StundenplanManager._compLehrer);
 	}
 
 	private update_lehrermenge_by_idUnterricht() : void {
-		this._lehrermenge_by_idUnterricht.clear();
+		this._lehrermenge_by_idUnterricht = new HashMap();
 		for (const u of this._unterrichtmenge) {
 			for (const idLehrer of u.lehrer) {
 				const lehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, idLehrer);
@@ -1120,32 +1111,29 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_raummenge() : void {
-		this._raummenge_sortiert.clear();
-		this._raummenge_sortiert.addAll(this._raum_by_id.values());
+		this._raummenge_sortiert = new ArrayList(this._raum_by_id.values());
 		this._raummenge_sortiert.sort(StundenplanManager._compRaum);
 	}
 
 	private update_schienenmenge() : void {
-		this._schienenmenge.clear();
-		this._schienenmenge.addAll(this._schiene_by_id.values());
+		this._schienenmenge = new ArrayList(this._schiene_by_id.values());
 		this._schienenmenge.sort(StundenplanManager._compSchiene);
 	}
 
 	private update_schuelermenge() : void {
-		this._schuelermenge.clear();
-		this._schuelermenge.addAll(this._schueler_by_id.values());
+		this._schuelermenge = new ArrayList(this._schueler_by_id.values());
 		this._schuelermenge.sort(StundenplanManager._compSchueler);
 	}
 
 	private update_schuelermenge_by_idKlasse() : void {
-		this._schuelermenge_by_idKlasse.clear();
+		this._schuelermenge_by_idKlasse = new HashMap();
 		for (const schueler of this._schuelermenge)
 			if (schueler.idKlasse >= 0)
 				MapUtils.addToList(this._schuelermenge_by_idKlasse, schueler.idKlasse, schueler);
 	}
 
 	private update_schuelermenge_by_idKurs() : void {
-		this._schuelermenge_by_idKurs.clear();
+		this._schuelermenge_by_idKurs = new HashMap();
 		for (const kurs of this._kursmenge) {
 			for (const idSchueler of kurs.schueler) {
 				const schueler : StundenplanSchueler = DeveloperNotificationException.ifMapGetIsNull(this._schueler_by_id, idSchueler);
@@ -1156,8 +1144,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge() : void {
-		this._unterrichtmenge.clear();
-		this._unterrichtmenge.addAll(this._unterricht_by_id.values());
+		this._unterrichtmenge = new ArrayList(this._unterricht_by_id.values());
 		this._unterrichtmenge.sort(this._compUnterricht);
 		this._unterrichtHatMultiWochen = false;
 		for (const u of this._unterrichtmenge)
@@ -1168,21 +1155,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idLehrer() : void {
-		this._unterrichtmenge_by_idLehrer.clear();
+		this._unterrichtmenge_by_idLehrer = new HashMap();
 		for (const u of this._unterrichtmenge)
 			for (const idLehrer of u.lehrer)
 				MapUtils.addToList(this._unterrichtmenge_by_idLehrer, idLehrer, u);
 	}
 
 	private update_unterrichtmenge_by_idLehrer_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idLehrer_and_idZeitraster.clear();
+		this._unterrichtmenge_by_idLehrer_and_idZeitraster = new HashMap2D();
 		for (const u of this._unterrichtmenge)
 			for (const idLehrer of u.lehrer)
 				Map2DUtils.addToList(this._unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, u.idZeitraster, u);
 	}
 
 	private update_unterrichtmenge_by_idKlasse() : void {
-		this._unterrichtmenge_by_idKlasse.clear();
+		this._unterrichtmenge_by_idKlasse = new HashMap();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs === null) {
 				for (const idKlasse of u.klassen)
@@ -1194,7 +1181,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idKlasse_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idKlasse_and_idZeitraster.clear();
+		this._unterrichtmenge_by_idKlasse_and_idZeitraster = new HashMap2D();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs === null) {
 				for (const idKlasse of u.klassen)
@@ -1206,21 +1193,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idSchueler_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idSchueler_and_idZeitraster.clear();
+		this._unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D();
 		for (const idSchueler of this._unterrichtmenge_by_idSchueler.keySet())
 			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idSchueler, idSchueler))
 				Map2DUtils.addToList(this._unterrichtmenge_by_idSchueler_and_idZeitraster, idSchueler, u.idZeitraster, u);
 	}
 
 	private update_unterrichtmenge_by_idKurs() : void {
-		this._unterrichtmenge_by_idKurs.clear();
+		this._unterrichtmenge_by_idKurs = new HashMap();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs !== null)
 				MapUtils.addToList(this._unterrichtmenge_by_idKurs, u.idKurs, u);
 	}
 
 	private update_unterrichtmenge_by_idKlasse_and_idFach() : void {
-		this._unterrichtmenge_by_idKlasse_and_idFach.clear();
+		this._unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs === null)
 				for (const idKlasse of u.klassen)
@@ -1228,33 +1215,33 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idZeitraster() : void {
-		this._unterrichtmenge_by_idZeitraster.clear();
+		this._unterrichtmenge_by_idZeitraster = new HashMap();
 		for (const u of this._unterrichtmenge)
 			MapUtils.addToList(this._unterrichtmenge_by_idZeitraster, u.idZeitraster, u);
 	}
 
 	private update_unterrichtmenge_by_idZeitraster_and_wochentyp() : void {
-		this._unterrichtmenge_by_idZeitraster_and_wochentyp.clear();
+		this._unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D();
 		for (const u of this._unterrichtmenge)
 			Map2DUtils.addToList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, u.wochentyp, u);
 	}
 
 	private update_unterrichtmenge_by_idRaum() : void {
-		this._unterrichtmenge_by_idRaum.clear();
+		this._unterrichtmenge_by_idRaum = new HashMap();
 		for (const u of this._unterrichtmenge)
 			for (const idRaum of u.raeume)
 				MapUtils.addToList(this._unterrichtmenge_by_idRaum, idRaum, u);
 	}
 
 	private update_unterrichtmenge_by_idRaum_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idRaum_and_idZeitraster.clear();
+		this._unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D();
 		for (const u of this._unterrichtmenge)
 			for (const idRaum of u.raeume)
 				Map2DUtils.addToList(this._unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster, u);
 	}
 
 	private update_unterrichtmenge_by_idSchueler() : void {
-		this._unterrichtmenge_by_idSchueler.clear();
+		this._unterrichtmenge_by_idSchueler = new HashMap();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs === null) {
 				for (const idKlasse of u.klassen)
@@ -1267,7 +1254,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idJahrgang() : void {
-		this._unterrichtmenge_by_idJahrgang.clear();
+		this._unterrichtmenge_by_idJahrgang = new HashMap();
 		for (const u of this._unterrichtmenge)
 			if (u.idKurs === null) {
 				for (const idKlasse of u.klassen)
@@ -1280,31 +1267,30 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idJahrgang_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idJahrgang_and_idZeitraster.clear();
+		this._unterrichtmenge_by_idJahrgang_and_idZeitraster = new HashMap2D();
 		for (const idJahrgang of this._unterrichtmenge_by_idJahrgang.keySet())
 			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idJahrgang, idJahrgang))
 				Map2DUtils.addToList(this._unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, u.idZeitraster, u);
 	}
 
 	private update_unterrichtmenge_by_idSchiene() : void {
-		this._unterrichtmenge_by_idSchiene.clear();
+		this._unterrichtmenge_by_idSchiene = new HashMap();
 		for (const u of this._unterrichtmenge)
 			for (const idSchiene of u.schienen)
 				MapUtils.addToList(this._unterrichtmenge_by_idSchiene, idSchiene, u);
 	}
 
 	private update_zeitraster_by_wochentag_and_stunde() : void {
-		this._zeitraster_by_wochentag_and_stunde.clear();
+		this._zeitraster_by_wochentag_and_stunde = new HashMap2D();
 		for (const zeit of this._zeitrastermenge)
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._zeitraster_by_wochentag_and_stunde, zeit.wochentag, zeit.unterrichtstunde, zeit);
 	}
 
 	private update_zeitrastermenge() : void {
-		this._zeitrastermenge.clear();
-		this._zeitrastermenge.addAll(this._zeitraster_by_id.values());
+		this._zeitrastermenge = new ArrayList(this._zeitraster_by_id.values());
 		this._zeitrastermenge.sort(StundenplanManager._compZeitraster);
-		this._zeitrasterMinutenMinByStunde.clear();
-		this._zeitrasterMinutenMaxByStunde.clear();
+		this._zeitrasterMinutenMinByStunde = new HashMap();
+		this._zeitrasterMinutenMaxByStunde = new HashMap();
 		this._zeitrasterMinutenMin = null;
 		this._zeitrasterMinutenMax = null;
 		this._zeitrasterWochentagMin = Wochentag.SONNTAG.id + 1;
@@ -1334,7 +1320,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_zeitrastermengeOhneLeereUnterrichtmenge() : void {
-		this._zeitrastermengeOhneLeere_sortiert.clear();
+		this._zeitrastermengeOhneLeere_sortiert = new ArrayList();
 		for (const z of this._zeitrastermenge)
 			if (!MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster, z.id).isEmpty())
 				this._zeitrastermengeOhneLeere_sortiert.add(z);
@@ -1356,19 +1342,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_zeitrastermenge_by_wochentag() : void {
-		this._zeitrastermenge_by_wochentag.clear();
+		this._zeitrastermenge_by_wochentag = new HashMap();
 		for (const zeit of this._zeitrastermenge)
 			MapUtils.addToList(this._zeitrastermenge_by_wochentag, zeit.wochentag, zeit);
 	}
 
 	private update_zeitrastermenge_by_stunde() : void {
-		this._zeitrastermenge_by_stunde.clear();
+		this._zeitrastermenge_by_stunde = new HashMap();
 		for (const zeit of this._zeitrastermenge)
 			MapUtils.addToList(this._zeitrastermenge_by_stunde, zeit.unterrichtstunde, zeit);
 	}
 
 	private update_klassenmenge_by_idUnterricht() : void {
-		this._klassenmenge_by_idUnterricht.clear();
+		this._klassenmenge_by_idUnterricht = new HashMap();
 		for (const u of this._unterrichtmenge) {
 			if (u.idKurs === null) {
 				for (const idKlasse of u.klassen) {
@@ -1448,7 +1434,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public aufsichtsbereichGetMengeAsList() : List<StundenplanAufsichtsbereich> {
-		return new ArrayList(this._aufsichtsbereichmenge_sortiert);
+		return this._aufsichtsbereichmenge_sortiert;
 	}
 
 	/**
@@ -2868,7 +2854,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
 	public pausenaufsichtGetMengeAsList() : List<StundenplanPausenaufsicht> {
-		return new ArrayList(this._pausenaufsichtmenge);
+		return this._pausenaufsichtmenge;
 	}
 
 	/**
@@ -3108,7 +3094,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte.
 	 */
 	public pausenzeitGetMengeAsList() : List<StundenplanPausenzeit> {
-		return new ArrayList(this._pausenzeitmenge_sortiert);
+		return this._pausenzeitmenge_sortiert;
 	}
 
 	/**
@@ -3462,7 +3448,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
 	 */
 	public raumGetMengeAsList() : List<StundenplanRaum> {
-		return new ArrayList(this._raummenge_sortiert);
+		return this._raummenge_sortiert;
 	}
 
 	/**
@@ -3896,7 +3882,7 @@ export class StundenplanManager extends JavaObject {
 		for (const u of this._unterricht_by_id.values())
 			if (u.wochentyp > modellTyp)
 				u.wochentyp = 0;
-		this._kwz_by_id.clear();
+		this._kwz_by_id = new HashMap();
 		this._stundenplanWochenTypModell = modellTyp;
 		this.update_all();
 	}
