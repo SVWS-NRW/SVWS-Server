@@ -87,7 +87,6 @@
 
 	function select_regel(r: GostBlockungRegel) {
 		const regel = GostBlockungRegel.transpilerFromJSON(GostBlockungRegel.transpilerToJSON(r));
-		console.log(regel, r)
 		emit('update:modelValue', regel);
 	}
 
