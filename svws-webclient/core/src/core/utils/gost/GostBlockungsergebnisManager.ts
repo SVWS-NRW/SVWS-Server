@@ -4217,6 +4217,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
+	 *
+	 * <br>(1) Wenn die alte Kurs-ID nicht existiert, passiert nichts.
+	 * <br>(2) Wenn die neue Kurs-ID bereits existiert, passiert nichts.
+	 * <br>(3) Wenn die alte Kurs-ID der neuen Kurs-ID gleicht, passiert nichts.
+	 * <br>(4) Andernfalls wird die alte Regel gelöscht (idKursAlt) und eine neue Regel wird erzeugt (idKursNeu).
+	 *
+	 * @param idKursAlt  Die alte Kurs-ID deren Regel gelöscht werden soll.
+	 * @param idKursNeu  Die neue Kurs-ID deren Regel hinzugefügt werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
+	 */
+	public regelupdatePatch_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(idKursAlt : number, idKursNeu : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const kAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKursAlt]);
+		const rAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kAlt);
+		if (rAlt === null)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKursNeu]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		if (idKursAlt === idKursNeu)
+			return u;
+		u.listEntfernen.add(rAlt);
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKursNeu));
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Kursen einer bestimmten Fachart (in jeder Schiene) zu begrenzen.
 	 * <br>(1) Falls die Regel bereits existiert, wird sie zunächst entfernt.
 	 * <br>(2) Falls der "maximal"-Wert 1 ist und es Regeln KURS_VERBIETEN_MIT_KURS bei Paaren dieser Fachart gibt, werden die Regeln entfernt.
