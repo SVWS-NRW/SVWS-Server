@@ -2,7 +2,7 @@ import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException } from "@core";
 
 import { Config } from "~/components/Config";
 import { AES } from "~/utils/crypto/aes";
@@ -219,7 +219,7 @@ export class ApiConnection {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname}:${port} fehlgeschlagen.`);
 			}
 		}
-		throw new Error();
+		throw new UserNotificationException('Es konnte keine Verbindung hergestellt werden.');
 	}
 
 	/**
