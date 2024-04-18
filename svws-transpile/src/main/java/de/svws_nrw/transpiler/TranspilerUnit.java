@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -327,6 +328,16 @@ public final class TranspilerUnit {
 			curPath = curPath.getParentPath();
 		final Tree curNode = curPath.getLeaf();
 		if (curNode instanceof final VariableTree vt) {
+			final Tree vtType = vt.getType();
+			if (vtType != null) {
+				if ((transpiler.getElement(vt) instanceof final VariableElement ve) && (transpiler.getElement(vt.getType()) instanceof final TypeElement te)) {
+					final PackageElement pe = transpiler.getPackageOf(ve);
+					final String packageName = pe.getQualifiedName().toString();
+					final String tmpClassName = te.getSimpleName().toString();
+					imports.put(tmpClassName, packageName);
+					return packageName;
+				}
+			}
 			final String strType = vt.getType().toString();
 			final int pos = strType.lastIndexOf(".");
 			final String packageName = strType.substring(0, pos);
@@ -594,6 +605,8 @@ public final class TranspilerUnit {
 				if (transpiler.isAnnotationArgument(node)) {
 					allImportsForAnnotations.put(node, getPackageName(node, path, true));
 				} else {
+					if ((elem.getKind() == ElementKind.CLASS) && (path.getParentPath().getLeaf() instanceof ConstantCaseLabelTree))
+						continue;
 					switch (elem.getKind()) {
 						case CLASS, ENUM, INTERFACE -> allImports.put(node, getPackageName(node, path, true));
 						case ANNOTATION_TYPE -> allAnnotations.put(node, getPackageName(node, path, false));
@@ -659,8 +672,16 @@ public final class TranspilerUnit {
 
 		// check imports
 		final String importPackageName = imports.get(nodeName);
-		if (importPackageName != null)
-			return ExpressionClassType.getExpressionClassType(transpiler, transpiler.getTypeElement(importPackageName + "." + nodeName));
+		if (importPackageName != null) {
+			final TypeElement typeElement = transpiler.getTypeElement(importPackageName + "." + nodeName);
+			if (typeElement == null) {
+				final Element elem = transpiler.getElement(node);
+				if (elem instanceof final TypeElement te)
+					return ExpressionClassType.getExpressionClassType(transpiler, te);
+				throw new TranspilerException("Transpiler Error: Element Kind of %s not yet supported.".formatted(elem.getKind()));
+			}
+			return ExpressionClassType.getExpressionClassType(transpiler, typeElement);
+		}
 
 		// check in imports for nested classes
 		final Entry<String, String> importsEntry = importsSuper.entrySet().stream()

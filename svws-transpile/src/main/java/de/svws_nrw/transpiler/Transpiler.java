@@ -24,6 +24,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -276,7 +278,7 @@ public final class Transpiler extends AbstractProcessor {
 	 */
 	void visitAnnotation(final TreePath path, final AnnotationTree node) {
 		final Element elem = trees.getElement(path);
-		if ((elem.getKind() == ElementKind.ANNOTATION_TYPE) && (elem instanceof final TypeElement te))
+		if ((elem != null) && (elem.getKind() == ElementKind.ANNOTATION_TYPE) && (elem instanceof final TypeElement te))
 			getTranspilerUnit(path).annotations.put(te.getSimpleName().toString(), elementUtils.getPackageOf(te).getQualifiedName().toString());
 	}
 
@@ -1300,6 +1302,18 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Retrieves the PackageElement of the specified Element
+	 *
+	 * @param elem   the element
+	 *
+	 * @return the package element
+	 */
+	public PackageElement getPackageOf(final Element elem) {
+		return elementUtils.getPackageOf(elem);
+	}
+
+
+	/**
 	 * Return the type mirror for the specified tree node
 	 *
 	 * @param node    the tree node
@@ -1338,10 +1352,17 @@ public final class Transpiler extends AbstractProcessor {
 
 			// Bestimme das TypeElement für die Klasse, um ggf. Typ-Parameter zu bestimmen
 			final String fullClassName = exprClassType.getFullQualifiedName();
-			final TypeElement classElement = getTypeElement(fullClassName);
+			TypeElement classElement = getTypeElement(fullClassName);
+			if (classElement == null) {
+				final Element e = getElement(mit);
+				if ((e instanceof final TypeElement te) && (te.getNestingKind() == NestingKind.MEMBER)) {
+					final Element enclosing = te.getEnclosingElement();
+					if (enclosing instanceof final TypeElement teEnclosing)
+						classElement = teEnclosing;
+				}
+			}
 			if (classElement == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve class element.");
-
 			// create a map for the type argument of the class
 			final List<? extends TypeParameterElement> classTypeParams = classElement.getTypeParameters();
 			if (exprClassType.getTypeArgumentCount() != classTypeParams.size())

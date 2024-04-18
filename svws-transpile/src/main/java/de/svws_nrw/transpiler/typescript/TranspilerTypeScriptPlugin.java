@@ -1132,7 +1132,28 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		for (final CaseTree curCase : node.getCases()) {
 			final CaseKind kind = curCase.getCaseKind();
 			switch (kind) {
-				case RULE -> throw new TranspilerException("Transpiler Error: Case of type " + kind + " currently not supported in switch statements."); // TODO implement
+				case RULE -> {
+					if (curCase.getExpressions().isEmpty())
+						sb.append(getIndent()).append("\tdefault:");
+					else
+						sb.append(curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp)).collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":")));
+					indentC++;
+					final Tree body = curCase.getBody();
+					sb.append(" {").append(System.lineSeparator());
+					indentC++;
+					if (body instanceof final ExpressionStatementTree est) {
+						sb.append(getIndent()).append(convertExpressionStatement(est)).append(System.lineSeparator());
+					} else if (body instanceof final BlockTree bt) {
+						sb.append(convertBlock(bt, false, null));
+					} else if (body instanceof final ThrowTree tt) {
+						sb.append(getIndent()).append(convertThrow(tt)).append(System.lineSeparator());
+					} else
+						throw new TranspilerException("Transpiler Error: Case of type RULE currently not supported in switch statements for body type %s.".formatted(body.getKind()));
+					sb.append(getIndent()).append("break;").append(System.lineSeparator());
+					indentC--;
+					sb.append(getIndent()).append("}").append(System.lineSeparator());
+					indentC--;
+				}
 				case STATEMENT -> {
 					if (curCase.getExpressions().isEmpty())
 						sb.append(getIndent()).append("\tdefault:");
