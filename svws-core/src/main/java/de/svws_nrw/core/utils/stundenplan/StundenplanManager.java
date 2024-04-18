@@ -2460,7 +2460,7 @@ public class StundenplanManager {
 		update_all();
 	}
 
-	private static double gerundetAufZweiNachkommastellen(final double d) { // TODO sinnvolle Benennung
+	private static double gerundetAufZweiNachkommastellen(final double d) {
 		if (d >= 0)
 			return (Math.round(d * 100.0)) / 100.0;
 		return -(Math.round(-d * 100.0)) / 100.0;
