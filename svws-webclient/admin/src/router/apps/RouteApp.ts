@@ -69,8 +69,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getApps(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of super.menu)
-			result.push({ name: c.name, text: c.text });
+		for (const { name, text } of super.menu)
+			result.push({ name, text });
 		return result;
 	}
 

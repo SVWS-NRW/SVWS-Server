@@ -137,25 +137,18 @@ export class RouteDataSchema {
 		listSchema.sort(<Comparator<SchemaListeEintrag>>{ compare(s1 : SchemaListeEintrag, s2 : SchemaListeEintrag) { return JavaString.compareToIgnoreCase(s1.name, s2.name); } });
 		for (const s of listSchema)
 			mapSchema.set(s.name.toLocaleLowerCase(), s);
-		let auswahl : SchemaListeEintrag | undefined = undefined;
+		this._state.value.mapSchema = mapSchema;
+		let currSchema : SchemaListeEintrag | undefined = undefined;
 		if (mapSchema.size > 0) {
-			auswahl = schemaname === undefined ? listSchema.get(0) : mapSchema.get(schemaname.toLocaleLowerCase());
-			if (auswahl === undefined)
-				auswahl = mapSchema.values().next().value;
+			currSchema = schemaname === undefined ? listSchema.get(0) : mapSchema.get(schemaname.toLocaleLowerCase());
+			if (currSchema === undefined)
+				currSchema = mapSchema.values().next().value;
 		}
 		const revision = await api.server.getServerDBRevision();
 		const schulen: List<SchulenKatalogEintrag> = await api.privileged.getAllgemeinenKatalogSchulen();
 		const view = routeSchemaUebersicht;
-		const result = await this.getSchemaInformation(auswahl);
-		this.setPatchedDefaultState({
-			mapSchema,
-			auswahl : result.auswahl,
-			schuleInfo: result.schuleInfo,
-			admins: result.admins,
-			revision,
-			schulen,
-			view
-		});
+		const { auswahl, schuleInfo, admins } = await this.getSchemaInformation(currSchema);
+		this.setPatchedDefaultState({ mapSchema, auswahl, schuleInfo, admins, revision, schulen, view });
 		api.status.stop();
 	}
 
@@ -191,8 +184,8 @@ export class RouteDataSchema {
 	 * @param schema   das ausgewählte Schema
 	 */
 	public async setSchema(schema: SchemaListeEintrag | undefined) {
-		const result = await this.getSchemaInformation(schema);
-		this.setPatchedState({ auswahl : result.auswahl, schuleInfo: result.schuleInfo, admins: result.admins });
+		const { auswahl, schuleInfo, admins } = await this.getSchemaInformation(schema);
+		this.setPatchedState({ auswahl, schuleInfo, admins });
 	}
 
 	public async setView(view: RouteNode<any,any>) {

@@ -22,13 +22,16 @@
 								<div class="flex flex-col gap-2 mb-8">
 									<div class="content-card--headline mb-4">Sicherung</div>
 									<template v-if="eintrag.isSVWS">
-										<button role="button" class="svws-ui-content-button" @click="getBackupSchema">
+										<button role="button" class="svws-ui-content-button" @click="clickBackup">
 											<div class="svws-icon"><span class="icon i-ri-save-3-line" /></div>
 											<div class="flex flex-col">
 												<div class="svws-title">Backup</div>
 												<div class="svws-description">Daten aus dem Schema werden in ein SQLite-Backup übertragen</div>
 											</div>
 										</button>
+										<svws-ui-content-card v-if="currentAction === 'backup'" class="ml-4 mt-4 mb-4">
+											<svws-ui-button @click="getBackupSchema" :disabled="loading"><svws-ui-spinner v-if="loading" :spinning="loading" /> Backup starten </svws-ui-button>
+										</svws-ui-content-card>
 									</template>
 									<template v-if="revisionNotUpToDate">
 										<button role="button" class="svws-ui-content-button" @click="upgradeSchema">
@@ -49,7 +52,13 @@
 							</template>
 							<template v-if="zeigeInitialisierungMitSchulkatalog || ((eintrag !== undefined) && (eintrag.isInConfig))">
 								<div class="flex flex-col gap-2">
-									<div class="content-card--headline mb-4">Initialisieren / Wiederherstellen</div>
+									<div class="content-card--headline mb-4">
+										Initialisieren / Wiederherstellen
+										<div class="text-error flex flex-row mt-1 text-sm">
+											<span class="icon-sm i-ri-alert-line inline-block relative icon-error -mt-0.5 top-0.5 mr-0.5" />
+											Bei diesen Aktionen werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.
+										</div>
+									</div>
 									<template v-if="zeigeInitialisierungMitSchulkatalog">
 										<button role="button" class="svws-ui-content-button" :class="{'svws-active': currentAction === 'init'}" @click="clickInitialisierungMitSchulkatalog">
 											<div class="svws-icon"><span class="icon i-ri-archive-line" /></div>
@@ -73,10 +82,6 @@
 												<div class="svws-title">Backup wiederherstellen</div>
 												<div class="svws-description">
 													Daten werden aus einem Backup wiederhergestellt <br>
-													<div class="text-error flex flex-row mt-1">
-														<span class="icon i-ri-alert-line inline-block relative icon-error -mt-0.5 top-0.5 mr-0.5" />
-														Bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.
-													</div>
 												</div>
 											</div>
 										</button>
@@ -166,27 +171,34 @@
 	];
 
 	async function clickInConfigAufnehmen() {
-		currentAction.value = (currentAction.value === 'inConfigAufnehmen') ? '' : 'inConfigAufnehmen'
+		currentAction.value = (currentAction.value === 'inConfigAufnehmen') ? '' : 'inConfigAufnehmen';
 		clearLog();
 	}
 
 	async function clickInitialisierungMitSchulkatalog() {
-		currentAction.value = (currentAction.value === 'init') ? '' : 'init'
+		currentAction.value = (currentAction.value === 'init') ? '' : 'init';
 		clearLog();
 	}
 
 	async function clickImportSQLiteBackup() {
-		currentAction.value = (currentAction.value === 'import') ? '' : 'import'
+		currentAction.value = (currentAction.value === 'import') ? '' : 'import';
 		clearLog();
 	}
 
 	async function clickMigrate() {
-		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate'
+		currentAction.value = (currentAction.value === 'migrate') ? '' : 'migrate';
+		clearLog();
+	}
+
+	async function clickBackup() {
+		currentAction.value = (currentAction.value === 'backup') ? '' : 'backup';
 		clearLog();
 	}
 
 	async function getBackupSchema() {
+		loading.value = true;
 		const { data, name } = await props.backupSchema();
+		loading.value = false;
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;

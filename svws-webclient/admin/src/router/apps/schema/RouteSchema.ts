@@ -55,12 +55,10 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 					await this.data.setView(child);
 	}
 
-
 	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// Aufräumen der Quelldaten für Migrationen aus RouteData, damit diese beim Abmelden nicht erhalten bleiben!
 		this.data.resetMigrationQuellinformationen();
 	}
-
 
 	public getRoute(schema?: string) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { schema } };
@@ -108,8 +106,8 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of this.children)
-			result.push({ name: c.name, text: c.text });
+		for (const { name, text } of this.children)
+			result.push({ name, text });
 		return result;
 	}
 

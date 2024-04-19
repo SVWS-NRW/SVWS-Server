@@ -47,10 +47,10 @@ export class RouteSchemagruppe extends RouteNode<RouteDataSchema, RouteApp> {
 			importSchema: routeSchema.data.importSchema,
 			migrateSchema: routeSchema.data.migrateSchema,
 			duplicateSchema: routeSchema.data.duplicateSchema,
-			addExistingSchemaToConfig: routeSchema.data.addExistingSchemaToConfig,
 			refresh: routeSchema.data.refresh,
 			migrationQuellinformationen: () => routeSchema.data.migrationQuellinformationen.value,
 			apiStatus: api.status,
+			revision: routeSchema.data.revision,
 		};
 	}
 
