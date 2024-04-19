@@ -40,7 +40,7 @@ export class KlausurterminblockungAlgorithmen extends JavaEnum<Klausurterminbloc
 	/**
 	 * Eine Map mit der Zuordnung zu der ID
 	 */
-	private static readonly _mapID : HashMap<number, KlausurterminblockungAlgorithmen> = new HashMap();
+	private static readonly _mapID : HashMap<number, KlausurterminblockungAlgorithmen> = new HashMap<number, KlausurterminblockungAlgorithmen>();
 
 	/**
 	 * Erstellt einen neuen Algorithmus-Typ.

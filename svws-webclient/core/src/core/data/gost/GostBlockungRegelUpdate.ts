@@ -8,12 +8,12 @@ export class GostBlockungRegelUpdate extends JavaObject {
 	/**
 	 * Die zu entfernenden Regeln
 	 */
-	public listEntfernen : List<GostBlockungRegel> = new ArrayList();
+	public listEntfernen : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 
 	/**
 	 * Die hinzuzufügenden Regeln
 	 */
-	public listHinzuzufuegen : List<GostBlockungRegel> = new ArrayList();
+	public listHinzuzufuegen : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 
 
 	public constructor() {

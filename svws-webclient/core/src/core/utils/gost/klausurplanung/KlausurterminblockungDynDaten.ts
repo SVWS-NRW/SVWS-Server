@@ -56,12 +56,12 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap();
+	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap();
+	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap<number, GostKursklausurRich>();
 
 	/**
 	 * Die Anzahl der Klausuren.
@@ -76,12 +76,12 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 * Alle Klausurgruppen.
 	 */
-	private readonly _klausurGruppen : List<List<number>> = new ArrayList();
+	private readonly _klausurGruppen : List<List<number>> = new ArrayList<List<number>>();
 
 	/**
 	 * Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn).
 	 */
-	private readonly _klausurGruppenGrad : List<List<number>> = new ArrayList();
+	private readonly _klausurGruppenGrad : List<List<number>> = new ArrayList<List<number>>();
 
 
 	/**
@@ -111,7 +111,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private teileKlausurgruppenAufBeiKollision() : void {
-		const kopie : List<List<number>> = new ArrayList(this._klausurGruppen);
+		const kopie : List<List<number>> = new ArrayList<List<number>>(this._klausurGruppen);
 		this._klausurGruppen.clear();
 		for (const gruppe of kopie) {
 			if (gruppe.isEmpty())
@@ -172,14 +172,14 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausurRich>) : void {
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
-			const gruppe : List<number> = new ArrayList();
+			const gruppe : List<number> = new ArrayList<number>();
 			gruppe.add(klausurNr);
 			this._klausurGruppen.add(gruppe);
 		}
 	}
 
 	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausurRich>) : void {
-		const mapFachZuKlausurGruppe : HashMap<number, List<number>> = new HashMap();
+		const mapFachZuKlausurGruppe : HashMap<number, List<number>> = new HashMap<number, List<number>>();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const fachID : number = gostKursklausur.idFach;
@@ -193,7 +193,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausurRich>) : void {
-		const mapSchieneZuKlausurGruppe : HashMap<number, List<number>> = new HashMap();
+		const mapSchieneZuKlausurGruppe : HashMap<number, List<number>> = new HashMap<number, List<number>>();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
@@ -250,7 +250,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereMatrixVerboten(pInput : List<GostKursklausurRich>) : void {
-		const mapSchuelerKlausuren : HashMap<number, List<number>> = new HashMap();
+		const mapSchuelerKlausuren : HashMap<number, List<number>> = new HashMap<number, List<number>>();
 		for (const gostKursklausur of pInput)
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
@@ -338,7 +338,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return die Klausur-Gruppen in zufälliger Reihenfolge.
 	 */
 	private gibKlausurgruppenInZufaelligerReihenfolge() : List<List<number>> {
-		const temp : List<List<number>> = new ArrayList();
+		const temp : List<List<number>> = new ArrayList<List<number>>();
 		const perm : Array<number> = ArrayUtils.getIndexPermutation(this._klausurGruppen.size(), this._random);
 		for (let i : number = 0; i < perm.length; i++)
 			temp.add(this._klausurGruppen.get(perm[i]));
@@ -351,7 +351,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
 	 */
 	gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() : List<List<number>> {
-		const temp : List<List<number>> = new ArrayList();
+		const temp : List<List<number>> = new ArrayList<List<number>>();
 		temp.addAll(this._klausurGruppenGrad);
 		const size : number = temp.size();
 		for (let i1 : number = 0; i1 < size; i1++) {

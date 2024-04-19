@@ -6,7 +6,7 @@ import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logg
 
 export class Logger extends JavaObject {
 
-	private readonly consumer : ArrayList<Consumer<LogData>> = new ArrayList();
+	private readonly consumer : ArrayList<Consumer<LogData>> = new ArrayList<Consumer<LogData>>();
 
 	private defaultLevel : LogLevel = LogLevel.INFO;
 

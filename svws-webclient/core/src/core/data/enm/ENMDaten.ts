@@ -77,52 +77,52 @@ export class ENMDaten extends JavaObject {
 	/**
 	 * Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool)
 	 */
-	public noten : List<ENMNote> = new ArrayList();
+	public noten : List<ENMNote> = new ArrayList<ENMNote>();
 
 	/**
 	 * Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool)
 	 */
-	public foerderschwerpunkte : List<ENMFoerderschwerpunkt> = new ArrayList();
+	public foerderschwerpunkte : List<ENMFoerderschwerpunkt> = new ArrayList<ENMFoerderschwerpunkt>();
 
 	/**
 	 * Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.
 	 */
-	public jahrgaenge : List<ENMJahrgang> = new ArrayList();
+	public jahrgaenge : List<ENMJahrgang> = new ArrayList<ENMJahrgang>();
 
 	/**
 	 * Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.
 	 */
-	public klassen : List<ENMKlasse> = new ArrayList();
+	public klassen : List<ENMKlasse> = new ArrayList<ENMKlasse>();
 
 	/**
 	 * Die Informationen der vordefinierten Floskelgruppen und deren Floskeln.
 	 */
-	public floskelgruppen : List<ENMFloskelgruppe> = new ArrayList();
+	public floskelgruppen : List<ENMFloskelgruppe> = new ArrayList<ENMFloskelgruppe>();
 
 	/**
 	 * Die Informationen zu Lehrern, die in der Notendatei vorhanden sind.
 	 */
-	public lehrer : List<ENMLehrer> = new ArrayList();
+	public lehrer : List<ENMLehrer> = new ArrayList<ENMLehrer>();
 
 	/**
 	 * Die Informationen zu den Fächern, die in der Notendatei vorhanden sind.
 	 */
-	public faecher : List<ENMFach> = new ArrayList();
+	public faecher : List<ENMFach> = new ArrayList<ENMFach>();
 
 	/**
 	 * Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind.
 	 */
-	public teilleistungsarten : List<ENMTeilleistungsart> = new ArrayList();
+	public teilleistungsarten : List<ENMTeilleistungsart> = new ArrayList<ENMTeilleistungsart>();
 
 	/**
 	 * Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind.
 	 */
-	public lerngruppen : List<ENMLerngruppe> = new ArrayList();
+	public lerngruppen : List<ENMLerngruppe> = new ArrayList<ENMLerngruppe>();
 
 	/**
 	 * Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden.
 	 */
-	public schueler : List<ENMSchueler> = new ArrayList();
+	public schueler : List<ENMSchueler> = new ArrayList<ENMSchueler>();
 
 
 	public constructor() {

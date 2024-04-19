@@ -19,7 +19,7 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB).
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Die textuelle Beschreibung der sonstigen Herkunft.

@@ -44,37 +44,37 @@ export class Stundenplan extends JavaObject {
 	/**
 	 * Das Zeitraster des Stundenplans.
 	 */
-	public zeitraster : List<StundenplanZeitraster> = new ArrayList();
+	public zeitraster : List<StundenplanZeitraster> = new ArrayList<StundenplanZeitraster>();
 
 	/**
 	 * Die Liste der Räume, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public raeume : List<StundenplanRaum> = new ArrayList();
+	public raeume : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 
 	/**
 	 * Die Liste der Schienen, die für den Stundenplan angelegt sind.
 	 */
-	public schienen : List<StundenplanSchiene> = new ArrayList();
+	public schienen : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 
 	/**
 	 * Die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen.
 	 */
-	public pausenzeiten : List<StundenplanPausenzeit> = new ArrayList();
+	public pausenzeiten : List<StundenplanPausenzeit> = new ArrayList<StundenplanPausenzeit>();
 
 	/**
 	 * Die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen.
 	 */
-	public aufsichtsbereiche : List<StundenplanAufsichtsbereich> = new ArrayList();
+	public aufsichtsbereiche : List<StundenplanAufsichtsbereich> = new ArrayList<StundenplanAufsichtsbereich>();
 
 	/**
 	 * Die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden.
 	 */
-	public kalenderwochenZuordnung : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
+	public kalenderwochenZuordnung : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
 	/**
 	 * Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
+	public jahrgaenge : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>();
 
 
 	public constructor() {

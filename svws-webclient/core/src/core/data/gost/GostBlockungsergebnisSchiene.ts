@@ -13,7 +13,7 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	/**
 	 * Eine Liste der Kurse, welche dieser Schiene zugeordnet sind.
 	 */
-	public readonly kurse : List<GostBlockungsergebnisKurs> = new ArrayList();
+	public readonly kurse : List<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>();
 
 
 	public constructor() {

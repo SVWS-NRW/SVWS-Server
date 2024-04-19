@@ -12,9 +12,9 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	/**
 	 * Alle Lerngruppen.
 	 */
-	private readonly _menge : List<StundenplanblockungManagerLerngruppe> = new ArrayList();
+	private readonly _menge : List<StundenplanblockungManagerLerngruppe> = new ArrayList<StundenplanblockungManagerLerngruppe>();
 
-	private readonly _map : JavaMap<number, StundenplanblockungManagerLerngruppe> = new HashMap();
+	private readonly _map : JavaMap<number, StundenplanblockungManagerLerngruppe> = new HashMap<number, StundenplanblockungManagerLerngruppe>();
 
 
 	public constructor() {

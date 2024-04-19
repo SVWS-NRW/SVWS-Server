@@ -19,7 +19,7 @@ export class HerkunftsartKatalogEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnungen bei den jeweils zulässigen Schulformen.
 	 */
-	public bezeichnungen : List<HerkunftsartKatalogEintragBezeichnung> = new ArrayList();
+	public bezeichnungen : List<HerkunftsartKatalogEintragBezeichnung> = new ArrayList<HerkunftsartKatalogEintragBezeichnung>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

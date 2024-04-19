@@ -27,7 +27,7 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	/**
 	 * Die IDs der {@link StundenplanAufsichtsbereich}, in denen in dieser Pausenzeit von dem {@link StundenplanLehrer} Aufsicht geführt wird.
 	 */
-	public bereiche : List<number> = new ArrayList();
+	public bereiche : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

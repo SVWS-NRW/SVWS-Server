@@ -13,12 +13,12 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	/**
 	 * eine Liste der Belegungsfehler und Hinweise zur Belegung
 	 */
-	public fehlercodes : List<GostBelegpruefungErgebnisFehler> = new ArrayList();
+	public fehlercodes : List<GostBelegpruefungErgebnisFehler> = new ArrayList<GostBelegpruefungErgebnisFehler>();
 
 	/**
 	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht
 	 */
-	public log : List<string> = new ArrayList();
+	public log : List<string> = new ArrayList<string>();
 
 
 	public constructor() {

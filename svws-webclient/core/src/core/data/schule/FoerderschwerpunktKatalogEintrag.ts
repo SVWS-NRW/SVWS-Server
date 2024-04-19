@@ -24,7 +24,7 @@ export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

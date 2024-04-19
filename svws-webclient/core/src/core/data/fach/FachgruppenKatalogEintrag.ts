@@ -40,7 +40,7 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x).

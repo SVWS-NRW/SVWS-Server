@@ -31,27 +31,27 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	/**
 	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
-	private readonly _values : ArrayList<BKBildungsplan> = new ArrayList();
+	private readonly _values : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand des Kürzels
 	 */
-	private readonly _mapFachByKuerzel : HashMap<string, BKFBFach> = new HashMap();
+	private readonly _mapFachByKuerzel : HashMap<string, BKFBFach> = new HashMap<string, BKFBFach>();
 
 	/**
 	 * Eine HashMap für den Zugriff auf einen Bildungsplan anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, BKBildungsplan> = new HashMap();
+	private readonly _mapByID : HashMap<number, BKBildungsplan> = new HashMap<number, BKBildungsplan>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Lehrpläne anhand des Fachklassen-Schlüssels.
 	 */
-	private readonly _mapBildungsplanByFachklasse : HashMap3D<number, string, number, List<BKBildungsplan>> = new HashMap3D();
+	private readonly _mapBildungsplanByFachklasse : HashMap3D<number, string, number, List<BKBildungsplan>> = new HashMap3D<number, string, number, List<BKBildungsplan>>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Fachklassen-Schlüssels.
 	 */
-	private readonly _mapFachByFachklasse : HashMap3D<number, string, string, JavaSet<BKFBFach>> = new HashMap3D();
+	private readonly _mapFachByFachklasse : HashMap3D<number, string, string, JavaSet<BKFBFach>> = new HashMap3D<number, string, string, JavaSet<BKFBFach>>();
 
 
 	/**
@@ -106,7 +106,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne für das angegebene Schuljahr
 	 */
 	public getLehrplaeneBySchuljahr(schuljahr : number) : List<BKBildungsplan> | null {
-		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
+		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 		for (const bildungsplan of this._values) {
 			if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
 				lehrplaene.add(bildungsplan);
@@ -123,7 +123,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne eines Index für das angegebene Schuljahr
 	 */
 	public getLehrplaeneByIndexSchuljahr(index : number, schuljahr : number) : List<BKBildungsplan> | null {
-		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
+		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
@@ -158,7 +158,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public getLehrplaeneByIndexSchuljahrAll(index : number, schuljahr : number) : List<BKBildungsplan> | null {
-		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList();
+		const lehrplaene : ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 		const lehrplaeneOfIndex : List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
@@ -285,7 +285,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getFaecherByFachklassenschuesselSchuljahr(__param0? : BKFachklassenSchluessel, __param1? : number) : List<BKFBFach> | null {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			const faecher : ArrayList<BKFBFach> = new ArrayList();
+			const faecher : ArrayList<BKFBFach> = new ArrayList<BKFBFach>();
 			faecher.addAll(this._mapFachByKuerzel.values());
 			return faecher;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {

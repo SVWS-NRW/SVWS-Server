@@ -27,7 +27,7 @@ export class KlassenartKatalogEintrag extends JavaObject {
 	/**
 	 * Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.
 	 */
-	public zulaessig : List<SchulformSchulgliederung> = new ArrayList();
+	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

@@ -13,32 +13,32 @@ export class StundenplanblockungInput extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lehrkraefte : List<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanblockungLehrkraft> = new ArrayList<StundenplanblockungLehrkraft>();
 
 	/**
 	 * Alle Klassen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public klassen : List<StundenplanblockungKlasse> = new ArrayList();
+	public klassen : List<StundenplanblockungKlasse> = new ArrayList<StundenplanblockungKlasse>();
 
 	/**
 	 * Alle Fächer, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public faecher : List<StundenplanblockungFach> = new ArrayList();
+	public faecher : List<StundenplanblockungFach> = new ArrayList<StundenplanblockungFach>();
 
 	/**
 	 * Alle Räume, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public raeume : List<StundenplanblockungRaum> = new ArrayList();
+	public raeume : List<StundenplanblockungRaum> = new ArrayList<StundenplanblockungRaum>();
 
 	/**
 	 * Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList<StundenplanblockungKopplung>();
 
 	/**
 	 * Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lerngruppen : List<StundenplanblockungLerngruppe> = new ArrayList();
+	public lerngruppen : List<StundenplanblockungLerngruppe> = new ArrayList<StundenplanblockungLerngruppe>();
 
 
 	public constructor() {

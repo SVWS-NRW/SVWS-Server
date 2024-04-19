@@ -2363,12 +2363,12 @@ export class Verkehrssprache extends JavaEnum<Verkehrssprache> {
 	/**
 	 * Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _sprachen : HashMap<string, Verkehrssprache> = new HashMap();
+	private static readonly _sprachen : HashMap<string, Verkehrssprache> = new HashMap<string, Verkehrssprache>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren zweistelligen ISO 639-1-Codes
 	 */
-	private static readonly _kuerzel2 : HashMap<string, Verkehrssprache> = new HashMap();
+	private static readonly _kuerzel2 : HashMap<string, Verkehrssprache> = new HashMap<string, Verkehrssprache>();
 
 	/**
 	 * Erzeugt eine neue Verkehrssprache in der Aufzählung.

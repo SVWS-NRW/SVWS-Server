@@ -58,7 +58,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Sprachenfolge des Schülers
 	 */
-	public sprachenfolge : List<ENMSprachenfolge> = new ArrayList();
+	public sprachenfolge : List<ENMSprachenfolge> = new ArrayList<ENMSprachenfolge>();
 
 	/**
 	 * Informationen zum Lernabschnitt des Schülers in der Notendatei
@@ -68,7 +68,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei
 	 */
-	public leistungsdaten : List<ENMLeistung> = new ArrayList();
+	public leistungsdaten : List<ENMLeistung> = new ArrayList<ENMLeistung>();
 
 	/**
 	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei

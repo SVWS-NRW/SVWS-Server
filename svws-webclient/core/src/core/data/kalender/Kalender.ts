@@ -33,7 +33,7 @@ export class Kalender extends JavaObject {
 	/**
 	 *  eine Liste der Einträge des Kalenders
 	 */
-	public kalenderEintraege : List<KalenderEintrag> = new ArrayList();
+	public kalenderEintraege : List<KalenderEintrag> = new ArrayList<KalenderEintrag>();
 
 	/**
 	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat

@@ -43,12 +43,12 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> {
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, LehrerEinsatzstatus | null> = new HashMap();
+	private static readonly _statusByID : HashMap<number, LehrerEinsatzstatus | null> = new HashMap<number, LehrerEinsatzstatus | null>();
 
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, LehrerEinsatzstatus | null> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, LehrerEinsatzstatus | null> = new HashMap<string, LehrerEinsatzstatus | null>();
 
 	/**
 	 * Erzeugt einen neuen Einsatzstatus in der Aufzählung.

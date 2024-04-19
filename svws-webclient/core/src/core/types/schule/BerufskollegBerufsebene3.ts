@@ -408,7 +408,7 @@ export class BerufskollegBerufsebene3 extends JavaEnum<BerufskollegBerufsebene3>
 	/**
 	 * Eine Hashmap mit allen definierten Berufsebenen der Ebene 3, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, BerufskollegBerufsebene3> = new HashMap();
+	private static readonly _ebenen : HashMap<string, BerufskollegBerufsebene3> = new HashMap<string, BerufskollegBerufsebene3>();
 
 	/**
 	 * Erzeugt eine neue Berufsebene in der Aufzählung.

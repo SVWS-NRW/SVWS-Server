@@ -75,12 +75,12 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOAKategorie> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAKategorie> = new HashMap<number, KAOAKategorie>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOAKategorie> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAKategorie> = new HashMap<string, KAOAKategorie>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

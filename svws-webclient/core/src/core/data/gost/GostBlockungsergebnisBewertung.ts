@@ -7,7 +7,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	/**
 	 * Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten.
 	 */
-	public regelVerletzungen : List<number> = new ArrayList();
+	public regelVerletzungen : List<number> = new ArrayList<number>();
 
 	/**
 	 * Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden.

@@ -58,7 +58,7 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	/**
 	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, Einschulungsart | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, Einschulungsart | null> = new HashMap<string, Einschulungsart | null>();
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.

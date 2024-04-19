@@ -149,12 +149,12 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOAEbene4> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAEbene4> = new HashMap<number, KAOAEbene4>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOAEbene4> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAEbene4> = new HashMap<string, KAOAEbene4>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

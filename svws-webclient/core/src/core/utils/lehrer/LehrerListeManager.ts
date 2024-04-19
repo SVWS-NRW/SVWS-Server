@@ -33,11 +33,11 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, LehrerListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, LehrerListeEintrag> = new HashMap2D<boolean, number, LehrerListeEintrag>();
 
-	private readonly _mapLehrerIstStatistikrelevant : HashMap2D<boolean, number, LehrerListeEintrag> = new HashMap2D();
+	private readonly _mapLehrerIstStatistikrelevant : HashMap2D<boolean, number, LehrerListeEintrag> = new HashMap2D<boolean, number, LehrerListeEintrag>();
 
-	private readonly _mapKlasseHatPersonaltyp : HashMap2D<PersonalTyp, number, LehrerListeEintrag> = new HashMap2D();
+	private readonly _mapKlasseHatPersonaltyp : HashMap2D<PersonalTyp, number, LehrerListeEintrag> = new HashMap2D<PersonalTyp, number, LehrerListeEintrag>();
 
 	/**
 	 * Das Filter-Attribut für die Personal-Typen
@@ -63,9 +63,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 */
 	private _personaldaten : LehrerPersonaldaten | null = null;
 
-	private readonly _mapAbschnittsdatenById : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap();
+	private readonly _mapAbschnittsdatenById : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap<number, LehrerPersonalabschnittsdaten>();
 
-	private readonly _mapAbschnittsdatenBySchuljahresabschnittsId : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap();
+	private readonly _mapAbschnittsdatenBySchuljahresabschnittsId : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap<number, LehrerPersonalabschnittsdaten>();
 
 
 	/**

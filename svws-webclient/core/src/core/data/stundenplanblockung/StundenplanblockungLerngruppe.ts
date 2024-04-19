@@ -18,42 +18,42 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public lehrkraefte1 : List<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte1 : List<StundenplanblockungLehrkraft> = new ArrayList<StundenplanblockungLehrkraft>();
 
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind.
 	 */
-	public lehrkraefte2 : List<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte2 : List<StundenplanblockungLehrkraft> = new ArrayList<StundenplanblockungLehrkraft>();
 
 	/**
 	 * Alle Klassen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public klassen : List<StundenplanblockungKlasse> = new ArrayList();
+	public klassen : List<StundenplanblockungKlasse> = new ArrayList<StundenplanblockungKlasse>();
 
 	/**
 	 * Alle Fächer, die dieser Lerngruppe zugeordnet sind. In der Regel genau ein Fach.
 	 */
-	public faecher : List<StundenplanblockungFach> = new ArrayList();
+	public faecher : List<StundenplanblockungFach> = new ArrayList<StundenplanblockungFach>();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe primär in Frage kommen.
 	 */
-	public raeume1 : List<StundenplanblockungRaum> = new ArrayList();
+	public raeume1 : List<StundenplanblockungRaum> = new ArrayList<StundenplanblockungRaum>();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe sekundär (alternativ) in Frage kommen.
 	 */
-	public raeume2 : List<StundenplanblockungRaum> = new ArrayList();
+	public raeume2 : List<StundenplanblockungRaum> = new ArrayList<StundenplanblockungRaum>();
 
 	/**
 	 * Alle Kopplungen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList<StundenplanblockungKopplung>();
 
 	/**
 	 * Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList();
+	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList<StundenplanblockungStundenelement>();
 
 
 	public constructor() {

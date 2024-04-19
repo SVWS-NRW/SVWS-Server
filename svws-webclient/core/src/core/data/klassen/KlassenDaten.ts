@@ -43,12 +43,12 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
 	 */
-	public klassenLeitungen : List<number> = new ArrayList();
+	public klassenLeitungen : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die Schüler der Klasse.
 	 */
-	public schueler : List<Schueler> = new ArrayList();
+	public schueler : List<Schueler> = new ArrayList<Schueler>();
 
 	/**
 	 * Adressmerkmal des Teilstandorts für die Klasse

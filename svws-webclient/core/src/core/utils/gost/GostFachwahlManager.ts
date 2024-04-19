@@ -14,22 +14,22 @@ export class GostFachwahlManager extends JavaObject {
 	/**
 	 * Die Liste mit den einzelnen Fachwahlen
 	 */
-	private readonly fachwahlen : ArrayList<GostFachwahl> = new ArrayList();
+	private readonly fachwahlen : ArrayList<GostFachwahl> = new ArrayList<GostFachwahl>();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart
 	 */
-	private readonly mapFachKursart : HashMap<number, ArrayMap<GostKursart, HashSet<number>>> = new HashMap();
+	private readonly mapFachKursart : HashMap<number, ArrayMap<GostKursart, HashSet<number>>> = new HashMap<number, ArrayMap<GostKursart, HashSet<number>>>();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID
 	 */
-	private readonly mapFach : HashMap<number, ArrayList<GostFachwahl>> = new HashMap();
+	private readonly mapFach : HashMap<number, ArrayList<GostFachwahl>> = new HashMap<number, ArrayList<GostFachwahl>>();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID
 	 */
-	private readonly mapSchueler : HashMap<number, ArrayList<GostFachwahl>> = new HashMap();
+	private readonly mapSchueler : HashMap<number, ArrayList<GostFachwahl>> = new HashMap<number, ArrayList<GostFachwahl>>();
 
 
 	/**

@@ -578,12 +578,12 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> {
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _lehrbefaehigungenByID : HashMap<number, LehrerLehrbefaehigung | null> = new HashMap();
+	private static readonly _lehrbefaehigungenByID : HashMap<number, LehrerLehrbefaehigung | null> = new HashMap<number, LehrerLehrbefaehigung | null>();
 
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _lehrbefaehigungenByKuerzel : HashMap<string, LehrerLehrbefaehigung | null> = new HashMap();
+	private static readonly _lehrbefaehigungenByKuerzel : HashMap<string, LehrerLehrbefaehigung | null> = new HashMap<string, LehrerLehrbefaehigung | null>();
 
 	/**
 	 * Erzeugt eine neue Lehrbefähigung in der Aufzählung.

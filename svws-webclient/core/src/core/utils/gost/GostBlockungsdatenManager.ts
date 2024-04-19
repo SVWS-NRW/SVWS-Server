@@ -102,77 +102,77 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID.
 	 */
-	private readonly _map_idKurs_kurs : HashMap<number, GostBlockungKurs> = new HashMap();
+	private readonly _map_idKurs_kurs : HashMap<number, GostBlockungKurs> = new HashMap<number, GostBlockungKurs>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Listen der Kurse, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs.
 	 */
-	private readonly _map2d_idFach_idKursart_kurse : HashMap2D<number, number, List<GostBlockungKurs>> = new HashMap2D();
+	private readonly _map2d_idFach_idKursart_kurse : HashMap2D<number, number, List<GostBlockungKurs>> = new HashMap2D<number, number, List<GostBlockungKurs>>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Listen der Fachwahlen, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs.
 	 */
-	private readonly _map2d_idFach_idKursart_fachwahlen : HashMap2D<number, number, List<GostFachwahl>> = new HashMap2D();
+	private readonly _map2d_idFach_idKursart_fachwahlen : HashMap2D<number, number, List<GostFachwahl>> = new HashMap2D<number, number, List<GostFachwahl>>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID.
 	 */
-	private readonly _map_idSchiene_schiene : HashMap<number, GostBlockungSchiene> = new HashMap();
+	private readonly _map_idSchiene_schiene : HashMap<number, GostBlockungSchiene> = new HashMap<number, GostBlockungSchiene>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln anhand ihrer Datenbank-ID.
 	 */
-	private readonly _map_idRegel_regel : HashMap<number, GostBlockungRegel> = new HashMap();
+	private readonly _map_idRegel_regel : HashMap<number, GostBlockungRegel> = new HashMap<number, GostBlockungRegel>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
-	private readonly _map_regeltyp_regeln : JavaMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new ArrayMap(GostKursblockungRegelTyp.values());
+	private readonly _map_regeltyp_regeln : JavaMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new ArrayMap<GostKursblockungRegelTyp, List<GostBlockungRegel>>(GostKursblockungRegelTyp.values());
 
 	/**
 	 * Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
-	private readonly _map_multikey_regeln : HashMap<LongArrayKey, GostBlockungRegel> = new HashMap();
+	private readonly _map_multikey_regeln : HashMap<LongArrayKey, GostBlockungRegel> = new HashMap<LongArrayKey, GostBlockungRegel>();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID.
 	 */
-	private readonly _map_idSchueler_schueler : HashMap<number, Schueler> = new HashMap();
+	private readonly _map_idSchueler_schueler : HashMap<number, Schueler> = new HashMap<number, Schueler>();
 
 	/**
 	 * Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart.
 	 */
-	private readonly _map_idSchueler_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_idSchueler_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap<number, List<GostFachwahl>>();
 
 	/**
 	 * (Schüler-ID, Fach-ID) --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet.
 	 */
-	private readonly _map2d_idSchueler_idFach_fachwahl : HashMap2D<number, number, GostFachwahl> = new HashMap2D();
+	private readonly _map2d_idSchueler_idFach_fachwahl : HashMap2D<number, number, GostFachwahl> = new HashMap2D<number, number, GostFachwahl>();
 
 	/**
 	 * Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart.
 	 */
-	private readonly _map_idFachart_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_idFachart_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap<number, List<GostFachwahl>>();
 
 	/**
 	 * Ergebnis-ID --> {@link GostBlockungsergebnis}
 	 */
-	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnis> = new HashMap();
+	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnis> = new HashMap<number, GostBlockungsergebnis>();
 
 	/**
 	 * Ergebnis-ID --> {@link GostBlockungsergebnisManager}
 	 */
-	private readonly _map_idErgebnis_ErgebnisManager : HashMap<number, GostBlockungsergebnisManager> = new HashMap();
+	private readonly _map_idErgebnis_ErgebnisManager : HashMap<number, GostBlockungsergebnisManager> = new HashMap<number, GostBlockungsergebnisManager>();
 
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
 	 */
-	private readonly _list_kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList();
+	private readonly _list_kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER)
 	 */
-	private readonly _list_kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new ArrayList();
+	private readonly _list_kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 
 	/**
 	 * Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf.
@@ -683,7 +683,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnis} nach ihrer Bewertung.
 	 */
 	public ergebnisGetListeSortiertNachBewertung() : List<GostBlockungsergebnis> {
-		const result : List<GostBlockungsergebnis> = new ArrayList(this._daten.ergebnisse);
+		const result : List<GostBlockungsergebnis> = new ArrayList<GostBlockungsergebnis>(this._daten.ergebnisse);
 		return result;
 	}
 
@@ -1702,7 +1702,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
 	 */
 	public regelGetListeToggleSperrung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
-		const regeln : List<GostBlockungRegel> = new ArrayList();
+		const regeln : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		let aktiv : boolean = false;
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
@@ -1877,12 +1877,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 */
 	public fachGetMengeKursarten(idFach : number) : List<GostKursart> {
-		const idKursarten : HashSet<number> = new HashSet();
+		const idKursarten : HashSet<number> = new HashSet<number>();
 		if (this._map2d_idFach_idKursart_kurse.containsKey1(idFach))
 			idKursarten.addAll(this._map2d_idFach_idKursart_kurse.getKeySetOf(idFach));
 		if (this._map2d_idFach_idKursart_fachwahlen.containsKey1(idFach))
 			idKursarten.addAll(this._map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach));
-		const list : List<GostKursart> = new ArrayList();
+		const list : List<GostKursart> = new ArrayList<GostKursart>();
 		for (const kursart of GostKursart.values())
 			if (idKursarten.contains(kursart.id))
 				list.add(kursart);
@@ -1964,7 +1964,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Anzahl verschiedenen Kursarten.
 	 */
 	public fachwahlGetAnzahlVerwendeterKursarten() : number {
-		const setKursartenIDs : HashSet<number> = new HashSet();
+		const setKursartenIDs : HashSet<number> = new HashSet<number>();
 		for (const fachwahl of this._daten.fachwahlen)
 			setKursartenIDs.add(fachwahl.kursartID);
 		return setKursartenIDs.size();
@@ -2020,7 +2020,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 */
 	public schuelerGetAnzahlMitMindestensEinerFachwahl() : number {
-		const setSchuelerIDs : HashSet<number> | null = new HashSet();
+		const setSchuelerIDs : HashSet<number> | null = new HashSet<number>();
 		for (const fachwahl of this._daten.fachwahlen)
 			setSchuelerIDs.add(fachwahl.schuelerID);
 		return setSchuelerIDs.size();
@@ -2151,7 +2151,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return eine Liste der gemeinsamen Fächer (auch in der Kursart übereinstimmend) beider Schüler.
 	 */
 	public schuelerGetFachListeGemeinsamerFacharten(idSchueler1 : number, idSchueler2 : number) : List<GostFach> {
-		const temp : List<GostFach> = new ArrayList();
+		const temp : List<GostFach> = new ArrayList<GostFach>();
 		for (const fachwahl1 of this.schuelerGetListeOfFachwahlen(idSchueler1))
 			if (this.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
 				temp.add(this._faecherManager.getOrException(fachwahl1.fachID));

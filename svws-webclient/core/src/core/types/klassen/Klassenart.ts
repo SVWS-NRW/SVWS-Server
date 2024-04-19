@@ -79,12 +79,12 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	/**
 	 * Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID
 	 */
-	private static readonly _mapID : HashMap<number, Klassenart> = new HashMap();
+	private static readonly _mapID : HashMap<number, Klassenart> = new HashMap<number, Klassenart>();
 
 	/**
 	 * Eine HashMap mit zulässigen Klassenarten. Der Zugriff erfolgt dabei über das Kürzel
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Klassenart> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Klassenart> = new HashMap<string, Klassenart>();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist
@@ -170,7 +170,7 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	 * @return die zulässigen Klassenarten in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<Klassenart> {
-		const kursarten : ArrayList<Klassenart> = new ArrayList();
+		const kursarten : ArrayList<Klassenart> = new ArrayList<Klassenart>();
 		if (schulform === null)
 			return kursarten;
 		for (const kursart of Klassenart.values())

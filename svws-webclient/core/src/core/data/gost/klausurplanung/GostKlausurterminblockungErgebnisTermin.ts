@@ -7,7 +7,7 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 	/**
 	 * Eine Liste der, dem Termin zugeordneten, Kurs-Klausur-IDs
 	 */
-	public kursklausuren : List<number> = new ArrayList();
+	public kursklausuren : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

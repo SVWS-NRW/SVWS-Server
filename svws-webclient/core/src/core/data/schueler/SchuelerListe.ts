@@ -17,27 +17,27 @@ export class SchuelerListe extends JavaObject {
 	/**
 	 * Die Listen-Einträge für die Schüler
 	 */
-	public readonly schueler : List<SchuelerListeEintrag> = new ArrayList();
+	public readonly schueler : List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
 
 	/**
 	 * Die Klassen-Daten
 	 */
-	public readonly klassen : List<KlassenDaten> = new ArrayList();
+	public readonly klassen : List<KlassenDaten> = new ArrayList<KlassenDaten>();
 
 	/**
 	 * Die Kurs-Daten
 	 */
-	public readonly kurse : List<KursDaten> = new ArrayList();
+	public readonly kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
 	/**
 	 * Die Jahrgangs-Daten
 	 */
-	public readonly jahrgaenge : List<JahrgangsDaten> = new ArrayList();
+	public readonly jahrgaenge : List<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
 
 	/**
 	 * Die Daten zu den Jahrgängen der Gymnasialen Oberstufe
 	 */
-	public readonly jahrgaengeGost : List<GostJahrgang> = new ArrayList();
+	public readonly jahrgaengeGost : List<GostJahrgang> = new ArrayList<GostJahrgang>();
 
 
 	public constructor() {

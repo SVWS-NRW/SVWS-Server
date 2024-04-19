@@ -13,7 +13,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	/**
 	 * Die Historie des Katalog-Eintrags.
 	 */
-	public historie : List<AbgangsartKatalogDaten> = new ArrayList();
+	public historie : List<AbgangsartKatalogDaten> = new ArrayList<AbgangsartKatalogDaten>();
 
 
 	public constructor() {

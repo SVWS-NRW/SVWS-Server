@@ -27,7 +27,7 @@ export class StundenplanLehrer extends JavaObject {
 	/**
 	 * Die Liste der IDs der Unterrichtsfächer, die der Lehrer unterrichten kann.
 	 */
-	public faecher : List<number> = new ArrayList();
+	public faecher : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

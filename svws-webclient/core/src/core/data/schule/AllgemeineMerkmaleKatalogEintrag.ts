@@ -39,7 +39,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

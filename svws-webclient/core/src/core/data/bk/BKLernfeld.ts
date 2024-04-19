@@ -17,7 +17,7 @@ export class BKLernfeld extends JavaObject {
 	/**
 	 * Die Bündelfächer, denen das Lernfeld zugeordnet ist.
 	 */
-	public buendelfaecher : List<string> = new ArrayList();
+	public buendelfaecher : List<string> = new ArrayList<string>();
 
 	/**
 	 * Das Ausbildungsjahr, in dem das Lernfeld unterrichtet wird.

@@ -38,12 +38,12 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> {
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, LehrerLeitungsfunktion | null> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, LehrerLeitungsfunktion | null> = new HashMap<string, LehrerLeitungsfunktion | null>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren IDs
 	 */
-	private static readonly _mapByID : HashMap<number, LehrerLeitungsfunktion | null> = new HashMap();
+	private static readonly _mapByID : HashMap<number, LehrerLeitungsfunktion | null> = new HashMap<number, LehrerLeitungsfunktion | null>();
 
 	/**
 	 * Erzeugt eine neue Leitungsfunktion in der Aufzählung.

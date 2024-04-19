@@ -68,7 +68,7 @@ export class BerufskollegAnlage extends JavaEnum<BerufskollegAnlage> {
 	/**
 	 * Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _anlagen : HashMap<string, BerufskollegAnlage> = new HashMap();
+	private static readonly _anlagen : HashMap<string, BerufskollegAnlage> = new HashMap<string, BerufskollegAnlage>();
 
 	/**
 	 * Erzeugt eine neue Anlage in der Aufzählung.

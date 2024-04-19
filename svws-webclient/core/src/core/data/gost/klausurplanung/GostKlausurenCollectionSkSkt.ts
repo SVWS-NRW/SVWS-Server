@@ -9,12 +9,12 @@ export class GostKlausurenCollectionSkSkt extends JavaObject {
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList();
+	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList();
+	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 
 	public constructor() {

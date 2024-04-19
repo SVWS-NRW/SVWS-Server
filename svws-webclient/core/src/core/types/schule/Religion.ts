@@ -83,17 +83,17 @@ export class Religion extends JavaEnum<Religion> {
 	/**
 	 * Eine Hashmap mit allen definierten Religionen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, Religion> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Religion> = new HashMap<string, Religion>();
 
 	/**
 	 * Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _mapEintragById : HashMap<number, ReligionKatalogEintrag> = new HashMap();
+	private static readonly _mapEintragById : HashMap<number, ReligionKatalogEintrag> = new HashMap<number, ReligionKatalogEintrag>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Religionen, zugeordnet zu den IDs der Historieneinträgen
 	 */
-	private static readonly _mapById : HashMap<number, Religion> = new HashMap();
+	private static readonly _mapById : HashMap<number, Religion> = new HashMap<number, Religion>();
 
 	/**
 	 * Erzeugt eine neue Religion in der Aufzählung.

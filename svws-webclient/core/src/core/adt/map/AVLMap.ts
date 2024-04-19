@@ -44,7 +44,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *  Alle Anfragen werden an die Sub-Map delegiert. Diese hat einen Bereich von "-Unendlich" bis "+Unendlich" und
 	 *  beinhaltet somit alle Elemente.
 	 */
-	private readonly _sub : AVLMapSubMap<K, V> = new AVLMapSubMap(this, new AVLMapIntervall(this._infinityMinus, false, this._infinityPlus, false), true);
+	private readonly _sub : AVLMapSubMap<K, V> = new AVLMapSubMap<K, V>(this, new AVLMapIntervall(this._infinityMinus, false, this._infinityPlus, false), true);
 
 	/**
 	 *  Der {@link Comparator}, der zum Vergleichen der Schlüsselwerte genutzt wird.
@@ -1090,7 +1090,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	private _nodeCreateLeaf(prev : AVLMapNode<K, V> | null, next : AVLMapNode<K, V> | null, key : K, value : V) : AVLMapNode<K, V> {
-		const child : AVLMapNode<K, V> | null = new AVLMapNode(key, value);
+		const child : AVLMapNode<K, V> | null = new AVLMapNode<K, V>(key, value);
 		if (prev !== null) {
 			prev._next = child;
 			child._prev = prev;

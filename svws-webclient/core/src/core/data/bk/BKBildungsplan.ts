@@ -25,12 +25,12 @@ export class BKBildungsplan extends JavaObject {
 	/**
 	 * Die zugehörigen Bündelfächer
 	 */
-	public fbFaecher : List<BKFBFach> = new ArrayList();
+	public fbFaecher : List<BKFBFach> = new ArrayList<BKFBFach>();
 
 	/**
 	 * Die zugehörige Liste der Lernfelder.
 	 */
-	public lernfelder : List<BKLernfeld> = new ArrayList();
+	public lernfelder : List<BKLernfeld> = new ArrayList<BKLernfeld>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

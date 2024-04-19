@@ -36,31 +36,31 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _schuljahresabschnitt : Schuljahresabschnitt;
 
-	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap();
+	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap<number, SchuelerLeistungsdaten>();
 
-	private readonly _faecher : List<FachDaten> = new ArrayList();
+	private readonly _faecher : List<FachDaten> = new ArrayList<FachDaten>();
 
-	private readonly _mapFachByID : JavaMap<number, FachDaten> = new HashMap();
+	private readonly _mapFachByID : JavaMap<number, FachDaten> = new HashMap<number, FachDaten>();
 
-	private readonly _foerderschwerpunkte : List<FoerderschwerpunktEintrag> = new ArrayList();
+	private readonly _foerderschwerpunkte : List<FoerderschwerpunktEintrag> = new ArrayList<FoerderschwerpunktEintrag>();
 
-	private readonly _mapFoerderschwerpunktByID : JavaMap<number, FoerderschwerpunktEintrag> = new HashMap();
+	private readonly _mapFoerderschwerpunktByID : JavaMap<number, FoerderschwerpunktEintrag> = new HashMap<number, FoerderschwerpunktEintrag>();
 
-	private readonly _jahrgaenge : List<JahrgangsDaten> = new ArrayList();
+	private readonly _jahrgaenge : List<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
 
-	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsDaten> = new HashMap();
+	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsDaten> = new HashMap<number, JahrgangsDaten>();
 
-	private readonly _klassen : List<KlassenDaten> = new ArrayList();
+	private readonly _klassen : List<KlassenDaten> = new ArrayList<KlassenDaten>();
 
-	private readonly _mapKlasseByID : JavaMap<number, KlassenDaten> = new HashMap();
+	private readonly _mapKlasseByID : JavaMap<number, KlassenDaten> = new HashMap<number, KlassenDaten>();
 
-	private readonly _kurse : List<KursDaten> = new ArrayList();
+	private readonly _kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
-	private readonly _mapKursByID : JavaMap<number, KursDaten> = new HashMap();
+	private readonly _mapKursByID : JavaMap<number, KursDaten> = new HashMap<number, KursDaten>();
 
-	private readonly _lehrer : List<LehrerListeEintrag> = new ArrayList();
+	private readonly _lehrer : List<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
-	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap();
+	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap<number, LehrerListeEintrag>();
 
 	private static readonly _compFach : Comparator<FachDaten> = { compare : (a: FachDaten, b: FachDaten) => {
 		let cmp : number = a.sortierung - b.sortierung;
@@ -292,7 +292,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Menge der Leistungsdaten
 	 */
 	public leistungGetMengeAsListSortedByFach() : List<SchuelerLeistungsdaten> {
-		const result : List<SchuelerLeistungsdaten> = new ArrayList();
+		const result : List<SchuelerLeistungsdaten> = new ArrayList<SchuelerLeistungsdaten>();
 		result.addAll(this._lernabschnittsdaten.leistungsdaten);
 		result.sort(this._compLeistungenByFach);
 		return result;
@@ -492,7 +492,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public kursGetMengeFilteredByLeistung(idLeistung : number) : List<KursDaten> {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
-		const result : List<KursDaten> = new ArrayList();
+		const result : List<KursDaten> = new ArrayList<KursDaten>();
 		for (const k of this._kurse) {
 			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID)))
 				result.add(k);

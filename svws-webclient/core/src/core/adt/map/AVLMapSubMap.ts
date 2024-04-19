@@ -450,7 +450,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
 	bcRetainAllKeys(c : Collection<any>) : boolean {
-		const mapRetain : AVLMap<K, K> = new AVLMap();
+		const mapRetain : AVLMap<K, K> = new AVLMap<K, K>();
 		for (const obj of c) {
 			const key : K = obj as unknown as K;
 			mapRetain.put(key, key);
@@ -476,7 +476,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
 	bcRetainAllEntries(c : Collection<any>) : boolean {
-		const mapSave : AVLMap<K, V> = new AVLMap();
+		const mapSave : AVLMap<K, V> = new AVLMap<K, V>();
 		const setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
 		for (const o of c)
 			if (this._par.bcContainsEntry(o, this._iv))
@@ -579,7 +579,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
 	bcGetArrayListOfKeys() : ArrayList<K | null> {
-		const v : ArrayList<K | null> | null = new ArrayList();
+		const v : ArrayList<K | null> | null = new ArrayList<K | null>();
 		const iter : JavaIterator<K | null> | null = this.navigableKeySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -593,7 +593,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
 	bcGetArrayListOfValues() : ArrayList<V | null> {
-		const v : ArrayList<V | null> | null = new ArrayList();
+		const v : ArrayList<V | null> | null = new ArrayList<V | null>();
 		const iter : JavaIterator<V | null> | null = this.values().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -607,7 +607,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 */
 	bcGetArrayListOfEntries() : ArrayList<JavaMapEntry<K | null, V | null> | null> {
-		const v : ArrayList<JavaMapEntry<K | null, V | null> | null> | null = new ArrayList();
+		const v : ArrayList<JavaMapEntry<K | null, V | null> | null> | null = new ArrayList<JavaMapEntry<K | null, V | null> | null>();
 		const iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.entrySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());

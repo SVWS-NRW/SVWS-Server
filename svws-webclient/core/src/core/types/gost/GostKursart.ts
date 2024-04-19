@@ -47,12 +47,12 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	/**
 	 * Die Zuordnung der Kursarten zu dem Kürzel der Kursart
 	 */
-	private static readonly _mapKuerzel : HashMap<string, GostKursart> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, GostKursart> = new HashMap<string, GostKursart>();
 
 	/**
 	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart
 	 */
-	private static readonly _mapZulKursart : JavaMap<ZulaessigeKursart, GostKursart> = new ArrayMap(ZulaessigeKursart.values());
+	private static readonly _mapZulKursart : JavaMap<ZulaessigeKursart, GostKursart> = new ArrayMap<ZulaessigeKursart, GostKursart>(ZulaessigeKursart.values());
 
 	/**
 	 * Die eindeutige ID der Kursart der Gymnasialen Oberstufe

@@ -615,12 +615,12 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOAZusatzmerkmal> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAZusatzmerkmal> = new HashMap<number, KAOAZusatzmerkmal>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOAZusatzmerkmal> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAZusatzmerkmal> = new HashMap<string, KAOAZusatzmerkmal>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

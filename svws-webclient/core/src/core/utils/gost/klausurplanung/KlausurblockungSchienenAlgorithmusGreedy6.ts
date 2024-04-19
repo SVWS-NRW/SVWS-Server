@@ -45,7 +45,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				this._dynDaten.aktionZustand2Speichern();
 		} else if ((typeof __param0 === "undefined")) {
 			this._dynDaten.aktionKlausurenAusSchienenEntfernen();
-			const setS : LinkedCollection<number> = new LinkedCollection();
+			const setS : LinkedCollection<number> = new LinkedCollection<number>();
 			while (this._dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
 				setS.clear();
 				const nr1 : number = this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();

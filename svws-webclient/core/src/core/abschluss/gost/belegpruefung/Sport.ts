@@ -10,7 +10,7 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Sport extends GostBelegpruefung {
 
-	private _sport : List<AbiturFachbelegung> = new ArrayList();
+	private _sport : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 
 	/**

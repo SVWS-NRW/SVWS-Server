@@ -195,7 +195,7 @@ export class SatInput extends JavaObject {
 	public create_var_at_most_one_tree(pList : LinkedCollection<number>) : number {
 		if (pList.isEmpty())
 			return this.getVarFALSE();
-		const list : LinkedCollection<number> = new LinkedCollection(pList);
+		const list : LinkedCollection<number> = new LinkedCollection<number>(pList);
 		while (list.size() >= 2) {
 			const a : number = list.removeFirst().valueOf();
 			const b : number = list.removeFirst().valueOf();
@@ -330,14 +330,14 @@ export class SatInput extends JavaObject {
 		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			const pArray : Array<number> = __param0;
 			const pAmount : number = __param1 as number;
-			const list : LinkedCollection<number> = new LinkedCollection();
+			const list : LinkedCollection<number> = new LinkedCollection<number>();
 			for (const x of pArray)
 				list.addLast(x);
 			this.add_clause_exactly(list, pAmount);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			const pAmount : number = __param1 as number;
-			const list : LinkedCollection<number> = new LinkedCollection(pList);
+			const list : LinkedCollection<number> = new LinkedCollection<number>(pList);
 			const size : number = list.size();
 			DeveloperNotificationException.ifTrue("add_clause_exactly: " + pAmount + " > " + size, pAmount > size);
 			if (pAmount === 0) {
@@ -366,7 +366,7 @@ export class SatInput extends JavaObject {
 	 * @param pAmount Die Anzahl an TRUEs.
 	 */
 	public add_clause_exactly_in_row(pData : Array<Array<number>>, pRow : number, pAmount : number) : void {
-		const pList : LinkedCollection<number> = new LinkedCollection();
+		const pList : LinkedCollection<number> = new LinkedCollection<number>();
 		for (let c : number = 0; c < pData[pRow].length; c++)
 			pList.add(pData[pRow][c]);
 		this.add_clause_exactly(pList, pAmount);
@@ -380,7 +380,7 @@ export class SatInput extends JavaObject {
 	 * @param pAmount Die Anzahl an TRUEs.
 	 */
 	public add_clause_exactly_in_column(pData : Array<Array<number>>, pCol : number, pAmount : number) : void {
-		const pList : LinkedCollection<number> = new LinkedCollection();
+		const pList : LinkedCollection<number> = new LinkedCollection<number>();
 		for (let r : number = 0; r < pData.length; r++)
 			pList.add(pData[r][pCol]);
 		this.add_clause_exactly(pList, pAmount);

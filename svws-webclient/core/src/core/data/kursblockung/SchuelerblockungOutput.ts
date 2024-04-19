@@ -8,7 +8,7 @@ export class SchuelerblockungOutput extends JavaObject {
 	/**
 	 * Alle Fachwahlen-Zuordnungen.
 	 */
-	public fachwahlenZuKurs : List<SchuelerblockungOutputFachwahlZuKurs> = new ArrayList();
+	public fachwahlenZuKurs : List<SchuelerblockungOutputFachwahlZuKurs> = new ArrayList<SchuelerblockungOutputFachwahlZuKurs>();
 
 
 	public constructor() {

@@ -8,7 +8,7 @@ export class AdressbuchKontaktListe extends AdressbuchEintrag {
 	/**
 	 * Die Kategorien dieses Kontakts
 	 */
-	public kontakte : List<AdressbuchKontakt | null> | null = new ArrayList();
+	public kontakte : List<AdressbuchKontakt | null> | null = new ArrayList<AdressbuchKontakt | null>();
 
 
 	public constructor() {

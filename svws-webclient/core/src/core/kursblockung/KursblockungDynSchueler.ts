@@ -526,7 +526,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this._logger.modifyIndent(+4);
 		this._logger.logLn("");
 		this._logger.logLn(this.representation);
-		const setSchienenLage : HashSet<number | null> | null = new HashSet();
+		const setSchienenLage : HashSet<number | null> | null = new HashSet<number | null>();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
 			const kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
 			if (kurs === null)

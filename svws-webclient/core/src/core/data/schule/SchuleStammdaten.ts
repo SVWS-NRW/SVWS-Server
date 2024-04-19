@@ -99,7 +99,7 @@ export class SchuleStammdaten extends JavaObject {
 	/**
 	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 */
-	public readonly abschnitte : List<Schuljahresabschnitt> = new ArrayList();
+	public readonly abschnitte : List<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
 
 
 	public constructor() {

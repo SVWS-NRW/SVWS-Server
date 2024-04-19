@@ -30,7 +30,7 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
-	public readonly fachbelegungen : List<AbiturFachbelegung> = new ArrayList();
+	public readonly fachbelegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	/**
 	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.

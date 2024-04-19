@@ -32,7 +32,7 @@ export class StundenplanPausenzeit extends JavaObject {
 	/**
 	 * Die IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen!
 	 */
-	public klassen : List<number> = new ArrayList();
+	public klassen : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

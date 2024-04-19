@@ -32,23 +32,23 @@ export class StundenplanUnterricht extends JavaObject {
 	/**
 	 * Die IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind.
 	 */
-	public lehrer : List<number> = new ArrayList();
+	public lehrer : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
 	 *   Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!
 	 */
-	public klassen : List<number> = new ArrayList();
+	public klassen : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die IDs der Räume, die dieser Unterrichtseinheit zugeordnet sind.
 	 */
-	public raeume : List<number> = new ArrayList();
+	public raeume : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere).
 	 */
-	public schienen : List<number> = new ArrayList();
+	public schienen : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

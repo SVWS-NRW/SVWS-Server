@@ -93,12 +93,12 @@ export class Sprachreferenzniveau extends JavaEnum<Sprachreferenzniveau> {
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs
 	 */
-	private static readonly _mapID : HashMap<number, Sprachreferenzniveau> = new HashMap();
+	private static readonly _mapID : HashMap<number, Sprachreferenzniveau> = new HashMap<number, Sprachreferenzniveau>();
 
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Sprachreferenzniveau> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Sprachreferenzniveau> = new HashMap<string, Sprachreferenzniveau>();
 
 	/**
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.

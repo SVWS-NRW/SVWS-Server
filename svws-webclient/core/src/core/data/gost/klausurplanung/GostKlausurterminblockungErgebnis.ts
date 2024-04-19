@@ -8,7 +8,7 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 	/**
 	 * Eine Liste der Termine-Ergebnisse
 	 */
-	public termine : List<GostKlausurterminblockungErgebnisTermin> = new ArrayList();
+	public termine : List<GostKlausurterminblockungErgebnisTermin> = new ArrayList<GostKlausurterminblockungErgebnisTermin>();
 
 
 	public constructor() {

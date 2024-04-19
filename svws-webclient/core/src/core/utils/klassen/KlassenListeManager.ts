@@ -37,17 +37,17 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, KlassenDaten> = new HashMap2D();
+	private readonly _mapKlasseIstSichtbar : HashMap2D<boolean, number, KlassenDaten> = new HashMap2D<boolean, number, KlassenDaten>();
 
-	private readonly _mapKlasseInJahrgang : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
+	private readonly _mapKlasseInJahrgang : HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
 
-	private readonly _mapKlasseHatSchueler : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
+	private readonly _mapKlasseHatSchueler : HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
 
-	private readonly _mapKlassenlehrerInKlasse : HashMap2D<number, number, KlassenDaten> = new HashMap2D();
+	private readonly _mapKlassenlehrerInKlasse : HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
 
-	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D();
+	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D<string, number, KlassenDaten>();
 
-	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap();
+	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap<string, KlassenDaten>();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge

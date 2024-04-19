@@ -88,7 +88,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 			return;
 		}
 		input.sort(KlausurterminblockungAlgorithmus._compGostKursklausurRich);
-		const temp : List<GostKursklausurRich> = new ArrayList();
+		const temp : List<GostKursklausurRich> = new ArrayList<GostKursklausurRich>();
 		for (const klausur of input) {
 			if (temp.isEmpty()) {
 				temp.add(klausur);
@@ -143,7 +143,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 * @return die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 */
 	private static filter(input : List<GostKursklausurRich>, istLK : boolean) : List<GostKursklausurRich> {
-		const temp : List<GostKursklausurRich> = new ArrayList();
+		const temp : List<GostKursklausurRich> = new ArrayList<GostKursklausurRich>();
 		for (const gostKursklausur of input)
 			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === istLK)
 				temp.add(gostKursklausur);

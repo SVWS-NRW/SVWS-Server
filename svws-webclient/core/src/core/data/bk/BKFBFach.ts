@@ -23,7 +23,7 @@ export class BKFBFach extends JavaObject {
 	/**
 	 * Die Fachklassen, in denen das Fach im Bildungsplan steht
 	 */
-	public fachklassen : List<BKFachklassenSchluessel> = new ArrayList();
+	public fachklassen : List<BKFachklassenSchluessel> = new ArrayList<BKFachklassenSchluessel>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

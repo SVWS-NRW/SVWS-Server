@@ -437,12 +437,12 @@ export class LehrerAnrechnungsgrund extends JavaEnum<LehrerAnrechnungsgrund> {
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _gruendeByID : HashMap<number, LehrerAnrechnungsgrund | null> = new HashMap();
+	private static readonly _gruendeByID : HashMap<number, LehrerAnrechnungsgrund | null> = new HashMap<number, LehrerAnrechnungsgrund | null>();
 
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _gruendeByKuerzel : HashMap<string, LehrerAnrechnungsgrund | null> = new HashMap();
+	private static readonly _gruendeByKuerzel : HashMap<string, LehrerAnrechnungsgrund | null> = new HashMap<string, LehrerAnrechnungsgrund | null>();
 
 	/**
 	 * Erzeugt einen neuen Grund in der Aufzählung.

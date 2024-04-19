@@ -7,12 +7,12 @@ export class GostKlausurenUpdate extends JavaObject {
 	/**
 	 * Die zu entfernenden Regeln
 	 */
-	public listSchuelerklausurTermineRemoveIdTermin : List<number> = new ArrayList();
+	public listSchuelerklausurTermineRemoveIdTermin : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die hinzuzufügenden Regeln
 	 */
-	public listKlausurtermineNachschreiberZugelassenFalse : List<number> = new ArrayList();
+	public listKlausurtermineNachschreiberZugelassenFalse : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

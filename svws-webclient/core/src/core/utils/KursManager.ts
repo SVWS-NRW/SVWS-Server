@@ -12,12 +12,12 @@ export class KursManager extends JavaObject {
 	/**
 	 * Die Kurse, die im Manager vorhanden sind
 	 */
-	private readonly _kurse : List<KursDaten> = new ArrayList();
+	private readonly _kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private readonly _map : HashMap<number, KursDaten> = new HashMap();
+	private readonly _map : HashMap<number, KursDaten> = new HashMap<number, KursDaten>();
 
 
 	/**
@@ -160,7 +160,7 @@ export class KursManager extends JavaObject {
 	 * @return ein Vector mit den Kursen
 	 */
 	public toList() : List<KursDaten> {
-		const result : List<KursDaten> = new ArrayList();
+		const result : List<KursDaten> = new ArrayList<KursDaten>();
 		for (const kurs of this._kurse)
 			result.add(kurs);
 		return result;

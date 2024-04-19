@@ -23,7 +23,7 @@ export class ENMFloskelgruppe extends JavaObject {
 	/**
 	 * Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind.
 	 */
-	public readonly floskeln : List<ENMFloskel> = new ArrayList();
+	public readonly floskeln : List<ENMFloskel> = new ArrayList<ENMFloskel>();
 
 
 	public constructor() {

@@ -10,17 +10,17 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public raumstunden : List<GostKlausurraumstunde> = new ArrayList();
+	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList();
+	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList();
+	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 
 	/**
 	 * Die ID der Klausurraumstunde.
@@ -30,7 +30,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Klausurraumstunde.
 	 */
-	public idsSchuelerklausurtermine : List<number> = new ArrayList();
+	public idsSchuelerklausurtermine : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die ID der Klausurraumstunde.

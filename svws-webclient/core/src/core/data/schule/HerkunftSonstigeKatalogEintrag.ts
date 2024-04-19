@@ -19,7 +19,7 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Die textuelle Beschreibung der sonstigen Herkunft.

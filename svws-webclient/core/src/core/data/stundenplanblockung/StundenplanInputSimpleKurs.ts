@@ -12,27 +12,27 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	/**
 	 * 0 bis n Lehrkräfte werden dem Kurs zugeordnet.
 	 */
-	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList<StundenplanInputSimpleLehrkraft>();
 
 	/**
 	 * 0 bis n Klassen werden dem Kurs zugeordnet.
 	 */
-	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList();
+	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList<StundenplanInputSimpleKlasse>();
 
 	/**
 	 * 0 oder 1 Fach wird dem Kurs zugeordnet.
 	 */
-	public faecher : List<StundenplanInputSimpleFach> = new ArrayList();
+	public faecher : List<StundenplanInputSimpleFach> = new ArrayList<StundenplanInputSimpleFach>();
 
 	/**
 	 * 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird.
 	 */
-	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList();
+	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList<StundenplanInputSimpleRaum>();
 
 	/**
 	 * 0 oder 1 Kopplung wird dem Kurs zugeordnet.
 	 */
-	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList<StundenplanInputSimpleKopplung>();
 
 	/**
 	 * Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden.

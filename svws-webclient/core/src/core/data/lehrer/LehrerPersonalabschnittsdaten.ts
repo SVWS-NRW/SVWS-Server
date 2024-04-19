@@ -49,22 +49,22 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	/**
 	 * Die allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind.
 	 */
-	public readonly anrechnungen : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList();
+	public readonly anrechnungen : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
 	 * Die Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind.
 	 */
-	public readonly mehrleistung : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList();
+	public readonly mehrleistung : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
 	 * Die Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind.
 	 */
-	public readonly minderleistung : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList();
+	public readonly minderleistung : List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
 	 * Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind.
 	 */
-	public readonly funktionen : List<LehrerPersonalabschnittsdatenLehrerfunktion> = new ArrayList();
+	public readonly funktionen : List<LehrerPersonalabschnittsdatenLehrerfunktion> = new ArrayList<LehrerPersonalabschnittsdatenLehrerfunktion>();
 
 
 	public constructor() {

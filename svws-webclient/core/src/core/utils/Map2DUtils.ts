@@ -29,7 +29,7 @@ export class Map2DUtils extends JavaObject {
 		const list : List<V> | null = map2D.getOrNull(key1, key2);
 		if (list !== null)
 			return list;
-		const listNeu : ArrayList<V> = new ArrayList();
+		const listNeu : ArrayList<V> = new ArrayList<V>();
 		map2D.put(key1, key2, listNeu);
 		return listNeu;
 	}
@@ -50,7 +50,7 @@ export class Map2DUtils extends JavaObject {
 		const set : JavaSet<V> | null = map2D.getOrNull(key1, key2);
 		if (set !== null)
 			return set;
-		const setNeu : HashSet<V> = new HashSet();
+		const setNeu : HashSet<V> = new HashSet<V>();
 		map2D.put(key1, key2, setNeu);
 		return setNeu;
 	}
@@ -72,7 +72,7 @@ export class Map2DUtils extends JavaObject {
 		if (list !== null) {
 			list.add(value);
 		} else {
-			const listNeu : ArrayList<V> = new ArrayList();
+			const listNeu : ArrayList<V> = new ArrayList<V>();
 			listNeu.add(value);
 			map2D.put(key1, key2, listNeu);
 		}
@@ -96,7 +96,7 @@ export class Map2DUtils extends JavaObject {
 			if (!list.contains(value))
 				list.add(value);
 		} else {
-			const listNeu : ArrayList<V> = new ArrayList();
+			const listNeu : ArrayList<V> = new ArrayList<V>();
 			listNeu.add(value);
 			map2D.put(key1, key2, listNeu);
 		}

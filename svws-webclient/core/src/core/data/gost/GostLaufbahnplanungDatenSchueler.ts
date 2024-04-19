@@ -44,7 +44,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	/**
 	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
-	public readonly fachbelegungen : List<GostLaufbahnplanungDatenFachbelegung> = new ArrayList();
+	public readonly fachbelegungen : List<GostLaufbahnplanungDatenFachbelegung> = new ArrayList<GostLaufbahnplanungDatenFachbelegung>();
 
 	/**
 	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.

@@ -71,7 +71,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	}
 
 	private getEntryList() : List<ArrayMapEntry<K, V>> {
-		const list : ArrayList<ArrayMapEntry<K, V>> = new ArrayList(this._map.size());
+		const list : ArrayList<ArrayMapEntry<K, V>> = new ArrayList<ArrayMapEntry<K, V>>(this._map.size());
 		for (let i : number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value : ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
 			if (value !== null)

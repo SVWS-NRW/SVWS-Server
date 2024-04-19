@@ -623,12 +623,12 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	/**
 	 * Eine Map mit der Zuordnung der Schulgliederung zu dem Kürzel der Schulgliederung
 	 */
-	private static readonly _schulgliederungenKuerzel : HashMap<string, Schulgliederung> = new HashMap();
+	private static readonly _schulgliederungenKuerzel : HashMap<string, Schulgliederung> = new HashMap<string, Schulgliederung>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Schulgliederung zu der ID der Schulgliederung
 	 */
-	private static readonly _schulgliederungenID : HashMap<number, Schulgliederung> = new HashMap();
+	private static readonly _schulgliederungenID : HashMap<number, Schulgliederung> = new HashMap<number, Schulgliederung>();
 
 	/**
 	 * Die Schulformen, bei welchen die Schulgliederung vorkommt
@@ -718,7 +718,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static getByBkIndex(index : number) : List<Schulgliederung> {
-		const result : ArrayList<Schulgliederung> = new ArrayList();
+		const result : ArrayList<Schulgliederung> = new ArrayList<Schulgliederung>();
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++) {
 			const gliederung : Schulgliederung = gliederungen[i];
@@ -745,7 +745,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> {
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static get(schulform : Schulform | null) : List<Schulgliederung> {
-		const result : ArrayList<Schulgliederung> = new ArrayList();
+		const result : ArrayList<Schulgliederung> = new ArrayList<Schulgliederung>();
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();

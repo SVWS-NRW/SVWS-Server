@@ -69,17 +69,17 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> {
 	/**
 	 * Eine Map, welche der ID der bilingualen Sprache die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapEintragByID : HashMap<number, BilingualeSpracheKatalogEintrag> = new HashMap();
+	private static readonly _mapEintragByID : HashMap<number, BilingualeSpracheKatalogEintrag> = new HashMap<number, BilingualeSpracheKatalogEintrag>();
 
 	/**
 	 * Eine Map, welche der ID der bilingualen Sprache die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapByID : HashMap<number, BilingualeSprache> = new HashMap();
+	private static readonly _mapByID : HashMap<number, BilingualeSprache> = new HashMap<number, BilingualeSprache>();
 
 	/**
 	 * Eine Map, welche dem Kürzel der bilingualen Sprache die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, BilingualeSprache> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, BilingualeSprache> = new HashMap<string, BilingualeSprache>();
 
 	/**
 	 * Die Schulformen, bei welchen die bilingualen Sprache vorkommt
@@ -219,7 +219,7 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> {
 	 * @return die bilingualen Sprache in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<BilingualeSprache> {
-		const faecher : ArrayList<BilingualeSprache> = new ArrayList();
+		const faecher : ArrayList<BilingualeSprache> = new ArrayList<BilingualeSprache>();
 		if (schulform === null)
 			return faecher;
 		const fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();

@@ -216,12 +216,12 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOAAnschlussoptionen> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAAnschlussoptionen> = new HashMap<number, KAOAAnschlussoptionen>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOAAnschlussoptionen> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAAnschlussoptionen> = new HashMap<string, KAOAAnschlussoptionen>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

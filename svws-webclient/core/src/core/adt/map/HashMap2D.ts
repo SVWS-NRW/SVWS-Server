@@ -8,7 +8,7 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class HashMap2D<K1, K2, V> extends JavaObject {
 
-	private readonly _map : JavaMap<K1, JavaMap<K2, V | null>> = new HashMap();
+	private readonly _map : JavaMap<K1, JavaMap<K2, V | null>> = new HashMap<K1, JavaMap<K2, V | null>>();
 
 
 	/**
@@ -194,7 +194,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return eine Liste aller Values des 1. Keys in dieser Map.
 	 */
 	public getNonNullValuesOfKey1AsList(key1 : K1) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		for (const value of this.getSubMapOrException(key1).values()) {
 			if (value === null)
 				throw new DeveloperNotificationException("Liste hat NULL Elemente!")
@@ -209,7 +209,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesAsList() : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		for (const map2 of this._map.values()) {
 			for (const value of map2.values()) {
 				if (value === null)

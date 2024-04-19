@@ -179,17 +179,17 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 	/**
 	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapEintragByID : HashMap<number, FachgruppenKatalogEintrag> = new HashMap();
+	private static readonly _mapEintragByID : HashMap<number, FachgruppenKatalogEintrag> = new HashMap<number, FachgruppenKatalogEintrag>();
 
 	/**
 	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapByID : HashMap<number, Fachgruppe> = new HashMap();
+	private static readonly _mapByID : HashMap<number, Fachgruppe> = new HashMap<number, Fachgruppe>();
 
 	/**
 	 * Eine Map, welche dem Kürzel der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, Fachgruppe> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Fachgruppe> = new HashMap<string, Fachgruppe>();
 
 	/**
 	 * Die Schulformen, bei welchen die Fachgruppe vorkommt
@@ -330,7 +330,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<Fachgruppe> {
-		const faecher : ArrayList<Fachgruppe> = new ArrayList();
+		const faecher : ArrayList<Fachgruppe> = new ArrayList<Fachgruppe>();
 		if (schulform === null)
 			return faecher;
 		const fachgruppen : Array<Fachgruppe> = Fachgruppe.values();

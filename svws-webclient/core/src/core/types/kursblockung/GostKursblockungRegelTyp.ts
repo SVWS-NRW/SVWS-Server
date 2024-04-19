@@ -186,12 +186,12 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	/**
 	 * Mapping von "Typ --> GostKursblockungRegelTyp".
 	 */
-	private static readonly _map_id_regel : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
+	private static readonly _map_id_regel : HashMap<number, GostKursblockungRegelTyp> = new HashMap<number, GostKursblockungRegelTyp>();
 
 	/**
 	 * Mapping vom "Typ --> GostKursblockungRegelTyp mit einer Kurs-ID als Regel-Parameter-Type"
 	 */
-	private static readonly _map_id_regel_kursid : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
+	private static readonly _map_id_regel_kursid : HashMap<number, GostKursblockungRegelTyp> = new HashMap<number, GostKursblockungRegelTyp>();
 
 	/**
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.

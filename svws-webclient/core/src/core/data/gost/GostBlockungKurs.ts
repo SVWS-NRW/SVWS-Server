@@ -48,7 +48,7 @@ export class GostBlockungKurs extends JavaObject {
 	/**
 	 * Die Lehrer, die diesem Kurs bereits fest zugeordnet sind.
 	 */
-	public lehrer : List<GostBlockungKursLehrer> = new ArrayList();
+	public lehrer : List<GostBlockungKursLehrer> = new ArrayList<GostBlockungKursLehrer>();
 
 
 	public constructor() {

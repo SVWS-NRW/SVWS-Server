@@ -42,19 +42,19 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapSchuelerMitStatus : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerMitStatus : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInJahrgang : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInJahrgang : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInKlasse : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInKlasse : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInKurs : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInKurs : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInSchuljahresabschnitt : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInSchuljahresabschnitt : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInAbiturjahrgang : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInAbiturjahrgang : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInSchulgliederung : HashMap2D<string, number, SchuelerListeEintrag> = new HashMap2D();
+	private readonly _mapSchuelerInSchulgliederung : HashMap2D<string, number, SchuelerListeEintrag> = new HashMap2D<string, number, SchuelerListeEintrag>();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -70,7 +70,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 
 	private static readonly _klasseToId : JavaFunction<KlassenDaten, number> = { apply : (k: KlassenDaten) => k.id };
 
-	private readonly _mapKlassenAlle : JavaMap<number, KlassenDaten> = new HashMap();
+	private readonly _mapKlassenAlle : JavaMap<number, KlassenDaten> = new HashMap<number, KlassenDaten>();
 
 	/**
 	 * Das Filter-Attribut für die Kurse
@@ -120,7 +120,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public constructor(schulform : Schulform | null, daten : SchuelerListe, schuljahresabschnitte : List<Schuljahresabschnitt>, schuljahresabschnittSchule : number) {
 		super(daten.idSchuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, daten.schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
-		const aktuelleKlassen : List<KlassenDaten> = new ArrayList();
+		const aktuelleKlassen : List<KlassenDaten> = new ArrayList<KlassenDaten>();
 		for (const klasse of daten.klassen) {
 			this._mapKlassenAlle.put(klasse.id, klasse);
 			if (klasse.idSchuljahresabschnitt === daten.idSchuljahresabschnitt)

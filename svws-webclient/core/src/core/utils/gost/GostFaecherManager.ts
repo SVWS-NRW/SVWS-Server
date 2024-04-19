@@ -24,42 +24,42 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
 	 */
-	private readonly _faecher : List<GostFach> = new ArrayList();
+	private readonly _faecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private readonly _map : HashMap<number, GostFach> = new HashMap();
+	private readonly _map : HashMap<number, GostFach> = new HashMap<number, GostFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches
 	 */
-	private readonly _mapByKuerzel : HashMap<string, List<GostFach>> = new HashMap();
+	private readonly _mapByKuerzel : HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels
 	 */
-	private readonly _mapBySprachkuerzel : HashMap<string, List<GostFach>> = new HashMap();
+	private readonly _mapBySprachkuerzel : HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
 
 	/**
 	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
 	 */
-	private readonly _leitfaecher : List<GostFach> = new ArrayList();
+	private readonly _leitfaecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Die Liste der erforderlichen oder nicht erlaubten Fachkombinationen
 	 */
-	private readonly _fachkombis : List<GostJahrgangFachkombination> = new ArrayList();
+	private readonly _fachkombis : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 	/**
 	 * Die Liste mit den geforderten Fachkombinationen
 	 */
-	private readonly _fachkombisErforderlich : List<GostJahrgangFachkombination> = new ArrayList();
+	private readonly _fachkombisErforderlich : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 	/**
 	 * Die Liste mit den nicht erlaubten Fachkombinationen
 	 */
-	private readonly _fachkombisVerboten : List<GostJahrgangFachkombination> = new ArrayList();
+	private readonly _fachkombisVerboten : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 
 	/**
@@ -319,7 +319,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die Liste der schriftlich möglichen Fächer
 	 */
 	public getFaecherSchriftlichMoeglich() : List<GostFach> {
-		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList();
+		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this._faecher) {
 			const zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 			if (zf as unknown === ZulaessigesFach.PX as unknown || zf as unknown === ZulaessigesFach.VX as unknown || zf as unknown === ZulaessigesFach.VO as unknown || zf as unknown === ZulaessigesFach.IN as unknown)
@@ -345,7 +345,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die Liste der Fremdsprachen-Kürzel
 	 */
 	public getFremdsprachenkuerzel() : List<string> {
-		const result : List<string> = new ArrayList();
+		const result : List<string> = new ArrayList<string>();
 		result.addAll(this._mapBySprachkuerzel.keySet());
 		result.sort({ compare : (a: string, b: string) => JavaString.compareToIgnoreCase(a, b) });
 		return result;

@@ -131,7 +131,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	 *         für die Blockung verwendet.
 	 */
 	gibAnzahlGleicherFacharten() : number {
-		const setFachart : AVLSet<number | null> | null = new AVLSet();
+		const setFachart : AVLSet<number | null> | null = new AVLSet<number | null>();
 		let summe : number = 0;
 		for (const kurs of this.kursMap.values())
 			if (!setFachart.add(kurs.gibFachart().gibNr()))

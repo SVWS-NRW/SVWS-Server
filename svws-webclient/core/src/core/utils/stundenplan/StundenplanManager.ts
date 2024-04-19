@@ -179,127 +179,127 @@ export class StundenplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
-	private readonly _aufsichtsbereich_by_id : HashMap<number, StundenplanAufsichtsbereich> = new HashMap();
+	private readonly _aufsichtsbereich_by_id : HashMap<number, StundenplanAufsichtsbereich> = new HashMap<number, StundenplanAufsichtsbereich>();
 
-	private _aufsichtsbereich_by_kuerzel : HashMap<string, StundenplanAufsichtsbereich> = new HashMap();
+	private _aufsichtsbereich_by_kuerzel : HashMap<string, StundenplanAufsichtsbereich> = new HashMap<string, StundenplanAufsichtsbereich>();
 
-	private _aufsichtsbereichmenge_sortiert : List<StundenplanAufsichtsbereich> = new ArrayList();
+	private _aufsichtsbereichmenge_sortiert : List<StundenplanAufsichtsbereich> = new ArrayList<StundenplanAufsichtsbereich>();
 
-	private readonly _fach_by_id : HashMap<number, StundenplanFach> = new HashMap();
+	private readonly _fach_by_id : HashMap<number, StundenplanFach> = new HashMap<number, StundenplanFach>();
 
-	private _fachmenge_sortiert : List<StundenplanFach> = new ArrayList();
+	private _fachmenge_sortiert : List<StundenplanFach> = new ArrayList<StundenplanFach>();
 
-	private readonly _jahrgang_by_id : HashMap<number, StundenplanJahrgang> = new HashMap();
+	private readonly _jahrgang_by_id : HashMap<number, StundenplanJahrgang> = new HashMap<number, StundenplanJahrgang>();
 
-	private _jahrgangmenge_sortiert : List<StundenplanJahrgang> = new ArrayList();
+	private _jahrgangmenge_sortiert : List<StundenplanJahrgang> = new ArrayList<StundenplanJahrgang>();
 
-	private _jahrgangmenge_by_idKurs : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
+	private _jahrgangmenge_by_idKurs : HashMap<number, List<StundenplanJahrgang>> = new HashMap<number, List<StundenplanJahrgang>>();
 
-	private _jahrgangmenge_by_idKlasse : HashMap<number, List<StundenplanJahrgang>> = new HashMap();
+	private _jahrgangmenge_by_idKlasse : HashMap<number, List<StundenplanJahrgang>> = new HashMap<number, List<StundenplanJahrgang>>();
 
-	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
+	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap<number, StundenplanKalenderwochenzuordnung>();
 
-	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
+	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
-	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
+	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D<number, number, StundenplanKalenderwochenzuordnung>();
 
-	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap();
+	private readonly _klasse_by_id : HashMap<number, StundenplanKlasse> = new HashMap<number, StundenplanKlasse>();
 
-	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList();
+	private _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
 
-	private _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList();
+	private _klassenmenge_sichtbar_sortiert : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
 
-	private _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
-	private _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idJahrgang : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
-	private _klassenmenge_by_idSchueler : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idSchueler : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
-	private _klassenmenge_by_idPausenzeit : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idPausenzeit : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
-	private _klassenmenge_by_idUnterricht : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+	private _klassenmenge_by_idUnterricht : HashMap<number, List<StundenplanKlasse>> = new HashMap<number, List<StundenplanKlasse>>();
 
-	private readonly _klassenunterricht_by_idKlasse_and_idFach : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
+	private readonly _klassenunterricht_by_idKlasse_and_idFach : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D<number, number, StundenplanKlassenunterricht>();
 
-	private _klassenunterrichtmenge : List<StundenplanKlassenunterricht> = new ArrayList();
+	private _klassenunterrichtmenge : List<StundenplanKlassenunterricht> = new ArrayList<StundenplanKlassenunterricht>();
 
-	private _klassenunterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap<number, List<StundenplanKlassenunterricht>>();
 
-	private _klassenunterrichtmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKlassenunterricht>> = new HashMap2D();
+	private _klassenunterrichtmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKlassenunterricht>> = new HashMap2D<number, number, List<StundenplanKlassenunterricht>>();
 
-	private _klassenunterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap<number, List<StundenplanKlassenunterricht>>();
 
-	private _klassenunterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap<number, List<StundenplanKlassenunterricht>>();
 
-	private _klassenunterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+	private _klassenunterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap<number, List<StundenplanKlassenunterricht>>();
 
-	private readonly _kurs_by_id : HashMap<number, StundenplanKurs> = new HashMap();
+	private readonly _kurs_by_id : HashMap<number, StundenplanKurs> = new HashMap<number, StundenplanKurs>();
 
-	private _kursmenge : List<StundenplanKurs> = new ArrayList();
+	private _kursmenge : List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
 
-	private _kursmenge_by_idSchueler : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idSchueler : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
-	private _kursmenge_by_idSchiene : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idSchiene : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
-	private _kursmenge_by_idLehrer : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idLehrer : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
-	private _kursmenge_by_idKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
-	private _kursmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKurs>> = new HashMap2D();
+	private _kursmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKurs>> = new HashMap2D<number, number, List<StundenplanKurs>>();
 
-	private _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap<number, List<StundenplanKurs>>();
 
-	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap();
+	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap<number, StundenplanLehrer>();
 
-	private _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList();
+	private _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList<StundenplanLehrer>();
 
-	private _lehrermenge_by_idUnterricht : HashMap<number, List<StundenplanLehrer>> = new HashMap();
+	private _lehrermenge_by_idUnterricht : HashMap<number, List<StundenplanLehrer>> = new HashMap<number, List<StundenplanLehrer>>();
 
-	private readonly _pausenaufsicht_by_id : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
+	private readonly _pausenaufsicht_by_id : HashMap<number, StundenplanPausenaufsicht> = new HashMap<number, StundenplanPausenaufsicht>();
 
-	private _pausenaufsichtmenge : List<StundenplanPausenaufsicht> = new ArrayList();
+	private _pausenaufsichtmenge : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 
-	private _pausenaufsichtmenge_by_wochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_wochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap<number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idPausenzeit : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idPausenzeit : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap<number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idLehrer : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idLehrer : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap<number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
+	private _pausenaufsichtmenge_by_idAufsichtsbereich : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap<number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
 
-	private _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+	private _pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D<number, number, List<StundenplanPausenaufsicht>>();
 
-	private readonly _pausenzeit_by_id : HashMap<number, StundenplanPausenzeit> = new HashMap();
+	private readonly _pausenzeit_by_id : HashMap<number, StundenplanPausenzeit> = new HashMap<number, StundenplanPausenzeit>();
 
-	private _pausenzeit_by_tag_and_beginn_and_ende : HashMap<LongArrayKey, StundenplanPausenzeit> = new HashMap();
+	private _pausenzeit_by_tag_and_beginn_and_ende : HashMap<LongArrayKey, StundenplanPausenzeit> = new HashMap<LongArrayKey, StundenplanPausenzeit>();
 
-	private _pausenzeitmenge_sortiert : List<StundenplanPausenzeit> = new ArrayList();
+	private _pausenzeitmenge_sortiert : List<StundenplanPausenzeit> = new ArrayList<StundenplanPausenzeit>();
 
-	private _pausenzeitmengeOhneLeere_sortiert : List<StundenplanPausenzeit> = new ArrayList();
+	private _pausenzeitmengeOhneLeere_sortiert : List<StundenplanPausenzeit> = new ArrayList<StundenplanPausenzeit>();
 
-	private _pausenzeitmenge_by_wochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_wochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap<number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idKlasse : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idKlasse : HashMap<number, List<StundenplanPausenzeit>> = new HashMap<number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idSchueler : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idSchueler : HashMap<number, List<StundenplanPausenzeit>> = new HashMap<number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idLehrer : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idLehrer : HashMap<number, List<StundenplanPausenzeit>> = new HashMap<number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idJahrgang : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+	private _pausenzeitmenge_by_idJahrgang : HashMap<number, List<StundenplanPausenzeit>> = new HashMap<number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idKlasse_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idKlasse_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D<number, number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idLehrer_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idLehrer_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D<number, number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idSchueler_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idSchueler_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D<number, number, List<StundenplanPausenzeit>>();
 
-	private _pausenzeitmenge_by_idJahrgang_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+	private _pausenzeitmenge_by_idJahrgang_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D<number, number, List<StundenplanPausenzeit>>();
 
 	private _pausenzeitMinutenMin : number | null = null;
 
@@ -315,79 +315,79 @@ export class StundenplanManager extends JavaObject {
 
 	private _pausenzeitWochentageAlsEnumRange : Array<Wochentag> = [Wochentag.MONTAG];
 
-	private readonly _raum_by_id : HashMap<number, StundenplanRaum> = new HashMap();
+	private readonly _raum_by_id : HashMap<number, StundenplanRaum> = new HashMap<number, StundenplanRaum>();
 
-	private _raum_by_kuerzel : HashMap<string, StundenplanRaum> = new HashMap();
+	private _raum_by_kuerzel : HashMap<string, StundenplanRaum> = new HashMap<string, StundenplanRaum>();
 
-	private _raummenge_sortiert : List<StundenplanRaum> = new ArrayList();
+	private _raummenge_sortiert : List<StundenplanRaum> = new ArrayList<StundenplanRaum>();
 
-	private readonly _schiene_by_id : HashMap<number, StundenplanSchiene> = new HashMap();
+	private readonly _schiene_by_id : HashMap<number, StundenplanSchiene> = new HashMap<number, StundenplanSchiene>();
 
-	private _schienenmenge : List<StundenplanSchiene> = new ArrayList();
+	private _schienenmenge : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 
-	private _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap<number, List<StundenplanSchiene>>();
 
-	private _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap<number, List<StundenplanSchiene>>();
 
-	private _schienenmenge_by_idKlasse : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+	private _schienenmenge_by_idKlasse : HashMap<number, List<StundenplanSchiene>> = new HashMap<number, List<StundenplanSchiene>>();
 
-	private readonly _schueler_by_id : HashMap<number, StundenplanSchueler> = new HashMap();
+	private readonly _schueler_by_id : HashMap<number, StundenplanSchueler> = new HashMap<number, StundenplanSchueler>();
 
-	private _schuelermenge : List<StundenplanSchueler> = new ArrayList();
+	private _schuelermenge : List<StundenplanSchueler> = new ArrayList<StundenplanSchueler>();
 
-	private _schuelermenge_by_idKlasse : HashMap<number, List<StundenplanSchueler>> = new HashMap();
+	private _schuelermenge_by_idKlasse : HashMap<number, List<StundenplanSchueler>> = new HashMap<number, List<StundenplanSchueler>>();
 
-	private _schuelermenge_by_idKurs : HashMap<number, List<StundenplanSchueler>> = new HashMap();
+	private _schuelermenge_by_idKurs : HashMap<number, List<StundenplanSchueler>> = new HashMap<number, List<StundenplanSchueler>>();
 
-	private readonly _unterricht_by_id : HashMap<number, StundenplanUnterricht> = new HashMap();
+	private readonly _unterricht_by_id : HashMap<number, StundenplanUnterricht> = new HashMap<number, StundenplanUnterricht>();
 
-	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList();
+	private _unterrichtmenge : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
-	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idRaum : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idRaum : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idLehrer : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idSchiene : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idKurs : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idKurs : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idSchueler_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idSchueler_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idLehrer_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idLehrer_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idJahrgang_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idJahrgang_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idKlasse_and_idFach : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idKlasse_and_idFach : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+	private _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
 	private _unterrichtHatMultiWochen : boolean = false;
 
-	private readonly _zeitraster_by_id : HashMap<number, StundenplanZeitraster> = new HashMap();
+	private readonly _zeitraster_by_id : HashMap<number, StundenplanZeitraster> = new HashMap<number, StundenplanZeitraster>();
 
-	private _zeitraster_by_wochentag_and_stunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
+	private _zeitraster_by_wochentag_and_stunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D<number, number, StundenplanZeitraster>();
 
-	private _zeitrastermenge : List<StundenplanZeitraster> = new ArrayList();
+	private _zeitrastermenge : List<StundenplanZeitraster> = new ArrayList<StundenplanZeitraster>();
 
-	private _zeitrastermengeOhneLeere_sortiert : List<StundenplanZeitraster> = new ArrayList();
+	private _zeitrastermengeOhneLeere_sortiert : List<StundenplanZeitraster> = new ArrayList<StundenplanZeitraster>();
 
-	private _zeitrastermenge_by_wochentag : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+	private _zeitrastermenge_by_wochentag : HashMap<number, List<StundenplanZeitraster>> = new HashMap<number, List<StundenplanZeitraster>>();
 
-	private _zeitrastermenge_by_stunde : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+	private _zeitrastermenge_by_stunde : HashMap<number, List<StundenplanZeitraster>> = new HashMap<number, List<StundenplanZeitraster>>();
 
 	private _zeitrasterMinutenMin : number | null = null;
 
@@ -397,9 +397,9 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterMinutenMaxOhneLeere : number | null = null;
 
-	private _zeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
+	private _zeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap<number, number | null>();
 
-	private _zeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
+	private _zeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap<number, number | null>();
 
 	private _zeitrasterWochentagMin : number = Wochentag.MONTAG.id;
 
@@ -419,9 +419,9 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterStundenRangeOhneLeere : Array<number> = [1];
 
-	private _wertWochenminuten_by_idKurs : HashMap<number, number> = new HashMap();
+	private _wertWochenminuten_by_idKurs : HashMap<number, number> = new HashMap<number, number>();
 
-	private _wertWochenminuten_by_idKlasse_und_idFach : HashMap2D<number, number, number> = new HashMap2D();
+	private _wertWochenminuten_by_idKlasse_und_idFach : HashMap2D<number, number, number> = new HashMap2D<number, number, number>();
 
 	private readonly _stundenplanID : number;
 
@@ -684,7 +684,7 @@ export class StundenplanManager extends JavaObject {
 	private update_schienenmenge_by_idKlasse() : void {
 		this._schienenmenge_by_idKlasse = new HashMap();
 		for (const klasse of this._klassenmenge_sortiert) {
-			const schienenIDs : HashSet<number> = new HashSet();
+			const schienenIDs : HashSet<number> = new HashSet<number>();
 			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, klasse.id))
 				schienenIDs.addAll(kurs.schienen);
 			for (const klassenunterricht of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse, klasse.id))
@@ -1389,7 +1389,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private aufsichtsbereichAddAllOhneUpdate(list : List<StundenplanAufsichtsbereich>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of list) {
 			StundenplanManager.aufsichtsbereichCheckAttributes(aufsichtsbereich);
 			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!", this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
@@ -1478,7 +1478,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public aufsichtsbereichRemoveAll(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of listAufsichtsbereich) {
 			if (!this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
 				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!")
@@ -1536,7 +1536,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private fachAddAllOhneUpdate(list : List<StundenplanFach>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const fach of list) {
 			StundenplanManager.fachCheckAttributes(fach);
 			DeveloperNotificationException.ifTrue("fachAddAllOhneUpdate: ID=" + fach.id + " existiert bereits!", this._fach_by_id.containsKey(fach.id));
@@ -1592,7 +1592,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private jahrgangAddAllOhneUpdate(list : List<StundenplanJahrgang>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const jahrgang of list) {
 			StundenplanManager.jahrgangCheckAttributes(jahrgang);
 			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!", this._jahrgang_by_id.containsKey(jahrgang.id));
@@ -1711,7 +1711,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private kalenderwochenzuordnungAddAllOhneUpdate(list : List<StundenplanKalenderwochenzuordnung>) : void {
-		const setOfIDs : HashSet<string> = new HashSet();
+		const setOfIDs : HashSet<string> = new HashSet<string>();
 		for (const kwz of list) {
 			this.kalenderwochenzuordnungCheck(kwz, true);
 			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", this._kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
@@ -1959,7 +1959,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseAddAllOhneUpdate(list : List<StundenplanKlasse>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const klasse of list) {
 			this.klasseCheckAttributes(klasse);
 			DeveloperNotificationException.ifTrue("klasseAddAllOhneUpdate: ID=" + klasse.id + " existiert bereits!", this._klasse_by_id.containsKey(klasse.id));
@@ -2096,7 +2096,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klassenunterrichtAddAllOhneUpdate(list : List<StundenplanKlassenunterricht>) : void {
-		const setOfIDs : HashSet<string> = new HashSet();
+		const setOfIDs : HashSet<string> = new HashSet<string>();
 		for (const klassenunterricht of list) {
 			this.klassenunterrichtCheckAttributes(klassenunterricht);
 			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!", this._klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
@@ -2357,7 +2357,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private kursAddAllOhneUpdate(list : List<StundenplanKurs>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const kurs of list) {
 			this.kursCheckAttributes(kurs);
 			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " existiert bereits!", this._kurs_by_id.containsKey(kurs.id));
@@ -2678,7 +2678,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private lehrerAddAllOhneUpdate(list : List<StundenplanLehrer>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const lehrer of list) {
 			this.lehrerCheckAttributes(lehrer);
 			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " existiert bereits!", this._lehrer_by_id.containsKey(lehrer.id));
@@ -2784,7 +2784,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
 	 */
 	public lehrerRemoveAll(listLehrer : List<StundenplanLehrer>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const lehrer of listLehrer) {
 			if (!this._lehrer_by_id.containsKey(lehrer.id))
 				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!")
@@ -2816,7 +2816,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenaufsichtAddAllOhneUpdate(list : List<StundenplanPausenaufsicht>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const pausenaufsicht of list) {
 			this.pausenaufsichtCheckAttributes(pausenaufsicht);
 			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!", this._pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
@@ -2893,7 +2893,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
 	 */
 	public pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(idKlasse : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
-		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, idPausenzeit))
 			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
 				list.add(a);
@@ -2912,7 +2912,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers zu einer bestimmten Pausenzeit.
 	 */
 	public pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(idLehrer : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
-		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer, idPausenzeit))
 			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
 				list.add(a);
@@ -2931,7 +2931,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Schülers zu einer bestimmten Pausenzeit.
 	 */
 	public pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(idSchueler : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
-		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler, idPausenzeit))
 			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
 				list.add(a);
@@ -2950,7 +2950,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Jahrgangs zu einer bestimmten Pausenzeit.
 	 */
 	public pausenaufsichtGetMengeByJahrgangIdAndPausenzeitIdAndWochentypAndInklusive(idJahrgang : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
-		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		const list : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, idJahrgang, idPausenzeit))
 			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
 				list.add(a);
@@ -3013,7 +3013,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenzeitAddAllOhneUpdate(list : List<StundenplanPausenzeit>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const pausenzeit of list) {
 			StundenplanManager.pausenzeitCheckAttributes(pausenzeit);
 			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!", this._pausenzeit_by_id.containsKey(pausenzeit.id));
@@ -3401,7 +3401,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private raumAddAllOhneUpdate(list : List<StundenplanRaum>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const raum of list) {
 			StundenplanManager.raumCheckAttributes(raum);
 			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", this._raum_by_id.containsKey(raum.id));
@@ -3492,7 +3492,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
 	 */
 	public raumRemoveAll(listRaum : List<StundenplanRaum>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const raum of listRaum) {
 			if (!this._raum_by_id.containsKey(raum.id))
 				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!")
@@ -3524,7 +3524,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schieneAddAllOhneUpdate(list : List<StundenplanSchiene>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const schiene of list) {
 			this.schieneCheckAttributes(schiene);
 			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " existiert bereits!", this._schiene_by_id.containsKey(schiene.id));
@@ -3564,7 +3564,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
 	public schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
-		const list : List<StundenplanSchiene> = new ArrayList();
+		const list : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 		for (const u of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
 		list.sort(StundenplanManager._compSchiene);
@@ -3596,7 +3596,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Lehrers am "wochentag, stunde, wochentyp".
 	 */
 	public schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
-		const list : List<StundenplanSchiene> = new ArrayList();
+		const list : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 		for (const u of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
 		list.sort(StundenplanManager._compSchiene);
@@ -3616,7 +3616,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Schülers am "wochentag, stunde, wochentyp".
 	 */
 	public schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
-		const list : List<StundenplanSchiene> = new ArrayList();
+		const list : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 		for (const u of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
 		list.sort(StundenplanManager._compSchiene);
@@ -3636,7 +3636,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
 	public schieneGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
-		const list : List<StundenplanSchiene> = new ArrayList();
+		const list : List<StundenplanSchiene> = new ArrayList<StundenplanSchiene>();
 		for (const u of this.unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
 		list.sort(StundenplanManager._compSchiene);
@@ -3673,7 +3673,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schuelerAddAllOhneUpdate(list : List<StundenplanSchueler>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const schueler of list) {
 			StundenplanManager.schuelerCheckAttributes(schueler);
 			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!", this._schueler_by_id.containsKey(schueler.id));
@@ -3951,7 +3951,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private unterrichtAddAllOhneUpdate(list : List<StundenplanUnterricht>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const u of list) {
 			this.unterrichtCheckAttributes(u);
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", this._unterricht_by_id.containsKey(u.id));
@@ -4114,7 +4114,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 */
 	public unterrichtGetMengeByKursIdsAndWochentyp(idsKurs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
-		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
+		const result : ArrayList<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const idKurs of idsKurs)
 			result.addAll(this.unterrichtGetMengeByKursIdAndWochentyp(idKurs, wochentyp));
 		return result;
@@ -4173,7 +4173,7 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(idZeitraster : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
 		if ((wochentyp === 0) || (!inklWoche0))
 			return this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp);
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp));
 		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, 0));
 		return list;
@@ -4224,7 +4224,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z !== null)
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
@@ -4247,7 +4247,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const u of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
 			if (this.unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
@@ -4267,7 +4267,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z !== null)
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, z.id))
@@ -4290,7 +4290,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idLehrer : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const u of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
 			if (this.unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
@@ -4310,7 +4310,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z !== null)
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idSchueler_and_idZeitraster, idSchueler, z.id))
@@ -4333,7 +4333,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idSchueler : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const u of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
 			if (this.unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
@@ -4353,7 +4353,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z !== null)
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, z.id))
@@ -4377,7 +4377,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 */
 	public unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idJahrgang : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
-		const list : List<StundenplanUnterricht> = new ArrayList();
+		const list : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 		for (const u of this.unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
 			if (this.unterrichtHatSchiene(u, idSchiene))
 				list.add(u);
@@ -4412,7 +4412,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfKlassen(idUnterricht : number) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel : AVLSet<string> = new AVLSet();
+		const kuerzel : AVLSet<string> = new AVLSet<string>();
 		for (const idKlasse of unterricht.klassen) {
 			const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, idKlasse);
 			kuerzel.add(klasse.kuerzel);
@@ -4430,7 +4430,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfRaeume(idUnterricht : number) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel : AVLSet<string> = new AVLSet();
+		const kuerzel : AVLSet<string> = new AVLSet<string>();
 		for (const idRaum of unterricht.raeume) {
 			const raum : StundenplanRaum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, idRaum);
 			kuerzel.add(raum.kuerzel);
@@ -4448,7 +4448,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDStringOfSchienen(idUnterricht : number) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
-		const kuerzel : AVLSet<string> = new AVLSet();
+		const kuerzel : AVLSet<string> = new AVLSet<string>();
 		for (const idSchiene of unterricht.schienen) {
 			const schiene : StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
 			kuerzel.add(schiene.bezeichnung);
@@ -4499,7 +4499,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIDLehrerMengeAsString(idUnterricht : number) : string {
 		const lehrkraefteDesUnterrichts : List<StundenplanLehrer> = MapUtils.getOrCreateArrayList(this._lehrermenge_by_idUnterricht, idUnterricht);
-		const listeDerKuerzel : List<string> = new ArrayList();
+		const listeDerKuerzel : List<string> = new ArrayList<string>();
 		for (const lehkraft of lehrkraefteDesUnterrichts)
 			listeDerKuerzel.add(lehkraft.kuerzel);
 		return StringUtils.collectionToCommaSeparatedString(listeDerKuerzel);
@@ -4651,9 +4651,9 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
 	 */
 	public unterrichtsstundeGetUhrzeitenAsStrings(stunde : number) : List<string> {
-		const listUhrzeit : List<string> = new ArrayList();
-		const listWochentagVon : List<string> = new ArrayList();
-		const listWochentagBis : List<string> = new ArrayList();
+		const listUhrzeit : List<string> = new ArrayList<string>();
+		const listWochentagVon : List<string> = new ArrayList<string>();
+		const listWochentagBis : List<string> = new ArrayList<string>();
 		for (let wochentag : number = this._zeitrasterWochentagMin; wochentag <= this._zeitrasterWochentagMax; wochentag++) {
 			const sUhrzeit : string = this.unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
 			const sWochentag : string = Wochentag.fromIDorException(wochentag).kuerzel;
@@ -4715,8 +4715,8 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private zeitrasterAddAllOhneUpdate(list : List<StundenplanZeitraster>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		const setOfWochentagStunde : HashSet<string> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfWochentagStunde : HashSet<string> = new HashSet<string>();
 		for (const z of list) {
 			StundenplanManager.zeitrasterCheck(z);
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", this._zeitraster_by_id.containsKey(z.id));
@@ -4772,7 +4772,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller Dummy-{@link StundenplanZeitraster}-Objekte, welche in diesem Manager noch nicht definiert sind.
 	 */
 	public zeitrasterGetDummyListe(tagVon : number, tagBis : number, stundeVon : number, stundeBis : number) : List<StundenplanZeitraster> {
-		const listDummies : List<StundenplanZeitraster> = new ArrayList();
+		const listDummies : List<StundenplanZeitraster> = new ArrayList<StundenplanZeitraster>();
 		for (let wochentag : number = tagVon; wochentag <= tagBis; wochentag++)
 			for (let stunde : number = stundeVon; stunde <= stundeBis; stunde++)
 				if (!this._zeitraster_by_wochentag_and_stunde.contains(wochentag, stunde)) {
@@ -5410,7 +5410,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param zeitrasterList  Die neuen {@link StundenplanZeitraster}-Objekte, welche die alten ersetzen.
 	 */
 	public zeitrasterPatchAttributesAll(zeitrasterList : List<StundenplanZeitraster>) : void {
-		const mapWochentagStunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
+		const mapWochentagStunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D<number, number, StundenplanZeitraster>();
 		for (const z of zeitrasterList) {
 			StundenplanManager.zeitrasterCheck(z);
 			DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", this._zeitraster_by_id, z.id);

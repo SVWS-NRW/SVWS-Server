@@ -23,7 +23,7 @@ export class ReportingAusgabedaten extends JavaObject {
 	/**
 	 * Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.
 	 */
-	public idsHauptdaten : List<number> = new ArrayList();
+	public idsHauptdaten : List<number> = new ArrayList<number>();
 
 	/**
 	 * Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.
@@ -33,7 +33,7 @@ export class ReportingAusgabedaten extends JavaObject {
 	/**
 	 * Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.
 	 */
-	public idsDetaildaten : List<number> = new ArrayList();
+	public idsDetaildaten : List<number> = new ArrayList<number>();
 
 	/**
 	 * Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.

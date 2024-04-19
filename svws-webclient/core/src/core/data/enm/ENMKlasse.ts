@@ -32,7 +32,7 @@ export class ENMKlasse extends JavaObject {
 	/**
 	 * Die IDs der zugeordneten Klassenlehrer.
 	 */
-	public klassenlehrer : List<number> = new ArrayList();
+	public klassenlehrer : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

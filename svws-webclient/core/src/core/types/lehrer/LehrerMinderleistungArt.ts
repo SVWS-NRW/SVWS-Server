@@ -118,12 +118,12 @@ export class LehrerMinderleistungArt extends JavaEnum<LehrerMinderleistungArt> {
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt | null> = new HashMap();
+	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt | null> = new HashMap<number, LehrerMinderleistungArt | null>();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt | null> = new HashMap();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt | null> = new HashMap<string, LehrerMinderleistungArt | null>();
 
 	/**
 	 * Erzeugt eine neue Art von Minderleistung in der Aufzählung.

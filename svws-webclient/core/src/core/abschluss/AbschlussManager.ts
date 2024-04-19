@@ -150,7 +150,7 @@ export class AbschlussManager extends JavaObject {
 	 * @return die Liste mit den Fachkürzeln
 	 */
 	public static getKuerzel(faecher : List<GEAbschlussFach>) : List<string> {
-		const result : ArrayList<string> = new ArrayList();
+		const result : ArrayList<string> = new ArrayList<string>();
 		for (let i : number = 0; i < faecher.size(); i++) {
 			const fach : GEAbschlussFach = faecher.get(i);
 			if (fach.kuerzel === null || result.contains(fach.kuerzel))
@@ -194,7 +194,7 @@ export class AbschlussManager extends JavaObject {
 	public static pruefeKuerzelDuplikate(abschlussFaecher : GEAbschlussFaecher) : boolean {
 		if (abschlussFaecher.faecher === null)
 			return true;
-		const kuerzel : HashSet<string> = new HashSet();
+		const kuerzel : HashSet<string> = new HashSet<string>();
 		const faecher : List<GEAbschlussFach> = abschlussFaecher.faecher;
 		for (const fach of faecher) {
 			if ((fach === null) || (fach.kuerzel === null))

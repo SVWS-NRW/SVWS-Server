@@ -1063,17 +1063,17 @@ export class Nationalitaeten extends JavaEnum<Nationalitaeten> {
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code
 	 */
-	private static readonly _mapISO3 : HashMap<string, Nationalitaeten> = new HashMap();
+	private static readonly _mapISO3 : HashMap<string, Nationalitaeten> = new HashMap<string, Nationalitaeten>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code
 	 */
-	private static readonly _mapISO2 : HashMap<string, Nationalitaeten> = new HashMap();
+	private static readonly _mapISO2 : HashMap<string, Nationalitaeten> = new HashMap<string, Nationalitaeten>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu DESTATIS-Code
 	 */
-	private static readonly _mapDESTATIS : HashMap<string, Nationalitaeten> = new HashMap();
+	private static readonly _mapDESTATIS : HashMap<string, Nationalitaeten> = new HashMap<string, Nationalitaeten>();
 
 	/**
 	 * Erzeugt eine neue Nationalität in der Aufzählung.

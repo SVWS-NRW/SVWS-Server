@@ -55,12 +55,12 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs
 	 */
-	private static readonly _mapByID : HashMap<number, AllgemeinbildendOrganisationsformen> = new HashMap();
+	private static readonly _mapByID : HashMap<number, AllgemeinbildendOrganisationsformen> = new HashMap<number, AllgemeinbildendOrganisationsformen>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<string, AllgemeinbildendOrganisationsformen> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, AllgemeinbildendOrganisationsformen> = new HashMap<string, AllgemeinbildendOrganisationsformen>();
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.

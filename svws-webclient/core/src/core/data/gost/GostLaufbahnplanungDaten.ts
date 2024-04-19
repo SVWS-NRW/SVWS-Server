@@ -72,22 +72,22 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang
 	 */
-	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList();
+	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList<GostBeratungslehrer>();
 
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang
 	 */
-	public readonly faecher : List<GostFach> = new ArrayList();
+	public readonly faecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang
 	 */
-	public readonly fachkombinationen : List<GostJahrgangFachkombination> = new ArrayList();
+	public readonly fachkombinationen : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 	/**
 	 * Die Liste der Schüler mit ihren Laufbahnplanungsdaten.
 	 */
-	public readonly schueler : List<GostLaufbahnplanungDatenSchueler> = new ArrayList();
+	public readonly schueler : List<GostLaufbahnplanungDatenSchueler> = new ArrayList<GostLaufbahnplanungDatenSchueler>();
 
 
 	public constructor() {

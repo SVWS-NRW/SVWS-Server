@@ -406,12 +406,12 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	/**
 	 * Eine HashMap mit allen zulässigen Kursarten. Der Zugriff erfolgt dabei über die ID
 	 */
-	private static readonly _mapID : HashMap<number, ZulaessigeKursart | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, ZulaessigeKursart | null> = new HashMap<number, ZulaessigeKursart | null>();
 
 	/**
 	 * Eine HashMap mit zulässigen Kursarten. Der Zugriff erfolgt dabei über das Kürzel
 	 */
-	private static readonly _mapKuerzel : HashMap<string, ZulaessigeKursart | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, ZulaessigeKursart | null> = new HashMap<string, ZulaessigeKursart | null>();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist
@@ -421,7 +421,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	/**
 	 * Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten
 	 */
-	private static readonly _mapByAllgemein : HashMap<string, List<ZulaessigeKursart>> = new HashMap();
+	private static readonly _mapByAllgemein : HashMap<string, List<ZulaessigeKursart>> = new HashMap<string, List<ZulaessigeKursart>>();
 
 	/**
 	 * Erzeugt eine zulässige Kursart in der Aufzählung.
@@ -527,7 +527,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigeKursart> {
-		const kursarten : ArrayList<ZulaessigeKursart> = new ArrayList();
+		const kursarten : ArrayList<ZulaessigeKursart> = new ArrayList<ZulaessigeKursart>();
 		if (schulform === null)
 			return kursarten;
 		for (const kursart of ZulaessigeKursart.values())
@@ -566,12 +566,12 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 */
 	public static getByAllgemeinerKursart(allgKursart : string) : List<ZulaessigeKursart> {
 		if (JavaObject.equalsTranspiler(ZulaessigeKursart.E.daten.kuerzel, (allgKursart))) {
-			const result : List<ZulaessigeKursart> = new ArrayList();
+			const result : List<ZulaessigeKursart> = new ArrayList<ZulaessigeKursart>();
 			result.add(ZulaessigeKursart.E);
 			return result;
 		}
 		if (JavaObject.equalsTranspiler(ZulaessigeKursart.G.daten.kuerzel, (allgKursart))) {
-			const result : List<ZulaessigeKursart> = new ArrayList();
+			const result : List<ZulaessigeKursart> = new ArrayList<ZulaessigeKursart>();
 			result.add(ZulaessigeKursart.G);
 			return result;
 		}

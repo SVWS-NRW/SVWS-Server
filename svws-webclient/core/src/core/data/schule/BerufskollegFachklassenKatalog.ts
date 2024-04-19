@@ -13,7 +13,7 @@ export class BerufskollegFachklassenKatalog extends JavaObject {
 	/**
 	 * Die Teilkataloge in Abhängigkeit vom Index der Fachklassen.
 	 */
-	public indizes : List<BerufskollegFachklassenKatalogIndex> = new ArrayList();
+	public indizes : List<BerufskollegFachklassenKatalogIndex> = new ArrayList<BerufskollegFachklassenKatalogIndex>();
 
 
 	public constructor() {

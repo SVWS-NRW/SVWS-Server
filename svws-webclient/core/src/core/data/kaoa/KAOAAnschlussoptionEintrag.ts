@@ -25,12 +25,12 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 	/**
 	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)
 	 */
-	public stufen : List<string> = new ArrayList();
+	public stufen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden
 	 */
-	public anzeigeZusatzmerkmal : List<string> = new ArrayList();
+	public anzeigeZusatzmerkmal : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

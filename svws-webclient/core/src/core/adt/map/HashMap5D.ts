@@ -10,7 +10,7 @@ import { HashMap4D } from '../../../core/adt/map/HashMap4D';
 
 export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 
-	private readonly _map : JavaMap<K1, HashMap4D<K2, K3, K4, K5, V>> = new HashMap();
+	private readonly _map : JavaMap<K1, HashMap4D<K2, K3, K4, K5, V>> = new HashMap<K1, HashMap4D<K2, K3, K4, K5, V>>();
 
 
 	/**
@@ -236,7 +236,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesAsList() : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		for (const map2 of this._map.values())
 			list.addAll(map2.getNonNullValuesAsList());
 		return list;
@@ -250,7 +250,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap2AsList(key1 : K1) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 !== null)
 			list.addAll(map2.getNonNullValuesAsList());
@@ -266,7 +266,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap3AsList(key1 : K1, key2 : K2) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 !== null)
 			list.addAll(map2.getNonNullValuesOfMap2AsList(key2));
@@ -283,7 +283,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap4AsList(key1 : K1, key2 : K2, key3 : K3) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 !== null)
 			list.addAll(map2.getNonNullValuesOfMap3AsList(key2, key3));
@@ -301,7 +301,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap5AsList(key1 : K1, key2 : K2, key3 : K3, key4 : K4) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 !== null)
 			list.addAll(map2.getNonNullValuesOfMap4AsList(key2, key3, key4));

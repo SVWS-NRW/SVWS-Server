@@ -61,22 +61,22 @@ export class LehrerPersonaldaten extends JavaObject {
 	/**
 	 * Die Abschnittsdaten des Lehrers.
 	 */
-	public readonly abschnittsdaten : List<LehrerPersonalabschnittsdaten> = new ArrayList();
+	public readonly abschnittsdaten : List<LehrerPersonalabschnittsdaten> = new ArrayList<LehrerPersonalabschnittsdaten>();
 
 	/**
 	 * Die Lehrämter des Lehrers.
 	 */
-	public readonly lehraemter : List<LehrerLehramtEintrag> = new ArrayList();
+	public readonly lehraemter : List<LehrerLehramtEintrag> = new ArrayList<LehrerLehramtEintrag>();
 
 	/**
 	 * Die Fachrichtungen des Lehrers.
 	 */
-	public readonly fachrichtungen : List<LehrerFachrichtungEintrag> = new ArrayList();
+	public readonly fachrichtungen : List<LehrerFachrichtungEintrag> = new ArrayList<LehrerFachrichtungEintrag>();
 
 	/**
 	 * Die Lehrbefähigungen des Lehrers.
 	 */
-	public readonly lehrbefaehigungen : List<LehrerLehrbefaehigungEintrag> = new ArrayList();
+	public readonly lehrbefaehigungen : List<LehrerLehrbefaehigungEintrag> = new ArrayList<LehrerLehrbefaehigungEintrag>();
 
 
 	public constructor() {

@@ -11,7 +11,7 @@ export class SatSolverSimple1 extends SatSolver {
 	/**
 	 * Eine Kopie aller Klauseln.
 	 */
-	private readonly _clauses : List<Array<number>> = new ArrayList();
+	private readonly _clauses : List<Array<number>> = new ArrayList<Array<number>>();
 
 	/**
 	 * Das Array, welches jeder Variablen (1-indiziert) seine Lösung zuordnet.

@@ -23,7 +23,7 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt.
@@ -63,12 +63,12 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	/**
 	 * Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
-	public bkAbschlussBerufsbildend : List<string> = new ArrayList();
+	public bkAbschlussBerufsbildend : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
-	public bkAbschlussAllgemeinbildend : List<string> = new ArrayList();
+	public bkAbschlussAllgemeinbildend : List<string> = new ArrayList<string>();
 
 
 	/**

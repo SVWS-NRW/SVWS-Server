@@ -127,7 +127,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public add(e : E | null) : boolean {
 		if (e === null)
 			return false;
-		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
+		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement<E>(e, null, null);
 		if ((this._head === null) || (this._tail === null)) {
 			this._head = newElem;
 			this._tail = newElem;
@@ -257,7 +257,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			return true;
 		}
 		const iter : JavaIterator<E> = this.iterator();
-		const tmp : LinkedCollection<E> = new LinkedCollection();
+		const tmp : LinkedCollection<E> = new LinkedCollection<E>();
 		while (iter.hasNext()) {
 			const elem : E = iter.next();
 			if (!c.contains(elem))
@@ -488,7 +488,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public addFirst(e : E | null) : void {
 		if (e === null)
 			throw new NullPointerException()
-		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
+		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement<E>(e, null, null);
 		if ((this._head === null) || (this._tail === null)) {
 			this._head = newElem;
 			this._tail = newElem;

@@ -8,12 +8,12 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	/**
 	 * Die Kürzel der möglichen Nachprüfungsfächer.
 	 */
-	public moegliche : List<string> = new ArrayList();
+	public moegliche : List<string> = new ArrayList<string>();
 
 	/**
 	 * Die angesetzten bzw. durchgeführten Nachprüfungen
 	 */
-	public pruefungen : List<SchuelerLernabschnittNachpruefung> = new ArrayList();
+	public pruefungen : List<SchuelerLernabschnittNachpruefung> = new ArrayList<SchuelerLernabschnittNachpruefung>();
 
 
 	public constructor() {

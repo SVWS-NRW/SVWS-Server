@@ -20,7 +20,7 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	/**
 	 * Die Kürzel der Schulformen die bei der Schulstufe vorkommen.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 
 	/**

@@ -16,12 +16,12 @@ export class StundenplanKomplett extends JavaObject {
 	/**
 	 * Die Unterrichtsdaten des Stundenplans.
 	 */
-	public unterrichte : List<StundenplanUnterricht> = new ArrayList();
+	public unterrichte : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
 
 	/**
 	 * Die Informationen zu den Pausenaufsichten.
 	 */
-	public pausenaufsichten : List<StundenplanPausenaufsicht> = new ArrayList();
+	public pausenaufsichten : List<StundenplanPausenaufsicht> = new ArrayList<StundenplanPausenaufsicht>();
 
 	/**
 	 * Die Zusatzinformationen zu der Unterrichtsverteilung.

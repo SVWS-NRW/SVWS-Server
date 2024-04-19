@@ -24,32 +24,32 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	/**
 	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
-	private readonly _values : ArrayList<BerufskollegFachklassenKatalogEintrag> = new ArrayList();
+	private readonly _values : ArrayList<BerufskollegFachklassenKatalogEintrag> = new ArrayList<BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index.
 	 */
-	private readonly _mapByIndex : HashMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap();
+	private readonly _mapByIndex : HashMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap<number, BerufskollegFachklassenKatalogIndex>();
 
 	/**
 	 * Eine HashMap für den Zugriff auf den Index anhand eines Eintrags.
 	 */
-	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap();
+	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap<BerufskollegFachklassenKatalogEintrag, number>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels.
 	 */
-	private readonly _mapByKuerzel : HashMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap();
+	private readonly _mapByKuerzel : HashMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap<string, BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap();
+	private readonly _mapByID : HashMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap<number, BerufskollegFachklassenKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID.
 	 */
-	private readonly _mapDatenByID : HashMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap();
+	private readonly _mapDatenByID : HashMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap<number, BerufskollegFachklassenKatalogDaten>();
 
 
 	/**

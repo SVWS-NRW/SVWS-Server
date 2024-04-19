@@ -43,7 +43,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Telefonnummern des Kontakts.
 	 */
-	public telefonnummern : List<Telefonnummer> = new ArrayList();
+	public telefonnummern : List<Telefonnummer> = new ArrayList<Telefonnummer>();
 
 	/**
 	 * Die Mailadresse des Kontakts.
@@ -58,7 +58,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Kategorien dieses Kontakts
 	 */
-	public kategorien : List<string | null> | null = new ArrayList();
+	public kategorien : List<string | null> | null = new ArrayList<string | null>();
 
 	/**
 	 *  Die Organisation dieses Kontakts

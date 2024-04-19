@@ -17,13 +17,13 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Fremdsprachen extends GostBelegpruefung {
 
-	private _fremdsprachen : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
-	private _fremdsprachenNeu : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachenNeu : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
-	private _fremdsprachenFortgefuehrt : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachenFortgefuehrt : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
-	private _biliSachfaecher : List<AbiturFachbelegung> = new ArrayList();
+	private _biliSachfaecher : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	/**
 	 * Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung

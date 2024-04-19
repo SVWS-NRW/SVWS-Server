@@ -8,12 +8,12 @@ export class BenutzerConfig extends JavaObject {
 	/**
 	 * Die Konfiguration, die dem Benutzer zugeordnet ist.
 	 */
-	public user : List<BenutzerConfigElement> = new ArrayList();
+	public user : List<BenutzerConfigElement> = new ArrayList<BenutzerConfigElement>();
 
 	/**
 	 * Die globale Konfiguration, die auch für den Benutzer gilt.
 	 */
-	public global : List<BenutzerConfigElement> = new ArrayList();
+	public global : List<BenutzerConfigElement> = new ArrayList<BenutzerConfigElement>();
 
 
 	public constructor() {

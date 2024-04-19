@@ -53,12 +53,12 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung | null> = new HashMap<number, LehrerLehramtAnerkennung | null>();
 
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung | null> = new HashMap<string, LehrerLehramtAnerkennung | null>();
 
 	/**
 	 * Erzeugt eine neue Lehramtsanerkennung in der Aufzählung.

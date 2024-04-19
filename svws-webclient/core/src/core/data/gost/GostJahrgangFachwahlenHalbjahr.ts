@@ -8,7 +8,7 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 	/**
 	 * Die Fachwahlen für den Abiturbereich
 	 */
-	public fachwahlen : List<GostFachwahl> = new ArrayList();
+	public fachwahlen : List<GostFachwahl> = new ArrayList<GostFachwahl>();
 
 
 	public constructor() {

@@ -43,12 +43,12 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	/**
 	 * Eine Map mit der Zuordnung der Besuchsjahre zu dem Kürzel der Besuchsjahre
 	 */
-	private static readonly _mapKuerzel : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap<string, PrimarstufeSchuleingangsphaseBesuchsjahre | null>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Besuchsjahre zu der ID der Besuchsjahre
 	 */
-	private static readonly _mapID : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null> = new HashMap<number, PrimarstufeSchuleingangsphaseBesuchsjahre | null>();
 
 	/**
 	 * Erzeugt einen neuen Eintrage für Besuchsjahre in der Aufzählung.

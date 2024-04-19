@@ -48,12 +48,12 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung | null> = new HashMap<number, LehrerFachrichtungAnerkennung | null>();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung | null> = new HashMap<string, LehrerFachrichtungAnerkennung | null>();
 
 	/**
 	 * Erzeugt neue Anerkennung für Fachrichtungen in der Aufzählung.

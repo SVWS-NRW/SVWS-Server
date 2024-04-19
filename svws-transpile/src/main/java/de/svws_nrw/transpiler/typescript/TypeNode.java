@@ -16,9 +16,11 @@ import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WildcardTree;
 
 import de.svws_nrw.transpiler.ExpressionArrayType;
@@ -446,24 +448,38 @@ public class TypeNode {
 		return new TypeNode(plugin, baseType, false, false);
 	}
 
-
-	private String transpileParameterizedType(final ParameterizedTypeTree node, final boolean noTypeArgs) {
-		final TypeNode paramTypeNode = getParameterizedTypeBaseTypeNode(node);
-		String typeString = paramTypeNode.transpile(true);
-		final List<? extends Tree> typeArgs = node.getTypeArguments();
-		if (noTypeArgs || (typeArgs == null) || (typeArgs.size() == 0))
-			return typeString + ((decl && !notNull) ? " | null" : "");
-		typeString += "<";
+	private String transpileParameterizedTypeParameters(final List<? extends Tree> typeArgs) {
+		String result = "<";
 		boolean first = true;
 		for (final Tree t : typeArgs) {
 			if (!first)
-				typeString += ", ";
+				result += ", ";
 			first = false;
 			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
-			typeString += typeArgNode.transpile(false);
+			result += typeArgNode.transpile(false);
 		}
-		typeString += ">" + ((decl && !notNull) ? " | null" : "");
-		return typeString;
+		result += ">" + ((decl && !notNull) ? " | null" : "");
+		return result;
+	}
+
+	private String transpileParameterizedType(final ParameterizedTypeTree node, final boolean noTypeArgs) {
+		final TypeNode paramTypeNode = getParameterizedTypeBaseTypeNode(node);
+		final String typeString = paramTypeNode.transpile(true);
+		final List<? extends Tree> typeArgs = node.getTypeArguments();
+		if (noTypeArgs || (typeArgs == null) || (typeArgs.isEmpty())) {
+			// Es handelt sich um einen Parametrisierten Typ, dessen Typ-Parameter nicht explizit angegeben wurden...
+			// ... diese sollten daher indirekt ermittelt werden.
+			final Tree parent = this.plugin.getTranspiler().getParent(node);
+			if (parent instanceof final NewClassTree nct) {
+				final Tree grandparent = this.plugin.getTranspiler().getParent(nct);
+				if ((grandparent instanceof final VariableTree vt) && (vt.getType() instanceof final ParameterizedTypeTree ptt)) {
+					return typeString + transpileParameterizedTypeParameters(ptt.getTypeArguments());
+				}
+			}
+			// ... gebe für die bisher nicht unterstützten Fälle keine Typ-Parameter an
+			return typeString + ((decl && !notNull) ? " | null" : "");
+		}
+		return typeString + transpileParameterizedTypeParameters(typeArgs);
 	}
 
 

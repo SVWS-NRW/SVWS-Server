@@ -17,7 +17,7 @@ export class SchuleAbschnitte extends JavaObject {
 	/**
 	 * Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...)
 	 */
-	public bezAbschnitte : List<string> = new ArrayList();
+	public bezAbschnitte : List<string> = new ArrayList<string>();
 
 
 	public constructor() {

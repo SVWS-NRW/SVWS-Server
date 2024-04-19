@@ -12,27 +12,27 @@ export class GostKlausurenDataCollection extends JavaObject {
 	/**
 	 * Die Liste der Klausurvorgaben.
 	 */
-	public vorgaben : List<GostKlausurvorgabe> = new ArrayList();
+	public vorgaben : List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
 
 	/**
 	 * Die Liste der Kursklausuren.
 	 */
-	public kursklausuren : List<GostKursklausur> = new ArrayList();
+	public kursklausuren : List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList();
+	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList();
+	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public termine : List<GostKlausurtermin> = new ArrayList();
+	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
 
 	public constructor() {

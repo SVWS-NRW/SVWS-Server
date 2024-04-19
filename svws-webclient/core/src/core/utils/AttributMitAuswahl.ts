@@ -14,17 +14,17 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	/**
 	 * Eine Menge der zulässigen Werte
 	 */
-	private readonly _values : List<V> = new ArrayList();
+	private readonly _values : List<V> = new ArrayList<V>();
 
 	/**
 	 * Eine Map mit der Menge der zulässigen Werte
 	 */
-	private readonly _mapValuesByKey : JavaMap<K, V> = new HashMap();
+	private readonly _mapValuesByKey : JavaMap<K, V> = new HashMap<K, V>();
 
 	/**
 	 * Eine Map mit der Menge der Werte in der Auswahl
 	 */
-	private readonly _mapAuswahlValuesByKey : JavaMap<K, V> = new HashMap();
+	private readonly _mapAuswahlValuesByKey : JavaMap<K, V> = new HashMap<K, V>();
 
 	/**
 	 * Eine Funktion, um aus einem Wert den zugehörigen Schlüssel zu extrahieren.

@@ -98,12 +98,12 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart | null> = new HashMap();
+	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart | null> = new HashMap<number, LehrerBeschaeftigungsart | null>();
 
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart | null> = new HashMap();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart | null> = new HashMap<string, LehrerBeschaeftigungsart | null>();
 
 	/**
 	 * Erzeugt eine neue Beschäftigungsart in der Aufzählung.

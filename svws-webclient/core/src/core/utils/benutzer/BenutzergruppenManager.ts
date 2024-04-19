@@ -16,7 +16,7 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 * Die Menge an Kompetenzen, die dieser Gruppe zugeordnet ist.
 	 */
-	private readonly _setKompetenzen : HashSet<number> = new HashSet();
+	private readonly _setKompetenzen : HashSet<number> = new HashSet<number>();
 
 
 	/**

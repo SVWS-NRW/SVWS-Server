@@ -98,12 +98,12 @@ export class SchulabschlussBerufsbildend extends JavaEnum<SchulabschlussBerufsbi
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussBerufsbildend> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussBerufsbildend> = new HashMap<string, SchulabschlussBerufsbildend>();
 
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden
 	 */
-	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussBerufsbildend> = new HashMap();
+	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussBerufsbildend> = new HashMap<string, SchulabschlussBerufsbildend>();
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.

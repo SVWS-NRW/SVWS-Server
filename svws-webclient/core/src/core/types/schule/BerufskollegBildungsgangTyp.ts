@@ -53,7 +53,7 @@ export class BerufskollegBildungsgangTyp extends JavaEnum<BerufskollegBildungsga
 	/**
 	 * Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, BerufskollegBildungsgangTyp> = new HashMap();
+	private static readonly _ebenen : HashMap<string, BerufskollegBildungsgangTyp> = new HashMap<string, BerufskollegBildungsgangTyp>();
 
 	/**
 	 * Erzeugt einen neuen Berufsschultyp von Bildungsgängen in der Aufzählung.

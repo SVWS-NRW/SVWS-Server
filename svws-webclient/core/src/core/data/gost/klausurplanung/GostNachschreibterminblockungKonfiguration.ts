@@ -14,12 +14,12 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList();
+	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public termine : List<GostKlausurtermin> = new ArrayList();
+	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
 	/**
 	 * True, falls NachschreiberInnen der selben Klausur auf den selben Termin geblockt werden sollen.

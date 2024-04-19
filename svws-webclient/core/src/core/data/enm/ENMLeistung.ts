@@ -99,7 +99,7 @@ export class ENMLeistung extends JavaObject {
 	/**
 	 * Die Teilleistungen, sofern welche vordefiniert sind.
 	 */
-	public teilleistungen : List<ENMTeilleistung> = new ArrayList();
+	public teilleistungen : List<ENMTeilleistung> = new ArrayList<ENMTeilleistung>();
 
 
 	public constructor() {

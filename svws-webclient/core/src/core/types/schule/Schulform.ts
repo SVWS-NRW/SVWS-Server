@@ -125,17 +125,17 @@ export class Schulform extends JavaEnum<Schulform> {
 	/**
 	 * Ein ArrayList mit allen definierten Schulformen
 	 */
-	private static readonly _schulformen : HashMap<string, Schulform | null> = new HashMap();
+	private static readonly _schulformen : HashMap<string, Schulform | null> = new HashMap<string, Schulform | null>();
 
 	/**
 	 * Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben.
 	 */
-	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap();
+	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap<string, Schulform | null>();
 
 	/**
 	 * Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _mapEintragById : HashMap<number, SchulformKatalogEintrag | null> = new HashMap();
+	private static readonly _mapEintragById : HashMap<number, SchulformKatalogEintrag | null> = new HashMap<number, SchulformKatalogEintrag | null>();
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
@@ -237,7 +237,7 @@ export class Schulform extends JavaEnum<Schulform> {
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static get() : List<Schulform> {
-		const result : ArrayList<Schulform> = new ArrayList();
+		const result : ArrayList<Schulform> = new ArrayList<Schulform>();
 		for (const sf of Schulform.values())
 			if ((sf.daten !== null) && (sf.daten.nummer !== null))
 				result.add(sf);
@@ -250,7 +250,7 @@ export class Schulform extends JavaEnum<Schulform> {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static getMitGymOb() : List<Schulform> {
-		const result : ArrayList<Schulform> = new ArrayList();
+		const result : ArrayList<Schulform> = new ArrayList<Schulform>();
 		for (const sf of Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);

@@ -13,7 +13,7 @@ export class AbgangsartKatalog extends JavaObject {
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public eintraege : List<AbgangsartKatalogEintrag> = new ArrayList();
+	public eintraege : List<AbgangsartKatalogEintrag> = new ArrayList<AbgangsartKatalogEintrag>();
 
 
 	public constructor() {

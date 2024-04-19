@@ -18,32 +18,32 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 	/**
 	 * Die Liste der Lehrer, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public lehrer : List<StundenplanLehrer> = new ArrayList();
+	public lehrer : List<StundenplanLehrer> = new ArrayList<StundenplanLehrer>();
 
 	/**
 	 * Die Liste der Schüler, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public schueler : List<StundenplanSchueler> = new ArrayList();
+	public schueler : List<StundenplanSchueler> = new ArrayList<StundenplanSchueler>();
 
 	/**
 	 * Die Liste der Fächer, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public faecher : List<StundenplanFach> = new ArrayList();
+	public faecher : List<StundenplanFach> = new ArrayList<StundenplanFach>();
 
 	/**
 	 * Die Liste der Klassen, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public klassen : List<StundenplanKlasse> = new ArrayList();
+	public klassen : List<StundenplanKlasse> = new ArrayList<StundenplanKlasse>();
 
 	/**
 	 * Die Liste der Kurse, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public kurse : List<StundenplanKurs> = new ArrayList();
+	public kurse : List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
 
 	/**
 	 * Die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen.
 	 */
-	public klassenunterricht : List<StundenplanKlassenunterricht> = new ArrayList();
+	public klassenunterricht : List<StundenplanKlassenunterricht> = new ArrayList<StundenplanKlassenunterricht>();
 
 
 	public constructor() {

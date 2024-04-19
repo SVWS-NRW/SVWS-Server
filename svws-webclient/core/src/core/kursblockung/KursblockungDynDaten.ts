@@ -173,26 +173,26 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", input.daten().kurse);
 		const schienenAnzahl : number = input.schieneGetAnzahl();
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
-		const usedSchiene : HashSet<number | null> | null = new HashSet();
+		const usedSchiene : HashSet<number | null> | null = new HashSet<number | null>();
 		for (const gSchiene of input.daten().schienen) {
 			DeveloperNotificationException.ifInvalidID("gSchiene.id", gSchiene.id);
 			DeveloperNotificationException.ifSmaller("gSchiene.id", gSchiene.nummer, 1);
 			DeveloperNotificationException.ifGreater("gSchiene.id", gSchiene.nummer, schienenAnzahl);
 			DeveloperNotificationException.ifSetAddsDuplicate("usedSchiene", usedSchiene, gSchiene.nummer);
 		}
-		const setKursarten : HashSet<number> = new HashSet();
+		const setKursarten : HashSet<number> = new HashSet<number>();
 		for (const iKursart of GostKursart.values()) {
 			DeveloperNotificationException.ifNull("iKursart", iKursart);
 			DeveloperNotificationException.ifInvalidID("iKursart.id", iKursart.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setKursarten", setKursarten, iKursart.id);
 		}
-		const setFaecher : HashSet<number> = new HashSet();
+		const setFaecher : HashSet<number> = new HashSet<number>();
 		for (const iFach of input.faecherManager().faecher()) {
 			DeveloperNotificationException.ifNull("iFach", iFach);
 			DeveloperNotificationException.ifInvalidID("iFach.id", iFach.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setFaecher", setFaecher, iFach.id);
 		}
-		const setKurse : HashSet<number> = new HashSet();
+		const setKurse : HashSet<number> = new HashSet<number>();
 		for (const iKurs of input.daten().kurse) {
 			DeveloperNotificationException.ifNull("iKurs", iKurs);
 			DeveloperNotificationException.ifInvalidID("iKurs.id", iKurs.id);
@@ -200,7 +200,7 @@ export class KursblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iKurs.kursart);
 			DeveloperNotificationException.ifSetAddsDuplicate("setKurse", setKurse, iKurs.id);
 		}
-		const setSchueler : HashSet<number> = new HashSet();
+		const setSchueler : HashSet<number> = new HashSet<number>();
 		for (const gSchueler of input.daten().schueler)
 			DeveloperNotificationException.ifSetAddsDuplicate("setSchueler", setSchueler, gSchueler.id);
 		for (const iFachwahl of input.daten().fachwahlen) {
@@ -466,7 +466,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
-		const regelDatabaseIDs : HashSet<number | null> | null = new HashSet();
+		const regelDatabaseIDs : HashSet<number | null> | null = new HashSet<number | null>();
 		for (const iRegel of pRegeln) {
 			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("regelDatabaseIDs", regelDatabaseIDs, iRegel.id);
@@ -476,7 +476,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiSchuelerErstellung(input : GostBlockungsdatenManager) : void {
-		const setSchueler : HashSet<number> = new HashSet();
+		const setSchueler : HashSet<number> = new HashSet<number>();
 		for (const gSchueler of input.daten().schueler)
 			setSchueler.add(gSchueler.id);
 		for (const fachwahl of input.daten().fachwahlen)
@@ -529,7 +529,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiSchuelerFachwahlenErstellung(input : GostBlockungsdatenManager, susArr : Array<KursblockungDynSchueler>) : void {
-		const mapSchuelerFA : HashMap<number, List<KursblockungDynFachart>> = new HashMap();
+		const mapSchuelerFA : HashMap<number, List<KursblockungDynFachart>> = new HashMap<number, List<KursblockungDynFachart>>();
 		for (const iFachwahl of input.daten().fachwahlen) {
 			const dynFachart : KursblockungDynFachart = this.gibFachart(iFachwahl.fachID, iFachwahl.kursartID);
 			MapUtils.getOrCreateArrayList(mapSchuelerFA, iFachwahl.schuelerID).add(dynFachart);
@@ -596,7 +596,7 @@ export class KursblockungDynDaten extends JavaObject {
 	private schritt08FehlerBeiKursErstellungErzeuge(input : GostBlockungsdatenManager, kurs : GostBlockungKurs, nSchienen : number, kursNr : number, nSchueler : number) : KursblockungDynKurs {
 		DeveloperNotificationException.ifSmaller("kurs.anzahlSchienen", kurs.anzahlSchienen, 1);
 		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", kurs.anzahlSchienen, this._schienenArr.length);
-		const schieneLage : List<KursblockungDynSchiene> = new ArrayList();
+		const schieneLage : List<KursblockungDynSchiene> = new ArrayList<KursblockungDynSchiene>();
 		const schieneFrei : List<KursblockungDynSchiene> = ListUtils.getCopyAsArrayListPermuted(this._schienenArr, this._random);
 		for (const regel1 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			if (kurs.kursart === regel1.parameter.get(0)) {
@@ -663,7 +663,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private fehlerBeiFachartKursArrayErstellung() : void {
 		const nFacharten : number = this._fachartArr.length;
-		const mapFachartList : HashMap<number, List<KursblockungDynKurs>> = new HashMap();
+		const mapFachartList : HashMap<number, List<KursblockungDynKurs>> = new HashMap<number, List<KursblockungDynKurs>>();
 		for (let i : number = 0; i < nFacharten; i++)
 			mapFachartList.put(i, new ArrayList());
 		for (const kurs of this._kursArr) {
@@ -678,7 +678,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() : void {
-		const mapSchuelerZuFixierungen : HashMap<number, List<number>> = new HashMap();
+		const mapSchuelerZuFixierungen : HashMap<number, List<number>> = new HashMap<number, List<number>>();
 		for (const regel4 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			const schuelerID : number = regel4.parameter.get(0).valueOf();
 			const kursID : number = regel4.parameter.get(1).valueOf();
@@ -743,7 +743,7 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp10.isEmpty())
 			return;
 		DeveloperNotificationException.ifGreater("Liste of regelnTyp10", regelnTyp10.size(), 1);
-		const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
+		const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 		for (const gKurs of pInput.daten().kurse)
 			if (!gKurs.lehrer.isEmpty())
 				vKurseMitLehrkraft.add(gKurs);
@@ -760,7 +760,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
-		const setSSF : HashSet<string | null> = new HashSet();
+		const setSSF : HashSet<string | null> = new HashSet<string | null>();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();
 			const idS2 : number = regel11.parameter.get(1).valueOf();
@@ -974,7 +974,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	gibSchuelerArray(pNurMultiKurse : boolean) : Array<KursblockungDynSchueler> {
 		if (pNurMultiKurse) {
-			const list : LinkedCollection<KursblockungDynSchueler> = new LinkedCollection();
+			const list : LinkedCollection<KursblockungDynSchueler> = new LinkedCollection<KursblockungDynSchueler>();
 			for (const schueler of this._schuelerArr)
 				if (schueler.gibHatMultikurs())
 					list.addLast(schueler);

@@ -60,7 +60,7 @@ export class Schulstufe extends JavaEnum<Schulstufe> {
 	/**
 	 * Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, Schulstufe> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Schulstufe> = new HashMap<string, Schulstufe>();
 
 	/**
 	 * Erzeugt eine neue Schulstufe in der Aufzählung.

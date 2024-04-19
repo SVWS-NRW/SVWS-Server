@@ -30,7 +30,7 @@ export class Map3DUtils extends JavaObject {
 		const list : List<V> | null = map3D.getOrNull(key1, key2, key3);
 		if (list !== null)
 			return list;
-		const listNeu : ArrayList<V> = new ArrayList();
+		const listNeu : ArrayList<V> = new ArrayList<V>();
 		map3D.put(key1, key2, key3, listNeu);
 		return listNeu;
 	}
@@ -53,7 +53,7 @@ export class Map3DUtils extends JavaObject {
 		const set : JavaSet<V> | null = map3D.getOrNull(key1, key2, key3);
 		if (set !== null)
 			return set;
-		const setNeu : HashSet<V> = new HashSet();
+		const setNeu : HashSet<V> = new HashSet<V>();
 		map3D.put(key1, key2, key3, setNeu);
 		return setNeu;
 	}

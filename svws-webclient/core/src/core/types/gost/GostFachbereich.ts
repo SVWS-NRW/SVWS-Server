@@ -136,17 +136,17 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	/**
 	 * Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet.
 	 */
-	private static readonly _mapFachbereichByFach : JavaMap<ZulaessigesFach, List<GostFachbereich>> = new ArrayMap(ZulaessigesFach.values());
+	private static readonly _mapFachbereichByFach : JavaMap<ZulaessigesFach, List<GostFachbereich>> = new ArrayMap<ZulaessigesFach, List<GostFachbereich>>(ZulaessigesFach.values());
 
 	/**
 	 * Eine Liste der Fächern dieses Fachbereichs
 	 */
-	private readonly faecher : ArrayList<ZulaessigesFach> = new ArrayList();
+	private readonly faecher : ArrayList<ZulaessigesFach> = new ArrayList<ZulaessigesFach>();
 
 	/**
 	 * Eine Liste der Fächerkürzel dieses Fachbereichs
 	 */
-	private readonly kuerzel : ArrayList<string> = new ArrayList();
+	private readonly kuerzel : ArrayList<string> = new ArrayList<string>();
 
 	/**
 	 * Erstellt einen neuen Fachbereich als Kombination der übergebenen Fachbereiche

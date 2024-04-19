@@ -42,7 +42,7 @@ export class ENMLerngruppe extends JavaObject {
 	/**
 	 * Die IDs der Lehrer, die der Lerngruppe zugeordnet sind.
 	 */
-	public lehrerID : List<number> = new ArrayList();
+	public lehrerID : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.

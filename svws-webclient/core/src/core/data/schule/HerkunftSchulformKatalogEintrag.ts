@@ -24,7 +24,7 @@ export class HerkunftSchulformKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Die textuelle Beschreibung der Herkunftsschulform.

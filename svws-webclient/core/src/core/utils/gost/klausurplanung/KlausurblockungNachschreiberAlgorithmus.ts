@@ -57,7 +57,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	 * @return Eine Liste von Paaren: 1. Element = GostSchuelerklausurtermin (Nachschreiber), 2. Element = ID des Termins / der Schiene
 	 */
 	public berechne(config : GostNachschreibterminblockungKonfiguration, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
-		const nachschreiberGruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList();
+		const nachschreiberGruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList<List<GostSchuelerklausurTermin>>();
 		for (const skt of config.schuelerklausurtermine) {
 			const sk : GostSchuelerklausur | null = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
 			const idSchueler : number = sk.idSchueler;
@@ -113,8 +113,8 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	}
 
 	private static _algorithmusProTerminZufaelligGruppenVerteilenZufaellig(bewertung : KlausurblockungNachschreiberAlgorithmusBewertung, termine : List<GostKlausurtermin>, nachschreiberGruppen : List<List<GostSchuelerklausurTermin>>, klausurManager : GostKursklausurManager) : List<Pair<GostSchuelerklausurTermin, number>> {
-		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList();
-		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList(nachschreiberGruppen);
+		const ergebnis : List<Pair<GostSchuelerklausurTermin, number>> = new ArrayList<Pair<GostSchuelerklausurTermin, number>>();
+		const gruppen : List<List<GostSchuelerklausurTermin>> = new ArrayList<List<GostSchuelerklausurTermin>>(nachschreiberGruppen);
 		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random)) {
 			const gruppenanzahl : number = gruppen.size();
 			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
@@ -131,14 +131,14 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	}
 
 	private static _verteileMoeglichstVieleGruppenZufaelligAufDenTermin(idTermin : number, klausurManager : GostKursklausurManager, gruppen : List<List<GostSchuelerklausurTermin>>, ergebnis : List<Pair<GostSchuelerklausurTermin, number>>) : void {
-		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet();
+		const schuelerIDsDesTermin : HashSet<number> | null = new HashSet<number>();
 		if (idTermin >= 0) {
 			for (const sk of klausurManager.schuelerklausurGetMengeByTerminid(idTermin))
 				schuelerIDsDesTermin.add(sk.idSchueler);
 		}
 		for (const gruppe of ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random)) {
 			let kollision : boolean = false;
-			const schuelerIDsDerGruppe : List<number> = new ArrayList();
+			const schuelerIDsDerGruppe : List<number> = new ArrayList<number>();
 			for (const skt of gruppe) {
 				const sk : GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt);
 				schuelerIDsDerGruppe.add(sk.idSchueler);

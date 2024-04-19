@@ -47,17 +47,17 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	/**
 	 * Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt.
 	 */
-	private static readonly _mapID : HashMap<number, GostHalbjahr> = new HashMap();
+	private static readonly _mapID : HashMap<number, GostHalbjahr> = new HashMap<number, GostHalbjahr>();
 
 	/**
 	 * Eine Zuordnung der Halbjahre zu dem Kürzel.
 	 */
-	private static readonly _mapKuerzel : HashMap<string, GostHalbjahr> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, GostHalbjahr> = new HashMap<string, GostHalbjahr>();
 
 	/**
 	 * Eine Zuordnung der Halbjahre zu dem alten Kürzel.
 	 */
-	private static readonly _mapKuerzelAlt : HashMap<string, GostHalbjahr> = new HashMap();
+	private static readonly _mapKuerzelAlt : HashMap<string, GostHalbjahr> = new HashMap<string, GostHalbjahr>();
 
 	/**
 	 * Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe

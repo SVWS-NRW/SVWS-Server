@@ -70,7 +70,7 @@ export class HerkunftBildungsgangsTyp extends JavaEnum<HerkunftBildungsgangsTyp>
 	/**
 	 * Eine Hashmap mit allen definierten Bildungsgangtypen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, HerkunftBildungsgangsTyp | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftBildungsgangsTyp | null> = new HashMap<string, HerkunftBildungsgangsTyp | null>();
 
 	/**
 	 * Erzeugt eine neuen Herkunfts-Bildungsgangtyp in der Aufzählung.

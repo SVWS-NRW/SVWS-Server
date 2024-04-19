@@ -37,7 +37,7 @@ export class KAOAMerkmalEintrag extends JavaObject {
 	/**
 	 * Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf
 	 */
-	public bkAnlagen : List<string> = new ArrayList();
+	public bkAnlagen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

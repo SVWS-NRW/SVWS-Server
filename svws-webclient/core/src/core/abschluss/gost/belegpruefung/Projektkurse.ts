@@ -129,7 +129,7 @@ export class Projektkurse extends GostBelegpruefung {
 	private pruefeBelegungHalbjahre() : void {
 		if (this.projektkursBelegung === null)
 			return;
-		const pjkHalbjahre : HashSet<GostHalbjahr> = new HashSet();
+		const pjkHalbjahre : HashSet<GostHalbjahr> = new HashSet<GostHalbjahr>();
 		for (const fachbelegung of this.projektkursBelegung) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
 				if (belegungHalbjahr === null)

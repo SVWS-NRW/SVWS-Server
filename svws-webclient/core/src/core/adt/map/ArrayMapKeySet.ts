@@ -45,7 +45,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	private getKeyList() : List<K> {
-		const list : ArrayList<K> = new ArrayList(this._map.size());
+		const list : ArrayList<K> = new ArrayList<K>(this._map.size());
 		for (let i : number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value : ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
 			if (value !== null)

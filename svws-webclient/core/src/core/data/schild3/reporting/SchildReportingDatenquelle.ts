@@ -43,7 +43,7 @@ export class SchildReportingDatenquelle extends JavaObject {
 	/**
 	 * Die Liste der JSON-Attribute für diese Datenquelle.
 	 */
-	public attribute : List<SchildReportingDatenquelleAttribut> = new ArrayList();
+	public attribute : List<SchildReportingDatenquelleAttribut> = new ArrayList<SchildReportingDatenquelleAttribut>();
 
 
 	public constructor() {

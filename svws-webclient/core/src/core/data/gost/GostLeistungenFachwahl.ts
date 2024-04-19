@@ -24,7 +24,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 	/**
 	 * Die einzelnen Belegungen dieses Faches
 	 */
-	public readonly belegungen : List<GostLeistungenFachbelegung> = new ArrayList();
+	public readonly belegungen : List<GostLeistungenFachbelegung> = new ArrayList<GostLeistungenFachbelegung>();
 
 
 	public constructor() {

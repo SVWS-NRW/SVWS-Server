@@ -12,22 +12,22 @@ export class GostKlausurenMetaDataCollection extends JavaObject {
 	/**
 	 * Die Liste der Klausurvorgaben.
 	 */
-	public faecher : List<GostFach> = new ArrayList();
+	public faecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Die Liste der Kursklausuren.
 	 */
-	public schueler : List<SchuelerListeEintrag> = new ArrayList();
+	public schueler : List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public lehrer : List<LehrerListeEintrag> = new ArrayList();
+	public lehrer : List<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
 	/**
 	 * Die Liste der Schülerklausuren.
 	 */
-	public kurse : List<KursDaten> = new ArrayList();
+	public kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
 	/**
 	 * Die Liste der Schülerklausuren.

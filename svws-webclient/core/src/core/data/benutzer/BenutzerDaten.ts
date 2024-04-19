@@ -43,12 +43,12 @@ export class BenutzerDaten extends JavaObject {
 	/**
 	 * Die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist.
 	 */
-	public gruppen : List<BenutzergruppeDaten> = new ArrayList();
+	public gruppen : List<BenutzergruppeDaten> = new ArrayList<BenutzergruppeDaten>();
 
 	/**
 	 * Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind.
 	 */
-	public kompetenzen : List<number> = new ArrayList();
+	public kompetenzen : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

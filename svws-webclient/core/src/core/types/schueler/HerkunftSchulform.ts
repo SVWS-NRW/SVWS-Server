@@ -95,7 +95,7 @@ export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, HerkunftSchulform | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftSchulform | null> = new HashMap<string, HerkunftSchulform | null>();
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulform in der Aufzählung.

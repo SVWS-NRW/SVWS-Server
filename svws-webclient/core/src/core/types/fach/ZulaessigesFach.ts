@@ -1459,22 +1459,22 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	/**
 	 * Eine HashMap mit allen zulässigen Fächern. Der Zugriff erfolgt dabei über die ID
 	 */
-	private static readonly _mapID : HashMap<number, ZulaessigesFach> = new HashMap();
+	private static readonly _mapID : HashMap<number, ZulaessigesFach> = new HashMap<number, ZulaessigesFach>();
 
 	/**
 	 * Eine HashMap mit zulässigen Fächern. Der Zugriff erfolgt dabei das Statistik-Kürzel
 	 */
-	private static readonly _mapKuerzelASD : HashMap<string, ZulaessigesFach> = new HashMap();
+	private static readonly _mapKuerzelASD : HashMap<string, ZulaessigesFach> = new HashMap<string, ZulaessigesFach>();
 
 	/**
 	 * Eine Liste mit allen atomaren Kürzeln von Fremdsprachen
 	 */
-	private static readonly _listFremdsprachenKuerzel : List<string> = new ArrayList();
+	private static readonly _listFremdsprachenKuerzel : List<string> = new ArrayList<string>();
 
 	/**
 	 * Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das atomare Kürzel mit dem Statistik-Kürzel übereinstimmt.
 	 */
-	private static readonly _mapFremdsprachenKuerzelAtomar : HashMap<string, ZulaessigesFach> = new HashMap();
+	private static readonly _mapFremdsprachenKuerzelAtomar : HashMap<string, ZulaessigesFach> = new HashMap<string, ZulaessigesFach>();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist
@@ -1579,7 +1579,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigesFach> {
-		const faecher : ArrayList<ZulaessigesFach> = new ArrayList();
+		const faecher : ArrayList<ZulaessigesFach> = new ArrayList<ZulaessigesFach>();
 		if (schulform === null)
 			return faecher;
 		for (const fach of ZulaessigesFach.values())

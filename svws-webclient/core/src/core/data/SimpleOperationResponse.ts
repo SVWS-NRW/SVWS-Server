@@ -12,7 +12,7 @@ export class SimpleOperationResponse extends JavaObject {
 	/**
 	 * Das Log der Operation.
 	 */
-	public log : List<string | null> = new ArrayList();
+	public log : List<string | null> = new ArrayList<string | null>();
 
 
 	public constructor() {

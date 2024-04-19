@@ -207,12 +207,12 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOAMerkmal> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAMerkmal> = new HashMap<number, KAOAMerkmal>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOAMerkmal> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAMerkmal> = new HashMap<string, KAOAMerkmal>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

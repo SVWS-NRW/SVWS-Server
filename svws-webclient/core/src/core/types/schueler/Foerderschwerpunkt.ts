@@ -114,12 +114,12 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 	/**
 	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu dem Kürzel des Förderschwerpunktes
 	 */
-	private static readonly _foerderschwerpunkteKuerzel : HashMap<string, Foerderschwerpunkt> = new HashMap();
+	private static readonly _foerderschwerpunkteKuerzel : HashMap<string, Foerderschwerpunkt> = new HashMap<string, Foerderschwerpunkt>();
 
 	/**
 	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu der ID des Förderschwerpunktes
 	 */
-	private static readonly _foerderschwerpunkteID : HashMap<number, Foerderschwerpunkt> = new HashMap();
+	private static readonly _foerderschwerpunkteID : HashMap<number, Foerderschwerpunkt> = new HashMap<number, Foerderschwerpunkt>();
 
 	/**
 	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt
@@ -215,7 +215,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static get(schulform : Schulform | null) : List<Foerderschwerpunkt> {
-		const result : ArrayList<Foerderschwerpunkt> = new ArrayList();
+		const result : ArrayList<Foerderschwerpunkt> = new ArrayList<Foerderschwerpunkt>();
 		if (schulform === null)
 			return result;
 		const fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();

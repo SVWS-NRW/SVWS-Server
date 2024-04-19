@@ -42,12 +42,12 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps
 	 */
-	private static readonly _mapBezeichnungen : HashMap<string, PersonalTyp> = new HashMap();
+	private static readonly _mapBezeichnungen : HashMap<string, PersonalTyp> = new HashMap<string, PersonalTyp>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps
 	 */
-	private static readonly _mapID : HashMap<number, PersonalTyp> = new HashMap();
+	private static readonly _mapID : HashMap<number, PersonalTyp> = new HashMap<number, PersonalTyp>();
 
 	/**
 	 * Die ID des Personal-Typs als Integer

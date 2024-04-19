@@ -29,22 +29,22 @@ export class AbgangsartenManager extends JavaObject {
 	/**
 	 * Die kombinierten Daten der beiden Kataloge
 	 */
-	private readonly _alle : ArrayList<AbgangsartKatalogEintrag> = new ArrayList();
+	private readonly _alle : ArrayList<AbgangsartKatalogEintrag> = new ArrayList<AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels.
 	 */
-	private readonly _mapByKuerzel : HashMap<string, AbgangsartKatalogEintrag> = new HashMap();
+	private readonly _mapByKuerzel : HashMap<string, AbgangsartKatalogEintrag> = new HashMap<string, AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand der ID.
 	 */
-	private readonly _mapByID : HashMap<number, AbgangsartKatalogEintrag> = new HashMap();
+	private readonly _mapByID : HashMap<number, AbgangsartKatalogEintrag> = new HashMap<number, AbgangsartKatalogEintrag>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Daten der Abgangsarten anhand der ID.
 	 */
-	private readonly _mapDatenByID : HashMap<number, AbgangsartKatalogDaten> = new HashMap();
+	private readonly _mapDatenByID : HashMap<number, AbgangsartKatalogDaten> = new HashMap<number, AbgangsartKatalogDaten>();
 
 
 	/**

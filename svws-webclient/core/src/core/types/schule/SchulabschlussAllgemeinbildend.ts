@@ -119,12 +119,12 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden
 	 */
-	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap<string, SchulabschlussAllgemeinbildend>();
 
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden
 	 */
-	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap();
+	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap<string, SchulabschlussAllgemeinbildend>();
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.

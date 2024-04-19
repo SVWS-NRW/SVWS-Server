@@ -460,12 +460,12 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz
 	 */
-	private static readonly _mapID : HashMap<number, BenutzerKompetenz> = new HashMap();
+	private static readonly _mapID : HashMap<number, BenutzerKompetenz> = new HashMap<number, BenutzerKompetenz>();
 
 	/**
 	 * Eine ArrayMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe
 	 */
-	private static readonly _mapGruppenZuordnung : ArrayMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> = new ArrayMap(BenutzerKompetenzGruppe.values());
+	private static readonly _mapGruppenZuordnung : ArrayMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> = new ArrayMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>>(BenutzerKompetenzGruppe.values());
 
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz für die Aufzählung.
@@ -564,7 +564,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 * @return die Liste der Benutzerkompetenzen
 	 */
 	public static getKompetenzenMitSchulform(gruppe : BenutzerKompetenzGruppe, schulform : Schulform) : List<BenutzerKompetenz> {
-		const l : List<BenutzerKompetenz> | null = new ArrayList();
+		const l : List<BenutzerKompetenz> | null = new ArrayList<BenutzerKompetenz>();
 		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
 		if (liste === null)
 			return l;

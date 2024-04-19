@@ -583,12 +583,12 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> {
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _fachrichtungenByID : HashMap<number, LehrerFachrichtung | null> = new HashMap();
+	private static readonly _fachrichtungenByID : HashMap<number, LehrerFachrichtung | null> = new HashMap<number, LehrerFachrichtung | null>();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _fachrichtungenByKuerzel : HashMap<string, LehrerFachrichtung | null> = new HashMap();
+	private static readonly _fachrichtungenByKuerzel : HashMap<string, LehrerFachrichtung | null> = new HashMap<string, LehrerFachrichtung | null>();
 
 	/**
 	 * Erzeugt eine neuen Fachrichtung in der Aufzählung.

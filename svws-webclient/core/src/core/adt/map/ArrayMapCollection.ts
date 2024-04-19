@@ -42,7 +42,7 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	}
 
 	private getValueList() : List<V> {
-		const list : ArrayList<V> = new ArrayList(this._map.size());
+		const list : ArrayList<V> = new ArrayList<V>(this._map.size());
 		for (let i : number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value : V | null = this._map.getValueAt(i);
 			if (value !== null)

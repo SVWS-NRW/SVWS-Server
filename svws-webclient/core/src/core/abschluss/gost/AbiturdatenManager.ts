@@ -73,17 +73,17 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht
 	 */
-	private readonly mapFachbereiche : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
+	private readonly mapFachbereiche : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap<GostFachbereich, ArrayList<AbiturFachbelegung>>(GostFachbereich.values());
 
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Prüfungsordnungs-relevanten Fachbelegungen über den Fachbereich ermöglicht
 	 */
-	private readonly mapFachbereicheRelevant : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
+	private readonly mapFachbereicheRelevant : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap<GostFachbereich, ArrayList<AbiturFachbelegung>>(GostFachbereich.values());
 
 	/**
 	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung
 	 */
-	private belegpruefungen : List<GostBelegpruefung> = new ArrayList();
+	private belegpruefungen : List<GostBelegpruefung> = new ArrayList<GostBelegpruefung>();
 
 	/**
 	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden
@@ -93,7 +93,7 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
 	 */
-	private belegpruefungsfehler : List<GostBelegungsfehler> = new ArrayList();
+	private belegpruefungsfehler : List<GostBelegungsfehler> = new ArrayList<GostBelegungsfehler>();
 
 	/**
 	 * Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht.
@@ -127,7 +127,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
-		const pruefungen : ArrayList<GostBelegpruefung> = new ArrayList();
+		const pruefungen : ArrayList<GostBelegpruefung> = new ArrayList<GostBelegpruefung>();
 		pruefungen.add(new Deutsch(this, pruefungsArt));
 		const pruefungFremdsprachen : Fremdsprachen = new Fremdsprachen(this, pruefungsArt);
 		pruefungen.add(pruefungFremdsprachen);
@@ -293,7 +293,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Map mit den Schüler-Fachwahlen
 	 */
 	public getSchuelerFachwahlen() : JavaMap<number, GostSchuelerFachwahl> {
-		const fachwahlen : HashMap<number, GostSchuelerFachwahl> = new HashMap();
+		const fachwahlen : HashMap<number, GostSchuelerFachwahl> = new HashMap<number, GostSchuelerFachwahl>();
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen)
 			fachwahlen.put(fb.fachID, this.getSchuelerFachwahl(fb.fachID));
@@ -937,7 +937,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den Fachbelegungen, welche die kursart haben
 	 */
 	public filterBelegungKursartExistiert(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart) : List<AbiturFachbelegung> {
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
 			return result;
 		for (const fachbelegung of fachbelegungen) {
@@ -1074,7 +1074,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
 	public hatDoppelteFachbelegungInHalbjahr(halbjahr : GostHalbjahr) : boolean {
-		const set : HashSet<string> = new HashSet();
+		const set : HashSet<string> = new HashSet<string>();
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
@@ -1166,7 +1166,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getFachbelegungen(...fachbereiche : Array<GostFachbereich>) : List<AbiturFachbelegung> {
 		if ((fachbereiche === null) || (fachbereiche.length === 0))
 			return this.abidaten.fachbelegungen;
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbereich of fachbereiche) {
 			const fachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
 			if (fachbelegungen === null)
@@ -1188,7 +1188,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getRelevanteFachbelegungen(...fachbereiche : Array<GostFachbereich>) : List<AbiturFachbelegung> {
 		if ((fachbereiche === null) || (fachbereiche.length === 0))
 			return this.abidaten.fachbelegungen;
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbereich of fachbereiche) {
 			const fachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereicheRelevant.get(fachbereich);
 			if (fachbelegungen === null)
@@ -1204,7 +1204,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste der Fachbelegungen
 	 */
 	public getFachbelegungenBilingual() : List<AbiturFachbelegung> {
-		const result : List<AbiturFachbelegung> = new ArrayList();
+		const result : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			if (this.zaehleBelegung(fb) <= 0)
@@ -1226,7 +1226,7 @@ export class AbiturdatenManager extends JavaObject {
 	public filterFremdspracheNeuEinsetzend(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
 		if (fachbelegungen === null)
 			return Collections.emptyList();
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if ((fach !== null) && fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
@@ -1245,7 +1245,7 @@ export class AbiturdatenManager extends JavaObject {
 	public filterFremdspracheFortgefuehrt(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
 		if (fachbelegungen === null)
 			return Collections.emptyList();
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if ((fach !== null) && fach.istFremdsprache && !fach.istFremdSpracheNeuEinsetzend)
@@ -1262,7 +1262,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterDurchgehendBelegbar(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		if (fachbelegungen === null)
 			return result;
 		for (const fb of fachbelegungen) {
@@ -1285,7 +1285,7 @@ export class AbiturdatenManager extends JavaObject {
 	public filterBelegungen(fachbelegungen : List<AbiturFachbelegung> | null, ...halbjahre : Array<GostHalbjahr>) : List<AbiturFachbelegung> {
 		if (fachbelegungen === null)
 			return Collections.emptyList();
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			if (this.pruefeBelegung(fb, ...halbjahre))
 				result.add(fb);
@@ -1301,7 +1301,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Menge der Statistik-Fächer
 	 */
 	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach | null> {
-		const faecher : HashSet<ZulaessigesFach | null> = new HashSet();
+		const faecher : HashSet<ZulaessigesFach | null> = new HashSet<ZulaessigesFach | null>();
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.faecherManager.get(fb.fachID);
 			if (fach === null)
@@ -1415,7 +1415,7 @@ export class AbiturdatenManager extends JavaObject {
 	public filterBelegungenMitSchriftlichkeit(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : List<AbiturFachbelegung> {
 		if (fachbelegungen === null)
 			return Collections.emptyList();
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const result : ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			if (this.pruefeBelegungMitSchriftlichkeit(fb, schriftlichkeit, ...halbjahre))
 				result.add(fb);
@@ -1459,7 +1459,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den Fachbelegungen
 	 */
 	public getFachbelegungByFachkuerzel(kuerzel : string | null) : List<AbiturFachbelegung> {
-		const fachbelegungen : List<AbiturFachbelegung> = new ArrayList();
+		const fachbelegungen : List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		if (kuerzel === null)
 			return fachbelegungen;
 		const tmpFachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
@@ -1546,7 +1546,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste der Halbjahre in den das Fach mit einer der Kursarten belegt wurde
 	 */
 	public getHalbjahreKursart(fachbelegung : AbiturFachbelegung | null, ...kursarten : Array<GostKursart>) : List<GostHalbjahr> {
-		const halbjahre : ArrayList<GostHalbjahr> = new ArrayList();
+		const halbjahre : ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();
 		if (fachbelegung !== null) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
 				if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
@@ -1734,7 +1734,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Liste mit den Fachkombinationen
 	 */
 	public getFachkombinationenEF1() : List<GostJahrgangFachkombination> {
-		const kombis : List<GostJahrgangFachkombination> = new ArrayList();
+		const kombis : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 		for (const kombi of this.faecherManager.getFachkombinationen())
 			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
 				kombis.add(kombi);

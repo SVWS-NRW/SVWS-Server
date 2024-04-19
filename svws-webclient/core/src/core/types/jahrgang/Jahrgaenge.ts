@@ -165,12 +165,12 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Jahrgaenge | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Jahrgaenge | null> = new HashMap<string, Jahrgaenge | null>();
 
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu der ID des Jahrgangs
 	 */
-	private static readonly _mapID : HashMap<number, Jahrgaenge | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, Jahrgaenge | null> = new HashMap<number, Jahrgaenge | null>();
 
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
@@ -295,7 +295,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
 	public static get(schulform : Schulform | null) : List<Jahrgaenge | null> {
-		const result : ArrayList<Jahrgaenge | null> = new ArrayList();
+		const result : ArrayList<Jahrgaenge | null> = new ArrayList<Jahrgaenge | null>();
 		if (schulform === null)
 			return result;
 		const jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();

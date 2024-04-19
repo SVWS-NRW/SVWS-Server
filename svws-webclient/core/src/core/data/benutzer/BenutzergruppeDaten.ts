@@ -22,7 +22,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	/**
 	 * Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind.
 	 */
-	public kompetenzen : List<number> = new ArrayList();
+	public kompetenzen : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

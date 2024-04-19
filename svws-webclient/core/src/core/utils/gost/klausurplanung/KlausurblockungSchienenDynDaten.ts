@@ -28,17 +28,17 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap();
+	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap();
+	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausurRich> = new HashMap<number, GostKursklausurRich>();
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
-	private readonly _mapSchuelerZuNummer : HashMap<number, number> = new HashMap();
+	private readonly _mapSchuelerZuNummer : HashMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Die Anzahl der Klausuren.
@@ -114,7 +114,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereMapSchueler(pInput : List<GostKursklausurRich>) : void {
-		const setSchueler : HashSet<number> = new HashSet();
+		const setSchueler : HashSet<number> = new HashSet<number>();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				if (schuelerID < 0)
@@ -140,7 +140,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereMatrixVerboten(pInput : List<GostKursklausurRich>) : void {
-		const mapSchuelerKlausuren : HashMap<number, LinkedCollection<number>> = new HashMap();
+		const mapSchuelerKlausuren : HashMap<number, LinkedCollection<number>> = new HashMap<number, LinkedCollection<number>>();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				let list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
@@ -221,7 +221,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @return ein Ausgabe-Objekt: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
 	gibErzeugeOutput() : List<List<number>> {
-		const out : List<List<number>> = new ArrayList();
+		const out : List<List<number>> = new ArrayList<List<number>>();
 		for (let i : number = 0; i < this._schienenAnzahl; i++)
 			out.add(new ArrayList());
 		for (const e of this._mapKlausurZuNummer.entrySet()) {

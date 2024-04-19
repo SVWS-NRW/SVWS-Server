@@ -23,7 +23,7 @@ export class KursDaten extends JavaObject {
 	/**
 	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist
 	 */
-	public idJahrgaenge : List<number> = new ArrayList();
+	public idJahrgaenge : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die ID des Faches, dem der Kurs zugeordnet ist
@@ -53,12 +53,12 @@ export class KursDaten extends JavaObject {
 	/**
 	 * Die Schüler des Kurses.
 	 */
-	public schueler : List<Schueler> = new ArrayList();
+	public schueler : List<Schueler> = new ArrayList<Schueler>();
 
 	/**
 	 * Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde
 	 */
-	public schienen : List<number> = new ArrayList();
+	public schienen : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die Wochenstunden des Kurses.

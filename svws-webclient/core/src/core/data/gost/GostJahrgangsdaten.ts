@@ -69,7 +69,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe
 	 */
-	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList();
+	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList<GostBeratungslehrer>();
 
 
 	public constructor() {

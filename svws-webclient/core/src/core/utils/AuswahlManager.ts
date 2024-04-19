@@ -229,7 +229,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 				return;
 			}
 		}
-		const eintrag : Pair<string, boolean> = new Pair(field, order);
+		const eintrag : Pair<string, boolean> = new Pair<string, boolean>(field, order);
 		this._order.add(0, eintrag);
 		this._filtered = null;
 	}

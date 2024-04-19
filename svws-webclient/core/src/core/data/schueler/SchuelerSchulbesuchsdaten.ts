@@ -124,12 +124,12 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	/**
 	 * Die Informationen zu den besonderen Merkmalen für die Statistik.
 	 */
-	public merkmale : List<SchuelerSchulbesuchMerkmal> = new ArrayList();
+	public merkmale : List<SchuelerSchulbesuchMerkmal> = new ArrayList<SchuelerSchulbesuchMerkmal>();
 
 	/**
 	 * Die Informationen zu allen bisher besuchten Schulen.
 	 */
-	public alleSchulen : List<SchuelerSchulbesuchSchule> = new ArrayList();
+	public alleSchulen : List<SchuelerSchulbesuchSchule> = new ArrayList<SchuelerSchulbesuchSchule>();
 
 
 	public constructor() {

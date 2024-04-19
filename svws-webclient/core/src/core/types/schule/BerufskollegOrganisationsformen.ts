@@ -115,12 +115,12 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren IDs
 	 */
-	private static readonly _mapByID : HashMap<number, BerufskollegOrganisationsformen> = new HashMap();
+	private static readonly _mapByID : HashMap<number, BerufskollegOrganisationsformen> = new HashMap<number, BerufskollegOrganisationsformen>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<string, BerufskollegOrganisationsformen> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, BerufskollegOrganisationsformen> = new HashMap<string, BerufskollegOrganisationsformen>();
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.

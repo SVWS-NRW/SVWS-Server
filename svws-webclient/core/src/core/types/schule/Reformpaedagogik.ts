@@ -63,12 +63,12 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	/**
 	 * Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik
 	 */
-	private static readonly _schulgliederungenKuerzel : HashMap<string, Reformpaedagogik> = new HashMap();
+	private static readonly _schulgliederungenKuerzel : HashMap<string, Reformpaedagogik> = new HashMap<string, Reformpaedagogik>();
 
 	/**
 	 * Eine Map mit der Zuordnung der Reformpädagogik zu der ID der Reformpädagogik
 	 */
-	private static readonly _schulgliederungenID : HashMap<number, Reformpaedagogik> = new HashMap();
+	private static readonly _schulgliederungenID : HashMap<number, Reformpaedagogik> = new HashMap<number, Reformpaedagogik>();
 
 	/**
 	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt
@@ -166,7 +166,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
 	public static get(schulform : Schulform | null) : List<Reformpaedagogik> {
-		const result : ArrayList<Reformpaedagogik> = new ArrayList();
+		const result : ArrayList<Reformpaedagogik> = new ArrayList<Reformpaedagogik>();
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();

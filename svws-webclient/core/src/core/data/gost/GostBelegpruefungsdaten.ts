@@ -21,12 +21,12 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen
 	 */
-	public gostFaecher : List<GostFach> = new ArrayList();
+	public gostFaecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Die Informationen zu den nicht zulässigen und geforderten Fächerkombinationen.
 	 */
-	public gostFaecherKombinationen : List<GostJahrgangFachkombination> = new ArrayList();
+	public gostFaecherKombinationen : List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 
 	public constructor() {

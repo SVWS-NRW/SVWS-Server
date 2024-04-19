@@ -127,7 +127,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Abiturfächer mehrfach belegt zu haben.
 	 */
 	private pruefeMehrfacheAbiturfaecher() : void {
-		const abiFaecher : HashSet<GostAbiturFach> = new HashSet();
+		const abiFaecher : HashSet<GostAbiturFach> = new HashSet<GostAbiturFach>();
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);

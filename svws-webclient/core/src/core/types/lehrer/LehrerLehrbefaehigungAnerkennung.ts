@@ -48,12 +48,12 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap<number, LehrerLehrbefaehigungAnerkennung | null>();
 
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> = new HashMap<string, LehrerLehrbefaehigungAnerkennung | null>();
 
 	/**
 	 * Erzeugt einen neuen Anerkennungsgrund für Lehrbefähigungen in der Aufzählung.

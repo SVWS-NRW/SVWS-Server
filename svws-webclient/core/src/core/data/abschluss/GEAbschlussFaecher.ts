@@ -23,7 +23,7 @@ export class GEAbschlussFaecher extends JavaObject {
 	/**
 	 * Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen.
 	 */
-	public faecher : List<GEAbschlussFach> = new ArrayList();
+	public faecher : List<GEAbschlussFach> = new ArrayList<GEAbschlussFach>();
 
 
 	public constructor() {

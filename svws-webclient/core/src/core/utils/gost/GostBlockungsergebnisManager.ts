@@ -67,7 +67,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liste aller Fehlermeldungen.
 	 */
-	private _fehlermeldungen : List<string> = new ArrayList();
+	private _fehlermeldungen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Set aller Schienen-IDs.
@@ -97,117 +97,117 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Map von Schienen-ID nach {@link GostBlockungsergebnisSchiene}.
 	 */
-	private _schienenID_to_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap();
+	private _schienenID_to_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap<number, GostBlockungsergebnisSchiene>();
 
 	/**
 	 * Map von Schienen-NR nach {@link GostBlockungsergebnisSchiene}.
 	 */
-	private _schienenNR_to_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap();
+	private _schienenNR_to_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap<number, GostBlockungsergebnisSchiene>();
 
 	/**
 	 * Map von Kurs-ID nach {@link GostBlockungsergebnisKurs}.
 	 */
-	private _kursID_to_kurs : JavaMap<number, GostBlockungsergebnisKurs> = new HashMap();
+	private _kursID_to_kurs : JavaMap<number, GostBlockungsergebnisKurs> = new HashMap<number, GostBlockungsergebnisKurs>();
 
 	/**
 	 * Map von Schueler-ID nach {@link Schueler}.
 	 */
-	private _schuelerID_to_schueler : JavaMap<number, Schueler> = new HashMap();
+	private _schuelerID_to_schueler : JavaMap<number, Schueler> = new HashMap<number, Schueler>();
 
 	/**
 	 * Map von Schienen-ID nach Long-Set (von Kursen).
 	 */
-	private _schienenID_to_kursIDSet : JavaMap<number, JavaSet<number>> = new HashMap();
+	private _schienenID_to_kursIDSet : JavaMap<number, JavaSet<number>> = new HashMap<number, JavaSet<number>>();
 
 	/**
 	 * Map von Schueler-ID nach {@link GostBlockungsergebnisKurs}-Set (Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind).
 	 */
-	private _schuelerID_to_ungueltigeKurseSet : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap();
+	private _schuelerID_to_ungueltigeKurseSet : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap<number, JavaSet<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Map von Kurs-ID nach Long-Set (von Schülern).
 	 */
-	private _kursID_to_schuelerIDSet : JavaMap<number, JavaSet<number>> = new HashMap();
+	private _kursID_to_schuelerIDSet : JavaMap<number, JavaSet<number>> = new HashMap<number, JavaSet<number>>();
 
 	/**
 	 * Map von Fach-ID nach {@link GostBlockungsergebnisKurs}-List.
 	 */
-	private _fachID_to_kurseList : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap();
+	private _fachID_to_kurseList : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap<number, List<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Map von Kurs-ID nach {@link GostBlockungsergebnisSchiene}-Set.
 	 */
-	private _kursID_to_schienenSet : JavaMap<number, JavaSet<GostBlockungsergebnisSchiene>> = new HashMap();
+	private _kursID_to_schienenSet : JavaMap<number, JavaSet<GostBlockungsergebnisSchiene>> = new HashMap<number, JavaSet<GostBlockungsergebnisSchiene>>();
 
 	/**
 	 * Map von Kurs-ID nach Integer (Anzahl an externen SuS).
 	 */
-	private _kursID_to_dummySuS : JavaMap<number, number> = new HashMap();
+	private _kursID_to_dummySuS : JavaMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Map von Fachart-ID nach {@link GostBlockungsergebnisKurs}-List (Alle Kurse der selben Fachart).
 	 */
-	private _fachartID_to_kurseList : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap();
+	private _fachartID_to_kurseList : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap<number, List<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Map von Schüler-ID nach {@link GostBlockungsergebnisKurs}-Set.
 	 */
-	private _schuelerID_to_kurseSet : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap();
+	private _schuelerID_to_kurseSet : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap<number, JavaSet<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Menge aller Fachart-IDs sortiert nach der aktuellen Sortiervariante.
 	 */
-	private _fachartIDList_sortiert : List<number> = new ArrayList();
+	private _fachartIDList_sortiert : List<number> = new ArrayList<number>();
 
 	/**
 	 * Map von Fachart-ID nach Integer (Kursdifferenz der Fachart).
 	 */
-	private _fachartID_to_kursdifferenz : JavaMap<number, number> = new HashMap();
+	private _fachartID_to_kursdifferenz : JavaMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Map von Schienen-ID nach Integer (Anzahl an Kollisionen in der Schiene).
 	 */
-	private _schienenID_to_kollisionen : JavaMap<number, number> = new HashMap();
+	private _schienenID_to_kollisionen : JavaMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Map von Schienen-ID nach Integer (Anzahl der SuS in der Schiene).
 	 */
-	private _schienenID_to_susAnzahl : JavaMap<number, number> = new HashMap();
+	private _schienenID_to_susAnzahl : JavaMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Map von Schüler-ID nach Map von Schienen-ID nach {@link GostBlockungsergebnisKurs}-Set (Alle Kurse des Schülers in der Schiene).
 	 */
-	private _schuelerID_schienenID_to_kurseSet : HashMap2D<number, number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap2D();
+	private _schuelerID_schienenID_to_kurseSet : HashMap2D<number, number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap2D<number, number, JavaSet<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Map von Schienen-ID nach Map von Fachart-ID nach {@link GostBlockungsergebnisKurs}-List (Alle Kurse pro Schiene und Fachart).
 	 */
-	private _schienenID_fachartID_to_kurseList : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D();
+	private _schienenID_fachartID_to_kurseList : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D<number, number, List<GostBlockungsergebnisKurs>>();
 
 	/**
 	 * Map von Kursdifferenz nach String-List (Facharten mit dieser Kursdifferenzen).
 	 */
-	private _kursdifferenz_to_fachartenList : JavaMap<number, List<string>> = new HashMap();
+	private _kursdifferenz_to_fachartenList : JavaMap<number, List<string>> = new HashMap<number, List<string>>();
 
 	/**
 	 * Map von Schüler-ID Integer (Summe aller Kollisionen des Schülers).
 	 */
-	private _schuelerID_to_kollisionen : JavaMap<number, number> = new HashMap();
+	private _schuelerID_to_kollisionen : JavaMap<number, number> = new HashMap<number, number>();
 
 	/**
 	 * Map von Schüler-ID nach Map von Fach-ID nach {@link GostBlockungsergebnisKurs} (Die zugeordnete Wahl des Schülers in dem Fach, auch NULL möglich).
 	 */
-	private _schuelerID_fachID_to_kurs_or_null : HashMap2D<number, number, GostBlockungsergebnisKurs | null> = new HashMap2D();
+	private _schuelerID_fachID_to_kurs_or_null : HashMap2D<number, number, GostBlockungsergebnisKurs | null> = new HashMap2D<number, number, GostBlockungsergebnisKurs | null>();
 
 	/**
 	 * Von Regel-ID Regel-TYP nach List (alle Regelverletzungen des Typs als String-Menge).
 	 */
-	private _regelTyp_to_verletzungList : JavaMap<number, List<string>> = new HashMap();
+	private _regelTyp_to_verletzungList : JavaMap<number, List<string>> = new HashMap<number, List<string>>();
 
 	/**
 	 * Von Regel-ID nach String (Beschreibung der Regelverletzung).
 	 */
-	private _regelID_to_verletzungString : JavaMap<number, string> = new HashMap();
+	private _regelID_to_verletzungString : JavaMap<number, string> = new HashMap<number, string>();
 
 	/**
 	 * Textuelle Darstellung aller Regelverletzungen der definierten Regeln.
@@ -477,7 +477,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					continue;
 				if (set.size() <= 1)
 					continue;
-				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList(set);
+				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
 				if (wahlkonflikte < 10) {
 					sb.append(this._parent.toStringSchuelerSimple(idSchueler)! + " ist in " + this._parent.toStringSchieneSimple(e.getKey()!)! + " in mehreren Kursen:");
 					for (let i : number = 0; i < list.size(); i++)
@@ -798,7 +798,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchiene of this._schienenID_to_kursIDSet.keySet()) {
 			const kursmenge : JavaSet<number> = DeveloperNotificationException.ifMapGetIsNull(this._schienenID_to_kursIDSet, idSchiene);
 			let summeMitDoppelten : number = 0;
-			const summeOhneDoppelte : HashSet<number> = new HashSet();
+			const summeOhneDoppelte : HashSet<number> = new HashSet<number>();
 			for (const idKurs of kursmenge) {
 				const schuelermenge : JavaSet<number> = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs);
 				summeMitDoppelten += schuelermenge.size();
@@ -1778,7 +1778,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
 	private getOfSchuelerKursmengeSortiert(idSchueler : number) : List<GostBlockungsergebnisKurs> {
-		const list : List<GostBlockungsergebnisKurs> | null = new ArrayList();
+		const list : List<GostBlockungsergebnisKurs> | null = new ArrayList<GostBlockungsergebnisKurs>();
 		list.addAll(DeveloperNotificationException.ifMapGetIsNull(this._schuelerID_to_kurseSet, idSchueler));
 		if (this._fachartmenge_sortierung === 1)
 			list.sort(this._kursComparator_kursart_fach_kursnummer);
@@ -1795,7 +1795,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
 	public getOfSchuelerKursmengeMitKollisionen(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
+		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const schiene of this._parent.schieneGetListe()) {
 			const kurseDerSchiene : JavaSet<GostBlockungsergebnisKurs> = this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
@@ -2205,7 +2205,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return eine nach Kriterien gefilterte Menge aller Schüler.
 	 */
 	public getOfSchuelerMengeGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string) : List<Schueler> {
-		const menge : List<Schueler> = new ArrayList();
+		const menge : List<Schueler> = new ArrayList<Schueler>();
 		for (const schueler of this._parent.schuelerGetListe())
 			if (this.getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, null, null))
 				menge.add(schueler);
@@ -2335,7 +2335,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge der {@link GostBlockungsergebnisKurs}
 	 */
 	public getKursmenge() : List<GostBlockungsergebnisKurs> {
-		const result : List<GostBlockungsergebnisKurs> = new ArrayList();
+		const result : List<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>();
 		result.addAll(this._kursID_to_kurs.values());
 		return result;
 	}
@@ -2413,7 +2413,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge aller Schüler-Objekte des Kurses.
 	 */
 	public getOfKursSchuelermenge(idKurs : number) : List<Schueler> {
-		const list : List<Schueler> = new ArrayList();
+		const list : List<Schueler> = new ArrayList<Schueler>();
 		for (const idSchueler of this.getKursE(idKurs).schueler)
 			list.add(this.getSchuelerG(idSchueler!));
 		return list;
@@ -2481,7 +2481,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 */
 	private getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
-		const set : HashSet<number> = new HashSet();
+		const set : HashSet<number> = new HashSet<number>();
 		for (const schiene of this.getOfKursSchienenmenge(idKursID))
 			for (const idSchueler of this.getKursE(idKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
@@ -2627,7 +2627,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
 	 */
 	private getOfKursMengeAllerNichtFixiertenSchueler(idKurs : number) : List<Schueler> {
-		const list : List<Schueler> = new ArrayList();
+		const list : List<Schueler> = new ArrayList<Schueler>();
 		for (const schueler of this.getOfKursSchuelermenge(idKurs))
 			if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
 				list.add(schueler);
@@ -2642,7 +2642,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
 	 */
 	private getOfKursMengeAllerNichtFixiertenAbiturSchueler(idKurs : number) : List<Schueler> {
-		const list : List<Schueler> = new ArrayList();
+		const list : List<Schueler> = new ArrayList<Schueler>();
 		for (const schueler of this.getOfKursSchuelermenge(idKurs))
 			if ((!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) && (this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)))
 				list.add(schueler);
@@ -2673,7 +2673,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
 	 */
 	private getMengeDerKurseMitKollisionen() : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
+		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const kurs of this._kursID_to_kurs.values())
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -2681,7 +2681,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private static regelGetListeToggleFilteredBetween(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs) : List<GostBlockungKurs> {
-		const result : List<GostBlockungKurs> = new ArrayList();
+		const result : List<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 		let foundA : boolean = false;
 		let foundB : boolean = false;
 		for (const kursG of list) {
@@ -2715,7 +2715,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetListeToggleSperrung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
-		const regeln : List<GostBlockungRegel> = new ArrayList();
+		const regeln : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kursG of GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (let nr : number = min; nr <= max; nr++)
 				regeln.add(this._parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
@@ -2740,7 +2740,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetListeToggleKursfixierung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
-		const regeln : List<GostBlockungRegel> = new ArrayList();
+		const regeln : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kursG of GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, kursG.id)) {
 				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
@@ -2768,7 +2768,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetListeToggleSchuelerfixierung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
 		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
 		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
-		const regeln : List<GostBlockungRegel> = new ArrayList();
+		const regeln : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kursG of GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (const schieneE of DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schienenSet, kursG.id)) {
 				const schieneG : GostBlockungSchiene = this.getSchieneG(schieneE.id);
@@ -2790,7 +2790,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
 	 */
 	private regelGetMengeAnKursSchienenFixierungenDesKurses(idKurs : number) : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
 			if (regel.parameter.get(0) === idKurs)
 				list.add(regel);
@@ -2805,8 +2805,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
 	 */
 	private regelGetMengeAnKursSchienenFixierungenDerKurse(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const setKursIDs : HashSet<number> = new HashSet(listeDerKursIDs);
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const setKursIDs : HashSet<number> = new HashSet<number>(listeDerKursIDs);
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
 			if (setKursIDs.contains(regel.parameter.get(0)))
 				list.add(regel);
@@ -2821,7 +2821,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen des übergebenen Kurses.
 	 */
 	private regelGetMengeAllerSchuelerKursFixierungenDesKurses(idKurs : number) : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
 			if (regel.parameter.get(1) === idKurs)
 				list.add(regel);
@@ -2836,8 +2836,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
 	 */
 	private regelGetMengeAllerSchuelerKursFixierungenDerKurse(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const setKursIDs : HashSet<number> = new HashSet(listeDerKursIDs);
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const setKursIDs : HashSet<number> = new HashSet<number>(listeDerKursIDs);
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
 			if (setKursIDs.contains(regel.parameter.get(1)))
 				list.add(regel);
@@ -2861,7 +2861,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
 	 */
 	private regelGetDummyMengeAllerKursSchienenFixierungen() : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kurs of this._kursID_to_kurs.values())
 			for (const schiene of this.getOfKursSchienenmenge(kurs.id))
 				if (!this.getOfKursOfSchieneIstFixiert(kurs.id, schiene.id)) {
@@ -2880,7 +2880,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
 	 */
 	private regelGetDummyMengeAnKursSchienenFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
 			for (const schiene of this.getOfKursSchienenmenge(idKurs!))
 				if (!this.getOfKursOfSchieneIstFixiert(idKurs!, schiene.id)) {
@@ -2897,7 +2897,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
 	 */
 	private regelGetDummyMengeAllerSchuelerKursFixierungen() : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kurs of this._kursID_to_kurs.values())
 			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
 				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
@@ -2912,7 +2912,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
 	 */
 	private regelGetDummyMengeAllerSchuelerAbiturKursFixierungen() : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const kurs of this._kursID_to_kurs.values())
 			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
 				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)))
@@ -2929,7 +2929,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
 	 */
 	private regelGetDummyMengeAnKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
 			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
 				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!))
@@ -2946,7 +2946,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
 	 */
 	private regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const list : List<GostBlockungRegel> = new ArrayList();
+		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
 			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
 				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs!)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!)))
@@ -3533,7 +3533,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle LK-Schüler einer Kursmenge zu fixieren.
 	 */
 	public regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLK(idSchueler, idKurs))
@@ -3564,7 +3564,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB3(idSchueler, idKurs))
@@ -3595,7 +3595,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLKoderAB3(idSchueler, idKurs))
@@ -3626,7 +3626,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB4(idSchueler, idKurs))
@@ -3657,7 +3657,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAbiturfach(idSchueler, idKurs))
@@ -3688,7 +3688,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstSchriftlich(idSchueler, idKurs))
@@ -4645,7 +4645,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
 	public getOfSchieneSchuelermengeMitKollisionen(idSchiene : number) : JavaSet<number> {
-		const set : HashSet<number> = new HashSet();
+		const set : HashSet<number> = new HashSet<number>();
 		for (const schuelerID of this._schuelerID_to_kollisionen.keySet())
 			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, idSchiene).size() > 1)
 				set.add(schuelerID);
@@ -4660,7 +4660,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
 	public getOfSchieneKursmengeMitKollisionen(idSchiene : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
+		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const kurs of this.getSchieneE(idSchiene).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -4716,10 +4716,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
 	 */
 	public getOfSchieneTooltipKurskollisionenAsData(idSchiene : number) : List<List<Pair<GostBlockungsergebnisKurs, number>>> {
-		const listOfLists : List<List<Pair<GostBlockungsergebnisKurs, number>>> = new ArrayList();
+		const listOfLists : List<List<Pair<GostBlockungsergebnisKurs, number>>> = new ArrayList<List<Pair<GostBlockungsergebnisKurs, number>>>();
 		for (const kurs1 of this.getSchieneE(idSchiene).kurse) {
 			let summe : number = 0;
-			const listOfPairs : List<Pair<GostBlockungsergebnisKurs, number>> = new ArrayList();
+			const listOfPairs : List<Pair<GostBlockungsergebnisKurs, number>> = new ArrayList<Pair<GostBlockungsergebnisKurs, number>>();
 			for (const kurs2 of this.getSchieneE(idSchiene).kurse) {
 				if (kurs2.id !== kurs1.id) {
 					const anzahl : number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
@@ -4738,7 +4738,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {
-		const set : HashSet<number | null> = new HashSet();
+		const set : HashSet<number | null> = new HashSet<number | null>();
 		set.addAll(kurs1.schueler);
 		set.retainAll(kurs2.schueler);
 		return set.size();

@@ -19,7 +19,7 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 	/**
 	 * Die Jahrgangsbezeichungen bei den zulässigen Schulformen.
 	 */
-	public bezeichnungen : List<JahrgangsKatalogEintragBezeichnung> = new ArrayList();
+	public bezeichnungen : List<JahrgangsKatalogEintragBezeichnung> = new ArrayList<JahrgangsKatalogEintragBezeichnung>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

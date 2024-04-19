@@ -33,7 +33,7 @@ export class Adressbuch extends JavaObject {
 	/**
 	 *  eine Liste der Einträge des Adressbuchs
 	 */
-	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList();
+	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList<AdressbuchEintrag>();
 
 
 	public constructor() {

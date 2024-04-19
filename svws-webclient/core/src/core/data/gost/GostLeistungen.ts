@@ -54,7 +54,7 @@ export class GostLeistungen extends JavaObject {
 	/**
 	 * Die einzelnen Fachwahlen des Schülers.
 	 */
-	public readonly faecher : List<GostLeistungenFachwahl> = new ArrayList();
+	public readonly faecher : List<GostLeistungenFachwahl> = new ArrayList<GostLeistungenFachwahl>();
 
 
 	public constructor() {

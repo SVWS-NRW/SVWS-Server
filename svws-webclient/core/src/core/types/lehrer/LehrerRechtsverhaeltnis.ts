@@ -78,12 +78,12 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> {
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis | null> = new HashMap();
+	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis | null> = new HashMap<number, LehrerRechtsverhaeltnis | null>();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
-	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis | null> = new HashMap();
+	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis | null> = new HashMap<string, LehrerRechtsverhaeltnis | null>();
 
 	/**
 	 * Erzeugt eine neue Art von Rechtsverhältnissen in der Aufzählung.

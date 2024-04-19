@@ -9,7 +9,7 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 
-	private readonly _map1 : JavaMap<K1, JavaMap<K2, JavaMap<K3, V>>> = new HashMap();
+	private readonly _map1 : JavaMap<K1, JavaMap<K2, JavaMap<K3, V>>> = new HashMap<K1, JavaMap<K2, JavaMap<K3, V>>>();
 
 
 	/**
@@ -248,7 +248,7 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesAsList() : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		for (const map2 of this._map1.values())
 			for (const map3 of map2.values())
 				for (const value of map3.values())
@@ -264,7 +264,7 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap2AsList(key1 : K1) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 !== null) {
 			for (const map3 of map2.values())
@@ -283,7 +283,7 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Map.
 	 */
 	public getNonNullValuesOfMap3AsList(key1 : K1, key2 : K2) : List<V> {
-		const list : ArrayList<V> = new ArrayList();
+		const list : ArrayList<V> = new ArrayList<V>();
 		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 !== null) {
 			const map3 : JavaMap<K3, V> | null = map2.get(key2);

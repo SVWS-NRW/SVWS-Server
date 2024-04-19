@@ -25,7 +25,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	/**
 	 * Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind.
 	 */
-	private readonly belegungsfehler : List<GostBelegungsfehler> = new ArrayList();
+	private readonly belegungsfehler : List<GostBelegungsfehler> = new ArrayList<GostBelegungsfehler>();
 
 
 	/**
@@ -129,7 +129,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @return die Menge der Belegprüfungsfehler
 	 */
 	public static getBelegungsfehlerAlle(pruefungen : List<GostBelegpruefung>) : List<GostBelegungsfehler> {
-		const fehler : ArrayList<GostBelegungsfehler> = new ArrayList();
+		const fehler : ArrayList<GostBelegungsfehler> = new ArrayList<GostBelegungsfehler>();
 		for (let i : number = 0; i < pruefungen.size(); i++) {
 			const pruefung : GostBelegpruefung = pruefungen.get(i);
 			fehler.addAll(pruefung.getBelegungsfehler());

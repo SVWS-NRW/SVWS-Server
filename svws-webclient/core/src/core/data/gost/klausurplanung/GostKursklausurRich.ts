@@ -73,7 +73,7 @@ export class GostKursklausurRich extends JavaObject {
 	/**
 	 * Die Liste der IDs der zugehörigen Schüler.
 	 */
-	public schuelerIds : List<number> = new ArrayList();
+	public schuelerIds : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.

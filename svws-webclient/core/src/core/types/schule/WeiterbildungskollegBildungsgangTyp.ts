@@ -43,7 +43,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaEnum<Weiterbildungs
 	/**
 	 * Eine Hashmap mit allen definierten Typen von Bildungsgängen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, WeiterbildungskollegBildungsgangTyp> = new HashMap();
+	private static readonly _ebenen : HashMap<string, WeiterbildungskollegBildungsgangTyp> = new HashMap<string, WeiterbildungskollegBildungsgangTyp>();
 
 	/**
 	 * Erzeugt einen neuen Typ von Bildungsgängen in der Aufzählung.

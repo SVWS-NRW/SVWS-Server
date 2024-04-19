@@ -24,33 +24,33 @@ export class BenutzerManager extends JavaObject {
 	/**
 	 * Eine Map zum schnellen Zugriff auf die Benutzergruppendaten
 	 */
-	private readonly _mapGruppen : HashMap<number, BenutzergruppeDaten> = new HashMap();
+	private readonly _mapGruppen : HashMap<number, BenutzergruppeDaten> = new HashMap<number, BenutzergruppeDaten>();
 
 	/**
 	 * Die Ids der Benutzergruppen des Benutzers
 	 */
-	private readonly _setGruppenIDs : HashSet<number> = new HashSet();
+	private readonly _setGruppenIDs : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle Benutzer-Gruppen beinhaltet, von denen der Benutzer die Kompetenz erhalten hat.
 	 */
-	private readonly _mapKompetenzenVonGruppe : JavaMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new ArrayMap(BenutzerKompetenz.values());
+	private readonly _mapKompetenzenVonGruppe : JavaMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new ArrayMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>>(BenutzerKompetenz.values());
 
 	/**
 	 * Eine Map, welche zu einer Kompetenzgruppe eine Menge zuordnet, welche alle IDs von Benutzer-Gruppen beinhaltet, von denen der Benutzer Komptenzen in der Kompetenzgruppe erhalten hat.
 	 */
-	private readonly _mapKompetenzgruppenVonGruppe : JavaMap<BenutzerKompetenzGruppe, JavaSet<number>> = new ArrayMap(BenutzerKompetenzGruppe.values());
+	private readonly _mapKompetenzgruppenVonGruppe : JavaMap<BenutzerKompetenzGruppe, JavaSet<number>> = new ArrayMap<BenutzerKompetenzGruppe, JavaSet<number>>(BenutzerKompetenzGruppe.values());
 
 	/**
 	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist.
 	 */
-	private readonly _setKompetenzen : HashSet<BenutzerKompetenz> = new HashSet();
+	private readonly _setKompetenzen : HashSet<BenutzerKompetenz> = new HashSet<BenutzerKompetenz>();
 
 	/**
 	 *  Die Menge an Kompetenzen, die diesem Benutzer entweder direkt oder über
 	 *  mindestens eine Gruppe zugeordnet ist.
 	 */
-	private readonly _setKompetenzenAlle : HashSet<BenutzerKompetenz> = new HashSet();
+	private readonly _setKompetenzenAlle : HashSet<BenutzerKompetenz> = new HashSet<BenutzerKompetenz>();
 
 
 	/**
@@ -225,7 +225,7 @@ export class BenutzerManager extends JavaObject {
 		const benutzergruppen : JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
 		if (benutzergruppen === null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.")
-		const result : List<BenutzergruppeDaten> = new ArrayList();
+		const result : List<BenutzergruppeDaten> = new ArrayList<BenutzergruppeDaten>();
 		for (const idGruppe of benutzergruppen) {
 			const daten : BenutzergruppeDaten | null = this._mapGruppen.get(idGruppe);
 			if (daten !== null)

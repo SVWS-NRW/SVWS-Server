@@ -13,32 +13,32 @@ export class StundenplanInputSimple extends JavaObject {
 	/**
 	 * Alle Lehrkräfte.
 	 */
-	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList<StundenplanInputSimpleLehrkraft>();
 
 	/**
 	 * Alle Klassen.
 	 */
-	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList();
+	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList<StundenplanInputSimpleKlasse>();
 
 	/**
 	 * Alle Fächer.
 	 */
-	public faecher : List<StundenplanInputSimpleFach> = new ArrayList();
+	public faecher : List<StundenplanInputSimpleFach> = new ArrayList<StundenplanInputSimpleFach>();
 
 	/**
 	 * Alle Räume.
 	 */
-	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList();
+	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList<StundenplanInputSimpleRaum>();
 
 	/**
 	 * Alle Kopplungen.
 	 */
-	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList<StundenplanInputSimpleKopplung>();
 
 	/**
 	 * Alle Kurse.
 	 */
-	public kurse : List<StundenplanInputSimpleKurs> = new ArrayList();
+	public kurse : List<StundenplanInputSimpleKurs> = new ArrayList<StundenplanInputSimpleKurs>();
 
 
 	public constructor() {

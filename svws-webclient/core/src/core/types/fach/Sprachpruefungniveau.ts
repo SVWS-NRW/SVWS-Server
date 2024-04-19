@@ -58,12 +58,12 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs
 	 */
-	private static readonly _mapID : HashMap<number, Sprachpruefungniveau> = new HashMap();
+	private static readonly _mapID : HashMap<number, Sprachpruefungniveau> = new HashMap<number, Sprachpruefungniveau>();
 
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Sprachpruefungniveau> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Sprachpruefungniveau> = new HashMap<string, Sprachpruefungniveau>();
 
 	/**
 	 * Erstellt ein neues Prüfungsniveau dieser Aufzählung.

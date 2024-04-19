@@ -63,7 +63,7 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 	/**
 	 * Eine Hashmap mit allen definierten Verordnungen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _verordnungen : HashMap<string, Pruefungsordnung> = new HashMap();
+	private static readonly _verordnungen : HashMap<string, Pruefungsordnung> = new HashMap<string, Pruefungsordnung>();
 
 	/**
 	 * Erzeugt eine neue Verordnung in der Aufzählung.

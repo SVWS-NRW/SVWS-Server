@@ -72,7 +72,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	/**
 	 * Die Liste der IDs der belegten Kurse im aktuellen Abschnit
 	 */
-	public readonly kurse : List<number> = new ArrayList();
+	public readonly kurse : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

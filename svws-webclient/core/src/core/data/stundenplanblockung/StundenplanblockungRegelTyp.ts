@@ -78,7 +78,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	/**
 	 * Mapping von "Typ --> GostKursblockungRegelTyp".
 	 */
-	private static readonly _map_id_regel : HashMap<number, StundenplanblockungRegelTyp | null> = new HashMap();
+	private static readonly _map_id_regel : HashMap<number, StundenplanblockungRegelTyp | null> = new HashMap<number, StundenplanblockungRegelTyp | null>();
 
 	/**
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.

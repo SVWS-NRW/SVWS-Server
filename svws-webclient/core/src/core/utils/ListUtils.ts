@@ -22,7 +22,7 @@ export class ListUtils extends JavaObject {
 	 * @return eine gefilterte Kopie der Liste.
 	 */
 	public static getCopyFiltered<E>(list : List<E>, filter : Predicate<E>) : List<E> {
-		const listFiltered : ArrayList<E> = new ArrayList();
+		const listFiltered : ArrayList<E> = new ArrayList<E>();
 		for (const t of list)
 			if (filter.test(t))
 				listFiltered.add(t);
@@ -56,7 +56,7 @@ export class ListUtils extends JavaObject {
 	 * @return eine permutierte Kopie des Arrays als Liste.
 	 */
 	public static getCopyAsArrayListPermuted<T>(arrayOfT : Array<T>, random : Random) : List<T> {
-		const list : List<T> = new ArrayList();
+		const list : List<T> = new ArrayList<T>();
 		const perm : Array<number> | null = Array(arrayOfT.length).fill(0);
 		for (let i : number = 0; i < perm.length; i++)
 			perm[i] = i;
@@ -93,7 +93,7 @@ export class ListUtils extends JavaObject {
 			perm[i1] = save2;
 			perm[i2] = save1;
 		}
-		const list : List<T> = new ArrayList();
+		const list : List<T> = new ArrayList<T>();
 		for (let i : number = 0; i < n; i++)
 			list.add(original.get(perm[i]));
 		return list;
@@ -164,7 +164,7 @@ export class ListUtils extends JavaObject {
 	 * @return eine Liste, welche mit einem Element gefüllt wurde.
 	 */
 	public static create1<E>(element : E) : List<E> {
-		const list : ArrayList<E> = new ArrayList();
+		const list : ArrayList<E> = new ArrayList<E>();
 		list.add(element);
 		return list;
 	}
@@ -179,7 +179,7 @@ export class ListUtils extends JavaObject {
 	 * @return die Schnittmenge der beiden Listen ohne diese zu modifizieren.
 	 */
 	public static getIntersection<E>(list1 : List<E>, list2 : List<E>) : List<E> {
-		const list3 : List<E> = new ArrayList(list1);
+		const list3 : List<E> = new ArrayList<E>(list1);
 		list3.retainAll(list2);
 		return list3;
 	}

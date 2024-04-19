@@ -234,7 +234,7 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsbildungsgängen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _ebenen : HashMap<string, HerkunftBildungsgang | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftBildungsgang | null> = new HashMap<string, HerkunftBildungsgang | null>();
 
 	/**
 	 * Erzeugt einen neuen Herkunftsbildungsgang in der Aufzählung.

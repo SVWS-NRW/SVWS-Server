@@ -18,7 +18,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	/**
 	 * Alle Stundenelemente, die dieser Kopplung zugeordnet sind.
 	 */
-	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList();
+	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList<StundenplanblockungStundenelement>();
 
 
 	public constructor() {

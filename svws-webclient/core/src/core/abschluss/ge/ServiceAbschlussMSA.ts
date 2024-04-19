@@ -154,7 +154,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		let ignorieren_genutzt : boolean = false;
 		let ausgleich_genutzt : boolean = false;
 		let nachpruefung_genutzt : boolean = false;
-		const npFaecher : List<GEAbschlussFach> = new ArrayList();
+		const npFaecher : List<GEAbschlussFach> = new ArrayList<GEAbschlussFach>();
 		const fg1_defizite : number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussMSA.filterDefizite);
 		const fg2_defizite : number = faecher.fg2.getFaecherAnzahl(ServiceAbschlussMSA.filterDefizite);
 		const fg1_anzahlAusgleiche : number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussMSA.filterAusgleiche);

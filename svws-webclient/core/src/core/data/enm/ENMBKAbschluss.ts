@@ -68,7 +68,7 @@ export class ENMBKAbschluss extends JavaObject {
 	/**
 	 * Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind.
 	 */
-	public faecher : List<ENMBKFach> = new ArrayList();
+	public faecher : List<ENMBKFach> = new ArrayList<ENMBKFach>();
 
 
 	public constructor() {

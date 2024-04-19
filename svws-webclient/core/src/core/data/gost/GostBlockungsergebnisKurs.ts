@@ -27,12 +27,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	/**
 	 * Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind.
 	 */
-	public readonly schueler : List<number> = new ArrayList();
+	public readonly schueler : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die Schienen-IDs, denen der Kurs zugeordnet ist.
 	 */
-	public readonly schienen : List<number> = new ArrayList();
+	public readonly schienen : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

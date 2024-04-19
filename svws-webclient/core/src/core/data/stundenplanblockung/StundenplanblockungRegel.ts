@@ -17,7 +17,7 @@ export class StundenplanblockungRegel extends JavaObject {
 	/**
 	 * Eine Liste der Regel-Parameter
 	 */
-	public parameter : List<number> = new ArrayList();
+	public parameter : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

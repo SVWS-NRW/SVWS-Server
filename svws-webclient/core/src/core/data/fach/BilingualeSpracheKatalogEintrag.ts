@@ -20,7 +20,7 @@ export class BilingualeSpracheKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist.
 	 */
-	public schulformen : List<string> = new ArrayList();
+	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

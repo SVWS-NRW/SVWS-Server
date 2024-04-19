@@ -97,7 +97,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!", tmpNSchienen < 1);
 		const nKurse : number = pInput.kurse.size();
 		DeveloperNotificationException.ifTrue("Die Kursanzahl (" + nKurse + ") ist zu gering!", nKurse < 1);
-		const setKursID : HashSet<number | null> | null = new HashSet();
+		const setKursID : HashSet<number | null> | null = new HashSet<number | null>();
 		for (const kurs of pInput.kurse) {
 			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);
@@ -154,7 +154,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
 			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
-			const kurse : ArrayList<SchuelerblockungInputKurs> | null = new ArrayList();
+			const kurse : ArrayList<SchuelerblockungInputKurs> | null = new ArrayList<SchuelerblockungInputKurs>();
 			let hatFixiertenKurs : boolean = false;
 			for (const kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {

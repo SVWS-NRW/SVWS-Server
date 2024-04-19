@@ -151,7 +151,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 * @return die Liste der aktuellen Top-Blockungsergebnisse.
 	 */
 	public getBlockungsergebnisse() : List<GostBlockungsergebnisManager> {
-		const list : List<GostBlockungsergebnisManager> = new ArrayList();
+		const list : List<GostBlockungsergebnisManager> = new ArrayList<GostBlockungsergebnisManager>();
 		for (let i : number = 0; i < this._top.size(); i++)
 			list.add(this._top.get(i).gibErzeugtesKursblockungOutput(this._input, i));
 		return list;

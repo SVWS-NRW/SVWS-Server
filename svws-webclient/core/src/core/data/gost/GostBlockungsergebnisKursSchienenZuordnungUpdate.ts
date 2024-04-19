@@ -9,12 +9,12 @@ export class GostBlockungsergebnisKursSchienenZuordnungUpdate extends JavaObject
 	/**
 	 * Die zu entfernenden Zuordnungen
 	 */
-	public listEntfernen : List<GostBlockungsergebnisKursSchienenZuordnung> = new ArrayList();
+	public listEntfernen : List<GostBlockungsergebnisKursSchienenZuordnung> = new ArrayList<GostBlockungsergebnisKursSchienenZuordnung>();
 
 	/**
 	 * Die hinzuzufügenden Zuordnungen
 	 */
-	public listHinzuzufuegen : List<GostBlockungsergebnisKursSchienenZuordnung> = new ArrayList();
+	public listHinzuzufuegen : List<GostBlockungsergebnisKursSchienenZuordnung> = new ArrayList<GostBlockungsergebnisKursSchienenZuordnung>();
 
 	/**
 	 * Die Blockungs-Regeln, die dabei angepasst werden sollen. Das ist nur zulässig, wenn nur ein Blockungsergebnis für die Blockung vorhanden ist.

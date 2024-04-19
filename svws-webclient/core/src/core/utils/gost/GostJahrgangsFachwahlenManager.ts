@@ -13,32 +13,32 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	/**
 	 * (Fach-ID, Abifach [1=LK,3,4]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben.
 	 */
-	private readonly _map2D_fachID_abifachID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_fachID_abifachID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 	/**
 	 * (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Leistungskurs gewählt haben.
 	 */
-	private readonly _map2D_lk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_lk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 	/**
 	 * (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Grundkurs (oder PJK oder VTF) gewählt haben.
 	 */
-	private readonly _map2D_gk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_gk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 	/**
 	 * (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als schriftlichen Grundkurs gewählt haben.
 	 */
-	private readonly _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 	/**
 	 * (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als mündlichen Grundkurs (oder PJK oder VTF) gewählt haben.
 	 */
-	private readonly _map2D_gk_muendlich_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_gk_muendlich_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 	/**
 	 * (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Zusatzkurs gewählt haben.
 	 */
-	private readonly _map2D_zk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D();
+	private readonly _map2D_zk_fachID_halbjahrID_schuelerID : HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
 
 	/**

@@ -45,15 +45,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		return JavaInteger.compare(a.quartal, b.quartal);
 	} };
 
-	private readonly _vorgabe_by_id : JavaMap<number, GostKlausurvorgabe> = new HashMap();
+	private readonly _vorgabe_by_id : JavaMap<number, GostKlausurvorgabe> = new HashMap<number, GostKlausurvorgabe>();
 
-	private readonly _vorgabenmenge : List<GostKlausurvorgabe> = new ArrayList();
+	private readonly _vorgabenmenge : List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
 
-	private readonly _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurvorgabe>> = new HashMap3D();
+	private readonly _vorgabenmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurvorgabe>> = new HashMap3D<number, number, number, List<GostKlausurvorgabe>>();
 
-	private readonly _vorgabe_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach : HashMap5D<number, number, number, string, number, GostKlausurvorgabe> = new HashMap5D();
+	private readonly _vorgabe_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach : HashMap5D<number, number, number, string, number, GostKlausurvorgabe> = new HashMap5D<number, number, number, string, number, GostKlausurvorgabe>();
 
-	private readonly _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach : HashMap4D<number, number, string, number, List<GostKlausurvorgabe>> = new HashMap4D();
+	private readonly _vorgabenmenge_by_abijahr_and_halbjahr_and_kursartAllg_and_idFach : HashMap4D<number, number, string, number, List<GostKlausurvorgabe>> = new HashMap4D<number, number, string, number, List<GostKlausurvorgabe>>();
 
 
 	/**
@@ -168,7 +168,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private vorgabeAddAllOhneUpdate(list : List<GostKlausurvorgabe>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const vorgabe of list) {
 			GostKlausurvorgabenManager.vorgabeCheck(vorgabe);
 			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.idVorgabe + " existiert bereits!", this._vorgabe_by_id.containsKey(vorgabe.idVorgabe));
@@ -265,7 +265,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public vorgabeGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0) {
-			const vorgaben : List<GostKlausurvorgabe> | null = new ArrayList();
+			const vorgaben : List<GostKlausurvorgabe> | null = new ArrayList<GostKlausurvorgabe>();
 			if (this._vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.containsKey1AndKey2(abiJahrgang, halbjahr.id))
 				for (const vQuartal of this._vorgabenmenge_by_abijahr_and_halbjahr_and_quartal.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id)) {
 					vorgaben.addAll(vQuartal);
@@ -305,7 +305,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		if (quartal > 0) {
-			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
+			const retList : List<GostKlausurvorgabe> | null = new ArrayList<GostKlausurvorgabe>();
 			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(abiJahrgang, halbjahr, quartal, kursartAllg, idFach);
 			if (vorgabe !== null)
 				retList.add(vorgabe);

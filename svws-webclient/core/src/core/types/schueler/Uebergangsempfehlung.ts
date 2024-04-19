@@ -59,7 +59,7 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> {
 	/**
 	 * Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung | null> = new HashMap<string, Uebergangsempfehlung | null>();
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.

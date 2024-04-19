@@ -18,7 +18,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	/**
 	 * Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist.
 	 */
-	public zulaessig : List<SchulformGliederungJahrgaenge> = new ArrayList();
+	public zulaessig : List<SchulformGliederungJahrgaenge> = new ArrayList<SchulformGliederungJahrgaenge>();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

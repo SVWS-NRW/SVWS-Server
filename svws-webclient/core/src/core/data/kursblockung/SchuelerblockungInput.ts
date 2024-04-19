@@ -14,17 +14,17 @@ export class SchuelerblockungInput extends JavaObject {
 	/**
 	 * Alle Kurse, die zu den Fachwahlen des Schülers passen.
 	 */
-	public kurse : List<SchuelerblockungInputKurs> = new ArrayList();
+	public kurse : List<SchuelerblockungInputKurs> = new ArrayList<SchuelerblockungInputKurs>();
 
 	/**
 	 * Alle Fachwahlen des Schülers.
 	 */
-	public fachwahlen : List<GostFachwahl> = new ArrayList();
+	public fachwahlen : List<GostFachwahl> = new ArrayList<GostFachwahl>();
 
 	/**
 	 * Zu jeder Fachwahl eine textuelle Darstellung.
 	 */
-	public fachwahlenText : List<string> = new ArrayList();
+	public fachwahlenText : List<string> = new ArrayList<string>();
 
 
 	public constructor() {

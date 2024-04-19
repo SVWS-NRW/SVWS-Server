@@ -38,19 +38,19 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
 	 */
-	private readonly _mapKursIstSichtbar : HashMap2D<boolean, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursIstSichtbar : HashMap2D<boolean, number, KursDaten> = new HashMap2D<boolean, number, KursDaten>();
 
-	private readonly _mapKursInJahrgang : HashMap2D<number, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursInJahrgang : HashMap2D<number, number, KursDaten> = new HashMap2D<number, number, KursDaten>();
 
-	private readonly _mapKursHatSchueler : HashMap2D<number, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursHatSchueler : HashMap2D<number, number, KursDaten> = new HashMap2D<number, number, KursDaten>();
 
-	private readonly _mapLehrerInKurs : HashMap2D<number, number, KursDaten> = new HashMap2D();
+	private readonly _mapLehrerInKurs : HashMap2D<number, number, KursDaten> = new HashMap2D<number, number, KursDaten>();
 
-	private readonly _mapKursHatFach : HashMap2D<number, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursHatFach : HashMap2D<number, number, KursDaten> = new HashMap2D<number, number, KursDaten>();
 
-	private readonly _mapKursInSchulgliederung : HashMap2D<string, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursInSchulgliederung : HashMap2D<string, number, KursDaten> = new HashMap2D<string, number, KursDaten>();
 
-	private readonly _mapKursByKuerzelAndJahrgang : HashMap2D<string, number, KursDaten> = new HashMap2D();
+	private readonly _mapKursByKuerzelAndJahrgang : HashMap2D<string, number, KursDaten> = new HashMap2D<string, number, KursDaten>();
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -182,7 +182,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @return die Schulgliederungen des Kurses
 	 */
 	public datenGetSchulgliederung() : List<Schulgliederung> {
-		const result : List<Schulgliederung> = new ArrayList();
+		const result : List<Schulgliederung> = new ArrayList<Schulgliederung>();
 		if ((this._daten === null) || (this._daten.idJahrgaenge.isEmpty()))
 			return result;
 		for (const idJahrgang of this._daten.idJahrgaenge) {

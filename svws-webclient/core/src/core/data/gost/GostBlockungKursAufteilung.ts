@@ -18,12 +18,12 @@ export class GostBlockungKursAufteilung extends JavaObject {
 	/**
 	 * Die IDs der Schüler, die dem ersten Kurs zugeordnet bleiben.
 	 */
-	public schueler1 : List<number> = new ArrayList();
+	public schueler1 : List<number> = new ArrayList<number>();
 
 	/**
 	 * Die IDs der Schüler, die dem zweiten Kurs zugeordnet werden.
 	 */
-	public schueler2 : List<number> = new ArrayList();
+	public schueler2 : List<number> = new ArrayList<number>();
 
 
 	public constructor() {

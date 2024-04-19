@@ -113,47 +113,47 @@ export class GostKursklausurManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
-	private readonly _kursklausur_by_id : JavaMap<number, GostKursklausur> = new HashMap();
+	private readonly _kursklausur_by_id : JavaMap<number, GostKursklausur> = new HashMap<number, GostKursklausur>();
 
-	private readonly _kursklausurmenge : List<GostKursklausur> = new ArrayList();
+	private readonly _kursklausurmenge : List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
-	private readonly _kursklausurmenge_by_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKursklausur>> = new HashMap3D();
+	private readonly _kursklausurmenge_by_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKursklausur>> = new HashMap3D<number, number, number, List<GostKursklausur>>();
 
-	private readonly _kursklausurmenge_by_idTermin : JavaMap<number, List<GostKursklausur>> = new HashMap();
+	private readonly _kursklausurmenge_by_idTermin : JavaMap<number, List<GostKursklausur>> = new HashMap<number, List<GostKursklausur>>();
 
-	private readonly _kursklausurmenge_by_idVorgabe : JavaMap<number, List<GostKursklausur>> = new HashMap();
+	private readonly _kursklausurmenge_by_idVorgabe : JavaMap<number, List<GostKursklausur>> = new HashMap<number, List<GostKursklausur>>();
 
-	private readonly _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal : HashMap4D<number, number, number, number, List<GostKursklausur>> = new HashMap4D();
+	private readonly _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal : HashMap4D<number, number, number, number, List<GostKursklausur>> = new HashMap4D<number, number, number, number, List<GostKursklausur>>();
 
-	private readonly _kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal : HashMap4D<number, number, number, number, GostKursklausur> = new HashMap4D();
+	private readonly _kursklausur_by_idKurs_and_abijahr_and_halbjahr_and_quartal : HashMap4D<number, number, number, number, GostKursklausur> = new HashMap4D<number, number, number, number, GostKursklausur>();
 
-	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
+	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D<number, number, List<GostKursklausur>>();
 
-	private readonly _kursklausurmenge_by_terminId_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
+	private readonly _kursklausurmenge_by_terminId_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D<number, number, List<GostKursklausur>>();
 
-	private readonly _termin_by_id : JavaMap<number, GostKlausurtermin> = new HashMap();
+	private readonly _termin_by_id : JavaMap<number, GostKlausurtermin> = new HashMap<number, GostKlausurtermin>();
 
-	private readonly _terminmenge : List<GostKlausurtermin> = new ArrayList();
+	private readonly _terminmenge : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
-	private readonly _terminmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurtermin>> = new HashMap3D();
+	private readonly _terminmenge_by_abijahr_and_halbjahr_and_quartal : HashMap3D<number, number, number, List<GostKlausurtermin>> = new HashMap3D<number, number, number, List<GostKlausurtermin>>();
 
-	private readonly _terminmenge_by_datum_and_abijahr : HashMap2D<string, number, List<GostKlausurtermin>> = new HashMap2D();
+	private readonly _terminmenge_by_datum_and_abijahr : HashMap2D<string, number, List<GostKlausurtermin>> = new HashMap2D<string, number, List<GostKlausurtermin>>();
 
-	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap();
+	private readonly _schuelerklausur_by_id : JavaMap<number, GostSchuelerklausur> = new HashMap<number, GostSchuelerklausur>();
 
-	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList();
+	private readonly _schuelerklausurmenge : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 
-	private readonly _schuelerklausurmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausur>> = new HashMap();
+	private readonly _schuelerklausurmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausur>> = new HashMap<number, List<GostSchuelerklausur>>();
 
-	private readonly _schuelerklausurtermin_by_id : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
+	private readonly _schuelerklausurtermin_by_id : JavaMap<number, GostSchuelerklausurTermin> = new HashMap<number, GostSchuelerklausurTermin>();
 
-	private readonly _schuelerklausurterminmenge : List<GostSchuelerklausurTermin> = new ArrayList();
+	private readonly _schuelerklausurterminmenge : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
-	private readonly _schuelerklausurterminmenge_by_idSchuelerklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idSchuelerklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D();
+	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>>();
 
 
 	/**
@@ -396,7 +396,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private kursklausurAddAllOhneUpdate(list : List<GostKursklausur>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const klausur of list) {
 			GostKursklausurManager.kursklausurCheck(klausur);
 			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._kursklausur_by_id.containsKey(klausur.id));
@@ -521,7 +521,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private terminAddAllOhneUpdate(list : List<GostKlausurtermin>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const termin of list) {
 			GostKursklausurManager.terminCheck(termin);
 			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " existiert bereits!", this._termin_by_id.containsKey(termin.id));
@@ -633,7 +633,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private schuelerklausurAddAllOhneUpdate(list : List<GostSchuelerklausur>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const klausur of list) {
 			GostKursklausurManager.schuelerklausurCheck(klausur);
 			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._schuelerklausur_by_id.containsKey(klausur.id));
@@ -736,7 +736,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private schuelerklausurterminAddAllOhneUpdate(list : List<GostSchuelerklausurTermin>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfIDs : HashSet<number> = new HashSet<number>();
 		for (const schuelerklausurtermin of list) {
 			GostKursklausurManager.schuelerklausurterminCheck(schuelerklausurtermin);
 			DeveloperNotificationException.ifTrue("schuelerklausurterminAddAllOhneUpdate: ID=" + schuelerklausurtermin.id + " existiert bereits!", this._schuelerklausurtermin_by_id.containsKey(schuelerklausurtermin.id));
@@ -847,7 +847,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminGetMengeByDatum(datum : string) : List<GostKlausurtermin> {
-		const ergebnis : List<GostKlausurtermin> = new ArrayList();
+		const ergebnis : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 		if (!this._terminmenge_by_datum_and_abijahr.containsKey1(datum))
 			return ergebnis;
 		for (const termine of this._terminmenge_by_datum_and_abijahr.getNonNullValuesOfKey1AsList(datum))
@@ -877,7 +877,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminGetFremdmengeByDatumAndAbijahr(datum : string, abiJahrgang : number) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> = new ArrayList();
+		const termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 		const jgDatumMap : JavaMap<number, List<GostKlausurtermin> | null> | null = this._terminmenge_by_datum_and_abijahr.getSubMapOrNull(datum);
 		if (jgDatumMap !== null)
 			for (const entry of jgDatumMap.entrySet())
@@ -899,7 +899,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public terminGetMengeByDatumAndAbijahrAndZeitraster(datum : string, abiJahrgang : number, zr : StundenplanZeitraster, manager : StundenplanManager) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = this.terminGetMengeByDatumAndAbijahr(datum, abiJahrgang);
-		const retList : List<GostKlausurtermin> | null = new ArrayList();
+		const retList : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const termin of termine) {
 			const maxKlausurDauer : number = this.maxKlausurdauerGetByTerminid(termin.id);
 			const zrsTermin : List<StundenplanZeitraster> = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit)!, maxKlausurDauer);
@@ -960,7 +960,7 @@ export class GostKursklausurManager extends JavaObject {
 			const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.getOrNull(abiJahrgang, halbjahr.id, -1, quartal);
 			return klausuren !== null ? klausuren : new ArrayList();
 		}
-		const klausuren : List<GostKursklausur> | null = new ArrayList();
+		const klausuren : List<GostKursklausur> | null = new ArrayList<GostKursklausur>();
 		for (const kl of this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, -1)) {
 			klausuren.addAll(kl);
 		}
@@ -979,7 +979,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		if (quartal > 0) {
 			if (this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal) !== null)
 				termine.addAll(this._terminmenge_by_abijahr_and_halbjahr_and_quartal.getOrNull(abiJahrgang, halbjahr.id, quartal));
@@ -1006,7 +1006,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von NT-GostKlausurtermin-Objekten
 	 */
 	public terminGetNTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (!t.istHaupttermin || t.nachschreiberZugelassen)
 				termine.add(t);
@@ -1026,7 +1026,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
 	public terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		const termine : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const t of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (t.istHaupttermin)
 				termine.add(t);
@@ -1041,7 +1041,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminMitDatumGetMenge() : List<GostKlausurtermin> {
-		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const termin of this._terminmenge)
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
@@ -1062,7 +1062,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public terminMitDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
-		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const termin of this.terminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
@@ -1083,7 +1083,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von HT-GostKlausurtermin-Objekten
 	 */
 	public terminMitDatumGetHTMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
-		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList<GostKlausurtermin>();
 		for (const termin of this.terminGetHTMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, includeMultiquartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
@@ -1104,7 +1104,7 @@ export class GostKursklausurManager extends JavaObject {
 		const schuelertermine : List<GostSchuelerklausurTermin> = this.schuelerklausurterminNtByTerminid(idTermin);
 		if (klausuren.isEmpty() && schuelertermine.isEmpty())
 			return DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin).quartal;
-		const vorgaben : List<GostKlausurvorgabe> = new ArrayList();
+		const vorgaben : List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
 		for (const k of klausuren)
 			vorgaben.add(this.vorgabeByKursklausur(k));
 		for (const k of schuelertermine)
@@ -1254,7 +1254,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return d
 	 */
 	private berechneKonflikteSchuelerklausurtermine(menge1 : List<GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
-		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap();
+		const map1 : JavaMap<number, GostSchuelerklausurTermin> = new HashMap<number, GostSchuelerklausurTermin>();
 		if (menge1 !== null)
 			for (const termin1 of menge1)
 				DeveloperNotificationException.ifMapPutOverwrites(map1, this.schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
@@ -1270,7 +1270,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return d
 	 */
 	private berechneKonflikteMapschuelerklausurterminToListSchuelerklausurtermin(menge1 : JavaMap<number, GostSchuelerklausurTermin> | null, menge2 : List<GostSchuelerklausurTermin> | null) : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> {
-		const ergebnis : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> = new HashMap();
+		const ergebnis : JavaMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin> = new HashMap<GostSchuelerklausurTermin, GostSchuelerklausurTermin>();
 		if (menge1 === null || menge2 === null)
 			return ergebnis;
 		for (const skt2 of menge2) {
@@ -1304,7 +1304,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Anzahl der Konflikte
 	 */
 	public konfliktZuKursklausurBySchuelerklausur(schuelerklausur : GostSchuelerklausur, kursklausur : GostKursklausur) : boolean {
-		let schuelerids : List<number> = new ArrayList();
+		let schuelerids : List<number> = new ArrayList<number>();
 		for (let sk of this.schuelerklausurGetMengeByKursklausurid(kursklausur.id))
 			schuelerids.add(sk.idSchueler);
 		return schuelerids.contains(schuelerklausur.idSchueler);
@@ -1336,7 +1336,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(idTermin : number, idKursklausur : number) : JavaMap<GostKursklausur, JavaSet<number>> {
 		const klausuren1 : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
-		const klausuren2 : List<GostKursklausur> | null = new ArrayList();
+		const klausuren2 : List<GostKursklausur> | null = new ArrayList<GostKursklausur>();
 		klausuren2.add(DeveloperNotificationException.ifMapGetIsNull(this._kursklausur_by_id, idKursklausur));
 		return this.berechneKonflikte(klausuren1 !== null ? klausuren1 : new ArrayList(), klausuren2);
 	}
@@ -1352,9 +1352,9 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Anzahl der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur : GostKursklausur) : number {
-		const klausuren1 : List<GostKursklausur> = new ArrayList(DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, klausur.idTermin));
+		const klausuren1 : List<GostKursklausur> = new ArrayList<GostKursklausur>(DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, klausur.idTermin));
 		klausuren1.remove(klausur);
-		const klausuren2 : List<GostKursklausur> | null = new ArrayList();
+		const klausuren2 : List<GostKursklausur> | null = new ArrayList<GostKursklausur>();
 		klausuren2.add(klausur);
 		return GostKursklausurManager.countKonflikte(this.berechneKonflikte(klausuren1, klausuren2));
 	}
@@ -1387,8 +1387,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
-		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap();
-		const kursklausuren2Copy : List<GostKursklausur> | null = new ArrayList(klausuren2);
+		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap<GostKursklausur, JavaSet<number>>();
+		const kursklausuren2Copy : List<GostKursklausur> | null = new ArrayList<GostKursklausur>(klausuren2);
 		for (const kk1 of klausuren1) {
 			kursklausuren2Copy.remove(kk1);
 			for (const kk2 of kursklausuren2Copy) {
@@ -1403,13 +1403,13 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
-		const konflikte : HashSet<number> = new HashSet(this.getSchuelerIDsFromKursklausur(kk1));
+		const konflikte : HashSet<number> = new HashSet<number>(this.getSchuelerIDsFromKursklausur(kk1));
 		konflikte.retainAll(this.getSchuelerIDsFromKursklausur(kk2));
 		return konflikte;
 	}
 
 	private static countKonflikte(konflikte : JavaMap<GostKursklausur, JavaSet<number>>) : number {
-		const susIds : HashSet<number> = new HashSet();
+		const susIds : HashSet<number> = new HashSet<number>();
 		for (const klausurSids of konflikte.values())
 			susIds.addAll(klausurSids);
 		return susIds.size();
@@ -1446,7 +1446,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
 	public klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(termin : GostKlausurtermin, klausur : GostKursklausur | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
-		const ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
+		const ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap<number, List<GostKursklausur>>();
 		if (termin.datum === null)
 			return ergebnis;
 		const kw : number = DateUtils.gibKwDesDatumsISO8601(termin.datum);
@@ -1472,7 +1472,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste der Schüler-IDs
 	 */
 	public getSchuelerIDsFromSchuelerklausuren(sks : List<GostSchuelerklausur>) : List<number> {
-		const ids : List<number> = new ArrayList();
+		const ids : List<number> = new ArrayList<number>();
 		for (const sk of sks) {
 			ids.add(sk.idSchueler);
 		}
@@ -1511,7 +1511,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
-		const ergebnis : JavaMap<number, HashSet<GostKursklausur>> = new HashMap();
+		const ergebnis : JavaMap<number, HashSet<GostKursklausur>> = new HashMap<number, HashSet<GostKursklausur>>();
 		const kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
@@ -1761,7 +1761,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von Schülerklausur-Terminen
 	 */
 	public schuelerklausurGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausur> {
-		const ergebnis : List<GostSchuelerklausur> | null = new ArrayList();
+		const ergebnis : List<GostSchuelerklausur> | null = new ArrayList<GostSchuelerklausur>();
 		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(idTermin);
 		if (list === null)
 			return ergebnis;
@@ -1778,7 +1778,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von Folge-Schülerklausur-Terminen
 	 */
 	public schuelerklausurterminFolgeterminGetMengeByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
-		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		for (const skt of this.schuelerklausurterminGetMengeByTerminid(idTermin))
 			if (skt.folgeNr > 0)
 				ergebnis.add(skt);
@@ -1808,7 +1808,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
-		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		if (quartal > 0) {
 			const skts : JavaMap<number, List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap4OrNull(abiJahrgang, halbjahr.id, quartal);
 			if (skts !== null)
@@ -1837,7 +1837,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
-		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		for (const termin of this.schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal)) {
 			const t : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(termin);
 			if (t !== null && t.datum !== null)
@@ -1861,7 +1861,7 @@ export class GostKursklausurManager extends JavaObject {
 			const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getOrNull(abiJahrgang, halbjahr.id, quartal, -1);
 			return skts !== null ? skts : new ArrayList();
 		}
-		const skts : List<GostSchuelerklausurTermin> = new ArrayList();
+		const skts : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		const mapHalbjahr : JavaMap<number, JavaMap<number, List<GostSchuelerklausurTermin>>> | null = this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.getMap3OrNull(abiJahrgang, halbjahr.id);
 		if (mapHalbjahr !== null)
 			for (const sktList of mapHalbjahr.values()) {
@@ -1891,7 +1891,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostSchuelerklausurTermin-Objekten
 	 */
 	public schuelerklausurterminNtByTerminid(idTermin : number) : List<GostSchuelerklausurTermin> {
-		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList();
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		const listSkts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminGetMengeByTerminid(idTermin);
 		if (listSkts !== null)
 			for (const skt of listSkts)

@@ -175,7 +175,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Liste alle Sprachen, die in der GOSt fortgeführt werden können.
 	 */
 	public static getFortfuehrbareSprachenInGOSt(sprachendaten : Sprachendaten | null) : List<string> {
-		const sprachen : List<string> = new ArrayList();
+		const sprachen : List<string> = new ArrayList<string>();
 		if (sprachendaten !== null) {
 			const belegungen : List<Sprachbelegung> = sprachendaten.belegungen;
 			if (belegungen !== null && !belegungen.isEmpty()) {
@@ -445,7 +445,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return List mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
 	 */
 	private static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungsbeginnStart : string | null, belegungsbeginnEnde : string | null, mindestBelegdauer : number | null) : List<Sprachbelegung> {
-		const resultBelegungen : List<Sprachbelegung> = new ArrayList();
+		const resultBelegungen : List<Sprachbelegung> = new ArrayList<Sprachbelegung>();
 		if (sprachendaten === null || sprachendaten.belegungen === null || belegungsbeginnStart === null || JavaObject.equalsTranspiler("", (belegungsbeginnStart)) || belegungsbeginnEnde === null || JavaObject.equalsTranspiler("", (belegungsbeginnEnde)) || mindestBelegdauer === null || mindestBelegdauer < 0)
 			return resultBelegungen;
 		let belegtVonJahrgangNumerisch : number;

@@ -39,32 +39,32 @@ export class GostBlockungsdaten extends JavaObject {
 	/**
 	 * Die Definition der Schienen
 	 */
-	public schienen : List<GostBlockungSchiene> = new ArrayList();
+	public schienen : List<GostBlockungSchiene> = new ArrayList<GostBlockungSchiene>();
 
 	/**
 	 * Die Definition der Regeln
 	 */
-	public regeln : List<GostBlockungRegel> = new ArrayList();
+	public regeln : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 
 	/**
 	 * Die für die Blockung angelegten Kurse
 	 */
-	public kurse : List<GostBlockungKurs> = new ArrayList();
+	public kurse : List<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 
 	/**
 	 * Die SchülerInnen für die Blockung.
 	 */
-	public schueler : List<Schueler> = new ArrayList();
+	public schueler : List<Schueler> = new ArrayList<Schueler>();
 
 	/**
 	 * Die Fachwahlen für die Blockung
 	 */
-	public fachwahlen : List<GostFachwahl> = new ArrayList();
+	public fachwahlen : List<GostFachwahl> = new ArrayList<GostFachwahl>();
 
 	/**
 	 * Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.
 	 */
-	public readonly ergebnisse : List<GostBlockungsergebnis> = new ArrayList();
+	public readonly ergebnisse : List<GostBlockungsergebnis> = new ArrayList<GostBlockungsergebnis>();
 
 
 	public constructor() {

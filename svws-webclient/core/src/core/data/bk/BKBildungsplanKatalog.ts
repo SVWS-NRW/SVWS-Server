@@ -13,7 +13,7 @@ export class BKBildungsplanKatalog extends JavaObject {
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public lehrplaene : List<BKBildungsplanKatalogEintrag> = new ArrayList();
+	public lehrplaene : List<BKBildungsplanKatalogEintrag> = new ArrayList<BKBildungsplanKatalogEintrag>();
 
 
 	public constructor() {

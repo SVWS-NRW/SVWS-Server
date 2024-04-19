@@ -138,7 +138,7 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	/**
 	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz-Gruppe
 	 */
-	private static readonly _mapID : HashMap<number, BenutzerKompetenzGruppe> = new HashMap();
+	private static readonly _mapID : HashMap<number, BenutzerKompetenzGruppe> = new HashMap<number, BenutzerKompetenzGruppe>();
 
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz-Gruppe für die Aufzählung.

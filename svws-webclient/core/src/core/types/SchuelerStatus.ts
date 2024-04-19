@@ -57,12 +57,12 @@ export class SchuelerStatus extends JavaEnum<SchuelerStatus> {
 	/**
 	 * Die Zuordnung des Schüler-Status zu der ID
 	 */
-	private static readonly _mapID : HashMap<number, SchuelerStatus> = new HashMap();
+	private static readonly _mapID : HashMap<number, SchuelerStatus> = new HashMap<number, SchuelerStatus>();
 
 	/**
 	 * Die Zuordnung des Schüler-Status zu der ID
 	 */
-	private static readonly _mapBezeichnungen : HashMap<string, SchuelerStatus> = new HashMap();
+	private static readonly _mapBezeichnungen : HashMap<string, SchuelerStatus> = new HashMap<string, SchuelerStatus>();
 
 	/**
 	 * Die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird.

@@ -108,12 +108,12 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
-	private static readonly _statusByID : HashMap<number, KAOABerufsfeld> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOABerufsfeld> = new HashMap<number, KAOABerufsfeld>();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
-	private static readonly _statusByKuerzel : HashMap<string, KAOABerufsfeld> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOABerufsfeld> = new HashMap<string, KAOABerufsfeld>();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.

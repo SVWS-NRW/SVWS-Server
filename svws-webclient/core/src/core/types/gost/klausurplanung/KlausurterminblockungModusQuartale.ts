@@ -33,7 +33,7 @@ export class KlausurterminblockungModusQuartale extends JavaEnum<Klausurterminbl
 	/**
 	 * Eine Map mit der Zuordnung zu der ID
 	 */
-	private static readonly _mapID : HashMap<number, KlausurterminblockungModusQuartale> = new HashMap();
+	private static readonly _mapID : HashMap<number, KlausurterminblockungModusQuartale> = new HashMap<number, KlausurterminblockungModusQuartale>();
 
 	/**
 	 * Erstellt einen neuen Modus.

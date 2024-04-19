@@ -53,7 +53,7 @@ export class Kindergartenbesuch extends JavaEnum<Kindergartenbesuch> {
 	/**
 	 * Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<number, Kindergartenbesuch | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<number, Kindergartenbesuch | null> = new HashMap<number, Kindergartenbesuch | null>();
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.

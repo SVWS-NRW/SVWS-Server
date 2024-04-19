@@ -27,7 +27,7 @@ export class MapUtils extends JavaObject {
 		const set : JavaSet<V> | null = map.get(key);
 		if (set !== null)
 			return set;
-		const setNeu : HashSet<V> = new HashSet();
+		const setNeu : HashSet<V> = new HashSet<V>();
 		map.put(key, setNeu);
 		return setNeu;
 	}
@@ -46,7 +46,7 @@ export class MapUtils extends JavaObject {
 		const list : List<V> | null = map.get(key);
 		if (list !== null)
 			return list;
-		const listNeu : ArrayList<V> = new ArrayList();
+		const listNeu : ArrayList<V> = new ArrayList<V>();
 		map.put(key, listNeu);
 		return listNeu;
 	}
@@ -67,7 +67,7 @@ export class MapUtils extends JavaObject {
 			if (!list.contains(value))
 				list.add(value);
 		} else {
-			const listNeu : List<V> | null = new ArrayList();
+			const listNeu : List<V> | null = new ArrayList<V>();
 			listNeu.add(value);
 			map.put(key, listNeu);
 		}
@@ -88,7 +88,7 @@ export class MapUtils extends JavaObject {
 		if (list !== null) {
 			list.add(value);
 		} else {
-			const listNeu : List<V> | null = new ArrayList();
+			const listNeu : List<V> | null = new ArrayList<V>();
 			listNeu.add(value);
 			map.put(key, listNeu);
 		}

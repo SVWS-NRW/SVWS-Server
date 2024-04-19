@@ -18,7 +18,7 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	/**
 	 * Die Historie des Katalog-Eintrags.
 	 */
-	public historie : List<BerufskollegFachklassenKatalogDaten> = new ArrayList();
+	public historie : List<BerufskollegFachklassenKatalogDaten> = new ArrayList<BerufskollegFachklassenKatalogDaten>();
 
 
 	public constructor() {

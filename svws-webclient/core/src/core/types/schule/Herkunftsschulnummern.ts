@@ -137,7 +137,7 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsschulnummern, zugeordnet zu ihren Schulnummern
 	 */
-	private static readonly _mapBySchulnummer : HashMap<number, Herkunftsschulnummern | null> = new HashMap();
+	private static readonly _mapBySchulnummer : HashMap<number, Herkunftsschulnummern | null> = new HashMap<number, Herkunftsschulnummern | null>();
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulnummer in der Aufzählung.

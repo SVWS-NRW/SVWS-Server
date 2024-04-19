@@ -35,7 +35,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		const dynDaten : KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, pInput);
 		const zeitBedarf : number = dynDaten.gibBlockungszeitMillis();
 		const zeitEndeGesamt : number = System.currentTimeMillis() + zeitBedarf;
-		const kursblockungOutputs : ArrayList<GostBlockungsergebnisManager> = new ArrayList();
+		const kursblockungOutputs : ArrayList<GostBlockungsergebnisManager> = new ArrayList<GostBlockungsergebnisManager>();
 		const algorithmenK : Array<KursblockungAlgorithmusK> = [new KursblockungAlgorithmusKSchnellW(random, this.logger, dynDaten), new KursblockungAlgorithmusKFachwahlmatrix(random, this.logger, dynDaten), new KursblockungAlgorithmusKMatching(random, this.logger, dynDaten), new KursblockungAlgorithmusKSchuelervorschlag(random, this.logger, dynDaten), new KursblockungAlgorithmusKOptimiereBest(random, this.logger, dynDaten)];
 		const algorithmenS : Array<KursblockungAlgorithmusS> = [new KursblockungAlgorithmusSSchnellW(random, this.logger, dynDaten), new KursblockungAlgorithmusSZufaellig(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatching(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatchingW(random, this.logger, dynDaten)];
 		let zeitProK : number = 100;

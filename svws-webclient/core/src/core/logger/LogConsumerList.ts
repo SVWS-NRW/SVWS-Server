@@ -21,7 +21,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	/**
 	 * Der Vektor mit den gesammelten Log-Informationen.
 	 */
-	private readonly logData : ArrayList<LogData> = new ArrayList();
+	private readonly logData : ArrayList<LogData> = new ArrayList<LogData>();
 
 
 	/**
@@ -111,7 +111,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 			return this.getStrings("");
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
 			const indent : string = __param0;
-			const result : ArrayList<string> | null = new ArrayList();
+			const result : ArrayList<string> | null = new ArrayList<string>();
 			let temp : string = indent;
 			for (let i : number = 0; i < this.logData.size(); i++) {
 				const data : LogData = this.logData.get(i);

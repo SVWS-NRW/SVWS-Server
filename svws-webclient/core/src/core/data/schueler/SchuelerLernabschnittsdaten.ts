@@ -235,7 +235,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
 	 */
-	public leistungsdaten : List<SchuelerLeistungsdaten> = new ArrayList();
+	public leistungsdaten : List<SchuelerLeistungsdaten> = new ArrayList<SchuelerLeistungsdaten>();
 
 
 	public constructor() {

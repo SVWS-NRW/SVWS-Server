@@ -14,12 +14,12 @@ export class Sprachendaten extends JavaObject {
 	/**
 	 * Die Liste der Sprachbelegungen.
 	 */
-	public belegungen : List<Sprachbelegung> = new ArrayList();
+	public belegungen : List<Sprachbelegung> = new ArrayList<Sprachbelegung>();
 
 	/**
 	 * Die Liste der Sprachpruefungen.
 	 */
-	public pruefungen : List<Sprachpruefung> = new ArrayList();
+	public pruefungen : List<Sprachpruefung> = new ArrayList<Sprachpruefung>();
 
 
 	public constructor() {

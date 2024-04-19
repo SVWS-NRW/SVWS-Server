@@ -9,9 +9,9 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
-	private readonly _menge : List<StundenplanblockungManagerRaum> = new ArrayList();
+	private readonly _menge : List<StundenplanblockungManagerRaum> = new ArrayList<StundenplanblockungManagerRaum>();
 
-	private readonly _map : JavaMap<number, StundenplanblockungManagerRaum> = new HashMap();
+	private readonly _map : JavaMap<number, StundenplanblockungManagerRaum> = new HashMap<number, StundenplanblockungManagerRaum>();
 
 
 	public constructor() {

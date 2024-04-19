@@ -77,7 +77,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		let blockIAnzahlErsatzfach : number = 0;
 		const kursarten : Array<GostKursart> = GostKursart.values();
 		for (const halbjahr of GostHalbjahr.values()) {
-			const kurszahlenHalbjahr : ArrayMap<GostKursart, number> = new ArrayMap(GostKursart.values());
+			const kurszahlenHalbjahr : ArrayMap<GostKursart, number> = new ArrayMap<GostKursart, number>(GostKursart.values());
 			this.kurszahlen.put(halbjahr, kurszahlenHalbjahr);
 			for (const kursart of kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);

@@ -313,7 +313,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	public toSortedArray() : Array<T> {
 		if (this._size === 0)
 			return Array(0).fill(null);
-		const copy : MinHeap<T> = new MinHeap(this);
+		const copy : MinHeap<T> = new MinHeap<T>(this);
 		const tmp : Array<T> = this.newArray(this._nodes[0], this._size);
 		let current : T | null;
 		let i : number = 0;
