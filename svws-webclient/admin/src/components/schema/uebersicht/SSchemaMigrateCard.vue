@@ -24,13 +24,13 @@
 				<svws-ui-input-wrapper v-if="targetSchema === undefined">
 					<div class="text-button -mb-1 mt-2">Ziel-Datenbank (wird erstellt)</div>
 					<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
-					<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" />
+					<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
 					<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 				</svws-ui-input-wrapper>
 			</div>
 		</div>
-		<div class="flex gap-1 items-start">
-			<svws-ui-button @click="migrate" :disabled="loading().value || (migrationQuellinformationen().dbms === 'mdb' && !file)"> <svws-ui-spinner :spinning="loading().value" /> Migrieren </svws-ui-button>
+		<div class="flex gap-1 items-start mt-1">
+			<svws-ui-button @click="migrate" :disabled="loading().value || (migrationQuellinformationen().dbms === 'mdb' && !file) || (zielUsername === 'root')"> <svws-ui-spinner :spinning="loading().value" /> Migrieren </svws-ui-button>
 		</div>
 	</svws-ui-content-card>
 </template>

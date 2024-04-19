@@ -26,7 +26,7 @@
 					<div class="flex flex-col gap-3 w-128 text-left" v-if="targetSchema === undefined">
 						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
 						<svws-ui-text-input v-model.trim="zielSchema" placeholder="Schema (wird erstellt, z.B. svwsdb)" />
-						<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" />
+						<svws-ui-text-input v-model.trim="zielUsername" placeholder="Name des Datenbankbenutzers" :valid="value => value !== 'root'" />
 						<svws-ui-text-input v-model.trim="zielUserPassword" placeholder="Passwort des Datenbankbenutzers" type="password" />
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
-				<svws-ui-button type="secondary" @click="migrate" :disabled="loading"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
+				<svws-ui-button type="secondary" @click="migrate" :disabled="loading || (zielUsername === 'root')"> <svws-ui-spinner :spinning="loading" /> Migrieren </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
 			<template v-else>

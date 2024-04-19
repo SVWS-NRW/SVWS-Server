@@ -13,7 +13,7 @@
 						<div><b>Ziel-Datenbank (wird erstellt):</b></div>
 						<svws-ui-text-input v-model.trim="schema" required placeholder="Schemaname" />
 						<svws-ui-spacing />
-						<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" />
+						<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
 						<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" type="password" />
 					</div>
 				</div>
@@ -22,7 +22,7 @@
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
-				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading">
+				<svws-ui-button type="secondary" @click="add" :disabled="(schema.length === 0) || (user.length === 0) || loading || (user === 'root')">
 					<svws-ui-spinner :spinning="loading" />
 					Schema anlegen
 				</svws-ui-button>

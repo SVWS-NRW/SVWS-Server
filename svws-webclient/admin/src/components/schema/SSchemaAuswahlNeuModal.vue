@@ -6,13 +6,13 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input v-model.trim="schemaname" required placeholder="Schemaname" :disabled="loading" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" />
+				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" :valid="value => value !== 'root'" />
 				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading" type="password" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
-				<svws-ui-button type="secondary" @click="add" :disabled="(schemaname.length === 0) || user.length === 0 || loading">
+				<svws-ui-button type="secondary" @click="add" :disabled="(schemaname.length === 0) || user.length === 0 || loading || (user === 'root')">
 					<svws-ui-spinner :spinning="loading" />
 					Schema anlegen
 				</svws-ui-button>

@@ -1,11 +1,11 @@
 <template>
 	<div class="flex flex-col gap-2 m-4">
 		<div class="flex flex-col gap-2">
-			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" />
+			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading().value" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading().value" type="password" />
 		</div>
 		<div class="mt-2">
-			<svws-ui-button type="secondary" @click="add" :disabled="(props.schema === undefined) || user.length === 0 || loading().value">
+			<svws-ui-button type="secondary" @click="add" :disabled="(props.schema === undefined) || user.length === 0 || loading().value || (user === 'root')">
 				<svws-ui-spinner :spinning="loading().value" />
 				Hinzufügen
 			</svws-ui-button>

@@ -6,13 +6,13 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" />
+				<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="value => value !== 'root'" />
 				<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<template v-if="status === undefined">
-				<svws-ui-button type="secondary" @click="duplicate" :disabled="loading"> <svws-ui-spinner :spinning="loading" /> Duplizieren </svws-ui-button>
+				<svws-ui-button type="secondary" @click="duplicate" :disabled="loading || (user === 'root')"> <svws-ui-spinner :spinning="loading" /> Duplizieren </svws-ui-button>
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 			</template>
 			<template v-else>
