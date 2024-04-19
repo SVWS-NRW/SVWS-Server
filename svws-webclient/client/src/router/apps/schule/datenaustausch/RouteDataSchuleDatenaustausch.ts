@@ -6,7 +6,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 
-import { OAuth2ClientSecret, OpenApiError, SimpleOperationResponse } from "@core";
+import { OAuth2ClientSecret, OAuth2ServerTyp, OpenApiError, SimpleOperationResponse } from "@core";
 
 
 interface RouteStateDatenaustausch extends RouteStateInterface {
@@ -49,8 +49,9 @@ export class RouteDataSchuleDatenaustausch extends RouteData<RouteStateDatenaust
 	}
 
 	setWenomCredentials = async (url: string, token: string) => {
+		const wenom = OAuth2ServerTyp.WENOM;
 		const oauth = new OAuth2ClientSecret();
-		oauth.id = 1;
+		oauth.id = wenom.getId();
 		oauth.clientID = "1";
 		oauth.authServer = url;
 		oauth.clientSecret = token;
