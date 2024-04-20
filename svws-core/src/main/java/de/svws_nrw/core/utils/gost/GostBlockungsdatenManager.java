@@ -677,7 +677,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void ergebnisRemoveListe(final @NotNull List<@NotNull GostBlockungsergebnis> ergebnismenge) throws DeveloperNotificationException {
 		// ID kopieren, da Löschen über Objektidentität nicht funktioniert!
-		final @NotNull Set<@NotNull Long> listIDs = new HashSet<@NotNull Long>();
+		final @NotNull HashSet<@NotNull Long> listIDs = new HashSet<>();
 		for (final @NotNull GostBlockungsergebnis e : ergebnismenge)
 			listIDs.add(e.id);
 
@@ -1202,7 +1202,7 @@ public class GostBlockungsdatenManager {
 	 * @return ein Set aller Kurs-IDs.
 	 */
 	public @NotNull Set<@NotNull Long> kursmengeGetSetDerIDs() {
-		final @NotNull Set<@NotNull Long> setKursID = new HashSet<@NotNull Long>();
+		final @NotNull HashSet<@NotNull Long> setKursID = new HashSet<>();
 		for (final @NotNull GostBlockungKurs kurs : _list_kurse_sortiert_fach_kursart_kursnummer)
 			setKursID.add(kurs.id);
 		return setKursID;
@@ -1245,7 +1245,7 @@ public class GostBlockungsdatenManager {
 			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", _map_idKurs_kurs, idKurs);
 
 		// (2) Entfernen des Kurses.
-		final @NotNull Set<@NotNull Long> regelIDs = new HashSet<@NotNull Long>();
+		final @NotNull HashSet<@NotNull Long> regelIDs = new HashSet<>();
 		for (final long idKurs : idKurse) {
 			final @NotNull GostBlockungKurs kurs = this.kursGet(idKurs);
 			_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
@@ -1329,7 +1329,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void kurseRemove(final @NotNull List<@NotNull GostBlockungKurs> kurse) throws DeveloperNotificationException {
 		// Kopieren der IDs.
-		final @NotNull Set<@NotNull Long> idKurse = new HashSet<@NotNull Long>();
+		final @NotNull HashSet<@NotNull Long> idKurse = new HashSet<>();
 		for (final @NotNull GostBlockungKurs kursExtern : kurse)
 			idKurse.add(kursExtern.id);
 
@@ -1871,7 +1871,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void regelRemoveListe(final @NotNull List<@NotNull GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
 		// IDs im Set sammeln.
-		final @NotNull Set<@NotNull Long> setRegelIDs = new HashSet<@NotNull Long>();
+		final @NotNull HashSet<@NotNull Long> setRegelIDs = new HashSet<>();
 		for (final @NotNull GostBlockungRegel regel : regelmenge)
 			setRegelIDs.add(regel.id);
 

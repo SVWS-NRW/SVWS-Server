@@ -74,19 +74,19 @@ public class GostBlockungsergebnisManager {
 	// Sets der Objekte.
 
 	/** Set aller Schienen-IDs. */
-	private @NotNull Set<@NotNull Long> _schienenIDset = new HashSet<@NotNull Long>();
+	private @NotNull HashSet<@NotNull Long> _schienenIDset = new HashSet<>();
 
 	/** Set aller Schienen-Nummern. */
-	private @NotNull Set<@NotNull Integer> _schienenNRset = new HashSet<@NotNull Integer>();
+	private @NotNull HashSet<@NotNull Integer> _schienenNRset = new HashSet<>();
 
 	/** Set aller Kurs-IDs. */
-	private @NotNull Set<@NotNull Long> _kursIDset = new HashSet<@NotNull Long>();
+	private @NotNull HashSet<@NotNull Long> _kursIDset = new HashSet<>();
 
 	/** Set aller Fach-IDs. */
-	private @NotNull Set<@NotNull Long> _fachIDset = new HashSet<@NotNull Long>();
+	private @NotNull HashSet<@NotNull Long> _fachIDset = new HashSet<>();
 
 	/** Set aller Schüler-IDs. */
-	private @NotNull Set<@NotNull Long> _schuelerIDset = new HashSet<@NotNull Long>();
+	private @NotNull HashSet<@NotNull Long> _schuelerIDset = new HashSet<>();
 
 	// Maps der Objekte.
 
@@ -580,8 +580,8 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_0_schienenIDset_schienenNRset() {
-		_schienenIDset = new HashSet<@NotNull Long>();
-		_schienenNRset = new HashSet<@NotNull Integer>();
+		_schienenIDset = new HashSet<>();
+		_schienenNRset = new HashSet<>();
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			if (gSchiene.id < 0)
 				_fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist ungültig!");
@@ -598,7 +598,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_0_kursIDset() {
-		_kursIDset = new HashSet<@NotNull Long>();
+		_kursIDset = new HashSet<>();
 		for (final @NotNull GostBlockungKurs gKurs: _parent.daten().kurse) {
 			if (gKurs.id < 0)
 				_fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist ungültig!");
@@ -608,7 +608,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_0_fachIDset() {
-		_fachIDset = new HashSet<@NotNull Long>();
+		_fachIDset = new HashSet<>();
 		for (final @NotNull GostFach gFach: _parent.faecherManager().faecher()) {
 			if (gFach.id < 0)
 				_fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist ungültig!");
@@ -626,7 +626,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_0_schuelerIDset() {
-		_schuelerIDset = new HashSet<@NotNull Long>();
+		_schuelerIDset = new HashSet<>();
 		for (final @NotNull Schueler schueler : _parent.daten().schueler) {
 			if (schueler.id < 0)
 				_fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist ungültig!");

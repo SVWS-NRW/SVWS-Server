@@ -72,27 +72,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Set aller Schienen-IDs.
 	 */
-	private _schienenIDset : JavaSet<number> = new HashSet<number>();
+	private _schienenIDset : HashSet<number> = new HashSet();
 
 	/**
 	 * Set aller Schienen-Nummern.
 	 */
-	private _schienenNRset : JavaSet<number> = new HashSet<number>();
+	private _schienenNRset : HashSet<number> = new HashSet();
 
 	/**
 	 * Set aller Kurs-IDs.
 	 */
-	private _kursIDset : JavaSet<number> = new HashSet<number>();
+	private _kursIDset : HashSet<number> = new HashSet();
 
 	/**
 	 * Set aller Fach-IDs.
 	 */
-	private _fachIDset : JavaSet<number> = new HashSet<number>();
+	private _fachIDset : HashSet<number> = new HashSet();
 
 	/**
 	 * Set aller Schüler-IDs.
 	 */
-	private _schuelerIDset : JavaSet<number> = new HashSet<number>();
+	private _schuelerIDset : HashSet<number> = new HashSet();
 
 	/**
 	 * Map von Schienen-ID nach {@link GostBlockungsergebnisSchiene}.
@@ -582,8 +582,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_0_schienenIDset_schienenNRset() : void {
-		this._schienenIDset = new HashSet<number>();
-		this._schienenNRset = new HashSet<number>();
+		this._schienenIDset = new HashSet();
+		this._schienenNRset = new HashSet();
 		for (const gSchiene of this._parent.daten().schienen) {
 			if (gSchiene.id < 0)
 				this._fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist ungültig!");
@@ -600,7 +600,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_0_kursIDset() : void {
-		this._kursIDset = new HashSet<number>();
+		this._kursIDset = new HashSet();
 		for (const gKurs of this._parent.daten().kurse) {
 			if (gKurs.id < 0)
 				this._fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist ungültig!");
@@ -610,7 +610,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_0_fachIDset() : void {
-		this._fachIDset = new HashSet<number>();
+		this._fachIDset = new HashSet();
 		for (const gFach of this._parent.faecherManager().faecher()) {
 			if (gFach.id < 0)
 				this._fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist ungültig!");
@@ -626,7 +626,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private update_0_schuelerIDset() : void {
-		this._schuelerIDset = new HashSet<number>();
+		this._schuelerIDset = new HashSet();
 		for (const schueler of this._parent.daten().schueler) {
 			if (schueler.id < 0)
 				this._fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist ungültig!");
