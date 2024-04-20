@@ -468,6 +468,8 @@
 			const p = regel.value.parameter;
 			switch (regel.value?.typ) {
 				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_01_KURSART_SPERRE_SCHIENEN_VON_BIS(regel.value.id, p.get(0), p.get(1), p.get(2));
 					return props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ:
 					return props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(p.get(0), p.get(1));
@@ -498,10 +500,8 @@
 				case GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ:
 					return props.getErgebnismanager().regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(p.get(0)));
 				case GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ:
-					if (regel.value.id > 0) {
-						const alt = props.getDatenmanager().regelGet(regel.value.id).parameter.get(0);
-						return props.getErgebnismanager().regelupdatePatch_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(alt, p.get(0));
-					}
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(regel.value.id, p.get(0));
 					return props.getErgebnismanager().regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(p.get(0)));
 				case GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE.typ:
 					return props.getErgebnismanager().regelupdateCreate_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(p.get(0), p.get(1), p.get(2));

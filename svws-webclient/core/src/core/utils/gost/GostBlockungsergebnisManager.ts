@@ -2994,6 +2994,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return ((a1 === b1) && (a2 === b2)) || ((a1 === b2) && (a2 === b1));
 	}
 
+	private static regelupdateAppend(u1 : GostBlockungRegelUpdate, u2 : GostBlockungRegelUpdate) : void {
+		u1.listEntfernen.addAll(u2.listEntfernen);
+		u1.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+	}
+
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 * <br>(1) Wenn ein Kurs der Kursart im Schienen-Bereich liegt und gesperrt ist, wird dies entfernt.
@@ -3030,6 +3035,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const keyVonBis : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
 		if (this._parent.regelGetByLongArrayKeyOrNull(keyVonBis) === null)
 			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt     Die ID der alten zu modifizierenden Regel.
+	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
+	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
+	 * @param schienenNrBis  Der Endbereich der Schienen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_01_KURSART_SPERRE_SCHIENEN_VON_BIS(idRegelAlt : number, kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const von : number = Math.min(schienenNrVon, schienenNrBis);
+		const bis : number = Math.max(schienenNrVon, schienenNrBis);
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		u.listEntfernen.add(rAlt);
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart, von, bis));
 		return u;
 	}
 
@@ -4243,6 +4277,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return u;
 		u.listEntfernen.add(rAlt);
 		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKursNeu));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
+	 *
+	 * <br>(1) Wenn die alte Regel nicht existiert, passiert nichts.
+	 * <br>(2) Wenn die neue Kurs-ID bereits existiert, passiert nichts.
+	 * <br>(3) Wenn die alte Kurs-ID der neuen Kurs-ID gleicht, passiert nichts.
+	 * <br>(4) Andernfalls wird die alte Regel gelöscht (idKursAlt) und eine neue Regel wird erzeugt (idKursNeu).
+	 *
+	 * @param idRegelAlt  Die Regel, die modifiziert wird.
+	 * @param idKursNeu   Die neue Kurs-ID deren Regel hinzugefügt werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
+	 */
+	public regelupdatePatchByID_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(idRegelAlt : number, idKursNeu : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKursNeu]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		const idKursAlt : number = rAlt.parameter.get(0).valueOf();
+		if (idKursAlt === idKursNeu)
+			return u;
+		u.listEntfernen.add(rAlt);
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(idKursNeu)));
 		return u;
 	}
 
