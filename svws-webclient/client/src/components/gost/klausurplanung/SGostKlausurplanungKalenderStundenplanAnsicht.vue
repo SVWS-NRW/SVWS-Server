@@ -78,7 +78,7 @@
 						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
 							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
 							<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
-							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
+							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin)}" />
 							<svws-ui-tooltip :hover="false" class="cursor-pointer">
 								<span class="z-10 relative p-2 leading-tight font-medium">{{ terminBezeichnung(termin) }}</span>
 								<template #content>
@@ -254,8 +254,11 @@
 		return props.useDragAndDrop && (props.dragData() === undefined);
 	}
 
-	function getBgColors(termin: number | null) {
-		const klausuren = [...props.kMan().kursklausurGetMengeByTerminid(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
+	function getBgColors(termin: GostKlausurtermin) {
+		if (termin.abijahr !== props.jahrgangsdaten.abiturjahr)
+			return "#fecdd3";
+
+		const klausuren = [...props.kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
 		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 
 		let gradient = '';

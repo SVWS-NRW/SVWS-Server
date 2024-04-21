@@ -24,10 +24,10 @@
 				{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(rowData)) }}
 			</template>
 			<template #cell(datum)="{ rowData }">
-				{{ DateUtils.gibDatumGermanFormat(kMan().terminBySchuelerklausurTermin(rowData)!.datum!) }}
+				{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(rowData).datum!) }}
 			</template>
 			<template #cell(startzeit)="{ rowData }">
-				{{ DateUtils.getStringOfUhrzeitFromMinuten(rowData.startzeit !== null ? rowData.startzeit : kMan().terminBySchuelerklausurTermin(rowData)!.startzeit!) }}
+				{{ DateUtils.getStringOfUhrzeitFromMinuten(rowData.startzeit !== null ? rowData.startzeit : kMan().terminOrExceptionBySchuelerklausurTermin(rowData).startzeit!) }}
 			</template>
 			<template #cell(dauer)="{ rowData }">
 				{{ kMan().vorgabeBySchuelerklausurTermin(rowData).dauer }}

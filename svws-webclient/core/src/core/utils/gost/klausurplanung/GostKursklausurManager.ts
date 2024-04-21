@@ -1554,8 +1554,19 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return den Klausurtermin
 	 */
-	public terminByKursklausur(klausur : GostKursklausur) : GostKlausurtermin | null {
+	public terminOrNullByKursklausur(klausur : GostKursklausur) : GostKlausurtermin | null {
 		return this._termin_by_id.get(klausur.idTermin);
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 *
+	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public terminOrExceptionByKursklausur(klausur : GostKursklausur) : GostKlausurtermin {
+		return DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, DeveloperNotificationException.ifNull(JavaString.format("idTermin von Klausur %d darf nicht NULL sein", klausur.id), klausur.idTermin));
 	}
 
 	/**
@@ -1565,10 +1576,24 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return den Klausurtermin
 	 */
-	public terminBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin | null {
+	public terminOrNullBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin | null {
 		if (termin.folgeNr > 0)
 			return termin.idTermin === null ? null : this.terminGetByIdOrException(termin.idTermin);
-		return this.terminByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
+		return this.terminOrNullByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einem Schülerklausurtermin oder NULL.
+	 *
+	 * @param termin der Schülerklausurtermin, zu dem der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public terminOrExceptionBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin {
+		if (termin.folgeNr > 0) {
+			return this.terminGetByIdOrException(DeveloperNotificationException.ifNull(JavaString.format("idTermin von Termin %d darf nicht NULL sein", termin.id), termin.idTermin)!);
+		}
+		return this.terminOrExceptionByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
 	}
 
 	/**
@@ -1579,7 +1604,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return den Klausurtermin
 	 */
 	public terminKursklausurBySchuelerklausur(sk : GostSchuelerklausur) : GostKlausurtermin | null {
-		return this.terminByKursklausur(this.kursklausurBySchuelerklausur(sk));
+		return this.terminOrNullByKursklausur(this.kursklausurBySchuelerklausur(sk));
 	}
 
 	/**
@@ -1711,7 +1736,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Startzeit der Klausur
 	 */
 	public startzeitByKursklausur(klausur : GostKursklausur) : number | null {
-		const termin : GostKlausurtermin | null = this.terminByKursklausur(klausur);
+		const termin : GostKlausurtermin | null = this.terminOrNullByKursklausur(klausur);
 		if (klausur.startzeit !== null)
 			return klausur.startzeit;
 		return termin === null ? null : termin.startzeit;
@@ -1726,7 +1751,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Startzeit der Klausur
 	 */
 	public hatAbweichendeStartzeitByKursklausur(klausur : GostKursklausur) : boolean {
-		const termin : GostKlausurtermin | null = this.terminByKursklausur(klausur);
+		const termin : GostKlausurtermin | null = this.terminOrNullByKursklausur(klausur);
 		return !(klausur.startzeit === null || termin === null || termin.startzeit === null || JavaObject.equalsTranspiler(termin.startzeit, (klausur.startzeit)));
 	}
 
@@ -1839,7 +1864,7 @@ export class GostKursklausurManager extends JavaObject {
 	public schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : List<GostSchuelerklausurTermin> {
 		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 		for (const termin of this.schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal)) {
-			const t : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(termin);
+			const t : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(termin);
 			if (t !== null && t.datum !== null)
 				ergebnis.add(termin);
 		}
@@ -2106,7 +2131,7 @@ export class GostKursklausurManager extends JavaObject {
 		const vorgaengerSkt : GostSchuelerklausurTermin | null = this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
 		if (vorgaengerSkt === null)
 			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.")
-		const termin : GostKlausurtermin | null = this.terminBySchuelerklausurTermin(vorgaengerSkt);
+		const termin : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(vorgaengerSkt);
 		return termin === null ? null : termin.datum;
 	}
 

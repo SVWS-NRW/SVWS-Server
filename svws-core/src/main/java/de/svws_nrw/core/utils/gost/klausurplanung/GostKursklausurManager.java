@@ -1652,8 +1652,19 @@ public class GostKursklausurManager {
 	 *
 	 * @return den Klausurtermin
 	 */
-	public GostKlausurtermin terminByKursklausur(final @NotNull GostKursklausur klausur) {
+	public GostKlausurtermin terminOrNullByKursklausur(final @NotNull GostKursklausur klausur) {
 		return _termin_by_id.get(klausur.idTermin);
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 *
+	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public @NotNull GostKlausurtermin terminOrExceptionByKursklausur(final @NotNull GostKursklausur klausur) {
+		return DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, DeveloperNotificationException.ifNull(String.format("idTermin von Klausur %d darf nicht NULL sein", klausur.id), klausur.idTermin));
 	}
 
 	/**
@@ -1663,10 +1674,24 @@ public class GostKursklausurManager {
 	 *
 	 * @return den Klausurtermin
 	 */
-	public GostKlausurtermin terminBySchuelerklausurTermin(final @NotNull GostSchuelerklausurTermin termin) {
+	public GostKlausurtermin terminOrNullBySchuelerklausurTermin(final @NotNull GostSchuelerklausurTermin termin) {
 		if (termin.folgeNr > 0)
 			return termin.idTermin == null ? null : terminGetByIdOrException(termin.idTermin);
-		return terminByKursklausur(kursklausurBySchuelerklausurTermin(termin));
+		return terminOrNullByKursklausur(kursklausurBySchuelerklausurTermin(termin));
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einem Schülerklausurtermin oder NULL.
+	 *
+	 * @param termin der Schülerklausurtermin, zu dem der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public @NotNull GostKlausurtermin terminOrExceptionBySchuelerklausurTermin(final @NotNull GostSchuelerklausurTermin termin) {
+		if (termin.folgeNr > 0) {
+			return terminGetByIdOrException(DeveloperNotificationException.ifNull(String.format("idTermin von Termin %d darf nicht NULL sein", termin.id), termin.idTermin));
+		}
+		return terminOrExceptionByKursklausur(kursklausurBySchuelerklausurTermin(termin));
 	}
 
 	/**
@@ -1677,7 +1702,7 @@ public class GostKursklausurManager {
 	 * @return den Klausurtermin
 	 */
 	public GostKlausurtermin terminKursklausurBySchuelerklausur(final @NotNull GostSchuelerklausur sk) {
-		return terminByKursklausur(kursklausurBySchuelerklausur(sk));
+		return terminOrNullByKursklausur(kursklausurBySchuelerklausur(sk));
 	}
 
 	/**
@@ -1809,7 +1834,7 @@ public class GostKursklausurManager {
 	 * @return die Startzeit der Klausur
 	 */
 	public Integer startzeitByKursklausur(final @NotNull GostKursklausur klausur) {
-		final GostKlausurtermin termin = terminByKursklausur(klausur);
+		final GostKlausurtermin termin = terminOrNullByKursklausur(klausur);
 		if (klausur.startzeit != null)
 			return klausur.startzeit;
 		return termin == null ? null : termin.startzeit;
@@ -1824,7 +1849,7 @@ public class GostKursklausurManager {
 	 * @return die Startzeit der Klausur
 	 */
 	public boolean hatAbweichendeStartzeitByKursklausur(final @NotNull GostKursklausur klausur) {
-		final GostKlausurtermin termin = terminByKursklausur(klausur);
+		final GostKlausurtermin termin = terminOrNullByKursklausur(klausur);
 		return !(klausur.startzeit == null || termin == null || termin.startzeit == null || termin.startzeit.equals(klausur.startzeit));
 	}
 
@@ -1937,7 +1962,7 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal) {
 		final @NotNull List<@NotNull GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
 		for (@NotNull final GostSchuelerklausurTermin termin : schuelerklausurterminNtAktuellMitTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal)) {
-			final GostKlausurtermin t = terminBySchuelerklausurTermin(termin);
+			final GostKlausurtermin t = terminOrNullBySchuelerklausurTermin(termin);
 			if (t != null && t.datum != null)
 				ergebnis.add(termin);
 		}
@@ -2205,7 +2230,7 @@ public class GostKursklausurManager {
 		final GostSchuelerklausurTermin vorgaengerSkt = schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
 		if (vorgaengerSkt == null)
 			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.");
-		final GostKlausurtermin termin = terminBySchuelerklausurTermin(vorgaengerSkt);
+		final GostKlausurtermin termin = terminOrNullBySchuelerklausurTermin(vorgaengerSkt);
 		return termin == null ? null : termin.datum;
 	}
 

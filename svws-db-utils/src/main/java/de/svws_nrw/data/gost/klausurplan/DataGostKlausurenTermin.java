@@ -10,6 +10,7 @@ import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.ListUtils;
@@ -118,10 +119,21 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final DBEntityManager conn, final List<GostSchuelerklausurTermin> schuelerklausurTermine) throws ApiOperationException {
+		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
 		if (schuelerklausurTermine.isEmpty())
-			return new ArrayList<>();
+			return ergebnis;
+		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
+		if (schuelerklausurTermineNullTermin.size() > 0) {
+			final List<GostSchuelerklausur> schuelerklausurNullTermin =  DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
+			final List<GostKursklausur> kursklausurNullTermin =  DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, schuelerklausurNullTermin);
+			ergebnis.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, kursklausurNullTermin));
+		}
+
+		// TODO Termine von Kursklausuren ergänzen
+
 		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryNamed("DTOGostKlausurenTermine.id.multiple", schuelerklausurTermine.stream().map(skt -> skt.idTermin).toList(), DTOGostKlausurenTermine.class);
-		return DTOMapper.mapList(terminDTOs, dtoMapper);
+		ergebnis.addAll(DTOMapper.mapList(terminDTOs, dtoMapper));
+		return ergebnis;
 	}
 
 	/**

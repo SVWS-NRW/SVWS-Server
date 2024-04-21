@@ -9,7 +9,7 @@
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
 			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-checkbox class="-mt-1" type="toggle" v-if="raummanager().anzahlTermine() > 1" v-model="zeigeAlleRaeume">Räume von anderen Klausurterminen anzeigen</svws-ui-checkbox>
+			<svws-ui-checkbox class="-mt-1" type="toggle" :disabled="raummanager().isKlausurenInFremdraeumen()" v-if="raummanager().anzahlTermine() > 1" v-model="zeigeAlleRaeume">Räume von anderen Klausurterminen anzeigen</svws-ui-checkbox>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleRaeume).size()">
@@ -17,7 +17,6 @@
 					:key="raum.id"
 					:stundenplanmanager="stundenplanmanager"
 					:raum="raum"
-					:termin-startzeit="termin.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit) : undefined"
 					:raummanager="raummanager"
 					:patch-klausurraum="patchKlausurraum"
 					:loesche-klausurraum="loescheKlausurraum"
@@ -38,9 +37,7 @@
 	import type { GostKursklausurManager, GostKlausurtermin, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrs} from '@core';
 	import { DateUtils} from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import { ref } from 'vue';
-
-	const zeigeAlleRaeume = ref(false);
+	import { onMounted, ref, watch } from 'vue';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
@@ -55,5 +52,13 @@
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 	}>();
+
+	const zeigeAlleRaeume = ref(false);
+
+	watch(props.raummanager, () => {
+		zeigeAlleRaeume.value = props.raummanager().isKlausurenInFremdraeumen();
+	});
+
+
 
 </script>

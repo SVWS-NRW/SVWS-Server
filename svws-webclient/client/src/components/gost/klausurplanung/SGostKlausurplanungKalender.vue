@@ -91,8 +91,7 @@
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
-										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur)!.datum !== null ? kMan().terminByKursklausur(klausur)!.datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
-									</span>
+										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionByKursklausur(klausur).datum !== null ? kMan().terminOrExceptionByKursklausur(klausur).datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>									</span>
 								</div>
 							</li>
 							<li v-if="!showMoreKonflikte" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte(4, false, true).length - 3 }} weitere</li>
@@ -124,7 +123,7 @@
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachBgColorByKursklausur(klausur)};`">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
-										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminByKursklausur(klausur)!.datum !== null ? kMan().terminByKursklausur(klausur)!.datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
+										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionByKursklausur(klausur).datum !== null ? kMan().terminOrExceptionByKursklausur(klausur).datum! : stundenplanmanager().datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
 									</span>
 								</div>
 							</li>

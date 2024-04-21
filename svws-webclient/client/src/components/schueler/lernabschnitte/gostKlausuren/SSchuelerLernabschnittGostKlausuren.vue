@@ -20,11 +20,11 @@
 				<template #cell(termin)="{ rowData }">
 					<svws-ui-table v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" :items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)" :columns="colsTermine" disable-header>
 						<template #cell(datum)="{ rowData: termin }">
-							{{ kMan().terminBySchuelerklausurTermin(termin) !== null ? (kMan().terminBySchuelerklausurTermin(termin)!.datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminBySchuelerklausurTermin(termin)!.datum!) : "N.N.") : "N.N." }}
+							{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null ? (kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!) : "N.N.") : "N.N." }}
 						</template>
 						<template #cell(button)="{ rowData: termin }">
 							<div class="flex space-x-1" v-if="kMan().istAktuellerSchuelerklausurtermin(termin)">
-								<svws-ui-button class="mt-4" v-if="kMan().terminBySchuelerklausurTermin(termin) !== null && kMan().terminBySchuelerklausurTermin(termin)!.datum !== null" @click="terminSelected = termin; showModalTerminGrund().value = true">
+								<svws-ui-button class="mt-4" v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund().value = true">
 									<svws-ui-tooltip>
 										<template #content>
 											Klausur nicht mitgeschrieben

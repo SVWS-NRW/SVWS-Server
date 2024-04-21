@@ -62,7 +62,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idRaum_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
+	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
+
+	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
 
 	private readonly _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde : HashMap2D<number, number, GostSchuelerklausurterminraumstunde> = new HashMap2D<number, number, GostSchuelerklausurterminraumstunde>();
 
@@ -141,6 +143,15 @@ export class GostKlausurraumManager extends JavaObject {
 		this.update_all();
 	}
 
+	/**
+	 * Liefert den zu diesem Manager gehörenden Haupt-Klausurtermin.
+	 *
+	 * @return das GostKlausurtermin-Objekt
+	 */
+	public getHauptTermin() : GostKlausurtermin {
+		return this._termin;
+	}
+
 	private update_all() : void {
 		this.update_raummenge();
 		this.update_raumstundenmenge();
@@ -151,9 +162,10 @@ export class GostKlausurraumManager extends JavaObject {
 		this.update_raumstundenmenge_by_idRaum();
 		this.update_raumstunde_by_idRaum_and_idZeitraster();
 		this.update_raumstundenmenge_by_idSchuelerklausurtermin();
+		this.update_schuelerklausurterminmenge_by_idTermin();
 		this.update_schuelerklausurterminmenge_by_idRaum();
 		this.update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur();
-		this.update_schuelerterminklausurmenge_by_idKursklausur();
+		this.update_schuelerklausurterminmenge_by_idKursklausur();
 		this.update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		this.update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
 		this.update_klausurraum_by_idSchuelerklausurtermin();
@@ -198,6 +210,12 @@ export class GostKlausurraumManager extends JavaObject {
 		}
 	}
 
+	private update_schuelerklausurterminmenge_by_idTermin() : void {
+		this._schuelerklausurterminmenge_by_idTermin.clear();
+		for (const k of this._schuelerklausurterminmenge)
+			MapUtils.addToList(this._schuelerklausurterminmenge_by_idTermin, this._kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id, k);
+	}
+
 	private update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur() : void {
 		this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge) {
@@ -206,7 +224,7 @@ export class GostKlausurraumManager extends JavaObject {
 		}
 	}
 
-	private update_schuelerterminklausurmenge_by_idKursklausur() : void {
+	private update_schuelerklausurterminmenge_by_idKursklausur() : void {
 		this._schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (const k of this._schuelerklausurterminmenge)
 			MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idKursklausur, this._kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
@@ -444,9 +462,19 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param listRaumstunde Die Liste der zu entfernenden
 	 *                       {@link GostKlausurraumstunde}-Objekte.
 	 */
-	public raumstundeRemoveAll(listRaumstunde : List<GostKlausurraumstunde>) : void {
+	public raumstundeRemoveAllOhneUpdate(listRaumstunde : List<GostKlausurraumstunde>) : void {
 		for (const raumstunde of listRaumstunde)
 			this.raumstundeRemoveOhneUpdateById(raumstunde.id);
+	}
+
+	/**
+	 * Entfernt alle {@link GostKlausurraumstunde}-Objekte.
+	 *
+	 * @param listRaumstunde Die Liste der zu entfernenden
+	 *                       {@link GostKlausurraumstunde}-Objekte.
+	 */
+	public raumstundeRemoveAll(listRaumstunde : List<GostKlausurraumstunde>) : void {
+		this.raumstundeRemoveAllOhneUpdate(listRaumstunde);
 		this.update_all();
 	}
 
@@ -687,9 +715,18 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @param idsSchuelerklausurtermine die Liste der Schülerklausur-IDs.
 	 */
-	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(idsSchuelerklausurtermine : List<number>) : void {
+	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(idsSchuelerklausurtermine : List<number>) : void {
 		for (const idSchuelerklausurtermin of idsSchuelerklausurtermine)
 			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin);
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurterminraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
+	 *
+	 * @param idsSchuelerklausurtermine die Liste der Schülerklausur-IDs.
+	 */
+	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(idsSchuelerklausurtermine : List<number>) : void {
+		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(idsSchuelerklausurtermine);
 		this.update_all();
 	}
 
@@ -736,10 +773,11 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public setzeRaumZuSchuelerklausuren(collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
-		this.raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
-		this.raumstundeAddAll(collectionSkrsKrs.raumstunden);
-		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(collectionSkrsKrs.idsSchuelerklausurtermine);
-		this.schuelerklausurraumstundeAddAll(collectionSkrsKrs.sktRaumstunden);
+		this.raumstundeAddAllOhneUpdate(collectionSkrsKrs.raumstunden);
+		this.raumstundeRemoveAllOhneUpdate(collectionSkrsKrs.raumstundenGeloescht);
+		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(collectionSkrsKrs.idsSchuelerklausurtermine);
+		this.schuelerklausurraumstundeAddAllOhneUpdate(collectionSkrsKrs.sktRaumstunden);
+		this.update_all();
 	}
 
 	/**
@@ -926,12 +964,29 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert true zurück, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
+	 *
+	 * @return true, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
+	 */
+	public isKlausurenInFremdraeumen() : boolean {
+		let skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin.get(this._termin.id);
+		if (skts === null)
+			return false;
+		for (const skt of skts) {
+			const raum : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausurtermin.get(skt.id);
+			if (raum !== null && raum.idTermin !== this._termin.id)
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
 	 *
 	 * @return die Anzahl
 	 */
 	public anzahlTermine() : number {
-		return this._raummenge_by_idTermin.size();
+		return this._schuelerklausurterminmenge_by_idTermin.containsKey(this._termin.id) ? this._schuelerklausurterminmenge_by_idTermin.size() : this._schuelerklausurterminmenge_by_idTermin.size() + 1;
 	}
 
 	transpilerCanonicalName(): string {

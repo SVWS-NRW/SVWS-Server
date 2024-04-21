@@ -154,7 +154,7 @@
 		const vorklausur = props.kMan().kursklausurVorterminByKursklausur(klausur);
 		if (vorklausur === null)
 			return "-";
-		const termin = props.kMan().terminByKursklausur(vorklausur);
+		const termin = props.kMan().terminOrNullByKursklausur(vorklausur);
 		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0,6);
 	};
 

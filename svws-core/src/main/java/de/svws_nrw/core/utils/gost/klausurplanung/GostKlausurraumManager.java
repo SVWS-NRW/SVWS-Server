@@ -56,6 +56,7 @@ public class GostKlausurraumManager {
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum_and_idKursklausur = new HashMap2D<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idKursklausur = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin = new HashMap<>();
 
 	// GostSchuelerklausurraumstunde
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull GostSchuelerklausurterminraumstunde> _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde = new HashMap2D<>();
@@ -118,6 +119,15 @@ public class GostKlausurraumManager {
 
 	}
 
+	/**
+	 * Liefert den zu diesem Manager gehörenden Haupt-Klausurtermin.
+	 *
+	 * @return das GostKlausurtermin-Objekt
+	 */
+	public @NotNull GostKlausurtermin getHauptTermin() {
+		return _termin;
+	}
+
 	private void update_all() {
 
 		update_raummenge();
@@ -130,9 +140,10 @@ public class GostKlausurraumManager {
 		update_raumstundenmenge_by_idRaum();
 		update_raumstunde_by_idRaum_and_idZeitraster();
 		update_raumstundenmenge_by_idSchuelerklausurtermin(); // benötigt _raumstunde_by_id
+		update_schuelerklausurterminmenge_by_idTermin();
 		update_schuelerklausurterminmenge_by_idRaum(); // benötigt _raumstundenmenge_by_idSchuelerklausur
 		update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur
-		update_schuelerterminklausurmenge_by_idKursklausur();
+		update_schuelerklausurterminmenge_by_idKursklausur();
 		update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
 		update_klausurraum_by_idSchuelerklausurtermin(); // benötigt _raumstundenmenge_by_idSchuelerklausur,
@@ -178,6 +189,12 @@ public class GostKlausurraumManager {
 		}
 	}
 
+	private void update_schuelerklausurterminmenge_by_idTermin() {
+		_schuelerklausurterminmenge_by_idTermin.clear();
+		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge)
+			MapUtils.addToList(_schuelerklausurterminmenge_by_idTermin, _kursklausurManager.terminOrExceptionBySchuelerklausurTermin(k).id, k);
+	}
+
 	private void update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur() {
 		_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge) {
@@ -186,7 +203,7 @@ public class GostKlausurraumManager {
 		}
 	}
 
-	private void update_schuelerterminklausurmenge_by_idKursklausur() {
+	private void update_schuelerklausurterminmenge_by_idKursklausur() {
 		_schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (final @NotNull GostSchuelerklausurTermin k : _schuelerklausurterminmenge)
 			MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idKursklausur, _kursklausurManager.kursklausurBySchuelerklausurTermin(k).id).add(k);
@@ -449,10 +466,19 @@ public class GostKlausurraumManager {
 	 * @param listRaumstunde Die Liste der zu entfernenden
 	 *                       {@link GostKlausurraumstunde}-Objekte.
 	 */
-	public void raumstundeRemoveAll(final @NotNull List<@NotNull GostKlausurraumstunde> listRaumstunde) {
+	public void raumstundeRemoveAllOhneUpdate(final @NotNull List<@NotNull GostKlausurraumstunde> listRaumstunde) {
 		for (final @NotNull GostKlausurraumstunde raumstunde : listRaumstunde)
 			raumstundeRemoveOhneUpdateById(raumstunde.id);
+	}
 
+	/**
+	 * Entfernt alle {@link GostKlausurraumstunde}-Objekte.
+	 *
+	 * @param listRaumstunde Die Liste der zu entfernenden
+	 *                       {@link GostKlausurraumstunde}-Objekte.
+	 */
+	public void raumstundeRemoveAll(final @NotNull List<@NotNull GostKlausurraumstunde> listRaumstunde) {
+		raumstundeRemoveAllOhneUpdate(listRaumstunde);
 		update_all();
 	}
 
@@ -721,10 +747,18 @@ public class GostKlausurraumManager {
 	 *
 	 * @param idsSchuelerklausurtermine die Liste der Schülerklausur-IDs.
 	 */
-	public void schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(final @NotNull List<@NotNull Long> idsSchuelerklausurtermine) {
+	public void schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(final @NotNull List<@NotNull Long> idsSchuelerklausurtermine) {
 		for (final long idSchuelerklausurtermin : idsSchuelerklausurtermine)
 			schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin);
+	}
 
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurterminraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
+	 *
+	 * @param idsSchuelerklausurtermine die Liste der Schülerklausur-IDs.
+	 */
+	public void schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(final @NotNull List<@NotNull Long> idsSchuelerklausurtermine) {
+		schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(idsSchuelerklausurtermine);
 		update_all();
 	}
 
@@ -774,10 +808,12 @@ public class GostKlausurraumManager {
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public void setzeRaumZuSchuelerklausuren(final @NotNull GostKlausurenCollectionSkrsKrs collectionSkrsKrs) {
-		raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
-		raumstundeAddAll(collectionSkrsKrs.raumstunden);
-		schuelerklausurraumstundeRemoveAllByIdSchuelerklausurtermin(collectionSkrsKrs.idsSchuelerklausurtermine);
-		schuelerklausurraumstundeAddAll(collectionSkrsKrs.sktRaumstunden);
+		raumstundeAddAllOhneUpdate(collectionSkrsKrs.raumstunden);
+		raumstundeRemoveAllOhneUpdate(collectionSkrsKrs.raumstundenGeloescht);
+		schuelerklausurraumstundeRemoveAllByIdSchuelerklausurterminOhneUpdate(collectionSkrsKrs.idsSchuelerklausurtermine);
+		schuelerklausurraumstundeAddAllOhneUpdate(collectionSkrsKrs.sktRaumstunden);
+
+		update_all();
 	}
 
 	/**
@@ -964,12 +1000,29 @@ public class GostKlausurraumManager {
 	}
 
 	/**
+	 * Liefert true zurück, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
+	 *
+	 * @return true, falls Klausuren in terminfremden Räumen zugeordnet sind, sonst false
+	 */
+	public boolean isKlausurenInFremdraeumen() {
+		List<@NotNull GostSchuelerklausurTermin> skts = _schuelerklausurterminmenge_by_idTermin.get(_termin.id);
+		if (skts == null)
+			return false;
+		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
+			final GostKlausurraum raum = _klausurraum_by_idSchuelerklausurtermin.get(skt.id);
+			if (raum != null && raum.idTermin != _termin.id)
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert die Anzahl der Klausurtermine, deren Räume in diesem Manager verwaltet werden. <br>
 	 *
 	 * @return die Anzahl
 	 */
 	public int anzahlTermine() {
-		return _raummenge_by_idTermin.size();
+		return _schuelerklausurterminmenge_by_idTermin.containsKey(_termin.id) ? _schuelerklausurterminmenge_by_idTermin.size() : _schuelerklausurterminmenge_by_idTermin.size()  + 1;
 	}
 
 }

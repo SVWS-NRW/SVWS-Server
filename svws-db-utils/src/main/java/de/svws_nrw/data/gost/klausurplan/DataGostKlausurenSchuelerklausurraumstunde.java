@@ -237,11 +237,12 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<GostKursklausur> listKursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSchuelerklausuren);
 
 		final List<GostKlausurraumstunde> listRaumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaumid(conn, idRaum);
+		final List<GostKlausurtermin> listTermine = DataGostKlausurenTermin.getKlausurtermineZuSchuelerklausurterminen(conn, listSchuelerklausurtermine);
 
 		// Manager erzeugen
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKursklausuren);
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
-		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, null, listSchuelerklausuren, listSchuelerklausurtermine);
+		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
 		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren.stream().map(skt -> skt.id).toList(), kursklausurManager, termin);
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
@@ -257,7 +258,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			else if (kk.startzeit != null)
 				skStartzeit = kk.startzeit;
 			else
-				skStartzeit = termin.startzeit;
+				skStartzeit = kursklausurManager.terminOrNullBySchuelerklausurTermin(sk).startzeit;
 			if (skStartzeit < minStart)
 				minStart = skStartzeit;
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
@@ -353,7 +354,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		for (final GostSchuelerklausurTermin sk : listSchuelerklausurenNeu) {
 			final GostKursklausur kk = kursklausurManager.kursklausurBySchuelerklausurTermin(sk);
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
-			final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : termin.startzeit);
+			final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : kursklausurManager.terminOrNullByKursklausur(kk).startzeit);
 			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit,
 					v.dauer);
 			if (zeitrasterSk.isEmpty())

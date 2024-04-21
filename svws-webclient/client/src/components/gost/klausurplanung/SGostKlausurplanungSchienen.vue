@@ -189,7 +189,7 @@
 	};
 
 	function getDatum(klausur: GostKursklausur) {
-		const termin = props.kMan().terminByKursklausur(klausur);
+		const termin = props.kMan().terminOrNullByKursklausur(klausur);
 		if (termin !== null && termin.datum !== null)
 			return DateUtils.gibDatumGermanFormat(termin.datum);
 		if (terminSelected.value !== undefined && terminSelected.value.datum !== null)
