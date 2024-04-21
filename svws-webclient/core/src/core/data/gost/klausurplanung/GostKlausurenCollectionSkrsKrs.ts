@@ -11,12 +11,12 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public raeume : List<GostKlausurraum> = new ArrayList();
+	public raeume : List<GostKlausurraum> = new ArrayList<GostKlausurraum>();
 
 	/**
 	 * Die ID der Schülerklausur.
 	 */
-	public raumstunden : List<GostKlausurraumstunde> = new ArrayList();
+	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
 	 * Die ID der Schülerklausur.

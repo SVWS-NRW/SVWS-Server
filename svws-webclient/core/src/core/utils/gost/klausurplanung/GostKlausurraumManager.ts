@@ -36,9 +36,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _raum_by_id : JavaMap<number, GostKlausurraum> = new HashMap<number, GostKlausurraum>();
 
-	private readonly _raummenge : List<GostKlausurraum> = new ArrayList();
+	private readonly _raummenge : List<GostKlausurraum> = new ArrayList<GostKlausurraum>();
 
-	private readonly _raummenge_by_idTermin : JavaMap<number, List<GostKlausurraum>> = new HashMap();
+	private readonly _raummenge_by_idTermin : JavaMap<number, List<GostKlausurraum>> = new HashMap<number, List<GostKlausurraum>>();
 
 	private readonly _klausurraum_by_idStundenplanraum : JavaMap<number, GostKlausurraum> = new HashMap<number, GostKlausurraum>();
 
@@ -62,9 +62,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idRaum_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idKursklausur : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap();
+	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
 	private readonly _schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde : HashMap2D<number, number, GostSchuelerklausurterminraumstunde> = new HashMap2D<number, number, GostSchuelerklausurterminraumstunde>();
 
