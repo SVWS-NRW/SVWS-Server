@@ -251,7 +251,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 		const bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
 		if (bereiche !== null)
 			return bereiche;
-		return new ArrayList();
+		return new ArrayList<GostFachbereich>();
 	}
 
 	/**

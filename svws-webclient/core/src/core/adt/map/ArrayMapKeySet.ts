@@ -41,7 +41,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public iterator() : JavaIterator<K> {
-		return new ArrayMapKeySetIterator(this._map);
+		return new ArrayMapKeySetIterator<K, V>(this._map);
 	}
 
 	private getKeyList() : List<K> {

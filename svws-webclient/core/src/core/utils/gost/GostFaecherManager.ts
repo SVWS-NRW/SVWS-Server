@@ -310,7 +310,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste der Fächer
 	 */
 	public faecher() : List<GostFach> {
-		return new ArrayList(this._faecher);
+		return new ArrayList<GostFach>(this._faecher);
 	}
 
 	/**

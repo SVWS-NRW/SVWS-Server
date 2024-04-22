@@ -962,6 +962,19 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Checks whether the type parameter has a Not Null annotation from the
+	 * jakartax.validation package assigned.
+	 *
+	 * @param node   the type paramater tree node
+	 *
+	 * @return true if is has a not null annotation assigned
+	 */
+	public boolean hasNotNullAnnotation(final TypeParameterTree node) {
+		return hasNotNullAnnotation(node.getAnnotations(), getTranspilerUnit(node));
+	}
+
+
+	/**
 	 * Checks whether the annotation list contains a TranspilerDTO annotation.
 	 *
 	 * @param annotations   the list of annotation nodes
@@ -1320,7 +1333,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the type mirror
 	 */
-	TypeMirror getTypeMirror(final Tree node) {
+	public TypeMirror getTypeMirror(final Tree node) {
 		return trees.getTypeMirror(getTreePath(node));
 	}
 

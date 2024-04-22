@@ -4192,7 +4192,7 @@ export class StundenplanManager extends JavaObject {
 		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		if (zeitraster !== null)
 			return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
-		return new ArrayList();
+		return new ArrayList<StundenplanUnterricht>();
 	}
 
 	/**

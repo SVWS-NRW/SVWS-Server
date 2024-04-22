@@ -284,7 +284,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public iterator() : JavaIterator<T> {
-		return new MinHeapIterator(this._nodes, this);
+		return new MinHeapIterator<T>(this._nodes, this);
 	}
 
 	/**

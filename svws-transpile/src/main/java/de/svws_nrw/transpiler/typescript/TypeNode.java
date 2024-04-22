@@ -1,8 +1,10 @@
 package de.svws_nrw.transpiler.typescript;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -14,12 +16,17 @@ import javax.lang.model.type.TypeVariable;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ArrayTypeTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WildcardTree;
 
@@ -448,7 +455,7 @@ public class TypeNode {
 		return new TypeNode(plugin, baseType, false, false);
 	}
 
-	private String transpileParameterizedTypeParameters(final List<? extends Tree> typeArgs) {
+	private String transpileParameterizedTypeParameters(final List<? extends Tree> typeArgs, final boolean noBounds) {
 		String result = "<";
 		boolean first = true;
 		for (final Tree t : typeArgs) {
@@ -456,7 +463,7 @@ public class TypeNode {
 				result += ", ";
 			first = false;
 			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
-			result += typeArgNode.transpile(false);
+			result += typeArgNode.transpile(false, noBounds);
 		}
 		result += ">" + ((decl && !notNull) ? " | null" : "");
 		return result;
@@ -466,20 +473,47 @@ public class TypeNode {
 		final TypeNode paramTypeNode = getParameterizedTypeBaseTypeNode(node);
 		final String typeString = paramTypeNode.transpile(true);
 		final List<? extends Tree> typeArgs = node.getTypeArguments();
-		if (noTypeArgs || (typeArgs == null) || (typeArgs.isEmpty())) {
+		if (noTypeArgs)
+			return typeString + ((decl && !notNull) ? " | null" : "");
+		if ((typeArgs == null) || (typeArgs.isEmpty())) {
 			// Es handelt sich um einen Parametrisierten Typ, dessen Typ-Parameter nicht explizit angegeben wurden...
 			// ... diese sollten daher indirekt ermittelt werden.
 			final Tree parent = this.plugin.getTranspiler().getParent(node);
 			if (parent instanceof final NewClassTree nct) {
 				final Tree grandparent = this.plugin.getTranspiler().getParent(nct);
 				if ((grandparent instanceof final VariableTree vt) && (vt.getType() instanceof final ParameterizedTypeTree ptt)) {
-					return typeString + transpileParameterizedTypeParameters(ptt.getTypeArguments());
+					return typeString + transpileParameterizedTypeParameters(ptt.getTypeArguments(), true);
+				}
+				if ((grandparent instanceof final ReturnTree rt) && (this.plugin.getTranspiler().getParent(rt) instanceof final BlockTree bt)
+						&& (this.plugin.getTranspiler().getParent(bt) instanceof final MethodTree mt)
+						&& (mt.getReturnType() instanceof final ParameterizedTypeTree ptt)) {
+					// Bestimme die Typ-Parameter anhand von generischen Parametern der Methode und/oder von generischen Parametern der Klasse
+					final TypeMirror et = this.plugin.getTranspiler().getTypeMirror(node);
+					if (et instanceof final DeclaredType dt) {
+						final ClassTree ct = this.plugin.getTranspiler().getClass(node);
+						final Map<String, TypeParameterTree> mapParams = ct.getTypeParameters().stream().collect(Collectors.toMap(tpt -> tpt.getName().toString(), tpt -> tpt));
+						for (final TypeParameterTree tpt : mt.getTypeParameters())
+							mapParams.put(tpt.getName().toString(), tpt);
+						final List<Tree> paramTypes = new ArrayList<>();
+						for (int i = 0; i < dt.getTypeArguments().size(); i++) {
+							final TypeMirror t = dt.getTypeArguments().get(i);
+							Tree pt = mapParams.get(t.toString());
+							if (pt == null) {
+								if (ptt.getTypeArguments().size() <= i)
+									throw new TranspilerException("Transpiler Error: Konnte Typ-Parameter nicht bestimmen.");
+								pt = ptt.getTypeArguments().get(i);
+							}
+							paramTypes.add(pt);
+						}
+						return typeString + transpileParameterizedTypeParameters(paramTypes, true);
+					}
+					return typeString + transpileParameterizedTypeParameters(ptt.getTypeArguments(), true);
 				}
 			}
 			// ... gebe für die bisher nicht unterstützten Fälle keine Typ-Parameter an
 			return typeString + ((decl && !notNull) ? " | null" : "");
 		}
-		return typeString + transpileParameterizedTypeParameters(typeArgs);
+		return typeString + transpileParameterizedTypeParameters(typeArgs, false);
 	}
 
 
@@ -543,7 +577,7 @@ public class TypeNode {
 	private String transpileAnnotatedType(final AnnotatedTypeTree node, final boolean noTypeArgs, final boolean parentNotNull) {
 		final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
 		final TypeNode underlyingTypeNode = new TypeNode(plugin, node.getUnderlyingType(), decl, hasNotNull);
-		return underlyingTypeNode.transpileInternal(noTypeArgs, parentNotNull, hasNotNull);
+		return underlyingTypeNode.transpileInternal(noTypeArgs, parentNotNull, hasNotNull, false);
 	}
 
 	private String transpileWildcard(final WildcardTree node) {
@@ -562,7 +596,28 @@ public class TypeNode {
 		};
 	}
 
-	private String transpileInternal(final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull) {
+	private String transpileTypeParameter(final TypeParameterTree node, final boolean noBounds) {
+		final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
+		final StringBuilder sb = new StringBuilder();
+		sb.append(node.getName().toString());
+		if (!noBounds && !node.getBounds().isEmpty()) {
+			boolean first = true;
+			sb.append(" extends ");
+			for (final Tree bound : node.getBounds()) {
+				if (first)
+					first = false;
+				else
+					sb.append(" & ");
+				final TypeNode boundNode = new TypeNode(plugin, bound, decl, false);
+				sb.append(boundNode.transpile(false));
+			}
+		}
+		if (!hasNotNull)
+			sb.append(" | null");
+		return sb.toString();
+	}
+
+	private String transpileInternal(final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull, final boolean noBounds) {
 		if ((node == null) && (typeMirror == null))
 			return "void";
 		if (node != null) {
@@ -580,6 +635,8 @@ public class TypeNode {
 				return this.transpileAnnotatedType(att, noTypeArgs, parentNotNull);
 			if (node instanceof final WildcardTree wt)
 				return this.transpileWildcard(wt);
+			if (node instanceof final TypeParameterTree tpt)
+				return this.transpileTypeParameter(tpt, noBounds);
 			throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
 		}
 		if (typeMirror.getKind().isPrimitive())
@@ -602,7 +659,23 @@ public class TypeNode {
 	 * @return the transpiled code
 	 */
 	public String transpile(final boolean noTypeArgs) {
-		return transpileInternal(noTypeArgs, this.notNull, isVarArg && this.notNull);
+		return transpileInternal(noTypeArgs, this.notNull, isVarArg && this.notNull, false);
+	}
+
+
+	/**
+	 * Returns the transpiled code of this node.
+	 *
+	 * @param noTypeArgs   if set to true the type arguments of parameterized types are
+	 *                     not transpiled. This feature is used e.g. for the instanceof
+	 *                     operator.
+	 * @param noBounds     if set to true the bounds for type arguments of parameterized
+	 *                     types are not transpiled
+	 *
+	 * @return the transpiled code
+	 */
+	public String transpile(final boolean noTypeArgs, final boolean noBounds) {
+		return transpileInternal(noTypeArgs, this.notNull, isVarArg && this.notNull, noBounds);
 	}
 
 

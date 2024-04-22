@@ -1476,7 +1476,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
 	 */
 	public schieneGetListe() : List<GostBlockungSchiene> {
-		return new ArrayList(this._daten.schienen);
+		return new ArrayList<GostBlockungSchiene>(this._daten.schienen);
 	}
 
 	/**

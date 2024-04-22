@@ -194,7 +194,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return   die Sortier-Ordnung
 	 */
 	public orderGet() : List<Pair<string, boolean>> {
-		return new ArrayList(this._order);
+		return new ArrayList<Pair<string, boolean>>(this._order);
 	}
 
 	/**

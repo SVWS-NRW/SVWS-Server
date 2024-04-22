@@ -74,4 +74,26 @@ public class Utils {
 		};
 	}
 
+
+	/**
+	 * Gibt den Wert des übergebenen Objektes auf der Konsole aus.
+	 *
+	 * @param <T> der Typ des Wertes
+	 *
+	 * @param o   das Objekt
+	 */
+	public static <@NotNull T> void printObjectValue(final ClassWithParameter<@NotNull T> o) {
+		System.out.println(o.getValue().toString());
+	}
+
+
+	/**
+	 * Eine Test-Methode, für das Erzeugen einer Instanz einer generischen Klasse
+	 */
+	public static void testPrintObjectValue() {
+		printObjectValue(new ClassWithParameter<>(5));
+	}
+
+
+
 }

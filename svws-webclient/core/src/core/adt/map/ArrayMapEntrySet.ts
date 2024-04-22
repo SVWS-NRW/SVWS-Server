@@ -67,7 +67,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	}
 
 	public iterator() : JavaIterator<JavaMapEntry<K, V>> {
-		return new ArrayMapEntrySetIterator(this._map);
+		return new ArrayMapEntrySetIterator<K, V>(this._map);
 	}
 
 	private getEntryList() : List<ArrayMapEntry<K, V>> {

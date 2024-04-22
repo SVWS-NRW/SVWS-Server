@@ -111,15 +111,15 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	public keySet() : JavaSet<K> {
-		return new AVLMapSubKeySet(this);
+		return new AVLMapSubKeySet<K, V>(this);
 	}
 
 	public values() : Collection<V> {
-		return new AVLMapSubCollection(this);
+		return new AVLMapSubCollection<K, V>(this);
 	}
 
 	public entrySet() : JavaSet<JavaMapEntry<K, V>> {
-		return new AVLMapSubEntrySet(this);
+		return new AVLMapSubEntrySet<K, V>(this);
 	}
 
 	public size() : number {
@@ -211,15 +211,15 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	public descendingMap() : NavigableMap<K, V> {
-		return new AVLMapSubMap(this._par, this._iv, !this._asc);
+		return new AVLMapSubMap<K, V>(this._par, this._iv, !this._asc);
 	}
 
 	public navigableKeySet() : NavigableSet<K> {
-		return new AVLMapSubKeySet(this);
+		return new AVLMapSubKeySet<K, V>(this);
 	}
 
 	public descendingKeySet() : NavigableSet<K> {
-		return new AVLMapSubKeySet(new AVLMapSubMap(this._par, this._iv, !this._asc));
+		return new AVLMapSubKeySet<K, V>(new AVLMapSubMap(this._par, this._iv, !this._asc));
 	}
 
 	public subMap(fromKey : K, fromInclusive : boolean, toKey : K, toInclusive : boolean) : NavigableMap<K, V>;
@@ -621,7 +621,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Einen {@link Iterator} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
 	bcGetSubKeySetIterator() : JavaIterator<K> {
-		return new AVLMapSubKeySetIterator(this);
+		return new AVLMapSubKeySetIterator<K, V>(this);
 	}
 
 	/**
@@ -631,7 +631,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Einen {@link Iterator} von Werten (Values) relativ zu dieser Sub-Map.
 	 */
 	bcGetSubCollectionIterator() : JavaIterator<V> {
-		return new AVLMapSubCollectionIterator(this);
+		return new AVLMapSubCollectionIterator<K, V>(this);
 	}
 
 	/**
@@ -641,7 +641,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link Iterator} von Entries relativ zu dieser Sub-Map.
 	 */
 	bcGetSubEntrySetIterator() : JavaIterator<JavaMapEntry<K, V>> {
-		return new AVLMapSubEntrySetIterator(this);
+		return new AVLMapSubEntrySetIterator<K, V>(this);
 	}
 
 	/**
@@ -651,7 +651,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
 	bcGetSubKeySetDescending() : NavigableSet<K> {
-		return new AVLMapSubKeySet(new AVLMapSubMap(this._par, this._iv, !this._asc));
+		return new AVLMapSubKeySet<K, V>(new AVLMapSubMap(this._par, this._iv, !this._asc));
 	}
 
 	/**
@@ -661,7 +661,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link Iterator} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
 	bcGetSubKeySetDescendingIterator() : JavaIterator<K> {
-		return new AVLMapSubKeySetIterator(new AVLMapSubMap(this._par, this._iv, !this._asc));
+		return new AVLMapSubKeySetIterator<K, V>(new AVLMapSubMap(this._par, this._iv, !this._asc));
 	}
 
 	/**
@@ -787,11 +787,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 			throw new IllegalArgumentException("FROM-KEY " + from + "/" + fromInc + " nicht in " + this._iv)
 		if (this._par.bcCheckOutOfIntervall(to, toInc, this._iv))
 			throw new IllegalArgumentException("TO-KEY " + to + "/" + toInc + " nicht in " + this._iv)
-		return new AVLMapSubMap(this._par, new AVLMapIntervall(from, fromInc, to, toInc), asc);
+		return new AVLMapSubMap<K, V>(this._par, new AVLMapIntervall(from, fromInc, to, toInc), asc);
 	}
 
 	private _createSet(from : K, fromInc : boolean, to : K, toInc : boolean, asc : boolean) : AVLMapSubKeySet<K, V> {
-		return new AVLMapSubKeySet(this._createMap(from, fromInc, to, toInc, asc));
+		return new AVLMapSubKeySet<K, V>(this._createMap(from, fromInc, to, toInc, asc));
 	}
 
 	transpilerCanonicalName(): string {

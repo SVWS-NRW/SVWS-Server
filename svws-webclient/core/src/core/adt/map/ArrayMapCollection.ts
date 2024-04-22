@@ -38,7 +38,7 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	}
 
 	public iterator() : JavaIterator<V> {
-		return new ArrayMapCollectionIterator(this._map);
+		return new ArrayMapCollectionIterator<K, V>(this._map);
 	}
 
 	private getValueList() : List<V> {

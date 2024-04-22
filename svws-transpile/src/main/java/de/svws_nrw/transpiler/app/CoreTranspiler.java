@@ -69,15 +69,11 @@ public class CoreTranspiler {
 					final String data = Files.readString(Paths.get(fileNameAPIFiles));
 					tmpApiFiles = data.split(",");
 				} catch (@SuppressWarnings("unused") final IOException e) {
-					tmpApiFiles = null;
+					tmpApiFiles = new String[0];
 				}
 			}
 			if ((tmpJavaFiles == null) || (tmpJavaFiles.length == 0) || ((tmpJavaFiles.length == 1) && (tmpJavaFiles[0].trim().equals("")))) {
 				cmdLine.printOptionsAndExit(1, "Es wurden keine Java-Quellcode-Dateien angegeben.");
-				return;
-			}
-			if ((tmpApiFiles == null) || (tmpApiFiles.length == 0) || ((tmpApiFiles.length == 1) && (tmpApiFiles[0].trim().equals("")))) {
-				cmdLine.printOptionsAndExit(1, "Es wurden keine Api-Dateien angegeben.");
 				return;
 			}
 			coreJavaSources = new File[tmpJavaFiles.length];
@@ -94,6 +90,10 @@ public class CoreTranspiler {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}
 
+		// Speichern der erzeugten Dateien
+		final ArrayList<String> outputs = new ArrayList<>();
+		final ArrayList<Boolean> outputsTypeOnly = new ArrayList<>();
+
     	// Create a transpiler object with the associated core java source files and use the TS Transpiler Plugin
 		final Transpiler transpiler = new Transpiler(tmpDir, coreJavaSources);
 
@@ -103,22 +103,23 @@ public class CoreTranspiler {
 		transpiler.printSourceFiles();
 		transpiler.transpile();
 
+		outputs.addAll(typescriptPlugin.getOutputFiles());
+		outputsTypeOnly.addAll(typescriptPlugin.getOutputFilesTypeOnly());
+
     	// Create a transpiler object with the associated api java source files and use the TS API Generator Plugin
 // TODO Finish implementing the OpenApi-Plugin after reducing code in Server-API-Classes
-		final Transpiler apiTranspiler = new Transpiler(tmpDir, apiJavaSources);
+		if ((apiJavaSources != null) && (apiJavaSources.length > 0)) {
+			final Transpiler apiTranspiler = new Transpiler(tmpDir, apiJavaSources);
 
-		final ApiTranspilerTypeScriptPlugin apiGeneratorPlugin = new ApiTranspilerTypeScriptPlugin(apiTranspiler, typeScriptOutputDir);
-		apiGeneratorPlugin.setIgnoreJavaPackagePrefix(typeScriptIgnorePackagePrefix);
+			final ApiTranspilerTypeScriptPlugin apiGeneratorPlugin = new ApiTranspilerTypeScriptPlugin(apiTranspiler, typeScriptOutputDir);
+			apiGeneratorPlugin.setIgnoreJavaPackagePrefix(typeScriptIgnorePackagePrefix);
 
-		apiTranspiler.printSourceFiles();
-		apiTranspiler.transpile();
+			apiTranspiler.printSourceFiles();
+			apiTranspiler.transpile();
 
-		final ArrayList<String> outputs = new ArrayList<>();
-		outputs.addAll(typescriptPlugin.getOutputFiles());
-		outputs.addAll(apiGeneratorPlugin.getOutputFiles());
-		final ArrayList<Boolean> outputsTypeOnly = new ArrayList<>();
-		outputsTypeOnly.addAll(typescriptPlugin.getOutputFilesTypeOnly());
-		outputsTypeOnly.addAll(apiGeneratorPlugin.getOutputFilesTypeOnly());
+			outputs.addAll(apiGeneratorPlugin.getOutputFiles());
+			outputsTypeOnly.addAll(apiGeneratorPlugin.getOutputFilesTypeOnly());
+		}
 
 		if (outputs.size() != outputsTypeOnly.size())
 			throw new TranspilerException("Transpiler Error: output arrays do not have the same size");

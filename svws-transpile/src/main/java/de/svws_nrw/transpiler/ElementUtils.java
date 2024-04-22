@@ -462,10 +462,10 @@ public final class ElementUtils {
 		final Map<String, TypeMirror> lastResolved = resolveTypeVariables(tmpList, path.getLast());
 		if (elem == null)
 			return lastResolved;
-		// Benutzer die Auflösung der Typ-Variablen des vorigen Element (rekursiver Aufruf) für das Auflösen der TypVariablen des aktuellen Elements
+		// Benutze die Auflösung der Typ-Variablen des vorigen Element (rekursiver Aufruf) für das Auflösen der TypVariablen des aktuellen Elements
 		final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
 		final DeclaredType ancestor = ElementUtils.getDirectAncestorType(path.getLast(), elem);
-		if (ancestor.getTypeArguments().size() != elem.getTypeParameters().size())
+		if ((ancestor == null) || (ancestor.getTypeArguments().size() != elem.getTypeParameters().size()))
 			throw new TranspilerException("Transpiler Error: Invalid size of type parameter list.");
 		for (int i = 0; i < elem.getTypeParameters().size(); i++) {
 			final String typeVarName = elem.getTypeParameters().get(i).getSimpleName().toString();

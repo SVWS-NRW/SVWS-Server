@@ -90,7 +90,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	}
 
 	public iterator() : JavaIterator<E> {
-		return new LinkedCollectionIterator(this);
+		return new LinkedCollectionIterator<E>(this);
 	}
 
 	public toArray() : Array<unknown>;
@@ -593,7 +593,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	}
 
 	public descendingIterator() : JavaIterator<E> {
-		return new LinkedCollectionDescendingIterator(this);
+		return new LinkedCollectionDescendingIterator<E>(this);
 	}
 
 	/**

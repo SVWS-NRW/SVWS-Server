@@ -356,7 +356,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const bildungsplan : BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 		if (bildungsplan === null)
 			return null;
-		return new ArrayList(bildungsplan.fbFaecher);
+		return new ArrayList<BKFBFach>(bildungsplan.fbFaecher);
 	}
 
 	/**
@@ -422,7 +422,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const bildungsplan : BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
 		if (bildungsplan === null)
 			return null;
-		return new ArrayList(bildungsplan.lernfelder);
+		return new ArrayList<BKLernfeld>(bildungsplan.lernfelder);
 	}
 
 	/**

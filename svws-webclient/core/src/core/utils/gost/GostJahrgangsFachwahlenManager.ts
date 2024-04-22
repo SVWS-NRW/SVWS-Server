@@ -134,7 +134,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_fachID_abifachID_schuelerID.getOrNull(idFach, idAbifach);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	/**
@@ -150,7 +150,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	/**
@@ -167,7 +167,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	/**
@@ -183,7 +183,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	/**
@@ -200,7 +200,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_gk_muendlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	/**
@@ -216,7 +216,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		const schuelerListe : List<number> | null = this._map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
 		if (schuelerListe !== null)
 			return schuelerListe;
-		return new ArrayList();
+		return new ArrayList<number>();
 	}
 
 	transpilerCanonicalName(): string {

@@ -677,7 +677,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
 	 */
 	public schuelerklausurGetMengeAsList() : List<GostSchuelerklausur> {
-		return new ArrayList(this._schuelerklausurmenge);
+		return new ArrayList<GostSchuelerklausur>(this._schuelerklausurmenge);
 	}
 
 	/**
@@ -780,7 +780,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return eine Liste aller {@link GostSchuelerklausurTermin}-Objekte.
 	 */
 	public schuelerklausurterminGetMengeAsList() : List<GostSchuelerklausurTermin> {
-		return new ArrayList(this._schuelerklausurterminmenge);
+		return new ArrayList<GostSchuelerklausurTermin>(this._schuelerklausurterminmenge);
 	}
 
 	/**

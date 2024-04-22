@@ -139,7 +139,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return die Liste der in der Auswahl enthaltenen Werte für dieses Attribut.
 	 */
 	public auswahl() : List<V> {
-		return new ArrayList(this._mapAuswahlValuesByKey.values());
+		return new ArrayList<V>(this._mapAuswahlValuesByKey.values());
 	}
 
 	/**
@@ -149,7 +149,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return die Liste der in der Auswahl enthaltenen Schlüssel für dieses Attribut zurück.
 	 */
 	public auswahlKeyList() : List<K> {
-		return new ArrayList(this._mapAuswahlValuesByKey.keySet());
+		return new ArrayList<K>(this._mapAuswahlValuesByKey.keySet());
 	}
 
 	/**
