@@ -921,6 +921,52 @@ public class GostKursklausurManager {
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
 	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull List<@NotNull GostKlausurtermin>> terminGruppierteUeberschneidungenGetMengeByDatum(final @NotNull String datum) {
+		return gruppiereUeberschneidungen(terminGetMengeByDatum(datum));
+	}
+
+	/*
+	 * Q&D: Muss noch hinsichtlich Laufzeit optimiert werden
+	 */
+	private @NotNull List<@NotNull List<@NotNull GostKlausurtermin>> gruppiereUeberschneidungen(final @NotNull List<@NotNull GostKlausurtermin> termine) {
+		final @NotNull List<@NotNull List<@NotNull GostKlausurtermin>> ergebnis = new ArrayList<>();
+		boolean added = false;
+		for (final @NotNull GostKlausurtermin terminToAdd : termine) {
+			// Not supported by transpiler outerloop:
+			for (final @NotNull List<@NotNull GostKlausurtermin> listToCheck : ergebnis) {
+				for (final @NotNull GostKlausurtermin terminInListe : termine) {
+					if (checkTerminUeberschneidung(terminInListe, terminToAdd)) {
+						listToCheck.add(terminToAdd);
+						// Not supported by transpiler break outerloop;
+						added = true;
+					}
+					if (added)
+						break;
+				}
+				if (added)
+					break;
+			}
+			if (!added)
+				ergebnis.add(ListUtils.create1(terminToAdd));
+		}
+		return ergebnis;
+	}
+
+	private boolean checkTerminUeberschneidung(final @NotNull GostKlausurtermin t1, final @NotNull GostKlausurtermin t2) {
+		int s1 = minKursklausurstartzeitByTerminid(t1.id);
+		int s2 = minKursklausurstartzeitByTerminid(t2.id);
+		int e1 = maxKursklausurendzeitByTerminid(t1.id);
+		int e2 = maxKursklausurendzeitByTerminid(t2.id);
+		return e1 >= s2 && e2 >= s1;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
 	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten

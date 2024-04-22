@@ -859,6 +859,47 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
 	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public terminGruppierteUeberschneidungenGetMengeByDatum(datum : string) : List<List<GostKlausurtermin>> {
+		return this.gruppiereUeberschneidungen(this.terminGetMengeByDatum(datum));
+	}
+
+	private gruppiereUeberschneidungen(termine : List<GostKlausurtermin>) : List<List<GostKlausurtermin>> {
+		const ergebnis : List<List<GostKlausurtermin>> = new ArrayList<List<GostKlausurtermin>>();
+		let added : boolean = false;
+		for (const terminToAdd of termine) {
+			for (const listToCheck of ergebnis) {
+				for (const terminInListe of termine) {
+					if (this.checkTerminUeberschneidung(terminInListe, terminToAdd)) {
+						listToCheck.add(terminToAdd);
+						added = true;
+					}
+					if (added)
+						break;
+				}
+				if (added)
+					break;
+			}
+			if (!added)
+				ergebnis.add(ListUtils.create1(terminToAdd));
+		}
+		return ergebnis;
+	}
+
+	private checkTerminUeberschneidung(t1 : GostKlausurtermin, t2 : GostKlausurtermin) : boolean {
+		let s1 : number = this.minKursklausurstartzeitByTerminid(t1.id);
+		let s2 : number = this.minKursklausurstartzeitByTerminid(t2.id);
+		let e1 : number = this.maxKursklausurendzeitByTerminid(t1.id);
+		let e2 : number = this.maxKursklausurendzeitByTerminid(t2.id);
+		return e1 >= s2 && e2 >= s1;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
 	 * @param abiJahrgang der Abiturjahrgang
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
