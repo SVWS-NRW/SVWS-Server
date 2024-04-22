@@ -2788,7 +2788,7 @@ public class StundenplanManager {
 	 */
 	public void kursRemoveAll(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
 		// Umwandeln in IDs.
-		final @NotNull Set<@NotNull Long> idKurse = new HashSet<@NotNull Long>();
+		final @NotNull Set<@NotNull Long> idKurse = new HashSet<>();
 		for (final @NotNull StundenplanKurs kurs : listKurs)
 				idKurse.add(kurs.id);
 
