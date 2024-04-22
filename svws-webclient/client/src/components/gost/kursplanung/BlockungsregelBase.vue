@@ -1,6 +1,12 @@
 <template>
 	<svws-ui-content-card has-background>
-		<svws-ui-table :items="regeln" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
+		<svws-ui-table :items="aufgeklappt ? regeln : []" :no-data="false" :columns="[{key: 'information', label: ' ', fixedWidth: 2}, ...columns, {key: 'entfernen', label: ' ', fixedWidth: 3}]" scroll clickable>
+			<template #header(information)>
+				<div v-if="regeln.size()" @click.stop="aufgeklappt = !aufgeklappt">
+					<span v-if="aufgeklappt" class="icon i-ri-arrow-down-s-line cursor-pointer inline-block" />
+					<span v-else class="rounded-md bg-primary p-1 -ml-2 text-light cursor-pointer inline-block">{{ regeln.size() }}</span>
+				</div>
+			</template>
 			<template #header(entfernen)>
 				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1">
 					<span class="icon i-ri-add-line" />
@@ -41,11 +47,11 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager, GostBlockungsdatenManager, List , GostKursblockungRegelTyp } from "@core";
-	import { GostBlockungRegel, ArrayList } from "@core";
+	import type { GostBlockungsergebnisManager, GostBlockungsdatenManager, List } from "@core";
+	import { GostBlockungRegel, ArrayList, GostKursblockungRegelTyp } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;
@@ -64,6 +70,9 @@
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
+
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const aufgeklappt = ref<boolean>(![GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE].includes(props.regelTyp));
 
 	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
 
