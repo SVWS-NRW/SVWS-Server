@@ -4,8 +4,12 @@
 			<template #header(information)>
 				<div v-if="regeln.size()" @click.stop="aufgeklappt = !aufgeklappt">
 					<span v-if="aufgeklappt" class="icon i-ri-arrow-down-s-line cursor-pointer inline-block" />
-					<span v-else class="rounded-md bg-primary p-1 -ml-2 text-light cursor-pointer inline-block">{{ regeln.size() }}</span>
+					<span v-else class="icon i-ri-arrow-right-s-line cursor-pointer inline-block" />
 				</div>
+			</template>
+			<template #[`header(${props.columns.at(0)?.key})`]="{ column }">
+				<span v-if="!aufgeklappt" class="rounded-md bg-primary p-1 text-light cursor-pointer inline-block">{{ regeln.size() }}</span>
+				<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 			</template>
 			<template #header(entfernen)>
 				<svws-ui-button @click="regelHinzufuegen" type="icon" :disabled="modelValue?.typ === regelTyp.typ || apiStatus.pending" v-if="!disabled" class="mr-1">
