@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.ArrayType;
@@ -20,6 +21,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -500,7 +502,7 @@ public class TypeNode {
 							Tree pt = mapParams.get(t.toString());
 							if (pt == null) {
 								if (ptt.getTypeArguments().size() <= i)
-									throw new TranspilerException("Transpiler Error: Konnte Typ-Parameter nicht bestimmen.");
+									throw new TranspilerException("Transpiler Error: Cannot dertemine type parameter.");
 								pt = ptt.getTypeArguments().get(i);
 							}
 							paramTypes.add(pt);
@@ -508,6 +510,28 @@ public class TypeNode {
 						return typeString + transpileParameterizedTypeParameters(paramTypes, true);
 					}
 					return typeString + transpileParameterizedTypeParameters(ptt.getTypeArguments(), true);
+				}
+				if ((grandparent instanceof final MethodInvocationTree mit)
+						&& (mit.getMethodSelect() instanceof final MemberSelectTree mst)) {
+					final int index = mit.getArguments().indexOf(parent);
+					if (index == -1)
+						throw new TranspilerException("Transpiler Error: cannot determine index of method invocation parameter.");
+					final VariableTree vt = this.plugin.getTranspiler().getDeclaration(mst.getExpression());
+					if (vt != null) {
+						if (vt.getType() instanceof final ParameterizedTypeTree pttOuter) {
+							if (index >= pttOuter.getTypeArguments().size())
+								throw new TranspilerException("Transpiler Error: cannot determine index of method invocation parameter.");
+							final Tree paramType = pttOuter.getTypeArguments().get(index);
+							final TypeNode typeArgNode = new TypeNode(plugin, paramType, false, this.plugin.getTranspiler().hasNotNullAnnotation(paramType));
+							return typeString + typeArgNode.transpileTypeParametersOnly() + (typeArgNode.isNotNull() ? "" : " | null");
+						}
+						throw new TranspilerException("Transpiler Error: Kind %s not yet supported.".formatted(vt.getType().getKind()));
+					}
+					if (this.plugin.getTranspiler().getElement(mit) instanceof ExecutableElement) {
+						// TODO komplexer Fall, wo bei statischen Methoden ggf. mit VarArgs die Typ-Parameter bestimmt werden können
+						return typeString + ((decl && !notNull) ? " | null" : "");
+					}
+					throw new TranspilerException("Transpiler Error: This kind of method invocation ist not yet supported.");
 				}
 			}
 			// ... gebe für die bisher nicht unterstützten Fälle keine Typ-Parameter an
@@ -650,6 +674,18 @@ public class TypeNode {
 
 
 	/**
+	 * Returns the transpiled code for the type parameters of this node
+	 *
+	 * @return the transpiled code
+	 */
+	public String transpileTypeParametersOnly() {
+		if (this.node instanceof final ParameterizedTypeTree ptt)
+			return transpileParameterizedTypeParameters(ptt.getTypeArguments(), false);
+		throw new TranspilerException("Transpiler Error: Node of kind %s not yet supoorted".formatted(node.getKind()));
+	}
+
+
+	/**
 	 * Returns the transpiled code of this node.
 	 *
 	 * @param noTypeArgs   if set to true the type arguments of parameterized types are
@@ -783,7 +819,7 @@ public class TypeNode {
 	 * @return the transpiled code
 	 */
 	public String getTypeCast(final String identifier) {
-		if (node instanceof final PrimitiveTypeTree p)
+		if (node instanceof PrimitiveTypeTree)
 			return identifier + " as " + transpile(false);
 		if (node instanceof final IdentifierTree i) {
 			final ExpressionType type = plugin.getTranspiler().getExpressionType(i);

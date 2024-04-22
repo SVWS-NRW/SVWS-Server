@@ -501,7 +501,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	private static getMapGruppenZuordnung() : JavaMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
 		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
 			for (const g of BenutzerKompetenzGruppe.values())
-				BenutzerKompetenz._mapGruppenZuordnung.put(g, new ArrayList());
+				BenutzerKompetenz._mapGruppenZuordnung.put(g, new ArrayList<BenutzerKompetenz>());
 			for (const p of BenutzerKompetenz.values()) {
 				let gruppe : BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
 				if (gruppe === null)

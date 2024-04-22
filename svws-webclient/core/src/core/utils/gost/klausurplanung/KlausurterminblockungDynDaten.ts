@@ -117,7 +117,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			if (gruppe.isEmpty())
 				this._logger.log(LogLevel.ERROR, "Es wurde eine leere Klausurgruppe gefunden!");
 			while (!gruppe.isEmpty()) {
-				this._klausurGruppen.addLast(new ArrayList());
+				this._klausurGruppen.addLast(new ArrayList<number>());
 				const size : number = gruppe.size();
 				for (let i : number = 0; i < size; i++) {
 					const klausurNr : number = ListUtils.pollNonNullFirst(gruppe).valueOf();

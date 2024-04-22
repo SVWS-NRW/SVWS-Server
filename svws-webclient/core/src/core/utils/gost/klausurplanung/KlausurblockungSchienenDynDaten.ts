@@ -223,7 +223,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	gibErzeugeOutput() : List<List<number>> {
 		const out : List<List<number>> = new ArrayList<List<number>>();
 		for (let i : number = 0; i < this._schienenAnzahl; i++)
-			out.add(new ArrayList());
+			out.add(new ArrayList<number>());
 		for (const e of this._mapKlausurZuNummer.entrySet()) {
 			const klausurID : number = e.getKey();
 			const klausurNr : number = e.getValue();

@@ -57,6 +57,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
@@ -102,7 +103,7 @@ public final class Transpiler extends AbstractProcessor {
 	/** A temporary variable used by the annotation processor for accessing the Tree-API of the java compiler  */
     private Trees trees;
 
-    /** A reference to the element utils of the java compiler processing environment */
+    /** A reference to the type utils of the java compiler processing environment */
     private Types typeUtils;
 
     /** A reference to the element utils of the java compiler processing environment */
@@ -816,7 +817,7 @@ public final class Transpiler extends AbstractProcessor {
 	 * Returns the variable declaration for the specified identifier or null if a
 	 * variable declaration is not found.
 	 *
-	 * @param node   the identifiert
+	 * @param node   the identifier
 	 *
 	 * @return the variable declaration or null
 	 */
@@ -828,6 +829,27 @@ public final class Transpiler extends AbstractProcessor {
 			final Tree currentNode = current.getLeaf();
 			if (((scopesLocalVariables != null) && (scopesLocalVariables.contains(currentNode))))
 				return tu.allLocalVariablesByScope.get(currentNode).get("" + node.getName());
+		}
+		return null;
+	}
+
+
+	/**
+	 * Returns the variable declaration for the specified identifier or null if a
+	 * variable declaration is not found.
+	 *
+	 * @param node   the expression to be evaluated
+	 *
+	 * @return the variable declaration or null
+	 */
+	public VariableTree getDeclaration(final ExpressionTree node) {
+		final TreePath path = getTreePath(node);
+		final TranspilerUnit tu = getTranspilerUnit(path);
+		final Set<Tree> scopesLocalVariables = tu.allLocalVariables.get("" + node.toString());
+		for (TreePath current = path; current.getParentPath() != null; current = current.getParentPath()) {
+			final Tree currentNode = current.getLeaf();
+			if (((scopesLocalVariables != null) && (scopesLocalVariables.contains(currentNode))))
+				return tu.allLocalVariablesByScope.get(currentNode).get("" + node.toString());
 		}
 		return null;
 	}
@@ -923,54 +945,22 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
-	 * Checks whether the variable has a Not Null annotation from the
+	 * Checks whether the tree node has a Not Null annotation from the
 	 * jakartax.validation package assigned.
 	 *
-	 * @param node   the variable tree node
+	 * @param node   the tree node
 	 *
 	 * @return true if is has a not null annotation assigned
 	 */
-	public boolean hasNotNullAnnotation(final VariableTree node) {
-		return hasNotNullAnnotation(node.getModifiers().getAnnotations(), getTranspilerUnit(node));
-	}
-
-
-	/**
-	 * Checks whether the method has a Not Null annotation from the
-	 * jakartax.validation package assigned for its return type.
-	 *
-	 * @param node   the method tree node
-	 *
-	 * @return true if is has a not null annotation assigned
-	 */
-	public boolean hasNotNullAnnotation(final MethodTree node) {
-		return hasNotNullAnnotation(node.getModifiers().getAnnotations(), getTranspilerUnit(node));
-	}
-
-
-	/**
-	 * Checks whether the annotated type has a Not Null annotation from the
-	 * jakartax.validation package assigned.
-	 *
-	 * @param node   the annotated type tree node
-	 *
-	 * @return true if is has a not null annotation assigned
-	 */
-	public boolean hasNotNullAnnotation(final AnnotatedTypeTree node) {
-		return hasNotNullAnnotation(node.getAnnotations(), getTranspilerUnit(node));
-	}
-
-
-	/**
-	 * Checks whether the type parameter has a Not Null annotation from the
-	 * jakartax.validation package assigned.
-	 *
-	 * @param node   the type paramater tree node
-	 *
-	 * @return true if is has a not null annotation assigned
-	 */
-	public boolean hasNotNullAnnotation(final TypeParameterTree node) {
-		return hasNotNullAnnotation(node.getAnnotations(), getTranspilerUnit(node));
+	public boolean hasNotNullAnnotation(final Tree node) {
+		return switch (node) {
+			case final VariableTree vt -> hasNotNullAnnotation(vt.getModifiers().getAnnotations(), getTranspilerUnit(vt));
+			case final MethodTree mt -> hasNotNullAnnotation(mt.getModifiers().getAnnotations(), getTranspilerUnit(mt));
+			case final AnnotatedTypeTree att -> hasNotNullAnnotation(att.getAnnotations(), getTranspilerUnit(att));
+			case final TypeParameterTree tpt -> hasNotNullAnnotation(tpt.getAnnotations(), getTranspilerUnit(tpt));
+			case final ParameterizedTypeTree ptt -> hasNotNullAnnotation(ptt.getType());
+			default -> throw new TranspilerException("Transpiler Error: Tree of Kind %s not yet supported.".formatted(node.getKind()));
+		};
 	}
 
 

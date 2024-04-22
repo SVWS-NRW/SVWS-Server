@@ -173,7 +173,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	private init() : void {
 		for (const p of BenutzerKompetenz.values())
-			this._mapKompetenzenVonGruppe.put(p, new ArrayList());
+			this._mapKompetenzenVonGruppe.put(p, new ArrayList<BenutzergruppeDaten>());
 		for (const p of BenutzerKompetenzGruppe.values())
 			this._mapKompetenzgruppenVonGruppe.put(p, new HashSet<number>());
 	}

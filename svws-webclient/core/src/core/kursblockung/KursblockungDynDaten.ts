@@ -665,7 +665,7 @@ export class KursblockungDynDaten extends JavaObject {
 		const nFacharten : number = this._fachartArr.length;
 		const mapFachartList : HashMap<number, List<KursblockungDynKurs>> = new HashMap<number, List<KursblockungDynKurs>>();
 		for (let i : number = 0; i < nFacharten; i++)
-			mapFachartList.put(i, new ArrayList());
+			mapFachartList.put(i, new ArrayList<KursblockungDynKurs>());
 		for (const kurs of this._kursArr) {
 			const fachartNr : number = kurs.gibFachart().gibNr();
 			DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr).add(kurs);

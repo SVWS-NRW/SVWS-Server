@@ -1983,7 +1983,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", schueler.geschlecht, 0);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idSchueler_schueler, schueler.id, schueler);
 		if (!this._map_idSchueler_fachwahlen.containsKey(schueler.id))
-			this._map_idSchueler_fachwahlen.put(schueler.id, new ArrayList());
+			this._map_idSchueler_fachwahlen.put(schueler.id, new ArrayList<GostFachwahl>());
 		this._daten.schueler.add(schueler);
 	}
 

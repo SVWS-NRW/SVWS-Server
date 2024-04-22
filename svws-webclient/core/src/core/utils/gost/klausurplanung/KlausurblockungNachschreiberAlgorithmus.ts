@@ -146,7 +146,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			}
 			if (!kollision) {
 				for (const skt of gruppe)
-					ergebnis.add(new Pair(skt, idTermin));
+					ergebnis.add(new Pair<GostSchuelerklausurTermin, number>(skt, idTermin));
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
 				gruppen.remove(gruppe);
 			}
