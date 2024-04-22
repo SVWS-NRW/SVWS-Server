@@ -472,6 +472,8 @@
 						return props.getErgebnismanager().regelupdatePatchByID_01_KURSART_SPERRE_SCHIENEN_VON_BIS(regel.value.id, p.get(0), p.get(1), p.get(2));
 					return props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_02e_KURS_FIXIERE_IN_EINER_SCHIENE(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(p.get(0), p.get(1));
 				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ:
 					return props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
@@ -480,6 +482,8 @@
 				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ:
 					return props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(regel.value.id, p.get(0), p.get(1), p.get(2));
 					return props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ:
 					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));

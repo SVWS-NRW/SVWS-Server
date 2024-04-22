@@ -3107,6 +3107,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt     Die ID der alten zu modifizierenden Regel.
+	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
+	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
+	 * @param schienenNrBis  Der Endbereich der Schienen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(idRegelAlt : number, kursart : number, schienenNrVon : number, schienenNrBis : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const von : number = Math.min(schienenNrVon, schienenNrBis);
+		const bis : number = Math.max(schienenNrVon, schienenNrBis);
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		u.listEntfernen.add(rAlt);
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung einer Rechtecks-Auswahl zu realisieren.
 	 * <br>(1) Wenn der Kurs markiert ist und eine Sperrung hat, wird die Sperrung entfernt.
 	 * <br>(2) Wenn der Kurs markiert ist und keine Fixierung hat, wird eine Fixierung erzeugt.
@@ -3294,6 +3323,32 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (rFixierungAlt !== null)
 					u.listEntfernen.add(rFixierungAlt);
 			}
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 * @param schienenNr  Die Nummer der Schiene, die fixiert werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_02e_KURS_FIXIERE_IN_EINER_SCHIENE(idRegelAlt : number, idKurs : number, schienenNr : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		u.listEntfernen.add(rAlt);
 		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
 		return u;
 	}
