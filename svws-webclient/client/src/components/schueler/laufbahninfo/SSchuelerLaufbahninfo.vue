@@ -19,7 +19,9 @@
 					</div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
-					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)"
+						@update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache}, rowData.sprache)"
+						:items="sprachJahrgaenge" :item-text="i => i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
 					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
@@ -29,7 +31,9 @@
 					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)"
+						@update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)"
+						:items="sprachJahrgaenge" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
@@ -66,8 +70,8 @@
 	import { computed, ref } from 'vue';
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn } from "@ui";
-	import type { Sprachbelegung} from '@core';
-	import { Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode } from '@core';
+	import type { Sprachbelegung } from '@core';
+	import { Schulform, Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
@@ -111,6 +115,13 @@
 	})
 
 	const sprachen = (s: string) => computed(() => [s, ...verfuegbareSprachen.value])
+
+	const sprachJahrgaenge = computed(() => {
+		const schulform = props.schuelerListeManager().schulform();
+		if ((schulform === Schulform.BK) || (schulform === Schulform.SB))
+			return Jahrgaenge.get(Schulform.GE);
+		return Jahrgaenge.get(schulform);
+	});
 
 	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
 	const latinum = computed(()=> {
@@ -198,4 +209,5 @@
 		for (const pruefung of auswahlPr.value)
 			await props.removeSprachpruefung(pruefung);
 	}
+
 </script>

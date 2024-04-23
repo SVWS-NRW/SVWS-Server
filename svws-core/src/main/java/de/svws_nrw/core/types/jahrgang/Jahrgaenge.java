@@ -463,7 +463,7 @@ public enum Jahrgaenge {
 	private static final @NotNull HashMap<@NotNull Long, Jahrgaenge> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<Schulform> @NotNull[] schulformen;
+	private final @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge */
 	private final @NotNull ArrayList<@NotNull String> @NotNull[] bezeichnungen;
@@ -480,7 +480,7 @@ public enum Jahrgaenge {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
-		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
@@ -577,7 +577,7 @@ public enum Jahrgaenge {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public @NotNull List<Schulform> getSchulformen() {
+	public @NotNull List<@NotNull Schulform> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -589,8 +589,8 @@ public enum Jahrgaenge {
 	 *
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
-	public static @NotNull List<Jahrgaenge> get(final Schulform schulform) {
-		final @NotNull ArrayList<Jahrgaenge> result = new ArrayList<>();
+	public static @NotNull List<@NotNull Jahrgaenge> get(final Schulform schulform) {
+		final @NotNull ArrayList<@NotNull Jahrgaenge> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Jahrgaenge@NotNull[] jahrgaenge = Jahrgaenge.values();

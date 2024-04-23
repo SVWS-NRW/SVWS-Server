@@ -175,7 +175,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
 	 */
-	private readonly schulformen : Array<ArrayList<Schulform | null>>;
+	private readonly schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
@@ -283,7 +283,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public getSchulformen() : List<Schulform | null> {
+	public getSchulformen() : List<Schulform> {
 		return this.schulformen[this.historie.length - 1];
 	}
 
@@ -294,8 +294,8 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 	 *
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
-	public static get(schulform : Schulform | null) : List<Jahrgaenge | null> {
-		const result : ArrayList<Jahrgaenge | null> = new ArrayList<Jahrgaenge | null>();
+	public static get(schulform : Schulform | null) : List<Jahrgaenge> {
+		const result : ArrayList<Jahrgaenge> = new ArrayList<Jahrgaenge>();
 		if (schulform === null)
 			return result;
 		const jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();
