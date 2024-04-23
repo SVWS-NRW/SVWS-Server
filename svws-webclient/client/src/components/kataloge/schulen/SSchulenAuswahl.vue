@@ -17,7 +17,11 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="liste.length === 0" />
-					<svws-ui-button @click="add" type="icon" title="Eine neue Schule hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
+					<s-schulen-neu-modal v-slot="{ openModal }" :add-eintrag>
+						<svws-ui-button type="icon" @click="openModal()">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+					</s-schulen-neu-modal>
 				</template>
 			</svws-ui-table>
 		</template>
@@ -28,7 +32,6 @@
 
 	import { ref, computed } from 'vue';
 	import type { SchulenAuswahlProps } from './SSchulenAuswahlProps';
-	import { SchulEintrag } from '@core';
 
 	const props = defineProps<SchulenAuswahlProps>();
 
@@ -44,11 +47,6 @@
 		liste.value = [];
 	}
 
-	async function add() {
-		const data = new SchulEintrag();
-		await props.addEintrag(data);
-	}
-
 	const schulen = computed(()=>{
 		const kuerzel = [];
 		const keinkeurzel = [];
@@ -57,8 +55,6 @@
 				kuerzel.push(schule);
 			else
 				keinkeurzel.push(schule);
-		kuerzel.sort((a, b) => a.schulnummer > b.schulnummer ? 1 : -1);
-		keinkeurzel.sort((a, b) => a.schulnummer > b.schulnummer ? 1 : -1);
 		return kuerzel.concat(keinkeurzel);
 	})
 

@@ -36,10 +36,16 @@ export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen>
 	public async ladeListe() {
 		api.status.start();
 		const listKatalogeintraege = await api.server.getSchulen(api.schema);
+		listKatalogeintraege.sort({ compare: (a: SchulEintrag, b: SchulEintrag) => a.schulnummer.localeCompare(b.schulnummer) });
 		const mapKatalogeintraege = new Map<number, SchulEintrag>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
+		let auswahl;
+		for (const l of listKatalogeintraege) {
 			mapKatalogeintraege.set(l.id, l);
+			if ((auswahl === undefined) && (l.kuerzel))
+				auswahl = l;
+		}
+		if ((auswahl === undefined) && (listKatalogeintraege.size() > 0))
+			auswahl = listKatalogeintraege.get(0);
 		this.setPatchedState({ auswahl, mapKatalogeintraege })
 		api.status.stop();
 	}
