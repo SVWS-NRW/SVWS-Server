@@ -60,7 +60,6 @@ public final class DataSchulen extends DataManager<Long> {
 		daten.schulleiter = e.Schulleiter;
 		daten.sortierung = (e.Sortierung == null) ? 32000 : e.Sortierung;
 		daten.istSichtbar = (e.Sichtbar == null) ? true : e.Sichtbar;
-		daten.istAenderbar = (e.Aenderbar == null) ? true : e.Aenderbar;
 		return daten;
 	};
 
@@ -165,8 +164,7 @@ public final class DataSchulen extends DataManager<Long> {
 		Map.entry("email", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, false, true, 40)),
 		Map.entry("schulleiter", (conn, dto, value, map) -> dto.Schulleiter = JSONMapper.convertToString(value, false, true, 40)),
 		Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, false)),
-		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false)),
-		Map.entry("istAenderbar", (conn, dto, value, map) -> dto.Aenderbar = JSONMapper.convertToBoolean(value, false))
+		Map.entry("istSichtbar", (conn, dto, value, map) -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false))
 	);
 
 
