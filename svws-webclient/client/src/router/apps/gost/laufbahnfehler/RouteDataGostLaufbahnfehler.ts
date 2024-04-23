@@ -1,18 +1,12 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
-import {
-	ArrayList,
-	DeveloperNotificationException,
-	GostBelegpruefungsArt,
-	OpenApiError,
-	ReportingAusgabedaten, ReportingAusgabeformat, ReportingReportvorlage,
-	SimpleOperationResponse
-} from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, ReportingAusgabedaten, ReportingReportvorlage, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
+import { routeSchuelerLaufbahninfo } from "../../schueler/laufbahninfo/RouteSchuelerLaufbahninfo";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {
@@ -84,6 +78,8 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	gotoLaufbahnplanung = async (idSchueler: number) =>
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
 
+	gotoSprachenfolge = async (idSchueler: number) =>
+		await RouteManager.doRoute(routeSchuelerLaufbahninfo.getRoute(idSchueler));
 
 	importLaufbahnplanung = async (data: FormData): Promise<SimpleOperationResponse> => {
 		api.status.start();

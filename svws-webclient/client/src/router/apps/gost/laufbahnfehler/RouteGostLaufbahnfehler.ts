@@ -74,6 +74,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
+			gotoSprachenfolge: this.data.gotoSprachenfolge,
 			importLaufbahnplanung: this.data.importLaufbahnplanung,
 			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
 			getPdfLaufbahnplanung: this.data.getPdfLaufbahnplanung,

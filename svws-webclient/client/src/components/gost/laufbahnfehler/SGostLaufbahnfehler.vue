@@ -61,7 +61,10 @@
 				</svws-ui-tooltip>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Laufbahnplanung</svws-ui-button>
+				<div class="flex flex-col">
+					<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Laufbahnplanung</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoSprachenfolge(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Sprachenfolge</svws-ui-button>
+				</div>
 			</template>
 			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 			<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
