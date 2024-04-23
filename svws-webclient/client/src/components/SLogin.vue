@@ -40,19 +40,19 @@
 									</svws-ui-input-wrapper>
 								</Transition>
 								<div class="mt-16 text-sm font-medium">
-									<div class="flex gap-3 items-center opacity-50">
+									<div class="flex gap-2 items-center opacity-50">
 										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-11">
 										<div class="text-left">
-											<div class="-mb-2">Powered by SVWS-NRW</div>
-											<div class="flex gap-1">
-												<div class="mt-2"><span class="font-bold">Version {{ version }}</span>  <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
-												<svws-ui-button type="transparent" @click="copyToClipboard">
-													<span class="icon i-ri-file-copy-line" v-if="copied === null" />
-													<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-													<span class="icon i-ri-check-line icon-primary" v-else />
-												</svws-ui-button>
+											<span class="flex-none">Powered by SVWS-NRW</span>
+											<div class="flex gap-2">
+												<div><span class="font-bold">v{{ version }}</span> <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
+												<div @click="copyToClipboard" class="-my-0.5 cursor-pointer">
+													<span class="icon i-ri-file-copy-line inline-block" v-if="copied === null" />
+													<span class="icon i-ri-error-warning-fill inline-block" v-else-if="copied === false" />
+													<span class="icon i-ri-check-line icon-primary inline-block" v-else />
+												</div>
 											</div>
-											<nav class="flex flex-row items-center gap-2 mt-0.5">
+											<nav class="flex items-center gap-2">
 												<a class="login-footer-link" href="#">Impressum</a>
 												<a class="login-footer-link" href="#">Datenschutz</a>
 											</nav>
