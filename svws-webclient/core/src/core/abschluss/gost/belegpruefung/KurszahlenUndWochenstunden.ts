@@ -111,6 +111,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				if (kursart === null)
 					continue;
 				let istAnrechenbar : boolean = true;
+				let istAnrechenbarHalbjahr : boolean = true;
 				let istNullPunkteBelegungInQPhase : boolean = false;
 				const istMusik : boolean = (zulFach as unknown === ZulaessigesFach.MU as unknown);
 				const istErsatzfach : boolean = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
@@ -120,6 +121,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						blockIAnzahlMusik++;
 						if (blockIHatMusikLK) {
 							istAnrechenbar = !istMusikErsatzfach;
+							istAnrechenbarHalbjahr = !istMusikErsatzfach;
 							if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown))
 								this.addFehler(GostBelegungsfehler.ANZ_21_INFO);
 						} else
@@ -142,21 +144,23 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					}
 					istNullPunkteBelegungInQPhase = AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr);
 				}
-				if (istAnrechenbar && !istNullPunkteBelegungInQPhase) {
+				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
 					let kurszahlenHalbjahr : ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
 					if (kurszahlenHalbjahr === null)
 						kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
 					const kurszahlAlt : number | null = kurszahlenHalbjahr.get(kursart);
 					kurszahlenHalbjahr.put(kursart, kurszahlAlt === null ? 1 : kurszahlAlt! + 1);
 				}
-				if (istAnrechenbar && !istNullPunkteBelegungInQPhase && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
-					const kurszahlGK : number | null = this.kurszahlenGrundkurse.get(halbjahr);
-					this.kurszahlenGrundkurse.put(halbjahr, kurszahlGK === null ? 1 : kurszahlGK! + 1);
+				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					const kurszahlAnrechenbar : number | null = this.kurszahlenAnrechenbar.get(halbjahr);
 					this.kurszahlenAnrechenbar.put(halbjahr, kurszahlAnrechenbar === null ? 1 : kurszahlAnrechenbar! + 1);
-					if (halbjahr.istQualifikationsphase()) {
-						this.blockIAnzahlGrundkurse++;
-						this.blockIAnzahlAnrechenbar++;
+					const kurszahlGK : number | null = this.kurszahlenGrundkurse.get(halbjahr);
+					this.kurszahlenGrundkurse.put(halbjahr, kurszahlGK === null ? 1 : kurszahlGK! + 1);
+					if (istAnrechenbar) {
+						if (halbjahr.istQualifikationsphase()) {
+							this.blockIAnzahlGrundkurse++;
+							this.blockIAnzahlAnrechenbar++;
+						}
 					}
 				}
 				if (halbjahr.istQualifikationsphase() && !istNullPunkteBelegungInQPhase && (kursart as unknown === GostKursart.LK as unknown)) {

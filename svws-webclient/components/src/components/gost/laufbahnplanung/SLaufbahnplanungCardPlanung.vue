@@ -248,21 +248,15 @@
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getAnrechenbareKurse());
 
-	const kurse_summe: ComputedRef<number> = computed(() => {
-		const k = kurszahlen.value;
-		return k[2] + k[3] + k[4] + k[5];
-	});
+	const kurse_summe: ComputedRef<number> = computed(() => props.abiturdatenManager().getAnrechenbareKurseBlockI());
 
 	const wochenstunden: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getWochenstunden());
 
 	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 
-	const wst_d_ef: ComputedRef<number> = computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
+	const wst_d_ef: ComputedRef<number> = computed(() => props.abiturdatenManager().getWochenstundenEinfuehrungsphase() / 2);
 
-	const wst_d_q: ComputedRef<number> = computed(() => {
-		const [e, f, ...q] = wochenstunden.value;
-		return q.reduce((p, c) => p + c, 0) / 4;
-	});
+	const wst_d_q: ComputedRef<number> = computed(() => props.abiturdatenManager().getWochenstundenQualifikationsphase() / 4);
 
 	const cols: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75},

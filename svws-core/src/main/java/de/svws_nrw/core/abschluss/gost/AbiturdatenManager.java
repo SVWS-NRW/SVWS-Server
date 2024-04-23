@@ -1905,6 +1905,29 @@ public class AbiturdatenManager {
 		return stunden;
 	}
 
+
+	/**
+	 * Gibt die Anzahl der Wochenstunden für die Einführungsphase zurück.
+	 *
+	 * @return die Anzahl der Wochenstunden
+	 */
+	public int getWochenstundenEinfuehrungsphase() {
+		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
+		return kuw.getWochenstundenEinfuehrungsphase();
+	}
+
+
+	/**
+	 * Gibt die Anzahl der Wochenstunden für die Qualifikationsphase zurück.
+	 *
+	 * @return die Anzahl der Wochenstunden
+	 */
+	public int getWochenstundenQualifikationsphase() {
+		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
+		return kuw.getWochenstundenQualifikationsphase();
+	}
+
+
 	/**
 	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
 	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
@@ -1917,6 +1940,18 @@ public class AbiturdatenManager {
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
 		return anzahl;
+	}
+
+
+	/**
+	 * Gibt die Anzahl der anrechenbaren Kurse für den Block I des Abiturs
+	 * zurück.
+	 *
+	 * @return die anrechenbaren Kursen für Block I des Abiturs
+	 */
+	public int getAnrechenbareKurseBlockI() {
+		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
+		return kuw.getBlockIAnzahlAnrechenbar();
 	}
 
 }

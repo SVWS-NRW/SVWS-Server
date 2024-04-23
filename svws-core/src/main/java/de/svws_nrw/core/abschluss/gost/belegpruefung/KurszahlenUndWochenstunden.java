@@ -145,6 +145,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					continue;
 
 				boolean istAnrechenbar = true;
+				boolean istAnrechenbarHalbjahr = true;   // Für den Speziallfall, dass Musikkurse nicht anrechenbar sind (s.u.), kann vorab nicht festgelegt werden in welchem Halbjahr der Kurs nicht anrechenbar ist
 				boolean istNullPunkteBelegungInQPhase = false;
 
 				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.2.4 und APO Gost §28.7, §28.8 und VVs)
@@ -156,6 +157,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						blockIAnzahlMusik++;
 						if (blockIHatMusikLK) {
 							istAnrechenbar = !istMusikErsatzfach;
+							istAnrechenbarHalbjahr = !istMusikErsatzfach;
 							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
 								addFehler(GostBelegungsfehler.ANZ_21_INFO);
 						} else if (blockIHatMusikGKAbitur) {
@@ -176,12 +178,12 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
 
-					// Prüfung, ob in den Leistungsdaten der Kurs mit null Punkten abgeschlossen wurde. Dann kann ist er nicht anrechenbar im Rahmen der Gesamtqualifikation.
+					// Prüfung, ob in den Leistungsdaten der Kurs mit null Punkten abgeschlossen wurde. Dann ist er nicht anrechenbar im Rahmen der Gesamtqualifikation.
 					istNullPunkteBelegungInQPhase = AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr);
 				}
 
 				// Für das Halbjahr
-				if (istAnrechenbar && !istNullPunkteBelegungInQPhase) {
+				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
 					ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 					if (kurszahlenHalbjahr == null)
 						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
@@ -190,15 +192,17 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				}
 
 				// Für die Grundkurse
-				if (istAnrechenbar && !istNullPunkteBelegungInQPhase && ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
+				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase && ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
 					|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
-					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
-					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
 					kurszahlenAnrechenbar.put(halbjahr, kurszahlAnrechenbar == null ? 1 : kurszahlAnrechenbar + 1);
-					if (halbjahr.istQualifikationsphase()) {
-						blockIAnzahlGrundkurse++;
-						blockIAnzahlAnrechenbar++;
+					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
+					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
+					if (istAnrechenbar) {
+						if (halbjahr.istQualifikationsphase()) {
+							blockIAnzahlGrundkurse++;
+							blockIAnzahlAnrechenbar++;
+						}
 					}
 				}
 
