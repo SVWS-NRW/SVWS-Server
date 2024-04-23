@@ -68,30 +68,42 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="termin in kMan().terminGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))" :key="termin.id">
-					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] text-center z-10 border-transparent"
-						:style="posKlausurtermin(termin)"
-						:data="termin"
-						:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
-						@dragstart="onDrag(termin)"
-						@dragend="onDrag(undefined)">
-						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
-							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
-							<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
-							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin)}" />
-							<svws-ui-tooltip :hover="false" class="cursor-pointer">
-								<span class="z-10 relative p-2 leading-tight font-medium">{{ terminBezeichnung(termin) }}</span>
-								<template #content>
-									<div class="-mx-3">
-										<s-gost-klausurplanung-termin :termin="termin"
-											:k-man="kMan">
-											<template #datum><span /></template>
-										</s-gost-klausurplanung-termin>
-									</div>
-								</template>
-							</svws-ui-tooltip>
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))">
+					<template v-for="(termin, index) in item" :key="termin.id">
+						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
+							:style="posKlausurtermin(termin) +
+								(item.size() > 1
+									? (index === 0
+										? ('width: calc(' + (100 / item.size()) + '% + 2px);left: calc(' + (100 / item.size() * index) + '% - 1px);')
+										: (index === item.size() - 1
+											? ('width: calc(' + (100 / item.size()) + '% + 3px);left: calc(' + (100 / item.size() * index) + '% - 3px);')
+											: ('width: calc(' + (100 / item.size()) + '% + 4px);left: calc(' + (100 / item.size() * index) + '% - 3px);')
+										)
+									)
+									: ''
+								)"
+							:data="termin"
+							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
+							@dragstart="onDrag(termin)"
+							@dragend="onDrag(undefined)">
+							<div class="bg-white/40 dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
+								:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
+								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
+								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: getBgColors(termin)}" />
+								<svws-ui-tooltip :hover="false" class="!items-start h-full mr-auto" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
+									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 line-clamp-4 pb-0 hyphens-auto">{{ terminBezeichnung(termin) }}</span>
+									<template #content>
+										<div class="-mx-3">
+											<s-gost-klausurplanung-termin :termin="termin"
+												:k-man="kMan">
+												<template #datum><span /></template>
+											</s-gost-klausurplanung-termin>
+										</div>
+									</template>
+								</svws-ui-tooltip>
+							</div>
 						</div>
-					</div>
+					</template>
 				</template>
 			</div>
 		</div>
