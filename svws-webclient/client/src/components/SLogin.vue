@@ -61,7 +61,7 @@
 									<div class="mt-3 -mb-3 opacity-50">
 										<p class="text-sm text-left">
 											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erziehungsberechtigte usw.
 											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
 											Geschlechter gleichermaßen zu berücksichtigen.
 										</p>
