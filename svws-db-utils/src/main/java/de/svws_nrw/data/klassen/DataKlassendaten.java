@@ -98,9 +98,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 		Schulgliederung gliederung = Schulgliederung.getBySchulformAndKuerzel(schulform, klasse.ASDSchulformNr);
 		if (gliederung == null)
 			gliederung = Schulgliederung.getDefault(schulform);
-		if (gliederung == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kann für die Schulform %s keine gültige Schulgliederung ermitteln.".formatted(schulform.toString()));
-		daten.idSchulgliederung = gliederung.daten.id;
+		daten.idSchulgliederung = (gliederung == null) ? -1 : gliederung.daten.id;
 		final Klassenart klassenart = Klassenart.getByKuerzel(klasse.Klassenart);
 		daten.idKlassenart = ((klassenart != null) && (klassenart.hasSchulform(schulform))) ? klassenart.daten.id : Klassenart.UNDEFINIERT.daten.id;
 		daten.noteneingabeGesperrt = klasse.NotenGesperrt != null && klasse.NotenGesperrt;
@@ -377,6 +375,10 @@ public final class DataKlassendaten extends DataManager<Long> {
 			if (schule == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Die Informatione zur Schule konnten nicht gefunde werden.");
 			final Long idSchulgliederung = JSONMapper.convertToLong(value, true);
+			if (((idSchulgliederung == null) || (idSchulgliederung == -1)) && (Schulgliederung.getDefault(schule.Schulform) == null)) {
+				dto.ASDSchulformNr = null;
+				return;
+			}
 			final Schulgliederung sgl = Schulgliederung.getByID(idSchulgliederung);
 			if (!sgl.hasSchulform(schule.Schulform))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulgliederung wird von der angegeben Schulform nicht unterstützt.");

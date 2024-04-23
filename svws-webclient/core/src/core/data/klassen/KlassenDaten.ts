@@ -101,7 +101,7 @@ export class KlassenDaten extends JavaObject {
 	public pruefungsordnung : string | null = null;
 
 	/**
-	 * Die ID für die Schulgliederung der Klasse
+	 * Die ID für die Schulgliederung der Klasse oder -1, wenn der Klasse keine eindeutige Schulgliederung zugeordnet ist.
 	 */
 	public idSchulgliederung : number = -1;
 
