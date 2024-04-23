@@ -133,6 +133,10 @@ public final class DataSchulen extends DataManager<Long> {
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw new ApiOperationException(Status.BAD_REQUEST);
 		}),
+		Map.entry("schulnummer", (conn, dto, value, map) -> {
+			final String strSchulnummer = JSONMapper.convertToString(value, true, false, 6);
+			dto.SchulNr = strSchulnummer;
+		}),
 		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, true, false, 10)),
 		Map.entry("kurzbezeichnung", (conn, dto, value, map) -> dto.KurzBez = JSONMapper.convertToString(value, true, false, 40)),
 		Map.entry("name", (conn, dto, value, map) -> dto.Name = JSONMapper.convertToString(value, false, false, 120)),
@@ -172,7 +176,7 @@ public final class DataSchulen extends DataManager<Long> {
 	}
 
 
-	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "groesse");
+	private static final Set<String> requiredCreateAttributes = Set.of("schulnummer");
 
 	private final ObjLongConsumer<DTOSchuleNRW> initDTO = (dto, id) -> dto.ID = id;
 
