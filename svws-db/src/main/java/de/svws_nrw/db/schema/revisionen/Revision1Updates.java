@@ -1150,10 +1150,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (1)",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > EF-Q1-Q2 (1)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-			SET ssf.ASDJahrgangVon = '01'
+			SET ssf.ASDJahrgangVon = 'EF'
 			WHERE (
 			    ssf.JahrgangVon = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
@@ -1163,10 +1163,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (2)",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > EF-Q1-Q2 (2)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-			SET ssf.ASDJahrgangVon = '02'
+			SET ssf.ASDJahrgangVon = 'Q1'
 			WHERE (
 			    ssf.JahrgangVon = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
@@ -1176,12 +1176,12 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (3)",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > EF-Q1-Q2 (3)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangVon = '03'
 			WHERE (
-			    ssf.JahrgangVon = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangVon = 'Q2' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
 			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
@@ -1189,10 +1189,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (1)",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > EF-Q1-Q2 (1)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-			SET ssf.ASDJahrgangBis = '01'
+			SET ssf.ASDJahrgangBis = 'EF'
 			WHERE (
 			    ssf.JahrgangBis = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
@@ -1202,10 +1202,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (2)",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > EF-Q1-Q2 (2)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-			SET ssf.ASDJahrgangBis = '02'
+			SET ssf.ASDJahrgangBis = 'Q1'
 			WHERE (
 			    ssf.JahrgangBis = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
@@ -1215,10 +1215,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (3)",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > EF-Q1-Q2 (3)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-			SET ssf.ASDJahrgangBis = '03'
+			SET ssf.ASDJahrgangBis = 'Q2'
 			WHERE (
 			    ssf.JahrgangBis = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
@@ -1227,7 +1227,20 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
-
+		add("Anpassung ASDJahrgänge Sprachbeginn auf 05, wenn der ASDJahrgang 01, 02, 03 oder 04 ist.",
+			"""
+			UPDATE SchuelerSprachenfolge ssf JOIN EigeneSchule es
+			SET ssf.ASDJahrgangVon = '05' WHERE ssf.ASDJahrgangVon IN ('01', '02', '03', '04') AND es.SchulformKrz <> 'WB';
+			""",
+			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
+		);
+		add("Anpassung ASDJahrgänge Sprachende auf null, wenn der ASDJahrgang 01, 02, 03 oder 04 ist.",
+			"""
+			UPDATE SchuelerSprachenfolge ssf JOIN EigeneSchule es
+			SET ssf.ASDJahrgangBis = null WHERE ssf.ASDJahrgangBis IN ('01', '02', '03', '04') AND es.SchulformKrz <> 'WB';
+			""",
+			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
+		);
 		add("Sprachprüfungen und -nachweis in eine separate Tabelle SchuelerSprachpruefungen auslagern",
 			"""
 			INSERT INTO SchuelerSprachpruefungen (Schueler_ID, Sprache, ASDJahrgang, IstHSUPruefung, IstFeststellungspruefung, Referenzniveau)
