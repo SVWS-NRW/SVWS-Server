@@ -251,7 +251,9 @@
 		data.reihenfolge = props.sprachbelegungen().size() + 1;
 		data.belegungVonAbschnitt = 1;
 		data.belegungBisAbschnitt = 2;
-		data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
+		const schulform = props.schuelerListeManager().schulform();
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+			data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
 		await props.addSprachbelegung(data);
 	}
 
@@ -260,7 +262,9 @@
 			return;
 		const data: Partial<Sprachpruefung> = {};
 		data.sprache = verfuegbareSprachen.value[0];
-		data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
+		const schulform = props.schuelerListeManager().schulform();
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
 		await props.addSprachpruefung(data);
 	}
 
