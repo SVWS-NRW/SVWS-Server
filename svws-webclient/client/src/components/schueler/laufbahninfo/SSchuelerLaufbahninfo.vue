@@ -110,38 +110,45 @@
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn } from "@ui";
 	import type { Sprachbelegung , Sprachpruefung} from '@core';
-	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note } from '@core';
+	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, ServerMode, Note, Schulgliederung } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
 	const auswahl = ref([]);
 	const auswahlPr = ref([]);
 
-	const colsSprachenfolge: DataTableColumn[] = [
-		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", span: 2 },
-		{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
-		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang" },
-		{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
-		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang" },
-		{ key: "belegungBisAbschnitt", label: "Halbjahr", tooltip: "belegt bis Abschnitt", divider: true },
-		{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", span: 2 },
-	];
+	const colsSprachenfolge = computed<DataTableColumn[]>(() => {
+		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
+		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", span: 2 },
+			{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
+			...(([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung))))
+				? []
+				: [{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang" },
+					{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
+					{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang" },
+					{ key: "belegungBisAbschnitt", label: "Halbjahr", tooltip: "belegt bis Abschnitt", divider: true }]),
+			{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", span: 2 },
+		]}
+	);
 
-	const colsSprachpruefungen: DataTableColumn[] = [
-		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
-		{ key: "istHSUPruefung", label: "HSU", tooltip: "Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht", minWidth: 4 },
-		{ key: "istFeststellungspruefung", label: "Festestellungsprüfung", tooltip: "Prüfung ist eine Sprachfeststellungsprüfung", minWidth: 4 },
-		{ key: "kannErstePflichtfremdspracheErsetzen", label: "Ersetzt 1", tooltip: "Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden", minWidth: 4 },
-		{ key: "kannZweitePflichtfremdspracheErsetzen", label: "Ersetzt 2", tooltip: "Durch die Prüfung kann die zweite Pflichtfremdsprache ersetzt werden", minWidth: 4 },
-		{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgeführt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "kannWahlpflichtfremdspracheErsetzen", label: "Ersetzt WPF", tooltip: "Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden", align: 'center', minWidth: 4, span: 0.5 },
-		{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 },
-		{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
-		{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
-		{ key: "referenzniveau", label: "Niveau", tooltip: "Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde", minWidth: 6 },
-		{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
-		{ key: "ersetzteSprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
-	];
+	const colsSprachpruefungen = computed<DataTableColumn[]>(() => {
+		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
+		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
+			{ key: "istHSUPruefung", label: "HSU", tooltip: "Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht", minWidth: 4 },
+			{ key: "istFeststellungspruefung", label: "Festestellungsprüfung", tooltip: "Prüfung ist eine Sprachfeststellungsprüfung", minWidth: 4 },
+			{ key: "kannErstePflichtfremdspracheErsetzen", label: "Ersetzt 1", tooltip: "Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden", minWidth: 4 },
+			{ key: "kannZweitePflichtfremdspracheErsetzen", label: "Ersetzt 2", tooltip: "Durch die Prüfung kann die zweite Pflichtfremdsprache ersetzt werden", minWidth: 4 },
+			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgeführt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4, span: 0.5 },
+			{ key: "kannWahlpflichtfremdspracheErsetzen", label: "Ersetzt WPF", tooltip: "Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden", align: 'center', minWidth: 4, span: 0.5 },
+			...([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung)))
+				? [] : [{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 }]),
+			{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung", minWidth: 4 },
+			{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
+			{ key: "referenzniveau", label: "Niveau", tooltip: "Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde", minWidth: 6 },
+			{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
+			{ key: "ersetzteSprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
+		]
+	});
 
 	const verfuegbareSprachen = computed(() => {
 		const belegungen = new Set();
@@ -269,10 +276,10 @@
 	}
 
 	async function hinzufuegenPruefungen() {
-		if (verfuegbareSprachen.value.length === 0)
+		if (verfuegbareSprachenPruefungen.value.length === 0)
 			return;
 		const data: Partial<Sprachpruefung> = {};
-		data.sprache = verfuegbareSprachen.value[0];
+		data.sprache = verfuegbareSprachenPruefungen.value[0];
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
