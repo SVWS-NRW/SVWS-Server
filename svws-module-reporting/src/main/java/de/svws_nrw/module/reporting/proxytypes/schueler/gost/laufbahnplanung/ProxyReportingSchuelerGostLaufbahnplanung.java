@@ -97,7 +97,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			try {
 				return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
 			} catch (final ApiOperationException e) {
-				e.printStackTrace();
 				return new GostLaufbahnplanungBeratungsdaten();
 			}
 		});
@@ -105,7 +104,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			try {
 				return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
 			} catch (final ApiOperationException e) {
-				e.printStackTrace();
 				return new GostJahrgangsdaten();
 			}
 		});
@@ -143,6 +141,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		super.setKursanzahlQ22(kurse[5]);
 
 		super.setKursanzahlQPh(super.kursanzahlQ11() + super.kursanzahlQ12() + super.kursanzahlQ21() + super.kursanzahlQ22());
+		super.setKursanzahlAnrechenbarBlockI((abiturdatenManager.getAnrechenbareKurseBlockI()));
 
 		super.setWochenstundenEF1(wochenstunden[0]);
 		super.setWochenstundenEF2(wochenstunden[1]);
@@ -192,16 +191,17 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 */
 	private void eintragBeratungGostHalbjahrErgaenzen(final ReportingJahrgang aktuellerJahrgang) {
 		final int folgeHalbjahr = (this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt % 2) + 1;
-		if (folgeHalbjahr == 2) {
-			super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
-		} else if (folgeHalbjahr == 1) {
-			if (aktuellerJahrgang.folgejahrgang() != null)
-				super.setFolgeGOStHalbjahr(aktuellerJahrgang.folgejahrgang().kuerzelStatistik() + ".1");
-			else
-				super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
+		switch (folgeHalbjahr) {
+			case 2 -> super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
+			case 1 -> {
+				if (aktuellerJahrgang.folgejahrgang() != null)
+					super.setFolgeGOStHalbjahr(aktuellerJahrgang.folgejahrgang().kuerzelStatistik() + ".1");
+				else
+					super.setFolgeGOStHalbjahr(aktuellerJahrgang.kuerzelStatistik() + ".2");
 
-		} else
-			super.setFolgeGOStHalbjahr("");
+			}
+			default -> super.setFolgeGOStHalbjahr("");
+		}
 		// Frühestes Beratungshalbjahr kann die EF.1 sein.
 		if (super.folgeGOStHalbjahr().compareTo("EF.1") < 0)
 			super.setFolgeGOStHalbjahr("EF.1");
@@ -222,7 +222,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					try {
 						return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(gostBeratungsdaten.beratungslehrerID);
 					} catch (final ApiOperationException e) {
-						e.printStackTrace();
 						return new LehrerStammdaten();
 					}
 				})));
@@ -238,7 +237,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 							try {
 								return new DataLehrerStammdaten(this.reportingRepository.conn()).getFromID(lehrkraft.id);
 							} catch (final ApiOperationException e) {
-								e.printStackTrace();
 								return new LehrerStammdaten();
 							}
 						})));
@@ -320,7 +318,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			if (!(fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22))
 				continue;
 
-			//final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
 			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(

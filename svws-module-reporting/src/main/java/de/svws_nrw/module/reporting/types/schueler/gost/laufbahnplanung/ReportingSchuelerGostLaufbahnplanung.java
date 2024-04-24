@@ -81,6 +81,9 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	/** Kursanzahl in der Qualifikationsphase */
 	private int kursanzahlQPh;
 
+	/** Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I */
+	private int kursanzahlAnrechenbarBlockI;
+
 	/** Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt */
 	private String pruefungsordnung;
 
@@ -576,6 +579,22 @@ public class ReportingSchuelerGostLaufbahnplanung {
 	 */
 	public void setKursanzahlQPh(final int kursanzahlQPh) {
 		this.kursanzahlQPh = kursanzahlQPh;
+	}
+
+	/**
+	 * Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I
+	 * @return Inhalt des Feldes kursanzahlAnrechenbarBlockI
+	 */
+	public int kursanzahlAnrechenbarBlockI() {
+		return kursanzahlAnrechenbarBlockI;
+	}
+
+	/**
+	 * Kursanzahl der aus der Qualifikationsphase anrechenbaren Kurse für Block I wird gesetzt.
+	 * @param kursanzahlAnrechenbarBlockI Neuer Wert für das Feld kursanzahlAnrechenbarBlockI
+	 */
+	public void setKursanzahlAnrechenbarBlockI(final int kursanzahlAnrechenbarBlockI) {
+		this.kursanzahlAnrechenbarBlockI = kursanzahlAnrechenbarBlockI;
 	}
 
 	/**
