@@ -21,7 +21,7 @@
 				<template #cell(belegungVonJahrgang)="{ rowData }">
 					<svws-ui-select title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)"
 						@update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache}, rowData.sprache)"
-						:items="sprachJahrgaenge" :item-text="i => i?.daten.kuerzel || ''" />
+						:items="sprachJahrgaengeVon" :item-text="i => i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
 					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
@@ -33,7 +33,7 @@
 				<template #cell(belegungBisJahrgang)="{ rowData }">
 					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)"
 						@update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)"
-						:items="sprachJahrgaenge" :item-text="i=>i?.daten.kuerzel || ''" />
+						:items="sprachJahrgaengeBis(rowData).value" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
@@ -77,7 +77,7 @@
 					<svws-ui-checkbox :model-value="value" @update:model-value="istFeststellungspruefung => patchSprachpruefung({istFeststellungspruefung})" headless />
 				</template>
 				<template #cell(jahrgang)="{ value }">
-					<svws-ui-select title="Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(value)" @update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten.kuerzel ?? null})" :items="sprachJahrgaenge" :item-text="i=>i?.daten.kuerzel || ''" />
+					<svws-ui-select title="Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(value)" @update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten.kuerzel ?? null})" :items="sprachJahrgaengeVon" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(anspruchsniveauId)="{ value }">
 					<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByID(value)" @update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null})" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
@@ -171,11 +171,22 @@
 
 	const sprachen = (s: string) => computed(() => [s, ...verfuegbareSprachen.value])
 
-	const sprachJahrgaenge = computed(() => {
+	const sprachJahrgaengeVon = computed(() => {
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform === Schulform.BK) || (schulform === Schulform.SB))
 			return Jahrgaenge.get(Schulform.GE);
 		return Jahrgaenge.get(schulform);
+	});
+
+	const sprachJahrgaengeBis = (sprachbelegung: Sprachbelegung) => computed(() => {
+		const schulform = props.schuelerListeManager().schulform();
+		const jahrgangVon = Jahrgaenge.getByKuerzel(sprachbelegung.belegungVonJahrgang);
+		const jahrgaenge_list = ((schulform === Schulform.BK) || (schulform === Schulform.SB)) ? Jahrgaenge.get(Schulform.GE) : Jahrgaenge.get(schulform);
+		const jahrgaenge = [];
+		for (const jahrgang of jahrgaenge_list)
+			if (jahrgangVon && (jahrgang.ordinal() > jahrgangVon.ordinal()))
+				jahrgaenge.push(jahrgang)
+		return jahrgaenge;
 	});
 
 	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
