@@ -40,7 +40,7 @@ public final class DataLehrerliste extends DataManager<Long> {
 		eintrag.kuerzel = l.Kuerzel;
 		eintrag.titel = l.Titel == null ? "" : l.Titel;
 		eintrag.nachname = l.Nachname;
-		eintrag.vorname = l.Vorname;
+		eintrag.vorname = l.Vorname == null ? "" : l.Vorname;
 		eintrag.personTyp = l.PersonTyp.kuerzel;
 		eintrag.sortierung = l.Sortierung;
 		eintrag.istSichtbar = l.Sichtbar;

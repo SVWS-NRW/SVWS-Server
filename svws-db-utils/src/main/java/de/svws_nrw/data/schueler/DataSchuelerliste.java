@@ -150,7 +150,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final Schueler schueler = new Schueler();
 		schueler.id = dto.ID;
 		schueler.nachname = dto.Nachname;
-		schueler.vorname = dto.Vorname;
+		schueler.vorname = dto.Vorname == null ? "" : dto.Vorname;
 		schueler.geschlecht = dto.Geschlecht.id;
 		schueler.status = dto.Status.id;
 		return schueler;

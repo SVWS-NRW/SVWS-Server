@@ -38,6 +38,7 @@ import de.svws_nrw.core.utils.gost.GostFachwahlManager;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
@@ -241,13 +242,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		for (final DTOSchueler dto : schuelerDTOs) {
 			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, mapSchuljahresabschnitte))
 				continue;
-			final Schueler daten = new Schueler();
-			daten.id = dto.ID;
-			daten.nachname = dto.Nachname;
-			daten.vorname = dto.Vorname;
-			daten.status = dto.Status.id;
-			daten.geschlecht = dto.Geschlecht.id;
-			schuelerListe.add(daten);
+			schuelerListe.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		}
 		manager.schuelerAddListe(schuelerListe);
 
