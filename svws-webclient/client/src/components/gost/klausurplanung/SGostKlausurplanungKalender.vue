@@ -262,7 +262,6 @@
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
-		console.log(props.hatStundenplanManager);
 	});
 
 </script>

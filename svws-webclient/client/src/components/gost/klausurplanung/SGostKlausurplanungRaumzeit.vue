@@ -85,7 +85,8 @@
 
 	const termine = () => props.kMan().terminMitDatumGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, false);
 
-	const calculatCssClassesKlausur = (klausur: GostKursklausur) => {
+	const calculatCssClassesKlausur = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
+		const klausur = kl as GostKursklausur;
 		return raummanager.value !== null
 			? {
 				"text-black/50 dark:text-white/50": raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
