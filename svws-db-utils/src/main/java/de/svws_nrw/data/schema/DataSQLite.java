@@ -78,7 +78,7 @@ public final class DataSQLite {
 
 	        // Lese die Datenbank in die Response ein
 			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
-			ZoneId berlin = ZoneId.of( "Europe/Berlin" );
+			ZoneId berlin = ZoneId.of("Europe/Berlin");
 			ZonedDateTime jetzt = ZonedDateTime.now(berlin);
 			String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(), jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
 			final Response response = Response.ok((StreamingOutput) output -> {
