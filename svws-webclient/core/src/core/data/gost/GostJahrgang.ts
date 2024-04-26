@@ -18,7 +18,7 @@ export class GostJahrgang extends JavaObject {
 	public bezeichnung : string | null = "Allgemein / Vorlage";
 
 	/**
-	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
+	 * Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
 	 */
 	public istAbgeschlossen : boolean = false;
 

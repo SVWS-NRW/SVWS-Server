@@ -260,7 +260,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 		final GostBlockungsdaten daten = manager.daten();
 		// Ergänze Blockungsliste
-		(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+		DataGostBlockungsergebnisse.getErgebnisListe(conn, manager);
 		return daten;
 	}
 
@@ -288,7 +288,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(conn, id);
 		final GostBlockungsdaten daten = manager.daten();
 		// Ergänze Blockungsliste
-		(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+		DataGostBlockungsergebnisse.getErgebnisListe(conn, manager);
 		return JSONMapper.gzipFileResponseFromObject(daten, "blockung_%d.json.gz".formatted(id));
 	}
 
@@ -487,7 +487,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
         blockungsdaten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, blockungsdaten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
         // Ergänze Blockungsliste
         conn.transactionFlush();
-        (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+        DataGostBlockungsergebnisse.getErgebnisListe(conn, manager);
         final GostBlockungListeneintrag blockungListeneintrag = new GostBlockungListeneintrag();
         blockungListeneintrag.id = blockungsdaten.id;
         blockungListeneintrag.name = blockungsdaten.name;

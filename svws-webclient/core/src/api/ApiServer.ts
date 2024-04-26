@@ -6351,6 +6351,44 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode exportUntisKursblockungAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/export/blockung/{ergebnisid : \d+}/zip/{unterrichtid : \d+}
+	 *
+	 * Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das exportierten Blockungsergebnis in einer Zip-Datei
+	 *     - Mime-Type: application/zip
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 400: Die Angaben zur ersten Unterrichts-ID für Untis sind ungültig.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Blockungsergebnis zu exportieren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * @param {number} unterrichtid - der Pfad-Parameter unterrichtid
+	 *
+	 * @returns Das exportierten Blockungsergebnis in einer Zip-Datei
+	 */
+	public async exportUntisKursblockungAsZip(schema : string, ergebnisid : number, unterrichtid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
+			.replace(/{unterrichtid\s*(:[^{}]+({[^{}]+})*)?}/g, unterrichtid.toString());
+		const result : ApiFile = await super.postJSONtoZIP(path, null);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode importStundenplanUntisGPU001 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/untis/import/gpu001
 	 *
 	 * Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.

@@ -1,10 +1,14 @@
 package de.svws_nrw.base.untis;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SequenceWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
@@ -27,7 +31,7 @@ public final class UntisGPU019 {
 	public Integer anzahlWochenstunden = null;
 
 	/** Die Unterrichtsnummer (siehe GPU002) */
-	public Integer idUnterricht = null;
+	public Long idUnterricht = null;
 
 	/** Das Alias des Faches */
 	public String fachAlias;
@@ -43,8 +47,8 @@ public final class UntisGPU019 {
 
 
 
-	/** Die Instanz des Object-Readers für die CSV-Daten */
-	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU019.class).with(CsvSchema.builder()
+	/** Das CSV-Schema */
+	private static final CsvSchema schema = CsvSchema.builder()
 		.addColumn("name")
 		.addColumn("art")
 		.addNumberColumn("anzahlWochenstunden")
@@ -57,8 +61,14 @@ public final class UntisGPU019 {
 		.withColumnSeparator(';')
 		.withQuoteChar('\"')
 		.withNullValue("")
-		.withoutHeader()
-	);
+		.withoutHeader();
+
+	/** Die Instanz des Object-Readers für die CSV-Daten */
+	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU019.class).with(schema);
+
+	/** Die Instanz des Object-Writers für die CSV-Daten */
+	private static final ObjectWriter writer = new CsvMapper().writerFor(UntisGPU019.class).with(schema).with(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS);
+
 
 	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU019-Datensätze
@@ -72,6 +82,22 @@ public final class UntisGPU019 {
 	public static @NotNull List<@NotNull UntisGPU019> readCSV(final String csvData) throws IOException {
 		try (MappingIterator<UntisGPU019> it = reader.readValues(csvData)) {
 			return it.readAll();
+		}
+	}
+
+	/**
+	 * Erstellt aus der übergebenen Liste der DTOs die CSV-Daten als String
+	 *
+	 * @param dtos   die Liste der DTOs
+	 *
+	 * @return die CSV-Daten als UTF-8 String
+	 *
+	 * @throws IOException falls die CSV-Daten nicht erstellt werden können
+	 */
+	public static String writeCSV(final @NotNull List<@NotNull UntisGPU019> dtos) throws IOException {
+		final StringWriter sw = new StringWriter();
+		try (SequenceWriter seqw = writer.writeValues(sw).writeAll(dtos)) {
+			return sw.toString();
 		}
 	}
 

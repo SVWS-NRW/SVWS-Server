@@ -92,11 +92,12 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * Bestimmt die Liste der Blockungsergebnisse und das aktuelle Blockungsergebnis
 	 * für den angegebenen Blockungsdaten-Manager
 	 *
+	 * @param conn   die Datenbankverbindung
 	 * @param datenManager   der Blockungsdaten-Manager
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void getErgebnisListe(@NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
+	public static void getErgebnisListe(final @NotNull DBEntityManager conn, @NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
 	    // Bestimme die Liste der Ergebnisse aus der Datenbank
         final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
                 "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
@@ -126,14 +127,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             final var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
 
             // Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
-            final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
+            final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
             for (final var ks : listSchienenKurse)
             	kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
     		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen = manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
     		manager.kursSchienenUpdateExecute(uKursSchienen);
 
             // Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
-        	final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+        	final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
             for (final var ks : listKursSchueler) // Fehlerhafte Zuordnungen führen im Manager nicht mehr zu Exceptions!
             	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
             final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
@@ -148,16 +149,17 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das zugehörige Core-DTO
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt den dazugeörigen Ergebnis-Manager
 	 *
+	 * @param conn   die Datenbankverbindung
 	 * @param ergebnis        das Datenbank-DTO des Blockungsergebnisses
 	 * @param datenManager    der Blockungsdaten-Manager
 	 *
-	 * @return das Core-DTO für das Blockungsergebnis
+	 * @return der Manager für das Blockungsergebnis
 	 *
 	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	public GostBlockungsergebnis getErgebnis(@NotNull final DTOGostBlockungZwischenergebnis ergebnis,
+	public static GostBlockungsergebnisManager getErgebnismanager(final @NotNull DBEntityManager conn, @NotNull final DTOGostBlockungZwischenergebnis ergebnis,
 	        @NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
         final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
 
@@ -165,7 +167,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         final List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
 
-        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchienenZuordnung>();
+        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
         for (final DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
         	kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen = manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
@@ -175,13 +177,32 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     	final List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
     			.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
 
-        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<@NotNull GostBlockungsergebnisKursSchuelerZuordnung>();
+        final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
         for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler) // Fehlerhafte Zuordnungen stürzen im Manager nicht mehr ab!
            	kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
         final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler = manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
         manager.kursSchuelerUpdateExecute(uKursSchueler);
 
         // Erzeuge das Ergebnis.
+        return manager;
+	}
+
+
+	/**
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das zugehörige Core-DTO
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param ergebnis        das Datenbank-DTO des Blockungsergebnisses
+	 * @param datenManager    der Blockungsdaten-Manager
+	 *
+	 * @return das Core-DTO für das Blockungsergebnis
+	 *
+	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 */
+	public static GostBlockungsergebnis getErgebnis(final @NotNull DBEntityManager conn, @NotNull final DTOGostBlockungZwischenergebnis ergebnis,
+	        @NotNull final GostBlockungsdatenManager datenManager) throws ApiOperationException {
+        // Erzeuge das Ergebnis.
+        final GostBlockungsergebnisManager manager = getErgebnismanager(conn, ergebnis, datenManager);
         final GostBlockungsergebnis daten = manager.getErgebnisInklusiveUngueltigerWahlen();
         daten.istAktiv = ergebnis.IstAktiv != null && ergebnis.IstAktiv;
         return daten;
@@ -192,25 +213,46 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das
 	 * zugehörige Core-DTO
 	 *
-	 * @param id			die ID des Blockungsergebnisses aus der Datenbank
+	 * @param conn   die Datenbankverbindung
+	 * @param id	 die ID des Blockungsergebnisses aus der Datenbank
 	 *
-	 * @return 				das Core-DTO für das Blockungsergebnis
+	 * @return das Core-DTO für das Blockungsergebnis
 	 *
 	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	public GostBlockungsergebnis getErgebnisFromID(@NotNull final Long id) throws ApiOperationException {
+	public static GostBlockungsergebnis getErgebnisFromID(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben.");
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, ergebnis.Blockung_ID);
-		return getErgebnis(ergebnis, datenManager);
+		return getErgebnis(conn, ergebnis, datenManager);
+	}
+
+
+	/**
+	 * Erzeugt den Blockungsergebnis-Manager für die übergeben Ergebnis-ID aus der Datenbank.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param id	 die ID des Blockungsergebnisses aus der Datenbank
+	 *
+	 * @return der Blockungsergebnis-Manager
+	 *
+	 * @throws ApiOperationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 */
+	public static GostBlockungsergebnisManager getErgebnismanagerFromID(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
+		if (ergebnis == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben.");
+		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, ergebnis.Blockung_ID);
+		return getErgebnismanager(conn, ergebnis, datenManager);
 	}
 
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		final GostBlockungsergebnis daten = getErgebnisFromID(id);
+		final GostBlockungsergebnis daten = getErgebnisFromID(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -903,7 +945,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
 		// Bestimme die Daten des Ergebnisses
-        final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
+        final GostBlockungsergebnis ergebnis = getErgebnis(conn, dtoErgebnis, datenManager);
         final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
 
         // Bestimme das Schuljahr und das Halbjahr, welchem das Ergebnis zugeordnet ist
@@ -1100,7 +1142,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		if (dtoErgebnis == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final GostBlockungsdatenManager datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(conn, dtoErgebnis.Blockung_ID);
-        final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
+        final GostBlockungsergebnis ergebnis = getErgebnis(conn, dtoErgebnis, datenManager);
         final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
 
         // Bestimme das Schuljahr und das Halbjahr, welchem das Ergebnis zugeordnet ist

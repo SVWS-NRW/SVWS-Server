@@ -3,6 +3,8 @@ package de.svws_nrw.api.server;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
@@ -246,6 +248,52 @@ public class APIGostDatenaustausch {
     	return DBBenutzerUtils.runWithoutTransaction(conn -> DataUntis.importGPU005(conn, multipart), request,
     			ServerMode.STABLE,
     			BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für den Export eines Blockungsergebnisses für Untis. Dabei
+     * werden die GPU-Dateien GPU002.txt, GPU010.txt, GPU015.txt und GPU019.txt generiert
+     * und in einer ZIP-Datei gepackt.
+     *
+     * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idErgebnis     die ID des Kursblockungsergebnisses, welches exportiert werden soll
+     * @param idUnterricht   die erste ID für den Unterricht, der für Untis generiert wird
+     * @param request        die Informationen zur HTTP-Anfrage
+     *
+     * @return die Zip-Datei mit dem Export
+     */
+    @POST
+    @Produces("application/zip")
+    @Path("/untis/export/blockung/{ergebnisid : \\d+}/zip/{unterrichtid : \\d+}")
+    @Operation(summary = "Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei.",
+    	description = "Liefert einen Export für das Blockungsergebnis mit der angegebenen ID für Untis ein einer Zip-Datei."
+    			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
+    @ApiResponse(responseCode = "200", description = "Das exportierten Blockungsergebnis in einer Zip-Datei",
+			content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary", description = "Die Zip-Datei mit dem exportierten Blockungsergebnis")))
+    @ApiResponse(responseCode = "400", description = "Die Angaben zur ersten Unterrichts-ID für Untis sind ungültig.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Blockungsergebnis zu exportieren.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response exportUntisKursblockungAsZip(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+    		@PathParam("unterrichtid") final long idUnterricht, @Context final HttpServletRequest request) {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
+    		try {
+    			return DataUntis.exportUntisBlockungsergebnis(conn, logger, idErgebnis, idUnterricht);
+    		} catch (final ApiOperationException aoe) {
+    			final SimpleOperationResponse sor = new SimpleOperationResponse();
+    			sor.log.addAll(log.getStrings());
+    			throw new ApiOperationException(aoe.getStatus(), aoe, sor);
+    		}
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
     }
 
 }
