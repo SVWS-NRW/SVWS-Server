@@ -18,6 +18,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.StreamingOutput;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 /**
  * Diese Klasse stellt Methoden für den Import und Export von SQLite-Datenbanken
  * zur Verfügung.
@@ -75,6 +78,9 @@ public final class DataSQLite {
 
 	        // Lese die Datenbank in die Response ein
 			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
+			ZoneId berlin = ZoneId.of( "Europe/Berlin" );
+			ZonedDateTime jetzt = ZonedDateTime.now(berlin);
+			String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(), jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
 			final Response response = Response.ok((StreamingOutput) output -> {
 				try {
 					FileUtils.move(sqlite.getFilename(), output);
@@ -82,7 +88,7 @@ public final class DataSQLite {
 				} catch (@SuppressWarnings("unused") final Exception e) {
 					// TODO throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 				}
-	        }).header("Content-Disposition", "attachment; filename=\"" + schemaname + ".sqlite\"").build();
+	        }).header("Content-Disposition", "attachment; filename=\"" + schemanameMitDatum + ".sqlite\"").build();
 			if (!response.hasEntity())
 				logger.logLn(2, "[FEHLER]");
 			logger.logLn("Datei eingelesen.");
