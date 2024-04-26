@@ -9,26 +9,26 @@
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
 			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><span class="icon i-ri-add-line -ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-checkbox class="-mt-1" type="toggle" :disabled="raummanager().isKlausurenInFremdraeumen()" v-if="raummanager().anzahlTermine() > 1" v-model="zeigeAlleRaeume">Räume von anderen Klausurterminen anzeigen</svws-ui-checkbox>
+			<svws-ui-badge type="highlight" size="big" v-if="!zeigeAlleJahrgaenge() && raummanager().isKlausurenInFremdraeumen()" class="warning">Jahrgangsübergreifende Planung aktiviert, da jahrgangsgemischte Räume existieren.</svws-ui-badge>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
-			<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleRaeume).size()">
-				<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleRaeume)"
-					:key="raum.id"
-					:stundenplanmanager="stundenplanmanager"
-					:raum="raum"
-					:raummanager="raummanager"
-					:patch-klausurraum="patchKlausurraum"
-					:loesche-klausurraum="loescheKlausurraum"
-					:patch-klausur="patchKlausur"
-					:k-man="kMan"
-					:drag-data="dragData"
-					:on-drag="onDrag"
-					:on-drop="onDrop" />
-			</template>
+			<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
+			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() && !raummanager().isKlausurenInFremdraeumen())"
+				:key="raum.id"
+				:stundenplanmanager="stundenplanmanager"
+				:raum="raum"
+				:raummanager="raummanager"
+				:patch-klausurraum="patchKlausurraum"
+				:loesche-klausurraum="loescheKlausurraum"
+				:patch-klausur="patchKlausur"
+				:k-man="kMan"
+				:drag-data="dragData"
+				:on-drag="onDrag"
+				:on-drop="onDrop" />
+			<!-- </template>
 			<template v-else>
 				<div class="shadow-inner rounded-lg h-48" />
-			</template>
+			</template> -->
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -51,14 +51,7 @@
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
+		zeigeAlleJahrgaenge: () => boolean;
 	}>();
-
-	const zeigeAlleRaeume = ref(false);
-
-	watch(props.raummanager, () => {
-		zeigeAlleRaeume.value = props.raummanager().isKlausurenInFremdraeumen();
-	});
-
-
 
 </script>

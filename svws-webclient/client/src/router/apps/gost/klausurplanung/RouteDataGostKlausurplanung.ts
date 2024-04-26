@@ -240,6 +240,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
 	}
 
+	get zeigeAlleJahrgaenge(): boolean {
+		return api.config.getValue("gost.klausurplan.zeigeAlleJahrgaenge") === 'true';
+	}
+
+	setZeigeAlleJahrgaenge = async (value: boolean) => {
+		await api.config.setValue('gost.klausurplan.zeigeAlleJahrgaenge', value ? "true" : "false");
+	}
+
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {
 		api.status.start();
 		const terminNeu : Partial<GostKlausurtermin> = new GostKlausurtermin();

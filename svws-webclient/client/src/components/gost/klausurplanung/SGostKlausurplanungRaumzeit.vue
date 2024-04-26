@@ -4,7 +4,7 @@
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 		</Teleport>
 		<div class="page--content page--content--full relative">
 			<svws-ui-content-card title="In Planung">
@@ -46,16 +46,17 @@
 			</svws-ui-content-card>
 			<template v-else>
 				<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
-					:k-man="kMan"
+					:k-man
 					:raummanager="() => (raummanager as GostKlausurraumManager)"
 					:stundenplanmanager="stundenplanmanager()"
-					:create-klausurraum="createKlausurraum"
-					:loesche-klausurraum="loescheKlausurraum"
-					:patch-klausurraum="patchKlausurraum"
-					:patch-klausur="patchKlausur"
+					:create-klausurraum
+					:loesche-klausurraum
+					:patch-klausurraum
+					:patch-klausur
 					:drag-data="() => dragData"
-					:on-drag="onDrag"
-					:on-drop="onDrop" />
+					:on-drag
+					:on-drop
+					:zeige-alle-jahrgaenge />
 			</template>
 		</div>
 	</template>

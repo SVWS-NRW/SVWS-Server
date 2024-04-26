@@ -68,7 +68,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))">
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +

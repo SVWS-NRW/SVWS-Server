@@ -19,6 +19,8 @@ import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/R
 
 import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -42,6 +44,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			routeGostKlausurplanungNachschreibAnsicht,
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
+		api.config.addElements([
+			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
+		]);
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}

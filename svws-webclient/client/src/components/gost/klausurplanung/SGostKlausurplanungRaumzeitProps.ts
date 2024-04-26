@@ -27,4 +27,6 @@ export interface GostKlausurplanungRaumzeitProps {
 	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	zeigeAlleJahrgaenge: () => boolean;
+	setZeigeAlleJahrgaenge: (value: boolean) => void;
 }

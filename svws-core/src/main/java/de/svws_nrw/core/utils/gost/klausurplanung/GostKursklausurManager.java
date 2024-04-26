@@ -928,6 +928,21 @@ public class GostKursklausurManager {
 		return gruppiereUeberschneidungen(terminGetMengeByDatum(datum));
 	}
 
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull List<@NotNull GostKlausurtermin>> terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(final @NotNull String datum, final Integer abiJahrgang) {
+		if (abiJahrgang == null)
+			return terminGruppierteUeberschneidungenGetMengeByDatum(datum);
+		final List<@NotNull GostKlausurtermin> termine = _terminmenge_by_datum_and_abijahr.getOrNull(datum, abiJahrgang);
+		return termine != null ? gruppiereUeberschneidungen(termine) : new ArrayList<>();
+	}
+
 	/*
 	 * Q&D: Muss noch hinsichtlich Laufzeit optimiert werden
 	 */

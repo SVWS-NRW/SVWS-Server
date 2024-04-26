@@ -16,4 +16,6 @@ export interface GostKlausurplanungKalenderProps {
 	stundenplanmanager: () => StundenplanManager;
 	hatStundenplanManager: boolean,
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	zeigeAlleJahrgaenge: () => boolean;
+	setZeigeAlleJahrgaenge: (value: boolean) => void;
 }

@@ -40,6 +40,8 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
 			hatStundenplanManager: routeGostKlausurplanung.data.hatStundenplanManager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
+			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 		}
 	}
 

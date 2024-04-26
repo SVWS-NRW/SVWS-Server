@@ -866,6 +866,21 @@ export class GostKursklausurManager extends JavaObject {
 		return this.gruppiereUeberschneidungen(this.terminGetMengeByDatum(datum));
 	}
 
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
+	 * @param abiJahrgang der Abiturjahrgang
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(datum : string, abiJahrgang : number | null) : List<List<GostKlausurtermin>> {
+		if (abiJahrgang === null)
+			return this.terminGruppierteUeberschneidungenGetMengeByDatum(datum);
+		const termine : List<GostKlausurtermin> | null = this._terminmenge_by_datum_and_abijahr.getOrNull(datum, abiJahrgang);
+		return termine !== null ? this.gruppiereUeberschneidungen(termine) : new ArrayList();
+	}
+
 	private gruppiereUeberschneidungen(termine : List<GostKlausurtermin>) : List<List<GostKlausurtermin>> {
 		const ergebnis : List<List<GostKlausurtermin>> = new ArrayList<List<GostKlausurtermin>>();
 		let added : boolean = false;

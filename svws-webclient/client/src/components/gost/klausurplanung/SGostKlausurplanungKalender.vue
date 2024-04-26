@@ -4,7 +4,7 @@
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
 		</Teleport>
 		<div class="page--content page--content--full relative">
 			<svws-ui-content-card title="In Planung">
@@ -46,9 +46,9 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card class="svws-card-stundenplan">
 				<template v-if="kwAuswahl">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl" :jahrgangsdaten
-						:manager="stundenplanmanager" :k-man="kMan" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-						:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl :jahrgangsdaten
+						:manager="stundenplanmanager" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
+						:on-drop :on-drag :drag-data="() => dragData" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge>
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager().kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>

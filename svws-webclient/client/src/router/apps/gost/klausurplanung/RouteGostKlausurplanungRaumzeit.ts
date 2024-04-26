@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode, Vector } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostKursklausurManager, Schulform, ServerMode, Vector } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -12,7 +12,7 @@ const SGostKlausurplanungRaumzeit = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.raumzeit", "raumzeit", SGostKlausurplanungRaumzeit);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.raumzeit", "raumzeit/:idtermin(\\d+)?", SGostKlausurplanungRaumzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume und Startzeiten";
@@ -31,6 +31,14 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		// Prüfe die Parameter zunächst allgemein
+		if (to_params.idtermin instanceof Array)
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const idTermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
+		console.log("idTermin", idTermin);
+	}
+
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
@@ -45,6 +53,8 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
+			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 		}
 	}
 
