@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class UntisGPU010 {
 
-	/** Der Name des Schülers (z.B. "Adam_Thomas_20031119") */
+	/** Der Name des Schülers (z.B. "Adam_Tho_20031119") */
 	public String name;
 
 	/** Der Langname (z.B. der Nachname "Adam") */
