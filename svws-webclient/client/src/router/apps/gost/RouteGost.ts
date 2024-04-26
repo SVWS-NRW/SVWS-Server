@@ -20,6 +20,7 @@ import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
+import { ConfigElement } from "~/components/Config";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -41,6 +42,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			routeGostKlausurplanung
 		];
 		super.defaultChild = routeGostFaecher;
+		api.config.addElements([
+			new ConfigElement("gost.auswahl.filterNurAktuelle", "user", "true"),
+		]);
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
@@ -98,6 +102,8 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
 			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang,
 			removeAbiturjahrgang: this.data.removeAbiturjahrgang,
+			filterNurAktuelle: () => this.data.filterNurAktuelle,
+			setFilterNurAktuelle: this.data.setFilterNurAktuelle,
 		};
 	}
 

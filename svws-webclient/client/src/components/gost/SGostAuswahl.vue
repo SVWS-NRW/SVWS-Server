@@ -6,7 +6,12 @@
 			<span v-else class="text-base font-bold opacity-50 select-none">{{ aktAbschnitt.schuljahr + "." + aktAbschnitt.abschnitt }}</span>
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items :columns>
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items :columns :filter-open="false">
+				<template #filterAdvanced>
+					<div class="col-span-full flex flex-wrap gap-x-5">
+						<svws-ui-checkbox type="toggle" :model-value="filterNurAktuelle()" @update:model-value="setFilterNurAktuelle">Nur Aktuelle Jahrgänge</svws-ui-checkbox>
+					</div>
+				</template>
 				<template #cell(abiturjahr)="{ value }">
 					<span v-if="value === -1" class="opacity-25">
 						—
@@ -63,7 +68,8 @@
 
 	const items = computed<GostJahrgang[]>(() => {
 		const list = [...props.mapAbiturjahrgaenge().values()];
-		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
+		const filtern = props.filterNurAktuelle();
+		return list.filter(a => filtern && !a.istAbgeschlossen).sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 
 	const pending = computed<boolean>(() => props.apiStatus.pending);

@@ -5,7 +5,7 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Diese Klasse stellt einen Core-Types für einem Jahrgang der gymnasialen Oberstufe
+ * Diese Klasse stellt einen Core-Type für einen Jahrgang der gymnasialen Oberstufe
  * zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
@@ -27,7 +27,7 @@ public class GostJahrgang {
 	@Schema(description = "die textuelle Bezeichnung für den Abiturjahrgang", example = "Q1")
 	public String bezeichnung = "Allgemein / Vorlage";
 
-	/** Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
+	/** Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
 	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet", example = "false")
 	public boolean istAbgeschlossen = false;
 

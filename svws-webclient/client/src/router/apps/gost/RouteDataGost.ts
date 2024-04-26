@@ -40,6 +40,15 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		super(defaultState);
 	}
 
+	get filterNurAktuelle(): boolean {
+		return api.config.getValue("gost.auswahl.filterNurAktuelle") === 'true';
+	}
+
+	setFilterNurAktuelle = async (value: boolean) => {
+		await api.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
+	}
+
+
 	private firstAbiturjahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>): GostJahrgang | undefined {
 		if (mapAbiturjahrgaenge.size === 0)
 			return undefined;
