@@ -7,7 +7,6 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
-import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
@@ -74,8 +73,6 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		final List<DTOLehrer> lehrerliste = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
 		final ArrayList<StundenplanLehrer> daten = new ArrayList<>();
 		for (final DTOLehrer l : lehrerliste) {
-			if ((l.PersonTyp != PersonalTyp.LEHRKRAFT) && (l.PersonTyp != PersonalTyp.EXTERN))
-				continue;
 			if ((l.DatumAbgang != null)) {
 				// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
 			}
@@ -110,7 +107,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
-		if ((lehrer == null) || (lehrer.Sichtbar != null && !lehrer.Sichtbar) || ((lehrer.PersonTyp != PersonalTyp.LEHRKRAFT) && (lehrer.PersonTyp != PersonalTyp.EXTERN)))
+		if ((lehrer == null) || (lehrer.Sichtbar != null && !lehrer.Sichtbar))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Lehrkraft mit der ID %d gefunden.".formatted(idLehrer));
 		if ((lehrer.DatumAbgang != null)) {
 			// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
