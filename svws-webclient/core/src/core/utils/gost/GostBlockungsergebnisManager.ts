@@ -3241,7 +3241,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler bereits im Kurs fixiert ist, wird dies ignoriert.
 	 * <br>(4) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
-	 * TODO Wenn der Schüler gar nicht den Kurs wählen kann --> ignorieren.
 	 *
 	 * @param setSchuelerID  Die Menge der Schüler-IDs.
 	 * @param setKursID      Die Menge der Kurs-IDs.
@@ -3249,28 +3248,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
 		for (const idSchueler of setSchuelerID)
-			for (const idKurs of setKursID) {
-				const kurs1 : GostBlockungKurs = this._parent.kursGet(idKurs);
-				const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
-				const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung !== null)
-					u.listEntfernen.add(regelSperrung);
-				for (const kurs2 of this._parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
-					const keyFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id]);
-					const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-					if (kurs1.id === kurs2.id) {
-						if (regelFixierung === null) {
-							u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
-						}
-					} else {
-						if (regelFixierung !== null)
-							u.listEntfernen.add(regelFixierung);
-					}
-				}
-			}
-		return u;
+			for (const idKurs of setKursID)
+				schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3332,7 +3314,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLK(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3363,7 +3345,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB3(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3394,7 +3376,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLKoderAB3(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3425,7 +3407,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB4(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3456,7 +3438,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAbiturfach(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3487,7 +3469,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstSchriftlich(idSchueler, idKurs))
 					schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
-		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare);
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
+	}
+
+	/**
+	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Schüler-Kurs-Fixierung.
+	 *
+	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
+	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
+	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
+	 *
+	 * @param idSchueler             Die ID des Schülers.
+	 * @param idKurs                 Die ID des Kurses.
+	 *
+	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
+	 */
+	private regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
+		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
+		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
 	/**
@@ -3497,11 +3497,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
 	 *
-	 * @param schuelerKursPaare  Die Menge aller Schüler-Kurs-Paare.
+	 * @param schuelerKursPaare      Die Menge aller Schüler-Kurs-Paare.
 	 *
 	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 */
-	private regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(schuelerKursPaare : JavaSet<PairNN<number, number>>) : GostBlockungRegelUpdate {
+	private regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare : JavaSet<PairNN<number, number>>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const pair of schuelerKursPaare) {
 			const idSchueler : number = pair.a;
@@ -4014,8 +4014,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
 		if (rNeu !== null)
 			return u;
-		u.listEntfernen.add(rAlt);
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart, von, bis));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
 		return u;
 	}
 
@@ -4043,8 +4044,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
 		if (rNeu !== null)
 			return u;
-		u.listEntfernen.add(rAlt);
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
 		return u;
 	}
 
@@ -4069,8 +4071,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
 		if (rNeu !== null)
 			return u;
-		u.listEntfernen.add(rAlt);
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_02e_helper(idKurs, schienenNr, false));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
 		return u;
 	}
 
@@ -4095,8 +4098,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
 		if (rNeu !== null)
 			return u;
-		u.listEntfernen.add(rAlt);
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idSchueler  Die ID des Schülers.
+	 * @param idKurs      Die ID des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_04_SCHUELER_FIXIEREN_IN_KURS(idRegelAlt : number, idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler, idKurs));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
 		return u;
 	}
 
@@ -4125,8 +4156,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const idKursAlt : number = rAlt.parameter.get(0).valueOf();
 		if (idKursAlt === idKursNeu)
 			return u;
-		u.listEntfernen.add(rAlt);
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(idKursNeu)));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
 		return u;
 	}
 
