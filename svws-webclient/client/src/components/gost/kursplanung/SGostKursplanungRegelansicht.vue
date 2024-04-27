@@ -476,6 +476,8 @@
 						return props.getErgebnismanager().regelupdatePatchByID_02e_KURS_FIXIERE_IN_EINER_SCHIENE(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(p.get(0), p.get(1));
 				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_03_KURS_SPERRE_IN_SCHIENE(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ:
 					return props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
