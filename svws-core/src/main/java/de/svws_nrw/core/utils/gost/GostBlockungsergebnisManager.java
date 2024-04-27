@@ -3499,7 +3499,7 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idSchueler : setSchuelerID)
 			for (final long idKurs : setKursID)
-				schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+				schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3566,7 +3566,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstLK(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3599,7 +3599,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstAB3(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3632,7 +3632,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstLKoderAB3(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3665,7 +3665,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstAB4(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3698,7 +3698,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstAbiturfach(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3731,7 +3731,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
 				if (getOfSchuelerOfKursIstSchriftlich(idSchueler, idKurs))
-					schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+					schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -3750,7 +3750,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull GostBlockungRegelUpdate regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(final long idSchueler, final long idKurs) {
 		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
-		schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
+		schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
 
