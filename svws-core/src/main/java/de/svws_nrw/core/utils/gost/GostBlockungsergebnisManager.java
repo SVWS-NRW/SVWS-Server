@@ -3902,8 +3902,8 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
-	 * <br>(1) Wenn Kurs A mit Kurs B zusammen sein soll, wird dies entfernt.
-	 * <br>(2) Wenn die Regel mit bereits existiert, aber die IDs nicht aufsteigend sind, wird dies entfernt.
+	 * <br>(1) Wenn Kurs A mit Kurs B zusammen (Regel 8) sein soll, wird dies entfernt.
+	 * <br>(2) Wenn die Regel bereits existiert, aber die IDs nicht aufsteigend sind, wird die (MaxKursID, MinKursID)-Kombination entfernt.
 	 * <br>(3) Wenn die Regel nicht existiert, wird sie hinzugefügt.
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
@@ -4421,44 +4421,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-     * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-     * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
-     * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
-	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
-	 *
-	 * @param idRegelAlt     Die ID der alten zu modifizierenden Regel.
-	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
-	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
-	 * @param schienenNrBis  Der Endbereich der Schienen.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(final long idRegelAlt, final int kursart, final int schienenNrVon, final int schienenNrBis) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-		final int von = Math.min(schienenNrVon, schienenNrBis);
-		final int bis = Math.max(schienenNrVon, schienenNrBis);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
-			return u;
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis});
-		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null)
-			return u;
-
-		// (3)
-		regelupdateAppend(u, regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt))
-			u.listEntfernen.add(rAlt);
-
-		return u;
-	}
-
-	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
@@ -4591,6 +4553,81 @@ public class GostBlockungsergebnisManager {
 
 		// (3)
 		regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt     Die ID der alten zu modifizierenden Regel.
+	 * @param kursart        Die Kursart der Kurse für welche diese Regel gilt.
+	 * @param schienenNrVon  Der Anfangsbereich der Schienen.
+	 * @param schienenNrBis  Der Endbereich der Schienen.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(final long idRegelAlt, final int kursart, final int schienenNrVon, final int schienenNrBis) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final int von = Math.min(schienenNrVon, schienenNrBis);
+		final int bis = Math.max(schienenNrVon, schienenNrBis);
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idKurs1     Die ID des 1. Kurses.
+	 * @param idKurs2     Die ID des 2. Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_07_KURS_VERBIETEN_MIT_KURS(final long idRegelAlt, final long idKurs1, final long idKurs2) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final long idKursMin = Math.min(idKurs1, idKurs2);
+		final long idKursMax = Math.max(idKurs1, idKurs2);
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKursMin, idKursMax});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);

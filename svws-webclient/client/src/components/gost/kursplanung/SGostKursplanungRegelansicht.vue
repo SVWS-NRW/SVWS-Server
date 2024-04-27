@@ -492,6 +492,8 @@
 						return props.getErgebnismanager().regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(regel.value.id, p.get(0), p.get(1), p.get(2));
 					return props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(p.get(0), p.get(1), p.get(2));
 				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_07_KURS_VERBIETEN_MIT_KURS(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
 				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ:
 					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
