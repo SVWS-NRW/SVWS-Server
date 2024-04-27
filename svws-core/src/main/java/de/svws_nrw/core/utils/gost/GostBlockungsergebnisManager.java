@@ -845,7 +845,7 @@ public class GostBlockungsergebnisManager {
 			final @NotNull Set<@NotNull Long> kursmenge = DeveloperNotificationException.ifMapGetIsNull(_schienenID_to_kursIDSet, idSchiene);
 
 			int summeMitDoppelten = 0;
-			final @NotNull HashSet<@NotNull Long> summeOhneDoppelte = new HashSet<>();
+			final @NotNull Set<@NotNull Long> summeOhneDoppelte = new HashSet<>();
 
 			for (final long idKurs : kursmenge) {
 				final @NotNull Set<@NotNull Long> schuelermenge = DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schuelerIDSet, idKurs);
@@ -1901,7 +1901,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeMitKollisionen(final long idSchueler) {
 		// Muss ein Set sein, da ein Multikurs sonst zu Dopplungen führen kann.
-		final @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
 
 		for (final @NotNull GostBlockungSchiene schiene : _parent.schieneGetListe()) {
 			final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseDerSchiene = _schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, schiene.id);
@@ -2638,7 +2638,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 */
 	private @NotNull Set<@NotNull Long> getOfKursSchuelermengeMitKollisionen(final long idKursID) {
-		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
+		final @NotNull Set<@NotNull Long> set = new HashSet<>();
 
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKursID))
 			for (final @NotNull Long idSchueler : getKursE(idKursID).schueler)
@@ -2837,7 +2837,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
 	 */
 	private @NotNull Set<@NotNull GostBlockungsergebnisKurs> getMengeDerKurseMitKollisionen() {
-		final @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
 		for (final @NotNull GostBlockungsergebnisKurs kurs : _kursID_to_kurs.values())
 			if (getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -2985,7 +2985,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAnKursSchienenFixierungenDerKurse(final @NotNull List<@NotNull Long> listeDerKursIDs) {
 		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
-		final @NotNull HashSet<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
+		final @NotNull Set<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
 		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
 
 		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
@@ -3021,7 +3021,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDerKurse(final @NotNull List<@NotNull Long> listeDerKursIDs) {
 		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
-		final @NotNull HashSet<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
+		final @NotNull Set<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
 
 		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
 
@@ -3495,7 +3495,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<@NotNull Long> setSchuelerID, final @NotNull Set<@NotNull Long> setKursID) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idSchueler : setSchuelerID)
 			for (final long idKurs : setKursID)
@@ -3561,7 +3561,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle LK-Schüler einer Kursmenge zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3594,7 +3594,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3627,7 +3627,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3660,7 +3660,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3693,7 +3693,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3726,7 +3726,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(final @NotNull Set<@NotNull Long> kursIDs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs)
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs))
@@ -3749,7 +3749,7 @@ public class GostBlockungsergebnisManager {
 	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 */
 	private @NotNull GostBlockungRegelUpdate regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(final long idSchueler, final long idKurs) {
-		final @NotNull HashSet<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
+		final @NotNull Set<@NotNull PairNN<@NotNull Long, @NotNull Long>> schuelerKursPaare = new HashSet<>();
 		schuelerKursPaare.add(new PairNN<@NotNull Long, @NotNull Long>(idSchueler, idKurs));
 		return regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -5344,7 +5344,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
 	public @NotNull Set<@NotNull Long> getOfSchieneSchuelermengeMitKollisionen(final long idSchiene) {
-		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
+		final @NotNull Set<@NotNull Long> set = new HashSet<>();
 		for (final @NotNull Long schuelerID : _schuelerID_to_kollisionen.keySet())
 			if (getOfSchuelerOfSchieneKursmenge(schuelerID, idSchiene).size() > 1)
 				set.add(schuelerID);
@@ -5359,7 +5359,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchieneKursmengeMitKollisionen(final long idSchiene) {
-		final @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
 		for (final @NotNull GostBlockungsergebnisKurs kurs : getSchieneE(idSchiene).kurse)
 			if (getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -5445,7 +5445,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private static int getOfKursOfKursAnzahlGemeinsamerSchueler(final @NotNull GostBlockungsergebnisKurs kurs1, final @NotNull GostBlockungsergebnisKurs kurs2) {
-		final @NotNull HashSet<Long> set = new HashSet<>();
+		final @NotNull Set<Long> set = new HashSet<>();
 		set.addAll(kurs1.schueler);
 		set.retainAll(kurs2.schueler);
 		return set.size();

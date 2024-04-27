@@ -619,7 +619,7 @@ public class StundenplanManager {
 		_schienenmenge_by_idKlasse = new HashMap<>();
 
 		for (final @NotNull StundenplanKlasse klasse : _klassenmenge_sortiert) {
-			final @NotNull HashSet<@NotNull Long> schienenIDs = new HashSet<>();
+			final @NotNull Set<@NotNull Long> schienenIDs = new HashSet<>();
 
 			// Sammeln der Schienen aller Kurse (der Klasse).
 			for (final @NotNull StundenplanKurs kurs : MapUtils.getOrCreateArrayList(_kursmenge_by_idKlasse, klasse.id))
@@ -1386,7 +1386,7 @@ public class StundenplanManager {
 
 	private void aufsichtsbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanAufsichtsbereich> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichCheckAttributes(aufsichtsbereich);
 			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!", _aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
@@ -1488,7 +1488,7 @@ public class StundenplanManager {
 	 */
 	public void aufsichtsbereichRemoveAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
 		// check
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich) {
 			if (!_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
 				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!");
@@ -1558,7 +1558,7 @@ public class StundenplanManager {
 
 	private void fachAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanFach> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanFach fach : list) {
 			fachCheckAttributes(fach);
 			DeveloperNotificationException.ifTrue("fachAddAllOhneUpdate: ID=" + fach.id + " existiert bereits!", _fach_by_id.containsKey(fach.id));
@@ -1622,7 +1622,7 @@ public class StundenplanManager {
 
 	private void jahrgangAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanJahrgang> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : list) {
 			jahrgangCheckAttributes(jahrgang);
 			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!", _jahrgang_by_id.containsKey(jahrgang.id));
@@ -1764,7 +1764,7 @@ public class StundenplanManager {
 
 	private void kalenderwochenzuordnungAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> list) {
 		// check all
-		final @NotNull HashSet<@NotNull String> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull String> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : list) {
 			kalenderwochenzuordnungCheck(kwz, true);
 			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", _kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
@@ -2047,7 +2047,7 @@ public class StundenplanManager {
 
 	private void klasseAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKlasse> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKlasse klasse : list) {
 			klasseCheckAttributes(klasse);
 			DeveloperNotificationException.ifTrue("klasseAddAllOhneUpdate: ID=" + klasse.id + " existiert bereits!", _klasse_by_id.containsKey(klasse.id));
@@ -2202,7 +2202,7 @@ public class StundenplanManager {
 
 	private void klassenunterrichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKlassenunterricht> list) {
 		// check all
-		final @NotNull HashSet<@NotNull String> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull String> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : list) {
 			klassenunterrichtCheckAttributes(klassenunterricht);
 			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!", _klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
@@ -2476,7 +2476,7 @@ public class StundenplanManager {
 
 	private void kursAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKurs> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanKurs kurs : list) {
 			kursCheckAttributes(kurs);
 			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " existiert bereits!", _kurs_by_id.containsKey(kurs.id));
@@ -2822,7 +2822,7 @@ public class StundenplanManager {
 
 	private void lehrerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanLehrer> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : list) {
 			lehrerCheckAttributes(lehrer);
 			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " existiert bereits!", _lehrer_by_id.containsKey(lehrer.id));
@@ -2943,7 +2943,7 @@ public class StundenplanManager {
 	 */
 	public void lehrerRemoveAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
 		// check
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : listLehrer) {
 			if (!_lehrer_by_id.containsKey(lehrer.id))
 				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!");
@@ -2983,7 +2983,7 @@ public class StundenplanManager {
 
 	private void pausenaufsichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsicht> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : list) {
 			pausenaufsichtCheckAttributes(pausenaufsicht);
 			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!", _pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
@@ -3201,7 +3201,7 @@ public class StundenplanManager {
 
 	private void pausenzeitAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenzeit> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanPausenzeit pausenzeit : list) {
 			pausenzeitCheckAttributes(pausenzeit);
 			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!", _pausenzeit_by_id.containsKey(pausenzeit.id));
@@ -3606,7 +3606,7 @@ public class StundenplanManager {
 
 	private void raumAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanRaum> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : list) {
 			raumCheckAttributes(raum);
 			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", _raum_by_id.containsKey(raum.id));
@@ -3710,7 +3710,7 @@ public class StundenplanManager {
 	 */
 	public void raumRemoveAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
 		// check
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : listRaum) {
 			if (!_raum_by_id.containsKey(raum.id))
 				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!");
@@ -3749,7 +3749,7 @@ public class StundenplanManager {
 
 	private void schieneAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanSchiene> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchiene schiene : list) {
 			schieneCheckAttributes(schiene);
 			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " existiert bereits!", _schiene_by_id.containsKey(schiene.id));
@@ -3914,7 +3914,7 @@ public class StundenplanManager {
 
 	private void schuelerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanSchueler> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchueler schueler : list) {
 			schuelerCheckAttributes(schueler);
 			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!", _schueler_by_id.containsKey(schueler.id));
@@ -4231,7 +4231,7 @@ public class StundenplanManager {
 
 	private void unterrichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanUnterricht> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanUnterricht u : list) {
 			unterrichtCheckAttributes(u);
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", _unterricht_by_id.containsKey(u.id));
@@ -4267,7 +4267,7 @@ public class StundenplanManager {
 	// TODO unterrichtCheckDuplicateInCell
 	private void unterrichtCheckDuplicateInCell(@SuppressWarnings("unused") final @NotNull List<@NotNull StundenplanUnterricht> list) {
 		// Simuliere die neue Lage für Kursunterricht (idKurs, tag, stunde) -->
-		// final @NotNull HashSet<@NotNull String> _menge_by_idKurs = new HashSet<>()
+		// final @NotNull Set<@NotNull String> _menge_by_idKurs = new HashSet<>()
 	}
 
 	private @NotNull Comparator<@NotNull StundenplanUnterricht> unterrichtCreateComparator() {
@@ -5083,8 +5083,8 @@ public class StundenplanManager {
 
 	private void zeitrasterAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanZeitraster> list) {
 		// check all
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
-		final @NotNull HashSet<@NotNull String> setOfWochentagStunde = new HashSet<>();
+		final @NotNull Set<@NotNull Long> setOfIDs = new HashSet<>();
+		final @NotNull Set<@NotNull String> setOfWochentagStunde = new HashSet<>();
 		for (final @NotNull StundenplanZeitraster z : list) {
 			zeitrasterCheck(z);
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", _zeitraster_by_id.containsKey(z.id));

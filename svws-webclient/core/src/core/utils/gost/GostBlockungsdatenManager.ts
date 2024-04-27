@@ -715,7 +715,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keine Ergebnisse mit diesen IDs gibt.
 	 */
 	public ergebnisRemoveListe(ergebnismenge : List<GostBlockungsergebnis>) : void {
-		const listIDs : HashSet<number> = new HashSet();
+		const listIDs : HashSet<number> = new HashSet<number>();
 		for (const e of ergebnismenge)
 			listIDs.add(e.id);
 		this.ergebnisRemoveListeByIDs(listIDs);
@@ -1216,7 +1216,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return ein Set aller Kurs-IDs.
 	 */
 	public kursmengeGetSetDerIDs() : JavaSet<number> {
-		const setKursID : HashSet<number> = new HashSet();
+		const setKursID : HashSet<number> = new HashSet<number>();
 		for (const kurs of this._list_kurse_sortiert_fach_kursart_kursnummer)
 			setKursID.add(kurs.id);
 		return setKursID;
@@ -1256,7 +1256,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		for (const idKurs of idKurse)
 			DeveloperNotificationException.ifMapNotContains("_map_idKurs_kurs", this._map_idKurs_kurs, idKurs);
-		const regelIDs : HashSet<number> = new HashSet();
+		const regelIDs : HashSet<number> = new HashSet<number>();
 		for (const idKurs of idKurse) {
 			const kurs : GostBlockungKurs = this.kursGet(idKurs);
 			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
@@ -1325,7 +1325,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public kurseRemove(kurse : List<GostBlockungKurs>) : void {
-		const idKurse : HashSet<number> = new HashSet();
+		const idKurse : HashSet<number> = new HashSet<number>();
 		for (const kursExtern of kurse)
 			idKurse.add(kursExtern.id);
 		this.kurseRemoveByID(idKurse);
@@ -1817,7 +1817,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
 	public regelRemoveListe(regelmenge : List<GostBlockungRegel>) : void {
-		const setRegelIDs : HashSet<number> = new HashSet();
+		const setRegelIDs : HashSet<number> = new HashSet<number>();
 		for (const regel of regelmenge)
 			setRegelIDs.add(regel.id);
 		this.regelRemoveListeByIDs(setRegelIDs);

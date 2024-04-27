@@ -72,27 +72,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Set aller Schienen-IDs.
 	 */
-	private _schienenIDset : HashSet<number> = new HashSet();
+	private _schienenIDset : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Set aller Schienen-Nummern.
 	 */
-	private _schienenNRset : HashSet<number> = new HashSet();
+	private _schienenNRset : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Set aller Kurs-IDs.
 	 */
-	private _kursIDset : HashSet<number> = new HashSet();
+	private _kursIDset : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Set aller Fach-IDs.
 	 */
-	private _fachIDset : HashSet<number> = new HashSet();
+	private _fachIDset : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Set aller Schüler-IDs.
 	 */
-	private _schuelerIDset : HashSet<number> = new HashSet();
+	private _schuelerIDset : HashSet<number> = new HashSet<number>();
 
 	/**
 	 * Map von Schienen-ID nach {@link GostBlockungsergebnisSchiene}.
@@ -798,7 +798,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idSchiene of this._schienenID_to_kursIDSet.keySet()) {
 			const kursmenge : JavaSet<number> = DeveloperNotificationException.ifMapGetIsNull(this._schienenID_to_kursIDSet, idSchiene);
 			let summeMitDoppelten : number = 0;
-			const summeOhneDoppelte : HashSet<number> = new HashSet<number>();
+			const summeOhneDoppelte : JavaSet<number> = new HashSet<number>();
 			for (const idKurs of kursmenge) {
 				const schuelermenge : JavaSet<number> = DeveloperNotificationException.ifMapGetIsNull(this._kursID_to_schuelerIDSet, idKurs);
 				summeMitDoppelten += schuelermenge.size();
@@ -1795,7 +1795,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
 	public getOfSchuelerKursmengeMitKollisionen(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
+		const set : JavaSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const schiene of this._parent.schieneGetListe()) {
 			const kurseDerSchiene : JavaSet<GostBlockungsergebnisKurs> = this._schuelerID_schienenID_to_kurseSet.getNonNullOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
@@ -2481,7 +2481,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 */
 	private getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
-		const set : HashSet<number> = new HashSet<number>();
+		const set : JavaSet<number> = new HashSet<number>();
 		for (const schiene of this.getOfKursSchienenmenge(idKursID))
 			for (const idSchueler of this.getKursE(idKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
@@ -2673,7 +2673,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
 	 */
 	private getMengeDerKurseMitKollisionen() : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
+		const set : JavaSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const kurs of this._kursID_to_kurs.values())
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -2805,7 +2805,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
 	 */
 	private regelGetMengeAnKursSchienenFixierungenDerKurse(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const setKursIDs : HashSet<number> = new HashSet<number>(listeDerKursIDs);
+		const setKursIDs : JavaSet<number> = new HashSet<number>(listeDerKursIDs);
 		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
 			if (setKursIDs.contains(regel.parameter.get(0)))
@@ -2836,7 +2836,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
 	 */
 	private regelGetMengeAllerSchuelerKursFixierungenDerKurse(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
-		const setKursIDs : HashSet<number> = new HashSet<number>(listeDerKursIDs);
+		const setKursIDs : JavaSet<number> = new HashSet<number>(listeDerKursIDs);
 		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
 			if (setKursIDs.contains(regel.parameter.get(1)))
@@ -3248,7 +3248,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
 	public regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchuelerID : JavaSet<number>, setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idSchueler of setSchuelerID)
 			for (const idKurs of setKursID)
 				schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
@@ -3309,7 +3309,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle LK-Schüler einer Kursmenge zu fixieren.
 	 */
 	public regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLK(idSchueler, idKurs))
@@ -3340,7 +3340,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB3(idSchueler, idKurs))
@@ -3371,7 +3371,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstLKoderAB3(idSchueler, idKurs))
@@ -3402,7 +3402,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAB4(idSchueler, idKurs))
@@ -3433,7 +3433,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstAbiturfach(idSchueler, idKurs))
@@ -3464,7 +3464,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
 	public regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kursIDs : JavaSet<number>) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		for (const idKurs of kursIDs)
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs))
 				if (this.getOfSchuelerOfKursIstSchriftlich(idSchueler, idKurs))
@@ -3485,7 +3485,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 */
 	private regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
-		const schuelerKursPaare : HashSet<PairNN<number, number>> = new HashSet();
+		const schuelerKursPaare : JavaSet<PairNN<number, number>> = new HashSet<PairNN<number, number>>();
 		schuelerKursPaare.add(new PairNN<number, number>(idSchueler, idKurs));
 		return this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURSMENGE(schuelerKursPaare);
 	}
@@ -4796,7 +4796,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
 	public getOfSchieneSchuelermengeMitKollisionen(idSchiene : number) : JavaSet<number> {
-		const set : HashSet<number> = new HashSet<number>();
+		const set : JavaSet<number> = new HashSet<number>();
 		for (const schuelerID of this._schuelerID_to_kollisionen.keySet())
 			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, idSchiene).size() > 1)
 				set.add(schuelerID);
@@ -4811,7 +4811,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
 	public getOfSchieneKursmengeMitKollisionen(idSchiene : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
+		const set : JavaSet<GostBlockungsergebnisKurs> = new HashSet<GostBlockungsergebnisKurs>();
 		for (const kurs of this.getSchieneE(idSchiene).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
@@ -4889,7 +4889,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private static getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1 : GostBlockungsergebnisKurs, kurs2 : GostBlockungsergebnisKurs) : number {
-		const set : HashSet<number | null> = new HashSet<number | null>();
+		const set : JavaSet<number | null> = new HashSet<number | null>();
 		set.addAll(kurs1.schueler);
 		set.retainAll(kurs2.schueler);
 		return set.size();

@@ -684,7 +684,7 @@ export class StundenplanManager extends JavaObject {
 	private update_schienenmenge_by_idKlasse() : void {
 		this._schienenmenge_by_idKlasse = new HashMap();
 		for (const klasse of this._klassenmenge_sortiert) {
-			const schienenIDs : HashSet<number> = new HashSet<number>();
+			const schienenIDs : JavaSet<number> = new HashSet<number>();
 			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, klasse.id))
 				schienenIDs.addAll(kurs.schienen);
 			for (const klassenunterricht of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse, klasse.id))
@@ -1389,7 +1389,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private aufsichtsbereichAddAllOhneUpdate(list : List<StundenplanAufsichtsbereich>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of list) {
 			StundenplanManager.aufsichtsbereichCheckAttributes(aufsichtsbereich);
 			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!", this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
@@ -1478,7 +1478,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public aufsichtsbereichRemoveAll(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of listAufsichtsbereich) {
 			if (!this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
 				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!")
@@ -1536,7 +1536,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private fachAddAllOhneUpdate(list : List<StundenplanFach>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const fach of list) {
 			StundenplanManager.fachCheckAttributes(fach);
 			DeveloperNotificationException.ifTrue("fachAddAllOhneUpdate: ID=" + fach.id + " existiert bereits!", this._fach_by_id.containsKey(fach.id));
@@ -1592,7 +1592,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private jahrgangAddAllOhneUpdate(list : List<StundenplanJahrgang>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const jahrgang of list) {
 			StundenplanManager.jahrgangCheckAttributes(jahrgang);
 			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!", this._jahrgang_by_id.containsKey(jahrgang.id));
@@ -1711,7 +1711,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private kalenderwochenzuordnungAddAllOhneUpdate(list : List<StundenplanKalenderwochenzuordnung>) : void {
-		const setOfIDs : HashSet<string> = new HashSet<string>();
+		const setOfIDs : JavaSet<string> = new HashSet<string>();
 		for (const kwz of list) {
 			this.kalenderwochenzuordnungCheck(kwz, true);
 			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", this._kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
@@ -1959,7 +1959,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseAddAllOhneUpdate(list : List<StundenplanKlasse>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const klasse of list) {
 			this.klasseCheckAttributes(klasse);
 			DeveloperNotificationException.ifTrue("klasseAddAllOhneUpdate: ID=" + klasse.id + " existiert bereits!", this._klasse_by_id.containsKey(klasse.id));
@@ -2096,7 +2096,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klassenunterrichtAddAllOhneUpdate(list : List<StundenplanKlassenunterricht>) : void {
-		const setOfIDs : HashSet<string> = new HashSet<string>();
+		const setOfIDs : JavaSet<string> = new HashSet<string>();
 		for (const klassenunterricht of list) {
 			this.klassenunterrichtCheckAttributes(klassenunterricht);
 			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!", this._klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
@@ -2357,7 +2357,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private kursAddAllOhneUpdate(list : List<StundenplanKurs>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const kurs of list) {
 			this.kursCheckAttributes(kurs);
 			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " existiert bereits!", this._kurs_by_id.containsKey(kurs.id));
@@ -2678,7 +2678,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private lehrerAddAllOhneUpdate(list : List<StundenplanLehrer>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const lehrer of list) {
 			this.lehrerCheckAttributes(lehrer);
 			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " existiert bereits!", this._lehrer_by_id.containsKey(lehrer.id));
@@ -2784,7 +2784,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
 	 */
 	public lehrerRemoveAll(listLehrer : List<StundenplanLehrer>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const lehrer of listLehrer) {
 			if (!this._lehrer_by_id.containsKey(lehrer.id))
 				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!")
@@ -2816,7 +2816,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenaufsichtAddAllOhneUpdate(list : List<StundenplanPausenaufsicht>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const pausenaufsicht of list) {
 			this.pausenaufsichtCheckAttributes(pausenaufsicht);
 			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!", this._pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
@@ -3013,7 +3013,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenzeitAddAllOhneUpdate(list : List<StundenplanPausenzeit>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const pausenzeit of list) {
 			StundenplanManager.pausenzeitCheckAttributes(pausenzeit);
 			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!", this._pausenzeit_by_id.containsKey(pausenzeit.id));
@@ -3401,7 +3401,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private raumAddAllOhneUpdate(list : List<StundenplanRaum>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const raum of list) {
 			StundenplanManager.raumCheckAttributes(raum);
 			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", this._raum_by_id.containsKey(raum.id));
@@ -3492,7 +3492,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
 	 */
 	public raumRemoveAll(listRaum : List<StundenplanRaum>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const raum of listRaum) {
 			if (!this._raum_by_id.containsKey(raum.id))
 				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!")
@@ -3524,7 +3524,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schieneAddAllOhneUpdate(list : List<StundenplanSchiene>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const schiene of list) {
 			this.schieneCheckAttributes(schiene);
 			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " existiert bereits!", this._schiene_by_id.containsKey(schiene.id));
@@ -3673,7 +3673,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schuelerAddAllOhneUpdate(list : List<StundenplanSchueler>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const schueler of list) {
 			StundenplanManager.schuelerCheckAttributes(schueler);
 			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!", this._schueler_by_id.containsKey(schueler.id));
@@ -3951,7 +3951,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private unterrichtAddAllOhneUpdate(list : List<StundenplanUnterricht>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
 		for (const u of list) {
 			this.unterrichtCheckAttributes(u);
 			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", this._unterricht_by_id.containsKey(u.id));
@@ -4715,8 +4715,8 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private zeitrasterAddAllOhneUpdate(list : List<StundenplanZeitraster>) : void {
-		const setOfIDs : HashSet<number> = new HashSet<number>();
-		const setOfWochentagStunde : HashSet<string> = new HashSet<string>();
+		const setOfIDs : JavaSet<number> = new HashSet<number>();
+		const setOfWochentagStunde : JavaSet<string> = new HashSet<string>();
 		for (const z of list) {
 			StundenplanManager.zeitrasterCheck(z);
 			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", this._zeitraster_by_id.containsKey(z.id));
