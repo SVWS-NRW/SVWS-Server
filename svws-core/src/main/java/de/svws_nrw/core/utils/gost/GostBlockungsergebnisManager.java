@@ -3555,19 +3555,7 @@ public class GostBlockungsergebnisManager {
 		return u;
 	}
 
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
-	 * <br>(1) Wenn der Kurs in der Schiene eine Sperrung hat, wird diese entfernt.
-	 * <br>(2) Wenn der Kurs bereits in der Schiene fixiert ist, passiert nichts weiteres.
-	 * <br>(3) Wenn der Kurs bereits vollständig fixiert ist, werden seine alten Fixierungen entfernt.
-	 * <br>(4) Andernfalls wird der Kurs in der Schiene fixiert.
-	 *
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 * @param schienenNr  Die Nummer der Schiene, die fixiert werden soll.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
-	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
+	private @NotNull GostBlockungRegelUpdate regelupdateCreate_02e_helper(final long idKurs, final int schienenNr, final boolean checkErlaubt) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -3583,7 +3571,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		if (!_parent.kursIstWeitereFixierungErlaubt(idKurs))
+		if (checkErlaubt && !_parent.kursIstWeitereFixierungErlaubt(idKurs))
 			for (int nr = 1; nr <= _schienenNR_to_schiene.size(); nr++) {
 				final @NotNull LongArrayKey kFixierungAlt = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr});
 				final GostBlockungRegel rFixierungAlt = _parent.regelGetByLongArrayKeyOrNull(kFixierungAlt);
@@ -3595,6 +3583,23 @@ public class GostBlockungsergebnisManager {
 		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
 
 		return u;
+	}
+
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
+	 * <br>(1) Wenn der Kurs in der Schiene eine Sperrung hat, wird diese entfernt.
+	 * <br>(2) Wenn der Kurs bereits in der Schiene fixiert ist, passiert nichts weiteres.
+	 * <br>(3) Wenn der Kurs bereits vollständig fixiert ist, werden seine alten Fixierungen entfernt.
+	 * <br>(4) Andernfalls wird der Kurs in der Schiene fixiert.
+	 *
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 * @param schienenNr  Die Nummer der Schiene, die fixiert werden soll.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
+		return regelupdateCreate_02e_helper(idKurs, schienenNr, true);
 	}
 
 	/**
@@ -3625,7 +3630,7 @@ public class GostBlockungsergebnisManager {
 
 		// (3)
 		u.listEntfernen.add(rAlt);
-		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
+		regelupdateAppend(u, regelupdateCreate_02e_helper(idKurs, schienenNr, false));
 
 		return u;
 	}

@@ -3294,6 +3294,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return u;
 	}
 
+	private regelupdateCreate_02e_helper(idKurs : number, schienenNr : number, checkErlaubt : boolean) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const kSperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kSperrung);
+		if (rSperrung !== null)
+			u.listEntfernen.add(rSperrung);
+		const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
+		const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
+		if (rFixierung !== null)
+			return u;
+		if (checkErlaubt && !this._parent.kursIstWeitereFixierungErlaubt(idKurs))
+			for (let nr : number = 1; nr <= this._schienenNR_to_schiene.size(); nr++) {
+				const kFixierungAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
+				const rFixierungAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierungAlt);
+				if (rFixierungAlt !== null)
+					u.listEntfernen.add(rFixierungAlt);
+			}
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
+		return u;
+	}
+
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
 	 * <br>(1) Wenn der Kurs in der Schiene eine Sperrung hat, wird diese entfernt.
@@ -3307,24 +3328,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
 	 */
 	public regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(idKurs : number, schienenNr : number) : GostBlockungRegelUpdate {
-		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		const kSperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr]);
-		const rSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kSperrung);
-		if (rSperrung !== null)
-			u.listEntfernen.add(rSperrung);
-		const kFixierung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr]);
-		const rFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierung);
-		if (rFixierung !== null)
-			return u;
-		if (!this._parent.kursIstWeitereFixierungErlaubt(idKurs))
-			for (let nr : number = 1; nr <= this._schienenNR_to_schiene.size(); nr++) {
-				const kFixierungAlt : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
-				const rFixierungAlt : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kFixierungAlt);
-				if (rFixierungAlt !== null)
-					u.listEntfernen.add(rFixierungAlt);
-			}
-		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
-		return u;
+		return this.regelupdateCreate_02e_helper(idKurs, schienenNr, true);
 	}
 
 	/**
@@ -3349,7 +3353,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (rNeu !== null)
 			return u;
 		u.listEntfernen.add(rAlt);
-		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_02e_helper(idKurs, schienenNr, false));
 		return u;
 	}
 
