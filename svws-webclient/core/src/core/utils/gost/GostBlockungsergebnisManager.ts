@@ -3565,11 +3565,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private regelupdateCreate_05b_SCHUELER_VERBIETEN_IN_DEN_KURSEN(setKursID : JavaSet<number>) : GostBlockungRegelUpdate {
 		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		for (const idKurs of setKursID) {
-			const u2 : GostBlockungRegelUpdate = this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
-			u.listEntfernen.addAll(u2.listEntfernen);
-			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
-		}
+		for (const idKurs of setKursID)
+			GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(this.getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 		return u;
 	}
 
@@ -4126,6 +4123,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (rNeu !== null)
 			return u;
 		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler, idKurs));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idSchueler  Die ID des Schülers.
+	 * @param idKurs      Die ID des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_05_SCHUELER_VERBIETEN_IN_KURS(idRegelAlt : number, idSchueler : number, idKurs : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
 		return u;

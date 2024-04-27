@@ -484,6 +484,8 @@
 						return props.getErgebnismanager().regelupdatePatchByID_04_SCHUELER_FIXIEREN_IN_KURS(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_05_SCHUELER_VERBIETEN_IN_KURS(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
 					if (regel.value.id > 0)
