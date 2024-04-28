@@ -29,14 +29,11 @@ public class APITempDBFile implements AutoCloseable {
 	/** Der zu verwendende Logger */
 	private final Logger _logger;
 
-	/** Das Verzeichnis, wo die temporäre MDB-Datei abgelegt wird */
+	/** Das Verzeichnis, wo die temporäre DB-Datei abgelegt wird */
 	private final String _tmpDir;
 
-	/** Der Dateiname für die temporäre MDB-Datei */
+	/** Der Dateiname für die temporäre DB-Datei */
 	private final String _tmpFilename;
-
-	/** Das Kennwort für den Zugriff auf die MDB */
-	private final String _password;
 
 	/** Gibt an, ob die close-Methode sich um das Löschen der temporären Datei kümmert oder nicht */
 	private final boolean _doDelete;
@@ -65,13 +62,12 @@ public class APITempDBFile implements AutoCloseable {
 	 * @param logger       der zu verwendende Logger
 	 * @param log          die Liste, welche die Meldungen der Loggers mitprotokolliert
 	 * @param data         die DB als Byte-Array
-	 * @param password     ggf. das Kennwort für die DB
 	 * @param doDelete     gibt an, ob die Datei beim close gelöscht werden soll oder ob sich die aufrufende Methode darum kümmert.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public APITempDBFile(final DBDriver dbms, final String praefix, final Logger logger, final LogConsumerList log,
-			final byte[] data, final String password, final boolean doDelete) throws ApiOperationException {
+			final byte[] data, final boolean doDelete) throws ApiOperationException {
 		this._dbms = dbms;
 		this._doDelete = doDelete;
 		this._logger = logger;
@@ -79,7 +75,6 @@ public class APITempDBFile implements AutoCloseable {
 			_logger.logLn("Fehler: Das DBMS %s wird für das Erstellen von temporären DBMS nicht unterstützt.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
 		}
-		this._password = password;
     	// Erstelle temporär eine Datenbank-Datei aus dem übergebenen Byte-Array
 		_tmpDir = SVWSKonfiguration.get().getTempPath();
 		_tmpFilename = praefix +  "_" + random.ints(48, 123)  // from 0 to z
@@ -117,7 +112,7 @@ public class APITempDBFile implements AutoCloseable {
 	 */
 	public DBConfig getConfig() {
 		final String username = (_dbms == DBDriver.MDB) ? "admin" : null;
-		return new DBConfig(_dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, _password, true, false, 0, 0);
+		return new DBConfig(_dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, null, true, false, 0, 0);
 	}
 
 

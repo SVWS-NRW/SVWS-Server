@@ -65,7 +65,7 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Bestimme den Dateinamen für eine temporäre SQLite-Datei
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, null, false)) {
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
 			if (srcManager == null)
@@ -78,9 +78,9 @@ public final class DataSQLite {
 
 	        // Lese die Datenbank in die Response ein
 			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
-			ZoneId berlin = ZoneId.of("Europe/Berlin");
-			ZonedDateTime jetzt = ZonedDateTime.now(berlin);
-			String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(), jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
+			final ZoneId berlin = ZoneId.of("Europe/Berlin");
+			final ZonedDateTime jetzt = ZonedDateTime.now(berlin);
+			final String schemanameMitDatum = schemaname + String.format("_%02d%02d%02d_%02d%02d", jetzt.getYear(), jetzt.getMonthValue(), jetzt.getDayOfMonth(), jetzt.getHour(), jetzt.getMinute());
 			final Response response = Response.ok((StreamingOutput) output -> {
 				try {
 					FileUtils.move(sqlite.getFilename(), output);
@@ -116,7 +116,7 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, null, true)) {
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, true)) {
 	    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
 	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());

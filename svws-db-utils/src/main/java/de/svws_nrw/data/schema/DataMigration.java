@@ -49,20 +49,19 @@ public final class DataMigration {
 	 *
 	 * @param conn            die Datenbank-Verbindung zum Ziel-Schema
 	 * @param srcDB           die MDB-Quell-Datenbank
-	 * @param srcDBPassword   das Kennwort für den Zugriff auf die Quell-Datenbank
 	 *
 	 * @return die HTTP-Response mit dem LOG der Migration
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-    public static Response migrateMDB(final DBEntityManager conn, final byte[] srcDB, final String srcDBPassword) throws ApiOperationException {
+    public static Response migrateMDB(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine MDB-Datei aus dem übergebenen Byte-Array
-    	try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, srcDB, srcDBPassword, true)) {
+    	try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, srcDB, true)) {
 	    	logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
 	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());

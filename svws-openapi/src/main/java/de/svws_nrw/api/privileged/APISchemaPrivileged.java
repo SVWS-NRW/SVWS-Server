@@ -420,7 +420,7 @@ public class APISchemaPrivileged {
 			logger.addConsumer(log);
 			logger.addConsumer(new LogConsumerConsole());
 
-			try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, multipart.database, multipart.databasePassword, true)) {
+			try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, multipart.database, true)) {
 				logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 				logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
 				logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
@@ -462,7 +462,7 @@ public class APISchemaPrivileged {
 	 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response importSQLite2Schema(@PathParam("schema") final String schemaname,
 			@RequestBody(description = "Die SQLite-Datei", required = true, content =
-				@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyWithoutDBPassword multipart,
+				@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBody multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
@@ -471,7 +471,7 @@ public class APISchemaPrivileged {
 			logger.addConsumer(new LogConsumerConsole());
 
 			// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-			try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, multipart.database, null, true)) {
+			try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, multipart.database, true)) {
 				logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 				logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
 				logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
@@ -809,10 +809,10 @@ public class APISchemaPrivileged {
 	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
 	public Response migrateMDBInto(@PathParam("schema") final String schemaname,
 			@RequestBody(description = "Die MDB-Datei", required = true, content =
-			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDataOnly multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			return DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword);
+			return DataMigration.migrateMDB(conn, multipart.database);
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 

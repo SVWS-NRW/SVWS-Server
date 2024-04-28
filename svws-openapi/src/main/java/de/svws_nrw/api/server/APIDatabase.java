@@ -3,7 +3,6 @@ package de.svws_nrw.api.server;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.api.privileged.DBMultipartBodyDataOnly;
-import de.svws_nrw.api.privileged.DBMultipartBodyDefaultSchema;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.types.ServerMode;
@@ -122,9 +121,9 @@ public class APIDatabase {
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     public Response migrateMDB(@PathParam("schema") final String schemaname,
     		@RequestBody(description = "Die MDB-Datei", required = true, content =
-			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDataOnly multipart,
     		@Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword), request,
+    	return DBBenutzerUtils.runWithoutTransaction(conn -> DataMigration.migrateMDB(conn, multipart.database), request,
     			ServerMode.STABLE,
     			BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN);
     }
