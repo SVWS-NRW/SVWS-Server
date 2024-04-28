@@ -1255,30 +1255,38 @@ public class GostBlockungsdatenManager {
 			_daten.kurse.remove(kurs);
 
 			// (3) Entfernen der Regeln
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			// Typ 1 nicht relevant.
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) // Typ 2
 				if (r.parameter.get(0) == idKurs)
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) // Typ 3
 				if (r.parameter.get(0) == idKurs)
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) // Typ 4
 				if (r.parameter.get(1) == idKurs)
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) // Typ 5
 				if (r.parameter.get(1) == idKurs)
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
+			// Typ 6 nicht relevant.
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) // Typ 7
 				if ((r.parameter.get(0) == idKurs) || (r.parameter.get(1) == idKurs))
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) // Typ 8
 				if ((r.parameter.get(0) == idKurs) || (r.parameter.get(1) == idKurs))
 					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) // Typ 9
 				if (r.parameter.get(0) == idKurs)
 					regelIDs.add(r.id);
+			// Typ 10 bis 14 nicht relevant.
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) // Typ 15
+				if (r.parameter.get(0) == idKurs)
+					regelIDs.add(r.id);
+			// Typ 16 nicht relevant.
+			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN)) // Typ 17
+				if (r.parameter.get(0) == idKurs)
+					regelIDs.add(r.id);
+			// Typ 18 nicht relevant.
 		}
 
 		// (3) Löschen der gesammelten Regeln.

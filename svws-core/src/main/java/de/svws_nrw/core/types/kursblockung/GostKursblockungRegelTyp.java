@@ -9,6 +9,7 @@ import java.util.List;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.kursblockung.KursblockungDynDaten;
 import de.svws_nrw.core.kursblockung.KursblockungDynStatistik;
+import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -21,7 +22,8 @@ import jakarta.validation.constraints.NotNull;
  * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    -->
  * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              -->
  * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             -->
- * <br> {@link GostBlockungsergebnisManager}: regelupdate Methoden(n) erzeugen                            -->
+ * <br> {@link GostBlockungsdatenManager#kurseRemoveByID}: ggf. Regel-Löschung beachten.                  -->
+ * <br> {@link GostBlockungsergebnisManager}: regelupdate und regelpatch Methoden(n) erzeugen.            -->
  * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               -->
 
  * <br> Weitere Schritte

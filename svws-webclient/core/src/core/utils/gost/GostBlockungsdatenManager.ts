@@ -1270,9 +1270,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
 				if (r.parameter.get(0) === idKurs)
 					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
 			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
 				if (r.parameter.get(1) === idKurs)
 					regelIDs.add(r.id);
@@ -1286,6 +1283,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 				if ((r.parameter.get(0) === idKurs) || (r.parameter.get(1) === idKurs))
 					regelIDs.add(r.id);
 			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
+				if (r.parameter.get(0) === idKurs)
+					regelIDs.add(r.id);
+			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN))
 				if (r.parameter.get(0) === idKurs)
 					regelIDs.add(r.id);
 		}
