@@ -1,10 +1,6 @@
 ﻿var
-  Schild2AccessPassword: String;
-  QueryAccessPassword: Boolean;
   MigrationPage: TInputFileWizardPage;
   ComboboxDBMS: TNewComboBox;
-  StaticTextMDBPasswd: TNewStaticText;
-  EditMDBPasswd: TNewEdit;
   StaticTextSrcUsername: TNewStaticText;
   EditSrcUsername: TNewEdit;
   StaticTextSrcPassword: TNewStaticText;
@@ -15,7 +11,6 @@
   EditSrcSchema: TNewEdit;
   MigrationsOption: Integer;
   MDBFileLocation: String;
-  MDBPassword: String;
   SrcUsername: String;
   SrcPassword: String;
   SrcLocation: String;
@@ -32,10 +27,6 @@ procedure ComboboxDBMSOnChange(Sender: TObject);
     MigrationPage.Edits[0].Visible := (ComboboxDBMS.ItemIndex = 0);
     MigrationPage.Buttons[0].Enabled := (ComboboxDBMS.ItemIndex = 0);
     MigrationPage.Buttons[0].Visible := (ComboboxDBMS.ItemIndex = 0);
-    StaticTextMDBPasswd.Enabled := (ComboboxDBMS.ItemIndex = 0);
-    StaticTextMDBPasswd.Visible := (ComboboxDBMS.ItemIndex = 0) AND QueryAccessPassword;
-    EditMDBPasswd.Enabled := (ComboboxDBMS.ItemIndex = 0);
-    EditMDBPasswd.Visible := (ComboboxDBMS.ItemIndex = 0) AND QueryAccessPassword;
 
     StaticTextSrcUsername.Enabled := (ComboboxDBMS.ItemIndex <> 0);
     StaticTextSrcUsername.Visible := (ComboboxDBMS.ItemIndex <> 0);
@@ -61,8 +52,6 @@ procedure ComboboxDBMSOnChange(Sender: TObject);
 }
 procedure InitializeMigrationPage(Page: TWizardPage);
   begin
-    Schild2AccessPassword := '@schild2_access_password@';
-    QueryAccessPassword := (Schild2AccessPassword = '');
     MigrationPage := CreateInputFilePage(Page.ID, 'Migration', 'Migration einer Schild-Datenbank der Version 2.x', '');
 
     ComboboxDBMS := TNewComboBox.Create(MigrationPage);
@@ -94,30 +83,6 @@ procedure InitializeMigrationPage(Page: TWizardPage);
         Edits[0].Enabled := True;
         Buttons[0].Enabled := True;
         PromptLabels[0].Enabled := True;
-      end;
-
-    StaticTextMDBPasswd := TNewStaticText.Create(MigrationPage);
-    with StaticTextMDBPasswd do
-      begin
-        Left := ScaleX(0);
-        Top := MigrationPage.Edits[0].Top + MigrationPage.Edits[0].Height + ScaleY(8);
-        AutoSize := True;
-        Caption := 'MDB-Kennwort';
-        Parent := MigrationPage.Surface;
-        Enabled := True;
-        Visible := QueryAccessPassword;
-      end;
-
-    EditMDBPasswd := TNewEdit.Create(MigrationPage);
-    with EditMDBPasswd do
-      begin
-        Left := StaticTextMDBPasswd.Left + StaticTextMDBPasswd.Width + ScaleX(3);
-        Top := StaticTextMDBPasswd.Top - ScaleY(2);
-        Width := Page.SurfaceWidth div 2 - ScaleX(8);
-        Text := '';
-        Parent := MigrationPage.Surface;
-        Enabled := True;        
-        Visible := QueryAccessPassword;
       end;
 
     StaticTextSrcUsername := TNewStaticText.Create(MigrationPage);
@@ -233,16 +198,6 @@ function CheckMigrationConfigurationValues(CurPageID: Integer) : Boolean;
                 result := False;
                 Exit;
               end;
-            if QueryAccessPassword then
-                MDBPassword := EditMDBPasswd.Text
-            else
-                MDBPassword := Schild2AccessPassword;
-            if MDBPassword = '' then
-              begin
-                MsgBox('Es muss ein gültiges Kennwort für die Access-Datenbank angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
-                result := False;
-                Exit;
-              end;
           end
         else
           begin
@@ -303,7 +258,6 @@ procedure DoMigration;
                   '-k -X POST "https://localhost/api/schema/root/migrate/mdb/' + SVWSDBSchema + '" ' +
                   '-H  "accept: application/json" ' +
                   '-H  "Content-Type: multipart/form-data" ' +
-                  '-F "databasePassword=' + MDBPassword + '" ' +
                   '-F "schemaUsername=' + SVWSDBUser + '" ' +
                   '-F "schemaUserPassword=' + SVWSDBPassword + '" ' +
                   '-F "database=@' + MDBFileLocation + '"',
