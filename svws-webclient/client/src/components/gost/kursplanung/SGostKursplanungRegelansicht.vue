@@ -524,6 +524,8 @@
 						return props.getErgebnismanager().regelupdatePatchByID_15_KURS_MAXIMALE_SCHUELERANZAHL(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(p.get(0), p.get(1));
 				case GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_16_SCHUELER_IGNORIEREN(regel.value.id, p.get(0));
 					return props.getErgebnismanager().regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(p.get(0)));
 				case GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ:
 					if (regel.value.id > 0)

@@ -4895,6 +4895,40 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idSchueler  Die ID des Schülers.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_16_SCHUELER_IGNORIEREN(final long idRegelAlt, final long idSchueler) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(idSchueler)));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
 	 *
 	 * <br>(1) Wenn die alte Regel nicht existiert, passiert nichts.
