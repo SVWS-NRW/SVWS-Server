@@ -79,7 +79,14 @@
 										<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachBgColorByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-									<div class="svws-ui-td svws-align-right" role="cell"><SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge> {{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) || 0 }}</div>
+									<div class="svws-ui-td flex" role="cell">
+										<div>
+											<span v-if="kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() }}/</span>
+											<span :class="kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
+										</div>
+										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>
+									</div>
 									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 									<div v-if="kMan().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
@@ -96,9 +103,9 @@
 							:patch-klausur="patchKlausur"
 							:klausur-css-classes="klausurCssClasses" />
 					</slot>
-					<div v-else-if="schuelerklausurtermine().size()">
+					<!--<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
-					</div>
+					</div>-->
 					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
 						<div class="py-3" :class="{'opacity-50': !kursklausuren().size()}">
 							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
@@ -136,6 +143,8 @@
 		showKursschiene? : boolean;
 		showLastKlausurtermin? : boolean;
 		showSchuelerklausuren?: boolean;
+		showKursklausurenNachschreiber?: boolean;
+		showKlausurenSelbesDatum?: boolean;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>(), {
 		klausurCssClasses: undefined,
@@ -145,9 +154,11 @@
 		quartalsauswahl: undefined,
 		showSchuelerklausuren: false,
 		patchKlausur: undefined,
+		showKlausurenSelbesDatum: false,
+		showKursklausurenNachschreiber: false,
 	});
 
-	const kursklausuren = () => props.kMan().kursklausurGetMengeByTerminid(props.termin.id);
+	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTerminid(props.termin.id, props.showKursklausurenNachschreiber);
 	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminFolgeterminGetMengeByTerminid(props.termin.id);
 
 	const datumVorklausur = (klausur: GostKursklausur) => {

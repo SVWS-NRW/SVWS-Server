@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurvorgabenManager {
 
-	private GostFaecherManager _faecherManager = null;
+	private final GostFaecherManager _faecherManager;
 
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
 		if (a.kursart.compareTo(b.kursart) < 0)
@@ -62,10 +62,20 @@ public class GostKlausurvorgabenManager {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
+	 */
+	public GostKlausurvorgabenManager() {
+		_faecherManager = null;
+	}
+
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
 	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben) {
+		_faecherManager = null;
 		initAll(listVorgaben);
 	}
 
@@ -90,14 +100,14 @@ public class GostKlausurvorgabenManager {
 
 	}
 
-	/**
-	 * Setzt den GostFaecherManager
-	 *
-	 * @param faecherManager der GostFaecherManager
-	 */
-	public void setFaecherManager(final @NotNull GostFaecherManager faecherManager) {
-		_faecherManager = faecherManager;
-	}
+//	/**
+//	 * Setzt den GostFaecherManager
+//	 *
+//	 * @param faecherManager der GostFaecherManager
+//	 */
+//	public void setFaecherManager(final @NotNull GostFaecherManager faecherManager) {
+//		_faecherManager = faecherManager;
+//	}
 
 	/**
 	 * Liefert den GostFaecherManager, falls dieser gesetzt ist, sonst wird eine DeveloperNotificationException geworfen.

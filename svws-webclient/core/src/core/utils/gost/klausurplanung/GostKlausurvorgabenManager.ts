@@ -23,7 +23,7 @@ import { HashSet } from '../../../../java/util/HashSet';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
-	private _faecherManager : GostFaecherManager | null = null;
+	private readonly _faecherManager : GostFaecherManager | null;
 
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
 		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
@@ -59,6 +59,12 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 */
+	public constructor();
+
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
 	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
@@ -78,10 +84,13 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostFaecherManager | List<GostKlausurvorgabe>, __param1? : List<GostKlausurvorgabe>) {
+	public constructor(__param0? : GostFaecherManager | List<GostKlausurvorgabe>, __param1? : List<GostKlausurvorgabe>) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+			this._faecherManager = null;
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
+			this._faecherManager = null;
 			this.initAll(listVorgaben);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
 			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
@@ -94,15 +103,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	private initAll(listVorgaben : List<GostKlausurvorgabe>) : void {
 		this.vorgabeAddAll(listVorgaben);
 		this.update_all();
-	}
-
-	/**
-	 * Setzt den GostFaecherManager
-	 *
-	 * @param faecherManager der GostFaecherManager
-	 */
-	public setFaecherManager(faecherManager : GostFaecherManager) : void {
-		this._faecherManager = faecherManager;
 	}
 
 	/**

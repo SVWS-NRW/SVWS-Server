@@ -31,6 +31,7 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
 	quartalsauswahl: 0 | 1 | 2 ;
+	terminauswahl: GostKlausurtermin | null;
 }
 
 const defaultState = <RouteStateGostKlausurplanung> {
@@ -46,6 +47,7 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	stundenplanmanager: undefined,
 	kursmanager: new KursManager(),
 	quartalsauswahl: 0,
+	terminauswahl: null,
 	view: routeGostKlausurplanungVorgaben,
 };
 
@@ -148,8 +150,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
 				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
 				const faecherManager = new GostFaecherManager(listFaecher);
-				const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
-				klausurvorgabenmanager.setFaecherManager(faecherManager);
+				const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, listKlausurvorgaben);
 				Object.assign(result, {klausurvorgabenmanager});
 				this.setPatchedState(result);
 				return true;
@@ -228,13 +229,21 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.klausurvorgabenmanager;
 	}
 
-	quartalsauswahl = computed({
-		get: () : 0 | 1 | 2 => this._state.value.quartalsauswahl,
-		set: (value: 0 | 1 | 2): void => {
+	quartalsauswahl = computed<0 | 1 | 2>({
+		get: () => this._state.value.quartalsauswahl,
+		set: (value) => {
 			this._state.value.quartalsauswahl = value;
 			this.commit();
 		}
-	  });
+	});
+
+	terminauswahl = computed<GostKlausurtermin | null>({
+		get: () => this._state.value.terminauswahl,
+		set: (value) => {
+			this._state.value.terminauswahl = value;
+			this.commit();
+		}
+	});
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));

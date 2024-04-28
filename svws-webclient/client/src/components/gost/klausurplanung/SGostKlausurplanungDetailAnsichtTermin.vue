@@ -41,7 +41,7 @@
 							</table>
 						</td>-->
 					</template>
-					<td v-else colspan="4" class="border-black border-r text-center text-error p-2">
+					<td v-else colspan="3" class="border-black border-r text-center text-error p-2">
 						Keine Klausuren in diesem Raum
 					</td>
 					<td :rowspan="raummanager.raumGetMengeAsList().size()" v-if="id===0">{{ termin.bemerkung }}</td>

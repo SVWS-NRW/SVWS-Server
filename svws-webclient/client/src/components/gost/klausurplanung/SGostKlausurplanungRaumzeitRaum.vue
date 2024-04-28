@@ -34,7 +34,13 @@
 
 
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-						<div class="svws-ui-td" role="cell">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td flex" role="cell">
+							<div>
+								<span v-if="raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() }}/</span>
+								<span :class="raummanager().schuelerklausurGetMengeByRaumidAndKursklausurid(raum.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+								<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
+							</div>
+						</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (kMan().startzeitByKursklausur(klausur) !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().startzeitByKursklausur(klausur)!) + ' Uhr' || 'Startzeit' : '') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />

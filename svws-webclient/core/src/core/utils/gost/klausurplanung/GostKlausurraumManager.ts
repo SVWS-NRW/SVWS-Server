@@ -76,6 +76,11 @@ export class GostKlausurraumManager extends JavaObject {
 
 
 	/**
+	 * Erstellt einen leeren Manager.
+	 */
+	public constructor();
+
+	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
@@ -108,9 +113,12 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausurterminraumstunde> | List<number>, __param3 : GostKursklausurManager | List<number>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
+	public constructor(__param0? : GostKlausurraum | List<GostKlausurraum>, __param1? : List<GostKlausurraumstunde>, __param2? : List<GostSchuelerklausurterminraumstunde> | List<number>, __param3? : GostKursklausurManager | List<number>, __param4? : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
+		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
+			this._termin = new GostKlausurtermin();
+			this._kursklausurManager = new GostKursklausurManager();
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const listSchuelerklausurterminIds : List<number> = cast_java_util_List(__param2);
@@ -805,11 +813,11 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 * Liefert die Menge aller Kursklausuren zurück, die in einem bestimmten Raum geschrieben werden, auch wenn die Kursklausur nur nachgeschrieben wird.
 	 *
 	 * @param idRaum  die Id des Klausurraums
 	 *
-	 * @return die Liste der GostKursklausuren
+	 * @return die Liste der GostKursklausuren im übergebenen Klausurraum
 	 */
 	public kursklausurGetMengeByRaumid(idRaum : number) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList<GostKursklausur>();

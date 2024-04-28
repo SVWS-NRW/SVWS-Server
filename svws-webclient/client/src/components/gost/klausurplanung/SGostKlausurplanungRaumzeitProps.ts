@@ -12,7 +12,7 @@ import type {
 	List,
 	StundenplanManager,
 } from "@core";
-import type { WritableComputedRef } from "vue";
+import type { Ref, WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
@@ -27,6 +27,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	terminauswahl : WritableComputedRef<GostKlausurtermin | null>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 }

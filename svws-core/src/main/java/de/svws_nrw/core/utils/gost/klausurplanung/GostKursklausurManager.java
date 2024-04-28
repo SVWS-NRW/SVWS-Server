@@ -146,7 +146,15 @@ public class GostKursklausurManager {
 	private final @NotNull List<@NotNull GostSchuelerklausurTermin> _schuelerklausurterminmenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idSchuelerklausur = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin_and_idKursklausur = new HashMap2D<>();
 	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin = new HashMap4D<>(); // ggf. neuer Manager
+
+	/**
+	 * Erstellt einen leeren Manager.
+	 */
+	public GostKursklausurManager() {
+		_vorgabenManager = new GostKlausurvorgabenManager();
+	}
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -261,6 +269,7 @@ public class GostKursklausurManager {
 		update_schuelerklausurmenge_by_idKursklausur();
 		update_schuelerklausurterminmenge_by_idSchuelerklausur();
 		update_schuelerklausurterminmenge_by_idTermin();
+		update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur();
 
 		update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
@@ -372,6 +381,13 @@ public class GostKursklausurManager {
 			else
 				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
 		}
+	}
+
+	private void update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur() {
+		_schuelerklausurterminmenge_by_idTermin_and_idKursklausur.clear();
+		for (final @NotNull Entry<@NotNull Long, @NotNull List<GostSchuelerklausurTermin>> e : _schuelerklausurterminmenge_by_idTermin.entrySet())
+			for (final @NotNull GostSchuelerklausurTermin skt : e.getValue())
+				Map2DUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin_and_idKursklausur, e.getKey(), schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
 	}
 
 	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() { // ggf. neuer Manager
@@ -1046,6 +1062,23 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMengeByTerminid(final Long idTermin) {
 		final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(idTermin != null ? idTermin : -1);
 		return klausuren != null ? klausuren : new ArrayList<>();
+	}
+
+	/**
+	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin auf Wunsch mit Kursklausuren der Nachschreiber
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 * @param mitNachschreibern wenn true werden die Kursklausuren einzelner Nachschreiber mit inkludiert
+	 *
+	 * @return die Liste von GostKursklausur-Objekten
+	 */
+	public @NotNull Set<@NotNull GostKursklausur> kursklausurMitNachschreibernGetMengeByTerminid(final Long idTermin, final boolean mitNachschreibern) {
+		final Set<@NotNull GostKursklausur> klausuren = new HashSet<>(kursklausurGetMengeByTerminid(idTermin));
+		if (mitNachschreibern)
+			for (GostSchuelerklausurTermin skt : schuelerklausurterminGetMengeByTerminid(idTermin)) {
+				klausuren.add(kursklausurBySchuelerklausurTermin(skt));
+			}
+		return klausuren;
 	}
 
 	/**
@@ -1934,6 +1967,19 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminGetMengeByTerminid(final @NotNull long idTermin) {
 		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin.get(idTermin);
+		return list != null ? list : new ArrayList<>();
+	}
+
+	/**
+	 * Gibt die Liste von Schülerklausur-Terminen zu einem Klausurtermin und einer Kursklausur zurück.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 * @param idKursklausur die ID der Kursklausur
+	 *
+	 * @return die Liste von Schülerklausur-Terminen
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminGetMengeByTerminidAndKursklausurid(final @NotNull long idTermin, final @NotNull long idKursklausur) {
+		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin_and_idKursklausur.getOrNull(idTermin, idKursklausur);
 		return list != null ? list : new ArrayList<>();
 	}
 

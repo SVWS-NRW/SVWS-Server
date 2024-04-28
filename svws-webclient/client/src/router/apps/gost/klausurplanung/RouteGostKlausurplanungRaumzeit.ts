@@ -33,17 +33,19 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
+		console.log("LALALA");
 		if (to_params.idtermin instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const idTermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
-		console.log("idTermin", idTermin);
+		const idTermin = !to_params.idtermin ? null : parseInt(to_params.idtermin);
+		routeGostKlausurplanung.data.terminauswahl.value = (idTermin === null) ? null : routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrException(idTermin);
+		console.log(routeGostKlausurplanung.data.terminauswahl.value);
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(routeGostKlausurplanung.data.klausurvorgabenmanager, new Vector(), null, null, null)},
+			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
 			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
 			hatStundenplanManager: routeGostKlausurplanung.data.hatStundenplanManager,
 			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
@@ -53,6 +55,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			terminauswahl: routeGostKlausurplanung.data.terminauswahl,
 			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 		}

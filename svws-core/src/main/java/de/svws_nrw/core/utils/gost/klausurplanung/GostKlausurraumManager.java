@@ -65,6 +65,15 @@ public class GostKlausurraumManager {
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurterminraumstunde>> _schuelerklausurraumstundenmenge_by_idSchuelerklausurtermin = new HashMap<>();
 
 	/**
+	 * Erstellt einen leeren Manager.
+	 *
+	 */
+	public GostKlausurraumManager() {
+		_termin = new GostKlausurtermin();
+		_kursklausurManager = new GostKursklausurManager();
+	}
+
+	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
@@ -841,11 +850,11 @@ public class GostKlausurraumManager {
 	}
 
 	/**
-	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 * Liefert die Menge aller Kursklausuren zurück, die in einem bestimmten Raum geschrieben werden, auch wenn die Kursklausur nur nachgeschrieben wird.
 	 *
 	 * @param idRaum  die Id des Klausurraums
 	 *
-	 * @return die Liste der GostKursklausuren
+	 * @return die Liste der GostKursklausuren im übergebenen Klausurraum
 	 */
 	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMengeByRaumid(final long idRaum) {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();

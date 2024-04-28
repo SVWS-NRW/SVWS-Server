@@ -243,7 +243,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKursklausuren);
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben);
 		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
-		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren.stream().map(skt -> skt.id).toList(), kursklausurManager, termin);
+		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausurtermine.stream().map(skt -> skt.id).toList(), kursklausurManager, termin);
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
 
@@ -354,7 +354,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		for (final GostSchuelerklausurTermin sk : listSchuelerklausurenNeu) {
 			final GostKursklausur kk = kursklausurManager.kursklausurBySchuelerklausurTermin(sk);
 			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
-			final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : kursklausurManager.terminOrNullByKursklausur(kk).startzeit);
+			final int startzeit = sk.startzeit != null ? sk.startzeit : (sk.folgeNr == 0 && kk.startzeit != null ? kk.startzeit : kursklausurManager.terminOrExceptionBySchuelerklausurTermin(sk).startzeit);
 			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit,
 					v.dauer);
 			if (zeitrasterSk.isEmpty())

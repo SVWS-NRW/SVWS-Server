@@ -30,7 +30,7 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<unknown
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList()), new ArrayList(), null, null, null)},
+			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
 			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
