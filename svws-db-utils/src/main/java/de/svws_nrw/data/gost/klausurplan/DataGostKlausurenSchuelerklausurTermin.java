@@ -29,6 +29,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -117,6 +118,8 @@ public final class DataGostKlausurenSchuelerklausurTermin extends DataManager<Lo
 				.setParameter("skid", id)
 				.setMaxResults(1)
 				.getSingleResult();
+		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> raumstunden = conn.queryNamed("DTOGostKlausurenSchuelerklausurenTermineRaumstunden.schuelerklausurtermin_id", lastTermin.ID, DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class);
+		conn.transactionRemoveAll(raumstunden);
 		final DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1);
 		conn.transactionPersist(newTermin);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(newTermin)).build();

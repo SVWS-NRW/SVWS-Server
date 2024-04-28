@@ -154,7 +154,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _schuelerklausurterminmenge_by_idTermin : JavaMap<number, List<GostSchuelerklausurTermin>> = new HashMap<number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idTermin_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
+	private readonly _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
 	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>>();
 
@@ -195,13 +195,13 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private initAll(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null, listSchuelerklausuren : List<GostSchuelerklausur> | null, listSchuelerklausurtermine : List<GostSchuelerklausurTermin> | null) : void {
-		this.kursklausurAddAll(listKlausuren);
+		this.kursklausurAddAllOhneUpdate(listKlausuren);
 		if (listTermine !== null)
-			this.terminAddAll(listTermine);
+			this.terminAddAllOhneUpdate(listTermine);
 		if (listSchuelerklausuren !== null)
-			this.schuelerklausurAddAll(listSchuelerklausuren);
+			this.schuelerklausurAddAllOhneUpdate(listSchuelerklausuren);
 		if (listSchuelerklausurtermine !== null)
-			this.schuelerklausurterminAddAll(listSchuelerklausurtermine);
+			this.schuelerklausurterminAddAllOhneUpdate(listSchuelerklausurtermine);
 		this.update_all();
 	}
 
@@ -285,7 +285,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_schuelerklausurmenge_by_idKursklausur();
 		this.update_schuelerklausurterminmenge_by_idSchuelerklausur();
 		this.update_schuelerklausurterminmenge_by_idTermin();
-		this.update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur();
+		this.update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur();
 		this.update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		this.update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
 		this.update_terminmenge_by_halbjahr_and_quartal();
@@ -391,20 +391,22 @@ export class GostKursklausurManager extends JavaObject {
 		}
 	}
 
-	private update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur() : void {
-		this._schuelerklausurterminmenge_by_idTermin_and_idKursklausur.clear();
+	private update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur() : void {
+		this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.clear();
 		for (const e of this._schuelerklausurterminmenge_by_idTermin.entrySet())
 			for (const skt of e.getValue())
-				Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin_and_idKursklausur, e.getKey(), this.schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
+				if (this.istAktuellerSchuelerklausurtermin(skt))
+					Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, e.getKey(), this.schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
 	}
 
 	private update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() : void {
 		this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.clear();
-		for (const sktList of this._schuelerklausurterminmenge_by_idSchuelerklausur.values()) {
-			const sktLast : GostSchuelerklausurTermin = sktList.get(sktList.size() - 1);
-			const v : GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(sktLast);
-			if (sktLast.folgeNr > 0)
+		for (const sk of this._schuelerklausurmenge) {
+			const sktLast : GostSchuelerklausurTermin | null = this.schuelerklausurterminaktuellBySchuelerklausur(sk.id);
+			if (sktLast.folgeNr > 0) {
+				const v : GostKlausurvorgabe | null = this.vorgabeBySchuelerklausurTermin(sktLast);
 				Map4DUtils.getOrCreateArrayList(this._schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin !== null ? sktLast.idTermin : -1).add(sktLast);
+			}
 		}
 	}
 
@@ -1889,8 +1891,8 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von Schülerklausur-Terminen
 	 */
-	public schuelerklausurterminGetMengeByTerminidAndKursklausurid(idTermin : number, idKursklausur : number) : List<GostSchuelerklausurTermin> {
-		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idTermin_and_idKursklausur.getOrNull(idTermin, idKursklausur);
+	public schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(idTermin : number, idKursklausur : number) : List<GostSchuelerklausurTermin> {
+		const list : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(idTermin, idKursklausur);
 		return list !== null ? list : new ArrayList();
 	}
 
@@ -1934,8 +1936,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return true, wenn es sich um den aktuellen Termin handelt, sonst false
 	 */
 	public istAktuellerSchuelerklausurtermin(skt : GostSchuelerklausurTermin) : boolean {
-		const skts : List<GostSchuelerklausurTermin | null> = DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idSchuelerklausur, skt.idSchuelerklausur);
-		return skts.get(skts.size() - 1) as unknown === skt as unknown;
+		return this.schuelerklausurterminaktuellBySchuelerklausur(skt.idSchuelerklausur) as unknown === skt as unknown;
+	}
+
+	/**
+	 * Liefert den aktuellen Schülerklausurtermin zu einer übergebenen Schülerklausur
+	 *
+	 * @param idSchuelerklausur die ID der Schülerklausur, deren aktueller Schülerklausurtermin gesucht wird
+	 *
+	 * @return den aktuellen Schülerklausurtermin
+	 */
+	public schuelerklausurterminaktuellBySchuelerklausur(idSchuelerklausur : number) : GostSchuelerklausurTermin {
+		const skts : List<GostSchuelerklausurTermin | null> = DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idSchuelerklausur, idSchuelerklausur);
+		return DeveloperNotificationException.ifNull("Schülerklausur " + idSchuelerklausur + " enthält keine Schülerklausurtermine.", skts.getLast());
 	}
 
 	/**

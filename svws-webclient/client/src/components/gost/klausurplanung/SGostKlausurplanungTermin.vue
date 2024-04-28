@@ -81,8 +81,8 @@
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 									<div class="svws-ui-td flex" role="cell">
 										<div>
-											<span v-if="kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() }}/</span>
-											<span :class="kMan().schuelerklausurterminGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+											<span v-if="kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() }}/</span>
+											<span :class="kMan().schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 										</div>
 										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>

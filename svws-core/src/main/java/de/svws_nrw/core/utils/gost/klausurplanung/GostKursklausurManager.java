@@ -146,7 +146,7 @@ public class GostKursklausurManager {
 	private final @NotNull List<@NotNull GostSchuelerklausurTermin> _schuelerklausurterminmenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idSchuelerklausur = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin = new HashMap<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin_and_idKursklausur = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur = new HashMap2D<>();
 	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostSchuelerklausurTermin>> _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin = new HashMap4D<>(); // ggf. neuer Manager
 
 	/**
@@ -173,13 +173,13 @@ public class GostKursklausurManager {
 	}
 
 	private void initAll(final @NotNull List<@NotNull GostKursklausur> listKlausuren, final List<@NotNull GostKlausurtermin> listTermine, final List<@NotNull GostSchuelerklausur> listSchuelerklausuren, final List<@NotNull GostSchuelerklausurTermin> listSchuelerklausurtermine) {
-		kursklausurAddAll(listKlausuren);
+		kursklausurAddAllOhneUpdate(listKlausuren);
 		if (listTermine != null)
-			terminAddAll(listTermine);
+			terminAddAllOhneUpdate(listTermine);
 		if (listSchuelerklausuren != null)
-			schuelerklausurAddAll(listSchuelerklausuren);
+			schuelerklausurAddAllOhneUpdate(listSchuelerklausuren);
 		if (listSchuelerklausurtermine != null)
-			schuelerklausurterminAddAll(listSchuelerklausurtermine);
+			schuelerklausurterminAddAllOhneUpdate(listSchuelerklausurtermine);
 
 		update_all();
 
@@ -269,7 +269,7 @@ public class GostKursklausurManager {
 		update_schuelerklausurmenge_by_idKursklausur();
 		update_schuelerklausurterminmenge_by_idSchuelerklausur();
 		update_schuelerklausurterminmenge_by_idTermin();
-		update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur();
+		update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur();
 
 		update_kursklausurmenge_by_halbjahr_and_quartal_and_idTermin();
 		update_kursklausur_by_idKurs_and_halbjahr_and_quartal();
@@ -383,23 +383,22 @@ public class GostKursklausurManager {
 		}
 	}
 
-	private void update_schuelerklausurterminmenge_by_idTermin_and_idKursklausur() {
-		_schuelerklausurterminmenge_by_idTermin_and_idKursklausur.clear();
+	private void update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur() {
+		_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.clear();
 		for (final @NotNull Entry<@NotNull Long, @NotNull List<GostSchuelerklausurTermin>> e : _schuelerklausurterminmenge_by_idTermin.entrySet())
 			for (final @NotNull GostSchuelerklausurTermin skt : e.getValue())
-				Map2DUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin_and_idKursklausur, e.getKey(), schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
+				if (istAktuellerSchuelerklausurtermin(skt))
+					Map2DUtils.getOrCreateArrayList(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, e.getKey(), schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
 	}
 
 	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() { // ggf. neuer Manager
 		_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin.clear();
-
-		for (final @NotNull List<@NotNull GostSchuelerklausurTermin> sktList : _schuelerklausurterminmenge_by_idSchuelerklausur.values()) {
-			@NotNull
-			final GostSchuelerklausurTermin sktLast = sktList.get(sktList.size() - 1);
-			@NotNull
-			final GostKlausurvorgabe v = vorgabeBySchuelerklausurTermin(sktLast);
-			if (sktLast.folgeNr > 0)
+		for (final @NotNull GostSchuelerklausur sk : _schuelerklausurmenge) {
+			final GostSchuelerklausurTermin sktLast = schuelerklausurterminaktuellBySchuelerklausur(sk.id);
+			if (sktLast.folgeNr > 0) {
+				final GostKlausurvorgabe v = vorgabeBySchuelerklausurTermin(sktLast);
 				Map4DUtils.getOrCreateArrayList(_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin, v.abiJahrgang, v.halbjahr, v.quartal, sktLast.idTermin != null ? sktLast.idTermin : -1).add(sktLast);
+			}
 		}
 	}
 
@@ -1978,8 +1977,8 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von Schülerklausur-Terminen
 	 */
-	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminGetMengeByTerminidAndKursklausurid(final @NotNull long idTermin, final @NotNull long idKursklausur) {
-		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminmenge_by_idTermin_and_idKursklausur.getOrNull(idTermin, idKursklausur);
+	public @NotNull List<@NotNull GostSchuelerklausurTermin> schuelerklausurterminaktuellGetMengeByTerminidAndKursklausurid(final @NotNull long idTermin, final @NotNull long idKursklausur) {
+		final List<@NotNull GostSchuelerklausurTermin> list = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(idTermin, idKursklausur);
 		return list != null ? list : new ArrayList<>();
 	}
 
@@ -2023,8 +2022,19 @@ public class GostKursklausurManager {
 	 * @return true, wenn es sich um den aktuellen Termin handelt, sonst false
 	 */
 	public boolean istAktuellerSchuelerklausurtermin(final @NotNull GostSchuelerklausurTermin skt) {
-		final @NotNull List<GostSchuelerklausurTermin> skts = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idSchuelerklausur, skt.idSchuelerklausur);
-		return skts.get(skts.size() - 1) == skt;
+		return schuelerklausurterminaktuellBySchuelerklausur(skt.idSchuelerklausur) == skt;
+	}
+
+	/**
+	 * Liefert den aktuellen Schülerklausurtermin zu einer übergebenen Schülerklausur
+	 *
+	 * @param idSchuelerklausur die ID der Schülerklausur, deren aktueller Schülerklausurtermin gesucht wird
+	 *
+	 * @return den aktuellen Schülerklausurtermin
+	 */
+	public @NotNull GostSchuelerklausurTermin schuelerklausurterminaktuellBySchuelerklausur(final long idSchuelerklausur) {
+		final @NotNull List<GostSchuelerklausurTermin> skts = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idSchuelerklausur, idSchuelerklausur);
+		return DeveloperNotificationException.ifNull("Schülerklausur " + idSchuelerklausur + " enthält keine Schülerklausurtermine.", skts.getLast());
 	}
 
 	/**
