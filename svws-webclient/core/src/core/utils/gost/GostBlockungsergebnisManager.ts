@@ -4241,6 +4241,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idSchueler1  Die Datenbank-ID des 1. Schülers.
+	 * @param idSchueler2  Die Datenbank-ID des 2. Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public regelupdatePatchByID_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idRegelAlt : number, idSchueler1 : number, idSchueler2 : number, idFach : number) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		const idSchuelerMin : number = Math.min(idSchueler1, idSchueler2);
+		const idSchuelerMax : number = Math.max(idSchueler1, idSchueler2);
+		const rAlt : GostBlockungRegel = this._parent.regelGet(idRegelAlt);
+		if (rAlt.typ !== GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ)
+			return u;
+		const kNeu : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idSchuelerMin, idSchuelerMax, idFach]);
+		const rNeu : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu !== null)
+			return u;
+		GostBlockungsergebnisManager.regelupdateAppend(u, this.regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
 	 *
 	 * <br>(1) Wenn die alte Regel nicht existiert, passiert nichts.
