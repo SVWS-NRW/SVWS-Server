@@ -4276,7 +4276,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
-	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99], wird die Regel hinzugefügt.
+	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99] hat, wird die Regel hinzugefügt.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 * @param anzahl  Die Anzahl an Dummy-Schülern.
@@ -4852,6 +4852,41 @@ public class GostBlockungsergebnisManager {
 
 		// (3)
 		regelupdateAppend(u, regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idKurs      Die ID des Kurses.
+	 * @param anzahl      Die maximale Anzahl der SuS des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_15_KURS_MAXIMALE_SCHUELERANZAHL(final long idRegelAlt, final long idKurs, final int anzahl) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
