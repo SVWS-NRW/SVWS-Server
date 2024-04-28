@@ -3943,8 +3943,8 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
-	 * <br>(1) Wenn Kurs A mit Kurs B verboten sein soll, wird dies entfernt.
-	 * <br>(2) Wenn die Regel mit bereits existiert, aber die IDs nicht aufsteigend sind, wird dies entfernt.
+	 * <br>(1) Wenn Kurs A mit Kurs B verboten (Regel 7) sein soll, wird dies entfernt.
+	 * <br>(2) Wenn die Regel bereits existiert, aber die IDs nicht aufsteigend sind, wird die (MaxKursID, MinKursID)-Kombination entfernt.
 	 * <br>(3) Wenn die Regel nicht existiert, wird sie hinzugefügt.
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
@@ -4628,6 +4628,78 @@ public class GostBlockungsergebnisManager {
 
 		// (3)
 		regelupdateAppend(u, regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idKurs1     Die ID des 1. Kurses.
+	 * @param idKurs2     Die ID des 2. Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_08_KURS_ZUSAMMEN_MIT_KURS(final long idRegelAlt, final long idKurs1, final long idKurs2) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final long idKursMin = Math.min(idKurs1, idKurs2);
+		final long idKursMax = Math.max(idKurs1, idKurs2);
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKursMin, idKursMax});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt))
+			u.listEntfernen.add(rAlt);
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
+	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idKurs      Die ID des Kurses.
+	 * @param anzahl      Die Anzahl an Dummy-SuS des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(final long idRegelAlt, final long idKurs, final int anzahl) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = _parent.regelGet(idRegelAlt);
+		if (rAlt.typ != GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ)
+			return u;
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] {GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl});
+		final GostBlockungRegel rNeu = _parent.regelGetByLongArrayKeyOrNull(kNeu);
+		if (rNeu != null)
+			return u;
+
+		// (3)
+		regelupdateAppend(u, regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);

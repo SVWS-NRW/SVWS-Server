@@ -496,8 +496,12 @@
 						return props.getErgebnismanager().regelupdatePatchByID_07_KURS_VERBIETEN_MIT_KURS(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
 				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_08_KURS_ZUSAMMEN_MIT_KURS(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(p.get(0), p.get(1)));
 				case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ:
+					if (regel.value.id > 0)
+						return props.getErgebnismanager().regelupdatePatchByID_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(regel.value.id, p.get(0), p.get(1));
 					return props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(p.get(0), p.get(1));
 				case GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ:
 					return props.getErgebnismanager().regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(p.get(0), p.get(1),p.get(2));
