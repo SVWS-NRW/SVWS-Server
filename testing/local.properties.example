@@ -20,5 +20,3 @@ MariaDB_USER=*****
 MariaDB_PASSWORD=******
 # Das Passwort für den TLS-Keystore, welcher für den APP-Server generiert wird. WICHTIG: mindestens 6 Zeichen!!!!
 SVWS_TLS_KEYSTORE_PASSWORD=******
-# Das bekannte Passwort der *.mdb-Beispieldaten
-MDB_PASSWORD=*****

@@ -10,12 +10,6 @@ Dieses README-Dokument erklärt die verschiedenen Umgebungsvariablen, die in der
 - **Default**: `/etc/app/svws/init-scripts`
 - **Hinweis**: `kann per volumen mit eigenen Skripten benutzt werden`
 
-### TESTDB_PASSWORD
-
-- **Beschreibung**: Das Passwort für einen Test-Datenbankbenutzer (nicht spezifiziert).
-- **Wert**: Ihr spezifisches Passwort (ersetzen Sie `xxx` durch Ihr tatsächliches Passwort).
-- **Hinweis**: `wenn angegeben wird, werden beim starten TestDB-Daten eingespielt`
-
 ### MariaDB_ROOT_PASSWORD
 
 - **Beschreibung**: Das Root-Passwort für die MariaDB-Datenbank.

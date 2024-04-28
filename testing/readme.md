@@ -26,16 +26,16 @@
 Die Testumgebung benötigt eine lokale Dockerinstallation, siehe [Docker Installation](https://docs.docker.com/desktop/).  Installieren und prüfen, ob die Installation geklappt hat:
 
 ```
-critter@critter-Virtual-Machine:~$ docker --version
+user@host:~$ docker --version
 Docker version 24.0.4, build 3713ee1
 ```
 
 Weiterhin benötigen die für die Testumgebung ausgeführten Container ein Dockernetzwerk, um miteinander ohne Umstände über ihre Container-Namen zu kommunizieren:
 
 ```
-critter@critter-Virtual-Machine:~/git/SVWS-Server$ docker network create gitlab_runner_network
+user@host:~/git/SVWS-Server$ docker network create gitlab_runner_network
 728c2bd6ac200cb8fe8b662862c960406e3bd358a5f57585d5b059dcdbeb2dbb
-critter@critter-Virtual-Machine:~/git/SVWS-Server$ docker network ls
+user@host:~/git/SVWS-Server$ docker network ls
 NETWORK ID     NAME                    DRIVER    SCOPE
 *
 *
@@ -75,7 +75,7 @@ Darüber hinaus haben die Subprojekte einzelne Tasks, mit denen die Container f�
 
 ## Aufbau des Projekts
 ### Docker Runner
-Dieses Repository enthält die Dateien für einen Docker Runner, der in einem Docker Container auf Basis von Eclipse Temurin 17 läuft. Der Docker Runner ist mit der Docker CLI ausgestattet und kann über eine Socket-Verbindung auf den Docker Daemon des Hosts zugreifen. Dies ermöglicht das Erstellen, Bauen und Stoppen von Docker Containern innerhalb der Testumgebung.
+Dieses Repository enthält die Dateien für einen Docker Runner, der in einem Docker Container auf Basis von Eclipse Temurin läuft. Der Docker Runner ist mit der Docker CLI ausgestattet und kann über eine Socket-Verbindung auf den Docker Daemon des Hosts zugreifen. Dies ermöglicht das Erstellen, Bauen und Stoppen von Docker Containern innerhalb der Testumgebung.
 
 Das Image wird in [Docker-Hub](https://hub.docker.com/r/svwsnrw/dockerrunner) gehostet und wird in der CI Pipeline verwendet, ist für die lokale Verwendung derzeit nicht von Bedeutung.
 
@@ -103,7 +103,6 @@ Das `.env`-File für Docker-Compose setzt sich wie folgt zusammen:
 - MariaDB_HOST: der Hostname der zu testenden MariaDB, wird an die SVWS-Konfiguration gereicht
 - SVWS_CONTAINER_NAME: der Hostname für den SVWS-App-Container innerhalb des Dockernetworks, festgelegt als `${project.name-svws}`
 - DB_CONTAINER_NAME: der Hostname für den SVWS-App-Container innerhalb des Dockernetworks, festgelegt als `${project.name-db}`
-- TESTDB_PASSWORD*: das bekannte Passwort für die Beispieldatenbanken, ggf. bei der Projektleitung erfragen
 
 Bei lokaler Ausführung weiterhin:
 - SVWS_PORT*: der Host-Port an den der SVWS-App-Container seinen internen Port 8443 weiterleitet
@@ -220,9 +219,3 @@ Anhand der Beispiele `testing/svws-dav-api-test` für Java-Tests und `testing/sv
 - den erstellten Task vom Typ Test in `testing/build.gradle` in der Liste `testTasks` anfügen 
 - ergänzen des `SVWS-Server/settings.gradle` um die Referenz zum neuen Subprojekt
 - optional: für eigene DB-Schemas mit ggf. eigenen Datenbanken bzw. abweichenden Inhalten muss ein entsprechendes Init-Script im Ordner `init-scripts` angelegt werden
-
-
-
-
-
-Änderungsvorschläge und Diskussionen werden gern entgegengenommen, vgl. #771

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "$TESTDB_PASSWORD" ]; then
+if [ -z "$MDBFILE" ]; then
 	exit 1
 fi
 
@@ -24,7 +24,7 @@ echo "Importiere Datenbank: ${MDBFILE} ..."
 if [ -n "$MariaDB_ROOT_USER" ]; then
     # Wenn MariaDB_ROOT_USER gesetzt ist, führe den Code für den Fall aus
 	java -cp "svws-server-app-*.jar:./*:./lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
-	   -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
+	   -sl "${MDBFILE}" \
 	   -td "MARIA_DB" \
 	   -tl ${MariaDB_HOST} \
 	   -ts ${MariaDB_DATABASE} \
@@ -35,7 +35,7 @@ if [ -n "$MariaDB_ROOT_USER" ]; then
 else
     # Wenn MariaDB_ROOT_USER nicht gesetzt ist, führe den Code für den anderen Fall aus
 	java -cp "svws-server-app-*.jar:./*:./lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
-	   -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
+	   -sl "${MDBFILE}" \
 	   -td "MARIA_DB" \
 	   -tl ${MariaDB_HOST} \
 	   -ts ${MariaDB_DATABASE} \

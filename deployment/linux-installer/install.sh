@@ -148,10 +148,6 @@ else
 
     if [[ "$1" == "--default" ]]; then
     	echo "verwende defaults ..."
-    	echo "Testdaten:"
-        read -sp "TESTDB_PASSWORD: " TESTDB_PASSWORD
-        echo ""
-        export TESTDB_PASSWORD=${TESTDB_PASSWORD}
     else
     	#Konfuguration
     	echo "MariaDB-Konfiguration:"
@@ -232,10 +228,8 @@ else
     	read -p "Möchten Sie Testdaten importieren? (j/N): " CREATE_TESTDATA
     	if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
     		echo "Testdaten:"
-    		read -sp "TESTDB_PASSWORD: " TESTDB_PASSWORD
-    		echo
-    		export TESTDB_PASSWORD=${TESTDB_PASSWORD}
     		read -p "MDBFILE (default: 'Abitur-Test-Daten.mdb'): " MDBFILE_USER
+    		echo
     		export TMP_DIR=/tmp/svws
     		MDBFILE_USER=${MDBFILE_USER:-/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
     		MDBFILE="${TMP_DIR}${MDBFILE_USER}"
@@ -313,10 +307,11 @@ else
     echo "INPUT_state=$INPUT_state" >> .env
     echo "INPUT_country=$INPUT_country" >> .env
     echo "validity_days=$validity_days" >> .env
-    echo "TESTDB_PASSWORD=$TESTDB_PASSWORD" >> .env
-    echo "TMP_DIR=$TMP_DIR" >> .env
-    echo "MDBFILE=$MDBFILE" >> .env
-    echo "INIT_EMPTY_DB=$INIT_EMPTY_DB" >> .env
+	echo "TMP_DIR=$TMP_DIR" >> .env
+	if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
+		echo "MDBFILE=$MDBFILE" >> .env
+	fi
+	echo "INIT_EMPTY_DB=$INIT_EMPTY_DB" >> .env
 fi
 
 # Laden von Abhängigkeiten
@@ -460,7 +455,7 @@ if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
     # Importiere die Datenbank(en) mittels der MigrateDB Klasse
     echo "Importiere Datenbank: ${MDBFILE} ..."
     java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
-       -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
+       -sl "${MDBFILE}" \
        -td "MARIA_DB" \
        -tl ${MariaDB_HOST} \
        -ts ${MariaDB_DATABASE} \

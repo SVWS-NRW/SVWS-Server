@@ -49,7 +49,6 @@ def MariaDB_ROOT_PASSWORD = getEnvironmentProperty 'MariaDB_ROOT_PASSWORD', null
 def MariaDB_PASSWORD = getEnvironmentProperty 'MariaDB_PASSWORD', null
 def MariaDB_USER = getEnvironmentProperty 'MariaDB_USER', null
 def SVWS_TLS_KEYSTORE_PASSWORD = getEnvironmentProperty 'SVWS_TLS_KEYSTORE_PASSWORD', null
-def MDB_PASSWORD = getEnvironmentProperty 'MDB_PASSWORD', null
 def testumgebungPath = "$buildDir/testumgebung/${project.name}"
 
 task createEnv(){
@@ -72,8 +71,6 @@ task createEnv(){
 			entry(key:"MariaDB_HOST", value: project.name + '-db-' + JOB_ID)
 			entry(key:"SVWS_CONTAINER_NAME", value: project.name + '-svws-' + JOB_ID)
 			entry(key:"DB_CONTAINER_NAME", value: project.name + '-db-' + JOB_ID)
-
-			entry(key:"TESTDB_PASSWORD", value: MDB_PASSWORD)
 		}
 		if(SVWS_TEST_ENVIRONMENT.equals('local')) {
 			ant.propertyfile(file: "$testumgebungPath/.env") {
