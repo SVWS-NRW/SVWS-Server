@@ -1230,7 +1230,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge Sprachbeginn auf 05, wenn der ASDJahrgang 01, 02, 03 oder 04 ist und das Sprachende nicht in diesem Bereich liegt.",
 			"""
 			UPDATE SchuelerSprachenfolge ssf JOIN EigeneSchule es
-			SET ssf.ASDJahrgangVon = '05' WHERE ssf.ASDJahrgangVon IN ('01', '02', '03', '04') AND ssf.ASDJahrgangBis NOT IN ('01', '02', '03', '04') AND es.SchulformKrz <> 'WB';
+			SET ssf.ASDJahrgangVon = '05' WHERE ssf.ASDJahrgangVon IN ('01', '02', '03', '04') AND (ssf.ASDJahrgangBis NOT IN ('01', '02', '03', '04') OR ssf.ASDJahrgangBis IS NULL) AND es.SchulformKrz <> 'WB';
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
