@@ -2,8 +2,10 @@ package de.svws_nrw.data.gost;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
@@ -72,7 +74,7 @@ public final class DBUtilsGost {
 
 	/**
 	 * Prüft, ob in dem angebenen Schuljahresabschnitt für das angebene Halbjahr der gymnasialen Oberstufe
-	 * bereits Kurse der gymnasialen Oberstufe vorhanden sidn oder nicht.
+	 * bereits Kurse der gymnasialen Oberstufe vorhanden sind oder nicht.
 	 *
 	 * @param conn       die aktuelle Datenbankverbindung
 	 * @param halbjahr   das Halbjahr
@@ -89,6 +91,69 @@ public final class DBUtilsGost {
 			if (kursart != null)
 				return true;
 		}
+		return false;
+	}
+
+
+	/**
+	 * Ermittelt in dem angebenen Schuljahresabschnitt für das angebene Halbjahr der gymnasialen Oberstufe
+	 * die Menge der Kurse (DB-DTOs) der gymnasialen Oberstufe.
+	 *
+	 * @param conn       die aktuelle Datenbankverbindung
+	 * @param halbjahr   das Halbjahr
+	 * @param abschnitt  der Schuljahresabschnitt
+	 *
+	 * @return die Menge der Kurse (DB-DTOs)
+	 */
+	public static Set<DTOKurs> getOberstufenKurseInAbschnitt(final DBEntityManager conn, final GostHalbjahr halbjahr,
+			final DTOSchuljahresabschnitte abschnitt) {
+		final List<DTOKurs> kurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = ?1 AND e.Schuljahresabschnitts_ID = ?2",
+			DTOKurs.class, halbjahr.jahrgang, abschnitt.ID);
+		final Set<DTOKurs> result = new HashSet<>();
+		for (final DTOKurs kurs : kurse) {
+			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+			if (kursart != null)
+				result.add(kurs);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Prüft, ob in dem angebenen Schuljahresabschnitt für das angebene Halbjahr der gymnasialen Oberstufe
+	 * bereits Kurse der gymnasialen Oberstufe vorhanden sind und Schülern in diesem Abschnitt bei diesen
+	 * Kursen bereits Quartalsnoten oder Noten zugewiesen wurden oder nicht.
+	 *
+	 * @param conn       die aktuelle Datenbankverbindung
+	 * @param halbjahr   das Halbjahr
+	 * @param abschnitt  der Schuljahresabschnitt
+	 *
+	 * @return true, wenn bereits Kurse vorhanden sind und Schüler dort Quartalsnoten oder Noten zugewiesen
+	 *     wurden, ansonsten false
+	 */
+	public static boolean pruefeHatNotenFuerOberstufeInAbschnitt(final DBEntityManager conn,
+			final GostHalbjahr halbjahr, final DTOSchuljahresabschnitte abschnitt) {
+    	// Bestimme alle Jahrgänge der Schule, welche den passenden ASD-Jahrgang haben
+    	final List<DTOJahrgang> listJahrgaengeGost = conn.queryNamed("DTOJahrgang.asdjahrgang", halbjahr.jahrgang, DTOJahrgang.class);
+    	final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
+    	if (listJahrgaengeGostIDs.isEmpty())
+    		return false;
+    	// Bestimme die SchuelerLernabschnitte von Schülern der Stufe
+    	final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(
+    		"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s ON s.Geloescht <> true AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = ?1 AND sla.Jahrgang_ID IN ?2",
+    		DTOSchuelerLernabschnittsdaten.class, abschnitt.ID, listJahrgaengeGostIDs);
+    	final List<Long> idsSchuelerLernabschnittsdaten = schuelerLernabschnittsdaten.stream().map(l -> l.ID).toList();
+    	if (idsSchuelerLernabschnittsdaten.isEmpty())
+    		return false;
+    	// Bestimme die Schueler-Leistungsdaten zu den Lernabschnitten, welche einen (Quartals-)Noteneintrag aufweisen
+    	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND NOT (e.NotenKrz IS NULL AND e.NotenKrzQuartal IS NULL)", DTOSchuelerLeistungsdaten.class,
+    			idsSchuelerLernabschnittsdaten);
+    	// ... und prüfe diese Lernabschnitte, ob sie Einträge für die gymnasiale Oberstufe beinhalten
+    	for (final DTOSchuelerLeistungsdaten l : leistungsdaten) {
+    		if (GostKursart.fromKuerzel(l.KursartAllg) == null)
+    			continue;
+    		return true;
+    	}
 		return false;
 	}
 

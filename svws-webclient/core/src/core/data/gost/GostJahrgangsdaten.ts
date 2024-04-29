@@ -57,14 +57,19 @@ export class GostJahrgangsdaten extends JavaObject {
 	public beginnZusatzkursSW : string | null = null;
 
 	/**
-	 * Gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0 = EF.1, 1=EF.2, ...)
+	 * Gibt die Anzahl der Blockung in der Kursplanung für die jeweilige Halbjahre der Oberstufe bei dem Abiturjahrgang an. Diese müssen nicht zwingend persistiert sein (Index 0=EF.1, 1=EF.2, ...)
 	 */
 	public anzahlKursblockungen : Array<number> = Array(6).fill(0);
 
 	/**
-	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...)
+	 * Gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0=EF.1, 1=EF.2, ...)
 	 */
 	public istBlockungFestgelegt : Array<boolean> = Array(6).fill(false);
+
+	/**
+	 * Gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits (Quartals-)Noten in den Leistungsdaten vorhanden sind (0=EF.1, 1=EF.2, ...)
+	 */
+	public existierenNotenInLeistungsdaten : Array<boolean> = Array(6).fill(false);
 
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe
@@ -111,6 +116,9 @@ export class GostJahrgangsdaten extends JavaObject {
 		for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
 			result.istBlockungFestgelegt[i] = obj.istBlockungFestgelegt[i];
 		}
+		for (let i = 0; i < obj.existierenNotenInLeistungsdaten.length; i++) {
+			result.existierenNotenInLeistungsdaten[i] = obj.existierenNotenInLeistungsdaten[i];
+		}
 		if ((obj.beratungslehrer !== undefined) && (obj.beratungslehrer !== null)) {
 			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
@@ -151,6 +159,18 @@ export class GostJahrgangsdaten extends JavaObject {
 				const elem = obj.istBlockungFestgelegt[i];
 				result += JSON.stringify(elem);
 				if (i < obj.istBlockungFestgelegt.length - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.existierenNotenInLeistungsdaten) {
+			result += '"existierenNotenInLeistungsdaten" : []';
+		} else {
+			result += '"existierenNotenInLeistungsdaten" : [ ';
+			for (let i = 0; i < obj.existierenNotenInLeistungsdaten.length; i++) {
+				const elem = obj.existierenNotenInLeistungsdaten[i];
+				result += JSON.stringify(elem);
+				if (i < obj.existierenNotenInLeistungsdaten.length - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -225,6 +245,21 @@ export class GostJahrgangsdaten extends JavaObject {
 				result += '"istBlockungFestgelegt" : []';
 			} else {
 				result += '"istBlockungFestgelegt" : [ ';
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
+					result += JSON.stringify(elem);
+					if (i < a.length - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.existierenNotenInLeistungsdaten !== "undefined") {
+			const a = obj.existierenNotenInLeistungsdaten;
+			if (!a) {
+				result += '"existierenNotenInLeistungsdaten" : []';
+			} else {
+				result += '"existierenNotenInLeistungsdaten" : [ ';
 				for (let i = 0; i < a.length; i++) {
 					const elem = a[i];
 					result += JSON.stringify(elem);

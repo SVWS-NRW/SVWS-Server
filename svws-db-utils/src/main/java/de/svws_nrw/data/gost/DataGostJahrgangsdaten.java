@@ -139,6 +139,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
 	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
 	    		daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
+	    		daten.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, abschnitt);
 	    	}
     	}
     	daten.anzahlKursblockungen = DataGostBlockungsliste.getAnzahlBlockungen(conn, daten.abiturjahr);

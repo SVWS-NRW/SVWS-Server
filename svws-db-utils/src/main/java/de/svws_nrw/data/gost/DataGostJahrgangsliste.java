@@ -377,7 +377,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		// Prüfe, ob der Abiturjahrgang existiert und bereits persistierte Leistungsdaten hat...
 		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahrgang);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
-			if (jahrgangsdaten.istBlockungFestgelegt[hj.id])
+			if ((jahrgangsdaten.istBlockungFestgelegt[hj.id]) || (jahrgangsdaten.existierenNotenInLeistungsdaten[hj.id]))
 				throw new ApiOperationException(Status.BAD_REQUEST, "Ein Abiturjahrgang mit bereits vorhandenen Leistungsdaten kann nicht entfernt werden.");
 		if (jahrgangsdaten.istAbgeschlossen)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein abgeschlossener Abiturjahrgang kann nicht entfernt werden.");

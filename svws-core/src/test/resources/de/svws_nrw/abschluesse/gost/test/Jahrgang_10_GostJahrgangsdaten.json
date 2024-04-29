@@ -25,5 +25,13 @@
     false,
     false
   ],
+  "existierenNotenInLeistungsdaten": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
   "beratungslehrer": []
 }
