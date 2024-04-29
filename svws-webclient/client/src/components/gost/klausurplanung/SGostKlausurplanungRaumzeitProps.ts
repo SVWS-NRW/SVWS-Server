@@ -17,9 +17,11 @@ import type { Ref, WritableComputedRef } from "vue";
 export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
+	gotoTermin: (value: number) => Promise<void>;
 	kMan: () => GostKursklausurManager;
 	stundenplanmanager: () => StundenplanManager;
 	hatStundenplanManager: boolean,
+	raummanager: () => GostKlausurraumManager | undefined;
 	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
@@ -27,7 +29,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum | null, sks: List<GostSchuelerklausurTermin>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	terminauswahl : WritableComputedRef<GostKlausurtermin | null>;
+	setRaumTermin : (termin: GostKlausurtermin | null) => Promise<void>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 }

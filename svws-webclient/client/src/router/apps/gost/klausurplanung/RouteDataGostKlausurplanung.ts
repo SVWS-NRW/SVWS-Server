@@ -14,6 +14,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeApp } from "../../RouteApp";
+import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -31,7 +32,8 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
 	quartalsauswahl: 0 | 1 | 2 ;
-	terminauswahl: GostKlausurtermin | null;
+	// terminauswahl: GostKlausurtermin | null;
+	raummanager: GostKlausurraumManager | undefined;
 }
 
 const defaultState = <RouteStateGostKlausurplanung> {
@@ -49,6 +51,7 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	quartalsauswahl: 0,
 	terminauswahl: null,
 	view: routeGostKlausurplanungVorgaben,
+	raummanager: undefined,
 };
 
 
@@ -229,6 +232,17 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.klausurvorgabenmanager;
 	}
 
+	public get raummanager(): GostKlausurraumManager | undefined {
+		return this._state.value.raummanager;
+	}
+
+	setRaumTermin = async (termin: GostKlausurtermin | null) => {
+		if (this._state.value.raummanager === undefined || termin !== this._state.value.raummanager.getHauptTermin()) {
+			this._state.value.raummanager = termin !== null ? await this.erzeugeKlausurraummanager(termin) : undefined;
+			this.commit();
+		}
+	}
+
 	quartalsauswahl = computed<0 | 1 | 2>({
 		get: () => this._state.value.quartalsauswahl,
 		set: (value) => {
@@ -237,13 +251,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 	});
 
-	terminauswahl = computed<GostKlausurtermin | null>({
-		get: () => this._state.value.terminauswahl,
-		set: (value) => {
-			this._state.value.terminauswahl = value;
-			this.commit();
-		}
-	});
+	gotoTermin = async (idtermin: number) => {
+		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(this.abiturjahr, this.halbjahr.id, idtermin ));
+	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
@@ -409,7 +419,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
 		const manager = new GostKlausurraumManager(krsCollection.raeume, krsCollection.raumstunden, krsCollection.sktRaumstunden, krsCollection.idsSchuelerklausurtermine, this.kursklausurmanager, termin);
-		this.commit();
 		api.status.stop();
 		return manager;
 	}

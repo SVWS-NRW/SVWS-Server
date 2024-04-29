@@ -27,24 +27,25 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 		return false;
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	public getRoute(abiturjahr: number, halbjahr: number, idtermin: number) : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idtermin }};
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
-		console.log("LALALA");
 		if (to_params.idtermin instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idTermin = !to_params.idtermin ? null : parseInt(to_params.idtermin);
-		routeGostKlausurplanung.data.terminauswahl.value = (idTermin === null) ? null : routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrException(idTermin);
-		console.log(routeGostKlausurplanung.data.terminauswahl.value);
+		// if (idTermin !== null)
+		// 	routeGostKlausurplanung.data.gotoTermin(idTermin);
+		routeGostKlausurplanung.data.setRaumTermin(idTermin === null ? null : routeGostKlausurplanung.data.kursklausurmanager.terminGetByIdOrException(idTermin));
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
+			gotoTermin: routeGostKlausurplanung.data.gotoTermin,
 			kMan: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager()},
 			stundenplanmanager: () => routeGostKlausurplanung.data.stundenplanmanager,
 			hatStundenplanManager: routeGostKlausurplanung.data.hatStundenplanManager,
@@ -55,7 +56,8 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
 			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-			terminauswahl: routeGostKlausurplanung.data.terminauswahl,
+			setRaumTermin: routeGostKlausurplanung.data.setRaumTermin,
+			raummanager: () => routeGostKlausurplanung.data.raummanager,
 			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 		}

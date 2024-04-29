@@ -25,8 +25,8 @@
 						@drop="onDrop(termin)"
 						:data="termin"
 						:class="{
-							'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': terminauswahl.value?.id === termin.id,
-							'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': terminauswahl.value?.id !== termin.id,
+							'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': raummanager() !== undefined && raummanager()!.getHauptTermin().id === termin.id,
+							'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': raummanager() !== undefined && raummanager()!.getHauptTermin().id !== termin.id,
 						}">
 						<s-gost-klausurplanung-termin :termin
 							:k-man
@@ -34,22 +34,22 @@
 							:draggable="isDraggable"
 							drag-icon
 							:klausur-css-classes="calculatCssClassesKlausur"
-							:compact-with-date="terminauswahl.value?.id !== termin.id"
+							:compact-with-date="raummanager() === undefined || raummanager()!.getHauptTermin().id !== termin.id"
 							:show-kursklausuren-nachschreiber="true">
-							<template #main v-if="terminauswahl.value?.id !== termin.id"><template /></template>
+							<template #main v-if="raummanager() === undefined || raummanager()!.getHauptTermin().id !== termin.id"><template /></template>
 						</s-gost-klausurplanung-termin>
 					</li>
 				</ul>
 			</svws-ui-content-card>
-			<svws-ui-content-card v-if="terminauswahl.value === null">
+			<svws-ui-content-card v-if="raummanager() === undefined">
 				<div class="h-full rounded-lg shadow-inner flex items-center justify-center py-8 px-3 text-center">
 					<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
 				</div>
 			</svws-ui-content-card>
 			<template v-else>
-				<s-gost-klausurplanung-raumzeit-termin :termin="terminauswahl.value"
+				<s-gost-klausurplanung-raumzeit-termin :termin="raummanager()!.getHauptTermin()"
 					:k-man
-					:raummanager="() => (raummanager as GostKlausurraumManager)"
+					:raummanager="() => raummanager()!"
 					:stundenplanmanager="stundenplanmanager()"
 					:create-klausurraum
 					:loesche-klausurraum
@@ -65,7 +65,8 @@
 </template>
 
 <script setup lang="ts">
-	import { GostKlausurraumManager, GostSchuelerklausurTermin, ListUtils} from '@core';
+	import type { GostKlausurraumManager} from '@core';
+	import { GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import { ref, onMounted } from 'vue';
@@ -74,14 +75,15 @@
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
-	const raummanager = ref<GostKlausurraumManager>(new GostKlausurraumManager());
+	// const raummanager = ref<GostKlausurraumManager>(new GostKlausurraumManager());
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
-		if (props.terminauswahl.value === null || termin.id !== props.terminauswahl.value.id) {
-			raummanager.value = await props.erzeugeKlausurraummanager(termin);
-			props.terminauswahl.value = termin;
-			console.log(props.terminauswahl.value?.id);
-		}
+		await props.setRaumTermin(termin);
+		// if (props.terminauswahl.value === null || termin.id !== props.terminauswahl.value.id) {
+		// 	props.raummanager() = await props.erzeugeKlausurraummanager(termin);
+		// 	props.terminauswahl.value = termin;
+		await props.gotoTermin(termin.id);
+		// }
 
 	}
 
@@ -91,10 +93,11 @@
 
 	const calculatCssClassesKlausur = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
-		return raummanager.value !== null
+		const rm = props.raummanager();
+		return rm !== undefined
 			? {
-				"text-black/50 dark:text-white/50": raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
-				"": !raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
+				"text-black/50 dark:text-white/50": rm.isAlleSchuelerklausurenVerplant(klausur),
+				"": !rm.isAlleSchuelerklausurenVerplant(klausur),
 			}
 			: {}
 	};
@@ -103,12 +106,13 @@
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	function isDraggable(object: any) : boolean {
-		if (props.terminauswahl.value !== null && object instanceof GostKursklausur && raummanager.value !== null) {
+		const rm = props.raummanager();
+		if (object instanceof GostKursklausur && rm !== undefined) {
 			//if (object.idTermin === props.terminauswahl.value.id)
-			return !raummanager.value.isAlleSchuelerklausurenVerplant(object);
-		} else if (props.terminauswahl.value !== null && object instanceof GostKlausurtermin && raummanager.value !== null) {
-			return object.id === props.terminauswahl.value.id && raummanager.value.schuelerklausurOhneRaumGetMenge().size() > 0;
-		} else if (props.terminauswahl.value !== null && object instanceof GostSchuelerklausurTermin && raummanager.value !== null) {
+			return !rm.isAlleSchuelerklausurenVerplant(object);
+		} else if (object instanceof GostKlausurtermin && rm !== undefined) {
+			return object.id === rm.getHauptTermin().id && rm.schuelerklausurOhneRaumGetMenge().size() > 0;
+		} else if (object instanceof GostSchuelerklausurTermin && rm !== undefined) {
 			return true;
 		}
 		return false;
@@ -117,23 +121,24 @@
 	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKursklausur && raummanager.value !== null) {
+		const rm = props.raummanager();
+		if (dragData.value instanceof GostKursklausur && rm !== undefined) {
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id), rm);
 			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurGetMengeByKursklausurid(dragData.value.id), rm);
 			}
-		} else if (dragData.value instanceof GostKlausurtermin && raummanager.value !== null) {
+		} else if (dragData.value instanceof GostKlausurtermin && rm !== undefined) {
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value.schuelerklausurOhneRaumGetMenge(), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(zone, rm.schuelerklausurOhneRaumGetMenge(), rm);
 			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value.schuelerklausurOhneRaumGetMenge(), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(null, rm.schuelerklausurOhneRaumGetMenge(), rm);
 			}
-		} else if (dragData.value instanceof GostSchuelerklausurTermin && raummanager.value !== null) {
+		} else if (dragData.value instanceof GostSchuelerklausurTermin && rm !== undefined) {
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, ListUtils.create1(dragData.value as GostSchuelerklausurTermin), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(zone, ListUtils.create1(dragData.value as GostSchuelerklausurTermin), rm);
 			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, ListUtils.create1(dragData.value), raummanager.value as GostKlausurraumManager);
+				await props.setzeRaumZuSchuelerklausuren(null, ListUtils.create1(dragData.value), rm);
 			}
 		}
 	};
