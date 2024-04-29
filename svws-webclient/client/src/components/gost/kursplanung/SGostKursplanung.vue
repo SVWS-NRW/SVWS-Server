@@ -25,6 +25,11 @@
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
 							<span class="icon-sm i-ri-file-copy-line" /> Ableiten
 						</svws-ui-button>
+						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
+							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
+								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
+							</svws-ui-button>
+						</s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben>
 						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :get-datenmanager :ergebnis-aktivieren :blockungsname v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
 								<span class="icon-sm i-ri-arrow-right-circle-line" /> Übertragen
@@ -35,11 +40,6 @@
 								<span class="icon-sm i-ri-loop-left-line" /> Synchronisieren
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
-						<s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben :get-datenmanager :ergebnis-hochschreiben v-slot="{ openModal }">
-							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
-								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
-							</svws-ui-button>
-						</s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben>
 					</div>
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
