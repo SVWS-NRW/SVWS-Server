@@ -136,18 +136,32 @@
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { HashSet, SetUtils } from "@core";
+	import { GostHalbjahr, HashSet, SetUtils } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
+
+	const aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.jahrgangsdaten().jahrgang, props.jahrgangsdaten().halbjahr));
 
 	const collapsed = ref<boolean>(true);
 	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
 	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
 	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
-	const vergangenheit = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id + 1]);
+	const vergangenheit = computed<boolean>(() => {
+		const jgdaten = props.jahrgangsdaten();
+		if (jgdaten.istAbgeschlossen)
+			return true;
+		if (aktuellesHalbjahr.value === null)
+			return false;
+		return props.halbjahr.id < aktuellesHalbjahr.value.id;
+	});
 	const persistiert = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
-	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
-	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
+	const hatNoten = computed<boolean>(() => props.jahrgangsdaten().existierenNotenInLeistungsdaten[props.halbjahr.id]);
+	const aktivieren_moeglich = computed<boolean>(() => {
+		return !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt;
+	});
+	const synchronisieren_moeglich = computed<boolean>(() => {
+		return !vergangenheit.value && !hatNoten.value && persistiert.value;
+	});
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
