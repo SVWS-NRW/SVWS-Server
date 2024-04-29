@@ -11,16 +11,16 @@
 					<svws-ui-select :items="blockungen" :model-value="undefined" @update:model-value="blockung => blockung && setBlockung(blockung)" :item-text="i=>i.name" title="Blockung" />
 					<template v-if="ergebnisse.size()">
 						<svws-ui-select :items="ergebnisse" v-model="ergebnis" :item-text="i=>i.id.toString()" title="Ergebnis-ID" ref="selectErgebnis" />
-						<svws-ui-input-number v-model="unterrichtID" :min="1" />
+						<svws-ui-input-number v-model="unterrichtID" :min="1" placeholder="Unterricht-ID" />
 					</template>
 					<div v-else>Diese Blockung hat keine Ergebnisse</div>
 				</template>
 				<div v-else>Für diesen Abiturjahrgang existieren keine Blockungen</div>
-				<svws-ui-button type="primary" @click="untisExport" :disabled="!ergebnis && !ergebnisse.size()">
-					<svws-ui-spinner :spinning="loading" /> Exportieren
-				</svws-ui-button>
 			</svws-ui-input-wrapper>
 			<div v-else>Es liegen keine Abiturjahrgänge vor</div>
+			<svws-ui-button v-if="ergebnisse.size()" type="primary" @click="untisExport" :disabled="!ergebnis" class="mt-2">
+				<svws-ui-spinner :spinning="loading" /> Exportieren
+			</svws-ui-button>
 		</svws-ui-content-card>
 	</div>
 </template>
