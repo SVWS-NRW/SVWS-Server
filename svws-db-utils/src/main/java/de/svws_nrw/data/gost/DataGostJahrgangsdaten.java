@@ -106,6 +106,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 		final GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
+		daten.halbjahr = aktuellerAbschnitt.Abschnitt;
 		if (daten.abiturjahr >= 0) {
 			final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {

@@ -16,12 +16,17 @@ export class GostJahrgangsdaten extends JavaObject {
 	public jahrgang : string | null = null;
 
 	/**
+	 * Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet.
+	 */
+	public halbjahr : number = 0;
+
+	/**
 	 * Die textuelle Bezeichnung für den Abiturjahrgang
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
+	 * Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
 	 */
 	public istAbgeschlossen : boolean = false;
 
@@ -96,6 +101,9 @@ export class GostJahrgangsdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
 		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		if (typeof obj.halbjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute halbjahr');
+		result.halbjahr = obj.halbjahr;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.istAbgeschlossen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
@@ -131,6 +139,7 @@ export class GostJahrgangsdaten extends JavaObject {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"halbjahr" : ' + obj.halbjahr + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
@@ -199,6 +208,9 @@ export class GostJahrgangsdaten extends JavaObject {
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		}
+		if (typeof obj.halbjahr !== "undefined") {
+			result += '"halbjahr" : ' + obj.halbjahr + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';

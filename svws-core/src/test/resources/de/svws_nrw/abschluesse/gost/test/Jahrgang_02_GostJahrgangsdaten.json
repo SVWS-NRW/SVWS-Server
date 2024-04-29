@@ -1,6 +1,7 @@
 {
   "abiturjahr": 2020,
   "jahrgang": "Q1",
+  "halbjahr": 2,
   "bezeichnung": "Abi 2020 (Q1)",
   "istAbgeschlossen": false,
   "textBeratungsbogen": null,

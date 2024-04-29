@@ -26,11 +26,15 @@ public class GostJahrgangsdaten {
 	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist", example = "Q1")
 	public String jahrgang;
 
+	/** Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet. */
+	@Schema(description = "das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet", example = "Q1")
+	public int halbjahr;
+
 	/** Die textuelle Bezeichnung für den Abiturjahrgang */
 	@Schema(description = "die textuelle Bezeichnung für den Abiturjahrgang", example = "Q1")
 	public String bezeichnung;
 
-	/** Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
+	/** Gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. */
 	@Schema(description = "gibt an, ob das Abitur für diesen Jahrgang bereits abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet", example = "false")
 	public boolean istAbgeschlossen;
 

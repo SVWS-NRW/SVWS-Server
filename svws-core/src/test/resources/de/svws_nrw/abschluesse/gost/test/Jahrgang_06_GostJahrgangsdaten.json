@@ -1,6 +1,7 @@
 {
   "abiturjahr": 2022,
   "jahrgang": "EF",
+  "halbjahr": 2,
   "bezeichnung": "Gemischte Testdaten (3)",
   "istAbgeschlossen": false,
   "textBeratungsbogen": null,
