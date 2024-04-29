@@ -1,13 +1,14 @@
 import type { GostJahrgangsdaten, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+import type { WritableComputedRef } from "vue";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
 	jahrgangsdaten: GostJahrgangsdaten;
 	ignoreEmpty?: boolean;
 	id: number;
-	kwAuswahl: StundenplanKalenderwochenzuordnung;
+	kalenderwoche: WritableComputedRef<StundenplanKalenderwochenzuordnung>;
 	manager: () => StundenplanManager;
 	kMan: () => GostKursklausurManager;
 	wochentyp: () => number;

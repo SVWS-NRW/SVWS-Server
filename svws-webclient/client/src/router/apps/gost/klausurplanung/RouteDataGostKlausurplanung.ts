@@ -1,5 +1,6 @@
 
 import type { GostJahrgangsdaten, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate} from "@core";
+import { StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin, HashMap } from "@core";
 import { GostKlausurenCollectionSkrsKrs, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
@@ -31,8 +32,7 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
 	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
-	quartalsauswahl: 0 | 1 | 2 ;
-	// terminauswahl: GostKlausurtermin | null;
+	kalenderwoche: StundenplanKalenderwochenzuordnung;
 	raummanager: GostKlausurraumManager | undefined;
 }
 
@@ -48,10 +48,11 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	klausurvorgabenmanager: undefined,
 	stundenplanmanager: undefined,
 	kursmanager: new KursManager(),
-	quartalsauswahl: 0,
+	// quartalsauswahl: 0,
 	terminauswahl: null,
 	view: routeGostKlausurplanungVorgaben,
 	raummanager: undefined,
+	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
 };
 
 
@@ -192,6 +193,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
 			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
+			if (this.kalenderwoche.value.jahr === -1)
+				this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
 			this.setPatchedState(Object.assign(result, {
 				stundenplanmanager,
 			}));
@@ -244,12 +247,31 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	quartalsauswahl = computed<0 | 1 | 2>({
-		get: () => this._state.value.quartalsauswahl,
+		get: () => {
+			const value = parseInt(api.config.getValue("gost.klausurplan.quartal"));
+			return (value === 1 || value === 2) ? value : 0;
+		},
 		set: (value) => {
-			this._state.value.quartalsauswahl = value;
-			this.commit();
+			if (this.quartalsauswahl.value !== value) {
+				api.config.setValue("gost.klausurplan.quartal", value.toString());
+				this.commit();
+			}
 		}
 	});
+
+	kalenderwoche = computed<StundenplanKalenderwochenzuordnung>({
+		get: () => this._state.value.kalenderwoche,
+		set: (value) => {
+			if (this._state.value.kalenderwoche !== value) {
+				this._state.value.kalenderwoche = value;
+				this.commit();
+			}
+		}
+	});
+
+	gotoKalenderwoche = async (kw: number) => {
+		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw ));
+	}
 
 	gotoTermin = async (idtermin: number) => {
 		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(this.abiturjahr, this.halbjahr.id, idtermin ));

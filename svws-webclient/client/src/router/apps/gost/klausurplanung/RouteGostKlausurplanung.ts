@@ -45,6 +45,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		api.config.addElements([
+			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
 			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
 		]);
 		this.isHidden = (params?: RouteParams) => {
@@ -72,11 +73,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe die Parameter zunächst allgemein
-			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array)
+			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array || to_params.kw instanceof Array)
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 			const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
 			const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 			const idTermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
+			const kw = !to_params.kw ? undefined : parseInt(to_params.kw);
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
@@ -97,6 +99,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			if (changedHalbjahr || (to.name === this.name)) {
 				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idTermin)
 					return this.data.view.getRoute(abiturjahr, halbjahr.id, idTermin);
+				if (this.data.view.name === "gost.klausurplanung.kalender" && kw)
+					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw);
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 			}
 		} catch(e: unknown) {

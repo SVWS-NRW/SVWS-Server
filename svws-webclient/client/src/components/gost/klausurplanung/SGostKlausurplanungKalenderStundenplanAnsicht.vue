@@ -4,12 +4,12 @@
 		<div class="svws-ui-stundenplan--head">
 			<slot name="kwAuswahl">
 				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
-					KW {{ kwAuswahl?.kw || '–' }}
+					KW {{ kalenderwoche.value.kw || '–' }}
 				</div>
 			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
-				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }}
+				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag)) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -68,7 +68,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +

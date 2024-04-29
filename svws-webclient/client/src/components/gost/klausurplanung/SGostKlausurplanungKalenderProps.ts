@@ -4,6 +4,7 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurtermin,
 	GostKursklausurManager,
+	StundenplanKalenderwochenzuordnung,
 	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
@@ -18,4 +19,6 @@ export interface GostKlausurplanungKalenderProps {
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
+	kalenderwoche: WritableComputedRef<StundenplanKalenderwochenzuordnung>;
+	gotoKalenderwoche: (value: number) => Promise<void>;
 }
