@@ -107,7 +107,7 @@ procedure InitializeSVWSServerConfigurationSection(Page: TWizardPage; Top: Integ
     CheckBoxInstallSVWSServer.Top := Top;
     CheckBoxInstallSVWSServer.Width := Page.SurfaceWidth;
     CheckBoxInstallSVWSServer.Height := ScaleY(17);
-    CheckBoxInstallSVWSServer.Caption := ' Installiere SVWS-Server @version@';
+    CheckBoxInstallSVWSServer.Caption := ' Installiere SVWS-Server @version@@snapshot@';
     if IsSVWSServerUpdate then
       begin
         CheckBoxInstallSVWSServer.Caption := CheckBoxInstallSVWSServer.Caption + ' (bereits installiert: ' + SVWSExistingVersion + ')';

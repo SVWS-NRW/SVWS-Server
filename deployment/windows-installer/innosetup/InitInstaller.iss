@@ -119,7 +119,7 @@ function InitializeSetup(): Boolean;
             result := false;
             Exit;
           end;
-        if CompareVersions(SVWSNewVersion, SVWSExistingVersion) = 0 then
+        if ((CompareVersions(SVWSNewVersion, SVWSExistingVersion) = 0) and (CheckIsSnapshotVersion(SVWSNewVersion) and not CheckIsSnapshotVersion(SVWSExistingVersion))) then
           begin
             Log('WARNUNG: Die SVWS-Server-Version ' + SVWSNewVersion + ' ist bereits installiert.');
             msgBoxResult := MsgBox('Die Version ' + SVWSNewVersion + ' ist bereits installiert. Soll die Installation dennoch fortgesetzt und die bestehenden Programmdateien überschrieben werden?', mbConfirmation, MB_YESNO);

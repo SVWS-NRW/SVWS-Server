@@ -24,17 +24,49 @@ function CheckCertificateHostname(name : String): Boolean;
 { Ermittelt die drei Integer-Werte einer dreistelligen Versionsnummer 
   @param v   die Versionsnummer als String
   @return ein Array mit den drei Teilen der Version }
-function GetVersionFromString(v: String) : array[0..2] of Integer;
+function GetVersionFromString(v: String) : array[0..3] of Integer;
   var p: Integer;
       tmp: String;
   begin
-    p := Pos('.', v);
-    result[0] := StrToIntDef(Copy(v, 1, p-1), -1);
-    tmp := Copy(v, p+1, Length(v) - p);
+    tmp := v;
+    p := Pos('-', tmp);
+    if p > 0 then
+      begin
+        tmp := Copy(tmp, 1, p-1);
+      end;
+    p := Pos('+', tmp);
+    if p > 0 then
+      begin
+        tmp := Copy(tmp, 1, p-1);
+        result[3] := StrToIntDef(Copy(tmp, p+1, Length(tmp) - p), -1);
+      end
+    else
+      begin
+        result[3] := 0;
+      end;
+    p := Pos('.', tmp);
+    result[0] := StrToIntDef(Copy(tmp, 1, p-1), -1);
+    tmp := Copy(tmp, p+1, Length(tmp) - p);
     p := Pos('.', tmp);
     result[1] := StrToIntDef(Copy(tmp, 1, p-1), -1);
     result[2] := StrToIntDef(Copy(tmp, p+1, Length(tmp) - p), -1);
   end;
+
+
+{ Prüft, ob es sich bei der übergebenen Version um eine Snapshot-Version handelt oder nicht 
+  @param v   die Versionsnummer als String
+  @return true, falls es sich um eine Snapshot-Version handelt }
+function CheckIsSnapshotVersion(v: String) : Boolean;
+  var p: Integer;
+  begin
+  	result := false;
+    p := Pos('-', v);
+    if p > 0 then
+      begin
+        result := (CompareText('SNAPSHOT', Copy(v, p+1, Length(v) - p)) = 0);
+      end;
+  end;
+
 
 { Vergleicht die beiden als String übergebenen Versionen miteinander und gibt
   zurück, welche größer (>0) bzw. kleiner (<0) ist oder ob sie identisch sind (=0)
@@ -52,7 +84,11 @@ function CompareVersions(a, b: String) : Integer;
       begin
         tmp := versionA[1] - versionB[1];
         if tmp = 0 then
-          tmp := versionA[2] - versionB[2];
+          begin
+            tmp := versionA[2] - versionB[2];
+            if tmp = 0 then
+                tmp := versionA[3] - versionB[3];
+          end;
       end;
     result := tmp;
   end;
