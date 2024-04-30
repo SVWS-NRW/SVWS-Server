@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
+		<svws-ui-radio-option name="rgQuartalAuswahl" label="Alle" value="0" @click="quartalsauswahl.value = 0" :model-value="quartalsauswahl.value.toString()" />
 		<svws-ui-radio-option name="rgQuartalAuswahl" :label="halbjahr === GostHalbjahr.Q22 ? 'Halbjahr' : '1. Quartal'" value="1" @click="quartalsauswahl.value = 1" :model-value="quartalsauswahl.value.toString()" />
 		<svws-ui-radio-option name="rgQuartalAuswahl" :label="halbjahr === GostHalbjahr.Q22 ? 'Abitur' : '2. Quartal'" value="2" @click="quartalsauswahl.value = 2" :model-value="quartalsauswahl.value.toString()" />
-		<svws-ui-radio-option name="rgQuartalAuswahl" label="Alle" value="0" @click="quartalsauswahl.value = 0" :model-value="quartalsauswahl.value.toString()" />
-		<svws-ui-checkbox class="ml-5" type="toggle" v-if="zeigeAlleJahrgaenge" :disabled="setZeigeAlleJahrgaenge === undefined" :model-value="zeigeAlleJahrgaenge()" @update:model-value="setZeigeAlleJahrgaenge">Jahrgangsübergreifende Planung</svws-ui-checkbox>
+		<svws-ui-checkbox class="ml-8" type="toggle" v-if="zeigeAlleJahrgaenge" :disabled="setZeigeAlleJahrgaenge === undefined" :model-value="zeigeAlleJahrgaenge()" @update:model-value="setZeigeAlleJahrgaenge">Jahrgangsübergreifend</svws-ui-checkbox>
 	</svws-ui-radio-group>
 </template>
 
