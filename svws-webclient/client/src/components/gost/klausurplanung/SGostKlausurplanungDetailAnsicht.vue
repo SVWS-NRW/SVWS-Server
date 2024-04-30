@@ -2,21 +2,20 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<div class="page--content page--content--full relative flex-col">
-		<div class="text-headline">Klausurplan {{ jahrgangsdaten.jahrgang }}, {{ halbjahr.halbjahr }}. Halbjahr{{ quartalsauswahl.value === 0 ? "" : ", " + quartalsauswahl.value + ". Quartal" }}</div>
-
-		<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false).size() > 0">
-			<s-gost-klausurplanung-detail-ansicht-termin class="mb-10"
-				v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false)"
-				:key="termin.id"
-				:termin="termin"
-				:k-man="kMan"
-				:erzeuge-klausurraummanager="erzeugeKlausurraummanager"
-				:stundenplanmanager="stundenplanmanager()" />
-		</div>
-		<div v-else>
-			Es wurden noch keine Klausurtermine geplant.
-		</div>
+	<div class="page--content relative flex-col">
+		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
+			<div v-if="kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false).size() > 0" class="flex flex-col gap-20 mt-8">
+				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminMitDatumGetHTMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, false)"
+					:key="termin.id"
+					:termin="termin"
+					:k-man="kMan"
+					:erzeuge-klausurraummanager="erzeugeKlausurraummanager"
+					:stundenplanmanager="stundenplanmanager()" />
+			</div>
+			<div v-else>
+				<span>Es wurden noch keine Klausurtermine geplant.</span>
+			</div>
+		</svws-ui-content-card>
 	</div>
 </template>
 
