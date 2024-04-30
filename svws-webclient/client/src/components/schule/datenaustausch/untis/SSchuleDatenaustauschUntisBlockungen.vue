@@ -8,9 +8,9 @@
 				<svws-ui-select :items="jahrgaenge" :model-value="abiturjahrgang()" :item-text="i=>i.abiturjahr.toString()" @update:model-value="jahrgang => jahrgang && setAbiturjahrgang(jahrgang)" title="Abiturjahrgang" />
 				<svws-ui-select v-if="abiturjahrgang()" :items="GostHalbjahr.values()" :model-value="halbjahr()" @update:model-value="hj => hj && setHalbjahr(hj)" :item-text="i=>i.beschreibung" title="Halbjahr" ref="selectHalbjahr" />
 				<template v-if="blockungen.size">
-					<svws-ui-select :items="blockungen" :model-value="undefined" @update:model-value="blockung => blockung && setBlockung(blockung)" :item-text="i=>i.name" title="Blockung" />
+					<svws-ui-select :items="blockungen" :model-value="blockung()" @update:model-value="blockung => blockung && setBlockung(blockung)" :item-text="i=>i.name" title="Blockung" />
 					<template v-if="ergebnisse.size()">
-						<svws-ui-select :items="ergebnisse" v-model="ergebnis" :item-text="i=>i.id.toString()" title="Ergebnis-ID" ref="selectErgebnis" />
+						<svws-ui-select :items="ergebnisse" :model-value="ergebnis()" @update:model-value="ergebnis => ergebnis && setErgebnis(ergebnis)" :item-text="i=>i.id.toString()" title="Ergebnis-ID" ref="selectErgebnis" />
 						<svws-ui-input-number v-model="unterrichtID" :min="1" placeholder="Unterricht-ID" />
 					</template>
 					<div v-else>Diese Blockung hat keine Ergebnisse</div>
@@ -30,7 +30,8 @@
 	import { computed, ref, watch } from 'vue';
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { SchuleDatenaustauschUntisBlockungenProps } from './SSchuleDatenaustauschUntisBlockungenProps';
-	import { GostBlockungsergebnis, GostHalbjahr } from '@core';
+	import type { GostBlockungsergebnis} from '@core';
+	import { GostHalbjahr } from '@core';
 	import { SvwsUiSelect } from '@ui';
 
 	const props = defineProps<SchuleDatenaustauschUntisBlockungenProps>();
@@ -39,24 +40,8 @@
 
 	const jahrgaenge = computed(() => [...props.mapAbiturjahrgaenge().values()].filter(j => j.abiturjahr > 1));
 	const blockungen = computed(() => props.mapBlockungen());
-	// const blockung = computed(() => {
-	// 	for (const b of blockungen.value.values())
-	// 		if (b.istAktiv)
-	// 			return b;
-	// 	return blockungen.value.values().next().value;
-	// })
 
 	const ergebnisse = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung());
-	const ergebnis = computed(() => {
-		if (ergebnisse.value.size()) {
-			for (const e of ergebnisse.value)
-				if (e.istAktiv)
-					return e;
-			return ergebnisse.value.getFirst()
-		}
-		return new GostBlockungsergebnis()
-	});
-
 	watch(()=> props.abiturjahrgang(), () => selectHalbjahr.value?.reset());
 
 	const unterrichtID = ref<number>(1);

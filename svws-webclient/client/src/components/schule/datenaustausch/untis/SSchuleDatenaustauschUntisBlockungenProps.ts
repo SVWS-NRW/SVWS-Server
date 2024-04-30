@@ -1,4 +1,4 @@
-import type { ApiFile, GostBlockungListeneintrag, GostBlockungsdatenManager, GostHalbjahr, GostJahrgang  } from "@core";
+import type { ApiFile, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, GostJahrgang  } from "@core";
 
 export interface SchuleDatenaustauschUntisBlockungenProps {
 	mapAbiturjahrgaenge: () => Map<number, GostJahrgang>;
@@ -7,7 +7,10 @@ export interface SchuleDatenaustauschUntisBlockungenProps {
 	halbjahr: () => GostHalbjahr | undefined;
 	setHalbjahr: (halbjahr: GostHalbjahr) => Promise<void>;
 	mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
-	setBlockung: (blockung: GostBlockungListeneintrag) => Promise<void>
+	blockung: () => GostBlockungListeneintrag | undefined;
+	setBlockung: (blockung: GostBlockungListeneintrag) => Promise<void>;
+	ergebnis: () => GostBlockungsergebnis | undefined;
+	setErgebnis: (ergebnis: GostBlockungsergebnis) => Promise<void>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	exportUntisBlockungenZIP: (formData: FormData) => Promise<ApiFile>;
 }

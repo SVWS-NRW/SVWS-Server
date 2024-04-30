@@ -37,7 +37,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 			for (const child of this.children) {
 				if (to.name.startsWith(child.name)) {
 					this.data.setView(child, this.children);
-					return child.getRoute();
+					return child.getRoute(to_params);
 				}
 			}
 		}
