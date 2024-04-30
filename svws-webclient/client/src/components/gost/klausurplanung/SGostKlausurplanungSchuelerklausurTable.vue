@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-checkbox class="mb-5" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
+	<svws-ui-checkbox class="-mt-3 mb-5" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
 	<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle">
 		<template #noData>
 			<slot name="noData">
