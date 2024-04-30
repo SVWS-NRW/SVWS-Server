@@ -90,6 +90,10 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		return this._state.value.mapErgebnisse;
 	}
 
+	public async cleanup() {
+		this.setPatchedDefaultState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge });
+	}
+
 	public async ladeAbiturjahrgaenge() {
 		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema);
 		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();

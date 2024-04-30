@@ -61,6 +61,10 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<unknown,
 		}
 	}
 
+	public leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		return routeSchuleDatenaustauschUntis.data.cleanup();
+	}
+
 	public getRoute(to_params?: RouteParams) : RouteLocationRaw {
 		const { abiturjahr, halbjahr, idblockung, idergebnis } = to_params || {};
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idblockung, idergebnis}};
