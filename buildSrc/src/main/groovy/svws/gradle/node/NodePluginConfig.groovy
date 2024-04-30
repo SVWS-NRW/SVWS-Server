@@ -31,7 +31,7 @@ abstract class NodePluginConfig {
     	this.project = p;
     	this.rootProject = p.rootProject;
     	url.convention('https://nodejs.org/dist/v');
-    	version.convention('20.12.1'); // https://nodejs.org/en/download
+    	version.convention('20.12.2'); // https://nodejs.org/en/download
     	npmVersion.convention('10.5.0');
     	tsVersion.convention('5.4.5'); // https://github.com/microsoft/TypeScript/releases
     	tsNodeTypesVersion.convention('20.12.7'); // https://www.npmjs.com/package/@types/node
