@@ -5,12 +5,12 @@
 				Um eine ZIP-Datei zu erzeugen, werden die folgenden Angaben benötigt:
 			</div>
 			<svws-ui-input-wrapper v-if="jahrgaenge.length" :grid="2">
-				<svws-ui-select :items="jahrgaenge" :model-value="abiturjahrgang()" :item-text="i=>i.abiturjahr.toString()" @update:model-value="jahrgang => jahrgang && setAbiturjahrgang(jahrgang)" title="Abiturjahrgang" />
-				<svws-ui-select v-if="abiturjahrgang()" :items="GostHalbjahr.values()" :model-value="halbjahr()" @update:model-value="hj => hj && setHalbjahr(hj)" :item-text="i=>i.beschreibung" title="Halbjahr" ref="selectHalbjahr" />
-				<template v-if="blockungen.size">
-					<svws-ui-select :items="blockungen" :model-value="blockung()" @update:model-value="blockung => blockung && setBlockung(blockung)" :item-text="i=>i.name" title="Blockung" />
+				<svws-ui-select :items="jahrgaenge" :model-value="abiturjahrgang()" :item-text="i=>i.abiturjahr.toString()" @update:model-value="jahrgang => jahrgang && gotoAbiturjahrgang(jahrgang.abiturjahr)" title="Abiturjahrgang" />
+				<svws-ui-select v-if="abiturjahrgang()" :items="GostHalbjahr.values()" :model-value="halbjahr()" @update:model-value="hj => hj && gotoHalbjahr(hj.id)" :item-text="i=>i.beschreibung" title="Halbjahr" ref="selectHalbjahr" />
+				<template v-if="blockungen.size()">
+					<svws-ui-select :items="blockungen" :model-value="blockung()" @update:model-value="blockung => blockung && gotoBlockung(blockung.id)" :item-text="i=>i.name" title="Blockung" />
 					<template v-if="ergebnisse.size()">
-						<svws-ui-select :items="ergebnisse" :model-value="ergebnis()" @update:model-value="ergebnis => ergebnis && setErgebnis(ergebnis)" :item-text="i=>i.id.toString()" title="Ergebnis-ID" ref="selectErgebnis" />
+						<svws-ui-select :items="ergebnisse" :model-value="ergebnis()" @update:model-value="ergebnis => ergebnis && gotoErgebnis(ergebnis.id)" :item-text="i=>i.id.toString()" title="Ergebnis-ID" ref="selectErgebnis" />
 						<svws-ui-input-number v-model="unterrichtID" :min="1" placeholder="Unterricht-ID" />
 					</template>
 					<div v-else>Diese Blockung hat keine Ergebnisse</div>
@@ -39,9 +39,9 @@
 	const selectHalbjahr = ref<ComponentExposed<typeof SvwsUiSelect<GostHalbjahr>> | null>(null);
 
 	const jahrgaenge = computed(() => [...props.mapAbiturjahrgaenge().values()].filter(j => j.abiturjahr > 1));
-	const blockungen = computed(() => props.mapBlockungen());
+	const blockungen = computed(() => props.listBlockungen());
 
-	const ergebnisse = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung());
+	const ergebnisse = computed(() => props.listErgebnisse());
 	watch(()=> props.abiturjahrgang(), () => selectHalbjahr.value?.reset());
 
 	const unterrichtID = ref<number>(1);

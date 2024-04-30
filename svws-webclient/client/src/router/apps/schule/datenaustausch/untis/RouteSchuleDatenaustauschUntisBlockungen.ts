@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../../RouteApp";
 import { routeSchuleDatenaustauschUntis, type RouteSchuleDatenaustauschUntis } from "~/router/apps/schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
@@ -17,20 +17,48 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<unknown,
 		super.text = "Blockungen";
 	}
 
-	public async enter() {
-		return routeSchuleDatenaustauschUntis.data.ladeAbiturjahrgaenge();
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await routeSchuleDatenaustauschUntis.data.ladeAbiturjahrgaenge();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = !to_params.halbjahr ? undefined : parseInt(to_params.halbjahr);
-		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
-		if (abiturjahr && halbjahr && idBlockung && idErgebnis)
-			routeSchuleDatenaustauschUntis.data.gotoErgebnis(abiturjahr, halbjahr, idBlockung, idErgebnis);
+		if (abiturjahr !== undefined) {
+			const abiturjahrgang = routeSchuleDatenaustauschUntis.data.mapAbiturjahrgaenge.get(abiturjahr);
+			if (abiturjahrgang !== undefined) {
+				await routeSchuleDatenaustauschUntis.data.setAbiturjahrgang(abiturjahrgang);
+				const halbjahr = !to_params.halbjahr ? undefined : parseInt(to_params.halbjahr);
+				if (halbjahr !== undefined) {
+					const hj = GostHalbjahr.fromID(halbjahr);
+					if (hj !== null)
+						await routeSchuleDatenaustauschUntis.data.setHalbjahr(hj);
+					const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
+					if (idBlockung !== undefined) {
+						const blockung = routeSchuleDatenaustauschUntis.data.mapBlockungen.get(abiturjahr)?.get(halbjahr)?.get(idBlockung);
+						if (blockung) {
+							await routeSchuleDatenaustauschUntis.data.setBlockung(blockung);
+							const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
+							if (idErgebnis) {
+								const ergebnisse = routeSchuleDatenaustauschUntis.data.mapErgebnisse.get(idBlockung);
+								if (ergebnisse !== undefined)
+									for (const e of ergebnisse) {
+										if (e.id === idErgebnis) {
+											await routeSchuleDatenaustauschUntis.data.setErgebnis(e);
+											break;
+										}
+									}
+							} else if (routeSchuleDatenaustauschUntis.data.ergebnis)
+								return this.getRoute({abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: to_params.idblockung, idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString()});
+						}
+					} else {
+						if (routeSchuleDatenaustauschUntis.data.ergebnis && routeSchuleDatenaustauschUntis.data.blockung)
+							return this.getRoute({abiturjahr: to_params.abiturjahr, halbjahr: to_params.halbjahr, idblockung: routeSchuleDatenaustauschUntis.data.blockung.id.toString(), idergebnis: routeSchuleDatenaustauschUntis.data.ergebnis.id.toString()});
+					}
+				}
+			}
+		}
 	}
 
 	public getRoute(to_params?: RouteParams) : RouteLocationRaw {
@@ -42,15 +70,15 @@ export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<unknown,
 		return {
 			mapAbiturjahrgaenge: () => routeSchuleDatenaustauschUntis.data.mapAbiturjahrgaenge,
 			abiturjahrgang: () => routeSchuleDatenaustauschUntis.data.abiturjahrgang,
-			setAbiturjahrgang: routeSchuleDatenaustauschUntis.data.setAbiturjahrgang,
+			gotoAbiturjahrgang: routeSchuleDatenaustauschUntis.data.gotoAbiturjahrgang,
 			halbjahr: () => routeSchuleDatenaustauschUntis.data.halbjahr,
-			setHalbjahr: routeSchuleDatenaustauschUntis.data.setHalbjahr,
-			mapBlockungen: () => routeSchuleDatenaustauschUntis.data.mapBlockungen,
+			gotoHalbjahr: routeSchuleDatenaustauschUntis.data.gotoHalbjahr,
+			listBlockungen: () => routeSchuleDatenaustauschUntis.data.listBlockungen,
 			blockung: () => routeSchuleDatenaustauschUntis.data.blockung,
-			setBlockung: routeSchuleDatenaustauschUntis.data.setBlockung,
+			gotoBlockung: routeSchuleDatenaustauschUntis.data.gotoBlockung,
+			listErgebnisse: () => routeSchuleDatenaustauschUntis.data.listErgebnisse,
 			ergebnis: () => routeSchuleDatenaustauschUntis.data.ergebnis,
-			setErgebnis: routeSchuleDatenaustauschUntis.data.setErgebnis,
-			getDatenmanager: () => routeSchuleDatenaustauschUntis.data.getDatenmanager,
+			gotoErgebnis: routeSchuleDatenaustauschUntis.data.gotoErgebnis,
 			exportUntisBlockungenZIP: routeSchuleDatenaustauschUntis.data.exportUntisBlockungenZIP,
 		};
 	}
