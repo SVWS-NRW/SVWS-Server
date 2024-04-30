@@ -1,12 +1,16 @@
 <template>
-	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group border bg-white dark:bg-black rounded"
+	<div :id="'gost-klausurtermin-' + termin.id" class="svws-ui-termin h-full flex flex-col group bg-white dark:bg-black rounded-lg"
 		:class="{
-			'shadow-lg shadow-black/5 dark:border-white/10': true,
-			'ring-svws/25': termin.istHaupttermin,
-			'border-svws' : !termin.istHaupttermin,
+			'border shadow-md shadow-black/5': !inTooltip,
+			'border-black/10 dark:border-white/10': !inTooltip && !terminSelected,
+			'-mx-2 -my-1': inTooltip,
+			'border-r-2 border-r-svws border-l-transparent': inTooltip && !termin.istHaupttermin,
+			'border-black/50 dark:border-white/50 ring-4 ring-black/10 dark:ring-white/10': termin.istHaupttermin && !inTooltip && terminSelected,
+			'border-svws/50 dark:border-svws/50 ring-4 ring-svws/10 dark:ring-svws/10': !termin.istHaupttermin && !inTooltip && terminSelected,
+			'border-l-svws border-l-2': !termin.istHaupttermin,
 		}">
 		<slot name="header">
-			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle, 'text-svws': terminSelected}">
+			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle}">
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
 						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
@@ -41,7 +45,7 @@
 			</section>
 		</slot>
 		<slot name="main" v-if="!compact">
-			<section class="px-3 flex flex-col flex-grow" :class="{'mt-2': !$slots.tableTitle}">
+			<section class="flex flex-col flex-grow" :class="{'mt-2': !$slots.tableTitle, 'px-3': !inTooltip}">
 				<slot name="klausuren">
 					<div v-if="kursklausuren().size() === 0 && (schuelerklausurtermine().size() === 0)">
 						Keine Klausuren
@@ -72,7 +76,7 @@
 									<div class="svws-ui-td" role="cell">
 										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" />
 									</div>
-									<div class="svws-ui-td" role="cell">
+									<div class="svws-ui-td" :class="{'-ml-2': inTooltip}" role="cell">
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
@@ -87,7 +91,7 @@
 										</div>
 										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>
 									</div>
-									<div class="svws-ui-td svws-align-right" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
+									<div class="svws-ui-td svws-align-right" :class="{'pr-3': inTooltip}" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 									<div v-if="kMan().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 									<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
@@ -106,8 +110,8 @@
 					<!--<div v-else-if="schuelerklausurtermine().size()">
 						{{ schuelerklausurtermine().size() }} Nachschreibklausuren
 					</div>-->
-					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto">
-						<div class="py-3" :class="{'opacity-50': !kursklausuren().size()}">
+					<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">
+						<div class="py-3" :class="{'opacity-50': !kursklausuren().size() && (showSchuelerklausuren && !schuelerklausurtermine().size())}">
 							<span class="font-bold">{{ kMan().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler, </span>
 							<span>bis {{ kMan().maxKlausurdauerGetByTerminid(termin.id) }} Min</span>
 						</div>
@@ -146,6 +150,7 @@
 		showKursklausurenNachschreiber?: boolean;
 		showKlausurenSelbesDatum?: boolean;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		inTooltip?: boolean;
 	}>(), {
 		klausurCssClasses: undefined,
 		onDrag: undefined,
@@ -156,6 +161,7 @@
 		patchKlausur: undefined,
 		showKlausurenSelbesDatum: false,
 		showKursklausurenNachschreiber: false,
+		inTooltip: false,
 	});
 
 	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTerminid(props.termin.id, props.showKursklausurenNachschreiber);
@@ -237,6 +243,11 @@
       @apply font-bold;
     }
   }
+
+  .svws-klausurplanung-schienen-termin & {
+	@apply border-0 rounded-xl;
+
+	}
 
   .svws-selected & {
     .text-input--headless {

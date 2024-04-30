@@ -86,21 +86,26 @@
 							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
-							<div class="bg-white/40 dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
-								:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
+							<div class="bg-white/40 dark:bg-black border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
+								:class="dragData !== undefined ? 'bg-light border-black/20 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: getBgColors(termin)}" />
-								<svws-ui-tooltip :hover="false" class="!items-start h-full mr-auto" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
-									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 line-clamp-4 pb-0 hyphens-auto">{{ terminBezeichnung(termin) }}</span>
+								<!-- TODO: EF/Q1/Q2 statt termin.abijahr anzeigen -->
+								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ termin.abijahr }}</span>
+								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
+								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
+									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
+										<span class="line-clamp-4">{{ terminBezeichnung(termin) }}</span>
+									</span>
 									<template #content>
-										<div class="-mx-3">
-											<s-gost-klausurplanung-termin :termin="termin"
-												:k-man="kMan">
-												<template #datum><span /></template>
-											</s-gost-klausurplanung-termin>
-										</div>
+										<s-gost-klausurplanung-termin :termin="termin"
+											in-tooltip
+											:k-man="kMan">
+											<template #datum><span /></template>
+										</s-gost-klausurplanung-termin>
 									</template>
 								</svws-ui-tooltip>
+								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none">Details</span>
 							</div>
 						</div>
 					</template>
@@ -112,7 +117,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht} from "@core";
+	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
 	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
@@ -268,7 +273,7 @@
 
 	function getBgColors(termin: GostKlausurtermin) {
 		if (termin.abijahr !== props.jahrgangsdaten.abiturjahr)
-			return "#fecdd3";
+			return "#f2f4f5";
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTerminid(termin.id)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
 		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
