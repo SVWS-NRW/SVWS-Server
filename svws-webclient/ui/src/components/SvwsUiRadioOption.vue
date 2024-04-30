@@ -128,7 +128,7 @@
 }
 
 .radio--indicator ~ .radio--indicator-icon {
-	@apply absolute inset-0 opacity-25 pointer-events-none left-2 top-1.5 w-5 h-5;
+	@apply absolute inset-0 opacity-25 pointer-events-none left-1.5 top-1.5 w-5 h-5;
 }
 
 .radio--label:not(.radio--label--checked) .radio--indicator-icon .radio--indicator-icon--checked {

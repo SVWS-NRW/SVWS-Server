@@ -96,7 +96,7 @@
 		}
 
 		.router-tab-bar--subnav & {
-			@apply text-sm font-bold;
+			@apply text-sm font-bold my-0;
 			padding: 0.3rem 0.65rem;
 
 			&:first-child {
