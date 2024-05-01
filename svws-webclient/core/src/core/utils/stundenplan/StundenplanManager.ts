@@ -179,6 +179,14 @@ export class StundenplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
+	private static readonly _compID : Comparator<number> = { compare : (a: number, b: number) => {
+		if (a < b)
+			return -1;
+		if (a > b)
+			return +1;
+		return 0;
+	} };
+
 	private readonly _aufsichtsbereich_by_id : HashMap<number, StundenplanAufsichtsbereich> = new HashMap<number, StundenplanAufsichtsbereich>();
 
 	private _aufsichtsbereich_by_kuerzel : HashMap<string, StundenplanAufsichtsbereich> = new HashMap<string, StundenplanAufsichtsbereich>();
@@ -376,6 +384,8 @@ export class StundenplanManager extends JavaObject {
 	private _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
 	private _unterrichtHatMultiWochen : boolean = false;
+
+	private _unterrichtsgruppenMergeable : List<List<StundenplanUnterricht>> = new ArrayList<List<StundenplanUnterricht>>();
 
 	private readonly _zeitraster_by_id : HashMap<number, StundenplanZeitraster> = new HashMap<number, StundenplanZeitraster>();
 
@@ -602,6 +612,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_wertWochenminuten_by_idKurs();
 		this.update_wertWochenminuten_by_idKlasse_und_idFach();
 		this.update_unterrichtmenge_by_idUnterricht();
+		this.update_unterrichtsgruppenMergeable();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -644,6 +655,58 @@ export class StundenplanManager extends JavaObject {
 		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
 			for (const u of menge)
 				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
+	}
+
+	private update_unterrichtsgruppenMergeable() : void {
+		this._unterrichtsgruppenMergeable = new ArrayList();
+		if (this._stundenplanWochenTypModell < 2)
+			return;
+		for (const menge of this._unterrichtmenge_by_idKurs.values())
+			this.update_unterrichtsgruppenMergeableHelper1(menge);
+		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			this.update_unterrichtsgruppenMergeableHelper1(menge);
+	}
+
+	private update_unterrichtsgruppenMergeableHelper1(menge : List<StundenplanUnterricht>) : void {
+		if (menge.size() < this._stundenplanWochenTypModell)
+			return;
+		const mapProZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap<number, List<StundenplanUnterricht>>();
+		for (const u of menge)
+			MapUtils.addToList(mapProZeitraster, u.idZeitraster, u);
+		for (const mengeProZeitraster of mapProZeitraster.values())
+			this.update_unterrichtsgruppenMergeableHelper2(mengeProZeitraster);
+	}
+
+	private update_unterrichtsgruppenMergeableHelper2(mengeProZeitraster : List<StundenplanUnterricht>) : void {
+		if (mengeProZeitraster.size() < this._stundenplanWochenTypModell)
+			return;
+		const mapProWochentyp : HashMap<number, StundenplanUnterricht> = new HashMap<number, StundenplanUnterricht>();
+		for (const u of mengeProZeitraster)
+			mapProWochentyp.put(u.wochentyp, u);
+		const gruppe : List<StundenplanUnterricht> = new ArrayList<StundenplanUnterricht>();
+		for (let wochentyp : number = 1; wochentyp <= this._stundenplanWochenTypModell; wochentyp++) {
+			const u : StundenplanUnterricht | null = mapProWochentyp.get(wochentyp);
+			if (u === null)
+				return;
+			gruppe.add(u);
+		}
+		this.update_unterrichtsgruppenMergeableHelper3(gruppe);
+	}
+
+	private update_unterrichtsgruppenMergeableHelper3(gruppe : List<StundenplanUnterricht>) : void {
+		for (let i : number = 1; i < gruppe.size(); i++) {
+			const unterrichtA : StundenplanUnterricht = gruppe.get(i - 1);
+			const unterrichtB : StundenplanUnterricht = gruppe.get(i);
+			if (!JavaObject.equalsTranspiler(unterrichtA.lehrer, (unterrichtB.lehrer)))
+				return;
+			if (!JavaObject.equalsTranspiler(unterrichtA.klassen, (unterrichtB.klassen)))
+				return;
+			if (!JavaObject.equalsTranspiler(unterrichtA.raeume, (unterrichtB.raeume)))
+				return;
+			if (!JavaObject.equalsTranspiler(unterrichtA.schienen, (unterrichtB.schienen)))
+				return;
+		}
+		this._unterrichtsgruppenMergeable.add(gruppe);
 	}
 
 	private update_wertWochenminuten_by_idKlasse_und_idFach() : void {
@@ -1147,11 +1210,14 @@ export class StundenplanManager extends JavaObject {
 		this._unterrichtmenge = new ArrayList(this._unterricht_by_id.values());
 		this._unterrichtmenge.sort(this._compUnterricht);
 		this._unterrichtHatMultiWochen = false;
-		for (const u of this._unterrichtmenge)
-			if (u.wochentyp > 0) {
+		for (const u of this._unterrichtmenge) {
+			u.klassen.sort(StundenplanManager._compID);
+			u.lehrer.sort(StundenplanManager._compID);
+			u.raeume.sort(StundenplanManager._compID);
+			u.schienen.sort(StundenplanManager._compID);
+			if (u.wochentyp > 0)
 				this._unterrichtHatMultiWochen = true;
-				break;
-			}
+		}
 	}
 
 	private update_unterrichtmenge_by_idLehrer() : void {
@@ -4670,6 +4736,17 @@ export class StundenplanManager extends JavaObject {
 		for (const unterricht of listUnterricht)
 			this.unterrichtRemoveByIdOhneUpdate(unterricht.id);
 		this.update_all();
+	}
+
+	/**
+	 * Liefert die Menge aller Unterrichtsgruppen, die sich zu einem einzigen Unterricht des Wochentyps 0 "mergen" lassen.
+	 * <br>Wenn die Liste nicht leer ist, dann sollte die GUI dem Benutzer ein "Mergen" anbieten.
+	 * <br>Pro Gruppe müssten alle Unterrichte gelöscht werden und anschließend kann eines der Elemente wieder hinzugefügt werden, jedoch mit Wochentyp 0.
+	 *
+	 * @return die Menge aller Unterrichtsgruppen, die sich zu einem einzigen Unterricht des Wochentyps 0 "mergen" lassen.
+	 */
+	public unterrichtsgruppenMergeableGet() : List<List<StundenplanUnterricht>> {
+		return this._unterrichtsgruppenMergeable;
 	}
 
 	/**

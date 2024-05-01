@@ -137,6 +137,12 @@ public class StundenplanManager {
 		return Long.compare(a.id, b.id);
 	};
 
+	private static final @NotNull Comparator<@NotNull Long> _compID = (final @NotNull Long a, final @NotNull Long b) -> {
+		if (a < b) return -1;
+		if (a > b) return +1;
+		return 0;
+	};
+
 	// StundenplanAufsichtsbereich
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereich_by_id = new HashMap<>();
 	private @NotNull HashMap<@NotNull String, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereich_by_kuerzel = new HashMap<>();
@@ -264,6 +270,7 @@ public class StundenplanManager {
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idFach = new HashMap2D<>();
 	private @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D<>();
 	private boolean _unterrichtHatMultiWochen = false;
+	private @NotNull List<@NotNull List<@NotNull StundenplanUnterricht>> _unterrichtsgruppenMergeable = new ArrayList<>();
 
 	// StundenplanZeitraster
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _zeitraster_by_id = new HashMap<>();
@@ -524,6 +531,7 @@ public class StundenplanManager {
 		update_wertWochenminuten_by_idKurs();                        // _kursmenge, _unterrichtmenge_by_idKurs
 		update_wertWochenminuten_by_idKlasse_und_idFach();           // _klassenmenge, _fachmenge, _unterrichtmenge_by_idKlasse_and_idFach
 		update_unterrichtmenge_by_idUnterricht();                    // _unterrichtmenge_by_idKurs, _unterrichtmenge_by_idKlasse_and_idFach
+		update_unterrichtsgruppenMergeable();                        // _unterrichtmenge_by_idKurs, _unterrichtmenge_by_idKlasse_and_idFach
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();          // _pausenzeitmenge_by_idKlasse
@@ -537,6 +545,7 @@ public class StundenplanManager {
 		update_schienenmenge_by_idKlasse();                          // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
 	}
+
 
 	private void update_pausenzeit_by_tag_and_beginn_and_ende() {
 		_pausenzeit_by_tag_and_beginn_and_ende = new HashMap<>();
@@ -572,6 +581,81 @@ public class StundenplanManager {
 		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
 			for (final @NotNull StundenplanUnterricht u : menge)
 				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
+	}
+
+
+	private void update_unterrichtsgruppenMergeable() {
+		_unterrichtsgruppenMergeable = new ArrayList<>();
+
+		// Falls es keine unterschiedlichen Wochen gibt, kann es auch nichts zum "Mergen" geben.
+		if (_stundenplanWochenTypModell < 2)
+			return;
+
+		// Kurs-Unterricht-Gruppen hinzufügen.
+		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKurs.values())
+			update_unterrichtsgruppenMergeableHelper1(menge);
+
+		// Klassen-Unterricht-Gruppen hinzufügen.
+		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			update_unterrichtsgruppenMergeableHelper1(menge);
+	}
+
+	private void update_unterrichtsgruppenMergeableHelper1(final @NotNull List<@NotNull StundenplanUnterricht> menge) {
+		// Können überhaupt genügend Unterrichte zum "Mergen" gesammelt werden?
+		if (menge.size() < _stundenplanWochenTypModell)
+			return;
+
+		// Sammle Unterrichte pro Zeitraster.
+		final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> mapProZeitraster = new HashMap<>();
+
+		for (final @NotNull StundenplanUnterricht u : menge)
+			MapUtils.addToList(mapProZeitraster, u.idZeitraster, u);
+
+		for (final @NotNull List<@NotNull StundenplanUnterricht> mengeProZeitraster : mapProZeitraster.values())
+			update_unterrichtsgruppenMergeableHelper2(mengeProZeitraster);
+	}
+
+	private void update_unterrichtsgruppenMergeableHelper2(final @NotNull List<@NotNull StundenplanUnterricht> mengeProZeitraster) {
+		// Können überhaupt genügend Unterrichte zum "Mergen" gesammelt werden?
+		if (mengeProZeitraster.size() < _stundenplanWochenTypModell)
+			return;
+
+		// Sammle Unterrichte pro Wochentyp
+		final @NotNull HashMap<@NotNull Integer, @NotNull StundenplanUnterricht> mapProWochentyp = new HashMap<>();
+
+		for (final @NotNull StundenplanUnterricht u : mengeProZeitraster)
+			mapProWochentyp.put(u.wochentyp, u);
+
+		final @NotNull List<@NotNull StundenplanUnterricht> gruppe = new ArrayList<>();
+
+		for (int wochentyp = 1; wochentyp <= _stundenplanWochenTypModell; wochentyp++) {
+			final StundenplanUnterricht u = mapProWochentyp.get(wochentyp);
+			// Falls es zu einem Wochentyp keinen Unterricht gibt, dann kann man auch nichts "Mergen".
+			if (u == null)
+				return;
+			gruppe.add(u);
+		}
+
+		update_unterrichtsgruppenMergeableHelper3(gruppe);
+	}
+
+	private void update_unterrichtsgruppenMergeableHelper3(final @NotNull List<@NotNull StundenplanUnterricht> gruppe) {
+
+		for (int i = 1; i < gruppe.size(); i++) {
+			final @NotNull StundenplanUnterricht unterrichtA = gruppe.get(i - 1);
+			final @NotNull StundenplanUnterricht unterrichtB = gruppe.get(i);
+			if (!unterrichtA.lehrer.equals(unterrichtB.lehrer))
+				return;
+			if (!unterrichtA.klassen.equals(unterrichtB.klassen))
+				return;
+			if (!unterrichtA.raeume.equals(unterrichtB.raeume))
+				return;
+			if (!unterrichtA.schienen.equals(unterrichtB.schienen))
+				return;
+		}
+
+		// Diese Gruppe kann man "Mergen".
+		_unterrichtsgruppenMergeable.add(gruppe);
 	}
 
 	private void update_wertWochenminuten_by_idKlasse_und_idFach() {
@@ -1113,12 +1197,17 @@ public class StundenplanManager {
 		_unterrichtmenge = new ArrayList<>(_unterricht_by_id.values());
 		_unterrichtmenge.sort(_compUnterricht);
 
+		// Sortiere auch die Referenzen des Unterrichts.
 		_unterrichtHatMultiWochen = false;
-		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
-			if (u.wochentyp > 0) {
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge) {
+			u.klassen.sort(_compID);
+			u.lehrer.sort(_compID);
+			u.raeume.sort(_compID);
+			u.schienen.sort(_compID);
+
+			if (u.wochentyp > 0)
 				_unterrichtHatMultiWochen = true;
-				break;
-			}
+		}
 	}
 
 	private void update_unterrichtmenge_by_idLehrer() {
@@ -5024,6 +5113,17 @@ public class StundenplanManager {
 			unterrichtRemoveByIdOhneUpdate(unterricht.id);
 
 		update_all();
+	}
+
+	/**
+	 * Liefert die Menge aller Unterrichtsgruppen, die sich zu einem einzigen Unterricht des Wochentyps 0 "mergen" lassen.
+	 * <br>Wenn die Liste nicht leer ist, dann sollte die GUI dem Benutzer ein "Mergen" anbieten.
+	 * <br>Pro Gruppe müssten alle Unterrichte gelöscht werden und anschließend kann eines der Elemente wieder hinzugefügt werden, jedoch mit Wochentyp 0.
+	 *
+	 * @return die Menge aller Unterrichtsgruppen, die sich zu einem einzigen Unterricht des Wochentyps 0 "mergen" lassen.
+	 */
+	public @NotNull List<@NotNull List<@NotNull StundenplanUnterricht>> unterrichtsgruppenMergeableGet() {
+		return _unterrichtsgruppenMergeable;
 	}
 
 	/**
