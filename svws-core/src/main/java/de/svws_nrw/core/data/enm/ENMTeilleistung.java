@@ -21,16 +21,32 @@ public class ENMTeilleistung {
 	@Schema(description = "Die ID der Teilleistungsart", example = "42")
 	public long artID;
 
+	/** Der Zeitstempel der letzten Änderung an der Teilleistungsart */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an der Teilleistungsart.", example = "2013-11-14 13:12:48.774")
+	public String tsArtID;
+
 	/** Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde. (z.B. "2020-10-10") */
 	@Schema(description = "Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde", example = "2020-10-10")
 	public String datum;
+
+	/** Der Zeitstempel der letzten Änderung an dem Datum */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an dem Datum.", example = "2013-11-14 13:12:48.774")
+	public String tsDatum;
 
 	/** Eine Bemerkung zu der Teilleistung (z.B. "Nachgeschrieben") */
 	@Schema(description = "Eine Bemerkung zu der Teilleistung", example = "Nachgeschrieben")
 	public String bemerkung;
 
+	/** Der Zeitstempel der letzten Änderung an der Bemerkung */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an der Bemerkung.", example = "2013-11-14 13:12:48.774")
+	public String tsBemerkung;
+
 	/** Das Noten-Kürzel für die Teilleistung (z.B. "1+") */
 	@Schema(description = "Das Noten-Kürzel für die Teilleistung", example = "1+")
-	public String notenKuerzel;
+	public String note;
+
+	/** Der Zeitstempel der letzten Änderung an der Note */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an der Note.", example = "2013-11-14 13:12:48.774")
+	public String tsNote;
 
 }

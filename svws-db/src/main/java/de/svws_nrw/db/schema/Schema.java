@@ -45,6 +45,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Zertifikate;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EinschulungsartKatalog_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EnmLeistungsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_EnmLernabschnittsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EnmTeilleistungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_ErzieherDatenschutz;
 import de.svws_nrw.db.schema.tabellen.Tabelle_ErzieherLernplattform;
 import de.svws_nrw.db.schema.tabellen.Tabelle_FachKatalog;
@@ -895,6 +896,9 @@ public final class Schema {
 
     /** Tabelle EnmLernabschnittsdaten */
     public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
+
+    /** Tabelle EnmTeilleistungen */
+    public static final Tabelle_EnmTeilleistungen tab_EnmTeilleistungen = add(new Tabelle_EnmTeilleistungen());
 
     /** Tabelle_Schulbewerbung_Importe */
     public static final Tabelle_Schulbewerbung_Importe tab_Schulbewerbung_Importe = add(new Tabelle_Schulbewerbung_Importe());

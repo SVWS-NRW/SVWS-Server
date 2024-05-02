@@ -10,8 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -126,6 +128,22 @@ public final class JsonReader {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+
+	/**
+	 * Wandelt den übergebenen JSON-String in eine Liste von Objekten des
+	 * generischen Typs um
+	 *
+	 * @param <T>    der Typ der Objekte für die Liste
+	 * @param json   ein JSON-String mit einem Array von Objekten des Typs T
+	 *
+	 * @return die Liste der Objekte
+	 *
+	 * @throws IOException im Fehlerfall
+	 */
+	public static <T> List<T> fromString(final String json) throws IOException {
+		return mapper.readValue(json, new TypeReference<List<T>>() { /* nothing special */ });
 	}
 
 }

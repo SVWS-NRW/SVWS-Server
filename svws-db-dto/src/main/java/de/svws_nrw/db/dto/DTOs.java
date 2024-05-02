@@ -224,6 +224,7 @@ import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -472,6 +473,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTODavSyncTokenSchueler.class.getSimpleName(), DTODavSyncTokenSchueler.class);
              mapDTOName2DTOClass.put(DTOEnmLeistungsdaten.class.getSimpleName(), DTOEnmLeistungsdaten.class);
              mapDTOName2DTOClass.put(DTOEnmLernabschnittsdaten.class.getSimpleName(), DTOEnmLernabschnittsdaten.class);
+             mapDTOName2DTOClass.put(DTOEnmTeilleistungen.class.getSimpleName(), DTOEnmTeilleistungen.class);
              mapDTOName2DTOClass.put(DTOViewBenutzer.class.getSimpleName(), DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerKompetenz.class.getSimpleName(), DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerdetails.class.getSimpleName(), DTOViewBenutzerdetails.class);
@@ -723,6 +725,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("DavSyncTokenSchueler", DTODavSyncTokenSchueler.class);
              mapTablename2DTOClass.put("EnmLeistungsdaten", DTOEnmLeistungsdaten.class);
              mapTablename2DTOClass.put("EnmLernabschnittsdaten", DTOEnmLernabschnittsdaten.class);
+             mapTablename2DTOClass.put("EnmTeilleistungen", DTOEnmTeilleistungen.class);
              mapTablename2DTOClass.put("V_Benutzer", DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen", DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails", DTOViewBenutzerdetails.class);

@@ -13,9 +13,19 @@ export class ENMTeilleistung extends JavaObject {
 	public artID : number = 0;
 
 	/**
+	 * Der Zeitstempel der letzten Änderung an der Teilleistungsart
+	 */
+	public tsArtID : string | null = null;
+
+	/**
 	 * Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde. (z.B. "2020-10-10")
 	 */
 	public datum : string | null = null;
+
+	/**
+	 * Der Zeitstempel der letzten Änderung an dem Datum
+	 */
+	public tsDatum : string | null = null;
 
 	/**
 	 * Eine Bemerkung zu der Teilleistung (z.B. "Nachgeschrieben")
@@ -23,9 +33,19 @@ export class ENMTeilleistung extends JavaObject {
 	public bemerkung : string | null = null;
 
 	/**
+	 * Der Zeitstempel der letzten Änderung an der Bemerkung
+	 */
+	public tsBemerkung : string | null = null;
+
+	/**
 	 * Das Noten-Kürzel für die Teilleistung (z.B. "1+")
 	 */
-	public notenKuerzel : string | null = null;
+	public note : string | null = null;
+
+	/**
+	 * Der Zeitstempel der letzten Änderung an der Note
+	 */
+	public tsNote : string | null = null;
 
 
 	public constructor() {
@@ -49,9 +69,13 @@ export class ENMTeilleistung extends JavaObject {
 		if (typeof obj.artID === "undefined")
 			 throw new Error('invalid json format, missing attribute artID');
 		result.artID = obj.artID;
+		result.tsArtID = typeof obj.tsArtID === "undefined" ? null : obj.tsArtID === null ? null : obj.tsArtID;
 		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
+		result.tsDatum = typeof obj.tsDatum === "undefined" ? null : obj.tsDatum === null ? null : obj.tsDatum;
 		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
+		result.tsBemerkung = typeof obj.tsBemerkung === "undefined" ? null : obj.tsBemerkung === null ? null : obj.tsBemerkung;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
+		result.tsNote = typeof obj.tsNote === "undefined" ? null : obj.tsNote === null ? null : obj.tsNote;
 		return result;
 	}
 
@@ -59,9 +83,13 @@ export class ENMTeilleistung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"artID" : ' + obj.artID + ',';
+		result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
-		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
+		result += '"tsBemerkung" : ' + ((!obj.tsBemerkung) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -75,14 +103,26 @@ export class ENMTeilleistung extends JavaObject {
 		if (typeof obj.artID !== "undefined") {
 			result += '"artID" : ' + obj.artID + ',';
 		}
+		if (typeof obj.tsArtID !== "undefined") {
+			result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
+		}
 		if (typeof obj.datum !== "undefined") {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		}
+		if (typeof obj.tsDatum !== "undefined") {
+			result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (typeof obj.notenKuerzel !== "undefined") {
-			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
+		if (typeof obj.tsBemerkung !== "undefined") {
+			result += '"tsBemerkung" : ' + ((!obj.tsBemerkung) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
+		}
+		if (typeof obj.note !== "undefined") {
+			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+		}
+		if (typeof obj.tsNote !== "undefined") {
+			result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

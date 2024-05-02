@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import de.svws_nrw.core.data.enm.ENMKlasse;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
+import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
@@ -34,6 +36,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.oauth2.DataOauthClientSecrets;
 import de.svws_nrw.data.oauth2.OAuth2Client;
+import de.svws_nrw.data.schule.DBUtilsSchule;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFloskelgruppen;
@@ -46,12 +49,15 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
 import jakarta.ws.rs.core.MediaType;
@@ -144,7 +150,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	private ENMDaten getDaten(final Long id) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank ein
-		final DTOEigeneSchule schule = getSchule();
+		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
     	final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(schule);
     	final Map<Long, DTOLehrer> mapLehrer = getLehrerListe();
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
@@ -156,6 +162,7 @@ public final class DataENMDaten extends DataManager<Long> {
     	final Map<String, DTOKlassen> mapKlassen = getKlassenListe(schule);
     	final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(mapKlassen);
     	final Map<Long, DTOKurs> mapKurse = getKurse(schule);
+		final Map<Long, DTOTeilleistungsarten> mapTeilleistungsarten = conn.queryAll(DTOTeilleistungsarten.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
     	// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
     	final ENMDatenManager manager = new ENMDatenManager(id);
@@ -169,6 +176,14 @@ public final class DataENMDaten extends DataManager<Long> {
     	final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = dtoLehrer == null
     			? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, schule.Schuljahresabschnitts_ID)
     			: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
+    	// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
+    	final List<Long> idsLeistungen = schuelerabschnitte.stream().map(a -> a.leistungID).toList();
+    	final List<DTOSchuelerTeilleistung> listTeilleistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
+    			: conn.queryNamed("DTOSchuelerTeilleistung.leistung_id.multiple", idsLeistungen, DTOSchuelerTeilleistung.class);
+    	final Map<Long, List<DTOSchuelerTeilleistung>> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
+    	final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
+    	final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
+    			: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
     	for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
     		final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
 			if (dtoKlasse == null) {
@@ -290,14 +305,39 @@ public final class DataENMDaten extends DataManager<Long> {
     		};
     		final boolean istGemahnt = (schuelerabschnitt.istGemahnt != null) && schuelerabschnitt.istGemahnt;
     		final String mahndatum = schuelerabschnitt.mahndatum;
-    		manager.addSchuelerLeistungsdaten(enmSchueler, schuelerabschnitt.leistungID, lerngruppe.id,
-    				schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote,
+    		final ENMLeistung enmLeistung = manager.addSchuelerLeistungsdaten(enmSchueler,
+    				schuelerabschnitt.leistungID, lerngruppe.id, schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote,
     				schuelerabschnitt.noteQuartal.kuerzel, schuelerabschnitt.tsNoteQuartal, istSchriftlich, abiFach,
     				schuelerabschnitt.fehlstundenGesamt, schuelerabschnitt.tsFehlstundenGesamt,
     				schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.tsFehlstundenUnentschuldigt,
     				schuelerabschnitt.fachbezogeneBemerkungen, schuelerabschnitt.tsFachbezogeneBemerkungen, null,
     				istGemahnt, schuelerabschnitt.tsIstGemahnt, mahndatum);
-    		// TODO get and add Teilleistungen
+
+    		// Teilleistungen und deren Arten hinzufügen
+    		final List<DTOSchuelerTeilleistung> teilleistungen = mapTeilleistungen.get(schuelerabschnitt.leistungID);
+    		for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
+    			if (teilleistung.Art_ID == null)
+    				continue;
+    			// Prüfe die Teilleistungsart und ergänze sie ggf.
+    			ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+    			if (enmTeilleistungsart == null) {
+        			final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
+    				if (dtoArt == null) // DB-Error -> should not happen
+    					throw new NullPointerException();
+    				manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
+    						dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
+    						dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
+    				enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+    			}
+    			// Füge die Teilleistung hinzu
+    			final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
+    			if (teilleistungTimestamps == null)
+    				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+    			manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
+    					teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
+    					teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
+    		}
+
     		// TODO check and add ZP10 - Data
     		// TODO check and add BKAbschluss - Data
     	}
@@ -318,13 +358,6 @@ public final class DataENMDaten extends DataManager<Long> {
 		manager.addNoten();
     	// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
 		manager.addFoerderschwerpunkte(schule.Schulform);
-	}
-
-	private DTOEigeneSchule getSchule() throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		return schule;
 	}
 
 	private DTOSchuljahresabschnitte getSchuljahresabschnitt(final DTOEigeneSchule schule) throws ApiOperationException {
@@ -427,6 +460,18 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 	}
 
+
+	private ENMSchueler[] importParseByteArray(final byte[] enmBytes) throws ApiOperationException {
+		try {
+			return JSONMapper.mapper.readValue(enmBytes, ENMSchueler[].class);
+			// TODO kein ZIP auf diesem Endpunkt
+			// return JSONMapper.toObjectGZip(httpResponse.body(), ENMSchueler[].class);
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des ENM-Servers nicht parsebar.");
+		}
+	}
+
+
 	/**
 	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
 	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
@@ -436,45 +481,36 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public void importEnmDaten(final byte[] enmBytes) throws ApiOperationException {
-		ENMSchueler[] enmDaten;
-		try {
-			enmDaten = JSONMapper.mapper.readValue(enmBytes, ENMSchueler[].class);
-			// TODO kein ZIP auf diesem Endpunkt
-			// JSONMapper.toObjectGZip(httpResponse.body(), ENMSchueler[].class);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des ENM-Servers nicht parsebar.");
-		}
 		conn.transactionBegin();
-		final DTOEigeneSchule schule = getSchule();
-		final List<DTOSchuelerLernabschnittsdaten> slaDatenList = conn.queryNamed(
-				"DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID,
-				DTOSchuelerLernabschnittsdaten.class);
-		if (slaDatenList == null || slaDatenList.size() == 0) {
+		final ENMSchueler[] arrayEnmSchueler = importParseByteArray(enmBytes);
+		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
+		// Bestimme alle Schüler-Lernabschnittsdaten des aktuellen Schuljahresabschnittes der Schule aus der DB
+		// TODO bestimme die Schüler-Lernabschnittsdaten alternativ anhand der IDs aus den zu importierenden Daten und validiere die Schuljahresabschnitts-ID
+		final List<DTOSchuelerLernabschnittsdaten> slaDatenList = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id",
+				schule.Schuljahresabschnitts_ID, DTOSchuelerLernabschnittsdaten.class);
+		if ((slaDatenList == null) || slaDatenList.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten für Schuljahresabschnitt nicht gefunden.");
-		}
 		final Map<Long, DTOSchuelerLernabschnittsdaten> slaBySchuelerId = slaDatenList.stream()
 				.collect(Collectors.toMap((sla) -> sla.Schueler_ID, Function.identity()));
-
+		// TODO Die Schüler-Leistungsdaten müssen anhand der Abschnitts-IDs aus
 		final List<DTOSchuelerLeistungsdaten> slDatenList = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
 				schule.Schuljahresabschnitts_ID, DTOSchuelerLeistungsdaten.class);
-		if (slDatenList == null) {
+		if (slDatenList == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Leistungsdaten für Schuljahresabschnitt nicht gefunden.");
-		}
 
-		for (final ENMSchueler enmSchueler : enmDaten) {
+		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
+		for (final ENMSchueler enmSchueler : arrayEnmSchueler) {
 			final DTOSchuelerLernabschnittsdaten sla = slaBySchuelerId.get(enmSchueler.id);
 			final List<DTOEnmLernabschnittsdaten> dtoEnmLAList = conn.queryNamed("DTOEnmLernabschnittsdaten.id", sla.ID,
 					DTOEnmLernabschnittsdaten.class);
-			if (dtoEnmLAList == null || dtoEnmLAList.size() != 1) {
+			if ((dtoEnmLAList == null) || (dtoEnmLAList.size() != 1))
 				throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten nicht gefunden.");
-			}
 			final DTOEnmLernabschnittsdaten enmLA = dtoEnmLAList.get(0);
 
 			final List<DTOSchuelerPSFachBemerkungen> dtoFachbemerkungenList = conn.queryNamed(
 					"DTOSchuelerPSFachBemerkungen.abschnitt_id", sla.ID, DTOSchuelerPSFachBemerkungen.class);
-			if (dtoFachbemerkungenList == null || dtoFachbemerkungenList.size() != 1) {
+			if ((dtoFachbemerkungenList == null) || (dtoFachbemerkungenList.size() != 1))
 				throw new ApiOperationException(Status.NOT_FOUND, "Fachbemerkungen nicht gefunden.");
-			}
 			final DTOSchuelerPSFachBemerkungen fachBemerkungen = dtoFachbemerkungenList.get(0);
 			boolean laUpdaten = false;
 			boolean bemerkungenUpdaten = false;
@@ -509,15 +545,12 @@ public final class DataENMDaten extends DataManager<Long> {
 						enmLA.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
 					});
 
-			if (bemerkungenUpdaten) {
+			if (bemerkungenUpdaten)
 				conn.transactionPersist(fachBemerkungen);
-			}
-			if (laUpdaten) {
+			if (laUpdaten)
 				conn.transactionPersist(sla);
-			}
-			if (bemerkungenUpdaten || laUpdaten) {
+			if (bemerkungenUpdaten || laUpdaten)
 				conn.transactionPersist(enmLA);
-			}
 
 			for (final ENMLeistung leistung : enmSchueler.leistungsdaten) {
 				final DTOSchuelerLeistungsdaten dtoSchuelerLeistungsdaten = conn
@@ -567,32 +600,30 @@ public final class DataENMDaten extends DataManager<Long> {
 		conn.transactionCommitOrThrow();
 	}
 
+
 	/**
 	 * Prüft, ob der gegebene Timestamp-String des ENM nach dem Timestamp String des SVWS ist und führt in diesem Fall
 	 * das gegebene Runnable aus
 	 *
 	 * @param tsEnmStr    der Timestamp aus dem ENM
 	 * @param tsSvwsStr   der Timestamp aus dem SVWS-Server
-	 * @param actionIf die auszuführende Aktion, wenn der Timestamp des ENM nach dem des SVWS ist, vgl.
-	 *                 {@link Timestamp#after(Timestamp)}
+	 * @param actionIf    die auszuführende Aktion, wenn der Timestamp des ENM nach dem des SVWS ist, vgl.
+	 *                    {@link Timestamp#after(Timestamp)}
+	 *
 	 * @return ob der Timestamp des ENM nach dem des SVWS ist
 	 */
-	private static boolean isEnmLatestThenAction(final String tsEnmStr, final String tsSvwsStr,
-			final Runnable actionIf) {
-		if (tsEnmStr == null || tsEnmStr.isBlank()) {
+	private static boolean isEnmLatestThenAction(final String tsEnmStr, final String tsSvwsStr, final Runnable actionIf) {
+		if (tsEnmStr == null || tsEnmStr.isBlank())
 			return false;
-		}
 		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
 				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 		final Timestamp tsEnm = Timestamp.valueOf(LocalDateTime.parse(tsEnmStr, ofPattern));
-		if (tsSvwsStr == null || tsSvwsStr.isBlank()) {
+		if (tsSvwsStr == null || tsSvwsStr.isBlank())
 			return true;
-		}
 		final Timestamp tsSvws = Timestamp.valueOf(LocalDateTime.parse(tsSvwsStr, ofPattern));
 		final boolean after = tsEnm.after(tsSvws);
-		if (after) {
+		if (after)
 			actionIf.run();
-		}
 		return after;
 	}
 

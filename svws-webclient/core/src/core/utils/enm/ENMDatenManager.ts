@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
+import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
 import { ENMLeistung } from '../../../core/data/enm/ENMLeistung';
 import { ENMFach } from '../../../core/data/enm/ENMFach';
 import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
@@ -12,9 +13,11 @@ import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpu
 import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
 import { Note } from '../../../core/types/Note';
 import type { List } from '../../../java/util/List';
+import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
 import { Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class ENMDatenManager extends JavaObject {
 
@@ -26,32 +29,37 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für das Befüllen der ENMLehrer-Vektors.
 	 */
-	private readonly mapLehrer : HashMap<number, ENMLehrer> = new HashMap<number, ENMLehrer>();
+	private readonly mapLehrer : JavaMap<number, ENMLehrer> = new HashMap<number, ENMLehrer>();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMSchueler-Vektors.
 	 */
-	private readonly mapSchueler : HashMap<number, ENMSchueler> = new HashMap<number, ENMSchueler>();
+	private readonly mapSchueler : JavaMap<number, ENMSchueler> = new HashMap<number, ENMSchueler>();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private readonly mapFaecher : HashMap<number, ENMFach> = new HashMap<number, ENMFach>();
+	private readonly mapFaecher : JavaMap<number, ENMFach> = new HashMap<number, ENMFach>();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private readonly mapFaecherByKuerzel : HashMap<string, ENMFach> = new HashMap<string, ENMFach>();
+	private readonly mapFaecherByKuerzel : JavaMap<string, ENMFach> = new HashMap<string, ENMFach>();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMJahrgang-Vektors.
 	 */
-	private readonly mapJahrgaenge : HashMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
+	private readonly mapJahrgaenge : JavaMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMKlasse-Vektors.
 	 */
-	private readonly mapKlassen : HashMap<number, ENMKlasse> = new HashMap<number, ENMKlasse>();
+	private readonly mapKlassen : JavaMap<number, ENMKlasse> = new HashMap<number, ENMKlasse>();
+
+	/**
+	 * Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.
+	 */
+	private readonly mapTeilleistungsarten : JavaMap<number, ENMTeilleistungsart> = new HashMap<number, ENMTeilleistungsart>();
 
 	/**
 	 * Zählt die Id der Lerngruppe hoch.
@@ -61,7 +69,7 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für die Lerngruppen.
 	 */
-	private readonly mapLerngruppen : HashMap<string, ENMLerngruppe> = new HashMap<string, ENMLerngruppe>();
+	private readonly mapLerngruppen : JavaMap<string, ENMLerngruppe> = new HashMap<string, ENMLerngruppe>();
 
 
 	/**
@@ -305,6 +313,29 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt eine Teilleistungsart hinzu und überprüft dabei, ob die Art schon in der Liste vorhanden ist.
+	 *
+	 * @param id            die eindeutige ID der Teilleistungsart
+	 * @param bezeichnung   die Bezeichnung der Teilleistungsart
+	 * @param sortierung    die Reihenfolge der Art bei der Sortierung der Arten. (z.B. 8)
+	 * @param gewichtung    die Gewichtung der Art
+	 *
+	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false
+	 */
+	public addTeilleistungsart(id : number, bezeichnung : string | null, sortierung : number, gewichtung : number) : boolean {
+		if (this.mapTeilleistungsarten.get(id) !== null)
+			return false;
+		const enmArt : ENMTeilleistungsart = new ENMTeilleistungsart();
+		enmArt.id = id;
+		enmArt.bezeichnung = bezeichnung;
+		enmArt.sortierung = sortierung;
+		enmArt.gewichtung = gewichtung;
+		this.daten.teilleistungsarten.add(enmArt);
+		this.mapTeilleistungsarten.put(id, enmArt);
+		return true;
+	}
+
+	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
 	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
 	 * hinzugefügt wurden.
@@ -380,6 +411,18 @@ export class ENMDatenManager extends JavaObject {
 	 */
 	public getKlasse(id : number) : ENMKlasse | null {
 		return this.mapKlassen.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Teilleistungsart-Objekt für die angegebene Teilleistungsart-ID zurück,
+	 * sofern die Teilleistungsart hinzugefügt wurde.
+	 *
+	 * @param id   die ID der Teilleistungsart
+	 *
+	 * @return das ENM-Teilleistungsart-Objekt
+	 */
+	public getTeilleistungsart(id : number) : ENMTeilleistungsart | null {
+		return this.mapTeilleistungsarten.get(id);
 	}
 
 	/**
@@ -478,8 +521,10 @@ export class ENMDatenManager extends JavaObject {
 	 * @param istGemahnt                      gibt an, ob ein Fach gemahnt wurde oder nicht
 	 * @param tsIstGemahnt                    der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
+	 *
+	 * @return die neue ENM-Leistung
 	 */
-	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNoteQuartal : string | null, noteQuartal : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenFach : number | null, tsFehlstundenFach : string | null, fehlstundenUnentschuldigtFach : number | null, tsFehlstundenUnentschuldigtFach : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : void {
+	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNoteQuartal : string | null, noteQuartal : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenFach : number | null, tsFehlstundenFach : string | null, fehlstundenUnentschuldigtFach : number | null, tsFehlstundenUnentschuldigtFach : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : ENMLeistung {
 		const enmLeistung : ENMLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
@@ -500,6 +545,7 @@ export class ENMDatenManager extends JavaObject {
 		enmLeistung.tsIstGemahnt = tsIstGemahnt;
 		enmLeistung.mahndatum = mahndatum;
 		schueler.leistungsdaten.add(enmLeistung);
+		return enmLeistung;
 	}
 
 	/**
@@ -509,12 +555,26 @@ export class ENMDatenManager extends JavaObject {
 	 * @param leistung       die Leistungsdaten eines Schülers
 	 * @param id             die ID der Teilleistung
 	 * @param artID          die ID der Art von Teileistungen
+	 * @param tsArtID        der Zeitstempel der letzten Änderung an der Teilleistungsart
 	 * @param datum          das Datum, welches dem Erbringen der Teilleistung zuzuordnen ist (z.B. Klausurdatum)
+	 * @param tsDatum        der Zeitstempel der letzten Änderung an dem Datum
 	 * @param bemerkung      ggf. eine Bemerkung zu der Teilleistung
-	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
+	 * @param tsBemerkung    der Zeitstempel der letzten Änderung an der Bemerkung
+	 * @param note           das Notenkürzel, welches der Teilleistung zuzuordnen ist.
+	 * @param tsNote         der Zeitstempel der letzten Änderung an der Note
 	 */
-	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, datum : string | null, bemerkung : string | null, notenKuerzel : string | null) : void {
-		// empty block
+	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, tsArtID : string | null, datum : string | null, tsDatum : string | null, bemerkung : string | null, tsBemerkung : string | null, note : string | null, tsNote : string | null) : void {
+		const enmTeilleistung : ENMTeilleistung = new ENMTeilleistung();
+		enmTeilleistung.id = id;
+		enmTeilleistung.artID = artID;
+		enmTeilleistung.tsArtID = tsArtID;
+		enmTeilleistung.datum = datum;
+		enmTeilleistung.tsDatum = tsDatum;
+		enmTeilleistung.bemerkung = bemerkung;
+		enmTeilleistung.tsBemerkung = tsBemerkung;
+		enmTeilleistung.note = note;
+		enmTeilleistung.tsNote = tsNote;
+		leistung.teilleistungen.add(enmTeilleistung);
 	}
 
 	transpilerCanonicalName(): string {

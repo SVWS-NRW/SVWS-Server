@@ -413,6 +413,7 @@
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler</class>
         <class>de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten</class>
+        <class>de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>

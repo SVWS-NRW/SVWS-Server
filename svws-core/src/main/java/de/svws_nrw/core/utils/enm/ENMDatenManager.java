@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.enm;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
@@ -13,6 +14,8 @@ import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMNote;
 import de.svws_nrw.core.data.enm.ENMSchueler;
+import de.svws_nrw.core.data.enm.ENMTeilleistung;
+import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
@@ -29,28 +32,31 @@ public class ENMDatenManager {
 
 
 	/** Temporäre Map für das Befüllen der ENMLehrer-Vektors.*/
-	private final @NotNull HashMap<@NotNull Long, @NotNull ENMLehrer> mapLehrer = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull ENMLehrer> mapLehrer = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMSchueler-Vektors.*/
-	private final @NotNull HashMap<@NotNull Long, @NotNull ENMSchueler> mapSchueler = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull ENMSchueler> mapSchueler = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private final @NotNull HashMap<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
 
     /** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-    private final @NotNull HashMap<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
+    private final @NotNull Map<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMJahrgang-Vektors.*/
-	private final @NotNull HashMap<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMKlasse-Vektors.*/
-	private final @NotNull HashMap<@NotNull Long, @NotNull ENMKlasse> mapKlassen = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull ENMKlasse> mapKlassen = new HashMap<>();
+
+	/** Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.*/
+	private final @NotNull Map<@NotNull Long, @NotNull ENMTeilleistungsart> mapTeilleistungsarten = new HashMap<>();
 
 	/** Zählt die Id der Lerngruppe hoch. */
 	private long lerngruppenIDZaehler = 1;
 
 	/** Temporäre Map für die Lerngruppen. */
-	private final @NotNull HashMap<@NotNull String, @NotNull ENMLerngruppe> mapLerngruppen = new HashMap<>();
+	private final @NotNull Map<@NotNull String, @NotNull ENMLerngruppe> mapLerngruppen = new HashMap<>();
 
 
 	/**
@@ -297,6 +303,30 @@ public class ENMDatenManager {
 
 
 	/**
+	 * Fügt eine Teilleistungsart hinzu und überprüft dabei, ob die Art schon in der Liste vorhanden ist.
+	 *
+	 * @param id            die eindeutige ID der Teilleistungsart
+	 * @param bezeichnung   die Bezeichnung der Teilleistungsart
+	 * @param sortierung    die Reihenfolge der Art bei der Sortierung der Arten. (z.B. 8)
+	 * @param gewichtung    die Gewichtung der Art
+	 *
+	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false
+	 */
+	public boolean addTeilleistungsart(final long id, final String bezeichnung, final int sortierung, final double gewichtung) {
+		if (mapTeilleistungsarten.get(id) != null)
+			return false;
+		final @NotNull ENMTeilleistungsart enmArt = new ENMTeilleistungsart();
+		enmArt.id = id;
+		enmArt.bezeichnung = bezeichnung;
+		enmArt.sortierung = sortierung;
+		enmArt.gewichtung = gewichtung;
+		daten.teilleistungsarten.add(enmArt);
+		mapTeilleistungsarten.put(id, enmArt);
+		return true;
+	}
+
+
+	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
 	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
 	 * hinzugefügt wurden.
@@ -377,6 +407,19 @@ public class ENMDatenManager {
 	 */
 	public ENMKlasse getKlasse(final long id) {
 		return mapKlassen.get(id);
+	}
+
+
+	/**
+	 * Liefert das ENM-Teilleistungsart-Objekt für die angegebene Teilleistungsart-ID zurück,
+	 * sofern die Teilleistungsart hinzugefügt wurde.
+	 *
+	 * @param id   die ID der Teilleistungsart
+	 *
+	 * @return das ENM-Teilleistungsart-Objekt
+	 */
+	public ENMTeilleistungsart getTeilleistungsart(final long id) {
+		return mapTeilleistungsarten.get(id);
 	}
 
 
@@ -483,8 +526,10 @@ public class ENMDatenManager {
 	 * @param istGemahnt                      gibt an, ob ein Fach gemahnt wurde oder nicht
 	 * @param tsIstGemahnt                    der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
+	 *
+	 * @return die neue ENM-Leistung
 	 */
-	public void addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID, final String note,
+	public @NotNull ENMLeistung addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID, final String note,
 				final String tsNoteQuartal, final String noteQuartal, final String tsNote, final boolean istSchriftlich, final Integer abiturfach,
 				final Integer fehlstundenFach, final String tsFehlstundenFach, final Integer fehlstundenUnentschuldigtFach,
 				final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen, final String tsFachbezogeneBemerkungen,
@@ -509,6 +554,7 @@ public class ENMDatenManager {
 		enmLeistung.tsIstGemahnt = tsIstGemahnt;
 		enmLeistung.mahndatum = mahndatum;
 		schueler.leistungsdaten.add(enmLeistung);
+		return enmLeistung;
 	}
 
 
@@ -520,13 +566,27 @@ public class ENMDatenManager {
 	 * @param leistung       die Leistungsdaten eines Schülers
 	 * @param id             die ID der Teilleistung
 	 * @param artID          die ID der Art von Teileistungen
+	 * @param tsArtID        der Zeitstempel der letzten Änderung an der Teilleistungsart
 	 * @param datum          das Datum, welches dem Erbringen der Teilleistung zuzuordnen ist (z.B. Klausurdatum)
+	 * @param tsDatum        der Zeitstempel der letzten Änderung an dem Datum
 	 * @param bemerkung      ggf. eine Bemerkung zu der Teilleistung
-	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
+	 * @param tsBemerkung    der Zeitstempel der letzten Änderung an der Bemerkung
+	 * @param note           das Notenkürzel, welches der Teilleistung zuzuordnen ist.
+	 * @param tsNote         der Zeitstempel der letzten Änderung an der Note
 	 */
-	public void addSchuelerTeilleistung(final @NotNull ENMLeistung leistung, final long id, final long artID, final String datum, final String bemerkung, final String notenKuerzel) {
-		// TODO Hinzufügen der Teilleistung - Implementierung ähnlich wie das Hinzufügen der Leistungen bei dem ENM-Schüler
+	public void addSchuelerTeilleistung(final @NotNull ENMLeistung leistung, final long id, final long artID, final String tsArtID,
+			final String datum, final String tsDatum, final String bemerkung, final String tsBemerkung, final String note, final String tsNote) {
+		final @NotNull ENMTeilleistung enmTeilleistung = new ENMTeilleistung();
+		enmTeilleistung.id = id;
+		enmTeilleistung.artID = artID;
+		enmTeilleistung.tsArtID = tsArtID;
+		enmTeilleistung.datum = datum;
+		enmTeilleistung.tsDatum = tsDatum;
+		enmTeilleistung.bemerkung = bemerkung;
+		enmTeilleistung.tsBemerkung = tsBemerkung;
+		enmTeilleistung.note = note;
+		enmTeilleistung.tsNote = tsNote;
+		leistung.teilleistungen.add(enmTeilleistung);
 	}
-
 
 }
