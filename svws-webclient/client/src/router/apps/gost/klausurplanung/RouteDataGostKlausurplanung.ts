@@ -95,6 +95,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				Object.assign(result, {kursklausurmanager: this._state.value.kursklausurmanager});
 			if (this._state.value.stundenplanmanager)
 				Object.assign(result, {stundenplanmanager: this._state.value.stundenplanmanager});
+			if (this._state.value.kalenderwoche !== undefined)
+				Object.assign(result, {kalenderwoche: this._state.value.kalenderwoche});
 			// Setze den State neu
 			this.setPatchedDefaultState(result);
 		} finally {

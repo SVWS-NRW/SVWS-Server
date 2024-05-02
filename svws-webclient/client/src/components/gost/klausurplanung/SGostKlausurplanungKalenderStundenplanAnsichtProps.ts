@@ -1,4 +1,4 @@
-import type { GostJahrgangsdaten, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostKursklausurManager, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 import type { WritableComputedRef } from "vue";
@@ -6,6 +6,7 @@ import type { WritableComputedRef } from "vue";
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
 	jahrgangsdaten: GostJahrgangsdaten;
+	halbjahr: GostHalbjahr;
 	ignoreEmpty?: boolean;
 	id: number;
 	kalenderwoche: WritableComputedRef<StundenplanKalenderwochenzuordnung>;

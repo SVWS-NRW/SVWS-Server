@@ -46,7 +46,7 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card class="svws-card-stundenplan">
 				<template v-if="kalenderwoche.value">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
 						:manager="stundenplanmanager" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
 						:on-drop :on-drag :drag-data="() => dragData" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge>
 						<template #kwAuswahl>
