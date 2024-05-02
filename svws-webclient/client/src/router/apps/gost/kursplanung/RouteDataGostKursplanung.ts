@@ -531,6 +531,21 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const list = new ArrayList<number>();
 		for (const id of ids)
 			list.add(id);
+		// prüfe, ob der Schülerfilter noch eine Referenz zum Kurs hat
+		if (this.schuelerFilter.kurs?.id !== undefined) {
+			if (list.contains(this.schuelerFilter.kurs.id))
+				this.schuelerFilter.reset();
+		}
+		// Prüfe, ob der Schülerfilter noch eine Referenz zum Fach des Kurses hat
+		else if (this.schuelerFilter.fach !== undefined) {
+			const listFachIDs = this.ergebnismanager.getOfFachKursmenge(this.schuelerFilter.fach);
+			for (const k of list) {
+				if (listFachIDs.contains(k)) {
+					this.schuelerFilter.reset();
+					break;
+				}
+			}
+		}
 		await api.server.deleteGostBlockungKurse(list, api.schema);
 		this.datenmanager.kurseRemoveByID(list);
 		this.ergebnismanager.setRemoveKurseByID(list);
