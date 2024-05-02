@@ -3416,6 +3416,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode revertActivateGostBlockungsergebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{abiturjahr : \d+}/{halbjahr : \d+}/revertactivate
+	 *
+	 * Macht das Aktivieren bzw. persistieren in den Leistungsdaten rückgängig. Dies ist nur erlaubt, wenn Kurse der gymnasialen Oberstufe vorhanden sind und bei den Leistungsdaten der Schüler des Abiturjahrgangs in dem Halbjahr der gymnasialen Oberstufe noch keine Noteneinträge für eine Quartalsnode oder Halbjahresnote vorliegen.Es wird auch geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Blockungsdaten wurden bei den Kursen und Leistungsdaten erfolgreich gelöscht.
+	 *   Code 400: Es existieren Schüler mit Noten in den Leistungsdaten.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Persistierung rückgängig zu machen.
+	 *   Code 404: Es wurden keine Kurse der gymnasialen Oberstufe gefunden oder der Abiturjahrgang oder die ID des Halbjahres sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 */
+	public async revertActivateGostBlockungsergebnis(schema : string, abiturjahr : number, halbjahr : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/revertactivate"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der DELETE-Methode deleteGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}
 	 *
 	 * Entfernt die angegebene Blockung der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Blockungsdaten besitzt.

@@ -781,7 +781,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
      */
-    private void aktiviere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) throws ApiOperationException {
+    private void persist(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) throws ApiOperationException {
     	// Bestimme die ID des Jahrgangs
     	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
     	if (jahrgangsliste.isEmpty())
@@ -936,7 +936,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
      */
-    public Response aktiviere(final Long idErgebnis) throws ApiOperationException {
+    public Response persist(final Long idErgebnis) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme das Blockungs-Zwischenergebnis
@@ -955,11 +955,39 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
     	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
     	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
     		throw new ApiOperationException(Status.CONFLICT);
-    	aktiviere(ergebnisManager, abschnitt, halbjahr);
+    	persist(ergebnisManager, abschnitt, halbjahr);
         // Markiere die Blockung und das Ergebnis als aktiviert
     	DataGostBlockungsdaten.markiereBlockungAktiv(conn, dtoErgebnis.Blockung_ID, true);
 		markiereErgebnisAktiv(conn, dtoErgebnis.ID, true);
         return Response.status(Status.NO_CONTENT).build();
+    }
+
+
+    /**
+	 * Entfernt die Leistungsdaten für das angegeben Halbjahr der gymnasialen Oberstufe bei den Schülern des Abiturjahrgangs,
+	 * welcher durch den Schuljahresabschnitt und das Halbjahr der gymnasialen Oberstufe gegeben ist.
+	 * Dies wird nur durchgeführt, wenn Kurse für die gymnasiale Oberstufe angelegt sind und es keine Leistungsdaten
+	 * für Oberstufenkursen bei den Schüler gibt, welche bereits Noten beinhalten.
+     *
+     * @param conn         die Datenbankverbindung
+     * @param abiturjahr   die ID des Schuljahresabschnittes
+     * @param idHalbjahr   die ID des Halbjahres der gymnasialen Oberstufe
+     *
+     * @return die HTTP-Response 204
+     *
+     * @throws ApiOperationException   im Fehlerfall
+     */
+    public static Response unpersist(final DBEntityManager conn, final int abiturjahr, final int idHalbjahr) throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+        // Bestimme den Schuljahresabschnitt...
+		final GostHalbjahr halbjahr = GostHalbjahr.fromID(idHalbjahr);
+		if (halbjahr == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d ist nicht gültig als ID für ein Halbjahr der gymnasialen Oberstufe.".formatted(idHalbjahr));
+        final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
+    	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
+    	// ... und versuche die Leistungsdaten und die Kurse zu entfernen
+		DBUtilsGost.deleteOberstufenKurseUndLeistungsdaten(conn, halbjahr, abschnitt);
+		return Response.status(Status.NO_CONTENT).build();
     }
 
 

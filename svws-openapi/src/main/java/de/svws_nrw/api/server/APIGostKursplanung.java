@@ -1141,7 +1141,38 @@ public class APIGostKursplanung {
     @ApiResponse(responseCode = "409", description = "Es wurde bereits eine Blockung aktiviert")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response activateGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).aktiviere(id), request, ServerMode.STABLE,
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).persist(id), request, ServerMode.STABLE,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+	/**
+     * Die OpenAPI-Methode zum Rückgängig machen des Aktivieren bzw. Persistieren eines Blockungsergebnisses
+     * der gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
+     *
+     * @param schema       das Datenbankschema
+     * @param abiturjahr   das Abiturjahr
+     * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/revertactivate")
+    @Operation(summary = "Macht das Aktivieren bzw. persistieren in den Leistungsdaten rückgängig.",
+    description = "Macht das Aktivieren bzw. persistieren in den Leistungsdaten rückgängig. Dies ist nur erlaubt, wenn "
+    		    + "Kurse der gymnasialen Oberstufe vorhanden sind und bei den Leistungsdaten der Schüler des Abiturjahrgangs in "
+    		    + "dem Halbjahr der gymnasialen Oberstufe noch keine Noteneinträge für eine Quartalsnode oder Halbjahresnote vorliegen."
+    		    + "Es wird auch geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Blockungsdaten wurden bei den Kursen und Leistungsdaten erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "400", description = "Es existieren Schüler mit Noten in den Leistungsdaten.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Persistierung rückgängig zu machen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden keine Kurse der gymnasialen Oberstufe gefunden oder der Abiturjahrgang oder die ID des Halbjahres sind fehlerhaft.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response revertActivateGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataGostBlockungsergebnisse.unpersist(conn, abiturjahr, halbjahr), request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
