@@ -315,29 +315,30 @@ public final class DataENMDaten extends DataManager<Long> {
 
     		// Teilleistungen und deren Arten hinzufügen
     		final List<DTOSchuelerTeilleistung> teilleistungen = mapTeilleistungen.get(schuelerabschnitt.leistungID);
-    		for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
-    			if (teilleistung.Art_ID == null)
-    				continue;
-    			// Prüfe die Teilleistungsart und ergänze sie ggf.
-    			ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
-    			if (enmTeilleistungsart == null) {
-        			final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
-    				if (dtoArt == null) // DB-Error -> should not happen
-    					throw new NullPointerException();
-    				manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
-    						dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
-    						dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
-    				enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
-    			}
-    			// Füge die Teilleistung hinzu
-    			final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
-    			if (teilleistungTimestamps == null)
-    				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
-    			manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
-    					teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
-    					teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
+    		if (teilleistungen != null) {
+	    		for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
+	    			if (teilleistung.Art_ID == null)
+	    				continue;
+	    			// Prüfe die Teilleistungsart und ergänze sie ggf.
+	    			ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+	    			if (enmTeilleistungsart == null) {
+	        			final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
+	    				if (dtoArt == null) // DB-Error -> should not happen
+	    					throw new NullPointerException();
+	    				manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
+	    						dtoArt.Sortierung == null ? 32000 : dtoArt.Sortierung,
+	    						dtoArt.Gewichtung == null ? 1.0 : dtoArt.Gewichtung);
+	    				enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+	    			}
+	    			// Füge die Teilleistung hinzu
+	    			final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
+	    			if (teilleistungTimestamps == null)
+	    				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+	    			manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
+	    					teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
+	    					teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
+	    		}
     		}
-
     		// TODO check and add ZP10 - Data
     		// TODO check and add BKAbschluss - Data
     	}
