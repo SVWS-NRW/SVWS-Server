@@ -150,7 +150,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<GostKlausurtermin> getKlausurtermine(final DBEntityManager conn, final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr) throws ApiOperationException {
-		final GostHalbjahr ghj = DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
+		final GostHalbjahr ghj = halbjahr <= 0 ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 		final List<DTOGostKlausurenTermine> terminDTOs = (halbjahr <= 0)
 			? conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
 				.setParameter("jgid", abiturjahr)

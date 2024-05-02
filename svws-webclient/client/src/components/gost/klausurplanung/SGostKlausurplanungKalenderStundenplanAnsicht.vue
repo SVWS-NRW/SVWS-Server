@@ -91,7 +91,9 @@
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: getBgColors(termin)}" />
 								<!-- TODO: EF/Q1/Q2 statt termin.abijahr anzeigen -->
-								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ termin.abijahr }}</span>
+								{{ console.log(jahrgangsdaten.abiturjahr) }}
+								{{ console.log(termin.abijahr) }}
+								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ jahrgangsdaten.abiturjahr === termin.abijahr ? jahrgangsdaten.jahrgang : (jahrgangsdaten.abiturjahr < termin.abijahr ? GostHalbjahr.fromIDorException(jahrgangsdaten.halbjahr).nextOrException().nextOrException().jahrgang : GostHalbjahr.fromIDorException(jahrgangsdaten.halbjahr).previousOrException().previousOrException().jahrgang) }}</span>
 								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
@@ -118,7 +120,7 @@
 <script setup lang="ts">
 
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
+	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 

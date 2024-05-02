@@ -1873,7 +1873,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return true oder false
 	 */
-	public boolean istVorgabeVerwendetByVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
+	public boolean istVorgabeVerwendetByKursklausur(final @NotNull GostKlausurvorgabe vorgabe) {
 		final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
 		return klausuren != null && !klausuren.isEmpty();
 	}

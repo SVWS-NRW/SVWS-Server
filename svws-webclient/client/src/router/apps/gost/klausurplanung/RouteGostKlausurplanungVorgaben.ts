@@ -19,7 +19,7 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<unknown, RouteGos
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungVorgabenProps {

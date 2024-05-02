@@ -70,7 +70,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe die Parameter zunächst allgemein
 			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array || to_params.kw instanceof Array)

@@ -16,22 +16,17 @@ import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanu
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeApp } from "../../RouteApp";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
+import { routeGost } from "../RouteGost";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
 	abiturjahr: number | undefined;
 	abschnitt : Schuljahresabschnitt | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
-	faecherManager: GostFaecherManager;
-	// ... die mit dem Abiturjahrgang aktualisiert/mitgeladen werden
-	mapLehrer: Map<number, LehrerListeEintrag>;
-	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
 	kursklausurmanager: GostKursklausurManager | undefined;
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
 	stundenplanmanager: StundenplanManager | undefined;
-	kursmanager: KursManager;
 	kalenderwoche: StundenplanKalenderwochenzuordnung;
 	raummanager: GostKlausurraumManager | undefined;
 }
@@ -40,16 +35,10 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	abiturjahr: undefined,
 	abschnitt: undefined,
 	jahrgangsdaten: undefined,
-	mapSchueler: new Map(),
-	faecherManager: new GostFaecherManager(),
-	mapLehrer: new Map(),
 	halbjahr: GostHalbjahr.EF1,
 	kursklausurmanager: undefined,
 	klausurvorgabenmanager: undefined,
 	stundenplanmanager: undefined,
-	kursmanager: new KursManager(),
-	// quartalsauswahl: 0,
-	terminauswahl: null,
 	view: routeGostKlausurplanungVorgaben,
 	raummanager: undefined,
 	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
@@ -94,13 +83,20 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					view = routeGostKlausurplanungVorgaben;
 			}
 
-			// Setze den State neu
-			this.setPatchedDefaultState({
+			const result: Partial<RouteStateGostKlausurplanung> = {
 				abiturjahr: abiturjahr,
 				jahrgangsdaten: jahrgangsdaten,
 				halbjahr: this._state.value.halbjahr,
 				view: view,
-			});
+			}
+			if (this._state.value.klausurvorgabenmanager)
+				Object.assign(result, {klausurvorgabenmanager: this._state.value.klausurvorgabenmanager});
+			if (this._state.value.kursklausurmanager)
+				Object.assign(result, {kursklausurmanager: this._state.value.kursklausurmanager});
+			if (this._state.value.stundenplanmanager)
+				Object.assign(result, {stundenplanmanager: this._state.value.stundenplanmanager});
+			// Setze den State neu
+			this.setPatchedDefaultState(result);
 		} finally {
 			api.status.stop();
 		}
@@ -116,23 +112,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.jahrgangsdaten;
 	}
 
-	public get mapSchueler(): Map<number, SchuelerListeEintrag> {
-		return this._state.value.mapSchueler;
-	}
-
-	public get faecherManager() : GostFaecherManager {
-		return this._state.value.faecherManager;
-	}
-
-	public get kursManager() : KursManager {
-		return this._state.value.kursmanager;
-	}
-
-	public get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
-	}
-
-
 	public get halbjahr() : GostHalbjahr {
 		return this._state.value.halbjahr;
 	}
@@ -147,15 +126,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			const result: Partial<RouteStateGostKlausurplanung> = {
 				abschnitt: undefined,
 				halbjahr: halbjahr,
-				kursklausurmanager: undefined,
-				stundenplanmanager: undefined,
 			}
 			if (this._state.value.abiturjahr === -1) {
-				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
-				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-				const faecherManager = new GostFaecherManager(listFaecher);
-				const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, listKlausurvorgaben);
-				Object.assign(result, {klausurvorgabenmanager});
+				if (!this.hatKlausurvorgabenManager) {
+					const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
+					const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
+					const faecherManager = new GostFaecherManager(listFaecher);
+					const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, listKlausurvorgaben);
+					Object.assign(result, {klausurvorgabenmanager});
+				}
 				this.setPatchedState(result);
 				return true;
 			}
@@ -166,38 +145,41 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				return true;
 			}
 			Object.assign(result, {abschnitt});
-			const klausurdaten = await api.server.getGostKlausurenMetaCollectionOberstufe(api.schema, this.abiturjahr, halbjahr.id);
-			const faecherManager = new GostFaecherManager(klausurdaten.faecher);
-			const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, klausurdaten.klausurdata.vorgaben);
-			const kursklausurmanager = new GostKursklausurManager(klausurvorgabenmanager, klausurdaten.klausurdata.kursklausuren, klausurdaten.klausurdata.termine, klausurdaten.klausurdata.schuelerklausuren, klausurdaten.klausurdata.schuelerklausurtermine);
-			kursklausurmanager.setKursManager(new KursManager(klausurdaten.kurse));
-			const mapLehrer = new HashMap<number, LehrerListeEintrag>();
-			for (const l of klausurdaten.lehrer)
-				mapLehrer.put(l.id, l);
-			const mapSchueler = new HashMap<number, SchuelerListeEintrag>();
-			for (const l of klausurdaten.schueler)
-				mapSchueler.put(l.id, l);
-			kursklausurmanager.setLehrerMap(mapLehrer);
-			kursklausurmanager.setSchuelerMap(mapSchueler);
-			Object.assign(result, {kursklausurmanager, klausurvorgabenmanager});
-			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
-			if (listStundenplaene.isEmpty()) {
-				this.setPatchedState(result);
-				return true;
+			if (!this.hatKursklausurManager) {
+				const klausurdaten = await api.server.getGostKlausurenMetaCollectionOberstufe(api.schema, this.abiturjahr, halbjahr.id);
+				const faecherManager = new GostFaecherManager(klausurdaten.faecher);
+				const klausurvorgabenmanager = new GostKlausurvorgabenManager(faecherManager, klausurdaten.klausurdata.vorgaben);
+				const kursklausurmanager = new GostKursklausurManager(klausurvorgabenmanager, klausurdaten.klausurdata.kursklausuren, klausurdaten.klausurdata.termine, klausurdaten.klausurdata.schuelerklausuren, klausurdaten.klausurdata.schuelerklausurtermine);
+				kursklausurmanager.setKursManager(new KursManager(klausurdaten.kurse));
+				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
+				for (const l of klausurdaten.lehrer)
+					mapLehrer.put(l.id, l);
+				const mapSchueler = new HashMap<number, SchuelerListeEintrag>();
+				for (const l of klausurdaten.schueler)
+					mapSchueler.put(l.id, l);
+				kursklausurmanager.setLehrerMap(mapLehrer);
+				kursklausurmanager.setSchuelerMap(mapSchueler);
+				Object.assign(result, {kursklausurmanager, klausurvorgabenmanager});
 			}
-			const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
-			if (stundenplan === null)
-				throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
-			const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
-			const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
-			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
-			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
-			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
-			if (this.kalenderwoche.value.jahr === -1)
-				this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
-			this.setPatchedState(Object.assign(result, {
-				stundenplanmanager,
-			}));
+			if (!this.hatStundenplanManager) {
+				const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
+				if (listStundenplaene.isEmpty()) {
+					this.setPatchedState(result);
+					return true;
+				}
+				const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
+				if (stundenplan === null)
+					throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
+				const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
+				const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
+				const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
+				const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
+				const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
+				if (this.kalenderwoche.value.jahr === -1)
+					this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
+				Object.assign(result, {	stundenplanmanager });
+			}
+			this.setPatchedState(result);
 			return true;
 		} finally {
 			api.status.stop();

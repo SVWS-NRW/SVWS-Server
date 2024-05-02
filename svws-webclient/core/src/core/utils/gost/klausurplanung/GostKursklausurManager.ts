@@ -1787,7 +1787,7 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return true oder false
 	 */
-	public istVorgabeVerwendetByVorgabe(vorgabe : GostKlausurvorgabe) : boolean {
+	public istVorgabeVerwendetByKursklausur(vorgabe : GostKlausurvorgabe) : boolean {
 		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
 		return klausuren !== null && !klausuren.isEmpty();
 	}
