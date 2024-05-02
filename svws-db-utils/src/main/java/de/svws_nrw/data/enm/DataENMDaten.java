@@ -11,9 +11,10 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
@@ -26,6 +27,7 @@ import de.svws_nrw.core.data.enm.ENMKlasse;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
+import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.SchuelerStatus;
@@ -60,6 +62,7 @@ import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
+import de.svws_nrw.json.JsonReader;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -483,120 +486,197 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public void importEnmDaten(final byte[] enmBytes) throws ApiOperationException {
 		conn.transactionBegin();
-		final ENMSchueler[] arrayEnmSchueler = importParseByteArray(enmBytes);
 		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
-		// Bestimme alle Schüler-Lernabschnittsdaten des aktuellen Schuljahresabschnittes der Schule aus der DB
-		// TODO bestimme die Schüler-Lernabschnittsdaten alternativ anhand der IDs aus den zu importierenden Daten und validiere die Schuljahresabschnitts-ID
-		final List<DTOSchuelerLernabschnittsdaten> slaDatenList = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id",
-				schule.Schuljahresabschnitts_ID, DTOSchuelerLernabschnittsdaten.class);
-		if ((slaDatenList == null) || slaDatenList.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten für Schuljahresabschnitt nicht gefunden.");
-		final Map<Long, DTOSchuelerLernabschnittsdaten> slaBySchuelerId = slaDatenList.stream()
-				.collect(Collectors.toMap((sla) -> sla.Schueler_ID, Function.identity()));
-		// TODO Die Schüler-Leistungsdaten müssen anhand der Abschnitts-IDs aus
-		final List<DTOSchuelerLeistungsdaten> slDatenList = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
-				schule.Schuljahresabschnitts_ID, DTOSchuelerLeistungsdaten.class);
-		if (slDatenList == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Leistungsdaten für Schuljahresabschnitt nicht gefunden.");
+
+		// Parse zunächst die ENM-Daten
+		final List<ENMSchueler> listEnmSchueler;
+		try {
+			listEnmSchueler = JsonReader.fromByteArray(enmBytes);
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden.");
+		}
+
+		// Bestimme die Schüler-IDs, anhand der zu importierenden Daten
+		if (listEnmSchueler.isEmpty())
+			return; // nichts zu tun, da keine Daten vorhanden sind
+		final List<Long> idsSchueler = listEnmSchueler.stream().map(s -> s.id).distinct().toList();
+		if (idsSchueler.size() != listEnmSchueler.size())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten haben mindestens eine Schüler-ID doppelt enthalten. Dies ist nicht zulässig.");
+		final Map<Long, DTOSchueler> mapSchuelerDTOs = conn.queryByKeyList(DTOSchueler.class, idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		if (mapSchuelerDTOs.keySet().size() != idsSchueler.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Schüler in den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+
+		// Bestimme die Schüler-Lernabschnittsdaten anhand der IDs aus den zu importierenden Daten und validiere die Schuljahresabschnitts-ID
+		final List<Long> idsLernabschnitte = listEnmSchueler.stream().map(s -> s.lernabschnitt.id).distinct().toList();
+		if (idsLernabschnitte.size() != idsSchueler.size())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten nicht genügend Lernabschnitte. Dies ist nicht zulässig.");
+		final List<DTOSchuelerLernabschnittsdaten> listLernabschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, idsLernabschnitte);
+		if (listLernabschnitte.size() != idsLernabschnitte.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Lernabschnitte aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = listLernabschnitte.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+
+		// Bestimme die Fachbemerkungen zu den Lernabschnitten und erzeuge eine Map für die Abschnitts-ID
+		final List<DTOSchuelerPSFachBemerkungen> listLernabschnittsbemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id.multiple", idsLernabschnitte, DTOSchuelerPSFachBemerkungen.class);
+		final Map<Long, DTOSchuelerPSFachBemerkungen> mapLernabschnittsbemerkungen = listLernabschnittsbemerkungen.isEmpty() ? new HashMap<>()
+				: listLernabschnittsbemerkungen.stream().collect(Collectors.toMap(b -> b.Abschnitt_ID, b -> b));
+
+		// Bestimme die Schüler-Leistungsdaten in der DB anhand der IDs auf dem Import
+		final List<ENMLeistung> enmLeistungen = listEnmSchueler.stream().flatMap(s -> s.leistungsdaten.stream()).toList();
+		final List<Long> idsLeistungen = enmLeistungen.stream().map(l -> l.id).toList();
+		final List<DTOSchuelerLeistungsdaten> listLeistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
+				: conn.queryByKeyList(DTOSchuelerLeistungsdaten.class, idsLeistungen);
+		if (listLeistungen.size() != enmLeistungen.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Leistungsdaten aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+		final Map<Long, DTOSchuelerLeistungsdaten> mapLeistungen = listLeistungen.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+
+		// Bestimme die alle Teilleistungen von Schülern in der DB anhand des Imports
+		final List<ENMTeilleistung> enmTeilleistungen = enmLeistungen.stream().flatMap(l -> l.teilleistungen.stream()).toList();
+		final List<Long> idsTeilleistungen = enmTeilleistungen.stream().map(l -> l.id).toList();
+		final List<DTOSchuelerTeilleistung> listTeilleistungen = idsTeilleistungen.isEmpty() ? new ArrayList<>()
+				: conn.queryByKeyList(DTOSchuelerTeilleistung.class, idsTeilleistungen);
+		if (listTeilleistungen.size() != enmTeilleistungen.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Teilleistungen aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+		final Map<Long, DTOSchuelerTeilleistung> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+
+		// Bestimme die ENM-Timestamps für die Lernabschnitte, die Leistungen und die Teilleistungen
+		final Map<Long, DTOEnmLernabschnittsdaten> mapLernabschnitteTimestamps = idsLernabschnitte.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOEnmLernabschnittsdaten.class, idsLernabschnitte).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, DTOEnmLeistungsdaten> mapLeistungenTimestamps = idsLeistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOEnmLeistungsdaten.class, idsLeistungen).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+
+		// Sets, um die veränderten DTOs zwischenzuspeichern und später in einem Rutsch in der DB zu persistieren
+		final Set<DTOSchuelerLernabschnittsdaten> setLernabschnitte = new HashSet<>();
+		final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungen = new HashSet<>();
+		final Set<DTOEnmLernabschnittsdaten> setLernabschnitteTimestamps = new HashSet<>();
+		final Set<DTOSchuelerLeistungsdaten> setLeistungen = new HashSet<>();
+		final Set<DTOEnmLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
+		final Set<DTOSchuelerTeilleistung> setTeilleistungen = new HashSet<>();
+		final Set<DTOEnmTeilleistungen> setTeilleistungenTimestamps = new HashSet<>();
 
 		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
-		for (final ENMSchueler enmSchueler : arrayEnmSchueler) {
-			final DTOSchuelerLernabschnittsdaten sla = slaBySchuelerId.get(enmSchueler.id);
-			final List<DTOEnmLernabschnittsdaten> dtoEnmLAList = conn.queryNamed("DTOEnmLernabschnittsdaten.id", sla.ID,
-					DTOEnmLernabschnittsdaten.class);
-			if ((dtoEnmLAList == null) || (dtoEnmLAList.size() != 1))
-				throw new ApiOperationException(Status.NOT_FOUND, "Lernabschnittsdaten nicht gefunden.");
-			final DTOEnmLernabschnittsdaten enmLA = dtoEnmLAList.get(0);
+		for (final ENMSchueler enmSchueler : listEnmSchueler) {
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(enmSchueler.lernabschnitt.id);
+			final DTOEnmLernabschnittsdaten lernabschnittTS = mapLernabschnitteTimestamps.get(enmSchueler.lernabschnitt.id);
+			final DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = mapLernabschnittsbemerkungen.get(enmSchueler.lernabschnitt.id);
 
-			final List<DTOSchuelerPSFachBemerkungen> dtoFachbemerkungenList = conn.queryNamed(
-					"DTOSchuelerPSFachBemerkungen.abschnitt_id", sla.ID, DTOSchuelerPSFachBemerkungen.class);
-			if ((dtoFachbemerkungenList == null) || (dtoFachbemerkungenList.size() != 1))
-				throw new ApiOperationException(Status.NOT_FOUND, "Fachbemerkungen nicht gefunden.");
-			final DTOSchuelerPSFachBemerkungen fachBemerkungen = dtoFachbemerkungenList.get(0);
-			boolean laUpdaten = false;
-			boolean bemerkungenUpdaten = false;
-			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsASV, enmLA.tsASV, () -> {
-				fachBemerkungen.ASV = enmSchueler.bemerkungen.ASV;
-				enmLA.tsASV = enmSchueler.bemerkungen.tsASV;
+			boolean updatedBemerkungen = false;
+			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsASV, lernabschnittTS.tsASV, () -> {
+				lernabschnittsbemerkungen.ASV = enmSchueler.bemerkungen.ASV;
+				lernabschnittTS.tsASV = enmSchueler.bemerkungen.tsASV;
 			});
-			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsAUE, enmLA.tsAUE, () -> {
-				fachBemerkungen.AUE = enmSchueler.bemerkungen.AUE;
-				enmLA.tsAUE = enmSchueler.bemerkungen.tsAUE;
+			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsAUE, lernabschnittTS.tsAUE, () -> {
+				lernabschnittsbemerkungen.AUE = enmSchueler.bemerkungen.AUE;
+				lernabschnittTS.tsAUE = enmSchueler.bemerkungen.tsAUE;
 			});
-			bemerkungenUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen,
-					enmLA.tsBemerkungVersetzung, () -> {
-						fachBemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
-						enmLA.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
-					});
-
-			laUpdaten |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsZB, enmLA.tsZeugnisBem, () -> {
-				sla.ZeugnisBem = enmSchueler.bemerkungen.ZB;
-				enmLA.tsZeugnisBem = enmSchueler.bemerkungen.tsZB;
+			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, lernabschnittTS.tsBemerkungVersetzung, () -> {
+				lernabschnittsbemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
+				lernabschnittTS.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
 			});
 
-			laUpdaten |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamt, enmLA.tsSumFehlStd,
-					() -> {
-						sla.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
-						enmLA.tsSumFehlStd = enmSchueler.lernabschnitt.tsFehlstundenGesamt;
-					});
+			boolean updatedLernabschnitt = false;
+			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsZB, lernabschnittTS.tsZeugnisBem, () -> {
+				lernabschnitt.ZeugnisBem = enmSchueler.bemerkungen.ZB;
+				lernabschnittTS.tsZeugnisBem = enmSchueler.bemerkungen.tsZB;
+			});
+			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamt, lernabschnittTS.tsSumFehlStd, () -> {
+				lernabschnitt.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
+				lernabschnittTS.tsSumFehlStd = enmSchueler.lernabschnitt.tsFehlstundenGesamt;
+			});
+			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, lernabschnittTS.tsSumFehlStdU, () -> {
+				lernabschnitt.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
+				lernabschnittTS.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
+			});
 
-			laUpdaten |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt,
-					enmLA.tsSumFehlStdU, () -> {
-						sla.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
-						enmLA.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
-					});
+			if (updatedBemerkungen)
+				setLernabschnittsbemerkungen.add(lernabschnittsbemerkungen);
+			if (updatedLernabschnitt)
+				setLernabschnitte.add(lernabschnitt);
+			if (updatedBemerkungen || updatedLernabschnitt)
+				setLernabschnitteTimestamps.add(lernabschnittTS);
 
-			if (bemerkungenUpdaten)
-				conn.transactionPersist(fachBemerkungen);
-			if (laUpdaten)
-				conn.transactionPersist(sla);
-			if (bemerkungenUpdaten || laUpdaten)
-				conn.transactionPersist(enmLA);
+			for (final ENMLeistung enmLeistung : enmSchueler.leistungsdaten) {
+				final DTOSchuelerLeistungsdaten leistung = mapLeistungen.get(enmLeistung.id);
+				final DTOEnmLeistungsdaten leistungTS = mapLeistungenTimestamps.get(enmLeistung.id);
 
-			for (final ENMLeistung leistung : enmSchueler.leistungsdaten) {
-				final DTOSchuelerLeistungsdaten dtoSchuelerLeistungsdaten = conn
-						.queryNamed("DTOSchuelerLeistungsdaten.id", leistung.id, DTOSchuelerLeistungsdaten.class)
-						.get(0);
-				final List<DTOEnmLeistungsdaten> dtoEnmLDList = conn.queryNamed("DTOEnmLeistungsdaten.id", leistung.id,
-						DTOEnmLeistungsdaten.class);
-				if (dtoSchuelerLeistungsdaten == null || dtoEnmLDList == null || dtoEnmLDList.size() != 1) {
-					throw new ApiOperationException(Status.NOT_FOUND, "Schuelerleistungsdaten nicht gefunden.");
+				boolean updatedLeistung = false;
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFachbezogeneBemerkungen, leistungTS.tsLernentw, () -> {
+					leistung.Lernentw = enmLeistung.fachbezogeneBemerkungen;
+					leistungTS.tsLernentw = enmLeistung.tsFachbezogeneBemerkungen;
+				});
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFehlstundenFach, leistungTS.tsFehlStd, () -> {
+					leistung.FehlStd = enmLeistung.fehlstundenFach;
+					leistungTS.tsFehlStd = enmLeistung.tsFehlstundenFach;
+				});
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFehlstundenUnentschuldigtFach, leistungTS.tsuFehlStd, () -> {
+					leistung.uFehlStd = enmLeistung.fehlstundenUnentschuldigtFach;
+					leistungTS.tsuFehlStd = enmLeistung.tsFehlstundenUnentschuldigtFach;
+				});
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsIstGemahnt, leistungTS.tsWarnung, () -> {
+					leistung.Warnung = enmLeistung.istGemahnt;
+					leistungTS.tsWarnung = enmLeistung.tsIstGemahnt;
+				});
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsNote, leistungTS.tsNotenKrz, () -> {
+					leistung.NotenKrz = Note.fromKuerzel(enmLeistung.note);
+					leistungTS.tsNotenKrz = enmLeistung.tsNote;
+				});
+				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsNoteQuartal, leistungTS.tsNotenKrzQuartal, () -> {
+					leistung.NotenKrzQuartal = Note.fromKuerzel(enmLeistung.noteQuartal);
+					leistungTS.tsNotenKrzQuartal = enmLeistung.tsNoteQuartal;
+				});
+
+				if (updatedLeistung) {
+					setLeistungen.add(leistung);
+					setLeistungenTimestamps.add(leistungTS);
 				}
-				final var dtoEnmLD = dtoEnmLDList.get(0);
-				boolean dtoUpdaten = false;
 
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFachbezogeneBemerkungen, dtoEnmLD.tsLernentw, () -> {
-					dtoSchuelerLeistungsdaten.Lernentw = leistung.fachbezogeneBemerkungen;
-					dtoEnmLD.tsLernentw = leistung.tsFachbezogeneBemerkungen;
-				});
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFehlstundenFach, dtoEnmLD.tsFehlStd, () -> {
-					dtoSchuelerLeistungsdaten.FehlStd = leistung.fehlstundenFach;
-					dtoEnmLD.tsFehlStd = leistung.tsFehlstundenFach;
-				});
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsFehlstundenUnentschuldigtFach, dtoEnmLD.tsuFehlStd,
-						() -> {
-							dtoSchuelerLeistungsdaten.uFehlStd = leistung.fehlstundenUnentschuldigtFach;
-							dtoEnmLD.tsuFehlStd = leistung.tsFehlstundenUnentschuldigtFach;
-						});
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsIstGemahnt, dtoEnmLD.tsWarnung, () -> {
-					dtoSchuelerLeistungsdaten.Warnung = leistung.istGemahnt;
-					dtoEnmLD.tsWarnung = leistung.tsIstGemahnt;
-				});
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsNote, dtoEnmLD.tsNotenKrz, () -> {
-					dtoSchuelerLeistungsdaten.NotenKrz = Note.fromKuerzel(leistung.note);
-					dtoEnmLD.tsNotenKrz = leistung.tsNote;
-				});
-				dtoUpdaten |= isEnmLatestThenAction(leistung.tsNoteQuartal, dtoEnmLD.tsNotenKrzQuartal, () -> {
-					dtoSchuelerLeistungsdaten.NotenKrzQuartal = Note.fromKuerzel(leistung.noteQuartal);
-					dtoEnmLD.tsNotenKrzQuartal = leistung.tsNoteQuartal;
-				});
+				for (final ENMTeilleistung enmTeilleistung : enmLeistung.teilleistungen) {
+					final DTOSchuelerTeilleistung teilleistung = mapTeilleistungen.get(enmTeilleistung.id);
+					final DTOEnmTeilleistungen teilleistungTS = mapTeilleistungenTimestamps.get(enmTeilleistung.id);
 
-				if (dtoUpdaten) {
-					conn.transactionPersist(dtoSchuelerLeistungsdaten);
-					conn.transactionPersist(dtoEnmLD);
+					boolean updatedTeilleistung = false;
+					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsArtID, teilleistungTS.tsArt_ID, () -> {
+						teilleistung.Art_ID = enmTeilleistung.artID;
+						teilleistungTS.tsArt_ID = enmTeilleistung.tsArtID;
+					});
+					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsDatum, teilleistungTS.tsDatum, () -> {
+						teilleistung.Datum = enmTeilleistung.datum;
+						teilleistungTS.tsDatum = enmTeilleistung.tsDatum;
+					});
+					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsBemerkung, teilleistungTS.tsBemerkung, () -> {
+						teilleistung.Bemerkung = enmTeilleistung.bemerkung;
+						teilleistungTS.tsBemerkung = enmTeilleistung.tsBemerkung;
+					});
+					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsNote, teilleistungTS.tsNotenKrz, () -> {
+						teilleistung.NotenKrz = enmTeilleistung.note;
+						teilleistungTS.tsNotenKrz = enmTeilleistung.tsNote;
+					});
+
+					if (updatedTeilleistung) {
+						setTeilleistungen.add(teilleistung);
+						setTeilleistungenTimestamps.add(teilleistungTS);
+					}
 				}
 			}
 		}
+		if (!setLernabschnittsbemerkungen.isEmpty())
+			conn.transactionPersistAll(setLernabschnittsbemerkungen);
+		if (!setLernabschnitte.isEmpty())
+			conn.transactionPersist(setLernabschnitte);
+		if (!setLeistungen.isEmpty())
+			conn.transactionPersist(setLeistungen);
+		if (!setTeilleistungen.isEmpty())
+			conn.transactionPersist(setTeilleistungen);
+		conn.transactionFlush();
+
+		// TODO Prüfen, ob das Neusetzen der Timestamps nicht einen Konflikt mit den Triggern durch die Persistierung oben hervorruft...
+		if (!setLernabschnitteTimestamps.isEmpty())
+			conn.transactionPersist(setLernabschnitteTimestamps);
+		if (!setLeistungenTimestamps.isEmpty())
+			conn.transactionPersist(setLeistungenTimestamps);
+		if (!setTeilleistungenTimestamps.isEmpty())
+			conn.transactionPersist(setTeilleistungenTimestamps);
 		conn.transactionFlush();
 		conn.transactionCommitOrThrow();
 	}

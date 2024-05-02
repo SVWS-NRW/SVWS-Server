@@ -79,7 +79,6 @@ public class ENMLeistung {
 	/** Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule) */
 	@Schema(description = "Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten "
 			+ "Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule).", example = "E")
-	// TODO Core Type
 	public String neueZuweisungKursart;
 
 	/** Gibt an, ob ein Fach gemahnt wurde oder nicht. */

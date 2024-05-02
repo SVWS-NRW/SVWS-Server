@@ -81,6 +81,5 @@ public class ENMSchueler {
 	@Schema(description = "Die Informationen zu den Abschlüssen am Berufskolleg, sofern vorhanden - ansonsten null.", example = "null")
 	public ENMBKAbschluss bkabschluss;
 
-
 }
 

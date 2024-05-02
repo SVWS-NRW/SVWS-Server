@@ -146,4 +146,20 @@ public final class JsonReader {
 		return mapper.readValue(json, new TypeReference<List<T>>() { /* nothing special */ });
 	}
 
+
+	/**
+	 * Wandelt den im Byte-Array übergebenen JSON-String in eine Liste von
+	 * Objekten des generischen Typs um.
+	 *
+	 * @param <T>    der Typ der Objekte für die Liste
+	 * @param json   ein JSON-String mit einem Array von Objekten des Typs T
+	 *
+	 * @return die Liste der Objekte
+	 *
+	 * @throws IOException im Fehlerfall
+	 */
+	public static <T> List<T> fromByteArray(final byte[] json) throws IOException {
+		return mapper.readValue(json, new TypeReference<List<T>>() { /* nothing special */ });
+	}
+
 }
