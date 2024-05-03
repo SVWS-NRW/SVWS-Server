@@ -467,29 +467,34 @@ public final class ApiMethod {
 					sb.append("\t\treturn result;" + System.lineSeparator());
 				}
 			} else if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.MULTIPART_FORM_DATA)) {
-				sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
-				final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-				final String conversion = switch (datatype) {
-					case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-					case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
-					case "Character", "String" -> "JSON.parse(text).toString()";
-					case "Boolean" -> "(text === \"true\")";
-					default -> datatype + ".transpilerFromJSON(text)";
-				};
-				final String resultDatatype = switch (datatype) {
-					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
-					case "Character", "String" -> "string";
-                    case "Boolean" -> "boolean";
-					default -> datatype;
-				};
-				if (returnResponse.content.isArrayType) {
-					sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
-					sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-					sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator());
-					sb.append("\t\treturn ret;" + System.lineSeparator());
+				if (returnResponse.content == null) {
+					sb.append("\t\tawait super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
+					sb.append("\t\treturn;" + System.lineSeparator());
 				} else {
-					sb.append("\t\tconst text = result;" + System.lineSeparator());
-					sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
+					sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
+					final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
+					final String conversion = switch (datatype) {
+						case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
+						case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
+						case "Character", "String" -> "JSON.parse(text).toString()";
+						case "Boolean" -> "(text === \"true\")";
+						default -> datatype + ".transpilerFromJSON(text)";
+					};
+					final String resultDatatype = switch (datatype) {
+						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+						case "Character", "String" -> "string";
+	                    case "Boolean" -> "boolean";
+						default -> datatype;
+					};
+					if (returnResponse.content.isArrayType) {
+						sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
+						sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
+						sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator());
+						sb.append("\t\treturn ret;" + System.lineSeparator());
+					} else {
+						sb.append("\t\tconst text = result;" + System.lineSeparator());
+						sb.append("\t\treturn " + conversion + ";" + System.lineSeparator());
+					}
 				}
 			} else
 				throw new TranspilerException("Transpiler Error: POST which produces " + this.produces + " and consumes " + this.consumes + " not yet implemented in the transpiler.");

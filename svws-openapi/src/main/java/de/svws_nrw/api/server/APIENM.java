@@ -1,24 +1,30 @@
 package de.svws_nrw.api.server;
 
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.enm.DataENMDaten;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -112,6 +118,69 @@ public class APIENM {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
     }
+
+
+	/**
+	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
+	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param enmDaten   die ENM-Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+    @Path("/import")
+	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
+		description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand "
+				+ "der Zeitstempel in den ENM-Daten geprüft.")
+	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
+	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response importENMDaten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die ENM-Daten", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class)))
+			final ENMDaten enmDaten, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			DataENMDaten.importDaten(conn, enmDaten);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
+	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param multipart  enthält die ENM-Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/import/gzip")
+	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
+		description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand "
+				+ "der Zeitstempel in den ENM-Daten geprüft.")
+	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
+	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response importENMDatenGZip(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die ENM-Daten", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			DataENMDaten.importDatenGZip(conn, multipart.data);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für die Synchronisation der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.

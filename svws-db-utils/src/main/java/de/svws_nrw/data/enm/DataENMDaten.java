@@ -87,11 +87,13 @@ public final class DataENMDaten extends DataManager<Long> {
 		super(conn);
 	}
 
+
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final ENMDaten daten = getDaten(null);
+		final ENMDaten daten = getDaten(conn, null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
 
 	/**
 	 * Gibt die ENM-Daten als mit GZIP komprimiertes JSON-Objekt zurück.
@@ -101,38 +103,22 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getAllGZip() throws ApiOperationException {
-		final ENMDaten daten = getDaten(null);
+		final ENMDaten daten = getDaten(conn, null);
 		return JSONMapper.gzipFileResponseFromObject(daten, "enm.json.gz");
 	}
 
-	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final ENMDaten daten = getDaten(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * Gibt die ENM-Daten aller Lehrer als mit GZIP komprimiertes byte[] zurück.
+	 *
+	 * @param conn   die Datenbank-Verbindung
 	 *
 	 * @return das GZIP-komprimierte byte[].
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public byte[] getAllGZIPBytes() throws ApiOperationException {
-		final ENMDaten daten = getDaten(null);
+	public static byte[] getAllGZIPBytes(final DBEntityManager conn) throws ApiOperationException {
+		final ENMDaten daten = getDaten(conn, null);
 		try {
 			return JSONMapper.gzipByteArrayFromObject(daten);
 		} catch (final CompressionException ce) {
@@ -140,31 +126,49 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 	}
 
+
+	@Override
+	public Response getList() {
+		throw new UnsupportedOperationException();
+	}
+
+
+	@Override
+	public Response get(final Long id) throws ApiOperationException {
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final ENMDaten daten = getDaten(conn, id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+
 	/**
 	 * Ermittelt die ENM-Daten zu dem Lehrer mit der angegebenen ID.
 	 * Ist die ID null so werden die ENM-Daten für alle Lehrer des aktuellen
 	 * Schuljahresabschnitts generiert.
 	 *
-	 * @param id   die ID des Lehrers oder null
+	 * @param conn   die Datenbank-Verbindung
+	 * @param id     die ID des Lehrers oder null
 	 *
 	 * @return die ENMDaten
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private ENMDaten getDaten(final Long id) throws ApiOperationException {
+	private static ENMDaten getDaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank ein
 		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
-    	final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(schule);
-    	final Map<Long, DTOLehrer> mapLehrer = getLehrerListe();
+    	final DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(conn, schule);
+    	final Map<Long, DTOLehrer> mapLehrer = getLehrerListe(conn);
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
     	if ((id != null) && (dtoLehrer == null))
     		throw new ApiOperationException(Status.NOT_FOUND);
-    	final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(schule);
-    	final Map<Long, DTOFach> mapFaecher = getFaecherListe();
-    	final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe();
-    	final Map<String, DTOKlassen> mapKlassen = getKlassenListe(schule);
-    	final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(mapKlassen);
-    	final Map<Long, DTOKurs> mapKurse = getKurse(schule);
+    	final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, schule);
+    	final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
+    	final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe(conn);
+    	final Map<String, DTOKlassen> mapKlassen = getKlassenListe(conn, schule);
+    	final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(conn, mapKlassen);
+    	final Map<Long, DTOKurs> mapKurse = getKurse(conn, schule);
 		final Map<Long, DTOTeilleistungsarten> mapTeilleistungsarten = conn.queryAll(DTOTeilleistungsarten.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
     	// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
@@ -189,10 +193,8 @@ public final class DataENMDaten extends DataManager<Long> {
     			: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
     	for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
     		final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
-			if (dtoKlasse == null) {
-				// TODO DB-Error -> should not happen but must be handled
+			if (dtoKlasse == null)
 				throw new NullPointerException();
-			}
     		ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
 			if (enmKlasse == null) {
 				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
@@ -220,10 +222,8 @@ public final class DataENMDaten extends DataManager<Long> {
     			ENMJahrgang enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
     			if (enmJahrgang == null) {
     				final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(schuelerabschnitt.jahrgangID);
-    				if (dtoJahrgang == null) {
-    					// TODO DB-Error -> should not happen but must be handled
+    				if (dtoJahrgang == null)
     					throw new NullPointerException();
-    				}
     				manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
     						dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
     				enmJahrgang = manager.getJahrgang(schuelerabschnitt.jahrgangID);
@@ -347,9 +347,15 @@ public final class DataENMDaten extends DataManager<Long> {
     	}
 
     	// Kopiere den Floskel-Katalog in die ENM-Daten
-    	getFloskeln(manager, mapJahrgaenge);
+    	getFloskeln(conn, manager, mapJahrgaenge);
 
     	return manager.daten;
+	}
+
+
+	@Override
+	public Response patch(final Long id, final InputStream is) {
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -364,7 +370,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		manager.addFoerderschwerpunkte(schule.Schulform);
 	}
 
-	private DTOSchuljahresabschnitte getSchuljahresabschnitt(final DTOEigeneSchule schule) throws ApiOperationException {
+	private static DTOSchuljahresabschnitte getSchuljahresabschnitt(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (abschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -372,14 +378,14 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	// TODO Optimierung: Lese nur die aktiven Lehrer aus der Datenbank aus.
-	private Map<Long, DTOLehrer> getLehrerListe() throws ApiOperationException {
+	private static Map<Long, DTOLehrer> getLehrerListe(final DBEntityManager conn) throws ApiOperationException {
 		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
 		if (lehrer.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
-	private Map<Long, DTOSchueler> getSchuelerListe(final DTOEigeneSchule schule) throws ApiOperationException {
+	private static Map<Long, DTOSchueler> getSchuelerListe(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOSchueler.class);
 		if (schueler.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -388,34 +394,34 @@ public final class DataENMDaten extends DataManager<Long> {
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
-	private Map<Long, DTOFach> getFaecherListe() throws ApiOperationException {
+	private static Map<Long, DTOFach> getFaecherListe(final DBEntityManager conn) throws ApiOperationException {
 		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
 		if (faecher.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 	}
 
-	private Map<Long, DTOJahrgang> getJahrgangsListe() throws ApiOperationException {
+	private static Map<Long, DTOJahrgang> getJahrgangsListe(final DBEntityManager conn) throws ApiOperationException {
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if (jahrgaenge.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 	}
 
-	private Map<String, DTOKlassen> getKlassenListe(final DTOEigeneSchule schule) throws ApiOperationException {
+	private static Map<String, DTOKlassen> getKlassenListe(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
 		if (klassen.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
 	}
 
-	private Map<Long, List<DTOKlassenLeitung>> getKlassenleitungen(final Map<String, DTOKlassen> mapKlassen) {
+	private static Map<Long, List<DTOKlassenLeitung>> getKlassenleitungen(final DBEntityManager conn, final Map<String, DTOKlassen> mapKlassen) {
 		final List<Long> klassenIDs = mapKlassen.values().stream().map(kl -> kl.ID).toList();
 		return conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class).stream()
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}
 
-	private Map<Long, DTOKurs> getKurse(final DTOEigeneSchule schule) throws ApiOperationException {
+	private static Map<Long, DTOKurs> getKurse(final DBEntityManager conn, final DTOEigeneSchule schule) throws ApiOperationException {
 		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKurs.class);
 		if (kurse == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -427,10 +433,11 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Füllt die Datenstruktur für die Floskelgruppen des ENM mit den in der SVWS-DB hinterlegten
 	 * Floskelgruppen und den zugehörigen Floskeln.
 	 *
+	 * @param conn            die Datenbank-Verbindung
 	 * @param manager         der ENM-Daten-Manager
 	 * @param mapJahrgaenge   eine Map mit den jeweiligen Jahrgängen
 	 */
-	private void getFloskeln(final ENMDatenManager manager, final Map<Long, DTOJahrgang> mapJahrgaenge) {
+	private static void getFloskeln(final DBEntityManager conn, final ENMDatenManager manager, final Map<Long, DTOJahrgang> mapJahrgaenge) {
 		final Map<String, DTOJahrgang> mapJG = mapJahrgaenge.values().stream().collect(Collectors.toMap(j -> j.ASDJahrgang, j -> j));
 		final List<DTOFloskelgruppen> dtoFloskelgruppen = conn.queryAll(DTOFloskelgruppen.class);
 		final HashMap<String, ENMFloskelgruppe> map = new HashMap<>();
@@ -466,14 +473,49 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
+	 * Integriert die Veränderungen bei den importierten ENM-Daten gegenüber dem Stand
+	 * der SVWS-DB in die SVWS-DB.
+	 *
+	 * @param conn    die Datenbank-Verbindung
+	 * @param daten   die importierten ENMDaten GZIP-komprimiert als Byte-Array
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static void importDatenGZip(final DBEntityManager conn, final byte[] daten) throws ApiOperationException {
+		try {
+			importDaten(conn, JSONMapper.toObjectGZip(daten, ENMDaten.class));
+		} catch (final CompressionException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler bei entpacken der komprimierten ENM-Daten");
+		}
+	}
+
+
+	/**
+	 * Integriert die Veränderungen bei den importierten ENM-Daten gegenüber dem Stand
+	 * der SVWS-DB in die SVWS-DB.
+	 *
+	 * @param conn    die Datenbank-Verbindung
+	 * @param daten   die importierten Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static void importDaten(final DBEntityManager conn, final ENMDaten daten) throws ApiOperationException {
+		// TODO Prüfe (daten.lehrer == null) - dann ist es eine Gesamt-ENM-Datei und nicht lehrerspezifisch
+		// TODO Führe eine Prüfung der Integrität der Daten durch
+		importEnmSchueler(conn, daten.schueler);
+	}
+
+
+	/**
 	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
 	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
+	 * @param conn              die Datenbank-Verbindung
 	 * @param listEnmSchueler   die zu importierenden Schüler
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void importEnmSchueler(final List<ENMSchueler> listEnmSchueler) throws ApiOperationException {
+	public static void importEnmSchueler(final DBEntityManager conn, final List<ENMSchueler> listEnmSchueler) throws ApiOperationException {
 		conn.transactionBegin();
 		DBUtilsSchule.get(conn);
 
@@ -694,15 +736,16 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
 	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
+	 * @param conn       die Datenbank-Verbindung
 	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void importEnmSchuelerFromByteArray(final byte[] enmBytes) throws ApiOperationException {
+	public static void importEnmSchuelerFromByteArray(final DBEntityManager conn, final byte[] enmBytes) throws ApiOperationException {
 		try {
 			// TODO bei GZIP vorher: enmBytes = GZip.decode(enmBytes);
 			final List<ENMSchueler> listEnmSchueler = JsonReader.fromByteArray(enmBytes);
-			importEnmSchueler(listEnmSchueler);
+			importEnmSchueler(conn, listEnmSchueler);
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden.");
 		}
@@ -752,31 +795,30 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
 	 * Datenbank
 	 *
+	 * @param conn    die Datenbank-Verbindung
 	 * @param client  der OAuthClient
-	 *
-	 * @param dataENM der ENM DataManager
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void downloadENMDaten(final OAuth2Client client, final DataENMDaten dataENM) throws ApiOperationException {
+	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client) throws ApiOperationException {
 		final HttpResponse<byte[]> httpResponse = client.get(ENM_DOWNLOAD_PATH, BodyHandlers.ofByteArray());
 		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		}
-		dataENM.importEnmSchuelerFromByteArray(httpResponse.body());
+		importEnmSchuelerFromByteArray(conn, httpResponse.body());
 	}
 
 
 	/**
 	 * Lädt die ENM-Daten beim ENM-Server hoch
 	 *
+	 * @param conn         die Datenbank-Verbindung
 	 * @param client       der OAuth-Client zur Verbindung mit dem ENM
-	 * @param dataENMDaten der DataManager für ENM-Daten
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static void uploadENMDaten(final OAuth2Client client, final DataENMDaten dataENMDaten) throws ApiOperationException {
-		final byte[] daten = dataENMDaten.getAllGZIPBytes();
+	private static void uploadENMDaten(final DBEntityManager conn, final OAuth2Client client) throws ApiOperationException {
+		final byte[] daten = getAllGZIPBytes(conn);
 		final HttpResponse<String> response = client.postMultipart(ENM_UPLOAD_PATH, "json.gz", daten,
 				BodyHandlers.ofString());
 		if (response.statusCode() != Status.OK.getStatusCode()) {
@@ -798,9 +840,8 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static Response synchronize(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
-		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
-		uploadENMDaten(client, dataENMDaten);
-		downloadENMDaten(client, dataENMDaten);
+		uploadENMDaten(conn, client);
+		downloadENMDaten(conn, client);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
 	}
 
@@ -816,8 +857,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static Response upload(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
-		final DataENMDaten dataENMDaten = new DataENMDaten(conn);
-		uploadENMDaten(client, dataENMDaten);
+		uploadENMDaten(conn, client);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
 	}
 
@@ -833,8 +873,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static Response download(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
-		final DataENMDaten dataENM = new DataENMDaten(conn);
-		downloadENMDaten(client, dataENM);
+		downloadENMDaten(conn, client);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
 	}
 
