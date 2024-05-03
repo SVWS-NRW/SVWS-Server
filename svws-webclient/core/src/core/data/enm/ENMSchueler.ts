@@ -73,7 +73,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei
 	 */
-	public bemerkungen : ENMLeistungBemerkungen | null = new ENMLeistungBemerkungen();
+	public bemerkungen : ENMLeistungBemerkungen = new ENMLeistungBemerkungen();
 
 	/**
 	 * Die Informationen zu den Zentralen Prüfungen Klasse 10, sofern vorhanden - ansonsten null
@@ -133,7 +133,9 @@ export class ENMSchueler extends JavaObject {
 				result.leistungsdaten?.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.bemerkungen = ((typeof obj.bemerkungen === "undefined") || (obj.bemerkungen === null)) ? null : ENMLeistungBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
+		if (typeof obj.bemerkungen === "undefined")
+			 throw new Error('invalid json format, missing attribute bemerkungen');
+		result.bemerkungen = ENMLeistungBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
 		result.zp10 = ((typeof obj.zp10 === "undefined") || (obj.zp10 === null)) ? null : ENMZP10.transpilerFromJSON(JSON.stringify(obj.zp10));
 		result.bkabschluss = ((typeof obj.bkabschluss === "undefined") || (obj.bkabschluss === null)) ? null : ENMBKAbschluss.transpilerFromJSON(JSON.stringify(obj.bkabschluss));
 		return result;
@@ -175,7 +177,7 @@ export class ENMSchueler extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen)) + ',';
+		result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
 		result += '"bkabschluss" : ' + ((!obj.bkabschluss) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
 		result = result.slice(0, -1);
@@ -244,7 +246,7 @@ export class ENMSchueler extends JavaObject {
 			}
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen)) + ',';
+			result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		}
 		if (typeof obj.zp10 !== "undefined") {
 			result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';

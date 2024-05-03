@@ -71,7 +71,7 @@ public class ENMSchueler {
 
 	/** Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei */
 	@Schema(description = "Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei.", example = "Bemerkungstext.")
-	public ENMLeistungBemerkungen bemerkungen = new ENMLeistungBemerkungen();
+	public @NotNull ENMLeistungBemerkungen bemerkungen = new ENMLeistungBemerkungen();
 
 	/** Die Informationen zu den Zentralen Prüfungen Klasse 10, sofern vorhanden - ansonsten null */
 	@Schema(description = "Die Informationen zu den Zentralen Prüfungen Klasse 10, sofern vorhanden - ansonsten null.", example = "null")

@@ -465,36 +465,17 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
-	private ENMSchueler[] importParseByteArray(final byte[] enmBytes) throws ApiOperationException {
-		try {
-			return JSONMapper.mapper.readValue(enmBytes, ENMSchueler[].class);
-			// TODO kein ZIP auf diesem Endpunkt
-			// return JSONMapper.toObjectGZip(httpResponse.body(), ENMSchueler[].class);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			throw new ApiOperationException(Status.BAD_GATEWAY, "Antwort des ENM-Servers nicht parsebar.");
-		}
-	}
-
-
 	/**
 	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
 	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
-	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
+	 * @param listEnmSchueler   die zu importierenden Schüler
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void importEnmDaten(final byte[] enmBytes) throws ApiOperationException {
+	public void importEnmSchueler(final List<ENMSchueler> listEnmSchueler) throws ApiOperationException {
 		conn.transactionBegin();
-		final DTOEigeneSchule schule = DBUtilsSchule.get(conn);
-
-		// Parse zunächst die ENM-Daten
-		final List<ENMSchueler> listEnmSchueler;
-		try {
-			listEnmSchueler = JsonReader.fromByteArray(enmBytes);
-		} catch (final IOException e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden.");
-		}
+		DBUtilsSchule.get(conn);
 
 		// Bestimme die Schüler-IDs, anhand der zu importierenden Daten
 		if (listEnmSchueler.isEmpty())
@@ -549,48 +530,63 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Sets, um die veränderten DTOs zwischenzuspeichern und später in einem Rutsch in der DB zu persistieren
 		final Set<DTOSchuelerLernabschnittsdaten> setLernabschnitte = new HashSet<>();
 		final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungen = new HashSet<>();
+		final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungenNeu = new HashSet<>();
 		final Set<DTOEnmLernabschnittsdaten> setLernabschnitteTimestamps = new HashSet<>();
 		final Set<DTOSchuelerLeistungsdaten> setLeistungen = new HashSet<>();
 		final Set<DTOEnmLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
 		final Set<DTOSchuelerTeilleistung> setTeilleistungen = new HashSet<>();
 		final Set<DTOEnmTeilleistungen> setTeilleistungenTimestamps = new HashSet<>();
+		long idNeueFachbemerkung = conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class);
 
 		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
 		for (final ENMSchueler enmSchueler : listEnmSchueler) {
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(enmSchueler.lernabschnitt.id);
 			final DTOEnmLernabschnittsdaten lernabschnittTS = mapLernabschnitteTimestamps.get(enmSchueler.lernabschnitt.id);
-			final DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = mapLernabschnittsbemerkungen.get(enmSchueler.lernabschnitt.id);
+			boolean neuBemerkungen = false;
+			DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = mapLernabschnittsbemerkungen.get(enmSchueler.lernabschnitt.id);
+			if (lernabschnittsbemerkungen == null) {
+				lernabschnittsbemerkungen = new DTOSchuelerPSFachBemerkungen(idNeueFachbemerkung++, enmSchueler.lernabschnitt.id);
+				neuBemerkungen = true;
+			}
 
 			boolean updatedBemerkungen = false;
-			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsASV, lernabschnittTS.tsASV, () -> {
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsASV, lernabschnittTS.tsASV)) {
 				lernabschnittsbemerkungen.ASV = enmSchueler.bemerkungen.ASV;
 				lernabschnittTS.tsASV = enmSchueler.bemerkungen.tsASV;
-			});
-			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsAUE, lernabschnittTS.tsAUE, () -> {
+				updatedBemerkungen = true;
+			}
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsAUE, lernabschnittTS.tsAUE)) {
 				lernabschnittsbemerkungen.AUE = enmSchueler.bemerkungen.AUE;
 				lernabschnittTS.tsAUE = enmSchueler.bemerkungen.tsAUE;
-			});
-			updatedBemerkungen |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, lernabschnittTS.tsBemerkungVersetzung, () -> {
+				updatedBemerkungen = true;
+			}
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, lernabschnittTS.tsBemerkungVersetzung)) {
 				lernabschnittsbemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
 				lernabschnittTS.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
-			});
+				updatedBemerkungen = true;
+			}
 
 			boolean updatedLernabschnitt = false;
-			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.bemerkungen.tsZB, lernabschnittTS.tsZeugnisBem, () -> {
+			if (isTimestampAfter(enmSchueler.bemerkungen.tsZB, lernabschnittTS.tsZeugnisBem)) {
 				lernabschnitt.ZeugnisBem = enmSchueler.bemerkungen.ZB;
 				lernabschnittTS.tsZeugnisBem = enmSchueler.bemerkungen.tsZB;
-			});
-			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamt, lernabschnittTS.tsSumFehlStd, () -> {
+				updatedLernabschnitt = true;
+			}
+			if (isTimestampAfter(enmSchueler.lernabschnitt.tsFehlstundenGesamt, lernabschnittTS.tsSumFehlStd)) {
 				lernabschnitt.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
 				lernabschnittTS.tsSumFehlStd = enmSchueler.lernabschnitt.tsFehlstundenGesamt;
-			});
-			updatedLernabschnitt |= isEnmLatestThenAction(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, lernabschnittTS.tsSumFehlStdU, () -> {
+				updatedLernabschnitt = true;
+			}
+			if (isTimestampAfter(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, lernabschnittTS.tsSumFehlStdU)) {
 				lernabschnitt.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
 				lernabschnittTS.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
-			});
+				updatedLernabschnitt = true;
+			}
 
-			if (updatedBemerkungen)
+			if (updatedBemerkungen && !neuBemerkungen)
 				setLernabschnittsbemerkungen.add(lernabschnittsbemerkungen);
+			if (neuBemerkungen)
+				setLernabschnittsbemerkungenNeu.add(lernabschnittsbemerkungen);
 			if (updatedLernabschnitt)
 				setLernabschnitte.add(lernabschnitt);
 			if (updatedBemerkungen || updatedLernabschnitt)
@@ -601,30 +597,36 @@ public final class DataENMDaten extends DataManager<Long> {
 				final DTOEnmLeistungsdaten leistungTS = mapLeistungenTimestamps.get(enmLeistung.id);
 
 				boolean updatedLeistung = false;
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFachbezogeneBemerkungen, leistungTS.tsLernentw, () -> {
+				if (isTimestampAfter(enmLeistung.tsFachbezogeneBemerkungen, leistungTS.tsLernentw)) {
 					leistung.Lernentw = enmLeistung.fachbezogeneBemerkungen;
 					leistungTS.tsLernentw = enmLeistung.tsFachbezogeneBemerkungen;
-				});
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFehlstundenFach, leistungTS.tsFehlStd, () -> {
+					updatedLeistung = true;
+				}
+				if (isTimestampAfter(enmLeistung.tsFehlstundenFach, leistungTS.tsFehlStd)) {
 					leistung.FehlStd = enmLeistung.fehlstundenFach;
 					leistungTS.tsFehlStd = enmLeistung.tsFehlstundenFach;
-				});
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsFehlstundenUnentschuldigtFach, leistungTS.tsuFehlStd, () -> {
+					updatedLeistung = true;
+				}
+				if (isTimestampAfter(enmLeistung.tsFehlstundenUnentschuldigtFach, leistungTS.tsuFehlStd)) {
 					leistung.uFehlStd = enmLeistung.fehlstundenUnentschuldigtFach;
 					leistungTS.tsuFehlStd = enmLeistung.tsFehlstundenUnentschuldigtFach;
-				});
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsIstGemahnt, leistungTS.tsWarnung, () -> {
+					updatedLeistung = true;
+				}
+				if (isTimestampAfter(enmLeistung.tsIstGemahnt, leistungTS.tsWarnung)) {
 					leistung.Warnung = enmLeistung.istGemahnt;
 					leistungTS.tsWarnung = enmLeistung.tsIstGemahnt;
-				});
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsNote, leistungTS.tsNotenKrz, () -> {
+					updatedLeistung = true;
+				}
+				if (isTimestampAfter(enmLeistung.tsNote, leistungTS.tsNotenKrz)) {
 					leistung.NotenKrz = Note.fromKuerzel(enmLeistung.note);
 					leistungTS.tsNotenKrz = enmLeistung.tsNote;
-				});
-				updatedLeistung |= isEnmLatestThenAction(enmLeistung.tsNoteQuartal, leistungTS.tsNotenKrzQuartal, () -> {
+					updatedLeistung = true;
+				}
+				if (isTimestampAfter(enmLeistung.tsNoteQuartal, leistungTS.tsNotenKrzQuartal)) {
 					leistung.NotenKrzQuartal = Note.fromKuerzel(enmLeistung.noteQuartal);
 					leistungTS.tsNotenKrzQuartal = enmLeistung.tsNoteQuartal;
-				});
+					updatedLeistung = true;
+				}
 
 				if (updatedLeistung) {
 					setLeistungen.add(leistung);
@@ -636,22 +638,26 @@ public final class DataENMDaten extends DataManager<Long> {
 					final DTOEnmTeilleistungen teilleistungTS = mapTeilleistungenTimestamps.get(enmTeilleistung.id);
 
 					boolean updatedTeilleistung = false;
-					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsArtID, teilleistungTS.tsArt_ID, () -> {
+					if (isTimestampAfter(enmTeilleistung.tsArtID, teilleistungTS.tsArt_ID)) {
 						teilleistung.Art_ID = enmTeilleistung.artID;
 						teilleistungTS.tsArt_ID = enmTeilleistung.tsArtID;
-					});
-					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsDatum, teilleistungTS.tsDatum, () -> {
+						updatedTeilleistung = true;
+					}
+					if (isTimestampAfter(enmTeilleistung.tsDatum, teilleistungTS.tsDatum)) {
 						teilleistung.Datum = enmTeilleistung.datum;
 						teilleistungTS.tsDatum = enmTeilleistung.tsDatum;
-					});
-					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsBemerkung, teilleistungTS.tsBemerkung, () -> {
+						updatedTeilleistung = true;
+					}
+					if (isTimestampAfter(enmTeilleistung.tsBemerkung, teilleistungTS.tsBemerkung)) {
 						teilleistung.Bemerkung = enmTeilleistung.bemerkung;
 						teilleistungTS.tsBemerkung = enmTeilleistung.tsBemerkung;
-					});
-					updatedTeilleistung |= isEnmLatestThenAction(enmTeilleistung.tsNote, teilleistungTS.tsNotenKrz, () -> {
+						updatedTeilleistung = true;
+					}
+					if (isTimestampAfter(enmTeilleistung.tsNote, teilleistungTS.tsNotenKrz)) {
 						teilleistung.NotenKrz = enmTeilleistung.note;
 						teilleistungTS.tsNotenKrz = enmTeilleistung.tsNote;
-					});
+						updatedTeilleistung = true;
+					}
 
 					if (updatedTeilleistung) {
 						setTeilleistungen.add(teilleistung);
@@ -660,6 +666,8 @@ public final class DataENMDaten extends DataManager<Long> {
 				}
 			}
 		}
+		if (!setLernabschnittsbemerkungenNeu.isEmpty())
+			conn.transactionPersistAll(setLernabschnittsbemerkungenNeu);
 		if (!setLernabschnittsbemerkungen.isEmpty())
 			conn.transactionPersistAll(setLernabschnittsbemerkungen);
 		if (!setLernabschnitte.isEmpty())
@@ -683,29 +691,43 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
-	 * Prüft, ob der gegebene Timestamp-String des ENM nach dem Timestamp String des SVWS ist und führt in diesem Fall
-	 * das gegebene Runnable aus
+	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
+	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
-	 * @param tsEnmStr    der Timestamp aus dem ENM
-	 * @param tsSvwsStr   der Timestamp aus dem SVWS-Server
-	 * @param actionIf    die auszuführende Aktion, wenn der Timestamp des ENM nach dem des SVWS ist, vgl.
-	 *                    {@link Timestamp#after(Timestamp)}
+	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
 	 *
-	 * @return ob der Timestamp des ENM nach dem des SVWS ist
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static boolean isEnmLatestThenAction(final String tsEnmStr, final String tsSvwsStr, final Runnable actionIf) {
-		if (tsEnmStr == null || tsEnmStr.isBlank())
+	public void importEnmSchuelerFromByteArray(final byte[] enmBytes) throws ApiOperationException {
+		try {
+			// TODO bei GZIP vorher: enmBytes = GZip.decode(enmBytes);
+			final List<ENMSchueler> listEnmSchueler = JsonReader.fromByteArray(enmBytes);
+			importEnmSchueler(listEnmSchueler);
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden.");
+		}
+	}
+
+
+	/**
+	 * Prüft, ob der gegebene Timestamp-String tsCheckStr nach dem Timestamp-String tsOtherStr
+	 * liegt.
+	 *
+	 * @param tsCheckStr   der zu prüfende Timestamp-String
+	 * @param tsOtherStr   der andere Timestamp-String
+	 *
+	 * @return true, wenn tsCheckStr nach tsOtherStr liegt
+	 */
+	private static boolean isTimestampAfter(final String tsCheckStr, final String tsOtherStr) {
+		if (tsCheckStr == null || tsCheckStr.isBlank())
 			return false;
 		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
 				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
-		final Timestamp tsEnm = Timestamp.valueOf(LocalDateTime.parse(tsEnmStr, ofPattern));
-		if (tsSvwsStr == null || tsSvwsStr.isBlank())
+		final Timestamp tsCheck = Timestamp.valueOf(LocalDateTime.parse(tsCheckStr, ofPattern));
+		if (tsOtherStr == null || tsOtherStr.isBlank())
 			return true;
-		final Timestamp tsSvws = Timestamp.valueOf(LocalDateTime.parse(tsSvwsStr, ofPattern));
-		final boolean after = tsEnm.after(tsSvws);
-		if (after)
-			actionIf.run();
-		return after;
+		final Timestamp tsOther = Timestamp.valueOf(LocalDateTime.parse(tsOtherStr, ofPattern));
+		return tsCheck.after(tsOther);
 	}
 
 
@@ -725,6 +747,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		return OAuth2Client.getClient(dto);
 	}
 
+
 	/**
 	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
 	 * Datenbank
@@ -740,8 +763,9 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		}
-		dataENM.importEnmDaten(httpResponse.body());
+		dataENM.importEnmSchuelerFromByteArray(httpResponse.body());
 	}
+
 
 	/**
 	 * Lädt die ENM-Daten beim ENM-Server hoch
